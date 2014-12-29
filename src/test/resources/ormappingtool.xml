@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<oRmappingToolConfig>
+	<connectionConfig>
+		<driverClass>org.h2.Driver</driverClass>
+		<URL>jdbc:h2:tcp://localhost/./data/dao_gen_db</URL>
+		<user>sa</user>
+		<password></password>
+		<schema>public</schema>
+		<maxConn>5</maxConn>
+		<autocommit>false</autocommit>
+	</connectionConfig>
+	
+	<entityGenConfig>
+		<entityOutDir>/data/project/red/src/knowledge/src/main/java/redcomet/knowledge/entity</entityOutDir>
+		<entityPackage>redcomet.knowledge.entity</entityPackage>
+		<entitySuffix>Entity</entitySuffix>
+	</entityGenConfig>
+	
+	
+	<daoGenConfig>
+		<daoOutDir>/data/project/red/src/knowledge/src/main/java/redcomet/knowledge/dao</daoOutDir>
+		<daoPackage>redcomet.knowledge.dao</daoPackage>
+		<daoSuffix>Dao</daoSuffix>
+		
+		<!-- <rowIdColumn>ROW_ID</rowIdColumn> -->
+		<insertUserColumn>INSERT_USER</insertUserColumn>
+		<insertDatetimeColumn>INSERT_DATETIME</insertDatetimeColumn>
+		<updateUserColumn>UPDATE_USER</updateUserColumn>
+		<updateDatetimeColumn>UPDATE_DATETIME</updateDatetimeColumn>
+		<deleteFlagColumn>DELETE_FLAG</deleteFlagColumn>
+		<userColumnType>Integer</userColumnType>
+		
+	</daoGenConfig>
+	
+	<initializeConfig>
+		<sqlPaths>/redcomet/knowledge/database/ddl.sql</sqlPaths>
+	</initializeConfig>
+	
+</oRmappingToolConfig>

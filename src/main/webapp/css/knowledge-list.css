@@ -1,0 +1,40 @@
+.discription {
+	display: none;
+	position: absolute;
+	top: 30;
+	left: 30;
+	padding: 30px;
+	background: rgba(0, 0, 0, 0.4);
+	color: #FFF !important;
+	/* border:solid 5px #cc66ff; */
+	/* border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; */
+	border-radius: 50%;
+}
+
+.insert_info {
+	border-bottom: 1px solid #cccccc;
+}
+
+
+.bootstrap-tagsinput {
+	border: 0px solid #ccc;
+	box-shadow: none;
+	display: inline-block;
+	padding: 4px 6px;
+	margin-bottom: 0px;
+	color: #555;
+	vertical-align: middle;
+	border-radius: 0px;
+	max-width: 100%;
+	line-height: 22px;
+	cursor: text;
+}
+
+.thumbnail {
+	border: 0px solid #ccc;
+	box-shadow: none;
+}
+
+.selected_tag {
+	border-bottom: 1px dotted #ccc;
+}

@@ -1,0 +1,5 @@
+SELECT * FROM LIKES
+ WHERE 
+NO = ?
+ AND DELETE_FLAG = 0;
+;

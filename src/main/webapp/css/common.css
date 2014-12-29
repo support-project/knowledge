@@ -1,0 +1,37 @@
+body {
+	padding-top: 70px;
+}
+
+/* ------------------------------------- /
+/    Footer
+/* ------------------------------------- */
+#footer {
+	text-align: center;
+	padding: 20px 0;
+	margin-top: 60px;
+	background-color: #7E7E7E;
+	color: #cccccc;
+}
+
+/*  nav
+/*--------------------------------- */
+#footer .footer-menu>li {
+	border-right: 1px solid #000;
+}
+
+#footer .footer-menu>li.first {
+	border-left: 1px solid #000;
+}
+
+#footer .footer-menu li a {
+	color: #cccccc;
+}
+
+#footer .footer-menu li a:hover {
+	color: #fff;
+}
+/*  Copyright
+/*--------------------------------- */ 
+.copy {
+	margin-top: 0px;
+}

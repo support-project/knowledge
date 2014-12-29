@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app>
+	<time_zone>Asia/Tokyo</time_zone>
+	<indexPath>{user.home}/.knowledge/index/</indexPath>
+	<tmpPath>{user.home}/.knowledge/tmp/</tmpPath>
+	<uploadMaxMBSize>5</uploadMaxMBSize>
+</app>
+
+

@@ -1,0 +1,28 @@
+.preview {
+	word-break: break-all;
+	margin-top: 50px;
+}
+
+.insert_info {
+	border-bottom: 1px solid #cccccc;
+}
+
+.bootstrap-tagsinput { width: 100%; }
+
+
+.filediv {
+	margin: 10px;
+}
+.file-label {
+	width: 70%;
+	float: left;
+	vertical-align: center;
+}
+
+#drop_target {
+	border: 1px solid gray;
+	padding: 5px;
+	border-radius: 10px;		/* CSS3ëêàƒ */
+	-webkit-border-radius: 10px;	/* Safari,Google Chromeóp */
+	-moz-border-radius: 10px;	/* Firefoxóp */
+}
