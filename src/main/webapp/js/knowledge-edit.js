@@ -47,19 +47,24 @@ $(document).ready(function() {
 			$('.progress .progress-bar').text(progress + '%');
 			
 	 }).on('fileuploadfail', function (e, data) {
-		var msg = data.jqXHR.responseJSON.msg;
-		$.each(data.files, function (index) {
-			var filediv = '<div class="alert alert-warning alert-dismissible" role="alert">';
-			filediv += '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-			filediv += '<strong>';
-			filediv += '<i class="fa fa-remove"></i>&nbsp;';
-			filediv += data.files[index].name;
-			filediv += '</strong>&nbsp;&nbsp;';
-			filediv += msg;
-			filediv += '</div>';
-			$('#files').append(filediv);
-			$.notify('アップロードに失敗したファイルがあります', 'warn');
-		});
+		if (data && data.jqXHR && data.jqXHR.responseJSON && data.jqXHR.responseJSON.msg) {
+			var msg = data.jqXHR.responseJSON.msg;
+			$.each(data.files, function (index) {
+				var filediv = '<div class="alert alert-warning alert-dismissible" role="alert">';
+				filediv += '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+				filediv += '<strong>';
+				filediv += '<i class="fa fa-remove"></i>&nbsp;';
+				filediv += data.files[index].name;
+				filediv += '</strong>&nbsp;&nbsp;';
+				filediv += msg;
+				filediv += '</div>';
+				$('#files').append(filediv);
+				$.notify('アップロードに失敗したファイルがあります', 'warn');
+			});
+		} else {
+			console.log(e);
+			console.log(data);
+		}
 	 }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 	
 });
