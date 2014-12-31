@@ -16,6 +16,7 @@ import org.apache.lucene.queryparser.classic.QueryParser.Operator;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
@@ -38,6 +39,7 @@ import redcomet.common.log.Log;
 import redcomet.common.log.LogFactory;
 import redcomet.common.util.StringUtils;
 import redcomet.knowledge.config.AppConfig;
+import redcomet.knowledge.config.IndexType;
 import redcomet.knowledge.indexer.impl.LuceneIndexer;
 import redcomet.knowledge.searcher.SearchResultValue;
 import redcomet.knowledge.searcher.Searcher;
@@ -71,7 +73,7 @@ public class LuceneSearcher implements Searcher {
 		List<SearchResultValue> resultValues = new ArrayList<>();
 		
 		File indexDir = new File(getIndexPath());
-		if (!indexDir.exists()) {
+		if (!indexDir.exists() || indexDir.listFiles().length == 0) {
 			return resultValues;
 		}
 		
@@ -164,6 +166,9 @@ public class LuceneSearcher implements Searcher {
 			miniContainer.add(query, BooleanClause.Occur.SHOULD);
 			
 			container.add(miniContainer, BooleanClause.Occur.MUST);
+		} else {
+			Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TYPE, 1, IndexType.Knoeledge.getValue(), IndexType.Knoeledge.getValue(), true, true);
+			container.add(query, BooleanClause.Occur.MUST);
 		}
 		
 		if (StringUtils.isNotEmpty(value.getTags())) {

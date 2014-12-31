@@ -71,7 +71,7 @@ public class CronListener implements ServletContextListener {
 					LOG.error("添付ファイルのパースに失敗しました", e);
 				}
 			}
-		}, 10, 3, TimeUnit.MINUTES); // 10分後に実行、3分毎に実行
+		}, 60, 30, TimeUnit.SECONDS); // 10分後に実行、3分毎に実行
 	}
 
 	@Override
