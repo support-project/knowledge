@@ -33,5 +33,4 @@ public class AppConfig extends redcomet.web.config.AppConfig {
 		this.indexPath = indexPath;
 	}
 	
-	
 }

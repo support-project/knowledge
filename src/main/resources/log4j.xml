@@ -72,7 +72,7 @@
 	
 	<!-- Root Logger: Other -->
 	<root>
-		<priority value="DEBUG" />
+		<priority value="INFO" />
 		<appender-ref ref="APP_STDOUT" />
 	</root>
 

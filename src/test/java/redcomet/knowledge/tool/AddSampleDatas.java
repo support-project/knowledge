@@ -9,18 +9,21 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.h2.tools.Server;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import redcomet.common.config.ConfigLoader;
 import redcomet.common.config.INT_FLAG;
 import redcomet.common.log.Log;
 import redcomet.common.log.LogFactory;
 import redcomet.knowledge.deploy.InitDB;
 import redcomet.ormapping.common.DBUserPool;
 import redcomet.ormapping.tool.dao.InitializeDao;
+import redcomet.web.config.AppConfig;
 import redcomet.web.config.GroupRoleType;
 import redcomet.web.dao.GroupsDao;
 import redcomet.web.dao.UserGroupsDao;
@@ -37,6 +40,12 @@ public class AddSampleDatas {
 	private static Log LOG = LogFactory.getLog(AddSampleDatas.class);
 
 	public static void main(String[] args) throws Exception {
+		AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
+		String[] parms = {"-tcp", "-baseDir", appConfig.getDatabasePath()};
+
+		Server server = Server.createTcpServer(parms);
+		server.start();
+
 		// 内部的には、日付はGMTとして扱う
 		TimeZone zone = TimeZone.getTimeZone("GMT");
 		TimeZone.setDefault(zone);
@@ -50,6 +59,17 @@ public class AddSampleDatas {
 		addSampleDatas.doInitialize();
 		
 		AddSampleKnowledge.main(args);
+		
+		
+		server.stop();
+//		int count = 0;
+//		while(true) {
+//			Thread.sleep(1000);
+//			count++;
+//			if (count > 300) {
+//				break;
+//			}
+//		}
 	}
 	
 	public void createTables() {

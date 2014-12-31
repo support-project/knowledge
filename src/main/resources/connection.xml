@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <connectionConfig>
 	<driverClass>org.h2.Driver</driverClass>
-	<URL>jdbc:h2:{user.home}/.knowledge/knowledge_db</URL>
+	<URL>jdbc:h2:tcp://localhost/./knowledge_db</URL>
 	<user>sa</user>
 	<password></password>
 	<schema>public</schema>

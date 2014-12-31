@@ -3,6 +3,7 @@
 	<time_zone>Asia/Tokyo</time_zone>
 	<indexPath>{user.home}/.knowledge/index/</indexPath>
 	<tmpPath>{user.home}/.knowledge/tmp/</tmpPath>
+	<databasePath>{user.home}/.knowledge/db/</databasePath>
 	<uploadMaxMBSize>5</uploadMaxMBSize>
 </app>
 

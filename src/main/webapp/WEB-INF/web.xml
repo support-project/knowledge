@@ -7,6 +7,9 @@
 	<display-name>knowledge</display-name>
 
 	<listener>
+		<listener-class>redcomet.web.listener.H2DBManagerListener</listener-class>
+	</listener>
+	<listener>
 		<listener-class>redcomet.knowledge.deploy.InitializationListener</listener-class>
 	</listener>
 	<listener>
