@@ -5,6 +5,7 @@
 	<tmpPath>{user.home}/.knowledge/tmp/</tmpPath>
 	<databasePath>{user.home}/.knowledge/db/</databasePath>
 	<uploadMaxMBSize>5</uploadMaxMBSize>
+	<hashIterations>100</hashIterations>
 </app>
 
 

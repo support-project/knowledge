@@ -17,7 +17,10 @@ $(document).ready(function() {
 	}, function() {
 		$(this).find('.discription').slideUp(250); // .fadeOut(205)
 	});
-
+	$('#input_tags').on('beforeItemRemove', function(event) {
+		event.cancel = true;
+	});
+	echo.init();
 });
 
 var showKnowledge = function(url, offset, keyword, tag) {

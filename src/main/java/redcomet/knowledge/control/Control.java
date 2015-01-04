@@ -16,8 +16,11 @@ import redcomet.common.log.Log;
 import redcomet.common.log.LogFactory;
 import redcomet.common.log.LogLevel;
 import redcomet.common.util.HtmlUtils;
+import redcomet.di.DI;
+import redcomet.di.Instance;
 import redcomet.web.util.JspUtil;
 
+@DI(instance=Instance.Prototype)
 public abstract class Control extends redcomet.web.control.Control {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(Control.class);

@@ -48,6 +48,48 @@ ShowTag=1
 ShowCommonAttributes=0
 
 [Relation]
+Entity1=USERS
+Entity2=ACCOUNT_IMAGES
+RelationType1=1
+RelationType2=3
+Fields1=USER_ID
+Fields2=USER_ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,4985,4791,7220,R,R
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=498
+Bar2=479
+Bar3=722
+TermPos1=R
+TermPos2=R
+
+[Entity]
+PName=ACCOUNT_IMAGES
+LName=アカウントの画像
+Comment=
+TableOption=
+Page=Main
+Left=550
+Top=850
+Field="IMAGE_ID","IMAGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="ユーザID","USER_ID","@INT",,,"","",$FFFFFFFF,""
+Field="ファイル名","FILE_NAME","@VARCHAR(256)",,,"","",$FFFFFFFF,""
+Field="ファイルサイズ","FILE_SIZE","@DOUBLE",,,"","",$FFFFFFFF,""
+Field="バイナリ","FILE_BINARY","blob",,,"","",$FFFFFFFF,""
+Field="拡張子","EXTENSION","@VARCHAR(256)",,,"","",$FFFFFFFF,""
+Field="CONTENT_TYPE","CONTENT_TYPE","@VARCHAR(256)",,,"","",$FFFFFFFF,""
+Index=IDX_ACCOUNT_IMAGES_USER_ID=1,USER_ID
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20150102014151
+Position="Main",550,850
+
+[Relation]
 Entity1=KNOWLEDGES
 Entity2=LIKES
 RelationType1=1
@@ -74,14 +116,15 @@ Comment=
 TableOption=
 Page=MAIN
 Left=100
-Top=900
+Top=1300
 Field="NO","NO","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
+Index=IDX_LIKES_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20141228073716
-Position="MAIN",100,900
+ModifiedDateTime=20150102013522
+Position="MAIN",100,1300
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -115,10 +158,11 @@ Top=1550
 Field="コメント番号","COMMENT_NO","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="コメント","COMMENT","text",,,"","",$FFFFFFFF,""
+Index=IDX_COMMENTS_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20141222160017
+ModifiedDateTime=20150102013923
 Position="MAIN",1300,1550
 
 [Relation]
@@ -152,10 +196,11 @@ Top=1400
 Field="VOTE_NO","VOTE_NO","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="投票区分","VOTE_KIND","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Index=IDX_VOTES_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20141222155133
+ModifiedDateTime=20150102013835
 Position="MAIN",1250,1400,435,89
 
 [Relation]
@@ -190,10 +235,11 @@ Top=850
 Field="HISTORY_NO","HISTORY_NO","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="日時","VIEW_DATE_TIME","@DATETIME","NOT NULL",,"","",$FFFFFFFF,""
+Index=IDX_VIEW_HISTORIES_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20141222154942
+ModifiedDateTime=20150102013703
 Position="MAIN",1150,850
 
 [Relation]
@@ -315,14 +361,14 @@ Fields1=TAG_ID
 Fields2=TAG_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4552,5672,4658,R,R
+Position="MAIN",0,4552,5672,5143,R,R
 Dependence=1
 Caption=
 PName=
 LineMode=0
 Bar1=455
 Bar2=567
-Bar3=466
+Bar3=514
 TermPos1=R
 TermPos2=R
 
@@ -368,15 +414,15 @@ LName=タグ
 Comment=
 TableOption=
 Page=MAIN
-Left=600
-Top=850
+Left=100
+Top=1100
 Field="タグ_ID","TAG_ID","@INT","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
 Field="タグ名称","TAG_NAME","@VARCHAR(128)","NOT NULL",,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20141120205901
-Position="MAIN",600,850
+Position="MAIN",100,1100
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -413,10 +459,11 @@ Field="ファイル名","FILE_NAME","@VARCHAR(256)",,,"","",$FFFFFFFF,""
 Field="ファイルサイズ","FILE_SIZE","@DOUBLE",,,"","",$FFFFFFFF,""
 Field="バイナリ","FILE_BINARY","blob",,,"","",$FFFFFFFF,""
 Field="パース結果","PARSE_STATUS","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Index=IDX_KNOWLEDGE_FILES_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20141226051251
+ModifiedDateTime=20150102013438
 Position="MAIN",600,1600
 
 [Entity]
@@ -434,7 +481,7 @@ Field="公開区分","PUBLIC_FLAG","@INT",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20141222155113
+ModifiedDateTime=20150102012615
 Position="MAIN",600,1300
 
 [Comment]

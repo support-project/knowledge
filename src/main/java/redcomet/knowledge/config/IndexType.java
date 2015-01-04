@@ -1,7 +1,7 @@
 package redcomet.knowledge.config;
 
 public enum IndexType {
-	Knoeledge,
+	knowledge,
 	KnowledgeFile;
 	
 	

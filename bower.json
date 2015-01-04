@@ -10,7 +10,8 @@
     "bootbox": "4.3.0",
     "bootstrap-tagsinput": "0.4.2",
     "jquery-file-upload": "9.8.1",
-    "teambox.free-file-icons": "teambox/Free-file-icons"
+    "teambox.free-file-icons": "teambox/Free-file-icons",
+    "echojs": "1.6.0"
   },
   "devDependencies": {}
 }

@@ -8,6 +8,7 @@ $(document).ready(function(){
 		}
 	});
 	$('#content').html(marked($('#content_text').text()));
+	echo.init();
 });
 
 $('#input_tags').on('beforeItemRemove', function(event) {

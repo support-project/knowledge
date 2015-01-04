@@ -19,6 +19,7 @@
 
 <c:param name="PARAM_SCRIPTS">
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view.js"></script>
 </c:param>
 
@@ -30,7 +31,9 @@
 		<div class="col-sm-12">
 			<div class="thumbnail">
 				<div class="caption">
-					<h3>[${knowledgeId}] ${title}</h3>
+					<h3>
+					[${knowledgeId}] ${title}
+					</h3>
 					
 					<c:if test="${!empty tags}">
 					<p class="tags">
@@ -43,8 +46,10 @@
 							<i class="fa fa-thumbs-o-up"></i>&nbsp;参考になった！ × <span id="like_count">${like_count}</span>
 						</button>
 					</p>
-					
 					<p class="insert_info">
+						<img src="<%= request.getContextPath()%>/images/loader.gif" 
+							data-echo="<%= request.getContextPath()%>/open.account/icon/${insertUser}" 
+							alt="icon" width="32" height="32" />
 						<i class="fa fa-user"></i>&nbsp;${insertUserName}
 						&nbsp;&nbsp;&nbsp;
 						<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
@@ -104,7 +109,11 @@
 		</div>
 	</div>
 	<div class="question_Box">
-	<div class="question_image"><img src="<%= request.getContextPath() %>/images/icon/110197.png" alt="107039.png" width="90" height="90"/></div>
+	<div class="question_image">
+		<img src="<%= request.getContextPath()%>/images/loader.gif" 
+			data-echo="<%= request.getContextPath()%>/open.account/icon/${comment.updateUser}" 
+			alt="icon" width="64" height="64"/>
+	</div>
 	<div class="arrow_question">
 	${comment.comment}
 	</div><!-- /.arrow_question -->
@@ -116,7 +125,11 @@
 		</div>
 	</div>
 	<div class="question_Box">
-	<div class="answer_image"><img src="<%= request.getContextPath() %>/images/icon/107039.png" alt="110197.png" width="90" height="90"/></div>
+	<div class="answer_image">
+		<img src="<%= request.getContextPath()%>/images/loader.gif" 
+			data-echo="<%= request.getContextPath()%>/open.account/icon/${comment.updateUser}" 
+			alt="icon" width="64" height="64"/>
+	</div>
 	<div class="arrow_answer">
 	${comment.comment}
 	</div><!-- /.arrow_answer -->

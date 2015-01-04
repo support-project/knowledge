@@ -167,7 +167,7 @@ public class LuceneSearcher implements Searcher {
 			
 			container.add(miniContainer, BooleanClause.Occur.MUST);
 		} else {
-			Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TYPE, 1, IndexType.Knoeledge.getValue(), IndexType.Knoeledge.getValue(), true, true);
+			Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TYPE, 1, IndexType.knowledge.getValue(), IndexType.knowledge.getValue(), true, true);
 			container.add(query, BooleanClause.Occur.MUST);
 		}
 		

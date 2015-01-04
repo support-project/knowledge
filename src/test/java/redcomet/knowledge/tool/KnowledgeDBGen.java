@@ -14,8 +14,8 @@ public class KnowledgeDBGen {
 			args[0] = "/ormappingtool.xml";
 		}
 		
-//		DatabaseInitializer initializer = new DatabaseInitializer(args[0]);
-//		initializer.dropAllTable();
+		DatabaseInitializer initializer = new DatabaseInitializer(args[0]);
+		initializer.dropAllTable();
 		
 		DatabaseInitializer.main(args);
 		EntityMaker.main(args);

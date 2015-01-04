@@ -8,6 +8,8 @@ import java.util.Map;
 import redcomet.common.bean.ValidateError;
 import redcomet.common.util.PropertyUtil;
 import redcomet.common.util.StringUtils;
+import redcomet.di.DI;
+import redcomet.di.Instance;
 import redcomet.knowledge.control.Control;
 import redcomet.knowledge.logic.UserLogic;
 import redcomet.knowledge.vo.Roles;
@@ -20,6 +22,7 @@ import redcomet.web.entity.RolesEntity;
 import redcomet.web.entity.UsersEntity;
 import redcomet.web.exception.InvalidParamException;
 
+@DI(instance=Instance.Prototype)
 public class UsersControl extends Control {
 
 	public static final int PAGE_LIMIT = 100;

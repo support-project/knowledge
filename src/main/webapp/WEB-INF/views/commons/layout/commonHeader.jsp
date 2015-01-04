@@ -10,13 +10,13 @@
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
 <meta http-equiv="imagetoolbar" content="no" />
 
-<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-<meta name="Robots" content="index,follow">
-<meta name="description" content="">
-<meta name="keywords" content="">
-
 <meta http-equiv="expires" content="0" />
 <meta http-equiv="Pragma" content="no-cache" />
+
+<meta content="Knowledge - フリーの情報共有サービス" name="title">
+<meta content="Knowledgeは無料で利用できる情報共有の仕組みです。" name="description">
+
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
 
 <link rel="icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/vnd.microsoft.icon" /> 
 

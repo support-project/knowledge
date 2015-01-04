@@ -2,12 +2,15 @@ package redcomet.knowledge.control.open;
 
 import redcomet.common.log.Log;
 import redcomet.common.log.LogFactory;
+import redcomet.di.DI;
+import redcomet.di.Instance;
 import redcomet.knowledge.control.Control;
 import redcomet.knowledge.entity.KnowledgeFilesEntity;
 import redcomet.knowledge.logic.UploadedFileLogic;
 import redcomet.web.boundary.Boundary;
 import redcomet.web.common.HttpStatus;
 
+@DI(instance=Instance.Prototype)
 public class FileControl extends Control {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(FileControl.class);

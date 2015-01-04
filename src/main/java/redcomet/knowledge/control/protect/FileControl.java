@@ -7,6 +7,8 @@ import org.apache.commons.fileupload.FileItem;
 
 import redcomet.common.log.Log;
 import redcomet.common.log.LogFactory;
+import redcomet.di.DI;
+import redcomet.di.Instance;
 import redcomet.knowledge.control.Control;
 import redcomet.knowledge.dao.KnowledgeFilesDao;
 import redcomet.knowledge.entity.KnowledgeFilesEntity;
@@ -17,6 +19,7 @@ import redcomet.web.boundary.Boundary;
 import redcomet.web.boundary.JsonBoundary;
 import redcomet.web.common.HttpStatus;
 
+@DI(instance=Instance.Prototype)
 public class FileControl extends Control {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(FileControl.class);

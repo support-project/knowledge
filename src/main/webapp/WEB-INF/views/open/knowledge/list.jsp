@@ -16,13 +16,8 @@
 
 <c:param name="PARAM_SCRIPTS">
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-list.js"></script>
-<script>
-$('#input_tags').on('beforeItemRemove', function(event) {
-	event.cancel = true;
-});
-</script>
-
 </c:param>
 
 <c:param name="PARAM_CONTENT">
@@ -82,6 +77,9 @@ $('#input_tags').on('beforeItemRemove', function(event) {
 						</c:if>
 						
 						<p class="insert_info">
+						<img src="<%= request.getContextPath()%>/images/loader.gif" 
+							data-echo="<%= request.getContextPath()%>/open.account/icon/${knowledge.insertUser}" 
+							alt="icon" width="32" height="32" />
 						<i class="fa fa-user"></i>&nbsp;${knowledge.insertUserName}
 						&nbsp;&nbsp;&nbsp;
 						<i class="fa fa-thumbs-o-up"></i>&nbsp;× <span id="like_count">${knowledge.likeCount}</span>

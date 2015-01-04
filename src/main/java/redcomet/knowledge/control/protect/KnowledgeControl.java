@@ -9,6 +9,8 @@ import redcomet.common.log.Log;
 import redcomet.common.log.LogFactory;
 import redcomet.common.util.StringUtils;
 import redcomet.di.Container;
+import redcomet.di.DI;
+import redcomet.di.Instance;
 import redcomet.knowledge.control.Control;
 import redcomet.knowledge.dao.CommentsDao;
 import redcomet.knowledge.dao.KnowledgesDao;
@@ -22,6 +24,7 @@ import redcomet.web.boundary.Boundary;
 import redcomet.web.common.HttpStatus;
 import redcomet.web.exception.InvalidParamException;
 
+@DI(instance=Instance.Prototype)
 public class KnowledgeControl extends Control {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(KnowledgeControl.class);

@@ -21,7 +21,7 @@
 	${param.PARAM_PAGE_TITLE}
 </c:if>
 <c:if test="${param.PARAM_PAGE_TITLE == null}">
-	Knowledge
+	Knowledge - フリーの情報共有サービス
 </c:if>
 </title>
 

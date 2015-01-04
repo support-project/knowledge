@@ -1,13 +1,24 @@
 package redcomet.knowledge.control.protect;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.fileupload.FileItem;
+
 import redcomet.common.bean.ValidateError;
 import redcomet.common.util.StringUtils;
+import redcomet.common.validate.Validator;
+import redcomet.common.validate.ValidatorFactory;
 import redcomet.di.Container;
+import redcomet.di.DI;
+import redcomet.di.Instance;
 import redcomet.knowledge.control.Control;
+import redcomet.knowledge.logic.AccountLogic;
 import redcomet.knowledge.logic.UserLogic;
+import redcomet.knowledge.vo.UploadFile;
+import redcomet.knowledge.vo.UploadResults;
 import redcomet.web.bean.LoginedUser;
 import redcomet.web.boundary.Boundary;
 import redcomet.web.common.HttpStatus;
@@ -16,6 +27,7 @@ import redcomet.web.entity.UsersEntity;
 import redcomet.web.logic.AuthenticationLogic;
 import redcomet.web.logic.impl.DefaultAuthenticationLogicImpl;
 
+@DI(instance=Instance.Prototype)
 public class AccountControl extends Control {
 
 	@Override
@@ -108,5 +120,45 @@ public class AccountControl extends Control {
 		//return redirect(getRequest().getContextPath());
 	}
 	
-	
+	/**
+	 * アイコン画像をアップロード
+	 * @return
+	 * @throws IOException 
+	 */
+	public Boundary iconupload() throws IOException {
+		AccountLogic logic = AccountLogic.get();
+		UploadResults results = new UploadResults();
+		List<UploadFile> files = new ArrayList<UploadFile>();
+		Object obj = getParam("files[]", Object.class);
+		if (obj instanceof FileItem) {
+			FileItem fileItem = (FileItem) obj;
+			ValidateError error = checkExtension(fileItem.getName());
+			if (error != null) {
+				return send(HttpStatus.SC_400_BAD_REQUEST, error);
+			}
+			UploadFile file = logic.saveIconImage(fileItem, getLoginedUser(), getRequest().getContextPath());
+			files.add(file);
+		} else if (obj instanceof List) {
+			List<FileItem> fileItems = (List<FileItem>) obj;
+			for (FileItem fileItem : fileItems) {
+				ValidateError error = checkExtension(fileItem.getName());
+				if (error != null) {
+					return send(HttpStatus.SC_400_BAD_REQUEST, error);
+				}
+				UploadFile file = logic.saveIconImage(fileItem, getLoginedUser(), getRequest().getContextPath());
+				files.add(file);
+			}
+		}
+		results.setFiles(files);
+		return send(HttpStatus.SC_200_OK, results);
+	}
+	/**
+	 * アイコン画像の拡張子チェック
+	 * @param name
+	 * @return
+	 */
+	private ValidateError checkExtension(String name) {
+		Validator validator = ValidatorFactory.getInstance(Validator.EXTENSION);
+		return validator.validate(name, "icon", "png", "jpg", "jpeg", "gif");
+	}
 }

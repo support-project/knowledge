@@ -45,7 +45,7 @@ public class KnowledgeLogic {
 	public static final int PUBLIC_FLAG_PRIVATE = 1;
 	public static final int PUBLIC_FLAG_SELECT_USERS = 2;
 	
-	public static final int TYPE_KNOWLEDGE = IndexType.Knoeledge.getValue();
+	public static final int TYPE_KNOWLEDGE = IndexType.knowledge.getValue();
 	public static final int TYPE_FILE = IndexType.KnowledgeFile.getValue();
 
 	public static KnowledgeLogic get() {

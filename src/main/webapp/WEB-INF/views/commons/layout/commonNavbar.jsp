@@ -57,7 +57,7 @@
 				<% if (request.getRemoteUser() != null) { %>
 				<li class="dropdown" id="tabProfile">
 					<a class="dropdown-toggle" data-toggle="dropdown">
-						<i class="fa fa-user" ></i>&nbsp;<%= jspUtil.name(request) %><b class="caret"></b>
+						<i class="fa fa-user" ></i>&nbsp;<%= jspUtil.name() %><b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu">
 						<li>
