@@ -199,56 +199,6 @@ create table KNOWLEDGES (
   , constraint KNOWLEDGES_PKC primary key (KNOWLEDGE_ID)
 ) ;
 
-alter table LIKES
-  add constraint LIKES_FK1 foreign key (KNOWLEDGE_ID) references KNOWLEDGES(KNOWLEDGE_ID)
-  on delete cascade
-  on update cascade;
-
-alter table COMMENTS
-  add constraint COMMENTS_FK1 foreign key (KNOWLEDGE_ID) references KNOWLEDGES(KNOWLEDGE_ID)
-  on delete cascade
-  on update cascade;
-
-alter table VOTES
-  add constraint VOTES_FK1 foreign key (KNOWLEDGE_ID) references KNOWLEDGES(KNOWLEDGE_ID)
-  on delete cascade
-  on update cascade;
-
-alter table VIEW_HISTORIES
-  add constraint VIEW_HISTORIES_FK1 foreign key (KNOWLEDGE_ID) references KNOWLEDGES(KNOWLEDGE_ID)
-  on delete cascade
-  on update cascade;
-
-alter table STOCKS
-  add constraint STOCKS_FK1 foreign key (KNOWLEDGE_ID) references KNOWLEDGES(KNOWLEDGE_ID)
-  on delete cascade
-  on update cascade;
-
-alter table KNOWLEDGE_GROUPS
-  add constraint KNOWLEDGE_GROUPS_FK1 foreign key (KNOWLEDGE_ID) references KNOWLEDGES(KNOWLEDGE_ID)
-  on delete cascade
-  on update cascade;
-
-alter table KNOWLEDGE_USERS
-  add constraint KNOWLEDGE_USERS_FK1 foreign key (KNOWLEDGE_ID) references KNOWLEDGES(KNOWLEDGE_ID)
-  on delete cascade
-  on update cascade;
-
-alter table KNOWLEDGE_TAGS
-  add constraint KNOWLEDGE_TAGS_FK1 foreign key (TAG_ID) references TAGS(TAG_ID)
-  on delete cascade
-  on update cascade;
-
-alter table KNOWLEDGE_TAGS
-  add constraint KNOWLEDGE_TAGS_FK2 foreign key (KNOWLEDGE_ID) references KNOWLEDGES(KNOWLEDGE_ID)
-  on delete cascade
-  on update cascade;
-
-alter table KNOWLEDGE_FILES
-  add constraint KNOWLEDGE_FILES_FK1 foreign key (KNOWLEDGE_ID) references KNOWLEDGES(KNOWLEDGE_ID)
-  on delete cascade
-  on update cascade;
-
 comment on table ACCOUNT_IMAGES is 'アカウントの画像';
 comment on column ACCOUNT_IMAGES.IMAGE_ID is 'IMAGE_ID';
 comment on column ACCOUNT_IMAGES.USER_ID is 'ユーザID';

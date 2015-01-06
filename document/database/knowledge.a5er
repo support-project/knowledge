@@ -31,7 +31,6 @@ RDBMSType=6
 RDBMSTypeName=PostgreSQL
 GenerateDropTableStatement=1
 DropTableIfExists=1
-CreateFk=1
 FkOnDeleteOption=on delete cascade
 FkOnUpdateOption=on update cascade
 CommonField="登録ユーザ","INSERT_USER","@INT",,,"","",$FFFFFFFF
@@ -72,7 +71,7 @@ PName=ACCOUNT_IMAGES
 LName=アカウントの画像
 Comment=
 TableOption=
-Page=Main
+Page=MAIN
 Left=550
 Top=850
 Field="IMAGE_ID","IMAGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
@@ -87,7 +86,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150102014151
-Position="Main",550,850
+Position="MAIN",550,850
 
 [Relation]
 Entity1=KNOWLEDGES

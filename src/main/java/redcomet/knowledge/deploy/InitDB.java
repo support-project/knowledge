@@ -7,8 +7,6 @@ import java.util.Map;
 import redcomet.common.log.Log;
 import redcomet.common.log.LogFactory;
 import redcomet.knowledge.deploy.v0_0_1.InitializeSystem;
-import redcomet.knowledge.deploy.v0_3_0.Migrate_0_3_0;
-import redcomet.knowledge.deploy.v0_3_1.Migrate_0_3_1;
 import redcomet.web.dao.SystemsDao;
 import redcomet.web.entity.SystemsEntity;
 
@@ -27,9 +25,10 @@ public class InitDB {
 		super();
 		// MAP.put("0.0.1", InitializeSystem.get());
 		// MAP.put("0.1.0", Migrate_0_1_0.get());
-		MAP.put("0.2.0", INIT); // 初期公開バージョン
-		MAP.put("0.3.0", Migrate_0_3_0.get());
-		MAP.put(CURRENT, Migrate_0_3_1.get());
+		// MAP.put("0.2.0", INIT); // 初期公開バージョン
+		// MAP.put("0.3.0", Migrate_0_3_0.get());
+		// MAP.put("0.3.1", Migrate_0_3_1.get());
+		MAP.put(CURRENT, INIT); // マイグレートできなかった
 	}
 
 	public static void main(String[] args) throws Exception {
