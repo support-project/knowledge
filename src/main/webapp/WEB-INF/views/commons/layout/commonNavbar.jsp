@@ -50,6 +50,19 @@
 								<i class="fa fa-users"></i>&nbsp;Users
 							</a>
 						</li>
+						<li class="dropdown-header">&nbsp;System Config</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.config/config" style="cursor: pointer;">
+								<i class="fa fa-cogs"></i>&nbsp;General Config
+							</a>
+						</li>
+						<%-- 
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.mail/config" style="cursor: pointer;">
+								<i class="fa fa-inbox"></i>&nbsp;Mail Config
+							</a>
+						</li>
+						--%>
 					</ul>
 				</li>
 				<% } %>

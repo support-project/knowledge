@@ -53,11 +53,11 @@
 	<div class="col-sm-9 col-md-10">
 		<form action="<%= request.getContextPath()%>/protect.account/update" method="post" role="form">
 			<div class="form-group">
-				<label for="userKey">Mail Address</label>
+				<label for="userKey">Mail Address(ログイン時のIDになります/公開されることはありません)</label>
 				<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="${userKey}" />
 			</div>
 			<div class="form-group">
-				<label for="userName">User Name</label>
+				<label for="userName">User Name(このサービスの中で表示される名称です)</label>
 				<input type="text" class="form-control" name="userName" id="userName" placeholder="User Name" value="${userName}" />
 			</div>
 			

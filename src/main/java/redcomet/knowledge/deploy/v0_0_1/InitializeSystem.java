@@ -1,5 +1,6 @@
 package redcomet.knowledge.deploy.v0_0_1;
 
+import redcomet.knowledge.config.SystemConfig;
 import redcomet.knowledge.deploy.Migrate;
 import redcomet.ormapping.tool.dao.InitializeDao;
 import redcomet.web.dao.RolesDao;
@@ -26,13 +27,13 @@ public class InitializeSystem implements Migrate {
 		//権限の追加
 		RolesEntity adminRole = RolesEntity.get();
 		adminRole.setRoleId(1);
-		adminRole.setRoleKey("admin");
+		adminRole.setRoleKey(SystemConfig.ROLE_ADMIN);
 		adminRole.setRoleName("管理者権限");
 		RolesDao.get().insert(adminRole);
 		
 		RolesEntity userRole = RolesEntity.get();
 		userRole.setRoleId(2);
-		userRole.setRoleKey("user");
+		userRole.setRoleKey(SystemConfig.ROLE_USER);
 		userRole.setRoleName("一般ユーザ権限");
 		RolesDao.get().insert(userRole);
 		

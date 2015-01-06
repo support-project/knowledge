@@ -2,6 +2,7 @@ package redcomet.knowledge.config;
 
 
 public class AppConfig extends redcomet.web.config.AppConfig {
+	public static final String SYSTEM_NAME = "knowledge";
 	
 	private String indexPath;
 	

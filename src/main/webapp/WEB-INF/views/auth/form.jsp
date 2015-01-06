@@ -1,3 +1,4 @@
+<%@page import="redcomet.knowledge.logic.SystemConfigLogic"%>
 <%@page import="redcomet.common.util.StringUtils"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -90,6 +91,15 @@ body {
 				<button class="btn btn-lg btn-primary btn-block" type="submit">
 					<i class="fa fa-sign-in"></i>&nbsp;Sign in
 				</button>
+				
+<% if (SystemConfigLogic.get().isUserAddAble()) { %>
+				<br/>
+				<a href="<%= request.getContextPath() %>/open.signup/view" class="btn btn-info btn-block">
+					<i class="fa fa-plus-square"></i>&nbsp;ユーザ新規登録
+				</a>
+<% } %>
+				
+				
 			</form>
 
 		</div>

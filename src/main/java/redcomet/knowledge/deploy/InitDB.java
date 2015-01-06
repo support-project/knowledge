@@ -8,6 +8,7 @@ import redcomet.common.log.Log;
 import redcomet.common.log.LogFactory;
 import redcomet.knowledge.deploy.v0_0_1.InitializeSystem;
 import redcomet.knowledge.deploy.v0_3_0.Migrate_0_3_0;
+import redcomet.knowledge.deploy.v0_3_1.Migrate_0_3_1;
 import redcomet.web.dao.SystemsDao;
 import redcomet.web.entity.SystemsEntity;
 
@@ -16,18 +17,19 @@ public class InitDB {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(InitDB.class);
 	
-	private static final String SYSTEM_NAME = "knowledge";
+	private static final String SYSTEM_NAME = redcomet.knowledge.config.AppConfig.SYSTEM_NAME;
 	private static final Map<String, Migrate> MAP = new LinkedHashMap<>();
 	
 	private static final Migrate INIT = InitializeSystem.get();
-	private static final String CURRENT = "0.3.0";
+	private static final String CURRENT = "0.3.1";
 	
 	public InitDB() {
 		super();
 		// MAP.put("0.0.1", InitializeSystem.get());
 		// MAP.put("0.1.0", Migrate_0_1_0.get());
 		MAP.put("0.2.0", INIT); // 初期公開バージョン
-		MAP.put(CURRENT, Migrate_0_3_0.get());
+		MAP.put("0.3.0", Migrate_0_3_0.get());
+		MAP.put(CURRENT, Migrate_0_3_1.get());
 	}
 
 	public static void main(String[] args) throws Exception {
