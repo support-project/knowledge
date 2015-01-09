@@ -11,15 +11,15 @@
 	</connectionConfig>
 	
 	<entityGenConfig>
-		<entityOutDir>/data/project/red/src/knowledge/src/main/java/redcomet/knowledge/entity</entityOutDir>
-		<entityPackage>redcomet.knowledge.entity</entityPackage>
+		<entityOutDir>/data/project/red/src/knowledge/src/main/</entityOutDir>
+		<entityPackage>org.support.project.knowledge.entity</entityPackage>
 		<entitySuffix>Entity</entitySuffix>
 	</entityGenConfig>
 	
 	
 	<daoGenConfig>
-		<daoOutDir>/data/project/red/src/knowledge/src/main/java/redcomet/knowledge/dao</daoOutDir>
-		<daoPackage>redcomet.knowledge.dao</daoPackage>
+		<daoOutDir>/data/project/red/src/knowledge/src/main/</daoOutDir>
+		<daoPackage>org.support.project.knowledge.dao</daoPackage>
 		<daoSuffix>Dao</daoSuffix>
 		
 		<!-- <rowIdColumn>ROW_ID</rowIdColumn> -->
@@ -33,7 +33,7 @@
 	</daoGenConfig>
 	
 	<initializeConfig>
-		<sqlPaths>/redcomet/knowledge/database/ddl.sql</sqlPaths>
+		<sqlPaths>/org/support/project/knowledge/database/ddl.sql</sqlPaths>
 	</initializeConfig>
 	
 </oRmappingToolConfig>

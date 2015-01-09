@@ -1,4 +1,4 @@
-<%@page import="redcomet.web.util.JspUtil"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -32,7 +32,7 @@
 
 <div class="list-group">
 <c:if test="${empty users}">
-empty
+条件に該当するデータは存在しません。条件（ページ番号）を切り替えてください。
 </c:if>
 
 <c:forEach var="user" items="${users}" varStatus="status">

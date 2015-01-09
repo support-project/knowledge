@@ -1,4 +1,4 @@
-<%@page import="redcomet.web.util.JspUtil"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -21,22 +21,6 @@
 			</a>
 		</div>
 		<div class="navbar-collapse collapse">
-			<%-- 
-			<ul class="nav navbar-nav" id="myTab">
-				<li id="tabHome">
-					<a href="<%= request.getContextPath() %><%= top %>" style="cursor: pointer;">
-						<i class="fa fa-search"></i>&nbsp;Knowledges
-					</a>
-				</li>
-				<li id="tabHome">
-					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add" style="cursor: pointer;">
-						<i class="fa fa-plus-circle"></i>&nbsp;New Knowledge
-					</a>
-				</li>
-			</ul>
-			--%>
-
-
 			<ul class="nav navbar-nav navbar-right">
 				<% if (request.isUserInRole("admin")) { %>
 				<li class="dropdown" id="tabConfig">
@@ -50,19 +34,22 @@
 								<i class="fa fa-users"></i>&nbsp;Users
 							</a>
 						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.users/accept_list" style="cursor: pointer;">
+								<i class="fa fa-gavel"></i>&nbsp;Accept request for add user 
+							</a>
+						</li>
 						<li class="dropdown-header">&nbsp;System Config</li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.config/config" style="cursor: pointer;">
 								<i class="fa fa-cogs"></i>&nbsp;General Config
 							</a>
 						</li>
-						<%-- 
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.mail/config" style="cursor: pointer;">
 								<i class="fa fa-inbox"></i>&nbsp;Mail Config
 							</a>
 						</li>
-						--%>
 					</ul>
 				</li>
 				<% } %>

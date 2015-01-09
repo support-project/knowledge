@@ -1,5 +1,5 @@
-<%@page import="redcomet.web.util.JspUtil"%>
-<%@page import="redcomet.knowledge.control.Control"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
+<%@page import="org.support.project.knowledge.control.Control"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>

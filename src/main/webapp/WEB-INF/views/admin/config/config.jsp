@@ -1,7 +1,7 @@
-<%@page import="redcomet.knowledge.config.SystemConfig"%>
-<%@page import="redcomet.common.config.INT_FLAG"%>
-<%@page import="redcomet.knowledge.vo.Roles"%>
-<%@page import="redcomet.web.util.JspUtil"%>
+<%@page import="org.support.project.knowledge.config.SystemConfig"%>
+<%@page import="org.support.project.common.config.INT_FLAG"%>
+<%@page import="org.support.project.knowledge.vo.Roles"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -37,7 +37,6 @@
 			<i class="fa fa-lock fa-lg"></i>&nbsp;管理者が登録する
 		</label>
 		<br/>
-		<%-- 
 		<label class="radio-inline radio_block">
 			<input type="radio" value="<%= SystemConfig.USER_ADD_TYPE_VALUE_APPROVE %>" name="userAddType" 
 				id="userAddType_approve" <%= jspUtil.checked(SystemConfig.USER_ADD_TYPE_VALUE_APPROVE, "userAddType", false) %>/>
@@ -50,7 +49,6 @@
 			<i class="fa fa-envelope-square fa-lg"></i>&nbsp;ユーザ自身でメールアドレスを登録し、システムから招待のメールを出す（メール送信設定が必要です）
 		</label>
 		<br/>
-		--%>
 		<label class="radio-inline radio_block">
 			<input type="radio" value="<%= SystemConfig.USER_ADD_TYPE_VALUE_USER %>" name="userAddType" 
 				id="userAddType_mail" <%= jspUtil.checked(SystemConfig.USER_ADD_TYPE_VALUE_USER, "userAddType", false) %>/>
@@ -58,7 +56,6 @@
 		</label>
 	</div>
 	
-	<%-- 
 	<div class="form-group">
 		<label for="userAddNotify_off">ユーザ登録の管理者への通知</label><br/>
 		<label class="radio-inline radio_block">
@@ -73,7 +70,6 @@
 			<i class="fa fa-bell-o fa-lg"></i>&nbsp;通知する（承認が必要な場合、仮登録の時点で管理者にメールが届きます。その他の場合、ユーザが登録された場合にメールが届きます）
 		</label>
 	</div>
-	--%>
 	
 	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;登録</button>
 </form>

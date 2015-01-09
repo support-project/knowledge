@@ -1,0 +1,217 @@
+package org.support.project.knowledge.control.open;
+
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import org.support.project.aop.Aspect;
+import org.support.project.common.bean.ValidateError;
+import org.support.project.common.util.StringUtils;
+import org.support.project.common.validate.Validator;
+import org.support.project.common.validate.ValidatorFactory;
+import org.support.project.di.Container;
+import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.SystemConfig;
+import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.logic.MailLogic;
+import org.support.project.knowledge.logic.UserLogic;
+import org.support.project.web.boundary.Boundary;
+import org.support.project.web.common.HttpStatus;
+import org.support.project.web.common.HttpUtil;
+import org.support.project.web.dao.ProvisionalRegistrationsDao;
+import org.support.project.web.dao.SystemConfigsDao;
+import org.support.project.web.dao.UsersDao;
+import org.support.project.web.entity.ProvisionalRegistrationsEntity;
+import org.support.project.web.entity.SystemConfigsEntity;
+import org.support.project.web.entity.UsersEntity;
+import org.support.project.web.logic.AuthenticationLogic;
+import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
+
+public class SignupControl extends Control {
+
+	/**
+	 * ユーザのサインアップ画面を表示
+	 * @return
+	 */
+	public Boundary view() {
+		return forward("signup.jsp");
+	}
+	
+	/**
+	 * 新規登録処理を保存
+	 * @return
+	 */
+	public Boundary save() {
+		SystemConfigsDao systemConfigsDao = SystemConfigsDao.get();
+		SystemConfigsEntity userAddType = systemConfigsDao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+		if (userAddType == null) {
+			// ユーザによるデータの追加は認められていない
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
+		if (userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_ADMIN)) {
+			// ユーザによるデータの追加は認められていない
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
+		
+		List<ValidateError> errors = validate();
+		if (!errors.isEmpty()) {
+			setResult(null, errors);
+			return forward("signup.jsp");
+		}
+		
+		if (userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_USER)) {
+			// ユーザが自分で登録
+			addUser();
+			addMsgInfo("ユーザ登録しました");
+			return redirect(getRequest().getContextPath());
+		} else if (userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_MAIL)) {
+			// 招待メールで登録
+			ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
+			List<ProvisionalRegistrationsEntity> check = dao.selectOnUserKey(getParam("userKey"));
+			if (!check.isEmpty()) {
+				long now = new Date().getTime();
+				for (ProvisionalRegistrationsEntity entity : check) {
+					if (now - entity.getInsertDatetime().getTime() > 1000 * 60 * 60) {
+						// 無効なものなので、削除
+						dao.delete(entity);
+					} else {
+						addMsgWarn("既に登録済です。登録されたメールアドレスに招待のメールを送信していますので、ご確認ください。");
+						return forward("signup.jsp");
+					}
+				}
+			}
+			// 仮登録を行う
+			ProvisionalRegistrationsEntity entity = addProvisionalRegistration();
+			// 招待のメールを送信
+			String url = HttpUtil.getContextUrl(getRequest());
+			MailLogic mailLogic = MailLogic.get();
+			mailLogic.sendInvitation(entity, url);
+			return forward("mail_sended.jsp");
+		} else if (userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_APPROVE)){
+			// 管理者が承認
+			ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
+			List<ProvisionalRegistrationsEntity> check = dao.selectOnUserKey(getParam("userKey"));
+			if (!check.isEmpty()) {
+				addMsgWarn("既に登録済ですが管理者による確認がすんでいません。少々お待ちください。");
+				return forward("signup.jsp");
+			}
+			// 仮登録を行う
+			ProvisionalRegistrationsEntity entity = addProvisionalRegistration();
+			// 管理者へメール通知
+			MailLogic mailLogic = MailLogic.get();
+			mailLogic.sendNotifyAcceptUser(entity);
+
+			return forward("provisional_registration.jsp");
+		}
+		return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+	}
+
+	
+	
+	/**
+	 * 仮登録
+	 * @return 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	private ProvisionalRegistrationsEntity addProvisionalRegistration() {
+		ProvisionalRegistrationsEntity entity = super.getParams(ProvisionalRegistrationsEntity.class);
+		String id = UUID.randomUUID().toString() + "-" + new Date().getTime() + "-" + UUID.randomUUID().toString();
+		entity.setId(id);
+		ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
+		//既に仮登録が行われたユーザ(メールアドレス)でも、再度仮登録できる
+		//ただし、以前の登録は無効にする
+		dao.deleteOnUserKey(entity.getUserKey());
+		//データ登録
+		entity = dao.insert(entity);
+		return entity;
+	}
+	
+	/**
+	 * ユーザ追加
+	 */
+	private void addUser() {
+		// エラーが無い場合のみ登録
+		UsersEntity user = super.getParams(UsersEntity.class);
+		String[] roles = {SystemConfig.ROLE_USER};
+		user = UserLogic.get().insert(user, roles, getLoginedUser());
+		setAttributeOnProperty(user);
+		
+		// 管理者へユーザが追加されたことを通知
+		MailLogic mailLogic = MailLogic.get();
+		mailLogic.sendNotifyAddUser(user);
+
+		// ログイン処理
+		AuthenticationLogic logic = Container.getComp(DefaultAuthenticationLogicImpl.class);
+		logic.setSession(user.getUserKey(), getRequest());
+	}
+	
+	/**
+	 * 入力チェック
+	 * @return
+	 */
+	private List<ValidateError> validate() {
+		List<ValidateError> errors = UsersEntity.get().validate(getParams());
+		if (!StringUtils.isEmpty(getParam("password"))) {
+			if (!getParam("password").equals(getParam("confirm_password", String.class))) {
+				ValidateError error = new ValidateError("PasswordとConfirm Passwordが違っています");
+				errors.add(error);
+			}
+		}
+		UsersDao dao = UsersDao.get();
+		UsersEntity user = dao.selectOnUserKey(getParam("userKey"));
+		if (user != null) {
+			ValidateError error = new ValidateError("既に登録されているEmail Addressです");
+			errors.add(error);
+		}
+		
+		Validator validator = ValidatorFactory.getInstance(Validator.MAIL);
+		ValidateError error = validator.validate(getParam("userKey"), "Email Address");
+		if (error != null) {
+			errors.add(error);
+		}
+		return errors;
+	}
+	
+	
+	/**
+	 * 招待メールからの本登録
+	 * @return
+	 */
+	public Boundary activate() {
+		String id = getPathInfo();
+		if (StringUtils.isEmpty(id)) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
+		if (id.startsWith("/")) {
+			id = id.substring(1);
+		}
+		
+		ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
+		ProvisionalRegistrationsEntity entity = dao.selectOnKey(id);
+		if (entity == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
+		
+		long now = new Date().getTime();
+		if (now - entity.getInsertDatetime().getTime() > 1000 * 60 * 60) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
+		
+		// 仮登録から本登録へ
+		UsersEntity user = UserLogic.get().activate(entity);
+		// 管理者へユーザが追加されたことを通知
+		if (user != null) {
+			MailLogic mailLogic = MailLogic.get();
+			mailLogic.sendNotifyAddUser(user);
+			
+		}
+
+		// ログイン処理
+		AuthenticationLogic logic = Container.getComp(DefaultAuthenticationLogicImpl.class);
+		logic.setSession(entity.getUserKey(), getRequest());
+		
+		addMsgInfo("ユーザ登録が完了しました");
+		return devolution("Index/index");
+	}
+	
+}

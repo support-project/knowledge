@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>redcomet</groupId>
+	<groupId>org.support-project</groupId>
 	<artifactId>knowledge</artifactId>
 	<packaging>war</packaging>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<name>webapp for knowledge</name>
 	<url>https://support-project.org/</url>
 
@@ -15,9 +15,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>redcomet</groupId>
+			<groupId>org.support-project</groupId>
 			<artifactId>web</artifactId>
-			<version>0.3.1</version>
+			<version>0.3.2</version>
 		</dependency>
 
 		<dependency>
@@ -95,8 +95,8 @@
 				<version>3.1</version>
 				<configuration>
 					<encoding>UTF-8</encoding>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
@@ -114,11 +114,11 @@
 	
 	<distributionManagement>
 		<repository>
-			<id>redcomet-releases</id>
+			<id>org.support.project-releases</id>
 			<url>https://support-project.org/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
-			<id>redcomet-snapshots</id>
+			<id>org.support.project-snapshots</id>
 			<url>https://support-project.org/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>

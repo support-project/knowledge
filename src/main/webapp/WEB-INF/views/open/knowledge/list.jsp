@@ -1,5 +1,5 @@
-<%@page import="redcomet.knowledge.logic.KnowledgeLogic"%>
-<%@page import="redcomet.web.util.JspUtil"%>
+<%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -60,7 +60,7 @@
 		<div class="row">
 			<div class="col-sm-12 col-md-8">
 			<c:if test="${empty knowledges}">
-			empty
+			条件に該当する情報は存在しませんでした。条件（検索キーワード、タグ、ページきりかえ）の変更をお試しください。
 			</c:if>
 			
 			<c:forEach var="knowledge" items="${knowledges}" varStatus="status">

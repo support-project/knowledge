@@ -26,49 +26,30 @@
 		<level value="INFO" />
 	</category>
 	
-	<category name="redcomet.common">
+	<category name="org.support.project.common">
 		<level value="INFO" />
 	</category>
-	<category name="redcomet.aop">
+	<category name="org.support.project.aop">
 		<level value="INFO" />
 	</category>
-	<category name="redcomet.di">
+	<category name="org.support.project.di">
 		<level value="INFO" />
 	</category>
-	<category name="redcomet.ormapping">
+	<category name="org.support.project.ormapping">
 		<level value="INFO" />
 	</category>
-	<category name="redcomet.ormapping.common.ResultSetLoader">
+	<category name="org.support.project.ormapping.common.ResultSetLoader">
 		<level value="INFO" />
 	</category>
-	<category name="redcomet.web">
+	<category name="org.support.project.ormapping.transaction">
+		<level value="DEBUG" />
+	</category>
+	<category name="org.support.project.ormapping.dao">
+		<level value="DEBUG" />
+	</category>
+	<category name="org.support.project.web">
 		<level value="INFO" />
 	</category>
-	
-	<!-- 
-	<category name="redcomet.web.filter">
-		<level value="INFO" />
-	</category>
-	<category name="redcomet.web.filter.LoggingFilter">
-		<level value="INFO" />
-	</category>
-	<category name="redcomet.web.filter.AuthenticationFilter">
-		<level value="INFO" />
-	</category>
-	<category name="redcomet.web.filter.ControlManagerFilter">
-		<level value="INFO" />
-	</category>
-	<category name="redcomet.web.common">
-		<level value="INFO" />
-	</category>
-	<category name="redcomet.web.control">
-		<level value="INFO" />
-	</category>
-	<category name="redcomet.web.boundary">
-		<level value="INFO" />
-	</category>
-	-->
-
 	
 	<!-- Root Logger: Other -->
 	<root>
@@ -78,23 +59,3 @@
 
 </log4j:configuration>
 
-
-
-	<!--
-		レイアウトパターン 概要 
-		%c カテゴリー名。 %c{1} と記述した場合、一番「下の」 レベルのみ出力できる。
-		  「sample.pg.LoggerSample」の場合、「LoggerSample」となる。 
-		%C ログを生成したクラス名。カテゴリ名では無くクラス名。 %C{1} と記述した場合、一番「下の」 レベルのみ出力できる。
-		  「sample.pg.LoggerSample」の場合、「LoggerSample」となる。 
-		%d 日付。 %d{yyyy-MMM-dd HH:mm:ss,SSS} の様に詳細に指定できる。 
-		%l %F、%L、%Mを纏めた情報。※性能に問題あり。 
-		%F ログを生成したソースファイル名。※性能に問題あり 
-		%L ログを生成した箇所のソースの行番号。※性能に問題あり 
-		%M ログを生成したメソッドの名前。※性能に問題あり 
-		%m ログメッセージ %x NDC でpushした値 
-		%X{key} MDC に保存されたkey の値 
-		%n 改行コードを生成する。 
-		%p ログレベル（FATALやINFOなど） 
-		%r アプリケーションが開始してからの通算時間（ミリ秒） 
-		%t ログを生成したスレッド名
-	-->

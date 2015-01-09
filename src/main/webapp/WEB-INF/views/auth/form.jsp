@@ -1,5 +1,5 @@
-<%@page import="redcomet.knowledge.logic.SystemConfigLogic"%>
-<%@page import="redcomet.common.util.StringUtils"%>
+<%@page import="org.support.project.knowledge.logic.SystemConfigLogic"%>
+<%@page import="org.support.project.common.util.StringUtils"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>

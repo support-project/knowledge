@@ -44,7 +44,7 @@ var withdrawalFromKnowledge = function() {
 	</div>
 	
 	<div class="form-group">
-	<button type="button" class="btn btn-danger" onclick="withdrawalFromKnowledge();"><i class="fa fa-save"></i>&nbsp;更新</button>
+	<button type="button" class="btn btn-danger" onclick="withdrawalFromKnowledge();"><i class="fa fa-save"></i>&nbsp;退会する（取り消せません）</button>
 	<a href="<%= request.getContextPath() %>/protect.account"
 	class="btn btn-warning" role="button"><i class="fa fa-undo"></i>&nbsp;キャンセル</a>
 	</div>
