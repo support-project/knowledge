@@ -79,19 +79,19 @@
 						<p class="insert_info">
 						<img src="<%= request.getContextPath()%>/images/loader.gif" 
 							data-echo="<%= request.getContextPath()%>/open.account/icon/${knowledge.insertUser}" 
-							alt="icon" width="32" height="32" />
+							alt="icon" width="36" height="36" style="float:left"/>
 						<i class="fa fa-user"></i>&nbsp;${knowledge.insertUserName}
-						&nbsp;&nbsp;&nbsp;
-						<i class="fa fa-thumbs-o-up"></i>&nbsp;× <span id="like_count">${knowledge.likeCount}</span>
-						&nbsp;&nbsp;&nbsp;
-						
-						<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("knowledge.updateDatetime")%>
 						&nbsp;&nbsp;&nbsp;
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "knowledge.publicFlag", 
 								"<i class=\"fa fa-globe\"></i>&nbsp;[公開]") %>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "knowledge.publicFlag", 
 								"<i class=\"fa fa-lock\"></i>&nbsp;[非公開]") %>
+						<br/>
+						<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("knowledge.updateDatetime")%>
+						&nbsp;&nbsp;&nbsp;
+						<i class="fa fa-thumbs-o-up"></i>&nbsp;× <span id="like_count">${knowledge.likeCount}</span>
 						</p>
+						<p style="clear:left;">
 						
 						<p style="word-break:break-all" class="content">
 						<%-- <c:out value="${knowledge.content}"></c:out>--%>
@@ -114,13 +114,18 @@
 				</a>
 			</c:forEach>
 			</div>
+			<div style="width: 100%;text-align: right;">
+				<a href="<%= request.getContextPath() %>/open.tag/list">
+					<i class="fa fa-tags"></i>&nbsp;タグ一覧
+				</a>&nbsp;&nbsp;&nbsp;
+			</div>
 			
 			<h5>- History - </h5>
 			<div class="list-group">
 			<c:forEach var="history" items="${histories}">
 				<a href="<%= request.getContextPath() %>/open.knowledge/view/${history.knowledgeId}?offset=${offset}&keyword=<%= jspUtil.out("keyword") %>" 
 				class="list-group-item">
-					<h5 class="list-group-item-heading"><i class="fa fa-history"></i>&nbsp;${history.title}</h5>
+					<h5 class="list-group-item-heading"><i class="fa fa-history"></i>&nbsp;[${history.knowledgeId}]&nbsp;${history.title}</h5>
 					<p class="list-group-item-text">${history.content}</p>
 				</a>
 			</c:forEach>

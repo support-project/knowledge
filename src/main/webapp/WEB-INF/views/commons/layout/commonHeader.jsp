@@ -12,6 +12,7 @@
 
 <meta http-equiv="expires" content="0" />
 <meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-cache">
 
 <meta content="Knowledge - フリーの情報共有サービス" name="title">
 <meta content="Knowledgeは無料で利用できる情報共有の仕組みです。" name="description">

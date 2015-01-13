@@ -85,13 +85,19 @@ public class AddSampleKnowledge {
 		String tags = "";
 		if (count % 5 == 0) {
 			entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
-			tags = "テスト";
+			tags = "テスト,サンプル1,データ"+count;
+		} else if (count % 9 == 0) {
+			entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
+			tags = "サンプル,タグ2,データ"+count;
+		} else if (count % 13 == 0) {
+			entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
+			tags = "サンプル,タグ3,タグ4,テスト,データ"+count;
 		} else if (count % 7 == 0) {
 			entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
-			tags = "サンプルデータ,タグ1";
+			tags = "サンプルデータ,タグ1,データ"+count;
 		} else if (count % 8 == 0) {
 			entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
-			tags = "テスト,サンプルデータ,タグ1,タグ2";
+			tags = "テスト,サンプルデータ,テスト1,タグ2,データ"+count;
 		} else {
 			entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
 		}

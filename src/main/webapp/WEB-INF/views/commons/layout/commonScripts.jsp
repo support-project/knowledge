@@ -22,7 +22,20 @@
 <script type="text/javascript">
 var _CONTEXT = '<%= request.getContextPath() %>';
 
-function setCookie(c_name, value, expiredays) {
+var getCookies = function() {
+    var result = new Array();
+    var allcookies = document.cookie;
+    if( allcookies != '' ) {
+        var cookies = allcookies.split( '; ' );
+        for( var i = 0; i < cookies.length; i++ ) {
+            var cookie = cookies[ i ].split( '=' );
+            result[ cookie[ 0 ] ] = decodeURIComponent( cookie[ 1 ] );
+        }
+    }
+    return result;
+}
+
+var setCookie = function(c_name, value, expiredays, path) {
 //	var path = location.pathname;
 //	var paths = new Array();
 //	paths = path.split("/");
@@ -34,14 +47,17 @@ function setCookie(c_name, value, expiredays) {
 	var extime = new Date().getTime();
 	var cltime = new Date(extime + (60 * 60 * 24 * 1000 * expiredays));
 	var exdate = cltime.toUTCString();
-	var s = "";
-	s += c_name + "=" + escape(value);
-	s += "; path=" + _CONTEXT;
+	var s = '';
+	s += c_name + '=' + escape(value) + ';';
 	if (expiredays) {
-		s += "; expires=" + exdate + "; ";
-	} else {
-		s += "; ";
+		s += ' expires=' + exdate + ';';
 	}
+	if (path) {
+		s += ' path=' + path + ';';
+	} else {
+		s += ' path=' + _CONTEXT + ';';
+	}
+	
 	document.cookie = s;
 }
 setCookie('<%= JspUtil.TIME_ZONE_OFFSET %>', (new Date()).getTimezoneOffset(), 60);

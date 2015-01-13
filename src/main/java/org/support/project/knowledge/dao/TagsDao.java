@@ -8,6 +8,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenTagsDao;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.ormapping.common.SQLManager;
+import org.support.project.web.bean.LoginedUser;
 
 /**
  * タグ
@@ -94,6 +95,28 @@ public class TagsDao extends GenTagsDao {
 	public List<TagsEntity> selectTagsWithCountOnUser(int userid, int offset, int limit) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectTagsWithCountOnUser.sql");
 		return executeQuery(sql, TagsEntity.class, userid, limit, offset);
+	}
+	
+	/**
+	 * タグの一覧と、それに紐づくナレッジの件数を取得
+	 * @param offset
+	 * @param loginedUser
+	 * @return
+	 */
+	public List<TagsEntity> selectWithKnowledgeCount(int userId, int offset, int limit) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectWithKnowledgeCount.sql");
+		return executeQuery(sql, TagsEntity.class, userId, limit, offset);
+	}
+	/**
+	 * タグの一覧と、それに紐づくナレッジの件数を取得
+	 * 管理者用で、ナレッジにアクセス可能かのアクセス権限チェックはしない
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	public List<TagsEntity> selectWithKnowledgeCountAdmin(int offset, int limit) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectWithKnowledgeCountAdmin.sql");
+		return executeQuery(sql, TagsEntity.class, limit, offset);
 	}
 
 }

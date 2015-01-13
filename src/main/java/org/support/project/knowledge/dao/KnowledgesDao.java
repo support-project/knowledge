@@ -53,7 +53,8 @@ public class KnowledgesDao extends GenKnowledgesDao {
 	
 	
 	public List<KnowledgesEntity> selectKnowledge(int offset, int limit, Integer userId) {
-		String sql = "SELECT * FROM KNOWLEDGES WHERE DELETE_FLAG = 0 ORDER BY UPDATE_DATETIME DESC Limit ? offset ?;";
+		// String sql = "SELECT * FROM KNOWLEDGES WHERE DELETE_FLAG = 0 ORDER BY UPDATE_DATETIME DESC Limit ? offset ?;";
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectKnowledgeWithUserName.sql");
 		return executeQuery(sql, KnowledgesEntity.class, limit, offset);
 	}
 

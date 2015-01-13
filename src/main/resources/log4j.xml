@@ -51,9 +51,17 @@
 		<level value="INFO" />
 	</category>
 	
+	<category name="org.support.project.knowledge.bat">
+		<level value="INFO" />
+	</category>
+	<category name="org.support.project.knowledge.listener">
+		<level value="INFO" />
+	</category>
+	
+	
 	<!-- Root Logger: Other -->
 	<root>
-		<priority value="INFO" />
+		<priority value="DEBUG" />
 		<appender-ref ref="APP_STDOUT" />
 	</root>
 

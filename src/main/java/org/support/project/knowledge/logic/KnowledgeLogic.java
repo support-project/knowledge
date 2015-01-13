@@ -453,12 +453,29 @@ public class KnowledgeLogic {
 		//List<KnowledgesEntity> knowledgesEntities = knowledgesDao.selectKnowledges(knowledgeIds);
 		//アクセス権を考慮して取得
 		List<KnowledgesEntity> knowledgesEntities = new ArrayList<>();
+		List<String> addSuccess = new ArrayList<String>();
+		List<String> addFail = new ArrayList<String>();
 		for (Long integer : knowledgeIds) {
 			KnowledgesEntity entity = select(integer, loginedUser);
 			if (entity != null) {
+				addSuccess.add(integer.toString());
 				knowledgesEntities.add(entity);
+			} else {
+				addFail.add(integer.toString());
 			}
 		}
+		if (addSuccess.isEmpty()) {
+			LOG.debug("History: add success. [Empty]");
+		} else {
+			LOG.debug("History: add success. " + String.join(",", addSuccess.toArray(new String[0])));
+		}
+		
+		if (addFail.isEmpty()) {
+			LOG.debug("History: add fail. [Empty]");
+		} else {
+			LOG.debug("History: add fail. " + String.join(",", addFail.toArray(new String[0])));
+		}
+		
 		return knowledgesEntities;
 	}
 
