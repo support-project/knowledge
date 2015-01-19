@@ -31,6 +31,10 @@ public class SearchingValue {
 	/** 読み出し件数 */
 	private int limit = LIMIT;
 	
+	/** 作成者 */
+	private Integer creator;
+	
+	
 	/**
 	 * コンストラクタ
 	 */
@@ -162,6 +166,24 @@ public class SearchingValue {
 	public void setLimit(int limit) {
 		this.limit = limit;
 	}
+
+	/**
+	 * @return the creator
+	 */
+	public String getCreator() {
+		if (creator != null) {
+			return StringUtils.zeroPadding(creator, ID_ZEROPADDING_DIGIT);
+		}
+		return "";
+	}
+
+	/**
+	 * @param creator the creator to set
+	 */
+	public void setCreator(Integer creator) {
+		this.creator = creator;
+	}
+
 
 
 	

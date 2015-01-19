@@ -109,9 +109,9 @@
 	
 	<button type="button" class="btn btn-danger" onclick="deleteKnowledge();"><i class="fa fa-remove"></i>&nbsp;削除</button>
 	
-	<a href="<%= request.getContextPath() %>/open.knowledge/view/${knowledgeId}?offset=${offset}&keyword=${keyword}&tag=${tag}"
+	<a href="<%= request.getContextPath() %>/open.knowledge/view/${knowledgeId}?offset=${offset}&keyword=${keyword}&tag=${tag}&user=${user}"
 	class="btn btn-warning" role="button"><i class="fa fa-undo"></i>&nbsp;キャンセル</a>
-	<a href="<%= request.getContextPath() %>/open.knowledge/list/${offset}?keyword=${keyword}&tag=${tag}"
+	<a href="<%= request.getContextPath() %>/open.knowledge/list/${offset}?keyword=${keyword}&tag=${tag}&user=${user}"
 	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;一覧へ戻る</a>
 	
 </form>

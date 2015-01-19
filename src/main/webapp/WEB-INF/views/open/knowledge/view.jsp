@@ -49,15 +49,17 @@
 					<p class="insert_info">
 						<img src="<%= request.getContextPath()%>/images/loader.gif" 
 							data-echo="<%= request.getContextPath()%>/open.account/icon/${insertUser}" 
-							alt="icon" width="32" height="32" />
+							alt="icon" width="36" height="36" style="float:left" />
+						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=${insertUser}">
 						<i class="fa fa-user"></i>&nbsp;${insertUserName}
-						&nbsp;&nbsp;&nbsp;
-						<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
+						</a>
 						&nbsp;&nbsp;&nbsp;
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag", 
 								"<i class=\"fa fa-globe\"></i>&nbsp;[公開]") %>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", 
 								"<i class=\"fa fa-lock\"></i>&nbsp;[非公開]") %>
+						<br/>
+						<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
 					</p>
 					
 					<c:forEach var="file" items="${files}" >
@@ -80,19 +82,19 @@
 	<% if (request.getRemoteUser() != null) { 
 		if (request.isUserInRole("admin") 
 			|| jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
-		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/${knowledgeId}?offset=${offset}&keyword=${keyword}&tag=${tag}"
+		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/${knowledgeId}?offset=${offset}&keyword=${keyword}&tag=${tag}&user=${user}"
 		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
 		編集
 		</a>
 	<%	} %>
 	<% } else { %>
-		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/${knowledgeId}?offset=${offset}&keyword=${keyword}&tag=${tag}"
+		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/${knowledgeId}?offset=${offset}&keyword=${keyword}&tag=${tag}&user=${user}"
 		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
 		編集(サインイン)
 		</a>
 	<% } %>
 
-	<a href="<%= request.getContextPath() %>/open.knowledge/list/${offset}?keyword=${keyword}&tag=${tag}"
+	<a href="<%= request.getContextPath() %>/open.knowledge/list/${offset}?keyword=${keyword}&tag=${tag}&user=${user}"
 	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;一覧へ戻る</a>
 	
 	<hr/>

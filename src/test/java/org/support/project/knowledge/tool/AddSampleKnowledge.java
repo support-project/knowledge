@@ -18,6 +18,7 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.RolesDao;
 import org.support.project.web.dao.UsersDao;
@@ -58,7 +59,12 @@ public class AddSampleKnowledge {
 			String line;
 			while ((line = br.readLine()) != null) {
 				if (StringUtils.isNotEmpty(line)) {
-					addSample(line);
+					String[] sp = line.split("。");
+					StringBuilder builder = new StringBuilder();
+					for (int i = 0; i < sp.length; i++) {
+						builder.append("- ").append(sp[i]).append("\n");
+					}
+					addSample(builder.toString());
 				}
 			}
 		} finally {
@@ -72,6 +78,8 @@ public class AddSampleKnowledge {
 	private void addSample(String line) throws Exception {
 		//UsersEntity usersEntity = usersDao.selectOnUserKey(userKey);
 		UsersEntity usersEntity = users.get(RandomUtil.randamNum(1, users.size() - 2));
+		DBUserPool.get().setUser(usersEntity.getUserId());
+		
 		RolesDao rolesDao = RolesDao.get();
 		List<RolesEntity> rolesEntities = rolesDao.selectOnUserKey(usersEntity.getUserKey());
 		

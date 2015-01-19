@@ -37,20 +37,38 @@
 		</div>
 	</c:if>
 
+	<c:if test="${!empty selectedUser}">
+		<div class="row">
+			<div class="col-sm-12 selected_tag">
+			<a class="text-primary" 
+				href="<%= request.getContextPath() %>/open.knowledge/list?user=${selectedUser.userId}" >
+					<i class="fa fa-user"></i>&nbsp;${selectedUser.userName}
+			</a>
+			<a class="text-primary" 
+				href="<%= request.getContextPath() %>/open.knowledge/list" >
+					<i class="fa fa-times-circle"></i>&nbsp;
+			</a>
+			</div>
+		</div>
+	</c:if>
+
+
+
+
 		<nav>
 			<ul class="pager">
 				<li class="previous">
-					<a href="<%= request.getContextPath() %>/open.knowledge/list/${previous}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}">
+					<a href="<%= request.getContextPath() %>/open.knowledge/list/${previous}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}">
 						<span aria-hidden="true">&larr;</span>Previous
 					</a>
 				</li>
 				<li>
-					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add?offset=${offset}&keyword=<%= jspUtil.out("keyword") %>&tag=${tag}" style="cursor: pointer;">
+					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add?offset=${offset}&keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}" style="cursor: pointer;">
 						<i class="fa fa-plus-circle"></i>&nbsp;New Knowledge
 					</a>
 				</li>
 				<li class="next">
-					<a href="<%= request.getContextPath() %>/open.knowledge/list/${next}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}">
+					<a href="<%= request.getContextPath() %>/open.knowledge/list/${next}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}">
 						Next <span aria-hidden="true">&rarr;</span>
 					</a>
 				</li>
@@ -65,7 +83,7 @@
 			
 			<c:forEach var="knowledge" items="${knowledges}" varStatus="status">
 				<div class="thumbnail" 
-					onclick="showKnowledge('<%= request.getContextPath() %>/open.knowledge/view/${knowledge.knowledgeId}', '${offset}', '<%= jspUtil.out("keyword") %>', '${tag}');">
+					onclick="showKnowledge('<%= request.getContextPath() %>/open.knowledge/view/${knowledge.knowledgeId}', '${offset}', '<%= jspUtil.out("keyword") %>', '${tag}', '${user}');">
 					<div class="discription"><i class="fa fa-check-square-o"></i>&nbsp;show!</div>
 					<div class="caption">
 						<h4>[${knowledge.knowledgeId}]&nbsp;${knowledge.title}</h4>
@@ -103,7 +121,33 @@
 			</div>
 			
 			<div class="col-sm-12 col-md-4">
-			<h5>- Popular Tags - </h5>
+			<h5>- <i class="fa fa-bolt"></i>&nbsp;Menu - </h5>
+			<div class="list-group">
+				<a class="list-group-item " 
+				href="<%= request.getContextPath() %>/open.knowledge/list" >
+					<i class="fa fa-list-alt"></i>&nbsp;All Knowledges
+				</a>
+				<% if (!"".equals(jspUtil.id())) { %>
+				<a class="list-group-item " 
+				href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.id() %>" >
+					<i class="fa fa-male"></i>&nbsp;My Knowledges
+				</a>
+				<% } %>
+				<a class="list-group-item " 
+				href="<%= request.getContextPath() %>/open.knowledge/search" >
+					<i class="glyphicon glyphicon-search"></i>&nbsp;Search Knowledges
+				</a>
+				<a class="list-group-item " 
+					href="<%= request.getContextPath() %>/protect.knowledge/view_add?offset=${offset}&keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}" 
+					style="cursor: pointer;">
+					<i class="fa fa-plus-circle"></i>&nbsp;New Knowledge
+				</a>
+				
+				
+			</div>
+			<br/>
+			
+			<h5>- <i class="fa fa-tags"></i>&nbsp;Popular Tags - </h5>
 			
 			<div class="list-group">
 			<c:forEach var="tag" items="${tags}">
@@ -120,7 +164,7 @@
 				</a>&nbsp;&nbsp;&nbsp;
 			</div>
 			
-			<h5>- History - </h5>
+			<h5>- <i class="fa fa-history"></i>&nbsp;History - </h5>
 			<div class="list-group">
 			<c:forEach var="history" items="${histories}">
 				<a href="<%= request.getContextPath() %>/open.knowledge/view/${history.knowledgeId}?offset=${offset}&keyword=<%= jspUtil.out("keyword") %>" 
@@ -145,17 +189,17 @@
 		<nav>
 			<ul class="pager">
 				<li class="previous">
-					<a href="<%= request.getContextPath() %>/open.knowledge/list/${previous}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}">
+					<a href="<%= request.getContextPath() %>/open.knowledge/list/${previous}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}">
 						<span aria-hidden="true">&larr;</span>Previous
 					</a>
 				</li>
 				<li>
-					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add?offset=${offset}&keyword=<%= jspUtil.out("keyword") %>&tag=${tag}" style="cursor: pointer;">
+					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add?offset=${offset}&keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}" style="cursor: pointer;">
 						<i class="fa fa-plus-circle"></i>&nbsp;New Knowledge
 					</a>
 				</li>
 				<li class="next">
-					<a href="<%= request.getContextPath() %>/open.knowledge/list/${next}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}">
+					<a href="<%= request.getContextPath() %>/open.knowledge/list/${next}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}">
 						Next <span aria-hidden="true">&rarr;</span>
 					</a>
 				</li>

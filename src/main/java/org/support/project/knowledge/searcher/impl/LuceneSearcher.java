@@ -188,6 +188,12 @@ public class LuceneSearcher implements Searcher {
 			Query query = queryParser.parse(value.getGroups());
 			container.add(query, BooleanClause.Occur.MUST);
 		}
+		if (StringUtils.isNotEmpty(value.getCreator())) {
+			QueryParser queryParser = new QueryParser(Version.LUCENE_4_10_2, FIELD_LABEL_CREATE_USER, analyzer);
+			queryParser.setDefaultOperator(Operator.OR);
+			Query query = queryParser.parse(value.getCreator());
+			container.add(query, BooleanClause.Occur.MUST);
+		}
 		return container;
 	}
 

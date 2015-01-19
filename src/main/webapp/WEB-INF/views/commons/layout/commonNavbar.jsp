@@ -17,7 +17,7 @@
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="<%= request.getContextPath() %><%= top %>" style="cursor: pointer;">
-				<i class="fa fa-book"></i>&nbsp;Knowledge
+				<i class="fa fa-book"></i>&nbsp;Knowledge <span style="font-size: 8pt;">0.3.4</span>
 			</a>
 		</div>
 		<div class="navbar-collapse collapse">
@@ -65,6 +65,12 @@
 								<i class="fa fa-smile-o"></i>&nbsp;My Account
 							</a>
 						</li>
+						<li>
+							<a href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.id() %>" >
+								<i class="fa fa-male"></i>&nbsp;My Knowledges
+							</a>
+						</li>
+						
 						<li class="divider"></li>
 						<li id="tabLogout">
 							<a href="<%= request.getContextPath() %>/signout" style="cursor: pointer;">

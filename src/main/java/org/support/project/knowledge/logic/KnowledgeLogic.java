@@ -2,6 +2,7 @@ package org.support.project.knowledge.logic;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -292,6 +293,42 @@ public class KnowledgeLogic {
 	}
 	
 	/**
+	 * 指定ユーザのナレッジを取得
+	 * @param userId
+	 * @param loginedUser
+	 * @param i
+	 * @param pageLimit
+	 * @return
+	 * @throws Exception 
+	 */
+	public Collection<? extends KnowledgesEntity> showKnowledgeOnUser(int targetUser, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+		SearchingValue searchingValue = new SearchingValue();
+		searchingValue.setOffset(offset);
+		searchingValue.setLimit(limit);
+		
+		if (loginedUser != null && loginedUser.isAdmin()) {
+			//管理者の場合、ユーザのアクセス権を考慮しない
+			
+		} else {
+			searchingValue.addUser(ALL_USER);
+			Integer userId = null;
+			if (loginedUser != null) {
+				userId = loginedUser.getLoginUser().getUserId();
+				searchingValue.addUser(userId);
+			}
+		}
+		searchingValue.setCreator(targetUser);
+		
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("search params：" + PropertyUtil.reflectionToString(searchingValue));
+		}
+		List<SearchResultValue> list = IndexLogic.get().search(searchingValue);
+		
+		return getKnowledgeDatas(list);
+	}
+	
+	
+	/**
 	 * 全文検索エンジンの結果を元に、DBからデータを取得し、
 	 * さらにアクセス権のチェックなどを行う
 	 * @param list
@@ -545,7 +582,13 @@ public class KnowledgeLogic {
 		}
 		historiesDao.insert(historiesEntity);
 	}
-
+	
+	/**
+	 * いいね！を追加
+	 * @param knowledgeId
+	 * @param loginedUser
+	 * @return
+	 */
 	public Long addLike(Long knowledgeId, LoginedUser loginedUser) {
 		LikesDao likesDao = LikesDao.get();
 		LikesEntity likesEntity = new LikesEntity();
@@ -555,5 +598,6 @@ public class KnowledgeLogic {
 		Long count = likesDao.countOnKnowledgeId(knowledgeId);
 		return count;
 	}
+
 
 }

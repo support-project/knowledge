@@ -23,7 +23,7 @@ $(document).ready(function() {
 	echo.init();
 });
 
-var showKnowledge = function(url, offset, keyword, tag) {
+var showKnowledge = function(url, offset, keyword, tag, user) {
 	var param = '';
 	if (offset) {
 		param += '?offset=' + offset;
@@ -42,6 +42,14 @@ var showKnowledge = function(url, offset, keyword, tag) {
 			param += '?tag=' + tag;
 		}
 	}
+	if (user) {
+		if (param.length > 0) {
+			param += '&user=' + user;
+		} else {
+			param += '?user=' + user;
+		}
+	}
+	
 	url += param;
 	document.location.href = url;
 };

@@ -25,6 +25,8 @@ import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
+import org.support.project.web.dao.UsersDao;
+import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
@@ -122,6 +124,8 @@ public class KnowledgeControl extends Control {
 		LoginedUser loginedUser = super.getLoginedUser();
 		String keyword = getParam("keyword");
 		String tag = getParam("tag");
+		String user = getParam("user");
+		
 		
 		List<KnowledgesEntity> knowledges = new ArrayList<>();
 		
@@ -131,6 +135,14 @@ public class KnowledgeControl extends Control {
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
 			setAttribute("selectedTag", tagsEntity);
+		} else if (StringUtils.isNotEmpty(user) && StringUtils.isInteger(user)) {
+			// ユーザを選択している
+			LOG.trace("show on User");
+			int userId = Integer.parseInt(user);
+			knowledges.addAll(knowledgeLogic.showKnowledgeOnUser(userId, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+			UsersEntity usersEntity = UsersDao.get().selectOnKey(userId);
+			usersEntity.setPassword("");
+			setAttribute("selectedUser", usersEntity);
 		} else {
 			// その他
 			LOG.trace("search");
@@ -216,8 +228,13 @@ public class KnowledgeControl extends Control {
 		return super.send(entity);
 	}
 	
-	
-	
+	/**
+	 * 検索画面を表示
+	 * @return
+	 */
+	public Boundary search() {
+		return forward("search.jsp");
+	}
 }
 
 

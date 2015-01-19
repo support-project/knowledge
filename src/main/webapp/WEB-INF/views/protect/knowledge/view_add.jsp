@@ -108,7 +108,7 @@
 
 	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;登録</button>
 	<button type="button" class="btn btn-info" onclick="preview();"><i class="fa fa-play-circle"></i>&nbsp;プレビュー</button>
-	<a href="<%= request.getContextPath() %>/open.knowledge/list/${offset}?keyword=${keyword}&tag=${tag}"
+	<a href="<%= request.getContextPath() %>/open.knowledge/list/${offset}?keyword=${keyword}&tag=${tag}&user=${user}"
 	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;一覧へ戻る</a>
 
 </form>
