@@ -21,11 +21,17 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view.js"></script>
+
+<script>
+var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
+</script>
+
 </c:param>
 
 
 
 <c:param name="PARAM_CONTENT">
+<h4 class="title"><%= jspUtil.label("knowledge.view.title") %></h4>
 
 	<div class="row">
 		<div class="col-sm-12">
@@ -43,7 +49,8 @@
 					
 					<p>
 						<button class="btn btn-link" onclick="addlike(${knowledgeId});">
-							<i class="fa fa-thumbs-o-up"></i>&nbsp;参考になった！ × <span id="like_count">${like_count}</span>
+							<i class="fa fa-thumbs-o-up"></i>&nbsp;
+							<%= jspUtil.label("knowledge.view.like") %> × <span id="like_count">${like_count}</span>
 						</button>
 					</p>
 					<p class="insert_info">
@@ -55,9 +62,11 @@
 						</a>
 						&nbsp;&nbsp;&nbsp;
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag", 
-								"<i class=\"fa fa-globe\"></i>&nbsp;[公開]") %>
+								jspUtil.label("label.public.view")) %>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", 
-								"<i class=\"fa fa-lock\"></i>&nbsp;[非公開]") %>
+								jspUtil.label("label.private.view")) %>
+						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag", 
+								jspUtil.label("label.protect.view")) %>
 						<br/>
 						<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
 					</p>
@@ -84,18 +93,18 @@
 			|| jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
 		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/${knowledgeId}?offset=${offset}&keyword=${keyword}&tag=${tag}&user=${user}"
 		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
-		編集
+		<%= jspUtil.label("label.edit") %>
 		</a>
 	<%	} %>
 	<% } else { %>
 		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/${knowledgeId}?offset=${offset}&keyword=${keyword}&tag=${tag}&user=${user}"
 		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
-		編集(サインイン)
+		<%= jspUtil.label("knowledge.view.edit.with.login") %>
 		</a>
 	<% } %>
 
 	<a href="<%= request.getContextPath() %>/open.knowledge/list/${offset}?keyword=${keyword}&tag=${tag}&user=${user}"
-	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;一覧へ戻る</a>
+	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
 	
 	<hr/>
 	<h5><i class="fa fa-comments-o"></i>&nbsp;Comment</h5>
@@ -142,11 +151,11 @@
 	<% if (request.getRemoteUser() != null) { %>
 		<form action="<%= request.getContextPath()%>/protect.knowledge/comment/${knowledgeId}" method="post" role="form">
 		<textarea class="form-control" name="comment" rows="1" placeholder="Comment" id="comment"></textarea>
-		<button type="submit" class="btn btn-primary"><i class="fa fa-comment-o"></i>&nbsp;コメントを追加</button>
+		<button type="submit" class="btn btn-primary"><i class="fa fa-comment-o"></i>&nbsp;<%= jspUtil.label("knowledge.view.comment") %></button>
 		</form>
 	<% } else { %>
 		<form action="<%= request.getContextPath()%>/protect.knowledge/view/${knowledgeId}" method="get" role="form">
-		<button type="submit" class="btn btn-primary"><i class="fa fa-comment-o"></i>&nbsp;コメントを追加(サインイン)</button>
+		<button type="submit" class="btn btn-primary"><i class="fa fa-comment-o"></i>&nbsp;<%= jspUtil.label("knowledge.view.comment.with.login") %></button>
 		</form>
 	<% } %>
 	

@@ -14,6 +14,7 @@ import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.RandomUtil;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.tool.dao.InitializeDao;
@@ -184,6 +185,7 @@ public class AddSampleDatas {
 					groupsEntity.setGroupKey("GROUP" + groupsEntity.getGroupId());
 					groupsEntity.setGroupName(line);
 					groupsEntity.setDescription("グループサンプル " + groupsEntity.getGroupId());
+					groupsEntity.setGroupClass(RandomUtil.randamNum(0, 3));
 					groupsDao.save(groupsEntity);
 					
 					//グループとユーザのひも付

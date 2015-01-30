@@ -1,3 +1,4 @@
+<%@page import="org.support.project.web.util.JspUtil"%>
 <%@page import="org.support.project.knowledge.logic.SystemConfigLogic"%>
 <%@page import="org.support.project.common.util.StringUtils"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false"%>
@@ -5,106 +6,85 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<% JspUtil jspUtil = new JspUtil(request, pageContext); %>
+
 
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
-<style>
-body {
-	padding-top: 70px;
-	padding-bottom: 40px;
-	background-color: #eee;
-}
-
-.form-signin {
-	max-width: 330px;
-	padding: 15px;
-	margin: 0 auto;
-}
-
-.form-signin .form-signin-heading,.form-signin .checkbox {
-	margin-bottom: 10px;
-}
-
-.form-signin .checkbox {
-	font-weight: normal;
-}
-
-.form-signin .form-control {
-	position: relative;
-	font-size: 16px;
-	height: auto;
-	padding: 10px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
-.form-signin .form-control:focus {
-	z-index: 2;
-}
-
-.form-signin input[type="text"] {
-	margin-bottom: -1px;
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-}
-
-.form-signin input[type="password"] {
-	margin-bottom: 10px;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
-}
-</style>
-
 </c:param>
 
 
 
-	<c:param name="PARAM_CONTENT">
+<c:param name="PARAM_CONTENT">
+<h4 class="title"><%= jspUtil.label("label.login") %></h4>
 
-		<div class="container">
-			<form class="form-signin"
-				action="<%=request.getContextPath()%>/signin"
-				name="login" method="post">
-				<h2 class="form-signin-heading"></h2>
-				<% if (!StringUtils.isEmpty(request.getAttribute("page")) 
-						&& !"/open.knowledge/list".equals(request.getAttribute("page"))) { %>
-				<p>サインインが必要な機能です。<br/>(ナレッジの編集などはサインインが必要です)</p>
-				<% } %>
-				
-				<c:if test="${loginError}">
-					<p>
-						<span class="err">ID/パスワードが間違ってます</span>
-					</p>
-				</c:if>
-
+	<div class="container">
+		<form class=""
+			action="<%=request.getContextPath()%>/signin"
+			name="login" method="post">
+			
+			<% if (!StringUtils.isEmpty(request.getAttribute("page")) 
+					&& !"/open.knowledge/list".equals(request.getAttribute("page"))) { %>
+				<div class="form-group">
+					<div class="">
+					<%= jspUtil.label("knowledge.auth.description") %>
+					</div>
+				</div>
+			<% } %>
+			
+			<c:if test="${loginError}">
+				<div class="form-group">
+					<div class="">
+						<div class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<%= jspUtil.label("message.login.error") %>
+						</div>
+					</div>
+				</div>
+			</c:if>
+			
+			<div class="form-group">
+				<label for="inputEmail" class="control-label"><%= jspUtil.label("knowledge.auth.label.mail") %></label>
+				<div class="">
 				<input type="text" class="form-control"
 					name="username" value="${username}"
 					placeholder="Email address" autofocus>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="inputPass" class="control-label"><%= jspUtil.label("knowledge.auth.label.password") %></label>
+				<div class="">
 				<input type="password" class="form-control"
 					name="password" value="${password}"
 					placeholder="Password">
-
-				<input type="hidden" name="page" value="${page}" id="page">
-				
-				<button class="btn btn-lg btn-primary btn-block" type="submit">
-					<i class="fa fa-sign-in"></i>&nbsp;Sign in
-				</button>
-				
+				</div>
+			</div>
+			<input type="hidden" name="page" value="${page}" id="page">
+			
+			<div class="form-group">
+				<div class="">
+					<button class="btn btn-primary " type="submit">
+						<i class="fa fa-sign-in"></i>&nbsp;<%= jspUtil.label("knowledge.auth.signin") %>
+					</button>
+					<a href="<%= request.getContextPath() %>/open.knowledge/list"
+						class="btn btn-success " role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
+					
 <% if (SystemConfigLogic.get().isUserAddAble()) { %>
-				<br/>
-				<a href="<%= request.getContextPath() %>/open.signup/view" class="btn btn-info btn-block">
-					<i class="fa fa-plus-square"></i>&nbsp;ユーザ新規登録
-				</a>
+					<br/><br/>
+					<a href="<%= request.getContextPath() %>/open.signup/view" class="btn btn-info">
+						<i class="fa fa-plus-square"></i>&nbsp;<%= jspUtil.label("knowledge.auth.signup") %>
+					</a>
 <% } %>
+				</div>
+			</div>
 				
 				
-			</form>
+		</form>
 
-		</div>
-		
-	</c:param>
+	</div>
+	
+</c:param>
 
 </c:import>
 

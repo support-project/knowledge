@@ -180,14 +180,14 @@ public class UsersControl extends Control {
 		List<ValidateError> errors = user.validate(values);
 		if (!StringUtils.isEmpty(getParam("password"))) {
 			if (!getParam("password").equals(getParam("confirm_password", String.class))) {
-				ValidateError error = new ValidateError("PasswordとConfirm Passwordが違っています");
+				ValidateError error = new ValidateError("knowledge.user.invalid.same.password");
 				errors.add(error);
 			}
 		}
 		UsersDao dao = UsersDao.get();
 		user = dao.selectOnUserKey(getParam("userKey"));
 		if (user != null) {
-			ValidateError error = new ValidateError("既に登録されているEmail Addressです");
+			ValidateError error = new ValidateError("knowledge.user.mail.exist");
 			errors.add(error);
 		}
 		if (!errors.isEmpty()) {
@@ -204,7 +204,7 @@ public class UsersControl extends Control {
 		// 登録されているロールをセット
 		setSystemRoles(user);
 		
-		String successMsg = "登録しました";
+		String successMsg = "message.success.insert";
 		setResult(successMsg, errors);
 		return forward("view_edit.jsp");
 		
@@ -232,7 +232,7 @@ public class UsersControl extends Control {
 			values.put("password", "-");
 		} else {
 			if (!getParam("password").equals(getParam("confirm_password", String.class))) {
-				ValidateError error = new ValidateError("PasswordとConfirm Passwordが違っています");
+				ValidateError error = new ValidateError("knowledge.user.invalid.same.password");
 				errors.add(error);
 			}
 		}
@@ -241,12 +241,12 @@ public class UsersControl extends Control {
 		UsersDao dao = UsersDao.get();
 		user = dao.selectOnKey(getParam("userId", Integer.class));
 		if (user == null) {
-			ValidateError error = new ValidateError("削除されています");
+			ValidateError error = new ValidateError("message.allready.updated");
 			errors.add(error);
 		} else {
 			UsersEntity check = dao.selectOnUserKey(getParam("userKey"));
 			if (check != null && check.getUserId().intValue() != user.getUserId().intValue()) {
-				ValidateError error = new ValidateError("既に登録されているEmail Addressです");
+				ValidateError error = new ValidateError("knowledge.user.mail.exist");
 				errors.add(error);
 			}
 		}
@@ -269,7 +269,7 @@ public class UsersControl extends Control {
 		// 登録されているロールをセット
 		setSystemRoles(user);
 		
-		String successMsg = "更新しました";
+		String successMsg = "message.success.update";
 		setResult(successMsg, errors);
 		return forward("view_edit.jsp");
 	}
@@ -293,7 +293,7 @@ public class UsersControl extends Control {
 			//dao.delete(user.getUserId());
 			UserLogic.get().withdrawal(user.getUserId(), true);
 		}
-		String successMsg = "削除しました";
+		String successMsg = "message.success.delete";
 		setResult(successMsg, null);
 		return list(Integer.parseInt(offset), "");
 	}
@@ -328,20 +328,22 @@ public class UsersControl extends Control {
 		ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
 		ProvisionalRegistrationsEntity entity = dao.selectOnKey(id);
 		if (entity == null) {
-			addMsgWarn("承認する仮登録情報が見つかりませんでした。（他の管理者が承認）");
+			// 承認する仮登録情報が見つかりませんでした。（他の管理者が承認）
+			addMsgWarn("message.allready.updated");
 			return accept_list();
 		}
 		
 		UsersEntity user = UserLogic.get().activate(entity);
 		if (user != null) {
-			addMsgSuccess("承認しました");
+			addMsgSuccess("message.success.accept");
 			
 			// 承認されたことを通知
 			MailLogic mailLogic = MailLogic.get();
 			String url = HttpUtil.getContextUrl(getRequest());
 			mailLogic.sendAcceptedAddRequest(entity, url);
 		} else {
-			addMsgInfo("他の管理者がすでに承認していました");
+			//他の管理者がすでに承認していました
+			addMsgInfo("message.allready.updated");
 		}
 		return accept_list();
 	}

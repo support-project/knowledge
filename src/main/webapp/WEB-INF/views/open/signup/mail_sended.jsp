@@ -17,12 +17,13 @@
 
 
 <c:param name="PARAM_CONTENT">
-サービスへの招待メールを送信しました。<br/>
-受信したメールから、ユーザ登録を完了するとログイン出来るようになります。<br/>
+<h4 class="title"><%= jspUtil.label("knowledge.registration.result.title") %></h4>
+
+<%= jspUtil.label("knowledge.registration.msg.mail") %>
 
 <hr/>
-※注意：メーラーによっては、招待のメールが迷惑メールに入ってしまうことがあります。<br/>
-迷惑メールとして届いていないか確認してください。
+
+<%= jspUtil.label("knowledge.registration.msg.mail.info") %>
 
 </c:param>
 

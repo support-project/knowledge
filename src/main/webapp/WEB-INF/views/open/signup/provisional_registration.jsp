@@ -17,9 +17,9 @@
 
 
 <c:param name="PARAM_CONTENT">
-登録を受け付けました。<br/>
-本サービスの利用開始は、管理者の確認が必要になっています。<br/>
-管理者の確認までしばらくお待ちください。
+<h4 class="title"><%= jspUtil.label("knowledge.registration.result.title") %></h4>
+
+<%= jspUtil.label("knowledge.registration.msg.wait") %>
 
 </c:param>
 

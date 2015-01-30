@@ -16,19 +16,18 @@
 </c:param>
 
 <c:param name="PARAM_CONTENT">
-	
-	<h4>タグ一覧</h4>
+<h4 class="title"><%= jspUtil.label("knowledge.tags.title") %></h4>
 	
 	<nav>
 		<ul class="pager">
 			<li class="previous">
 				<a href="<%= request.getContextPath() %>/open.tag/list/${previous}">
-					<span aria-hidden="true">&larr;</span>Previous
+					<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
 				</a>
 			</li>
 			<li class="next">
 				<a href="<%= request.getContextPath() %>/open.tag/list/${next}">
-					Next <span aria-hidden="true">&rarr;</span>
+					<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
 				</a>
 			</li>
 		</ul>
@@ -54,12 +53,12 @@
 		<ul class="pager">
 			<li class="previous">
 				<a href="<%= request.getContextPath() %>/open.tag/list/${previous}">
-					<span aria-hidden="true">&larr;</span>Previous
+					<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
 				</a>
 			</li>
 			<li class="next">
 				<a href="<%= request.getContextPath() %>/open.tag/list/${next}">
-					Next <span aria-hidden="true">&rarr;</span>
+					<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
 				</a>
 			</li>
 		</ul>

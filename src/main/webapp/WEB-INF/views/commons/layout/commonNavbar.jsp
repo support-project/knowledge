@@ -17,37 +17,102 @@
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="<%= request.getContextPath() %><%= top %>" style="cursor: pointer;">
-				<i class="fa fa-book"></i>&nbsp;Knowledge <span style="font-size: 8pt;">0.3.4</span>
+				<i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
+				<span style="font-size: 8pt;"><%= jspUtil.label("label.version") %></span>
 			</a>
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
+				
+				<li class="dropdown" id="tabMenu">
+					<a class="dropdown-toggle" data-toggle="dropdown">
+						<i class="fa fa-bolt" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.menu") %><b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu">
+						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.menu.knowledge") %></li>
+						<li >
+							<a href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;">
+								<i class="fa fa-list-alt"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.all") %>
+							</a>
+						</li>
+						
+						<% if (jspUtil.logined()) { %>
+						<li>
+							<a href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.id() %>" >
+								<i class="fa fa-male"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.myknowledge") %>
+							</a>
+						</li>
+						<% } %>
+						
+						<li >
+							<a href="<%= request.getContextPath() %>/open.knowledge/search" >
+								<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.search") %>
+							</a>
+						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/protect.knowledge/view_add" style="cursor: pointer;">
+								<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.menu.knowledge.add") %>
+							</a>
+						</li>
+							
+						<% if (jspUtil.logined()) { %>
+						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.group") %></li>
+						<li >
+							<a href="<%= request.getContextPath() %>/protect.group/mygroups" style="cursor: pointer;">
+								<i class="fa fa-users"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.group.list") %>
+							</a>
+						</li>
+						<% } %>
+						
+						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.tag") %></li>
+						<li >
+							<a href="<%= request.getContextPath() %>/open.tag/list">
+								<i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("knowledge.list.tags.list") %>
+							</a>
+						</li>
+						
+						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.lang") %></li>
+						<li >
+							<a href="<%= request.getContextPath() %>/open.lang/en" style="cursor: pointer;">
+								<i class="fa fa-newspaper-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.lang.en") %>
+							</a>
+						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/open.lang/ja" style="cursor: pointer;">
+								<i class="fa fa-newspaper-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.lang.ja") %>
+							</a>
+						</li>
+					
+					</ul>
+				</li>
+				
+				
 				<% if (request.isUserInRole("admin")) { %>
 				<li class="dropdown" id="tabConfig">
 					<a class="dropdown-toggle" data-toggle="dropdown">
-						<i class="fa fa-cog" ></i>&nbsp;Config<b class="caret"></b>
+						<i class="fa fa-cog" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config") %><b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu">
-						<li class="dropdown-header">&nbsp;Admin</li>
+						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin") %></li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.users/list" style="cursor: pointer;">
-								<i class="fa fa-users"></i>&nbsp;Users
+								<i class="fa fa-users"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.users") %>
 							</a>
 						</li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.users/accept_list" style="cursor: pointer;">
-								<i class="fa fa-gavel"></i>&nbsp;Accept request for add user 
+								<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.acccept") %> 
 							</a>
 						</li>
-						<li class="dropdown-header">&nbsp;System Config</li>
+						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.system") %></li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.config/config" style="cursor: pointer;">
-								<i class="fa fa-cogs"></i>&nbsp;General Config
+								<i class="fa fa-cogs"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system.general") %>
 							</a>
 						</li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.mail/config" style="cursor: pointer;">
-								<i class="fa fa-inbox"></i>&nbsp;Mail Config
+								<i class="fa fa-inbox"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system.mail") %>
 							</a>
 						</li>
 					</ul>
@@ -62,19 +127,19 @@
 					<ul class="dropdown-menu">
 						<li>
 							<a href="<%= request.getContextPath() %>/protect.account" style="cursor: pointer;">
-								<i class="fa fa-smile-o"></i>&nbsp;My Account
+								<i class="fa fa-smile-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.myaccount") %>
 							</a>
 						</li>
 						<li>
 							<a href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.id() %>" >
-								<i class="fa fa-male"></i>&nbsp;My Knowledges
+								<i class="fa fa-male"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.myknowledge") %>
 							</a>
 						</li>
 						
 						<li class="divider"></li>
 						<li id="tabLogout">
 							<a href="<%= request.getContextPath() %>/signout" style="cursor: pointer;">
-								<i class="fa fa-sign-out"></i>&nbsp;Sign out
+								<i class="fa fa-sign-out"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signout") %>
 							</a>
 						</li>
 					</ul>
@@ -82,7 +147,7 @@
 				<% } else { %>
 				<li>
 					<a href="<%= request.getContextPath() %>/signin?page=<%= top %>" style="cursor: pointer;">
-						<i class="fa fa-sign-in"></i>&nbsp;Sign In
+						<i class="fa fa-sign-in"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signin") %>
 					</a>
 				</li>
 				<% } %>
@@ -92,7 +157,7 @@
 			<form class="nav navbar-nav navbar-form navbar-right" role="search"
 				action="<%= request.getContextPath() %><%= top %>">
 				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Search"
+					<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
 						name="keyword" id="keyword" value="<%= jspUtil.out("keyword") %>" />
 					<div class="input-group-btn">
 						<button class="btn btn-default" type="submit">

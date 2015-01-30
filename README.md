@@ -2,9 +2,25 @@
 
 ===============
 
+### Free Knowledge Management System
+
+
+#### Live Demo
+- https://support-project.org/knowledge/index
+- Demo users
+   - [id/password] user1 / user1
+   - [id/password] user2 / user2
+   - [id/password] user3 / user3
+
+
+#### Project website
+- https://support-project.org/knowledge_info/index
+
+
 #### 概要
 - Knowledgeは、フリーの情報共有サービスです。
 - 社内などで閉じた情報の管理が出来ます。
+
 
 #### 特徴
 - Markdown記法で情報登録
@@ -16,16 +32,6 @@
 - 添付ファイルの中身でも検索できます
 - サービスのファイル(war)を置くだけの簡単デプロイ
 
-#### Project website
-- https://support-project.org/knowledge_info/index
-
-
-#### Live Demo
-- https://support-project.org/knowledge_demo/index
-- デモ用のユーザ
-   - [id/password] user1 / user1
-   - [id/password] user2 / user2
-   - [id/password] user3 / user3
 
 #### サービスのデプロイ方法
 - Tomcat 7.0 以降をインストール
@@ -35,8 +41,12 @@
 - Tomcatのwebappsディレクトリに、knowledge.warを置く
    - warが配備され使えるようになります
 
-#### アプリケーションのデータ
+
+#### アプリケーションのデータ(バックアップ)
 - Tomcatの起動ユーザの、ホームディレクトリに「.knowledge」というフォルダを作成し、その中にデータを格納します
    - データのバックアップは、このディレクトリをコピーしておくことで可能です
    - Linuxなどでは、Tomcat起動ユーザで上記のディレクトリにアクセス出来るように、権限を設定してください
+
+
+
 

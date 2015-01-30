@@ -21,8 +21,7 @@
 	</c:param>
 
 	<c:param name="PARAM_CONTENT">
-
-		<h3>Search Knowledge</h3>
+		<h4 class="title"><%= jspUtil.label("knowledge.view.title") %></h4>
 
 		<div class="row">
 			<br/>
@@ -30,17 +29,17 @@
 			<form role="search" action="<%=request.getContextPath()%><%=top%>">
 				<div class="input-group">
 					<div class="input-group-addon"><i class="fa fa-pencil-square-o"></i></div>
-					<input type="text" class="form-control" placeholder="Search Keyword"
+					<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.search.placeholder") %>"
 						name="keyword" id="keyword" value="<%=jspUtil.out("keyword")%>" />
 					<div class="input-group-btn">
 					</div>
 				</div>
 			<br/>
 				<button class="btn btn-primary" type="submit">
-					<i class="glyphicon glyphicon-search"></i>&nbsp;Search
+					<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("label.search") %>
 				</button>
 				<a href="<%= request.getContextPath() %>/open.knowledge/list/${offset}?keyword=${keyword}&tag=${tag}&user=${user}"
-				class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;一覧へ戻る</a>
+				class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>
 			</form>
 			</div>
 		</div>

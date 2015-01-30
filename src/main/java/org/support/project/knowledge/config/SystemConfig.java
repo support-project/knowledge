@@ -23,5 +23,4 @@ public class SystemConfig {
 	public static final String USER_ADD_NOTIFY_OFF = "OFF";
 	
 	
-	
 }

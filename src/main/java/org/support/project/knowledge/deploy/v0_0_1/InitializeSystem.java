@@ -28,13 +28,13 @@ public class InitializeSystem implements Migrate {
 		RolesEntity adminRole = RolesEntity.get();
 		adminRole.setRoleId(1);
 		adminRole.setRoleKey(SystemConfig.ROLE_ADMIN);
-		adminRole.setRoleName("管理者権限");
+		adminRole.setRoleName("Administrator");
 		RolesDao.get().insert(adminRole);
 		
 		RolesEntity userRole = RolesEntity.get();
 		userRole.setRoleId(2);
 		userRole.setRoleKey(SystemConfig.ROLE_USER);
-		userRole.setRoleName("一般ユーザ権限");
+		userRole.setRoleName("User");
 		RolesDao.get().insert(userRole);
 		
 		//管理者ユーザ追加

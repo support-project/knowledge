@@ -60,7 +60,7 @@ public class AccountControl extends Control {
 		List<ValidateError> errors = user.validate(values);
 		if (!StringUtils.isEmpty(getParam("password"))) {
 			if (!getParam("password").equals(getParam("confirm_password", String.class))) {
-				ValidateError error = new ValidateError("PasswordとConfirm Passwordが違っています");
+				ValidateError error = new ValidateError("knowledge.user.invalid.same.password");
 				errors.add(error);
 			}
 		}
@@ -81,7 +81,7 @@ public class AccountControl extends Control {
 			}
 			dao.update(user);
 		}
-		String successMsg = "更新しました";
+		String successMsg = "message.success.update";
 		setResult(successMsg, errors);
 		
 		return forward("index.jsp");
@@ -114,7 +114,7 @@ public class AccountControl extends Control {
 		AuthenticationLogic<LoginedUser> authenticationLogic = Container.getComp(DefaultAuthenticationLogicImpl.class);
 		authenticationLogic.clearSession(getRequest());
 		
-		addMsgInfo("ご利用ありがとうございました");
+		addMsgInfo("knowledge.account.delete");
 		return devolution("index/index");
 		//return redirect(getRequest().getContextPath());
 	}

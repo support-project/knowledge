@@ -18,30 +18,32 @@
 
 
 <c:param name="PARAM_CONTENT">
-<h4>ユーザ新規登録</h4>
+<h4 class="title"><%= jspUtil.label("knowledge.signup.title") %></h4>
 
 <div class="row">
 	<div class="col-sm-12 col-md-12">
 		<form action="<%= request.getContextPath()%>/open.signup/save" method="post" role="form">
 			<div class="form-group">
-				<label for="userKey">Mail Address(ログイン時のIDになります/公開されることはありません)</label>
+				<label for="userKey"><%= jspUtil.label("knowledge.signup.label.mail") %></label>
 				<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="${userKey}" />
 			</div>
 			<div class="form-group">
-				<label for="userName">User Name(このサービスの中で表示される名称です)</label>
+				<label for="userName"><%= jspUtil.label("knowledge.signup.label.name") %></label>
 				<input type="text" class="form-control" name="userName" id="userName" placeholder="User Name" value="${userName}" />
 			</div>
 			
 			<div class="form-group">
-				<label for="password">Password (input to change password)</label>
+				<label for="password"><%= jspUtil.label("knowledge.signup.label.password") %></label>
 				<input type="password" class="form-control" name="password" id="password" placeholder="Password" value="${password}" />
 			</div>
 			<div class="form-group">
-				<label for="confirm_password">Confirm Password (input to change password)</label>
+				<label for="confirm_password"><%= jspUtil.label("knowledge.signup.label.confirm.password") %></label>
 				<input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Confirm Password" value="${confirm_password}" />
 			</div>
 			
-			<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;登録</button>
+			<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.registration") %></button>
+			<a href="<%= request.getContextPath() %>/open.knowledge/list"
+				class="btn btn-success " role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
 			
 		</form>
 	</div>

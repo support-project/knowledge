@@ -26,52 +26,53 @@
 
 
 <c:param name="PARAM_CONTENT">
+<h4 class="title"><%= jspUtil.label("knowledge.config.title") %></h4>
 
 <form action="<%= request.getContextPath()%>/admin.config/save" method="post" role="form">
 
 	<div class="form-group">
-		<label for="authType_lock">ユーザ登録のやり方</label><br/>
+		<label for="authType_lock"><%= jspUtil.label("knowledge.config.label.registration.method") %></label><br/>
 		<label class="radio-inline radio_block">
 			<input type="radio" value="<%= SystemConfig.USER_ADD_TYPE_VALUE_ADMIN %>" name="userAddType" 
 				id="userAddType_admin" <%= jspUtil.checked(SystemConfig.USER_ADD_TYPE_VALUE_ADMIN, "userAddType", true) %>/>
-			<i class="fa fa-lock fa-lg"></i>&nbsp;管理者が登録する
+			<i class="fa fa-lock fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.label.registration.method.admin") %>
 		</label>
 		<br/>
 		<label class="radio-inline radio_block">
 			<input type="radio" value="<%= SystemConfig.USER_ADD_TYPE_VALUE_APPROVE %>" name="userAddType" 
 				id="userAddType_approve" <%= jspUtil.checked(SystemConfig.USER_ADD_TYPE_VALUE_APPROVE, "userAddType", false) %>/>
-			<i class="fa fa-gavel fa-lg"></i>&nbsp;ユーザ自身でメールアドレスで登録し、管理者が承認する
+			<i class="fa fa-gavel fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.label.registration.method.accept") %>
 		</label>
 		<br/>
 		<label class="radio-inline radio_block">
 			<input type="radio" value="<%= SystemConfig.USER_ADD_TYPE_VALUE_MAIL %>" name="userAddType" 
 				id="userAddType_mail" <%= jspUtil.checked(SystemConfig.USER_ADD_TYPE_VALUE_MAIL, "userAddType", false) %>/>
-			<i class="fa fa-envelope-square fa-lg"></i>&nbsp;ユーザ自身でメールアドレスを登録し、システムから招待のメールを出す（メール送信設定が必要です）
+			<i class="fa fa-envelope-square fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.label.registration.method.mail") %>
 		</label>
 		<br/>
 		<label class="radio-inline radio_block">
 			<input type="radio" value="<%= SystemConfig.USER_ADD_TYPE_VALUE_USER %>" name="userAddType" 
 				id="userAddType_mail" <%= jspUtil.checked(SystemConfig.USER_ADD_TYPE_VALUE_USER, "userAddType", false) %>/>
-			<i class="fa fa-unlock fa-lg"></i>&nbsp;ユーザ自身で自由に登録（重複チェックのみ行います）
+			<i class="fa fa-unlock fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.label.registration.method.free") %>
 		</label>
 	</div>
 	
 	<div class="form-group">
-		<label for="userAddNotify_off">ユーザ登録の管理者への通知</label><br/>
+		<label for="userAddNotify_off"><%= jspUtil.label("knowledge.config.label.registration.notify") %></label><br/>
 		<label class="radio-inline radio_block">
 			<input type="radio" value="<%= SystemConfig.USER_ADD_NOTIFY_OFF %>" name="userAddNotify" 
 				id="userAddNotify_off" <%= jspUtil.checked(SystemConfig.USER_ADD_NOTIFY_OFF, "userAddNotify", true) %>/>
-			<i class="fa fa-bell-slash-o fa-lg"></i>&nbsp;通知しない
+			<i class="fa fa-bell-slash-o fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.label.registration.notify.no") %>
 		</label>
 		<br/>
 		<label class="radio-inline radio_block">
 			<input type="radio" value="<%= SystemConfig.USER_ADD_NOTIFY_ON %>" name="userAddNotify" 
 				id="userAddNotify_on" <%= jspUtil.checked(SystemConfig.USER_ADD_NOTIFY_ON, "userAddNotify", false) %>/>
-			<i class="fa fa-bell-o fa-lg"></i>&nbsp;通知する（承認が必要な場合、仮登録の時点で管理者にメールが届きます。その他の場合、ユーザが登録された場合にメールが届きます）
+			<i class="fa fa-bell-o fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.label.registration.notify.yes") %>
 		</label>
 	</div>
 	
-	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;登録</button>
+	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
 </form>
 
 

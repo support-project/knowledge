@@ -14,17 +14,21 @@
 
 
 <c:param name="PARAM_CONTENT">
+<h4 class="title"><%= jspUtil.label("knowledge.user.list.title") %></h4>
 
 <nav>
 	<ul class="pager">
 		<li class="previous">
-			<a href="<%= request.getContextPath() %>/admin.users/list/${previous}"><span aria-hidden="true">&larr;</span>Previous</a>
+			<a href="<%= request.getContextPath() %>/admin.users/list/${previous}"><span aria-hidden="true">&larr;</span>
+			<%= jspUtil.label("label.previous") %></a>
 		</li>
 		<li >
-		<a href="<%= request.getContextPath() %>/admin.users/view_add?offset=${offset}"><i class="fa fa-plus-circle"></i>&nbsp;Add</a>
+			<a href="<%= request.getContextPath() %>/admin.users/view_add?offset=${offset}"><i class="fa fa-plus-circle"></i>&nbsp;
+			<%= jspUtil.label("label.add") %></a>
 		</li>
 		<li class="next">
-			<a href="<%= request.getContextPath() %>/admin.users/list/${next}">Next <span aria-hidden="true">&rarr;</span></a>
+			<a href="<%= request.getContextPath() %>/admin.users/list/${next}"><%= jspUtil.label("label.next") %>
+			<span aria-hidden="true">&rarr;</span></a>
 		</li>
 	</ul>
 </nav>
@@ -32,14 +36,14 @@
 
 <div class="list-group">
 <c:if test="${empty users}">
-条件に該当するデータは存在しません。条件（ページ番号）を切り替えてください。
+<%= jspUtil.label("knowledge.user.list.label.empty") %>
 </c:if>
 
 <c:forEach var="user" items="${users}" varStatus="status">
 	<a href="<%= request.getContextPath() %>/admin.users/view_edit/${user.userId}?offset=${offset}" class="list-group-item">
 		<h4 class="list-group-item-heading">${user.userName} (${user.userKey})</h4>
 		<p class="list-group-item-text">
-		登録日時 / 更新日時 
+		<%= jspUtil.label("label.regist.datetime") %> / <%= jspUtil.label("label.update.datetime") %>
 			<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("user.insertDatetime")%> / 
 			<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("user.updateDatetime")%>
 		</p>
@@ -52,13 +56,16 @@
 <nav>
 	<ul class="pager">
 		<li class="previous">
-			<a href="<%= request.getContextPath() %>/admin.users/list/${previous}"><span aria-hidden="true">&larr;</span>Previous</a>
+			<a href="<%= request.getContextPath() %>/admin.users/list/${previous}"><span aria-hidden="true">&larr;</span>
+			<%= jspUtil.label("label.previous") %></a>
 		</li>
 		<li >
-		<a href="<%= request.getContextPath() %>/admin.users/view_add?offset=${offset}"><i class="fa fa-plus-circle"></i>&nbsp;Add</a>
+			<a href="<%= request.getContextPath() %>/admin.users/view_add?offset=${offset}"><i class="fa fa-plus-circle"></i>&nbsp;
+			<%= jspUtil.label("label.add") %></a>
 		</li>
 		<li class="next">
-			<a href="<%= request.getContextPath() %>/admin.users/list/${next}">Next <span aria-hidden="true">&rarr;</span></a>
+			<a href="<%= request.getContextPath() %>/admin.users/list/${next}"><%= jspUtil.label("label.next") %>
+			<span aria-hidden="true">&rarr;</span></a>
 		</li>
 	</ul>
 </nav>

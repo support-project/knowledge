@@ -1,7 +1,11 @@
+<%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<% JspUtil jspUtil = new JspUtil(request, pageContext); %>
+
 
 <!DOCTYPE html>
 <html>
@@ -18,7 +22,7 @@
 	${param.PARAM_PAGE_TITLE}
 </c:if>
 <c:if test="${param.PARAM_PAGE_TITLE == null}">
-	Knowledge
+	<%= jspUtil.label("knowledge.title") %>
 </c:if>
 </title>
 
@@ -30,7 +34,8 @@
 		<div class="container" id="myNavbar">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="<%=request.getContextPath()%>/">
-				<i class="fa fa-book"></i>&nbsp;Knowledge
+				<i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
+				<span style="font-size: 8pt;"><%= jspUtil.label("label.version") %></span>
 				</a>
 			</div>
 			<div class="navbar-collapse collapse">

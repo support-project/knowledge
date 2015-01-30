@@ -1,14 +1,16 @@
 package org.support.project.knowledge.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.support.project.common.util.StringJoinBuilder;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenTagsDao;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.ormapping.common.SQLManager;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.entity.GroupsEntity;
 
 /**
  * タグ
@@ -99,13 +101,25 @@ public class TagsDao extends GenTagsDao {
 	
 	/**
 	 * タグの一覧と、それに紐づくナレッジの件数を取得
+	 * @param groups 
 	 * @param offset
 	 * @param loginedUser
 	 * @return
 	 */
-	public List<TagsEntity> selectWithKnowledgeCount(int userId, int offset, int limit) {
+	public List<TagsEntity> selectWithKnowledgeCount(int userId, List<GroupsEntity> groups, int offset, int limit) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectWithKnowledgeCount.sql");
-		return executeQuery(sql, TagsEntity.class, userId, limit, offset);
+		StringJoinBuilder builder = new StringJoinBuilder();
+		List<Integer> params = new ArrayList<>();
+		params.add(new Integer(userId));
+		for (GroupsEntity group : groups) {
+			builder.append("?");
+			params.add(group.getGroupId());
+		}
+		params.add(new Integer(limit));
+		params.add(new Integer(offset));
+		sql = sql.replace("${groups}", builder.join(", "));
+		
+		return executeQuery(sql, TagsEntity.class, params.toArray(new Integer[0]));
 	}
 	/**
 	 * タグの一覧と、それに紐づくナレッジの件数を取得

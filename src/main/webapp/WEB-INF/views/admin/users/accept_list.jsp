@@ -14,21 +14,22 @@
 
 
 <c:param name="PARAM_CONTENT">
+<h4 class="title"><%= jspUtil.label("knowledge.accept.title") %></h4>
 
 
 <div class="list-group">
 <c:if test="${empty entries}">
-承認待ちのユーザはいません
+<%= jspUtil.label("knowledge.accept.label.list.empty") %>
 </c:if>
 
 <c:forEach var="entry" items="${entries}" varStatus="status">
 	<div class="list-group-item">
 		<a href="<%= request.getContextPath() %>/admin.users/accept/${entry.id}" class="btn btn-primary">
-			<i class="fa fa-gavel"></i>&nbsp;承認
+			<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.accept.label.accept") %>
 		</a>
 		<h4 class="list-group-item-heading">${entry.userName} (${entry.userKey})</h4>
 		<p class="list-group-item-text">
-		登録日時
+		<%= jspUtil.label("label.regist.datetime") %>
 			<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("user.insertDatetime")%> / 
 		</p>
 	</div>

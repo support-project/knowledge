@@ -17,6 +17,7 @@ import org.support.project.di.Container;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
+import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeTagsDao;
 import org.support.project.knowledge.dao.KnowledgeUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -24,6 +25,7 @@ import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
+import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.entity.KnowledgeTagsEntity;
 import org.support.project.knowledge.entity.KnowledgeUsersEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
@@ -35,6 +37,7 @@ import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.knowledge.searcher.impl.LuceneSearcher;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.entity.GroupsEntity;
 
 public class KnowledgeLogic {
 	/** ログ */
@@ -44,7 +47,7 @@ public class KnowledgeLogic {
 	
 	public static final int PUBLIC_FLAG_PUBLIC = 0;
 	public static final int PUBLIC_FLAG_PRIVATE = 1;
-	public static final int PUBLIC_FLAG_SELECT_USERS = 2;
+	public static final int PUBLIC_FLAG_PROTECT = 2;
 	
 	public static final int TYPE_KNOWLEDGE = IndexType.knowledge.getValue();
 	public static final int TYPE_FILE = IndexType.KnowledgeFile.getValue();
@@ -97,12 +100,13 @@ public class KnowledgeLogic {
 	 * @param entity
 	 * @param tags 
 	 * @param fileNos 
+	 * @param groups 
 	 * @param loginedUser
 	 * @return
 	 * @throws Exception
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgesEntity insert(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
+	public KnowledgesEntity insert(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos, List<GroupsEntity> groups, LoginedUser loginedUser) throws Exception {
 		// ナレッジを登録
 		entity = knowledgesDao.insert(entity);
 		// アクセス権を登録
@@ -113,8 +117,14 @@ public class KnowledgeLogic {
 		// 添付ファイルを更新（紐付けをセット）
 		fileLogic.setKnowledgeFiles(entity, fileNos, loginedUser);
 		
+		// グループとナレッジのヒモ付を登録
+		GroupLogic groupLogic = GroupLogic.get();
+		if (entity.getPublicFlag() != null && entity.getPublicFlag().intValue() == PUBLIC_FLAG_PROTECT) {
+			groupLogic.saveKnowledgeGroup(entity.getKnowledgeId(), groups);
+		}
+		
 		// 全文検索エンジンへ登録
-		saveIndex(entity, tags, loginedUser);
+		saveIndex(entity, tags, groups, loginedUser);
 		return entity;
 	}
 	
@@ -127,7 +137,7 @@ public class KnowledgeLogic {
 	 * @throws Exception 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgesEntity update(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
+	public KnowledgesEntity update(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos, List<GroupsEntity> groups, LoginedUser loginedUser) throws Exception {
 		// ナレッッジを更新
 		entity = knowledgesDao.update(entity);
 		// アクセス権を登録
@@ -141,8 +151,16 @@ public class KnowledgeLogic {
 		// 添付ファイルを更新（紐付けをセット）
 		fileLogic.setKnowledgeFiles(entity, fileNos, loginedUser);
 		
+		// グループとナレッジのヒモ付を登録
+		GroupLogic groupLogic = GroupLogic.get();
+		if (entity.getPublicFlag().intValue() == PUBLIC_FLAG_PROTECT) {
+			groupLogic.saveKnowledgeGroup(entity.getKnowledgeId(), groups);
+		} else {
+			groupLogic.removeKnowledgeGroup(entity.getKnowledgeId());
+		}
+		
 		// 全文検索エンジンへ登録
-		saveIndex(entity, tags, loginedUser);
+		saveIndex(entity, tags, groups, loginedUser);
 		return entity;
 	}
 	
@@ -187,10 +205,11 @@ public class KnowledgeLogic {
 	 * 全文検索エンジンへ保存
 	 * @param entity
 	 * @param tags 
+	 * @param groups 
 	 * @param loginedUser
 	 * @throws Exception
 	 */
-	private void saveIndex(KnowledgesEntity entity, List<TagsEntity> tags, LoginedUser loginedUser) throws Exception {
+	private void saveIndex(KnowledgesEntity entity, List<TagsEntity> tags, List<GroupsEntity> groups, LoginedUser loginedUser) throws Exception {
 		IndexingValue indexingValue = new IndexingValue();
 		indexingValue.setType(TYPE_KNOWLEDGE);
 		indexingValue.setId(String.valueOf(entity.getKnowledgeId()));
@@ -205,6 +224,14 @@ public class KnowledgeLogic {
 				indexingValue.addTag(tagsEntity.getTagId());
 			}
 		}
+		if (entity.getPublicFlag() != null && entity.getPublicFlag().intValue() == PUBLIC_FLAG_PROTECT) {
+			if (groups != null) {
+				for (GroupsEntity groupsEntity : groups) {
+					indexingValue.addGroup(groupsEntity.getGroupId());
+				}
+			}
+		}
+		
 		indexingValue.setCreator(loginedUser.getUserId());
 		indexingValue.setTime(entity.getUpdateDatetime().getTime()); // 更新日時をセットするので、更新日時でソート
 		
@@ -244,6 +271,13 @@ public class KnowledgeLogic {
 			if (loginedUser != null) {
 				userId = loginedUser.getLoginUser().getUserId();
 				searchingValue.addUser(userId);
+				
+				List<GroupsEntity> groups = loginedUser.getGroups();
+				if (groups != null && !groups.isEmpty()) {
+					for (GroupsEntity groupsEntity : groups) {
+						searchingValue.addGroup(groupsEntity.getGroupId());
+					}
+				}
 			}
 		}
 		if (LOG.isDebugEnabled()) {
@@ -277,6 +311,13 @@ public class KnowledgeLogic {
 			if (loginedUser != null) {
 				userId = loginedUser.getLoginUser().getUserId();
 				searchingValue.addUser(userId);
+				
+				List<GroupsEntity> groups = loginedUser.getGroups();
+				if (groups != null && !groups.isEmpty()) {
+					for (GroupsEntity groupsEntity : groups) {
+						searchingValue.addGroup(groupsEntity.getGroupId());
+					}
+				}
 			}
 		}
 		
@@ -315,6 +356,13 @@ public class KnowledgeLogic {
 			if (loginedUser != null) {
 				userId = loginedUser.getLoginUser().getUserId();
 				searchingValue.addUser(userId);
+				
+				List<GroupsEntity> groups = loginedUser.getGroups();
+				if (groups != null && !groups.isEmpty()) {
+					for (GroupsEntity groupsEntity : groups) {
+						searchingValue.addGroup(groupsEntity.getGroupId());
+					}
+				}
 			}
 		}
 		searchingValue.setCreator(targetUser);
@@ -451,6 +499,20 @@ public class KnowledgeLogic {
 				return entity;
 			}
 		}
+		if (loginedUser != null) {
+			List<GroupsEntity> groups = loginedUser.getGroups();
+			if (groups != null) {
+				List<KnowledgeGroupsEntity> knowledgeGroups = KnowledgeGroupsDao.get().selectOnKnowledgeId(knowledgeId);
+				for (KnowledgeGroupsEntity knowledgeGroupsEntity : knowledgeGroups) {
+					for (GroupsEntity groupsEntity : groups) {
+						if (groupsEntity.getGroupId().intValue() == knowledgeGroupsEntity.getGroupId().intValue()) {
+							// グループに登録があればアクセス可能
+							return entity;
+						}
+					}
+				}
+			}
+		}
 		return null;
 	}
 
@@ -534,6 +596,9 @@ public class KnowledgeLogic {
 		
 		// 添付ファイルを削除
 		fileLogic.deleteOnKnowledgeId(knowledgeId);
+		
+		// ナレッジにアクセス可能なグループ削除
+		GroupLogic.get().removeKnowledgeGroup(knowledgeId);
 		
 		//全文検索エンジンから削除
 		IndexLogic indexLogic = IndexLogic.get();

@@ -17,11 +17,13 @@ import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
+import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
+import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
@@ -46,7 +48,7 @@ public class KnowledgeControl extends Control {
 		return forward("view_add.jsp");
 	}
 	/**
-	 * 登録画面を表示する
+	 * 更新画面を表示する
 	 * @return
 	 * @throws InvalidParamException 
 	 */
@@ -68,10 +70,15 @@ public class KnowledgeControl extends Control {
 		List<UploadFile> files = fileLogic.selectOnKnowledgeId(knowledgeId, getRequest().getContextPath());
 		setAttribute("files", files);
 		
+		// 表示するグループを取得
+		List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
+		setAttribute("groups", groups);
+		
 		if (!super.getLoginedUser().isAdmin() && entity.getInsertUser().intValue() != super.getLoginUserId().intValue()) {
-			addMsgWarn("自分で登録したもの以外は編集出来ません");
+			addMsgWarn("knowledge.edit.noaccess");
 			return forward("/open/knowledge/view.jsp");
 		}
+		
 		return forward("view_edit.jsp");
 	}
 	
@@ -82,6 +89,11 @@ public class KnowledgeControl extends Control {
 	 */
 	public Boundary add(KnowledgesEntity entity) throws Exception {
 		LOG.trace("validate");
+		String groupsstr = super.getParam("groups");
+		String[] groupssp = groupsstr.split(",");
+		List<GroupsEntity> groups = GroupLogic.get().selectGroups(groupssp);
+		setAttribute("groups", groups);
+
 		List<Long> fileNos = new ArrayList<Long>();
 		Object obj = getParam("files", Object.class);
 		if (obj != null) {
@@ -99,6 +111,7 @@ public class KnowledgeControl extends Control {
 				}
 			}
 		}
+
 		
 		List<ValidateError> errors = entity.validate();
 		if (!errors.isEmpty()) {
@@ -120,13 +133,14 @@ public class KnowledgeControl extends Control {
 		LOG.trace("save");
 		String tags = super.getParam("tags");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
-		entity = knowledgeLogic.insert(entity, tagList, fileNos, super.getLoginedUser());
+		
+		entity = knowledgeLogic.insert(entity, tagList, fileNos, groups, super.getLoginedUser());
 		setAttributeOnProperty(entity);
 		
 		List<UploadFile> files = fileLogic.selectOnKnowledgeId(entity.getKnowledgeId(), getRequest().getContextPath());
 		setAttribute("files", files);
 		
-		addMsgSuccess("登録しました");
+		addMsgSuccess("message.success.insert");
 		return forward("view_edit.jsp");
 	}
 	
@@ -137,6 +151,11 @@ public class KnowledgeControl extends Control {
 	 */
 	public Boundary update(KnowledgesEntity entity) throws Exception {
 		LOG.trace("validate");
+		String groupsstr = super.getParam("groups");
+		String[] groupssp = groupsstr.split(",");
+		List<GroupsEntity> groups = GroupLogic.get().selectGroups(groupssp);
+		setAttribute("groups", groups);
+		
 		List<Long> fileNos = new ArrayList<Long>();
 		Object obj = getParam("files", Object.class);
 		if (obj != null) {
@@ -181,16 +200,17 @@ public class KnowledgeControl extends Control {
 			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
 		}
 		if (!super.getLoginedUser().isAdmin() && check.getInsertUser().intValue() != super.getLoginUserId().intValue()) {
-			addMsgWarn("自分で登録したもの以外は編集出来ません");
+			addMsgWarn("knowledge.edit.noaccess");
 			return forward("/open/knowledge/view.jsp");
 		}
 		
 		LOG.trace("save");
 		String tags = super.getParam("tags");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
-		entity = knowledgeLogic.update(entity, tagList, fileNos, super.getLoginedUser());
+		
+		entity = knowledgeLogic.update(entity, tagList, fileNos, groups, super.getLoginedUser());
 		setAttributeOnProperty(entity);
-		addMsgSuccess("更新しました");
+		addMsgSuccess("message.success.update");
 		
 		List<UploadFile> files = fileLogic.selectOnKnowledgeId(entity.getKnowledgeId(), getRequest().getContextPath());
 		setAttribute("files", files);
@@ -210,7 +230,7 @@ public class KnowledgeControl extends Control {
 		if (!StringUtils.isInteger(id)) {
 			// 削除するIDが指定されていない
 			//return sendError(HttpStatus.SC_400_BAD_REQUEST, null);
-			addMsgError("削除するナレッジが指定されていません");
+			addMsgError("knowledge.delete.none");
 			//return super.devolution("open.knowledge/list");
 			return forward("/commons/errors/server_error.jsp");
 		}
@@ -220,13 +240,13 @@ public class KnowledgeControl extends Control {
 			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
 		}
 		if (!super.getLoginedUser().isAdmin() && check.getInsertUser().intValue() != super.getLoginUserId().intValue()) {
-			addMsgWarn("自分で登録したもの以外は削除出来ません");
+			addMsgWarn("knowledge.edit.noaccess");
 			return forward("/open/knowledge/view.jsp");
 		}
 		LOG.trace("save");
 		knowledgeLogic.delete(knowledgeId, getLoginedUser());
 		
-		addMsgSuccess("削除しました");
+		addMsgSuccess("message.success.delete");
 		return super.devolution("open.knowledge/list");
 	}
 	

@@ -12,6 +12,7 @@ public class DBStart {
 
 		Server server = Server.createTcpServer(parms);
 		server.start();
+		System.out.println("Database start...");
 		
 		int count = 0;
 		while(true) {

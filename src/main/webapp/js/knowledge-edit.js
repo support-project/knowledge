@@ -1,3 +1,6 @@
+var groups = [];
+var selectedGroups = [];
+
 $(document).ready(function() {
 	hljs.initHighlightingOnLoad();
 	marked.setOptions({
@@ -30,11 +33,11 @@ $(document).ready(function() {
 			filediv += '&nbsp;&nbsp;&nbsp;';
 			filediv += '<button type="button" class="btn btn-danger" onclick="removeAddedFile(' + file.fileNo + ')">';
 			filediv += '<i class="fa fa-remove"></i>';
-			filediv += '&nbsp;削除</button>';
+			filediv += '&nbsp;' + _DELETE_LABEL + '</button>';
 			filediv += '</div>';
 			$('#files').append(filediv);
 		});
-		$.notify('ファイルをアップロードしました', 'success');
+		$.notify(_UPLOADED, 'success');
 		setTimeout(function() {
 			$('#progress').hide();
 		}, 5000);
@@ -59,7 +62,7 @@ $(document).ready(function() {
 				filediv += msg;
 				filediv += '</div>';
 				$('#files').append(filediv);
-				$.notify('アップロードに失敗したファイルがあります', 'warn');
+				$.notify(_FAIL_UPLOAD, 'warn');
 			});
 		} else {
 			console.log(e);
@@ -67,7 +70,121 @@ $(document).ready(function() {
 		}
 	 }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 	
+	var elt= $('#input_tags');
+	elt.tagsinput();
+	
+	dispChangeGroupArea($('input[name="publicFlag"]:checked').val());
+	$('input[name="publicFlag"]:radio').change( function() {
+		dispChangeGroupArea($( this ).val());
+	});
+	
+	var keyword = $('#groupKeyword').val();
+	var offset = 0;
+	$('#groupSelectModal').on('show.bs.modal', function (event) {
+		getGroups(keyword, offset);
+	});
+	$('#groupSearchButton').click(function() {
+		keyword = $('#groupKeyword').val();
+		offset = 0;
+		getGroups(keyword, offset);
+	});
+	$('#groupSearchPrevious').click(function() {
+		keyword = $('#groupKeyword').val();
+		offset--;
+		if (offset < 0){
+			offset = 0;
+		}
+		getGroups(keyword, offset);
+	});
+	$('#groupSearchNext').click(function() {
+		keyword = $('#groupKeyword').val();
+		offset++;
+		getGroups(keyword, offset);
+	});
+	$('#groupDecision').click(function() {
+		$('#groupSelectModal').modal('hide')
+	});
+	$('#clearSelectedGroup').click(function() {
+		selectedGroups = [];
+		viewGroup();
+	});
+	viewGroup();
 });
+
+var getGroups = function(keyword, offset) {
+	$('#groupList').html('Now loading...');
+	var url = _CONTEXT + '/protect.group/typeahead'
+	var params = {
+			keyword : keyword,
+			offset: offset
+	};
+	
+	$.get(url, params, function(result){
+		groups = result;
+		var html = '';
+		if (result.length == 0) {
+			html += 'empty';
+		} else {
+			html+= '<div class="list-group">';
+			for (var int = 0; int < result.length; int++) {
+				html += '<a href="#" class="list-group-item" onclick="selectGroup(' + int + ')">';
+				html += result[int].label;
+				html += '</a>';
+			}
+			html += '</div>';
+		}
+		$('#groupList').html(html);
+		$('#groupPage').text('- page:' + (offset + 1) + ' -');
+	});
+};
+
+
+var selectGroup = function(idx) {
+	var exist = false;
+	for (var i = 0; i < selectedGroups.length; i++) {
+		var item = selectedGroups[i];
+		if (item.value == groups[idx].value) {
+			exist = true;
+			break;
+		}
+	}
+	if (!exist) {
+		selectedGroups.push(groups[idx]);
+	}
+	viewGroup();
+};
+
+var viewGroup = function() {
+	var values = [];
+	var labels = [];
+	for (var i = 0; i < selectedGroups.length; i++) {
+		var item = selectedGroups[i];
+		values.push(item.value);
+		labels.push(item.label);
+	}
+	if (selectedGroups.length == 0) {
+		$('#clearSelectedGroup').hide();
+	} else {
+		$('#clearSelectedGroup').show();
+	}
+	
+	$('#selectedList').text(labels.join(','));
+	$('#groupsLabel').text(labels.join(','));
+	$('#groups').val(values.join(','));
+};
+
+
+
+
+var dispChangeGroupArea = function(val) {
+	var grops_area = $('#grops_area');
+	if (val == '2') {
+		grops_area.show('normal');
+	} else {
+		grops_area.hide('normal');
+	}
+};
+
 
 var removeAddedFile = function(fileNo) {
 	var url = _CONTEXT + '/protect.file/delete';
@@ -76,12 +193,12 @@ var removeAddedFile = function(fileNo) {
 		url : url,
 		data : 'fileNo=' + fileNo,
 		success : function(data, dataType) {
-			$.notify('ファイルを削除しました', 'info');
+			$.notify(_REMOVE_FILE, 'info');
 			$('#file-' + fileNo).remove();
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown){
 			//alert("error: " + textStatus);
-			$.notify('ファイルの削除に失敗しました', 'warn');
+			$.notify(_FAIL_REMOVE_FILE, 'warn');
 		}
 	});
 };
@@ -113,7 +230,7 @@ var preview = function() {
 
 
 function deleteKnowledge() {
-	bootbox.confirm("本当に削除しますか?", function(result) {
+	bootbox.confirm(_CONFIRM, function(result) {
 		if (result) {
 			$('#knowledgeForm').attr('action', _CONTEXT + '/protect.knowledge/delete');
 			$('#knowledgeForm').submit();

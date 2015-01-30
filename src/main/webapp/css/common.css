@@ -35,3 +35,11 @@ body {
 .copy {
 	margin-top: 0px;
 }
+
+.title {
+	text-align: left;
+	padding: 10px;
+	margin-bottom: 20px;
+	font-size: 18px;
+	border-bottom: 3px dotted #7E7E7E;
+}

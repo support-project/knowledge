@@ -21,6 +21,7 @@
 </c:param>
 
 <c:param name="PARAM_CONTENT">
+<h4 class="title"><%= jspUtil.label("knowledge.list.title") %></h4>
 
 	<c:if test="${!empty selectedTag}">
 		<div class="row">
@@ -59,17 +60,17 @@
 			<ul class="pager">
 				<li class="previous">
 					<a href="<%= request.getContextPath() %>/open.knowledge/list/${previous}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}">
-						<span aria-hidden="true">&larr;</span>Previous
+						<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
 					</a>
 				</li>
 				<li>
 					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add?offset=${offset}&keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}" style="cursor: pointer;">
-						<i class="fa fa-plus-circle"></i>&nbsp;New Knowledge
+						<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("label.add") %>
 					</a>
 				</li>
 				<li class="next">
 					<a href="<%= request.getContextPath() %>/open.knowledge/list/${next}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}">
-						Next <span aria-hidden="true">&rarr;</span>
+						<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
 					</a>
 				</li>
 			</ul>
@@ -78,7 +79,7 @@
 		<div class="row">
 			<div class="col-sm-12 col-md-8">
 			<c:if test="${empty knowledges}">
-			条件に該当する情報は存在しませんでした。条件（検索キーワード、タグ、ページきりかえ）の変更をお試しください。
+			<%= jspUtil.label("knowledge.list.empty") %>
 			</c:if>
 			
 			<c:forEach var="knowledge" items="${knowledges}" varStatus="status">
@@ -101,9 +102,11 @@
 						<i class="fa fa-user"></i>&nbsp;${knowledge.insertUserName}
 						&nbsp;&nbsp;&nbsp;
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "knowledge.publicFlag", 
-								"<i class=\"fa fa-globe\"></i>&nbsp;[公開]") %>
+								jspUtil.label("label.public.view")) %>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "knowledge.publicFlag", 
-								"<i class=\"fa fa-lock\"></i>&nbsp;[非公開]") %>
+								jspUtil.label("label.private.view")) %>
+						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "knowledge.publicFlag", 
+								jspUtil.label("label.protect.view")) %>
 						<br/>
 						<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("knowledge.updateDatetime")%>
 						&nbsp;&nbsp;&nbsp;
@@ -121,33 +124,40 @@
 			</div>
 			
 			<div class="col-sm-12 col-md-4">
-			<h5>- <i class="fa fa-bolt"></i>&nbsp;Menu - </h5>
+			<h5>- <i class="fa fa-bolt"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu") %> - </h5>
 			<div class="list-group">
 				<a class="list-group-item " 
 				href="<%= request.getContextPath() %>/open.knowledge/list" >
-					<i class="fa fa-list-alt"></i>&nbsp;All Knowledges
+					<i class="fa fa-list-alt"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.all") %>
 				</a>
 				<% if (!"".equals(jspUtil.id())) { %>
 				<a class="list-group-item " 
 				href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.id() %>" >
-					<i class="fa fa-male"></i>&nbsp;My Knowledges
+					<i class="fa fa-male"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.myknowledge") %>
 				</a>
 				<% } %>
 				<a class="list-group-item " 
 				href="<%= request.getContextPath() %>/open.knowledge/search" >
-					<i class="glyphicon glyphicon-search"></i>&nbsp;Search Knowledges
+					<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.search") %>
 				</a>
 				<a class="list-group-item " 
 					href="<%= request.getContextPath() %>/protect.knowledge/view_add?offset=${offset}&keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}" 
 					style="cursor: pointer;">
-					<i class="fa fa-plus-circle"></i>&nbsp;New Knowledge
+					<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.add") %>
 				</a>
-				
-				
 			</div>
 			<br/>
 			
-			<h5>- <i class="fa fa-tags"></i>&nbsp;Popular Tags - </h5>
+			
+			<h5>- <i class="fa fa-group"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.group") %> - </h5>
+			<div class="list-group">
+				<a class="list-group-item " href="<%= request.getContextPath() %>/protect.group/mygroups" style="cursor: pointer;">
+					<i class="fa fa-users"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.group.list") %>
+				</a>
+			</div>
+			<br/>
+			
+			<h5>- <i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("knowledge.list.popular.tags") %> - </h5>
 			
 			<div class="list-group">
 			<c:forEach var="tag" items="${tags}">
@@ -160,11 +170,11 @@
 			</div>
 			<div style="width: 100%;text-align: right;">
 				<a href="<%= request.getContextPath() %>/open.tag/list">
-					<i class="fa fa-tags"></i>&nbsp;タグ一覧
+					<i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("knowledge.list.tags.list") %>
 				</a>&nbsp;&nbsp;&nbsp;
 			</div>
 			
-			<h5>- <i class="fa fa-history"></i>&nbsp;History - </h5>
+			<h5>- <i class="fa fa-history"></i>&nbsp;<%= jspUtil.label("knowledge.list.history") %> - </h5>
 			<div class="list-group">
 			<c:forEach var="history" items="${histories}">
 				<a href="<%= request.getContextPath() %>/open.knowledge/view/${history.knowledgeId}?offset=${offset}&keyword=<%= jspUtil.out("keyword") %>" 
@@ -190,17 +200,17 @@
 			<ul class="pager">
 				<li class="previous">
 					<a href="<%= request.getContextPath() %>/open.knowledge/list/${previous}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}">
-						<span aria-hidden="true">&larr;</span>Previous
+						<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
 					</a>
 				</li>
 				<li>
 					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add?offset=${offset}&keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}" style="cursor: pointer;">
-						<i class="fa fa-plus-circle"></i>&nbsp;New Knowledge
+						<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("label.add") %>
 					</a>
 				</li>
 				<li class="next">
 					<a href="<%= request.getContextPath() %>/open.knowledge/list/${next}?keyword=<%= jspUtil.out("keyword") %>&tag=${tag}&user=${user}">
-						Next <span aria-hidden="true">&rarr;</span>
+						<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
 					</a>
 				</li>
 			</ul>

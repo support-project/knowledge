@@ -1,6 +1,6 @@
 package org.support.project.knowledge.searcher;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.util.Date;
@@ -168,6 +168,55 @@ public class SearchTest {
 		assertEquals(1, results.size());
 		
 		
+	}
+	
+	
+	@Test
+	public void testSearch3() throws Exception {
+		String title = "[5] test";
+		String contents = "TEST";
+		
+		IndexingValue indexingValue = new IndexingValue();
+		indexingValue.setType(0);
+		indexingValue.setId(String.valueOf(RandomUtil.randamNum(0, 10000)));
+		indexingValue.setTitle(title);
+		indexingValue.setContents(contents);
+		indexingValue.addUser(100);
+		indexingValue.addGroup(100);;
+		indexingValue.setCreator(100);
+		indexingValue.setTime(new Date().getTime());
+
+		Indexer indexer = Container.getComp(Indexer.class);
+		indexer.writeIndex(indexingValue);
+		
+		Searcher searcher = Container.getComp(Searcher.class);
+		SearchingValue searchingValue = new SearchingValue();
+		searchingValue.addUser(1);
+		List<SearchResultValue> results = searcher.search(searchingValue);
+		assertEquals(0, results.size());
+		
+		searchingValue = new SearchingValue();
+		searchingValue.addUser(100);
+		results = searcher.search(searchingValue);
+		assertEquals(1, results.size());
+		
+		searchingValue = new SearchingValue();
+		searchingValue.addUser(1);
+		searchingValue.addGroup(1);
+		results = searcher.search(searchingValue);
+		assertEquals(0, results.size());
+		
+		searchingValue = new SearchingValue();
+		searchingValue.addUser(1);
+		searchingValue.addGroup(100);
+		results = searcher.search(searchingValue);
+		assertEquals(1, results.size());
+		
+		searchingValue = new SearchingValue();
+		searchingValue.addUser(100);
+		searchingValue.addGroup(1);
+		results = searcher.search(searchingValue);
+		assertEquals(1, results.size());
 	}
 	
 	

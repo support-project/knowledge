@@ -21,7 +21,7 @@
 	${param.PARAM_PAGE_TITLE}
 </c:if>
 <c:if test="${param.PARAM_PAGE_TITLE == null}">
-	Knowledge - フリーの情報共有サービス
+	<%= jspUtil.label("knowledge.title") %>
 </c:if>
 </title>
 

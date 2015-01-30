@@ -29,29 +29,30 @@ function deleteUser() {
 
 
 <c:param name="PARAM_CONTENT">
+<h4 class="title"><%= jspUtil.label("knowledge.user.edit.title") %></h4>
 
 <form action="<%= request.getContextPath()%>/admin.users/save" method="post" role="form" id="userForm">
 
 	<div class="form-group">
-		<label for="userKey">Mail Address</label>
+		<label for="userKey"><%= jspUtil.label("knowledge.signup.label.mail") %></label>
 		<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="${userKey}" />
 	</div>
 	<div class="form-group">
-		<label for="userName">User Name</label>
+		<label for="userName"><%= jspUtil.label("knowledge.signup.label.name") %></label>
 		<input type="text" class="form-control" name="userName" id="userName" placeholder="User Name" value="${userName}" />
 	</div>
 	
 	<div class="form-group">
-		<label for="password">Password (input to change password)</label>
+		<label for="password"><%= jspUtil.label("knowledge.signup.label.password") %><%= jspUtil.label("knowledge.account.label.password.msg") %></label>
 		<input type="password" class="form-control" name="password" id="password" placeholder="Password" value="${password}" />
 	</div>
 	<div class="form-group">
-		<label for="confirm_password">Confirm Password (input to change password)</label>
+		<label for="confirm_password"><%= jspUtil.label("knowledge.signup.label.confirm.password") %></label>
 		<input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Confirm Password" value="${confirm_password}" />
 	</div>
 	
 	<div class="form-group">
-		<label for="role_${role.roleId}">権限</label><br/>
+		<label for="role_${role.roleId}"><%= jspUtil.label("label.role") %></label><br/>
 		<c:forEach var="role" items="${systemRoles}" varStatus="status">
 		<label class="radio-inline">
 			<input type="checkbox" value="${role.roleKey}" name="roles" 
@@ -66,7 +67,7 @@ function deleteUser() {
 	</div>
 	
 	<div class="form-group">
-		<label for="input_no">登録日時 / 更新日時</label>
+		<label for="input_no"><%= jspUtil.label("label.regist.datetime") %> / <%= jspUtil.label("label.update.datetime") %></label>
 		<p class="form-control-static">
 			<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("insertDatetime")%> / 
 			<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
@@ -76,10 +77,10 @@ function deleteUser() {
 	<input type="hidden" name="offset" value="${offset}" />
 	<input type="hidden" name="userId" value="${userId}" />
 	
-	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;更新</button>
-	<button type="button" class="btn btn-danger" onclick="deleteUser();"><i class="fa fa-remove"></i>&nbsp;削除</button>
+	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.update") %></button>
+	<button type="button" class="btn btn-danger" onclick="deleteUser();"><i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %></button>
 	<a href="<%= request.getContextPath() %>/admin.users/list/${offset}"
-	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;一覧へ戻る</a>
+	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>
 	
 </form>
 

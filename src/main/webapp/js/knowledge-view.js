@@ -25,7 +25,7 @@ var addlike = function(knowledgeId) {
 		success : function(data, dataType) {
 			console.log(data);
 			$('#like_count').text(data.count);
-			$.notify('参考になった！', 'info');
+			$.notify(LABEL_LIKE, 'info');
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown){
 			console.log(textStatus);

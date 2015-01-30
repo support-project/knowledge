@@ -23,6 +23,8 @@
 
 
 <c:param name="PARAM_CONTENT">
+<h4 class="title"><%= jspUtil.label("knowledge.account.title") %></h4>
+
 <div class="row">
 	<div class="col-sm-3 col-md-2">
 		<div id="icondiv">
@@ -38,12 +40,12 @@
 			</div>
 		</div>
 		<div class="form-group" id="drop_target">
-		アイコン画像を、ここへドロッップ<br/>
+		<%= jspUtil.label("knowledge.account.label.icon.drop") %><br/>
 		（png/jpg/jpeg/gif）
 		</div>
 		<div id="fileupload">
 			<span class="btn btn-info fileinput-button">
-				<i class="fa fa-cloud-upload"></i>&nbsp;<span>Icon change...</span>
+				<i class="fa fa-cloud-upload"></i>&nbsp;<span><%= jspUtil.label("knowledge.account.label.icon.select") %></span>
 				<input type="file" name="files[]" multiple>
 			</span>
 		</div>
@@ -53,25 +55,25 @@
 	<div class="col-sm-9 col-md-10">
 		<form action="<%= request.getContextPath()%>/protect.account/update" method="post" role="form">
 			<div class="form-group">
-				<label for="userKey">Mail Address(ログイン時のIDになります/公開されることはありません)</label>
+				<label for="userKey"><%= jspUtil.label("knowledge.signup.label.mail") %></label>
 				<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="${userKey}" />
 			</div>
 			<div class="form-group">
-				<label for="userName">User Name(このサービスの中で表示される名称です)</label>
+				<label for="userName"><%= jspUtil.label("knowledge.signup.label.name") %></label>
 				<input type="text" class="form-control" name="userName" id="userName" placeholder="User Name" value="${userName}" />
 			</div>
 			
 			<div class="form-group">
-				<label for="password">Password (input to change password)</label>
+				<label for="password"><%= jspUtil.label("knowledge.signup.label.password") %><%= jspUtil.label("knowledge.account.label.password.msg") %></label>
 				<input type="password" class="form-control" name="password" id="password" placeholder="Password" value="${password}" />
 			</div>
 			<div class="form-group">
-				<label for="confirm_password">Confirm Password (input to change password)</label>
+				<label for="confirm_password"><%= jspUtil.label("knowledge.signup.label.confirm.password") %></label>
 				<input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Confirm Password" value="${confirm_password}" />
 			</div>
 			
 			<div class="form-group">
-				<label for="input_no">登録日時 / 更新日時</label>
+				<label for="input_no"><%= jspUtil.label("label.regist.datetime") %> / <%= jspUtil.label("label.update.datetime") %></label>
 				<p class="form-control-static">
 					<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("insertDatetime")%> / 
 					<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
@@ -79,8 +81,9 @@
 			</div>
 			
 			
-			<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;更新</button>
-			<a href="<%= request.getContextPath()%>/protect.account/withdrawal" class="btn btn-default"><i class="fa fa-remove"></i>&nbsp;退会</a>
+			<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.update") %></button>
+			<a href="<%= request.getContextPath()%>/protect.account/withdrawal" class="btn btn-default">
+			<i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.withdrawal")%></a>
 			
 		</form>
 	</div>

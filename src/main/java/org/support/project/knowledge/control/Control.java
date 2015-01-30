@@ -11,12 +11,14 @@ import org.owasp.validator.html.Policy;
 import org.owasp.validator.html.PolicyException;
 import org.owasp.validator.html.ScanException;
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.log.LogLevel;
 import org.support.project.common.util.HtmlUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.web.common.HttpUtil;
 import org.support.project.web.util.JspUtil;
 
 @DI(instance=Instance.Prototype)
@@ -49,20 +51,33 @@ public abstract class Control extends org.support.project.web.control.Control {
 		request.setAttribute(MSG_WARN, warns);
 		request.setAttribute(MSG_ERROR, errors);
 	}
+	
+	protected String getResource(String key) {
+		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+		return resources.getResource(key);
+	}
 
-	protected void addMsgInfo(String msg) {
+	protected void addMsgInfo(String key, String... params) {
+		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+		String msg = resources.getResource(key, params);
 		infos.add(HtmlUtils.escapeHTML(msg));
 	}
 
-	protected void addMsgSuccess(String msg) {
+	protected void addMsgSuccess(String key, String... params) {
+		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+		String msg = resources.getResource(key, params);
 		successes.add(HtmlUtils.escapeHTML(msg));
 	}
 
-	protected void addMsgWarn(String msg) {
+	protected void addMsgWarn(String key, String... params) {
+		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+		String msg = resources.getResource(key, params);
 		warns.add(HtmlUtils.escapeHTML(msg));
 	}
 
-	protected void addMsgError(String msg) {
+	protected void addMsgError(String key, String... params) {
+		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+		String msg = resources.getResource(key, params);
 		errors.add(HtmlUtils.escapeHTML(msg));
 	}
 
@@ -72,9 +87,9 @@ public abstract class Control extends org.support.project.web.control.Control {
 		} else {
 			for (ValidateError validateError : errors) {
 				if (validateError.getLevel().intValue() == LogLevel.ERROR.getValue()) {
-					addMsgError(validateError.getMsg());
+					addMsgError(validateError.getMsg(HttpUtil.getLocale(getRequest())));
 				} else {
-					addMsgWarn(validateError.getMsg());
+					addMsgWarn(validateError.getMsg(HttpUtil.getLocale(getRequest())));
 				}
 			}
 		}

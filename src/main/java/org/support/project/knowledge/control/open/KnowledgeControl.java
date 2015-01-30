@@ -17,6 +17,7 @@ import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
+import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
@@ -26,6 +27,7 @@ import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.dao.UsersDao;
+import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
@@ -107,6 +109,10 @@ public class KnowledgeControl extends Control {
 		CommentsDao commentsDao = CommentsDao.get();
 		List<CommentsEntity> comments = commentsDao.selectOnKnowledgeId(knowledgeId);
 		setAttribute("comments", comments);
+		
+		// 表示するグループを取得
+		List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
+		setAttribute("groups", groups);
 		
 		return forward("view.jsp");
 	}

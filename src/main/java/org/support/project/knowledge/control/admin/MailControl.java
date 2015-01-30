@@ -59,11 +59,11 @@ public class MailControl extends Control {
 		//認証がONの場合のチェック
 		if (type.equals(String.valueOf(INT_FLAG.ON.getValue()))) {
 			if (StringUtils.isEmpty(getParam("smtpId"))) {
-				ValidateError error = new ValidateError("認証する場合、SMTP IDは必須です");
+				ValidateError error = new ValidateError("knowledge.config.mail.smtpid.require");
 				errors.add(error);
 			}
 			if (StringUtils.isEmpty(getParam("smtpPassword"))) {
-				ValidateError error = new ValidateError("認証する場合、SMTP パスワードは必須です");
+				ValidateError error = new ValidateError("knowledge.config.mail.smtppass.require");
 				errors.add(error);
 			}
 		}
@@ -85,7 +85,7 @@ public class MailControl extends Control {
 		
 		// TODO テストでメール送信（更新したユーザのメールアドレス宛に、メールを送る）
 		
-		String successMsg = "保存しました";
+		String successMsg = "message.success.save";
 		setResult(successMsg, errors);
 		
 		return forward("config.jsp");
@@ -106,7 +106,7 @@ public class MailControl extends Control {
 		entity.setSystemName(AppConfig.SYSTEM_NAME);
 		setAttributeOnProperty(entity);
 		
-		addMsgInfo("メールの設定を削除しました");
+		addMsgInfo("message.success.delete.target", getResource("knowledge.config.mail"));
 		
 		return forward("config.jsp");
 	}

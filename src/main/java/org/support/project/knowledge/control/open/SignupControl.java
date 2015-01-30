@@ -62,7 +62,7 @@ public class SignupControl extends Control {
 		if (userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_USER)) {
 			// ユーザが自分で登録
 			addUser();
-			addMsgInfo("ユーザ登録しました");
+			addMsgInfo("knowledge.signup.success");
 			return redirect(getRequest().getContextPath());
 		} else if (userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_MAIL)) {
 			// 招待メールで登録
@@ -75,7 +75,7 @@ public class SignupControl extends Control {
 						// 無効なものなので、削除
 						dao.delete(entity);
 					} else {
-						addMsgWarn("既に登録済です。登録されたメールアドレスに招待のメールを送信していますので、ご確認ください。");
+						addMsgWarn("knowledge.signup.exists");
 						return forward("signup.jsp");
 					}
 				}
@@ -92,7 +92,7 @@ public class SignupControl extends Control {
 			ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
 			List<ProvisionalRegistrationsEntity> check = dao.selectOnUserKey(getParam("userKey"));
 			if (!check.isEmpty()) {
-				addMsgWarn("既に登録済ですが管理者による確認がすんでいません。少々お待ちください。");
+				addMsgWarn("knowledge.signup.waiting");
 				return forward("signup.jsp");
 			}
 			// 仮登録を行う
@@ -153,14 +153,14 @@ public class SignupControl extends Control {
 		List<ValidateError> errors = UsersEntity.get().validate(getParams());
 		if (!StringUtils.isEmpty(getParam("password"))) {
 			if (!getParam("password").equals(getParam("confirm_password", String.class))) {
-				ValidateError error = new ValidateError("PasswordとConfirm Passwordが違っています");
+				ValidateError error = new ValidateError("knowledge.user.invalid.same.password");
 				errors.add(error);
 			}
 		}
 		UsersDao dao = UsersDao.get();
 		UsersEntity user = dao.selectOnUserKey(getParam("userKey"));
 		if (user != null) {
-			ValidateError error = new ValidateError("既に登録されているEmail Addressです");
+			ValidateError error = new ValidateError("knowledge.user.mail.exist");
 			errors.add(error);
 		}
 		
@@ -210,7 +210,7 @@ public class SignupControl extends Control {
 		AuthenticationLogic logic = Container.getComp(DefaultAuthenticationLogicImpl.class);
 		logic.setSession(entity.getUserKey(), getRequest());
 		
-		addMsgInfo("ユーザ登録が完了しました");
+		addMsgInfo("knowledge.signup.done");
 		return devolution("Index/index");
 	}
 	

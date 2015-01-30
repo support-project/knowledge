@@ -60,7 +60,7 @@ public class ConfigControl extends Control {
 			MailConfigsDao mailConfigsDao = MailConfigsDao.get();
 			MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.SYSTEM_NAME);
 			if (mailConfigsEntity == null) {
-				ValidateError error = new ValidateError("メールを送る場合、メールの送信の設定が必須です");
+				ValidateError error = new ValidateError("knowledge.config.mail.require");
 				errors.add(error);
 			}
 		}
@@ -78,7 +78,7 @@ public class ConfigControl extends Control {
 		userAddNotify.setConfigValue(notify);
 		dao.save(userAddNotify);
 		
-		String successMsg = "保存しました";
+		String successMsg = "message.success.save";
 		setResult(successMsg, errors);
 		
 		return forward("config.jsp");
