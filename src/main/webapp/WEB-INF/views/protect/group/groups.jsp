@@ -18,10 +18,10 @@
 
 
 <c:param name="PARAM_CONTENT">
-<h4 class="title"><%= jspUtil.label("knowledge.group.list.title") %> <span style="font-size: 14px">page[${ offset + 1 }]</span></h4>
+<h4 class="title"><%= jspUtil.label("knowledge.group.list.title") %> <span style="font-size: 14px">page[<%= jspUtil.getValue("offset", Integer.class) + 1 %>]</span></h4>
 
 <form action="<%= request.getContextPath() %>/protect.group/list" role="form" class="form-inline">
-<input type="text" name="keyword" class="form-control" value="${ keyword }" placeholder="Keyword" >
+<input type="text" name="keyword" class="form-control" value="<%= jspUtil.out("keyword") %>" placeholder="Keyword" >
 <button type="submit" class="btn btn-primary">
 <i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("label.filter") %>
 </button>
@@ -38,10 +38,10 @@
 <nav>
 	<ul class="pager">
 		<li class="previous">
-			<a href="<%= request.getContextPath() %>/protect.group/list/${previous}?keyword=${ keyword }"><span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %></a>
+			<a href="<%= request.getContextPath() %>/protect.group/list/<%= jspUtil.out("previous") %>?keyword=<%= jspUtil.out("keyword") %>"><span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %></a>
 		</li>
 		<li class="next">
-			<a href="<%= request.getContextPath() %>/protect.group/list/${next}?keyword=${ keyword }"><%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span></a>
+			<a href="<%= request.getContextPath() %>/protect.group/list/<%= jspUtil.out("next") %>?keyword=<%= jspUtil.out("keyword") %>"><%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span></a>
 		</li>
 	</ul>
 </nav>
@@ -53,9 +53,9 @@
 </c:if>
 
 <c:forEach var="group" items="${groups}" varStatus="status">
-	<a href="<%= request.getContextPath() %>/protect.group/view/${group.groupId}?listoffset=${offset}" class="list-group-item">
+	<a href="<%= request.getContextPath() %>/protect.group/view/<%= jspUtil.out("group.groupId") %>?listoffset=<%= jspUtil.out("offset") %>" class="list-group-item">
 		<h4 class="list-group-item-heading">
-		${group.groupName}
+		<%= jspUtil.out("group.groupName") %>
 		<c:if test="${ group.editAble }">
 		<span style="font-size: 12px"><%= jspUtil.label("knowledge.group.mylist.label.admin") %></span>
 		</c:if>
@@ -69,8 +69,7 @@
 		<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_MEMBER, "group.status", jspUtil.label("knowledge.group.mylist.label.member")) %>
 		<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_WAIT, "group.status", jspUtil.label("knowledge.group.mylist.label.wait")) %>
 		<br/>
-		
-		${group.description}
+		<%= jspUtil.out("group.description") %>
 		</p>
 	</a>
 </c:forEach>
@@ -80,10 +79,10 @@
 <nav>
 	<ul class="pager">
 		<li class="previous">
-			<a href="<%= request.getContextPath() %>/protect.group/list/${previous}?keyword=${ keyword }"><span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %></a>
+			<a href="<%= request.getContextPath() %>/protect.group/list/<%= jspUtil.out("previous") %>?keyword=<%= jspUtil.out("keyword") %>"><span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %></a>
 		</li>
 		<li class="next">
-			<a href="<%= request.getContextPath() %>/protect.group/list/${next}?keyword=${ keyword }"><%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span></a>
+			<a href="<%= request.getContextPath() %>/protect.group/list/<%= jspUtil.out("next") %>?keyword=<%= jspUtil.out("keyword") %>"><%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span></a>
 		</li>
 	</ul>
 </nav>

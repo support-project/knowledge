@@ -9,6 +9,8 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
+<% String params = "offset=" + jspUtil.out("offset") + "&keyword=" + jspUtil.out("keyword") + "&tag=" + jspUtil.out("tag") + "&user=" + jspUtil.out("user"); %>
+
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
@@ -38,27 +40,28 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 			<div class="thumbnail">
 				<div class="caption">
 					<h3>
-					[${knowledgeId}] ${title}
+					[<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title") %>
 					</h3>
 					
 					<c:if test="${!empty tags}">
 					<p class="tags">
-					<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput" value="${tags}" disabled="disabled"/>
+					<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput"
+						value="<%= jspUtil.out("tags") %>" disabled="disabled"/>
 					</p>
 					</c:if>
 					
 					<p>
-						<button class="btn btn-link" onclick="addlike(${knowledgeId});">
+						<button class="btn btn-link" onclick="addlike(<%= jspUtil.out("knowledgeId") %>);">
 							<i class="fa fa-thumbs-o-up"></i>&nbsp;
-							<%= jspUtil.label("knowledge.view.like") %> × <span id="like_count">${like_count}</span>
+							<%= jspUtil.label("knowledge.view.like") %> × <span id="like_count"><%= jspUtil.out("like_count") %></span>
 						</button>
 					</p>
 					<p class="insert_info">
 						<img src="<%= request.getContextPath()%>/images/loader.gif" 
-							data-echo="<%= request.getContextPath()%>/open.account/icon/${insertUser}" 
+							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("insertUser") %>" 
 							alt="icon" width="36" height="36" style="float:left" />
-						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=${insertUser}">
-						<i class="fa fa-user"></i>&nbsp;${insertUserName}
+						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("insertUser") %>">
+						<i class="fa fa-user"></i>&nbsp;<%= jspUtil.out("insertUserName") %>
 						</a>
 						&nbsp;&nbsp;&nbsp;
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag", 
@@ -73,9 +76,9 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 					
 					<c:forEach var="file" items="${files}" >
 						<p>
-							<img src="${ file.thumbnailUrl }" />
-							<a href="${ file.url }">
-							<c:out value="${file.name}"></c:out>
+							<img src="<%= jspUtil.out("file.thumbnailUrl") %>" />
+							<a href="<%= jspUtil.out("file.url") %>">
+							<%= jspUtil.out("file.name") %>
 							</a>
 						</p>
 					</c:forEach>
@@ -91,19 +94,19 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 	<% if (request.getRemoteUser() != null) { 
 		if (request.isUserInRole("admin") 
 			|| jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
-		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/${knowledgeId}?offset=${offset}&keyword=${keyword}&tag=${tag}&user=${user}"
+		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>?<%= params %>"
 		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
 		<%= jspUtil.label("label.edit") %>
 		</a>
 	<%	} %>
 	<% } else { %>
-		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/${knowledgeId}?offset=${offset}&keyword=${keyword}&tag=${tag}&user=${user}"
+		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>?<%= params %>"
 		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
 		<%= jspUtil.label("knowledge.view.edit.with.login") %>
 		</a>
 	<% } %>
 
-	<a href="<%= request.getContextPath() %>/open.knowledge/list/${offset}?keyword=${keyword}&tag=${tag}&user=${user}"
+	<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %>?<%= params %>"
 	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
 	
 	<hr/>
@@ -116,51 +119,51 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 	%>
 	<div class="row">
 		<div class="col-sm-12">
-		<%= jspUtil.date("comment.updateDatetime")%> [${comment.updateUserName}]
+		<%= jspUtil.date("comment.updateDatetime")%> [<%= jspUtil.out("comment.updateUserName") %>]
 		</div>
 	</div>
 	<div class="question_Box">
 	<div class="question_image">
 		<img src="<%= request.getContextPath()%>/images/loader.gif" 
-			data-echo="<%= request.getContextPath()%>/open.account/icon/${comment.updateUser}" 
+			data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("comment.updateUser") %>" 
 			alt="icon" width="64" height="64"/>
 	</div>
 	<div class="arrow_question">
-	${comment.comment}
+	<%= jspUtil.out("comment.comment") %>
 	</div><!-- /.arrow_question -->
 	</div><!-- /.question_Box -->
 	<% } else { %>
 	<div class="row">
 		<div class="col-sm-12" style="text-align: right;">
-		<%= jspUtil.date("comment.updateDatetime")%> [${comment.updateUserName}]
+		<%= jspUtil.date("comment.updateDatetime")%> [<%= jspUtil.out("comment.updateUserName") %>]
 		</div>
 	</div>
 	<div class="question_Box">
 	<div class="answer_image">
 		<img src="<%= request.getContextPath()%>/images/loader.gif" 
-			data-echo="<%= request.getContextPath()%>/open.account/icon/${comment.updateUser}" 
+			data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("comment.updateUser") %>" 
 			alt="icon" width="64" height="64"/>
 	</div>
 	<div class="arrow_answer">
-	${comment.comment}
+	<%= jspUtil.out("comment.comment") %>
 	</div><!-- /.arrow_answer -->
 	</div><!-- /.question_Box -->
 	<% } %>
 	</c:forEach>
 	
 	<% if (request.getRemoteUser() != null) { %>
-		<form action="<%= request.getContextPath()%>/protect.knowledge/comment/${knowledgeId}" method="post" role="form">
+		<form action="<%= request.getContextPath()%>/protect.knowledge/comment/<%= jspUtil.out("knowledgeId") %>" method="post" role="form">
 		<textarea class="form-control" name="comment" rows="1" placeholder="Comment" id="comment"></textarea>
 		<button type="submit" class="btn btn-primary"><i class="fa fa-comment-o"></i>&nbsp;<%= jspUtil.label("knowledge.view.comment") %></button>
 		</form>
 	<% } else { %>
-		<form action="<%= request.getContextPath()%>/protect.knowledge/view/${knowledgeId}" method="get" role="form">
+		<form action="<%= request.getContextPath()%>/protect.knowledge/view/<%= jspUtil.out("knowledgeId") %>" method="get" role="form">
 		<button type="submit" class="btn btn-primary"><i class="fa fa-comment-o"></i>&nbsp;<%= jspUtil.label("knowledge.view.comment.with.login") %></button>
 		</form>
 	<% } %>
 	
 <span style="display: none;" id="content_text">
-<c:out value="${content}"></c:out>
+<%= jspUtil.out("content") %>
 </span>
 
 

@@ -231,6 +231,7 @@ public class KnowledgeControl extends Control {
 	 * @return
 	 */
 	public Boundary escape(KnowledgesEntity entity) {
+		super.setSendEscapeHtml(false);
 		return super.send(entity);
 	}
 	

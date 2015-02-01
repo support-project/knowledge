@@ -24,11 +24,11 @@
 
 	<div class="form-group">
 		<label for="input_groupName"><%= jspUtil.label("knowledge.group.view.label.groupname") %></label>
-		<input type="text" class="form-control" name="groupName" id="input_groupName" placeholder="Group Name" value="${groupName}">
+		<input type="text" class="form-control" name="groupName" id="input_groupName" placeholder="Group Name" value="<%= jspUtil.out("groupName") %>">
 	</div>
 	<div class="form-group">
 		<label for="input_description"><%= jspUtil.label("knowledge.group.view.label.description") %></label>
-		<input type="text" class="form-control" name="description" id="input_description" placeholder="Description" value="${description}">
+		<input type="text" class="form-control" name="description" id="input_description" placeholder="Description" value="<%= jspUtil.out("description") %>">
 	</div>
 
 	<div class="form-group">

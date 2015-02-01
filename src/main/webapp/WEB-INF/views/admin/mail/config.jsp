@@ -36,11 +36,11 @@ function deleteMail() {
 
 	<div class="form-group">
 		<label for="host"><%= jspUtil.label("knowledge.mail.label.host") %></label>
-		<input type="text" class="form-control" name="host" id="host" placeholder="SMTP HOST" value="${host}" />
+		<input type="text" class="form-control" name="host" id="host" placeholder="SMTP HOST" value="<%= jspUtil.out("host") %>" />
 	</div>
 	<div class="form-group">
 		<label for="port"><%= jspUtil.label("knowledge.mail.label.port") %></label>
-		<input type="text" class="form-control" name="port" id="port" placeholder="SMTP PORT" value="${port}" />
+		<input type="text" class="form-control" name="port" id="port" placeholder="SMTP PORT" value="<%= jspUtil.out("port") %>" />
 	</div>
 	<div class="form-group">
 		<label for="authType_lock"><%= jspUtil.label("label.auth") %></label><br/>
@@ -57,22 +57,22 @@ function deleteMail() {
 	</div>
 	<div class="form-group">
 		<label for="smtpId"><%= jspUtil.label("knowledge.mail.label.auth.id") %></label>
-		<input type="text" class="form-control" name="smtpId" id="smtpId" placeholder="SMTP ID" value="${smtpId}" />
+		<input type="text" class="form-control" name="smtpId" id="smtpId" placeholder="SMTP ID" value="<%= jspUtil.out("smtpId") %>" />
 	</div>
 	<div class="form-group">
 		<label for="smtpPassword"><%= jspUtil.label("knowledge.mail.label.auth.password") %></label>
-		<input type="password" class="form-control" name="smtpPassword" id="smtpPassword" placeholder="SMTP PASSWORD" value="${smtpPassword}" />
+		<input type="password" class="form-control" name="smtpPassword" id="smtpPassword" placeholder="SMTP PASSWORD" value="<%= jspUtil.out("smtpPassword") %>" />
 	</div>
 	<div class="form-group">
 		<label for="fromAddress"><%= jspUtil.label("knowledge.mail.label.auth.send.address") %></label>
-		<input type="text" class="form-control" name="fromAddress" id="fromAddress" placeholder="送信元アドレス" value="${fromAddress}" />
+		<input type="text" class="form-control" name="fromAddress" id="fromAddress" placeholder="送信元アドレス" value="<%= jspUtil.out("fromAddress") %>" />
 	</div>
 	<div class="form-group">
 		<label for="fromName"><%= jspUtil.label("knowledge.mail.label.auth.send.name") %></label>
-		<input type="text" class="form-control" name="fromName" id="fromName" placeholder="送信者名" value="${fromName}" />
+		<input type="text" class="form-control" name="fromName" id="fromName" placeholder="送信者名" value="<%= jspUtil.out("fromName") %>" />
 	</div>
 	
-	<input type="hidden" name="systemName" value="${systemName}" />
+	<input type="hidden" name="systemName" value="<%= jspUtil.out("systemName") %>" />
 	
 	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
 	<button type="button" class="btn btn-danger" onclick="deleteMail();"><i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %></button>

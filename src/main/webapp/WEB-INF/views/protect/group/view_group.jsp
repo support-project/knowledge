@@ -29,12 +29,12 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 	<div class="form-group">
 		<label for="input_groupName"><%= jspUtil.label("knowledge.group.view.label.groupname") %></label>
 		<br/>
-		${groupName}
+		<%= jspUtil.out("groupName") %>
 	</div>
 	<div class="form-group">
 		<label for="input_description"><%= jspUtil.label("knowledge.group.view.label.description") %></label>
 		<br/>
-		${description}
+		<%= jspUtil.out("description") %>
 	</div>
 
 	<div class="form-group">
@@ -47,7 +47,7 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 
 	<c:if test="${ editAble }">
 	<div class="form-group">
-		<a href="<%= request.getContextPath() %>/protect.group/view_edit/${ groupId }" 
+		<a href="<%= request.getContextPath() %>/protect.group/view_edit/<%= jspUtil.out("groupId") %>" 
 			class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;<%= jspUtil.label("label.edit") %>
 		</a>
 		<button type="button" class="btn btn-danger" onclick="deleteGroup();">
@@ -55,8 +55,8 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 		</button>
 	</div>
 	</c:if>
-	<input type="hidden" name="groupId" value="${ groupId }">
-	<input type="hidden" name="groupKey" value="${ groupKey }">
+	<input type="hidden" name="groupId" value="<%= jspUtil.out("groupId") %>">
+	<input type="hidden" name="groupKey" value="<%= jspUtil.out("groupKey") %>">
 </form>
 
 <h4 class="title"><%= jspUtil.label("knowledge.group.view.label.member") %></h4>
@@ -70,21 +70,21 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 <%-- このグループに所属していない --%>
 <% if(jspUtil.is(CommonWebParameter.GROUP_CLASS_PUBLIC, "groupClass")) { %>
 	<%-- 公開の場合(自分でユーザを登録できる) --%>
-	<a href="<%= request.getContextPath() %>/protect.group/subscribe/${ groupId }" 
+	<a href="<%= request.getContextPath() %>/protect.group/subscribe/<%= jspUtil.out("groupId") %>" 
 			class="btn btn-info" role="button"><i class="fa fa-sign-in"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.subscribe.public") %>
 	</a>
 <% } %>
 
 <% if(jspUtil.is(CommonWebParameter.GROUP_CLASS_PROTECT, "groupClass")) { %>
 	<%-- 保護の場合(追加のリクエストは登録できる/管理者はそれを承認できる) --%>
-	<a href="<%= request.getContextPath() %>/protect.group/request/${ groupId }" 
+	<a href="<%= request.getContextPath() %>/protect.group/request/<%= jspUtil.out("groupId") %>" 
 			class="btn btn-info" role="button"><i class="fa fa-sign-in"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.subscribe.protect") %>
 	</a>
 <% } %>
 </c:if>
 
 <c:if test="${ belong }">
-	<a href="<%= request.getContextPath() %>/protect.group/unsubscribe/${ groupId }" 
+	<a href="<%= request.getContextPath() %>/protect.group/unsubscribe/<%= jspUtil.out("groupId") %>" 
 			class="btn btn-danger" role="button"><i class="fa fa-sign-out"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.unsubscribe") %>
 	</a>
 </c:if>
@@ -97,7 +97,7 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 
 <c:forEach var="user" items="${users}" varStatus="status">
 	<div class="list-group-item">
-		<h4 class="list-group-item-heading">${user.userName}</h4>
+		<h4 class="list-group-item-heading"><%= jspUtil.out("user.userName") %></h4>
 		<p class="list-group-item-text">
 			<%= jspUtil.label("label.status") %>: 
 			<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_WAIT, "user.groupRole", jspUtil.label("knowledge.group.view.label.role.wait")) %>
@@ -107,19 +107,19 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 			&nbsp;&nbsp;&nbsp;&nbsp;
 		<% if (jspUtil.is(Boolean.TRUE, "editAble")) { %>
 			<% if(jspUtil.is(CommonWebParameter.GROUP_ROLE_WAIT, "user.groupRole")) { %>
-			<a href="<%= request.getContextPath() %>/protect.group/accept/${groupId}?userId=${user.userId}" class="btn btn-primary">
+			<a href="<%= request.getContextPath() %>/protect.group/accept/<%= jspUtil.out("groupId") %>?userId=<%= jspUtil.out("user.userId") %>" class="btn btn-primary">
 				<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.accept.label.accept") %>
 			</a>
 			<% } else { %>
-			<a href="<%= request.getContextPath() %>/protect.group/change/${groupId}?userId=${user.userId}&status=<%= CommonWebParameter.GROUP_ROLE_ADMIN %>" 
+			<a href="<%= request.getContextPath() %>/protect.group/change/<%= jspUtil.out("groupId") %>?userId=<%= jspUtil.out("user.userId") %>&status=<%= CommonWebParameter.GROUP_ROLE_ADMIN %>" 
 				class="btn btn-default btn-sm">
 				<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.change.admin") %>
 			</a>
-			<a href="<%= request.getContextPath() %>/protect.group/change/${groupId}?userId=${user.userId}&status=<%= CommonWebParameter.GROUP_ROLE_MEMBER %>" 
+			<a href="<%= request.getContextPath() %>/protect.group/change/<%= jspUtil.out("groupId") %>?userId=<%= jspUtil.out("user.userId") %>&status=<%= CommonWebParameter.GROUP_ROLE_MEMBER %>" 
 				class="btn btn-default btn-sm">
 				<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.change.member") %>
 			</a>
-			<a href="<%= request.getContextPath() %>/protect.group/change/${groupId}?userId=${user.userId}&status=0" 
+			<a href="<%= request.getContextPath() %>/protect.group/change/<%= jspUtil.out("groupId") %>?userId=<%= jspUtil.out("user.userId") %>&status=0" 
 				class="btn btn-default btn-sm">
 				<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.change.none") %>
 			</a>
@@ -130,11 +130,6 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 		
 </c:forEach>
 </div>
-
-
-
-
-
 
 
 	<a href="<%= request.getContextPath() %>/protect.group/mygroups"

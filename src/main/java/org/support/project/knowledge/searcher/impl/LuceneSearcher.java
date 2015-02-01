@@ -36,6 +36,7 @@ import org.apache.lucene.util.Version;
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.HtmlUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.IndexType;
@@ -156,12 +157,21 @@ public class LuceneSearcher implements Searcher {
 			
 			QueryParser queryParser = new QueryParser(Version.LUCENE_4_10_2, FIELD_LABEL_TITLE, analyzer);
 			queryParser.setDefaultOperator(Operator.OR);
-			Query query = queryParser.parse(value.getKeyword());
+			Query query;
+			try {
+				query = queryParser.parse(value.getKeyword());
+			} catch (org.apache.lucene.queryparser.classic.ParseException e) {
+				query = queryParser.parse(value.getKeyword().replaceAll("/", ""));
+			}
 			miniContainer.add(query, BooleanClause.Occur.SHOULD);
 			
 			queryParser = new QueryParser(Version.LUCENE_4_10_2, FIELD_LABEL_CONTENTS, analyzer);
 			queryParser.setDefaultOperator(Operator.OR);
-			query = queryParser.parse(value.getKeyword());
+			try {
+				query = queryParser.parse(value.getKeyword());
+			} catch (org.apache.lucene.queryparser.classic.ParseException e) {
+				query = queryParser.parse(value.getKeyword().replaceAll("/", ""));
+			}
 			miniContainer.add(query, BooleanClause.Occur.SHOULD);
 			
 			container.add(miniContainer, BooleanClause.Occur.MUST);

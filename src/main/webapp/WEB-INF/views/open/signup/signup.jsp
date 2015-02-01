@@ -25,20 +25,20 @@
 		<form action="<%= request.getContextPath()%>/open.signup/save" method="post" role="form">
 			<div class="form-group">
 				<label for="userKey"><%= jspUtil.label("knowledge.signup.label.mail") %></label>
-				<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="${userKey}" />
+				<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("userKey") %>" />
 			</div>
 			<div class="form-group">
 				<label for="userName"><%= jspUtil.label("knowledge.signup.label.name") %></label>
-				<input type="text" class="form-control" name="userName" id="userName" placeholder="User Name" value="${userName}" />
+				<input type="text" class="form-control" name="userName" id="userName" placeholder="User Name" value="<%= jspUtil.out("userName") %>" />
 			</div>
 			
 			<div class="form-group">
 				<label for="password"><%= jspUtil.label("knowledge.signup.label.password") %></label>
-				<input type="password" class="form-control" name="password" id="password" placeholder="Password" value="${password}" />
+				<input type="password" class="form-control" name="password" id="password" placeholder="Password" value="<%= jspUtil.out("password") %>" />
 			</div>
 			<div class="form-group">
 				<label for="confirm_password"><%= jspUtil.label("knowledge.signup.label.confirm.password") %></label>
-				<input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Confirm Password" value="${confirm_password}" />
+				<input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Confirm Password" value="<%= jspUtil.out("confirm_password") %>" />
 			</div>
 			
 			<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.registration") %></button>

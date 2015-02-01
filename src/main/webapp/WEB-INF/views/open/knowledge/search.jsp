@@ -38,7 +38,7 @@
 				<button class="btn btn-primary" type="submit">
 					<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("label.search") %>
 				</button>
-				<a href="<%= request.getContextPath() %>/open.knowledge/list/${offset}?keyword=${keyword}&tag=${tag}&user=${user}"
+				<a href="<%= request.getContextPath() %>/open.knowledge/list/<%=jspUtil.out("offset")%>?keyword=<%=jspUtil.out("keyword")%>&tag=<%=jspUtil.out("tag")%>&user=<%=jspUtil.out("user")%>"
 				class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>
 			</form>
 			</div>

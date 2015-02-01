@@ -48,7 +48,7 @@
 				<label for="inputEmail" class="control-label"><%= jspUtil.label("knowledge.auth.label.mail") %></label>
 				<div class="">
 				<input type="text" class="form-control"
-					name="username" value="${username}"
+					name="username" value="<%= jspUtil.out("username") %>"
 					placeholder="Email address" autofocus>
 				</div>
 			</div>
@@ -56,11 +56,11 @@
 				<label for="inputPass" class="control-label"><%= jspUtil.label("knowledge.auth.label.password") %></label>
 				<div class="">
 				<input type="password" class="form-control"
-					name="password" value="${password}"
+					name="password" value="<%= jspUtil.out("password") %>"
 					placeholder="Password">
 				</div>
 			</div>
-			<input type="hidden" name="page" value="${page}" id="page">
+			<input type="hidden" name="page" value="<%= jspUtil.out("page") %>" id="page">
 			
 			<div class="form-group">
 				<div class="">

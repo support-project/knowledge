@@ -25,42 +25,43 @@
 
 	<div class="form-group">
 		<label for="userKey"><%= jspUtil.label("knowledge.signup.label.mail") %></label>
-		<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="${userKey}" />
+		<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("userKey") %>" />
 	</div>
 	<div class="form-group">
 		<label for="userName"><%= jspUtil.label("knowledge.signup.label.name") %></label>
-		<input type="text" class="form-control" name="userName" id="userName" placeholder="User Name" value="${userName}" />
+		<input type="text" class="form-control" name="userName" id="userName" placeholder="User Name" value="<%= jspUtil.out("userName") %>" />
 	</div>
 	
 	<div class="form-group">
 		<label for="password"><%= jspUtil.label("knowledge.signup.label.password") %></label>
-		<input type="password" class="form-control" name="password" id="password" placeholder="Password" value="${password}" />
+		<input type="password" class="form-control" name="password" id="password" placeholder="Password" value="<%= jspUtil.out("password") %>" />
 	</div>
 	<div class="form-group">
 		<label for="confirm_password"><%= jspUtil.label("knowledge.signup.label.confirm.password") %></label>
-		<input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Confirm Password" value="${confirm_password}" />
+		<input type="password" class="form-control" name="confirm_password" id="confirm_password"
+			placeholder="Confirm Password" value="<%= jspUtil.out("confirm_password") %>" />
 	</div>
 	
 	<div class="form-group">
 		<label for="role_${role.roleId}"><%= jspUtil.label("label.role") %></label><br/>
 		<c:forEach var="role" items="${systemRoles}" varStatus="status">		
 		<label class="radio-inline">
-			<input type="checkbox" value="${role.roleKey}" name="roles" 
+			<input type="checkbox" value="<%= jspUtil.out("role.roleKey") %>" name="roles" 
 				id="role_${role.roleId}" <% 
 					if (jspUtil.getValue("role", Roles.class).isChecked()) {
 						out.write("checked=\"checked\"");
 					} 
 				%>/>
-			${role.roleName}
+			<%= jspUtil.out("role.roleName") %>
 		</label>
 		</c:forEach>
 	</div>
 	
-	<input type="hidden" name="offset" value="${offset}" />
+	<input type="hidden" name="offset" value="<%= jspUtil.out("offset") %>" />
 	
 	
 	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.registration") %></button>
-	<a href="<%= request.getContextPath() %>/admin.users/list/${offset}"
+	<a href="<%= request.getContextPath() %>/admin.users/list/<%= jspUtil.out("offset") %>"
 	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>
 	
 </form>

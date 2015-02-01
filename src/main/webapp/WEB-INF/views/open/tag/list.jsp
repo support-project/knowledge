@@ -21,12 +21,12 @@
 	<nav>
 		<ul class="pager">
 			<li class="previous">
-				<a href="<%= request.getContextPath() %>/open.tag/list/${previous}">
+				<a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("previous") %>">
 					<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
 				</a>
 			</li>
 			<li class="next">
-				<a href="<%= request.getContextPath() %>/open.tag/list/${next}">
+				<a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("next") %>">
 					<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
 				</a>
 			</li>
@@ -42,9 +42,9 @@
 	<div class="list-group">
 		<c:forEach var="tag" items="${tags}">
 			<a class="list-group-item " 
-			href="<%= request.getContextPath() %>/open.knowledge/list?tag=${tag.tagId}" >
-				<span class="badge">${tag.knowledgeCount}</span>
-				<i class="fa fa-tag"></i>&nbsp;${tag.tagName}
+			href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%= jspUtil.out("tag.tagId") %>" >
+				<span class="badge"><%= jspUtil.out("tag.knowledgeCount") %></span>
+				<i class="fa fa-tag"></i>&nbsp;<%= jspUtil.out("tag.tagName") %>
 			</a>
 		</c:forEach>
 	</div>
@@ -52,12 +52,12 @@
 	<nav>
 		<ul class="pager">
 			<li class="previous">
-				<a href="<%= request.getContextPath() %>/open.tag/list/${previous}">
+				<a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("previous") %>">
 					<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
 				</a>
 			</li>
 			<li class="next">
-				<a href="<%= request.getContextPath() %>/open.tag/list/${next}">
+				<a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("next") %>">
 					<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
 				</a>
 			</li>

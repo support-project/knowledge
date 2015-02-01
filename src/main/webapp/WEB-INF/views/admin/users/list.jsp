@@ -19,15 +19,15 @@
 <nav>
 	<ul class="pager">
 		<li class="previous">
-			<a href="<%= request.getContextPath() %>/admin.users/list/${previous}"><span aria-hidden="true">&larr;</span>
+			<a href="<%= request.getContextPath() %>/admin.users/list/<%= jspUtil.out("previous") %>"><span aria-hidden="true">&larr;</span>
 			<%= jspUtil.label("label.previous") %></a>
 		</li>
 		<li >
-			<a href="<%= request.getContextPath() %>/admin.users/view_add?offset=${offset}"><i class="fa fa-plus-circle"></i>&nbsp;
+			<a href="<%= request.getContextPath() %>/admin.users/view_add?offset=<%= jspUtil.out("offset") %>"><i class="fa fa-plus-circle"></i>&nbsp;
 			<%= jspUtil.label("label.add") %></a>
 		</li>
 		<li class="next">
-			<a href="<%= request.getContextPath() %>/admin.users/list/${next}"><%= jspUtil.label("label.next") %>
+			<a href="<%= request.getContextPath() %>/admin.users/list/<%= jspUtil.out("next") %>"><%= jspUtil.label("label.next") %>
 			<span aria-hidden="true">&rarr;</span></a>
 		</li>
 	</ul>
@@ -40,8 +40,8 @@
 </c:if>
 
 <c:forEach var="user" items="${users}" varStatus="status">
-	<a href="<%= request.getContextPath() %>/admin.users/view_edit/${user.userId}?offset=${offset}" class="list-group-item">
-		<h4 class="list-group-item-heading">${user.userName} (${user.userKey})</h4>
+	<a href="<%= request.getContextPath() %>/admin.users/view_edit/<%= jspUtil.out("user.userId") %>?offset=<%= jspUtil.out("offset") %>" class="list-group-item">
+		<h4 class="list-group-item-heading"><%= jspUtil.out("user.userName") %> (<%= jspUtil.out("user.userKey") %>)</h4>
 		<p class="list-group-item-text">
 		<%= jspUtil.label("label.regist.datetime") %> / <%= jspUtil.label("label.update.datetime") %>
 			<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("user.insertDatetime")%> / 
@@ -56,15 +56,15 @@
 <nav>
 	<ul class="pager">
 		<li class="previous">
-			<a href="<%= request.getContextPath() %>/admin.users/list/${previous}"><span aria-hidden="true">&larr;</span>
+			<a href="<%= request.getContextPath() %>/admin.users/list/<%= jspUtil.out("previous") %>"><span aria-hidden="true">&larr;</span>
 			<%= jspUtil.label("label.previous") %></a>
 		</li>
 		<li >
-			<a href="<%= request.getContextPath() %>/admin.users/view_add?offset=${offset}"><i class="fa fa-plus-circle"></i>&nbsp;
+			<a href="<%= request.getContextPath() %>/admin.users/view_add?offset=<%= jspUtil.out("offset") %>"><i class="fa fa-plus-circle"></i>&nbsp;
 			<%= jspUtil.label("label.add") %></a>
 		</li>
 		<li class="next">
-			<a href="<%= request.getContextPath() %>/admin.users/list/${next}"><%= jspUtil.label("label.next") %>
+			<a href="<%= request.getContextPath() %>/admin.users/list/<%= jspUtil.out("next") %>"><%= jspUtil.label("label.next") %>
 			<span aria-hidden="true">&rarr;</span></a>
 		</li>
 	</ul>

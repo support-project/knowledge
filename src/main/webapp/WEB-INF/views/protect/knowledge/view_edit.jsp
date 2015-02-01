@@ -32,7 +32,7 @@ var _FAIL_REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.fail.delete.upl
 var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
 
 <c:forEach var="group" items="${groups}" varStatus="status">
-selectedGroups.push({label: '${group.groupName}', value: '${group.groupId}'});
+selectedGroups.push({label: '<%= jspUtil.out("group.groupName") %>', value: '<%= jspUtil.out("group.groupId") %>'});
 </c:forEach>
 
 </script>
@@ -48,15 +48,15 @@ selectedGroups.push({label: '${group.groupName}', value: '${group.groupId}'});
 
 	<div class="form-group">
 		<label for="input_no"><%= jspUtil.label("knowledge.edit.label.key") %></label>
-		<p class="form-control-static"><i class="fa fa-key"></i>&nbsp;${knowledgeId} / <i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%></p> 
+		<p class="form-control-static"><i class="fa fa-key"></i>&nbsp;<%= jspUtil.out("knowledgeId") %> / <i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%></p> 
 	</div>
 	<div class="form-group">
 		<label for="input_title"><%= jspUtil.label("knowledge.add.label.title") %></label>
-		<input type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="${title}" />
+		<input type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="<%= jspUtil.out("title") %>" />
 	</div>
 	<div class="form-group">
 		<label for="input_content"><%= jspUtil.label("knowledge.add.label.content") %></label>
-		<textarea class="form-control" name="content" rows="5" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content">${content}</textarea>
+		<textarea class="form-control" name="content" rows="5" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
 	</div>
 	
 	<div class="form-group">
@@ -80,16 +80,16 @@ selectedGroups.push({label: '${group.groupName}', value: '${group.groupId}'});
 	</div>
 	<div class="form-group" id="files">
 	<c:forEach var="file" items="${files}" >
-		<div class="filediv" id="file-${ file.fileNo }">
+		<div class="filediv" id="file-<%= jspUtil.out("file.fileNo") %>">
 			<div class="file-label">
-				<img src="${ file.thumbnailUrl }" />
-				<a href="${ file.url }">
-				<c:out value="${file.name}"></c:out>
+				<img src="<%= jspUtil.out("file.thumbnailUrl") %>" />
+				<a href="<%= jspUtil.out("file.url") %>">
+				<%= jspUtil.out("file.name") %>
 				</a>
 			</div>
-			<input type="hidden" name="files" value="${ file.fileNo }" />
+			<input type="hidden" name="files" value="<%= jspUtil.out("file.fileNo") %>" />
 			&nbsp;&nbsp;&nbsp;
-			<button type="button" class="btn btn-danger" onclick="removeAddedFile(${ file.fileNo })">
+			<button type="button" class="btn btn-danger" onclick="removeAddedFile(<%= jspUtil.out("file.fileNo") %>)">
 				<i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %>
 			</button>
 		</div>
@@ -130,25 +130,25 @@ selectedGroups.push({label: '${group.groupName}', value: '${group.groupId}'});
 		<label for="input_tag"><%= jspUtil.label("knowledge.add.label.tags") %></label>
 		<p class="tags">
 		<input type="text" class="form-control" name="tags" id="input_tags" 
-			placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="${tags}" />
+			placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="<%= jspUtil.out("tags") %>" />
 		</p>
 	</div>
 	
 	
-	<input type="hidden" name="knowledgeId" value="${knowledgeId}" />
-	<input type="hidden" name="offset" value="${offset}" />
-	<input type="hidden" name="keyword" value="${keyword}" />
-	<input type="hidden" name="tag" value="${tag}" />
+	<input type="hidden" name="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" />
+	<input type="hidden" name="offset" value="<%= jspUtil.out("offset") %>" />
+	<input type="hidden" name="keyword" value="<%= jspUtil.out("keyword") %>" />
+	<input type="hidden" name="tag" value="<%= jspUtil.out("tag") %>" />
 	
 	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
 	<button type="button" class="btn btn-info" onclick="preview();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
 	
 	<button type="button" class="btn btn-danger" onclick="deleteKnowledge();"><i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %></button>
 	
-	<a href="<%= request.getContextPath() %>/open.knowledge/view/${knowledgeId}?offset=${offset}&keyword=${keyword}&tag=${tag}&user=${user}"
-	class="btn btn-warning" role="button"><i class="fa fa-undo"></i>&nbsp;<%= jspUtil.label("label.cancel") %></a>
-	<a href="<%= request.getContextPath() %>/open.knowledge/list/${offset}?keyword=${keyword}&tag=${tag}&user=${user}"
-	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>
+	<a href="<%= request.getContextPath() %>/open.knowledge/view/<%= jspUtil.out("knowledgeId") %>?offset=<%= jspUtil.out("offset") %>&keyword=<%= jspUtil.out("keyword") %>&tag=<%= jspUtil.out("tag") %>&user=<%= jspUtil.out("user") %>"
+		class="btn btn-warning" role="button"><i class="fa fa-undo"></i>&nbsp;<%= jspUtil.label("label.cancel") %></a>
+	<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %>?keyword=<%= jspUtil.out("keyword") %>&tag=<%= jspUtil.out("tag") %>&user=<%= jspUtil.out("user") %>"
+		class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>
 	
 </form>
 
@@ -169,7 +169,7 @@ selectedGroups.push({label: '${group.groupName}', value: '${group.groupId}'});
 			</div>
 			<div class="modal-body">
 				<div role="form" class="form-inline">
-					<input type="text" name="keyword" class="form-control" value="${ keyword }" placeholder="Keyword" id="groupKeyword">
+					<input type="text" name="keyword" class="form-control" value="<%= jspUtil.out("keyword") %>" placeholder="Keyword" id="groupKeyword">
 					<button type="button" class="btn btn-success" id="groupSearchButton">
 						<i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("label.filter") %>
 					</button>
