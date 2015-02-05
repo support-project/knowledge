@@ -67,6 +67,7 @@ $(document).ready(function() {
 		} else {
 			console.log(e);
 			console.log(data);
+			$.notify('アップロードに失敗しました', 'warn');
 		}
 	 }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 	

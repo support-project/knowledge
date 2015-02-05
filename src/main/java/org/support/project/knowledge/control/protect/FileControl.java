@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.fileupload.FileItem;
+import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.DI;
@@ -14,9 +15,11 @@ import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.knowledge.vo.UploadResults;
+import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.boundary.JsonBoundary;
 import org.support.project.web.common.HttpStatus;
+import org.support.project.web.common.HttpUtil;
 
 @DI(instance=Instance.Prototype)
 public class FileControl extends Control {
@@ -37,11 +40,21 @@ public class FileControl extends Control {
 		Object obj = getParam("files[]", Object.class);
 		if (obj instanceof FileItem) {
 			FileItem fileItem = (FileItem) obj;
+			if (fileItem.getSize() > 10 * 1024 * 1024) {
+				ValidateError error = new ValidateError("errors.maxfilesize", "10MB");
+				Msg msg = new Msg(error.getMsg(HttpUtil.getLocale(getRequest())));
+				return send(HttpStatus.SC_400_BAD_REQUEST, msg);
+			}
 			UploadFile file = fileLogic.saveFile(fileItem, getLoginedUser(), getRequest().getContextPath());
 			files.add(file);
 		} else if (obj instanceof List) {
 			List<FileItem> fileItems = (List<FileItem>) obj;
 			for (FileItem fileItem : fileItems) {
+				if (fileItem.getSize() > 10 * 1024 * 1024) {
+					ValidateError error = new ValidateError("errors.maxfilesize", "10MB");
+					Msg msg = new Msg(error.getMsg(HttpUtil.getLocale(getRequest())));
+					return send(HttpStatus.SC_400_BAD_REQUEST, msg);
+				}
 				UploadFile file = fileLogic.saveFile(fileItem, getLoginedUser(), getRequest().getContextPath());
 				files.add(file);
 			}

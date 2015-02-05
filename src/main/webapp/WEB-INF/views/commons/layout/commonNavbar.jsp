@@ -104,6 +104,7 @@
 								<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.acccept") %> 
 							</a>
 						</li>
+						
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.system") %></li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.config/config" style="cursor: pointer;">
@@ -115,6 +116,15 @@
 								<i class="fa fa-inbox"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system.mail") %>
 							</a>
 						</li>
+						
+						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.data") %></li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.database/index" style="cursor: pointer;">
+								<i class="fa fa-recycle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.data.backup") %>
+							</a>
+						</li>
+						
+						
 					</ul>
 				</li>
 				<% } %>

@@ -54,22 +54,24 @@ public class KnowledgeControl extends Control {
 		List<String> ids = new ArrayList<String>();
 		ids.add(String.valueOf(knowledgeId));
 		Cookie[] cookies = getRequest().getCookies();
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals("KNOWLEDGE_HISTORY")) {
-				String history = cookie.getValue();
-				if (history.indexOf(",") != -1) {
-					String[] historyIds = history.split(",");
-					for (int i = historyIds.length - 1; i >= 0; i--) {
-						if (!ids.contains(historyIds[i])) {
-							ids.add(historyIds[i]);
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("KNOWLEDGE_HISTORY")) {
+					String history = cookie.getValue();
+					if (history.indexOf(",") != -1) {
+						String[] historyIds = history.split(",");
+						for (int i = historyIds.length - 1; i >= 0; i--) {
+							if (!ids.contains(historyIds[i])) {
+								ids.add(historyIds[i]);
+							}
+							if (ids.size() >= 10) {
+								break;
+							}
 						}
-						if (ids.size() >= 10) {
-							break;
+					} else {
+						if (!ids.contains(history)) {
+							ids.add(history);
 						}
-					}
-				} else {
-					if (!ids.contains(history)) {
-						ids.add(history);
 					}
 				}
 			}

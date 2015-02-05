@@ -9,11 +9,23 @@ $(document).ready(function(){
 	});
 	$('#content').html(marked($('#content_text').text()));
 	echo.init();
+	
+	$('#commentsLink').click(function(){
+		var speed = 500;
+		var href= $(this).attr("href");
+		//var target = $(href == "#" || href == "" ? 'html' : href);
+		var target = $(href);
+		var position = target.offset().top;
+		$("html, body").animate({scrollTop:position}, speed, "swing");
+		return false;
+	});
+	
+	$('#input_tags').on('beforeItemRemove', function(event) {
+		event.cancel = true;
+	});
+	
 });
 
-$('#input_tags').on('beforeItemRemove', function(event) {
-	event.cancel = true;
-});
 
 
 

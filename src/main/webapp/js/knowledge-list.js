@@ -12,18 +12,24 @@ $(document).ready(function() {
 		// $(this).html(marked(text));
 	});
 	
+	/*
 	$('.thumbnail').hover(function() {
 		$(this).find('.discription').slideDown(250); // .fadeIn(250)
 	}, function() {
 		$(this).find('.discription').slideUp(250); // .fadeOut(205)
 	});
+	*/
+	
 	$('#input_tags').on('beforeItemRemove', function(event) {
 		event.cancel = true;
 	});
 	echo.init();
 });
 
-var showKnowledge = function(url, offset, keyword, tag, user) {
+var showKnowledge = function(id, offset, keyword, tag, user) {
+	$('#discription_' + id).slideDown(20);
+	var url = _CONTEXT + '/open.knowledge/view/' + id;
+	
 	var param = '';
 	if (offset) {
 		param += '?offset=' + offset;

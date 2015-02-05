@@ -40,6 +40,8 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 	
 	/** いいねのカウント */
 	private Long likeCount;
+	/** コメントのカウント */
+	private int commentsCount;
 	
 	
 	/**
@@ -128,6 +130,20 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 	 */
 	public void setLikeCount(Long likeCount) {
 		this.likeCount = likeCount;
+	}
+
+	/**
+	 * @return the commentsCount
+	 */
+	public int getCommentsCount() {
+		return commentsCount;
+	}
+
+	/**
+	 * @param commentsCount the commentsCount to set
+	 */
+	public void setCommentsCount(int commentsCount) {
+		this.commentsCount = commentsCount;
 	}
 	
 	

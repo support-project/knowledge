@@ -16,6 +16,7 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.config.IndexType;
+import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeTagsDao;
@@ -24,6 +25,7 @@ import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
+import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.entity.KnowledgeTagsEntity;
@@ -260,8 +262,13 @@ public class KnowledgeLogic {
 				// TODO 登録ユーザ名
 				List<KnowledgesEntity> list = knowledgesDao.selectKnowledge(offset, limit, loginedUser.getUserId());
 				for (KnowledgesEntity entity : list) {
+					entity.setContent(org.apache.commons.lang.StringUtils.abbreviate(entity.getContent(), LuceneSearcher.CONTENTS_LIMIT_LENGTH));
+					// タグを取得（1件づつ処理するのでパフォーマンス悪いかも？）
 					setTags(entity);
+					// いいねの回数
 					setLikeCount(entity);
+					// コメント件数
+					setCommentsCount(entity);
 				}
 				return list;
 			}
@@ -420,6 +427,9 @@ public class KnowledgeLogic {
 					setTags(entity);
 					// いいねの回数
 					setLikeCount(entity);
+					// コメント件数
+					setCommentsCount(entity);
+
 					knowledges.add(entity);
 				}
 			} else if (searchResultValue.getType() == TYPE_FILE) {
@@ -448,13 +458,34 @@ public class KnowledgeLogic {
 					setTags(entity);
 					// いいねの回数
 					setLikeCount(entity);
+					// コメント件数
+					setCommentsCount(entity);
+					
 					knowledges.add(entity);
 				}
 			}
 		}
 		return knowledges;
 	}
+	
+	/**
+	 * コメントの件数を取得
+	 * TODO 再度SQLを実行するのでは無く、ナレッジ取得時にカウントもjoinして取得したほうが早い
+	 * 
+	 * @param entity
+	 */
+	private void setCommentsCount(KnowledgesEntity entity) {
+		CommentsDao commentsDao = CommentsDao.get();
+		Integer count = commentsDao.countOnKnowledgeId(entity.getKnowledgeId());
+		entity.setCommentsCount(count);
+	}
 
+	/**
+	 * いいねの件数を取得
+	 * TODO 再度SQLを実行するのでは無く、ナレッジ取得時にカウントもjoinして取得したほうが早い
+	 * 
+	 * @param entity
+	 */
 	private void setLikeCount(KnowledgesEntity entity) {
 		LikesDao likesDao = LikesDao.get();
 		Long count = likesDao.countOnKnowledgeId(entity.getKnowledgeId());

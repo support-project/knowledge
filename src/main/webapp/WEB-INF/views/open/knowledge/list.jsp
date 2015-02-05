@@ -84,13 +84,12 @@
 			
 			<c:forEach var="knowledge" items="${knowledges}" varStatus="status">
 				<div class="thumbnail" 
-					onclick="showKnowledge('<%= request.getContextPath() %>/open.knowledge/view/<%= jspUtil.out("knowledge.knowledgeId") %>',
+					onclick="showKnowledge('<%= jspUtil.out("knowledge.knowledgeId") %>',
 						'<%= jspUtil.out("offset") %>', '<%= jspUtil.out("keyword") %>',
 						'<%= jspUtil.out("tag") %>', '<%= jspUtil.out("user") %>');">
-					<div class="discription"><i class="fa fa-check-square-o"></i>&nbsp;show!</div>
+					<div class="discription" id="discription_<%= jspUtil.out("knowledge.knowledgeId") %>"><i class="fa fa-check-square-o"></i>&nbsp;show!</div>
 					<div class="caption">
-						<h4>[<%= jspUtil.out("knowledge.knowledgeId") %>]&nbsp;<%= jspUtil.out("knowledge.title") %></h4>
-						
+						<h4>[<%= jspUtil.out("knowledge.knowledgeId") %>]&nbsp;<%= jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR) %></h4>
 						<c:if test="${!empty knowledge.tags}">
 						<p class="tags">
 						<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput" value="<%= jspUtil.out("knowledge.tags") %>" disabled="disabled"/>
@@ -113,6 +112,8 @@
 						<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("knowledge.updateDatetime")%>
 						&nbsp;&nbsp;&nbsp;
 						<i class="fa fa-thumbs-o-up"></i>&nbsp;× <span id="like_count"><%= jspUtil.out("knowledge.likeCount") %></span>
+						&nbsp;&nbsp;&nbsp;
+						<i class="fa fa-comments-o"></i>&nbsp;× <%= jspUtil.out("knowledge.commentsCount") %>
 						</p>
 						<p style="clear:left;">
 						

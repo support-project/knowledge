@@ -32,6 +32,16 @@ public class CommentsDao extends GenCommentsDao {
 		builder.append("WHERE KNOWLEDGE_ID = ? ");
 		return executeQueryList(builder.toString(), CommentsEntity.class, knowledgeId);
 	}
+	
+	/**
+	 * ナレッジのコメントの件数を取得
+	 * @param knowledgeId
+	 * @return
+	 */
+	public Integer countOnKnowledgeId(Long knowledgeId) {
+		String sql = "SELECT COUNT(*) FROM COMMENTS WHERE KNOWLEDGE_ID = ?";
+		return super.executeQuerySingle(sql, Integer.class, knowledgeId);
+	}
 
 
 

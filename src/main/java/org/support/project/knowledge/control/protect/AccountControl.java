@@ -19,8 +19,10 @@ import org.support.project.knowledge.logic.UserLogic;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.knowledge.vo.UploadResults;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
+import org.support.project.web.common.HttpUtil;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.logic.AuthenticationLogic;
@@ -131,18 +133,20 @@ public class AccountControl extends Control {
 		Object obj = getParam("files[]", Object.class);
 		if (obj instanceof FileItem) {
 			FileItem fileItem = (FileItem) obj;
-			ValidateError error = checkExtension(fileItem.getName());
+			ValidateError error = checkFile(fileItem);
 			if (error != null) {
-				return send(HttpStatus.SC_400_BAD_REQUEST, error);
+				Msg msg = new Msg(error.getMsg(HttpUtil.getLocale(getRequest())));
+				return send(HttpStatus.SC_400_BAD_REQUEST, msg);
 			}
 			UploadFile file = logic.saveIconImage(fileItem, getLoginedUser(), getRequest().getContextPath());
 			files.add(file);
 		} else if (obj instanceof List) {
 			List<FileItem> fileItems = (List<FileItem>) obj;
 			for (FileItem fileItem : fileItems) {
-				ValidateError error = checkExtension(fileItem.getName());
+				ValidateError error = checkFile(fileItem);
 				if (error != null) {
-					return send(HttpStatus.SC_400_BAD_REQUEST, error);
+					Msg msg = new Msg(error.getMsg(HttpUtil.getLocale(getRequest())));
+					return send(HttpStatus.SC_400_BAD_REQUEST, msg);
 				}
 				UploadFile file = logic.saveIconImage(fileItem, getLoginedUser(), getRequest().getContextPath());
 				files.add(file);
@@ -152,11 +156,18 @@ public class AccountControl extends Control {
 		return send(HttpStatus.SC_200_OK, results);
 	}
 	/**
+	 * アップロードされたファイルのチェック
 	 * アイコン画像の拡張子チェック
 	 * @param name
 	 * @return
 	 */
-	private ValidateError checkExtension(String name) {
+	private ValidateError checkFile(FileItem fileItem) {
+		if (fileItem.getSize() > 5 * 1024 * 1024) {
+			ValidateError error = new ValidateError("errors.maxfilesize", "5MB");
+			return error;
+		}
+		
+		String name = fileItem.getName();
 		Validator validator = ValidatorFactory.getInstance(Validator.EXTENSION);
 		return validator.validate(name, "icon", "png", "jpg", "jpeg", "gif");
 	}

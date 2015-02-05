@@ -33,6 +33,7 @@
 .thumbnail {
 	border: 0px solid #ccc;
 	box-shadow: none;
+	cursor: pointer;
 }
 
 .selected_tag {

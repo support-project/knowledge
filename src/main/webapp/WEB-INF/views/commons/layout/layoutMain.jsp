@@ -71,7 +71,7 @@ ${param.PARAM_SCRIPTS}
 		<!-- /nav -->
 		<div class="clearfix"></div>
 		<div class="copy">
-			<span>Copyright &#169; 2015 Knowledge project.</span>
+			<span>Copyright &#169; 2015 support-project.org [Knowledge project]</span>
 		</div>
 		<!-- /copy -->
 	</div>

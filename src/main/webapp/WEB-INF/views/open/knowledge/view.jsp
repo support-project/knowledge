@@ -55,6 +55,11 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 							<i class="fa fa-thumbs-o-up"></i>&nbsp;
 							<%= jspUtil.label("knowledge.view.like") %> × <span id="like_count"><%= jspUtil.out("like_count") %></span>
 						</button>
+						
+						<a class="btn btn-link" href="#comments" id="commentsLink">
+							<i class="fa fa-comments-o"></i>&nbsp;
+							× <%= jspUtil.out("comments.size()") %>
+						</a>
 					</p>
 					<p class="insert_info">
 						<img src="<%= request.getContextPath()%>/images/loader.gif" 
@@ -110,7 +115,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
 	
 	<hr/>
-	<h5><i class="fa fa-comments-o"></i>&nbsp;Comment</h5>
+	<h5 id="comments"><i class="fa fa-comments-o"></i>&nbsp;Comment</h5>
 	<c:forEach var="comment" items="${comments}" varStatus="status">
 	<%
 		CommentsEntity comment = jspUtil.getValue("comment", CommentsEntity.class);
