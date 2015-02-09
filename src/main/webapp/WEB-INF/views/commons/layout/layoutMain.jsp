@@ -25,7 +25,7 @@
 </c:if>
 </title>
 
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/common.css" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/common.css") %>" />
 
 </head>
 

@@ -13,7 +13,7 @@
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/account.js"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/account.js") %>"></script>
 </c:param>
 
 

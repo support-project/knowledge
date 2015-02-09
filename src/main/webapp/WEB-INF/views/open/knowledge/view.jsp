@@ -15,14 +15,14 @@
 
 <c:param name="PARAM_HEAD">
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-edit.css" />
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-view.css" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-edit.css") %>" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-view.css") %>" />
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view.js"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view.js") %>"></script>
 
 <script>
 var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';

@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-edit.css" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-edit.css") %>" />
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
@@ -21,7 +21,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-edit.js"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-edit.js") %>"></script>
 
 <script>
 var _UPLOADED = '<%= jspUtil.label("knowledge.edit.label.uploaded") %>';

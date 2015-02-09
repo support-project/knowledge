@@ -18,7 +18,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/account.js"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/account.js") %>"></script>
 </c:param>
 
 

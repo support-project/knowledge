@@ -11,13 +11,13 @@
 
 <c:param name="PARAM_HEAD">
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-list.css" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-list.css") %>" />
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-list.js"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-list.js") %>"></script>
 </c:param>
 
 <c:param name="PARAM_CONTENT">

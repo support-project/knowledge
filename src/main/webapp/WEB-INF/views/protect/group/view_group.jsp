@@ -13,7 +13,7 @@
 <c:param name="PARAM_HEAD">
 </c:param>
 <c:param name="PARAM_SCRIPTS">
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/group.js"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/group.js") %>"></script>
 <script>
 var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.delete") %>';
 </script>
