@@ -1,3 +1,9 @@
+-- Project Name : knowledge
+-- Date/Time    : 2015/02/19 4:22:27
+-- Author       : ek003024
+-- RDBMS Type   : PostgreSQL
+-- Application  : A5:SQL Mk-2
+
 -- アカウントの画像
 drop table if exists ACCOUNT_IMAGES cascade;
 
@@ -191,6 +197,10 @@ create table KNOWLEDGES (
   , TITLE character varying(1024) not null
   , CONTENT text
   , PUBLIC_FLAG integer
+  , TAG_IDS character varying(1024)
+  , TAG_NAMES text
+  , LIKE_COUNT bigint
+  , COMMENT_COUNT integer
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -316,6 +326,10 @@ comment on column KNOWLEDGES.KNOWLEDGE_ID is 'ナレッジID';
 comment on column KNOWLEDGES.TITLE is 'タイトル';
 comment on column KNOWLEDGES.CONTENT is '内容';
 comment on column KNOWLEDGES.PUBLIC_FLAG is '公開区分';
+comment on column KNOWLEDGES.TAG_IDS is 'タグID一覧';
+comment on column KNOWLEDGES.TAG_NAMES is 'タグ名称一覧';
+comment on column KNOWLEDGES.LIKE_COUNT is 'いいね件数';
+comment on column KNOWLEDGES.COMMENT_COUNT is 'コメント件数';
 comment on column KNOWLEDGES.INSERT_USER is '登録ユーザ';
 comment on column KNOWLEDGES.INSERT_DATETIME is '登録日時';
 comment on column KNOWLEDGES.UPDATE_USER is '更新ユーザ';

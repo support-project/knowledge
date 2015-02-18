@@ -126,8 +126,8 @@ selectedGroups.push({label: '<%= jspUtil.out("group.groupName") %>', value: '<%=
 	<div class="form-group">
 		<label for="input_tag"><%= jspUtil.label("knowledge.add.label.tags") %></label>
 		<p class="tags">
-		<input type="text" class="form-control" name="tags" id="input_tags" 
-			placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="<%= jspUtil.out("tags") %>" />
+		<input type="text" class="form-control" name="tagNames" id="input_tags" 
+			placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="<%= jspUtil.out("tagNames") %>" />
 		</p>
 	</div>
 	

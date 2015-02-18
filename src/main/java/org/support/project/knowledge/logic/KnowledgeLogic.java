@@ -2,7 +2,6 @@ package org.support.project.knowledge.logic;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +11,7 @@ import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.common.util.StringJoinBuilder;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.knowledge.bat.FileParseBat;
@@ -25,7 +25,6 @@ import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
-import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.entity.KnowledgeTagsEntity;
@@ -127,6 +126,9 @@ public class KnowledgeLogic {
 		
 		// 全文検索エンジンへ登録
 		saveIndex(entity, tags, groups, loginedUser);
+		
+		// 一覧表示用の情報を更新
+		updateKnowledgeExInfo(entity);
 		return entity;
 	}
 	
@@ -163,6 +165,9 @@ public class KnowledgeLogic {
 		
 		// 全文検索エンジンへ登録
 		saveIndex(entity, tags, groups, loginedUser);
+		
+		// 一覧表示用の情報を更新
+		updateKnowledgeExInfo(entity);
 		return entity;
 	}
 	
@@ -239,6 +244,28 @@ public class KnowledgeLogic {
 		
 		IndexLogic.get().save(indexingValue); //全文検索のエンジンにも保存（DBに保存する意味ないかも）
 	}
+	
+	
+	/**
+	 * 全文検索エンジンからナレッジを取得し、そこにさらに付加情報をつけて返す
+	 * 
+	 * @param searchingValue
+	 * @return
+	 * @throws Exception
+	 */
+	private List<KnowledgesEntity> searchKnowledge(SearchingValue searchingValue) throws Exception {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("search params：" + PropertyUtil.reflectionToString(searchingValue));
+		}
+		LOG.trace("検索開始");
+		List<SearchResultValue> list = IndexLogic.get().search(searchingValue);
+		LOG.trace("検索終了");
+		LOG.trace("付加情報をセット開始");
+		List<KnowledgesEntity> result = getKnowledgeDatas(list);
+		LOG.trace("付加情報をセット終了");
+		return result;
+	}
+	
 
 	/**
 	 * ナレッジの検索
@@ -256,22 +283,23 @@ public class KnowledgeLogic {
 		searchingValue.setLimit(limit);
 		
 		if (loginedUser != null && loginedUser.isAdmin()) {
-			// 管理者の場合はユーザのアクセス権を考慮しない
-			if (StringUtils.isEmpty(keyword)) {
-				//キーワードが指定されていなければDBから直接取得
-				// TODO 登録ユーザ名
-				List<KnowledgesEntity> list = knowledgesDao.selectKnowledge(offset, limit, loginedUser.getUserId());
-				for (KnowledgesEntity entity : list) {
-					entity.setContent(org.apache.commons.lang.StringUtils.abbreviate(entity.getContent(), LuceneSearcher.CONTENTS_LIMIT_LENGTH));
-					// タグを取得（1件づつ処理するのでパフォーマンス悪いかも？）
-					setTags(entity);
-					// いいねの回数
-					setLikeCount(entity);
-					// コメント件数
-					setCommentsCount(entity);
-				}
-				return list;
-			}
+			// 管理者の場合はユーザのアクセス権を考慮しないので、何もセットしない
+			
+// DBからの直接取得はやめた
+//			if (StringUtils.isEmpty(keyword)) {
+//				//キーワードが指定されていなければDBから直接取得
+//				List<KnowledgesEntity> list = knowledgesDao.selectKnowledge(offset, limit, loginedUser.getUserId());
+//				for (KnowledgesEntity entity : list) {
+//					entity.setContent(org.apache.commons.lang.StringUtils.abbreviate(entity.getContent(), LuceneSearcher.CONTENTS_LIMIT_LENGTH));
+//					// タグを取得（1件づつ処理するのでパフォーマンス悪いかも？）
+//					setTags(entity);
+//					// いいねの回数
+//					setLikeCount(entity);
+//					// コメント件数
+//					setCommentsCount(entity);
+//				}
+//				return list;
+//			}
 		} else {
 			searchingValue.addUser(ALL_USER);
 			Integer userId = null;
@@ -287,12 +315,7 @@ public class KnowledgeLogic {
 				}
 			}
 		}
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("search params：" + PropertyUtil.reflectionToString(searchingValue));
-		}
-		List<SearchResultValue> list = IndexLogic.get().search(searchingValue);
-		
-		return getKnowledgeDatas(list);
+		return searchKnowledge(searchingValue);
 	}
 	
 	/**
@@ -332,12 +355,7 @@ public class KnowledgeLogic {
 			searchingValue.addTag(new Integer(tag));
 		}
 		
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("search params：" + PropertyUtil.reflectionToString(searchingValue));
-		}
-		List<SearchResultValue> list = IndexLogic.get().search(searchingValue);
-		
-		return getKnowledgeDatas(list);
+		return searchKnowledge(searchingValue);
 	}
 	
 	/**
@@ -349,7 +367,7 @@ public class KnowledgeLogic {
 	 * @return
 	 * @throws Exception 
 	 */
-	public Collection<? extends KnowledgesEntity> showKnowledgeOnUser(int targetUser, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+	public List<KnowledgesEntity> showKnowledgeOnUser(int targetUser, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
 		SearchingValue searchingValue = new SearchingValue();
 		searchingValue.setOffset(offset);
 		searchingValue.setLimit(limit);
@@ -374,13 +392,9 @@ public class KnowledgeLogic {
 		}
 		searchingValue.setCreator(targetUser);
 		
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("search params：" + PropertyUtil.reflectionToString(searchingValue));
-		}
-		List<SearchResultValue> list = IndexLogic.get().search(searchingValue);
-		
-		return getKnowledgeDatas(list);
+		return searchKnowledge(searchingValue);
 	}
+
 	
 	
 	/**
@@ -402,12 +416,14 @@ public class KnowledgeLogic {
 //				fileIds.add(new Long(id));
 			}
 		}
+		LOG.trace("添付ファイル情報取得完了");
 		
 		List<KnowledgesEntity> dbs = knowledgesDao.selectKnowledges(knowledgeIds);
 		Map<Long, KnowledgesEntity> map = new HashMap<Long, KnowledgesEntity>();
 		for (KnowledgesEntity knowledgesEntity : dbs) {
 			map.put(knowledgesEntity.getKnowledgeId(), knowledgesEntity);
 		}
+		LOG.trace("ナレッジ情報取得完了");
 		
 		List<KnowledgesEntity> knowledges = new ArrayList<>();
 		for (SearchResultValue searchResultValue : list) {
@@ -421,15 +437,8 @@ public class KnowledgeLogic {
 					if (StringUtils.isNotEmpty(searchResultValue.getHighlightedContents())) {
 						entity.setContent(searchResultValue.getHighlightedContents());
 					} else {
-						entity.setContent(org.apache.commons.lang.StringUtils.abbreviate(entity.getContent(), LuceneSearcher.CONTENTS_LIMIT_LENGTH));
+						// entity.setContent(org.apache.commons.lang.StringUtils.abbreviate(entity.getContent(), LuceneSearcher.CONTENTS_LIMIT_LENGTH));
 					}
-					// タグを取得（1件づつ処理するのでパフォーマンス悪いかも？）
-					setTags(entity);
-					// いいねの回数
-					setLikeCount(entity);
-					// コメント件数
-					setCommentsCount(entity);
-
 					knowledges.add(entity);
 				}
 			} else if (searchResultValue.getType() == TYPE_FILE) {
@@ -437,7 +446,7 @@ public class KnowledgeLogic {
 				String id = searchResultValue.getId().substring(FileParseBat.ID_PREFIX.length());
 				Long fileNo = new Long(id);
 				KnowledgeFilesEntity filesEntity = filesDao.selectOnKeyWithoutBinary(fileNo);
-				if (filesEntity.getKnowledgeId() != null) {
+				if (filesEntity != null && filesEntity.getKnowledgeId() != null) {
 					KnowledgesEntity entity = knowledgesDao.selectOnKeyWithUserName(filesEntity.getKnowledgeId());
 					entity.setTitle(entity.getTitle());
 					
@@ -454,46 +463,67 @@ public class KnowledgeLogic {
 						builder.append(searchResultValue.getHighlightedContents());
 					}
 					entity.setContent(builder.toString());
-					// タグを取得（1件づつ処理するのでパフォーマンス悪いかも？）
-					setTags(entity);
-					// いいねの回数
-					setLikeCount(entity);
-					// コメント件数
-					setCommentsCount(entity);
-					
 					knowledges.add(entity);
 				}
 			}
 		}
+
+// 以下の付加情報は、ナレッジテーブルに持ち各テーブルに再取得しない
+//		for (KnowledgesEntity entity : knowledges) {
+//			// タグを取得（1件づつ処理するのでパフォーマンス悪いかも？）
+//			setTags(entity);
+//			// いいねの回数
+//			setLikeCount(entity);
+//			// コメント件数
+//			setCommentsCount(entity);
+//		}
+		
+		
+		LOG.trace("ナレッジ１件づつに、付加情報をセット完了");
+
 		return knowledges;
 	}
 	
-	/**
-	 * コメントの件数を取得
-	 * TODO 再度SQLを実行するのでは無く、ナレッジ取得時にカウントもjoinして取得したほうが早い
-	 * 
-	 * @param entity
-	 */
-	private void setCommentsCount(KnowledgesEntity entity) {
-		CommentsDao commentsDao = CommentsDao.get();
-		Integer count = commentsDao.countOnKnowledgeId(entity.getKnowledgeId());
-		entity.setCommentsCount(count);
-	}
+//	/**
+//	 * コメントの件数を取得
+//	 * TODO 再度SQLを実行するのでは無く、ナレッジ取得時にカウントもjoinして取得したほうが早い
+//	 * 
+//	 * @param entity
+//	 */
+//	private void setCommentsCount(KnowledgesEntity entity) {
+//		CommentsDao commentsDao = CommentsDao.get();
+//		Integer count = commentsDao.countOnKnowledgeId(entity.getKnowledgeId());
+//		entity.setCommentCount(count);
+//	}
+//
+//	/**
+//	 * いいねの件数を取得
+//	 * TODO 再度SQLを実行するのでは無く、ナレッジ取得時にカウントもjoinして取得したほうが早い
+//	 * 
+//	 * @param entity
+//	 */
+//	private void setLikeCount(KnowledgesEntity entity) {
+//		LikesDao likesDao = LikesDao.get();
+//		Long count = likesDao.countOnKnowledgeId(entity.getKnowledgeId());
+//		entity.setLikeCount(count);
+//	}
 
 	/**
-	 * いいねの件数を取得
-	 * TODO 再度SQLを実行するのでは無く、ナレッジ取得時にカウントもjoinして取得したほうが早い
-	 * 
-	 * @param entity
+	 * ナレッジの情報を取得
+	 * 取得する際にタグ情報も取得
 	 */
-	private void setLikeCount(KnowledgesEntity entity) {
-		LikesDao likesDao = LikesDao.get();
-		Long count = likesDao.countOnKnowledgeId(entity.getKnowledgeId());
-		entity.setLikeCount(count);
+	public KnowledgesEntity selectWithTags(Long knowledgeId, LoginedUser loginedUser) {
+		KnowledgesEntity entity = select(knowledgeId, loginedUser);
+		if (entity != null) {
+			//タグをセット
+			setTags(entity);
+		}
+		return entity;
 	}
-
+	
+	
 	/**
-	 * ナレッジを取得
+	 * ナレッジを取得（アクセス権のあるもののみ）
 	 * @param knowledgeId
 	 * @param loginedUser
 	 * @return
@@ -504,8 +534,6 @@ public class KnowledgeLogic {
 		if (entity == null) {
 			return entity;
 		}
-		//タグをセット
-		setTags(entity);
 		
 		if (entity.getPublicFlag() == null || entity.getPublicFlag().intValue() == PUBLIC_FLAG_PUBLIC) {
 			return entity;
@@ -544,6 +572,7 @@ public class KnowledgeLogic {
 				}
 			}
 		}
+		// アクセス権がなかった
 		return null;
 	}
 
@@ -563,7 +592,7 @@ public class KnowledgeLogic {
 			builder.append(tagsEntity.getTagName());
 			count++;
 		}
-		entity.setTags(builder.toString());
+		entity.setTagNames(builder.toString());
 	}
 
 	/**
@@ -691,9 +720,61 @@ public class KnowledgeLogic {
 		likesEntity.setKnowledgeId(knowledgeId);
 		likesDao.insert(likesEntity);
 		
+		updateKnowledgeExInfo(knowledgeId);
+		
 		Long count = likesDao.countOnKnowledgeId(knowledgeId);
 		return count;
 	}
 
 
+	/**
+	 * ナレッジテーブルの
+	 * タグやイイネ件数、コメント件数などの付加情報を
+	 * 更新する（一覧表示用）
+	 * 
+	 * @param knowledgeId
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public void updateKnowledgeExInfo(Long knowledgeId) {
+		// 一覧表示用の情報を更新
+		KnowledgesDao knowledgesDao = KnowledgesDao.get();
+		KnowledgesEntity entity = knowledgesDao.selectOnKey(knowledgeId);
+		updateKnowledgeExInfo(entity);
+	}
+	
+	/**
+	 * ナレッジテーブルの
+	 * タグやイイネ件数、コメント件数などの付加情報を
+	 * 更新する（一覧表示用）
+	 * 
+	 * @param entity
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public void updateKnowledgeExInfo(KnowledgesEntity entity) {
+		// タグ情報
+		TagsDao tagsDao = TagsDao.get();
+		List<TagsEntity> tags = tagsDao.selectOnKnowledgeId(entity.getKnowledgeId());
+		StringJoinBuilder ids = new StringJoinBuilder();
+		StringJoinBuilder names = new StringJoinBuilder();
+		for (TagsEntity tagsEntity : tags) {
+			ids.append(tagsEntity.getTagId());
+			names.append(tagsEntity.getTagName());
+		}
+		entity.setTagIds(ids.join(","));
+		entity.setTagNames(names.join(","));
+		// いいね件数
+		LikesDao likesDao = LikesDao.get();
+		Long likeCount = likesDao.countOnKnowledgeId(entity.getKnowledgeId());
+		entity.setLikeCount(likeCount);
+		// コメント件数
+		CommentsDao commentsDao = CommentsDao.get();
+		Integer commentCount = commentsDao.countOnKnowledgeId(entity.getKnowledgeId());
+		entity.setCommentCount(commentCount);
+		
+		// 更新
+		KnowledgesDao knowledgesDao = KnowledgesDao.get();
+		knowledgesDao.update(entity);
+	}
+	
+	
 }

@@ -67,15 +67,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
 	public List<KnowledgesEntity> selectKnowledges(List<Long> knowledgeIds) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
-		sql.append(" KNOWLEDGES.KNOWLEDGE_ID");
-		sql.append(" ,KNOWLEDGES.TITLE");
-		sql.append(" ,KNOWLEDGES.CONTENT");
-		sql.append(" ,KNOWLEDGES.PUBLIC_FLAG");
-        sql.append(" ,KNOWLEDGES.INSERT_USER");
-        sql.append(" ,KNOWLEDGES.INSERT_DATETIME");
-        sql.append(" ,KNOWLEDGES.UPDATE_USER");
-        sql.append(" ,KNOWLEDGES.UPDATE_DATETIME");
-        sql.append(" ,KNOWLEDGES.DELETE_FLAG");
+		sql.append(" KNOWLEDGES.*");
         sql.append(" ,USERS.USER_NAME AS INSERT_USER_NAME");
         sql.append(" FROM");
         sql.append(" KNOWLEDGES");
