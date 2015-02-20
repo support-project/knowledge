@@ -60,7 +60,7 @@ public class KnowledgeControl extends Control {
 		setAttribute("offset", offset);
 		
 		Long knowledgeId = super.getPathLong();
-		KnowledgesEntity entity = knowledgeLogic.select(knowledgeId, getLoginedUser());
+		KnowledgesEntity entity = knowledgeLogic.selectWithTags(knowledgeId, getLoginedUser());
 		if (entity == null) {
 			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
 		}
@@ -131,7 +131,7 @@ public class KnowledgeControl extends Control {
 			return forward("view_add.jsp");
 		}
 		LOG.trace("save");
-		String tags = super.getParam("tags");
+		String tags = super.getParam("tagNames");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
 		
 		entity = knowledgeLogic.insert(entity, tagList, fileNos, groups, super.getLoginedUser());
@@ -205,7 +205,7 @@ public class KnowledgeControl extends Control {
 		}
 		
 		LOG.trace("save");
-		String tags = super.getParam("tags");
+		String tags = super.getParam("tagNames");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
 		
 		entity = knowledgeLogic.update(entity, tagList, fileNos, groups, super.getLoginedUser());
@@ -260,7 +260,11 @@ public class KnowledgeControl extends Control {
 		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId);
 	}
 	
-	
+	/**
+	 * コメント追加
+	 * @return
+	 * @throws InvalidParamException
+	 */
 	public Boundary comment() throws InvalidParamException {
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
 		
@@ -270,6 +274,9 @@ public class KnowledgeControl extends Control {
 		commentsEntity.setKnowledgeId(knowledgeId);
 		commentsEntity.setComment(comment);
 		commentsDao.insert(commentsEntity);
+		
+		// 一覧表示用の情報を更新
+		KnowledgeLogic.get().updateKnowledgeExInfo(knowledgeId);
 		
 		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId);
 	}

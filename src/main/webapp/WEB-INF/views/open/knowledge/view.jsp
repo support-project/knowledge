@@ -43,10 +43,10 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 					[<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title") %>
 					</h3>
 					
-					<c:if test="${!empty tags}">
+					<c:if test="${!empty tagNames}">
 					<p class="tags">
 					<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput"
-						value="<%= jspUtil.out("tags") %>" disabled="disabled"/>
+						value="<%= jspUtil.out("tagNames") %>" disabled="disabled"/>
 					</p>
 					</c:if>
 					

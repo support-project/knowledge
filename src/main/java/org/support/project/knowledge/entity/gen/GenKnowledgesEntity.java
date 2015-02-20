@@ -58,6 +58,14 @@ public class GenKnowledgesEntity implements Serializable {
 	private String content;
 	/** 公開区分 */
 	private Integer publicFlag;
+	/** タグID一覧 */
+	private String tagIds;
+	/** タグ名称一覧 */
+	private String tagNames;
+	/** いいね件数 */
+	private Long likeCount;
+	/** コメント件数 */
+	private Integer commentCount;
 	/** 登録ユーザ */
 	private Integer insertUser;
 	/** 登録日時 */
@@ -126,6 +134,66 @@ public class GenKnowledgesEntity implements Serializable {
 	 */
 	public GenKnowledgesEntity setPublicFlag(Integer publicFlag) {
 		this.publicFlag = publicFlag;
+		return this;
+	}
+
+	/**
+	 * タグID一覧 を取得する
+	 */
+	public String getTagIds() {
+		return this.tagIds;
+	}
+	/**
+	 * タグID一覧 を設定する
+	 * @param tagIds タグID一覧
+	 */
+	public GenKnowledgesEntity setTagIds(String tagIds) {
+		this.tagIds = tagIds;
+		return this;
+	}
+
+	/**
+	 * タグ名称一覧 を取得する
+	 */
+	public String getTagNames() {
+		return this.tagNames;
+	}
+	/**
+	 * タグ名称一覧 を設定する
+	 * @param tagNames タグ名称一覧
+	 */
+	public GenKnowledgesEntity setTagNames(String tagNames) {
+		this.tagNames = tagNames;
+		return this;
+	}
+
+	/**
+	 * いいね件数 を取得する
+	 */
+	public Long getLikeCount() {
+		return this.likeCount;
+	}
+	/**
+	 * いいね件数 を設定する
+	 * @param likeCount いいね件数
+	 */
+	public GenKnowledgesEntity setLikeCount(Long likeCount) {
+		this.likeCount = likeCount;
+		return this;
+	}
+
+	/**
+	 * コメント件数 を取得する
+	 */
+	public Integer getCommentCount() {
+		return this.commentCount;
+	}
+	/**
+	 * コメント件数 を設定する
+	 * @param commentCount コメント件数
+	 */
+	public GenKnowledgesEntity setCommentCount(Integer commentCount) {
+		this.commentCount = commentCount;
 		return this;
 	}
 
@@ -252,6 +320,10 @@ public class GenKnowledgesEntity implements Serializable {
 		builder.append("title = ").append(title).append("\n");
 		builder.append("content = ").append(content).append("\n");
 		builder.append("publicFlag = ").append(publicFlag).append("\n");
+		builder.append("tagIds = ").append(tagIds).append("\n");
+		builder.append("tagNames = ").append(tagNames).append("\n");
+		builder.append("likeCount = ").append(likeCount).append("\n");
+		builder.append("commentCount = ").append(commentCount).append("\n");
 		builder.append("insertUser = ").append(insertUser).append("\n");
 		builder.append("insertDatetime = ").append(insertDatetime).append("\n");
 		builder.append("updateUser = ").append(updateUser).append("\n");
@@ -284,6 +356,16 @@ public class GenKnowledgesEntity implements Serializable {
 		}
 		validator = ValidatorFactory.getInstance(Validator.INTEGER);
 		error = validator.validate(this.publicFlag, convLabelName("Public Flag"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+		error = validator.validate(this.tagIds, convLabelName("Tag Ids"), 1024);
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.INTEGER);
+		error = validator.validate(this.commentCount, convLabelName("Comment Count"));
 		if (error != null) {
 			errors.add(error);
 		}
@@ -323,6 +405,16 @@ public class GenKnowledgesEntity implements Serializable {
 		}
 		validator = ValidatorFactory.getInstance(Validator.INTEGER);
 		error = validator.validate(values.get("publicFlag"), convLabelName("Public Flag"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+		error = validator.validate(values.get("tagIds"), convLabelName("Tag Ids"), 1024);
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.INTEGER);
+		error = validator.validate(values.get("commentCount"), convLabelName("Comment Count"));
 		if (error != null) {
 			errors.add(error);
 		}

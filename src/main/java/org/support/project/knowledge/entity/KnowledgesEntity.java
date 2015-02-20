@@ -1,13 +1,9 @@
 package org.support.project.knowledge.entity;
 
-import org.owasp.validator.html.PolicyException;
-import org.owasp.validator.html.ScanException;
-import org.support.project.common.exception.SystemException;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.entity.gen.GenKnowledgesEntity;
 
 
@@ -68,11 +64,12 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 		if (StringUtils.isEmpty(super.getTitle())) {
 			return super.getTitle();
 		}
-		try {
-			return Control.doSamy(super.getTitle());
-		} catch (PolicyException | ScanException e) {
-			throw new SystemException(e);
-		}
+//		try {
+//			return Control.doSamy(super.getTitle());
+//		} catch (PolicyException | ScanException e) {
+//			throw new SystemException(e);
+//		}
+		return super.getTitle();
 	}
 
 	/* (non-Javadoc)
@@ -83,11 +80,12 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 		if (StringUtils.isEmpty(super.getContent())) {
 			return super.getContent();
 		}
-		try {
-			return Control.doSamy(super.getContent());
-		} catch (PolicyException | ScanException e) {
-			throw new SystemException(e);
-		}
+//		try {
+//			return Control.doSamy(super.getContent());
+//		} catch (PolicyException | ScanException e) {
+//			throw new SystemException(e);
+//		}
+		return super.getContent();
 	}
 
 	/**
@@ -102,48 +100,6 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 	 */
 	public void setInsertUserName(String insertUserName) {
 		this.insertUserName = insertUserName;
-	}
-
-	/**
-	 * @return the tags
-	 */
-	public String getTags() {
-		return tags;
-	}
-
-	/**
-	 * @param tags the tags to set
-	 */
-	public void setTags(String tags) {
-		this.tags = tags;
-	}
-
-	/**
-	 * @return the likeCount
-	 */
-	public Long getLikeCount() {
-		return likeCount;
-	}
-
-	/**
-	 * @param likeCount the likeCount to set
-	 */
-	public void setLikeCount(Long likeCount) {
-		this.likeCount = likeCount;
-	}
-
-	/**
-	 * @return the commentsCount
-	 */
-	public int getCommentsCount() {
-		return commentsCount;
-	}
-
-	/**
-	 * @param commentsCount the commentsCount to set
-	 */
-	public void setCommentsCount(int commentsCount) {
-		this.commentsCount = commentsCount;
 	}
 	
 	

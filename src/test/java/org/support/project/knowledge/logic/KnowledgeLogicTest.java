@@ -120,7 +120,7 @@ public class KnowledgeLogicTest extends TestCommon {
 		eqdb(checks, entities);
 		
 		checks = new ArrayList<KnowledgesEntity>();
-		list.get(1).setContent(StringUtils.abbreviate(list.get(1).getContent(), LuceneSearcher.CONTENTS_LIMIT_LENGTH));
+		list.get(1).setContent(list.get(1).getContent());
 		checks.add(list.get(1)); //スコア上
 		checks.add(list.get(0));
 		

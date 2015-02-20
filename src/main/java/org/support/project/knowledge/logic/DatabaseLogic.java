@@ -32,7 +32,6 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.common.wrapper.FileInputStreamWithDeleteWrapper;
 import org.support.project.di.Container;
 import org.support.project.knowledge.config.AppConfig;
-import org.support.project.web.logic.H2DBServerLogic;
 
 public class DatabaseLogic {
 	/** ログ */

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.Cookie;
 
+import org.owasp.validator.html.PolicyException;
+import org.owasp.validator.html.ScanException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
@@ -33,6 +35,8 @@ import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
 public class KnowledgeControl extends Control {
+	private static final int COOKIE_COUNT = 5;
+
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(KnowledgeControl.class);
 	
@@ -60,11 +64,12 @@ public class KnowledgeControl extends Control {
 					String history = cookie.getValue();
 					if (history.indexOf(",") != -1) {
 						String[] historyIds = history.split(",");
-						for (int i = historyIds.length - 1; i >= 0; i--) {
+						//for (int i = historyIds.length - 1; i >= 0; i--) {
+						for (int i = 0; i < historyIds.length; i++) {
 							if (!ids.contains(historyIds[i])) {
 								ids.add(historyIds[i]);
 							}
-							if (ids.size() >= 10) {
+							if (ids.size() >= COOKIE_COUNT) {
 								break;
 							}
 						}
@@ -75,14 +80,14 @@ public class KnowledgeControl extends Control {
 					}
 				}
 			}
+			String cookieHistory = String.join(",", ids);
+			Cookie cookie = new  Cookie("KNOWLEDGE_HISTORY", cookieHistory);
+			cookie.setPath(getRequest().getContextPath());
+			cookie.setMaxAge(COOKIE_AGE);
+			getResponse().addCookie(cookie);
 		}
-		String cookieHistory = String.join(",", ids);
-		Cookie cookie = new  Cookie("KNOWLEDGE_HISTORY", cookieHistory);
-		cookie.setPath(getRequest().getContextPath());
-		cookie.setMaxAge(COOKIE_AGE);
-		getResponse().addCookie(cookie);
 		
-		KnowledgesEntity entity = knowledgeLogic.select(knowledgeId, getLoginedUser());
+		KnowledgesEntity entity = knowledgeLogic.selectWithTags(knowledgeId, getLoginedUser());
 		if (entity == null) {
 			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
 		}
@@ -125,6 +130,7 @@ public class KnowledgeControl extends Control {
 	 * @throws Exception 
 	 */
 	public Boundary list() throws Exception {
+		LOG.trace("Call list");
 		TagsDao tagsDao = TagsDao.get();
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
 		
@@ -133,7 +139,6 @@ public class KnowledgeControl extends Control {
 		String keyword = getParam("keyword");
 		String tag = getParam("tag");
 		String user = getParam("user");
-		
 		
 		List<KnowledgesEntity> knowledges = new ArrayList<>();
 		
@@ -152,11 +157,12 @@ public class KnowledgeControl extends Control {
 			usersEntity.setPassword("");
 			setAttribute("selectedUser", usersEntity);
 		} else {
-			// その他
+			// その他(キーワード検索)
 			LOG.trace("search");
 			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 		}
 		setAttribute("knowledges", knowledges);
+		LOG.trace("検索終了");
 		
 		int previous = offset -1;
 		if (previous < 0) {
@@ -173,6 +179,8 @@ public class KnowledgeControl extends Control {
 			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, PAGE_LIMIT);
 			setAttribute("tags", tags);
 		}
+		LOG.trace("タグ取得完了");
+
 		
 		// History表示
 		// TODO 履歴表示を毎回取得するのはイマイチ。いったんセッションに保存しておくのが良いかも
@@ -195,12 +203,18 @@ public class KnowledgeControl extends Control {
 			}
 		}
 		List<KnowledgesEntity> histories = knowledgeLogic.getKnowledges(historyIds, loginedUser);
-		for (KnowledgesEntity knowledgesEntity : histories) {
-			knowledgesEntity.setContent(org.apache.commons.lang.StringUtils.abbreviate(
-					knowledgesEntity.getContent(), 40));
-			knowledgesEntity.setContent(doSamy(knowledgesEntity.getContent()));
-		}
+		LOG.trace("履歴取得完了");
+//		for (KnowledgesEntity knowledgesEntity : histories) {
+//			LOG.trace("   文字数チェック");
+//			knowledgesEntity.setContent(org.apache.commons.lang.StringUtils.abbreviate(
+//					knowledgesEntity.getContent(), 40));
+//			LOG.trace("   文字数チェック終了");
+//			LOG.trace("   Samy");
+//			knowledgesEntity.setContent(doSamy(knowledgesEntity.getContent()));
+//			LOG.trace("   Samy終了");
+//		}
 		setAttribute("histories", histories);
+		LOG.trace("履歴表示修正");
 		
 		setAttribute("offset", offset);
 		setAttribute("previous", previous);
@@ -231,9 +245,13 @@ public class KnowledgeControl extends Control {
 	 * TODO クライアント側で出来ないか？
 	 * @param entity
 	 * @return
+	 * @throws ScanException 
+	 * @throws PolicyException 
 	 */
-	public Boundary escape(KnowledgesEntity entity) {
+	public Boundary escape(KnowledgesEntity entity) throws PolicyException, ScanException {
 		super.setSendEscapeHtml(false);
+		entity.setTitle(doSamy(entity.getTitle()));
+		entity.setContent(doSamy(entity.getContent()));
 		return super.send(entity);
 	}
 	

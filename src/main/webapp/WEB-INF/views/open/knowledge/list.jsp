@@ -89,10 +89,11 @@
 						'<%= jspUtil.out("tag") %>', '<%= jspUtil.out("user") %>');">
 					<div class="discription" id="discription_<%= jspUtil.out("knowledge.knowledgeId") %>"><i class="fa fa-check-square-o"></i>&nbsp;show!</div>
 					<div class="caption">
-						<h4>[<%= jspUtil.out("knowledge.knowledgeId") %>]&nbsp;<%= jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR) %></h4>
-						<c:if test="${!empty knowledge.tags}">
+						<h4>[<%= jspUtil.out("knowledge.knowledgeId") %>]&nbsp;
+						<%= jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR) %></h4>
+						<c:if test="${!empty knowledge.tagNames}">
 						<p class="tags">
-						<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput" value="<%= jspUtil.out("knowledge.tags") %>" disabled="disabled"/>
+						<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput" value="<%= jspUtil.out("knowledge.tagNames") %>" disabled="disabled"/>
 						</p>
 						</c:if>
 						
@@ -113,7 +114,7 @@
 						&nbsp;&nbsp;&nbsp;
 						<i class="fa fa-thumbs-o-up"></i>&nbsp;× <span id="like_count"><%= jspUtil.out("knowledge.likeCount") %></span>
 						&nbsp;&nbsp;&nbsp;
-						<i class="fa fa-comments-o"></i>&nbsp;× <%= jspUtil.out("knowledge.commentsCount") %>
+						<i class="fa fa-comments-o"></i>&nbsp;× <%= jspUtil.out("knowledge.commentCount") %>
 						</p>
 						<p style="clear:left;">
 						
@@ -182,9 +183,10 @@
 			<c:forEach var="history" items="${histories}">
 				<a href="<%= request.getContextPath() %>/open.knowledge/view/<%= jspUtil.out("history.knowledgeId") %>?offset=<%= jspUtil.out("offset") %>&keyword=<%= jspUtil.out("keyword") %>" 
 				class="list-group-item">
-					<h5 class="list-group-item-heading"><i class="fa fa-history"></i>&nbsp;[<%= jspUtil.out("history.knowledgeId") %>]&nbsp;<%= jspUtil.out("history.title") %></h5>
+					<h5 class="list-group-item-heading"><i class="fa fa-history"></i>&nbsp;
+					[<%= jspUtil.out("history.knowledgeId") %>]&nbsp;<%= jspUtil.out("history.title") %></h5>
 					<p class="list-group-item-text">
-					<%= jspUtil.out("history.content") %>
+					<%= jspUtil.out("history.content", 0, 40) %>
 					</p>
 				</a>
 			</c:forEach>
