@@ -2,10 +2,12 @@ package org.support.project.knowledge.logic;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
+import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.RandomUtil;
@@ -152,17 +154,19 @@ public class UserLogic {
 	 * 退会
 	 * @param loginUserId
 	 * @param knowledgeRemove
+	 * @param locale 
 	 * @throws Exception 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void withdrawal(Integer loginUserId, boolean knowledgeRemove) throws Exception {
+	public void withdrawal(Integer loginUserId, boolean knowledgeRemove, Locale locale) throws Exception {
 		// アカウント削除
 		UsersDao usersDao = UsersDao.get();
 		UsersEntity user = usersDao.selectOnKey(loginUserId);
 		if (user != null) {
 			user.setPassword(RandomUtil.randamGen(32));
 			user.setUserKey(RandomUtil.randamGen(32));
-			user.setUserName("削除済ユーザー");
+			Resources resources = Resources.getInstance(locale);
+			user.setUserName(resources.getResource("knowledge.withdrawal.label.name"));
 			user.setDeleteFlag(INT_FLAG.ON.getValue());
 			usersDao.update(user);
 			usersDao.delete(loginUserId);

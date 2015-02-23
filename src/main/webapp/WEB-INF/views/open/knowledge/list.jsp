@@ -59,17 +59,17 @@
 		<nav>
 			<ul class="pager">
 				<li class="previous">
-					<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("previous") %>?keyword=<%= jspUtil.out("keyword") %>&tag=<%= jspUtil.out("tag") %>&user=<%= jspUtil.out("user") %>">
+					<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("previous") %><%= jspUtil.out("params") %>">
 						<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
 					</a>
 				</li>
 				<li>
-					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add?offset=<%= jspUtil.out("offset") %>&keyword=<%= jspUtil.out("keyword") %>&tag=<%= jspUtil.out("tag") %>&user=<%= jspUtil.out("user") %>" style="cursor: pointer;">
+					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" style="cursor: pointer;">
 						<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("label.add") %>
 					</a>
 				</li>
 				<li class="next">
-					<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("next") %>?keyword=<%= jspUtil.out("keyword") %>&tag=<%= jspUtil.out("tag") %>&user=<%= jspUtil.out("user") %>">
+					<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("next") %><%= jspUtil.out("params") %>">
 						<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
 					</a>
 				</li>
@@ -101,7 +101,11 @@
 						<img src="<%= request.getContextPath()%>/images/loader.gif" 
 							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("knowledge.insertUser") %>" 
 							alt="icon" width="36" height="36" style="float:left"/>
-						<i class="fa fa-user"></i>&nbsp;<%= jspUtil.out("knowledge.insertUserName") %>
+						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("knowledge.updateDatetime")%>
+						<br/>
+						<i class="fa fa-thumbs-o-up" style="margin-left: 5px;"></i>&nbsp;× <span id="like_count"><%= jspUtil.out("knowledge.likeCount") %></span>
+						&nbsp;&nbsp;&nbsp;
+						<i class="fa fa-comments-o"></i>&nbsp;× <%= jspUtil.out("knowledge.commentCount") %>
 						&nbsp;&nbsp;&nbsp;
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "knowledge.publicFlag", 
 								jspUtil.label("label.public.view")) %>
@@ -110,17 +114,13 @@
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "knowledge.publicFlag", 
 								jspUtil.label("label.protect.view")) %>
 						<br/>
-						<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("knowledge.updateDatetime")%>
-						&nbsp;&nbsp;&nbsp;
-						<i class="fa fa-thumbs-o-up"></i>&nbsp;× <span id="like_count"><%= jspUtil.out("knowledge.likeCount") %></span>
-						&nbsp;&nbsp;&nbsp;
-						<i class="fa fa-comments-o"></i>&nbsp;× <%= jspUtil.out("knowledge.commentCount") %>
+						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("knowledge.insertUserName") %>
 						</p>
 						<p style="clear:left;">
 						
 						<p style="word-break:break-all" class="content">
 						<%-- <c:out value="${knowledge.content}"></c:out>--%>
-						<%= jspUtil.out("knowledge.content", JspUtil.ESCAPE_CLEAR) %>
+						<%= jspUtil.out("knowledge.content", JspUtil.ESCAPE_CLEAR, 200) %>
 						</p>
 					</div>
 				</div>
@@ -145,7 +145,7 @@
 					<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.search") %>
 				</a>
 				<a class="list-group-item " 
-					href="<%= request.getContextPath() %>/protect.knowledge/view_add?offset=<%= jspUtil.out("offset") %>&keyword=<%= jspUtil.out("keyword") %>&tag=<%= jspUtil.out("tag") %>&user=<%= jspUtil.out("user") %>" 
+					href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" 
 					style="cursor: pointer;">
 					<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.add") %>
 				</a>
@@ -181,7 +181,7 @@
 			<h5>- <i class="fa fa-history"></i>&nbsp;<%= jspUtil.label("knowledge.list.history") %> - </h5>
 			<div class="list-group">
 			<c:forEach var="history" items="${histories}">
-				<a href="<%= request.getContextPath() %>/open.knowledge/view/<%= jspUtil.out("history.knowledgeId") %>?offset=<%= jspUtil.out("offset") %>&keyword=<%= jspUtil.out("keyword") %>" 
+				<a href="<%= request.getContextPath() %>/open.knowledge/view/<%= jspUtil.out("history.knowledgeId") %><%= jspUtil.out("params") %>" 
 				class="list-group-item">
 					<h5 class="list-group-item-heading"><i class="fa fa-history"></i>&nbsp;
 					[<%= jspUtil.out("history.knowledgeId") %>]&nbsp;<%= jspUtil.out("history.title") %></h5>
@@ -206,17 +206,17 @@
 		<nav>
 			<ul class="pager">
 				<li class="previous">
-					<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("previous") %>?keyword=<%= jspUtil.out("keyword") %>&tag=<%= jspUtil.out("tag") %>&user=<%= jspUtil.out("user") %>">
+					<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("previous") %><%= jspUtil.out("params") %> %>">
 						<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
 					</a>
 				</li>
 				<li>
-					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add?offset=<%= jspUtil.out("offset") %>&keyword=<%= jspUtil.out("keyword") %>&tag=<%= jspUtil.out("tag") %>&user=<%= jspUtil.out("user") %>" style="cursor: pointer;">
+					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" style="cursor: pointer;">
 						<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("label.add") %>
 					</a>
 				</li>
 				<li class="next">
-					<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("next") %>?keyword=<%= jspUtil.out("keyword") %>&tag=<%= jspUtil.out("tag") %>&user=<%= jspUtil.out("user") %>">
+					<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("next") %><%= jspUtil.out("params") %>">
 						<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
 					</a>
 				</li>
