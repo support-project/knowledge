@@ -12,12 +12,13 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
@@ -34,7 +35,7 @@ import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
-public class KnowledgeControl extends Control {
+public class KnowledgeControl extends KnowledgeControlBase {
 	private static final int COOKIE_COUNT = 5;
 
 	/** ログ */
@@ -49,6 +50,9 @@ public class KnowledgeControl extends Control {
 	 * @throws InvalidParamException 
 	 */
 	public Boundary view() throws InvalidParamException {
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
+		
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
 		
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
@@ -131,10 +135,14 @@ public class KnowledgeControl extends Control {
 	 */
 	public Boundary list() throws Exception {
 		LOG.trace("Call list");
+		Integer offset = super.getPathInteger(0);
+		setAttribute("offset", offset);
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
+		
 		TagsDao tagsDao = TagsDao.get();
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
 		
-		Integer offset = super.getPathInteger(0);
 		LoginedUser loginedUser = super.getLoginedUser();
 		String keyword = getParam("keyword");
 		String tag = getParam("tag");
@@ -260,8 +268,52 @@ public class KnowledgeControl extends Control {
 	 * @return
 	 */
 	public Boundary search() {
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
 		return forward("search.jsp");
 	}
+	
+	/**
+	 * いいねを押したユーザを一覧表示
+	 * @return
+	 * @throws InvalidParamException 
+	 */
+	public Boundary likes() throws InvalidParamException {
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
+		
+		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
+		setAttribute("knowledgeId", knowledgeId);
+		// 権限チェック(いったんアクセスできるユーザは全て表示) TODO 登録者のみにする？
+		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+		KnowledgesEntity entity = knowledgeLogic.select(knowledgeId, getLoginedUser());
+		if (entity == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
+		
+		Integer page = 0;
+		String p = getParamWithDefault("page", "");
+		if (StringUtils.isInteger(p)) {
+			page = Integer.parseInt(p);
+		}
+		
+		LikesDao likesDao = LikesDao.get();
+		List<LikesEntity> likes = likesDao.selectOnKnowledge(knowledgeId, page * PAGE_LIMIT, PAGE_LIMIT);
+		setAttribute("likes", likes);
+		
+		
+		int previous = page -1;
+		if (previous < 0) {
+			previous = 0;
+		}
+		setAttribute("page", page);
+		setAttribute("previous", previous);
+		setAttribute("next", page + 1);
+		
+		return forward("likes.jsp");
+	}
+	
+	
 }
 
 

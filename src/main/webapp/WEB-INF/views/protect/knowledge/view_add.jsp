@@ -134,11 +134,13 @@ selectedGroups.push({label: '<%= jspUtil.out("group.groupName") %>', value: '<%=
 	<input type="hidden" name="offset" value="<%= jspUtil.out("offset") %>" />
 	<input type="hidden" name="keyword" value="<%= jspUtil.out("keyword") %>" />
 	<input type="hidden" name="tag" value="<%= jspUtil.out("tag") %>" />
+	<input type="hidden" name="user" value="<%= jspUtil.out("user") %>" />
 
 	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
 	<button type="button" class="btn btn-info" onclick="preview();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
-	<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %>?keyword=<%= jspUtil.out("keyword") %>&tag=<%= jspUtil.out("tag") %>&user=<%= jspUtil.out("user") %>"
-	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>
+	<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
+		class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %>
+	</a>
 
 </form>
 

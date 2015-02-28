@@ -110,7 +110,7 @@ public class AccountControl extends Control {
 		if ("2".equals(getParam("knowledge_remove"))) {
 			knowledgeRemove = false;
 		}
-		UserLogic.get().withdrawal(getLoginUserId(), knowledgeRemove);
+		UserLogic.get().withdrawal(getLoginUserId(), knowledgeRemove, HttpUtil.getLocale(getRequest()));
 		
 		// セッションを破棄
 		AuthenticationLogic<LoginedUser> authenticationLogic = Container.getComp(DefaultAuthenticationLogicImpl.class);

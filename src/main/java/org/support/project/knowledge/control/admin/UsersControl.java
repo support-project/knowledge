@@ -291,7 +291,7 @@ public class UsersControl extends Control {
 		UsersEntity user = dao.selectOnKey(getParam("userId", Integer.class));
 		if (user != null) {
 			//dao.delete(user.getUserId());
-			UserLogic.get().withdrawal(user.getUserId(), true);
+			UserLogic.get().withdrawal(user.getUserId(), true, HttpUtil.getLocale(getRequest()));
 		}
 		String successMsg = "message.success.delete";
 		setResult(successMsg, null);

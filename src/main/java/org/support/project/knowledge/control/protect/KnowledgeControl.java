@@ -11,7 +11,7 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
@@ -27,7 +27,7 @@ import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
-public class KnowledgeControl extends Control {
+public class KnowledgeControl extends KnowledgeControlBase {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(KnowledgeControl.class);
 	
@@ -39,6 +39,9 @@ public class KnowledgeControl extends Control {
 	 * @return
 	 */
 	public Boundary view_add() {
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
+		
 		String offset = super.getParam("offset", String.class);
 		if (StringUtils.isEmpty(offset)) {
 			offset = "0";
@@ -53,6 +56,9 @@ public class KnowledgeControl extends Control {
 	 * @throws InvalidParamException 
 	 */
 	public Boundary view_edit() throws InvalidParamException {
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
+		
 		String offset = super.getParam("offset", String.class);
 		if (StringUtils.isEmpty(offset)) {
 			offset = "0";
@@ -88,7 +94,9 @@ public class KnowledgeControl extends Control {
 	 * @throws Exception 
 	 */
 	public Boundary add(KnowledgesEntity entity) throws Exception {
-		LOG.trace("validate");
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
+		
 		String groupsstr = super.getParam("groups");
 		String[] groupssp = groupsstr.split(",");
 		List<GroupsEntity> groups = GroupLogic.get().selectGroups(groupssp);
@@ -150,7 +158,9 @@ public class KnowledgeControl extends Control {
 	 * @throws Exception 
 	 */
 	public Boundary update(KnowledgesEntity entity) throws Exception {
-		LOG.trace("validate");
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
+		
 		String groupsstr = super.getParam("groups");
 		String[] groupssp = groupsstr.split(",");
 		List<GroupsEntity> groups = GroupLogic.get().selectGroups(groupssp);
@@ -224,6 +234,9 @@ public class KnowledgeControl extends Control {
 	 * @throws Exception
 	 */
 	public Boundary delete() throws Exception {
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
+		
 		LOG.trace("validate");
 		KnowledgesDao dao = Container.getComp(KnowledgesDao.class);
 		String id = getParam("knowledgeId");
@@ -256,6 +269,9 @@ public class KnowledgeControl extends Control {
 	 * @throws InvalidParamException
 	 */
 	public Boundary view() throws InvalidParamException {
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
+		
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
 		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId);
 	}
@@ -266,6 +282,9 @@ public class KnowledgeControl extends Control {
 	 * @throws InvalidParamException
 	 */
 	public Boundary comment() throws InvalidParamException {
+		// 共通処理呼の表示条件の保持の呼び出し
+		String params = setViewParam();
+		
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
 		
 		String comment = getParam("comment");
@@ -278,7 +297,7 @@ public class KnowledgeControl extends Control {
 		// 一覧表示用の情報を更新
 		KnowledgeLogic.get().updateKnowledgeExInfo(knowledgeId);
 		
-		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId);
+		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
 	}
 	
 }

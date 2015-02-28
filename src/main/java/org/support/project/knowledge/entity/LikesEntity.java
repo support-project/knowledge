@@ -14,6 +14,9 @@ public class LikesEntity extends GenLikesEntity {
 
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
+	
+	
+	private String userName;
 
 	/**
 	 * インスタンス取得
@@ -38,6 +41,20 @@ public class LikesEntity extends GenLikesEntity {
 
 	public LikesEntity(Long no) {
 		super(no);
+	}
+
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 }
