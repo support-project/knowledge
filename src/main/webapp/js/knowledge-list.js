@@ -20,6 +20,12 @@ $(document).ready(function() {
 	});
 	*/
 	
+	$('.thumbnail').hover(function() {
+		$(this).css('border', '1px solid gray');
+	}, function() {
+		$(this).css('border', '0px solid #ccc');
+	});
+	
 	$('#input_tags').on('beforeItemRemove', function(event) {
 		event.cancel = true;
 	});
@@ -27,7 +33,7 @@ $(document).ready(function() {
 });
 
 var showKnowledge = function(id, offset, keyword, tag, user) {
-	$('#discription_' + id).slideDown(20);
+	//$('#discription_' + id).slideDown(20);
 	var url = _CONTEXT + '/open.knowledge/view/' + id;
 	
 	var param = '';
