@@ -76,8 +76,13 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 								jspUtil.label("label.public.view")) %>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", 
 								jspUtil.label("label.private.view")) %>
-						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag", 
-								jspUtil.label("label.protect.view")) %>
+								
+						<% if(jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag")) { %>
+							<button class="btn btn-link" onclick="viewProtect(<%= jspUtil.out("knowledgeId") %>);">
+								<%= jspUtil.label("label.protect.view") %>
+							</button>
+							
+						<% } %>
 						<br/>
 						
 						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("insertUser") %>">

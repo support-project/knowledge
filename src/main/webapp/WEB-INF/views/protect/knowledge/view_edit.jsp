@@ -32,7 +32,7 @@ var _FAIL_REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.fail.delete.upl
 var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
 
 <c:forEach var="group" items="${groups}" varStatus="status">
-selectedGroups.push({label: '<%= jspUtil.out("group.groupName") %>', value: '<%= jspUtil.out("group.groupId") %>'});
+selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jspUtil.out("group.value") %>'});
 </c:forEach>
 
 </script>

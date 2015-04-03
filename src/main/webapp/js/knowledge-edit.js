@@ -114,7 +114,7 @@ $(document).ready(function() {
 
 var getGroups = function(keyword, offset) {
 	$('#groupList').html('Now loading...');
-	var url = _CONTEXT + '/protect.group/typeahead'
+	var url = _CONTEXT + '/protect.target/typeahead'
 	var params = {
 			keyword : keyword,
 			offset: offset

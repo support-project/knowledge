@@ -1,8 +1,45 @@
 -- Project Name : knowledge
--- Date/Time    : 2015/02/19 4:22:27
--- Author       : ek003024
+-- Date/Time    : 2015/03/31 5:54:19
 -- RDBMS Type   : PostgreSQL
 -- Application  : A5:SQL Mk-2
+
+-- 通知待ちキュー
+drop table if exists NOTIFY_QUEUES cascade;
+
+create table NOTIFY_QUEUES (
+  HASH character varying(32) not null
+  , TYPE integer not null
+  , ID bigint not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint NOTIFY_QUEUES_PKC primary key (HASH)
+) ;
+
+-- 通知設定
+drop table if exists NOTIFY_CONFIGS cascade;
+
+create table NOTIFY_CONFIGS (
+  USER_ID integer not null
+  , NOTIFY_MAIL integer
+  , NOTIFY_DESKTOP integer
+  , MY_ITEM_COMMENT integer
+  , MY_ITEM_LIKE integer
+  , MY_ITEM_STOCK integer
+  , TO_ITEM_SAVE integer
+  , TO_ITEM_COMMENT integer
+  , TO_ITEM_IGNORE_PUBLIC integer
+  , STOCK_ITEM_SAVE integer
+  , STOKE_ITEM_COMMENT integer
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint NOTIFY_CONFIGS_PKC primary key (USER_ID)
+) ;
 
 -- アカウントの画像
 drop table if exists ACCOUNT_IMAGES cascade;
@@ -174,6 +211,7 @@ drop table if exists KNOWLEDGE_FILES cascade;
 create table KNOWLEDGE_FILES (
   FILE_NO bigint not null AUTO_INCREMENT
   , KNOWLEDGE_ID bigint
+  , COMMENT_NO bigint
   , FILE_NAME character varying(256)
   , FILE_SIZE double precision
   , FILE_BINARY blob
@@ -208,6 +246,34 @@ create table KNOWLEDGES (
   , DELETE_FLAG integer
   , constraint KNOWLEDGES_PKC primary key (KNOWLEDGE_ID)
 ) ;
+
+comment on table NOTIFY_QUEUES is '通知待ちキュー';
+comment on column NOTIFY_QUEUES.HASH is 'HASH';
+comment on column NOTIFY_QUEUES.TYPE is '種類';
+comment on column NOTIFY_QUEUES.ID is '通知する種類のID';
+comment on column NOTIFY_QUEUES.INSERT_USER is '登録ユーザ';
+comment on column NOTIFY_QUEUES.INSERT_DATETIME is '登録日時';
+comment on column NOTIFY_QUEUES.UPDATE_USER is '更新ユーザ';
+comment on column NOTIFY_QUEUES.UPDATE_DATETIME is '更新日時';
+comment on column NOTIFY_QUEUES.DELETE_FLAG is '削除フラグ';
+
+comment on table NOTIFY_CONFIGS is '通知設定';
+comment on column NOTIFY_CONFIGS.USER_ID is 'ユーザID';
+comment on column NOTIFY_CONFIGS.NOTIFY_MAIL is 'メール通知する';
+comment on column NOTIFY_CONFIGS.NOTIFY_DESKTOP is 'デスクトップ通知する';
+comment on column NOTIFY_CONFIGS.MY_ITEM_COMMENT is '自分が登録した投稿にコメントが登録されたら通知';
+comment on column NOTIFY_CONFIGS.MY_ITEM_LIKE is '自分が登録した投稿にいいねが追加されたら通知';
+comment on column NOTIFY_CONFIGS.MY_ITEM_STOCK is '自分が登録した投稿がストックされたら通知';
+comment on column NOTIFY_CONFIGS.TO_ITEM_SAVE is '自分宛の投稿が更新されたら通知';
+comment on column NOTIFY_CONFIGS.TO_ITEM_COMMENT is '自分宛の投稿にコメントが登録されたら通知';
+comment on column NOTIFY_CONFIGS.TO_ITEM_IGNORE_PUBLIC is '自分宛の投稿で「公開」は除外';
+comment on column NOTIFY_CONFIGS.STOCK_ITEM_SAVE is 'ストックしたナレッジが更新されたら通知';
+comment on column NOTIFY_CONFIGS.STOKE_ITEM_COMMENT is 'ストックしたナレッジにコメントが登録されたら通知';
+comment on column NOTIFY_CONFIGS.INSERT_USER is '登録ユーザ';
+comment on column NOTIFY_CONFIGS.INSERT_DATETIME is '登録日時';
+comment on column NOTIFY_CONFIGS.UPDATE_USER is '更新ユーザ';
+comment on column NOTIFY_CONFIGS.UPDATE_DATETIME is '更新日時';
+comment on column NOTIFY_CONFIGS.DELETE_FLAG is '削除フラグ';
 
 comment on table ACCOUNT_IMAGES is 'アカウントの画像';
 comment on column ACCOUNT_IMAGES.IMAGE_ID is 'IMAGE_ID';
@@ -311,6 +377,7 @@ comment on column TAGS.DELETE_FLAG is '削除フラグ';
 comment on table KNOWLEDGE_FILES is '添付ファイル';
 comment on column KNOWLEDGE_FILES.FILE_NO is '添付ファイル番号';
 comment on column KNOWLEDGE_FILES.KNOWLEDGE_ID is 'ナレッジID';
+comment on column KNOWLEDGE_FILES.COMMENT_NO is 'コメント番号';
 comment on column KNOWLEDGE_FILES.FILE_NAME is 'ファイル名';
 comment on column KNOWLEDGE_FILES.FILE_SIZE is 'ファイルサイズ';
 comment on column KNOWLEDGE_FILES.FILE_BINARY is 'バイナリ';

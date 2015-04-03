@@ -6,6 +6,7 @@ import org.support.project.di.Container;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.web.dao.UsersDao;
+import org.support.project.web.entity.UsersEntity;
 
 public class ExUsersDao extends UsersDao {
 	/**
@@ -27,6 +28,16 @@ public class ExUsersDao extends UsersDao {
 	public List<GroupUser> selectGroupUser(Integer groupId, int offset, int limit) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExUsersDao/selectGroupUser.sql");
 		return executeQueryList(sql, GroupUser.class, groupId, limit, offset);
+	}
+	
+	
+	/**
+	 * 公開区分が「公開」のナレッジが登録された場合に、通知を希望しているユーザの一覧を取得
+	 * @return
+	 */
+	public List<UsersEntity> selectNotifyPublicUsers() {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExUsersDao/selectNotifyPublicUsers.sql");
+		return executeQueryList(sql, UsersEntity.class);
 	}
 
 }

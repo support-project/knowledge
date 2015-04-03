@@ -75,6 +75,7 @@ public class GenKnowledgeFilesDao extends AbstractDao {
 		Object key = executeInsert(sql, type, 
 			entity.getFileNo()
 			, entity.getKnowledgeId()
+			, entity.getCommentNo()
 			, entity.getFileName()
 			, entity.getFileSize()
 			, entity.getFileBinary()
@@ -117,6 +118,7 @@ public class GenKnowledgeFilesDao extends AbstractDao {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeFilesDao/KnowledgeFilesDao_update.sql");
 		executeUpdate(sql, 
 			entity.getKnowledgeId()
+			, entity.getCommentNo()
 			, entity.getFileName()
 			, entity.getFileSize()
 			, entity.getFileBinary()

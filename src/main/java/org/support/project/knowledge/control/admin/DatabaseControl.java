@@ -10,6 +10,7 @@ import org.support.project.common.bean.ValidateError;
 import org.support.project.common.logic.H2DBServerLogic;
 import org.support.project.common.wrapper.FileInputStreamWithDeleteWrapper;
 import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.deploy.InitializationLogic;
 import org.support.project.knowledge.logic.DatabaseLogic;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
@@ -33,8 +34,10 @@ public class DatabaseControl extends Control {
 		h2dbServerLogic.start();
 		boolean active = h2dbServerLogic.isActive();
 		setAttribute("active", active);
+		InitializationLogic.get().init();
 		return super.index();
 	}
+	
 	@Auth(roles="admin")
 	public Boundary stop() {
 		H2DBServerLogic h2dbServerLogic = H2DBServerLogic.get();

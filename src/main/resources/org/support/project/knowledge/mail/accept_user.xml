@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>情報共有のサービス[Knowledge]へのご招待</title>
+	<title>Information from [Knowledge]</title>
 	<contents xml:space="preserve">
-{UserName} 様
+Dear {UserName} 
 
-Knowledgeに登録いただき、ありがとうございます。
-管理者による登録確認が完了し、サインイン出来るように
-なりましたのでご連絡いたします。
+We registered with the Knowledge, thank you.
+Registration confirmation is completed by the administrator, to be able to sign in
+Because now I will contact you.
 
 {URL}
 
-サインインすると、新たにナレッジを追加や、ナレッジへの
-コメントの追加が出来るようになります。
+When you sign in, add new knowledge and, to the knowledge
+I will be able to add comments.
 
 ------------------------------------------
-※本メールはシステムより自動で送信されています。
- このメールに対する返信は出来ませんので御了承ください。
-
+ This e-mail has been sent automatically from the system.
+ Please understand that it can not reply to this email.
 	</contents>
 	
 </mail>

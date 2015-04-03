@@ -28,16 +28,7 @@ public class InitializationListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent contextEvent) {
 		LOG.debug("contextInitialized");
-		// 内部的には、日付はGMTとして扱う
-		TimeZone zone = TimeZone.getTimeZone("GMT");
-		TimeZone.setDefault(zone);
-		
-		InitDB initDB = new InitDB();
-		try {
-			initDB.start();
-		} catch (Exception e) {
-			throw new SystemException(e);
-		}
+		InitializationLogic.get().init();
 		
 		// 添付ファイル格納ディレクトリ（テンポラリディレクトリ）が存在しなければ生成
 		AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
@@ -53,6 +44,7 @@ public class InitializationListener implements ServletContextListener {
 			idx.mkdirs();
 			LOG.info("idx directory created." + idxDir);
 		}
+		LOG.info("Knowledge start on '" + contextEvent.getServletContext().getRealPath("/") + "'");
 	}
 
 }

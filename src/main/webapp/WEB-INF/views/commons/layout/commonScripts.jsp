@@ -5,6 +5,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<% JspUtil jspUtil = new JspUtil(request, pageContext); %>
+
 <!-- scripts -->
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery/dist/jquery.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap/dist/js/bootstrap.js"></script>
@@ -17,6 +19,8 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/highlightjs/highlight.pack.js"></script>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootbox/bootbox.js"></script>
+
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/notify.js/notify.js"></script>
 
 
 <script type="text/javascript">
@@ -101,6 +105,47 @@ $.notify('<%= msg %>', 'error');
 }
 
 %>
+
+<% if (jspUtil.is(Boolean.TRUE, "desktopNotify")) { %>
+function onNotifyShow() {
+	console.log('notification was shown!');
+}
+
+var webSocket;
+window.onload = function() {
+	var forRtoA = document.createElement('a');
+	forRtoA.href = '<%= request.getContextPath() %>/notify';
+	console.log(forRtoA.href.replace("http://", "ws://").replace("https://", "wss://"));
+	webSocket = new WebSocket(forRtoA.href.replace("http://", "ws://").replace("https://", "wss://"));
+	webSocket.onopen = function() {
+	}
+	webSocket.onclose = function() {
+	}
+	webSocket.onmessage = function(message) {
+		console.log('[RECEIVE] ');
+		var result = JSON.parse(message.data);
+		console.log(result);
+		if (Notify.isSupported) {
+			Notify.requestPermission(
+				function() {
+					var myNotification = new Notify('Notify from Knowledge', {
+						body: result.message,
+						notifyShow: onNotifyShow
+					});
+					myNotification.show();
+				},
+				function() {
+					console.log('notify fail.');
+				}
+			);
+		}
+	}
+	webSocket.onerror = function(message) {
+	}
+	<%-- //webSocket.send(message); --%>
+}
+<% } %>
+
 
 
 </script>

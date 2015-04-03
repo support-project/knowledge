@@ -4,9 +4,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.support.project.common.config.ConfigLoader;
+import org.support.project.common.config.LocaleConfigLoader;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
@@ -33,13 +35,26 @@ public class MailLogic {
 	}
 	
 	/**
+	 * メール設定の読み込み
+	 * @param configName
+	 * @param locale
+	 * @return
+	 */
+	public MailConfig load(String configName, Locale locale) {
+		String base = "/org/support/project/knowledge/mail/";
+		MailConfig mailConfig = LocaleConfigLoader.load(base, configName, locale, MailConfig.class);
+		return mailConfig;
+	}
+	
+	/**
 	 * ユーザが仮登録されたので、そのユーザに招待のメールを送信するために、
 	 * メール送信テーブルに登録する
 	 * （メールの送信処理は、非同期にバッチで実行される）
 	 * @param entity
 	 * @param url
 	 */
-	public void sendInvitation(ProvisionalRegistrationsEntity entity, String url) {
+	public void sendInvitation(ProvisionalRegistrationsEntity entity, String url, Locale locale) {
+		LOG.trace("sendInvitation");
 		MailsDao mailsDao = MailsDao.get();
 		MailsEntity mailsEntity = new MailsEntity();
 		String mailId = idGenu("Invitation");
@@ -48,7 +63,7 @@ public class MailLogic {
 		mailsEntity.setToAddress(entity.getUserKey());
 		mailsEntity.setToName(entity.getUserName());
 		
-		MailConfig mailConfig = ConfigLoader.load("/org/support/project/knowledge/mail/invitation.xml", MailConfig.class);
+		MailConfig mailConfig = load("invitation", locale);
 		
 		mailsEntity.setTitle(mailConfig.getTitle());
 		
@@ -70,6 +85,7 @@ public class MailLogic {
 	 * @param url
 	 */
 	public void sendAcceptedAddRequest(ProvisionalRegistrationsEntity entity, String url) {
+		LOG.trace("sendAcceptedAddRequest");
 		MailsDao mailsDao = MailsDao.get();
 		MailsEntity mailsEntity = new MailsEntity();
 		String mailId = idGenu("Accept");
@@ -78,6 +94,7 @@ public class MailLogic {
 		mailsEntity.setToAddress(entity.getUserKey());
 		mailsEntity.setToName(entity.getUserName());
 		
+		//TODO 仮登録時に、どのロケールでメールを出したかを保持しておかないと、言語を決められない、、、
 		MailConfig mailConfig = ConfigLoader.load("/org/support/project/knowledge/mail/accept_user.xml", MailConfig.class);
 		
 		mailsEntity.setTitle(mailConfig.getTitle());
@@ -110,11 +127,11 @@ public class MailLogic {
 	
 	
 	/**
-	 * 管理者へ通知
-	 * @param title
-	 * @param contents
+	 * ユーザ登録通知
+	 * @param user
 	 */
-	private void sendNotify(String title, String contents) {
+	public void sendNotifyAddUser(UsersEntity user) {
+		LOG.trace("sendNotifyAddUser");
 		SystemConfigsDao configsDao = SystemConfigsDao.get();
 		SystemConfigsEntity configsEntity = configsDao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.SYSTEM_NAME);
 		if (configsEntity != null && SystemConfig.USER_ADD_NOTIFY_ON.equals(configsEntity.getConfigValue())) {
@@ -122,6 +139,13 @@ public class MailLogic {
 			UsersDao usersDao = UsersDao.get();
 			List<UsersEntity> users = usersDao.selectOnRoleKey(SystemConfig.ROLE_ADMIN);
 			for (UsersEntity entity : users) {
+				Locale locale = entity.getLocale();
+				MailConfig mailConfig = load("notify_add_user", locale);
+				
+				String contents = mailConfig.getContents();
+				contents = contents.replace("{UserId}", String.valueOf(user.getUserId()));
+				String title = mailConfig.getTitle();
+				
 				MailsDao mailsDao = MailsDao.get();
 				MailsEntity mailsEntity = new MailsEntity();
 				String mailId = idGenu("Notify");
@@ -136,30 +160,38 @@ public class MailLogic {
 		}
 	}
 
-	/**
-	 * ユーザ登録通知
-	 * @param user
-	 */
-	public void sendNotifyAddUser(UsersEntity user) {
-		MailConfig mailConfig = ConfigLoader.load("/org/support/project/knowledge/mail/notify_add_user.xml", MailConfig.class);
-		String contents = mailConfig.getContents();
-		contents = contents.replace("{UserId}", String.valueOf(user.getUserId()));
-		String title = mailConfig.getTitle();
-		
-		sendNotify(title, contents);
-	}
-
 	
 	/**
 	 * ユーザの仮登録通知
 	 * @param entity
 	 */
-	public void sendNotifyAcceptUser(ProvisionalRegistrationsEntity entity) {
-		MailConfig mailConfig = ConfigLoader.load("/org/support/project/knowledge/mail/notify_accept_user.xml", MailConfig.class);
-		String contents = mailConfig.getContents();
-		String title = mailConfig.getTitle();
-		
-		sendNotify(title, contents);
+	public void sendNotifyAcceptUser(ProvisionalRegistrationsEntity registrationsEntity) {
+		LOG.trace("sendNotifyAcceptUser");
+		SystemConfigsDao configsDao = SystemConfigsDao.get();
+		SystemConfigsEntity configsEntity = configsDao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.SYSTEM_NAME);
+		if (configsEntity != null && SystemConfig.USER_ADD_NOTIFY_ON.equals(configsEntity.getConfigValue())) {
+			// 管理者へのメール通知がONなので、メールを送信する
+			UsersDao usersDao = UsersDao.get();
+			List<UsersEntity> users = usersDao.selectOnRoleKey(SystemConfig.ROLE_ADMIN);
+			for (UsersEntity entity : users) {
+				Locale locale = entity.getLocale();
+				MailConfig mailConfig = load("notify_accept_user", locale);
+				
+				String contents = mailConfig.getContents();
+				String title = mailConfig.getTitle();
+				
+				MailsDao mailsDao = MailsDao.get();
+				MailsEntity mailsEntity = new MailsEntity();
+				String mailId = idGenu("Notify");
+				mailsEntity.setMailId(mailId);
+				mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
+				mailsEntity.setToAddress(entity.getUserKey());
+				mailsEntity.setToName(entity.getUserName());
+				mailsEntity.setTitle(title);
+				mailsEntity.setContent(contents);
+				mailsDao.insert(mailsEntity);
+			}
+		}
 	}
 	
 	

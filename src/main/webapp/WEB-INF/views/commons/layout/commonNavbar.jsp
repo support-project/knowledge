@@ -148,6 +148,14 @@
 						
 						<li class="divider"></li>
 						<li id="tabLogout">
+							<a href="<%= request.getContextPath() %>/protect.notify" style="cursor: pointer;">
+								<i class="fa fa-bell-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.notify") %>
+							</a>
+						</li>
+						
+						
+						<li class="divider"></li>
+						<li id="tabLogout">
 							<a href="<%= request.getContextPath() %>/signout" style="cursor: pointer;">
 								<i class="fa fa-sign-out"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signout") %>
 							</a>

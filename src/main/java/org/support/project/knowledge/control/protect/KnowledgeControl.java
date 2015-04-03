@@ -17,13 +17,13 @@ import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
-import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
+import org.support.project.knowledge.vo.LabelValue;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
-import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
@@ -77,7 +77,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttribute("files", files);
 		
 		// 表示するグループを取得
-		List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
+		//List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
+		List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
 		setAttribute("groups", groups);
 		
 		if (!super.getLoginedUser().isAdmin() && entity.getInsertUser().intValue() != super.getLoginUserId().intValue()) {
@@ -98,8 +99,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setViewParam();
 		
 		String groupsstr = super.getParam("groups");
-		String[] groupssp = groupsstr.split(",");
-		List<GroupsEntity> groups = GroupLogic.get().selectGroups(groupssp);
+		String[] targets = groupsstr.split(",");
+		//List<GroupsEntity> groups = GroupLogic.get().selectGroups(targets);
+		List<LabelValue> groups = TargetLogic.get().selectTargets(targets);
 		setAttribute("groups", groups);
 
 		List<Long> fileNos = new ArrayList<Long>();
@@ -162,8 +164,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setViewParam();
 		
 		String groupsstr = super.getParam("groups");
-		String[] groupssp = groupsstr.split(",");
-		List<GroupsEntity> groups = GroupLogic.get().selectGroups(groupssp);
+		String[] targets = groupsstr.split(",");
+//		List<GroupsEntity> groups = GroupLogic.get().selectGroups(targets);
+		List<LabelValue> groups = TargetLogic.get().selectTargets(targets);
 		setAttribute("groups", groups);
 		
 		List<Long> fileNos = new ArrayList<Long>();
@@ -260,7 +263,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		knowledgeLogic.delete(knowledgeId, getLoginedUser());
 		
 		addMsgSuccess("message.success.delete");
-		return super.devolution("open.knowledge/list");
+		return super.devolution("open.Knowledge/list");
 	}
 	
 	/**
@@ -284,20 +287,24 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	public Boundary comment() throws InvalidParamException {
 		// 共通処理呼の表示条件の保持の呼び出し
 		String params = setViewParam();
-		
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		
 		String comment = getParam("comment");
-		CommentsDao commentsDao = CommentsDao.get();
-		CommentsEntity commentsEntity = new CommentsEntity();
-		commentsEntity.setKnowledgeId(knowledgeId);
-		commentsEntity.setComment(comment);
-		commentsDao.insert(commentsEntity);
 		
-		// 一覧表示用の情報を更新
-		KnowledgeLogic.get().updateKnowledgeExInfo(knowledgeId);
+		KnowledgeLogic.get().saveComment(knowledgeId, comment);
 		
 		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
+	}
+	
+	
+	/**
+	 * 指定のナレッジにアクセスできる対象を取得
+	 * @return
+	 * @throws InvalidParamException 
+	 */
+	public Boundary view_targets() throws InvalidParamException {
+		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
+		List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
+		return super.send(groups);
 	}
 	
 }

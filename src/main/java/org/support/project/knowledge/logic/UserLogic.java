@@ -124,8 +124,9 @@ public class UserLogic {
 	 * @param loginedUser
 	 */
 	private void insertRoles(UsersEntity user, String[] roles) {
-		LOG.info(roles);
-		
+		if (LOG.isTraceEnabled()) {
+			LOG.trace(roles);
+		}
 		
 		// ユーザに紐づくロールを削除
 		userRolesDao.deleteOnUser(user.getUserId());

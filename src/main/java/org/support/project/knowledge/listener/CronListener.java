@@ -15,6 +15,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.bat.KnowledgeFileClearBat;
 import org.support.project.knowledge.bat.MailSendBat;
+import org.support.project.knowledge.bat.NotifyMailBat;
 
 public class CronListener implements ServletContextListener {
 	
@@ -24,6 +25,7 @@ public class CronListener implements ServletContextListener {
 	private ScheduledFuture<?> fileClearfuture;
 	private ScheduledFuture<?> parsefuture;
 	private ScheduledFuture<?> mailfuture;
+	private ScheduledFuture<?> notifyfuture;
 	
 	@Override
 	public void contextInitialized(final ServletContextEvent sce) {
@@ -31,7 +33,7 @@ public class CronListener implements ServletContextListener {
 		fileClearfuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				LOG.trace("called.");
+				LOG.trace("called. [fileClearfuture]");
 				
 				// Java を別のVMで実行（添付ファイルの定期的なクリア）
 				JavaJob job = new JavaJob();
@@ -47,7 +49,7 @@ public class CronListener implements ServletContextListener {
 						LOG.trace(result.getStdout());
 					}
 				} catch (Exception e) {
-					LOG.error("添付ファイルの定期的なクリアに失敗しました", e);
+					LOG.error("Faild clear files.", e);
 				}
 			}
 		}, 10, 60, TimeUnit.MINUTES); // 10分後に実行、60分毎に実行
@@ -55,7 +57,7 @@ public class CronListener implements ServletContextListener {
 		parsefuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				LOG.trace("called.");
+				LOG.trace("called. [parsefuture]");
 				// Java を別のVMで実行（添付ファイルの中身を抽出し検索可能にする）
 				JavaJob job = new JavaJob();
 				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
@@ -70,7 +72,7 @@ public class CronListener implements ServletContextListener {
 						LOG.trace(result.getStdout());
 					}
 				} catch (Exception e) {
-					LOG.error("添付ファイルのパースに失敗しました", e);
+					LOG.error("Faild parse.", e);
 				}
 			}
 		}, 120, 30, TimeUnit.SECONDS); // 30秒毎に実行
@@ -78,7 +80,7 @@ public class CronListener implements ServletContextListener {
 		mailfuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				LOG.trace("called.");
+				LOG.trace("called. [mailfuture]");
 				// Java を別のVMで実行（添付ファイルの中身を抽出し検索可能にする）
 				JavaJob job = new JavaJob();
 				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
@@ -93,16 +95,42 @@ public class CronListener implements ServletContextListener {
 						LOG.trace(result.getStdout());
 					}
 				} catch (Exception e) {
-					LOG.error("メールの送信に失敗しました", e);
+					LOG.error("Failed send mail.", e);
 				}
 			}
 		}, 120, 10, TimeUnit.SECONDS); // 10秒毎に実行
+		
+		notifyfuture = service.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+				LOG.trace("called. [notifyfuture]");
+				// Java を別のVMで実行（添付ファイルの中身を抽出し検索可能にする）
+				JavaJob job = new JavaJob();
+				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
+				job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
+				job.setMainClass(NotifyMailBat.class.getName());
+				try {
+					JobResult result = job.execute();
+					if (LOG.isTraceEnabled()) {
+						LOG.trace("finish NotifyMailBat [result]" + result.getResultCode());
+					}
+					if (LOG.isTraceEnabled()) {
+						LOG.trace(result.getStdout());
+					}
+				} catch (Exception e) {
+					LOG.error("Failed to Notify", e);
+				}
+			}
+		}, 120, 10, TimeUnit.SECONDS); // 10秒毎に実行
+
 	}
 
 	@Override
 	public void contextDestroyed(final ServletContextEvent sce) {
 		fileClearfuture.cancel(true);
 		parsefuture.cancel(true);
+		mailfuture.cancel(true);
+		notifyfuture.cancel(true);
 		service.shutdown();
 	}
 
