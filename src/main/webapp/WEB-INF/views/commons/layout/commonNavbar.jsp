@@ -107,6 +107,12 @@
 						
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.system") %></li>
 						<li >
+							<a href="<%= request.getContextPath() %>/admin.config/system" style="cursor: pointer;">
+								<i class="fa fa-cog"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system.params") %>
+							</a>
+						</li>
+						
+						<li >
 							<a href="<%= request.getContextPath() %>/admin.config/config" style="cursor: pointer;">
 								<i class="fa fa-cogs"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system.general") %>
 							</a>

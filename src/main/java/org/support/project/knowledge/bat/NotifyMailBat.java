@@ -14,7 +14,9 @@ import org.support.project.common.config.LocaleConfigLoader;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
+import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
+import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -31,9 +33,11 @@ import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.Notify;
 import org.support.project.web.dao.MailsDao;
+import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.MailsEntity;
+import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
 public class NotifyMailBat {
@@ -70,6 +74,28 @@ public class NotifyMailBat {
 			notifyQueuesDao.delete(notifyQueuesEntity);
 			//notifyQueuesDao.physicalDelete(notifyQueuesEntity);
 		}
+	}
+	
+	/**
+	 * 指定のナレッジにアクセスするURLを作成
+	 * @param knowledge
+	 * @return
+	 */
+	private String makeURL(KnowledgesEntity knowledge) {
+		SystemConfigsDao dao = SystemConfigsDao.get();
+		SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.SYSTEM_NAME);
+		if (config == null) {
+			return "";
+		}
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append(config.getConfigValue());
+		if (!config.getConfigValue().endsWith("/")) {
+			builder.append("/");
+		}
+		builder.append("protect.knowledge/view/");
+		builder.append(knowledge.getKnowledgeId());
+		return builder.toString();
 	}
 	
 	
@@ -121,6 +147,8 @@ public class NotifyMailBat {
 		} else {
 			contents = contents.replace("{LikeInsertUser}", "");
 		}
+		contents = contents.replace("{URL}", makeURL(knowledge));
+		
 		mailsEntity.setContent(contents);
 		MailsDao.get().insert(mailsEntity);
 	}
@@ -176,11 +204,9 @@ public class NotifyMailBat {
 			NotifyConfigsEntity notifyConfigsEntity = notifyConfigsDao.selectOnKey(usersEntity.getUserId());
 			if (notifyConfigsEntity == null) {
 				iterator.remove();
-			}
-			if (!INT_FLAG.flagCheck(notifyConfigsEntity.getToItemComment())) {
+			} else if (!INT_FLAG.flagCheck(notifyConfigsEntity.getToItemComment())) {
 				iterator.remove();
-			}
-			if (user.getUserId().intValue() == knowledge.getInsertUser().intValue()) {
+			} else if (user.getUserId().intValue() == knowledge.getInsertUser().intValue()) {
 				// 登録者には通知しない（登録者に通知する／しないは、上のロジックで処理済)
 				iterator.remove();
 			}
@@ -224,6 +250,8 @@ public class NotifyMailBat {
 			contents = contents.replace("{CommentInsertUser}", "");
 		}
 		contents = contents.replace("{CommentContents}", comment.getComment());
+		contents = contents.replace("{URL}", makeURL(knowledge));
+
 		mailsEntity.setContent(contents);
 		MailsDao.get().insert(mailsEntity);
 	}
@@ -275,8 +303,7 @@ public class NotifyMailBat {
 			NotifyConfigsEntity notifyConfigsEntity = notifyConfigsDao.selectOnKey(usersEntity.getUserId());
 			if (notifyConfigsEntity == null) {
 				iterator.remove();
-			}
-			if (!INT_FLAG.flagCheck(notifyConfigsEntity.getToItemSave())) {
+			} else if (!INT_FLAG.flagCheck(notifyConfigsEntity.getToItemSave())) {
 				iterator.remove();
 			}
 		}
@@ -354,6 +381,8 @@ public class NotifyMailBat {
 		contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
 		contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
 		contents = contents.replace("{Contents}", knowledge.getContent());
+		contents = contents.replace("{URL}", makeURL(knowledge));
+
 		mailsEntity.setContent(contents);
 		MailsDao.get().insert(mailsEntity);
 	}

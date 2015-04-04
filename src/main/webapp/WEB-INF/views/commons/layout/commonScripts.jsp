@@ -111,6 +111,33 @@ function onNotifyShow() {
 	console.log('notification was shown!');
 }
 
+function notifyDesktop(msg) {
+	$.notify(msg, 'info');
+	if (Notify.isSupported) {
+		Notify.requestPermission(
+			function() {
+				var myNotification = new Notify('Notify from Knowledge', {
+					body: msg,
+					notifyShow: onNotifyShow
+				});
+				myNotification.show();
+			},
+			function() {
+				console.log('notification off. msg show to console.');
+				console.log(msg);
+			}
+		);
+	}
+}
+
+if (Notify.isSupported) {
+	Notify.requestPermission(function() {
+		console.log('notification on.');
+	}, function() {
+		console.log('notification off.');
+	});
+}
+
 var webSocket;
 window.onload = function() {
 	var forRtoA = document.createElement('a');
@@ -125,20 +152,7 @@ window.onload = function() {
 		console.log('[RECEIVE] ');
 		var result = JSON.parse(message.data);
 		console.log(result);
-		if (Notify.isSupported) {
-			Notify.requestPermission(
-				function() {
-					var myNotification = new Notify('Notify from Knowledge', {
-						body: result.message,
-						notifyShow: onNotifyShow
-					});
-					myNotification.show();
-				},
-				function() {
-					console.log('notify fail.');
-				}
-			);
-		}
+		notifyDesktop(result.message);
 	}
 	webSocket.onerror = function(message) {
 	}

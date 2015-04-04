@@ -1,14 +1,13 @@
 package org.support.project.knowledge.websocket;
 
-import java.io.IOException;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.websocket.Session;
 
 import net.arnx.jsonic.JSON;
-import net.arnx.jsonic.JSONException;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -30,13 +29,20 @@ public class SessionObserver implements Observer {
 	@Override
 	public void update(Observable o, Object message) {
 		try {
-			Locale locale = Locale.getDefault();
-			if (session.getUserProperties().containsKey(NotifyEndpointConfigurator.LOCALE_KEY)) {
-				locale = (Locale) session.getUserProperties().get(NotifyEndpointConfigurator.LOCALE_KEY);
+			if (!session.isOpen()) {
+				return;
 			}
+			
+			Locale locale = Locale.getDefault();
+			Map<String, Object> prop = session.getUserProperties();
 			LoginedUser loginuser = null;
-			if (session.getUserProperties().containsKey(NotifyEndpointConfigurator.LOCALE_KEY)) {
-				loginuser = (LoginedUser) session.getUserProperties().get(NotifyEndpointConfigurator.LOGIN_USER_KEY);
+			if (prop != null) {
+				if (prop.containsKey(NotifyEndpointConfigurator.LOCALE_KEY)) {
+					locale = (Locale) prop.get(NotifyEndpointConfigurator.LOCALE_KEY);
+				}
+				if (prop.containsKey(NotifyEndpointConfigurator.LOCALE_KEY)) {
+					loginuser = (LoginedUser) prop.get(NotifyEndpointConfigurator.LOGIN_USER_KEY);
+				}
 			}
 			
 			if (message instanceof Notify && loginuser != null) {
@@ -54,9 +60,17 @@ public class SessionObserver implements Observer {
 					session.getBasicRemote().sendText(JSON.encode(result));
 				}
 			}
-		} catch (JSONException | IOException e) {
+		} catch (Exception e) {
 			LOG.error("error", e);
 		}
+	}
+	
+	/**
+	 * Sessionが開いているかチェック
+	 * @return
+	 */
+	public boolean isOpen() {
+		return session.isOpen();
 	}
 
 }

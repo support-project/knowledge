@@ -1,13 +1,11 @@
 package org.support.project.knowledge.deploy;
 
 import java.io.File;
-import java.util.TimeZone;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.support.project.common.config.ConfigLoader;
-import org.support.project.common.exception.SystemException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.config.AppConfig;

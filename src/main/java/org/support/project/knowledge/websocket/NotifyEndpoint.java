@@ -3,8 +3,8 @@ package org.support.project.knowledge.websocket;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Observer;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
@@ -24,7 +24,7 @@ public class NotifyEndpoint {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(NotifyEndpoint.class);
 	
-	private Map<String, Observer> map = Collections.synchronizedMap(new HashMap<>());
+	private Map<String, SessionObserver> map = Collections.synchronizedMap(new HashMap<>());
 	private NotifyAction notify = Container.getComp(NotifyAction.class);
 	
 	@OnOpen
@@ -39,6 +39,18 @@ public class NotifyEndpoint {
 		SessionObserver observer = new SessionObserver(session);
 		map.put(session.getId(), observer);
 		notify.addObserver(observer);
+		
+		// 既存のセッションの存在チェック(Closeが呼ばれずに無くなってしまう事がある)
+		Iterator<String> iterator = map.keySet().iterator();
+		while (iterator.hasNext()) {
+			String key = (String) iterator.next();
+			SessionObserver sessionObserver = map.get(key);
+			if (!sessionObserver.isOpen()) {
+				LOG.info("websocket is allready closed: " + session.getId());
+				notify.deleteObserver(map.get(session.getId()));
+				map.remove(session.getId());
+			}
+		}
 	}
 
 	@OnClose

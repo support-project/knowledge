@@ -210,12 +210,16 @@ public class KnowledgeLogic {
 			// ナレッジとグループを紐付け
 			GroupLogic groupLogic = GroupLogic.get();
 			groupLogic.saveKnowledgeGroup(entity.getKnowledgeId(), targets);
+			
 			// アクセスできるユーザを指定
 			if (targets != null && !targets.isEmpty()) {
 				for (int i = 0; i < targets.size(); i++) {
 					LabelValue labelValue = targets.get(i);
 					Integer id = TargetLogic.get().getUserId(labelValue.getValue());
-					if (id != Integer.MIN_VALUE) {
+					if (id != Integer.MIN_VALUE 
+							&& loginedUser.getUserId().intValue() != id.intValue()
+							&& ALL_USER != id.intValue()
+					) {
 						knowledgeUsersEntity = new KnowledgeUsersEntity();
 						knowledgeUsersEntity.setKnowledgeId(entity.getKnowledgeId());
 						knowledgeUsersEntity.setUserId(id);
