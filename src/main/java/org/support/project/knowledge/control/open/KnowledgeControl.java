@@ -151,16 +151,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String keyword = getParam("keyword");
 		String tag = getParam("tag");
 		String user = getParam("user");
-		
-		if (StringUtils.isNotEmpty(keyword)) {
-			NotifyAction notify = Container.getComp(NotifyAction.class);
-			MessageResult message = new MessageResult();
-			message.setMessage("検索されたよ: " + keyword);
-			notify.notifyObservers(message);
-		}
-		
 		List<KnowledgesEntity> knowledges = new ArrayList<>();
-		
 		if (StringUtils.isInteger(tag)) {
 			//タグを選択している
 			LOG.trace("show on Tag");

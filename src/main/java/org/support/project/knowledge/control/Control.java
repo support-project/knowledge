@@ -60,6 +60,10 @@ public abstract class Control extends org.support.project.web.control.Control {
 		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
 		return resources.getResource(key);
 	}
+	protected String getResource(String key, String... params) {
+		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+		return resources.getResource(key, params);
+	}
 
 	protected void addMsgInfo(String key, String... params) {
 		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
@@ -85,9 +89,9 @@ public abstract class Control extends org.support.project.web.control.Control {
 		errors.add(HtmlUtils.escapeHTML(msg));
 	}
 
-	protected void setResult(String successMsg, List<ValidateError> errors) {
+	protected void setResult(String successMsg, List<ValidateError> errors, String... params) {
 		if (errors == null || errors.isEmpty()) {
-			addMsgSuccess(successMsg);
+			addMsgSuccess(successMsg, params);
 		} else {
 			for (ValidateError validateError : errors) {
 				if (validateError.getLevel().intValue() == LogLevel.ERROR.getValue()) {

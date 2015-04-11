@@ -16,7 +16,11 @@ public class NotifyAction extends Observable {
 	@Override
 	public void notifyObservers(Object arg) {
 		if (!(arg instanceof Notify)) {
-			throw new ArgumentException("arg is invalid. only Notify.class");
+			if (arg == null) {
+				throw new ArgumentException("notify is invalid. only Notify.class. notify is null");
+			} else {
+				throw new ArgumentException("notify is invalid. only Notify.class. notify is " + arg.getClass().getName());
+			}
 		}
 		setChanged();
 		super.notifyObservers(arg);

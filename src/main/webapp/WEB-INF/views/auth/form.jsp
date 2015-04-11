@@ -45,7 +45,7 @@
 			</c:if>
 			
 			<div class="form-group">
-				<label for="inputEmail" class="control-label"><%= jspUtil.label("knowledge.auth.label.mail") %></label>
+				<label for="inputEmail" class="control-label"><%= jspUtil.label("knowledge.auth.label.id") %></label>
 				<div class="">
 				<input type="text" class="form-control"
 					name="username" value="<%= jspUtil.out("username") %>"
@@ -76,6 +76,11 @@
 						<i class="fa fa-plus-square"></i>&nbsp;<%= jspUtil.label("knowledge.auth.signup") %>
 					</a>
 <% } %>
+					<br/><br/>
+					<a href="<%=request.getContextPath()%>/open.PasswordInitialization/view" class="btn btn-warning">
+						<i class="fa fa-key"></i>&nbsp;<%= jspUtil.label("knowledge.auth.forgot.password") %>
+					</a>
+
 				</div>
 			</div>
 				

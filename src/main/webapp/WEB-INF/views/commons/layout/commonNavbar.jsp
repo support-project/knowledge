@@ -73,12 +73,12 @@
 						
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.lang") %></li>
 						<li >
-							<a href="<%= request.getContextPath() %>/open.lang/en" style="cursor: pointer;">
+							<a href="<%= request.getContextPath() %>/open.lang/select/en" style="cursor: pointer;">
 								<i class="fa fa-newspaper-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.lang.en") %>
 							</a>
 						</li>
 						<li >
-							<a href="<%= request.getContextPath() %>/open.lang/ja" style="cursor: pointer;">
+							<a href="<%= request.getContextPath() %>/open.lang/select/ja" style="cursor: pointer;">
 								<i class="fa fa-newspaper-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.lang.ja") %>
 							</a>
 						</li>

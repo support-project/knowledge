@@ -1,3 +1,4 @@
+<%@page import="org.support.project.knowledge.config.SystemConfig"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -56,7 +57,12 @@
 		<form action="<%= request.getContextPath()%>/protect.account/update" method="post" role="form">
 			<div class="form-group">
 				<label for="userKey"><%= jspUtil.label("knowledge.signup.label.mail") %></label>
-				<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("userKey") %>" />
+				<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("userKey") %>" 
+					<%= jspUtil.isnot(SystemConfig.USER_ADD_TYPE_VALUE_USER, "userAddType", "readonly=\"readonly\"") %>
+				/>
+				<% if (jspUtil.is(SystemConfig.USER_ADD_TYPE_VALUE_MAIL, "userAddType")) { %>
+					<br/><a class="btn btn-success" href="<%= request.getContextPath()%>/protect.account/changekey"><%= jspUtil.label("knowledge.account.change.email") %></a>
+				<% } %>
 			</div>
 			<div class="form-group">
 				<label for="userName"><%= jspUtil.label("knowledge.signup.label.name") %></label>
