@@ -1,0 +1,28 @@
+INSERT INTO ACCOUNT_IMAGES
+( 
+IMAGE_ID
+ , USER_ID
+ , FILE_NAME
+ , FILE_SIZE
+ , FILE_BINARY
+ , EXTENSION
+ , CONTENT_TYPE
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

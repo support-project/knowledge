@@ -41,7 +41,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT FILE_NO, KNOWLEDGE_ID, FILE_NAME, FILE_SIZE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
 		sql.append("FROM KNOWLEDGE_FILES WHERE KNOWLEDGE_ID = ?;");
-		return executeQuery(sql.toString(), KnowledgeFilesEntity.class, knowledgeId);
+		return executeQueryList(sql.toString(), KnowledgeFilesEntity.class, knowledgeId);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT FILE_NO, KNOWLEDGE_ID, FILE_NAME, FILE_SIZE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
 		sql.append("FROM KNOWLEDGE_FILES WHERE FILE_NO = ?;");
-		return executeQueryOnKey(sql.toString(), KnowledgeFilesEntity.class, fileNo);
+		return executeQuerySingle(sql.toString(), KnowledgeFilesEntity.class, fileNo);
 	}
 	
 	/**

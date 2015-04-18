@@ -13,7 +13,7 @@ FILE_NO
  , UPDATE_DATETIME
  , DELETE_FLAG
 ) VALUES (
-?
+DEFAULT
  , ?
  , ?
  , ?

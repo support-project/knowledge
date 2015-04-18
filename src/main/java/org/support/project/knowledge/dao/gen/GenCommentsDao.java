@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,28 +43,51 @@ public class GenCommentsDao extends AbstractDao {
 	 */
 	public List<CommentsEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_physical_select_all.sql");
-		return executeQuery(sql, CommentsEntity.class);
+		return executeQueryList(sql, CommentsEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public CommentsEntity physicalSelectOnKey(Long commentNo) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, CommentsEntity.class, commentNo);
+		return executeQuerySingle(sql, CommentsEntity.class, commentNo);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<CommentsEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_select_all.sql");
-		return executeQuery(sql, CommentsEntity.class);
+		return executeQueryList(sql, CommentsEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public CommentsEntity selectOnKey(Long commentNo) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_select_on_key.sql");
-		return executeQueryOnKey(sql, CommentsEntity.class, commentNo);
+		return executeQuerySingle(sql, CommentsEntity.class, commentNo);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public CommentsEntity rawPhysicalInsert(CommentsEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getCommentNo()
+			, entity.getKnowledgeId()
+			, entity.getComment()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
+		if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
+			String setValSql = "select setval('COMMENTS_COMMENT_NO_seq', (select max(COMMENT_NO) from COMMENTS));";
+			executeQuerySingle(setValSql, Long.class);
+		}
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 
@@ -72,8 +97,7 @@ public class GenCommentsDao extends AbstractDao {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_insert.sql");
 		Class<?> type = PropertyUtil.getPropertyType(entity, "commentNo");
 		Object key = executeInsert(sql, type, 
-			entity.getCommentNo()
-			, entity.getKnowledgeId()
+			entity.getKnowledgeId()
 			, entity.getComment()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()

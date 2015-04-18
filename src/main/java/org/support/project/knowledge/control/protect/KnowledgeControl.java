@@ -282,9 +282,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	/**
 	 * コメント追加
 	 * @return
-	 * @throws InvalidParamException
+	 * @throws Exception 
 	 */
-	public Boundary comment() throws InvalidParamException {
+	public Boundary comment() throws Exception {
 		// 共通処理呼の表示条件の保持の呼び出し
 		String params = setViewParam();
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));

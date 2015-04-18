@@ -51,7 +51,7 @@ PName=NOTIFY_QUEUES
 LName=通知待ちキュー
 Comment=
 TableOption=
-Page=Main
+Page=MAIN
 Left=120
 Top=1700
 Field="HASH","HASH","@VARCHAR(32)","NOT NULL",0,"","",$FFFFFFFF,""
@@ -61,7 +61,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150331055404
-Position="Main",120,1700
+Position="MAIN",120,1700
 
 [Relation]
 Entity1=USERS
@@ -156,18 +156,18 @@ TableOption=
 Page=MAIN
 Left=1010
 Top=900
-Field="IMAGE_ID","IMAGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="IMAGE_ID","IMAGE_ID","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ユーザID","USER_ID","@INT",,,"","",$FFFFFFFF,""
 Field="ファイル名","FILE_NAME","@VARCHAR(256)",,,"","",$FFFFFFFF,""
 Field="ファイルサイズ","FILE_SIZE","@DOUBLE",,,"","",$FFFFFFFF,""
-Field="バイナリ","FILE_BINARY","blob",,,"","",$FFFFFFFF,""
+Field="バイナリ","FILE_BINARY","BYTEA",,,"","",$FFFFFFFF,""
 Field="拡張子","EXTENSION","@VARCHAR(256)",,,"","",$FFFFFFFF,""
 Field="CONTENT_TYPE","CONTENT_TYPE","@VARCHAR(256)",,,"","",$FFFFFFFF,""
 Index=IDX_ACCOUNT_IMAGES_USER_ID=1,USER_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20150102014151
+ModifiedDateTime=20150416234339
 Position="MAIN",1010,900
 
 [Relation]
@@ -198,13 +198,13 @@ TableOption=
 Page=MAIN
 Left=580
 Top=1470
-Field="NO","NO","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="NO","NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Index=IDX_LIKES_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20150102013522
+ModifiedDateTime=20150416233511
 Position="MAIN",580,1470
 
 [Relation]
@@ -236,14 +236,14 @@ TableOption=
 Page=MAIN
 Left=1890
 Top=1540
-Field="コメント番号","COMMENT_NO","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="コメント番号","COMMENT_NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="コメント","COMMENT","text",,,"","",$FFFFFFFF,""
 Index=IDX_COMMENTS_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20150102013923
+ModifiedDateTime=20150416233710
 Position="MAIN",1890,1540
 
 [Relation]
@@ -274,14 +274,14 @@ TableOption=
 Page=MAIN
 Left=1890
 Top=1390
-Field="VOTE_NO","VOTE_NO","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="VOTE_NO","VOTE_NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="投票区分","VOTE_KIND","@INT","NOT NULL",,"","",$FFFFFFFF,""
 Index=IDX_VOTES_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20150102013835
+ModifiedDateTime=20150416233659
 Position="MAIN",1890,1390,435,89
 
 [Relation]
@@ -313,14 +313,14 @@ TableOption=
 Page=MAIN
 Left=1890
 Top=840
-Field="HISTORY_NO","HISTORY_NO","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="HISTORY_NO","HISTORY_NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="日時","VIEW_DATE_TIME","@DATETIME","NOT NULL",,"","",$FFFFFFFF,""
 Index=IDX_VIEW_HISTORIES_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20150102013703
+ModifiedDateTime=20150416233623
 Position="MAIN",1890,840
 
 [Relation]
@@ -497,12 +497,12 @@ TableOption=
 Page=MAIN
 Left=70
 Top=1310
-Field="タグ_ID","TAG_ID","@INT","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="タグ_ID","TAG_ID","SERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="タグ名称","TAG_NAME","@VARCHAR(128)","NOT NULL",,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20141120205901
+ModifiedDateTime=20150416233544
 Position="MAIN",70,1310
 
 [Relation]
@@ -534,18 +534,18 @@ TableOption=
 Page=MAIN
 Left=1140
 Top=1520
-Field="添付ファイル番号","FILE_NO","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="添付ファイル番号","FILE_NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint",,,"","",$FFFFFFFF,""
 Field="コメント番号","COMMENT_NO","bigint",,,"","",$FFFFFFFF,""
 Field="ファイル名","FILE_NAME","@VARCHAR(256)",,,"","",$FFFFFFFF,""
 Field="ファイルサイズ","FILE_SIZE","@DOUBLE",,,"","",$FFFFFFFF,""
-Field="バイナリ","FILE_BINARY","blob",,,"","",$FFFFFFFF,""
+Field="バイナリ","FILE_BINARY","BYTEA",,,"","",$FFFFFFFF,""
 Field="パース結果","PARSE_STATUS","@INT","NOT NULL",,"","",$FFFFFFFF,""
 Index=IDX_KNOWLEDGE_FILES_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20150328055544
+ModifiedDateTime=20150416234328
 Position="MAIN",1140,1520
 
 [Entity]
@@ -556,7 +556,7 @@ TableOption=
 Page=MAIN
 Left=1160
 Top=1150
-Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="ナレッジID","KNOWLEDGE_ID","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="タイトル","TITLE","@VARCHAR(1024)","NOT NULL",,"","",$FFFFFFFF,""
 Field="内容","CONTENT","text",,,"","",$FFFFFFFF,""
 Field="公開区分","PUBLIC_FLAG","@INT",,,"","",$FFFFFFFF,""
@@ -567,7 +567,7 @@ Field="コメント件数","COMMENT_COUNT","@INT",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20150219042038
+ModifiedDateTime=20150416233526
 Position="MAIN",1160,1150
 
 [Comment]

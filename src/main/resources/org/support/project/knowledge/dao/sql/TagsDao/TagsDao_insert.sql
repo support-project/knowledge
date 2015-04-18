@@ -8,7 +8,7 @@ TAG_ID
  , UPDATE_DATETIME
  , DELETE_FLAG
 ) VALUES (
-?
+DEFAULT
  , ?
  , ?
  , ?

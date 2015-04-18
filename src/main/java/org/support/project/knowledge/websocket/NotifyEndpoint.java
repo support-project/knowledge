@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
@@ -75,5 +76,15 @@ public class NotifyEndpoint {
 		// message.setMessage(text);
 		// notify.notifyObservers(message);
 	}
+	
+	@OnError
+	public void onError(Throwable t) {
+		LOG.warn("websocket on error." + t.getClass().getName() + " : " + t.getMessage());
+		if (LOG.isDebugEnabled()) {
+			LOG.warn("websocket error -> ", t);
+		}
+	}
+	
+	
 	
 }

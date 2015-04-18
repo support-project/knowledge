@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,28 +43,46 @@ public class GenNotifyQueuesDao extends AbstractDao {
 	 */
 	public List<NotifyQueuesEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_physical_select_all.sql");
-		return executeQuery(sql, NotifyQueuesEntity.class);
+		return executeQueryList(sql, NotifyQueuesEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public NotifyQueuesEntity physicalSelectOnKey(String hash) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, NotifyQueuesEntity.class, hash);
+		return executeQuerySingle(sql, NotifyQueuesEntity.class, hash);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<NotifyQueuesEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_select_all.sql");
-		return executeQuery(sql, NotifyQueuesEntity.class);
+		return executeQueryList(sql, NotifyQueuesEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public NotifyQueuesEntity selectOnKey(String hash) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_select_on_key.sql");
-		return executeQueryOnKey(sql, NotifyQueuesEntity.class, hash);
+		return executeQuerySingle(sql, NotifyQueuesEntity.class, hash);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public NotifyQueuesEntity rawPhysicalInsert(NotifyQueuesEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getHash()
+			, entity.getType()
+			, entity.getId()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 

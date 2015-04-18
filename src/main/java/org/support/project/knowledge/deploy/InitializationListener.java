@@ -29,7 +29,7 @@ public class InitializationListener implements ServletContextListener {
 		InitializationLogic.get().init();
 		
 		// 添付ファイル格納ディレクトリ（テンポラリディレクトリ）が存在しなければ生成
-		AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
+		AppConfig appConfig = AppConfig.get();
 		String tmpDir = appConfig.getTmpPath();
 		File tmp = new File(tmpDir);
 		if (!tmp.exists()) {
@@ -42,7 +42,10 @@ public class InitializationListener implements ServletContextListener {
 			idx.mkdirs();
 			LOG.info("idx directory created." + idxDir);
 		}
-		LOG.info("Knowledge start on '" + contextEvent.getServletContext().getRealPath("/") + "'");
+		String path = contextEvent.getServletContext().getRealPath("/");
+		LOG.info("Knowledge start on '" + path + "'");
+		LOG.info(path);
+		appConfig.setWebRealPath(path);
 	}
 
 }

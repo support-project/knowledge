@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,28 +43,54 @@ public class GenNotifyConfigsDao extends AbstractDao {
 	 */
 	public List<NotifyConfigsEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_physical_select_all.sql");
-		return executeQuery(sql, NotifyConfigsEntity.class);
+		return executeQueryList(sql, NotifyConfigsEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public NotifyConfigsEntity physicalSelectOnKey(Integer userId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, NotifyConfigsEntity.class, userId);
+		return executeQuerySingle(sql, NotifyConfigsEntity.class, userId);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<NotifyConfigsEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_select_all.sql");
-		return executeQuery(sql, NotifyConfigsEntity.class);
+		return executeQueryList(sql, NotifyConfigsEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public NotifyConfigsEntity selectOnKey(Integer userId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_select_on_key.sql");
-		return executeQueryOnKey(sql, NotifyConfigsEntity.class, userId);
+		return executeQuerySingle(sql, NotifyConfigsEntity.class, userId);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public NotifyConfigsEntity rawPhysicalInsert(NotifyConfigsEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getUserId()
+			, entity.getNotifyMail()
+			, entity.getNotifyDesktop()
+			, entity.getMyItemComment()
+			, entity.getMyItemLike()
+			, entity.getMyItemStock()
+			, entity.getToItemSave()
+			, entity.getToItemComment()
+			, entity.getToItemIgnorePublic()
+			, entity.getStockItemSave()
+			, entity.getStokeItemComment()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 

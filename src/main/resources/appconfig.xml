@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <app>
 	<time_zone>Asia/Tokyo</time_zone>
-	<indexPath>{user.home}/.knowledge/index/</indexPath>
-	<tmpPath>{user.home}/.knowledge/tmp/</tmpPath>
-	<databasePath>{user.home}/.knowledge/db/</databasePath>
+	<basePath>{user.home}/.knowledge</basePath>
+	<indexPath>{base.path}/index/</indexPath>
+	<tmpPath>{base.path}/tmp/</tmpPath>
+	<databasePath>{base.path}/db/</databasePath>
 	<uploadMaxMBSize>500</uploadMaxMBSize>
 	<hashIterations>100</hashIterations>
 </app>

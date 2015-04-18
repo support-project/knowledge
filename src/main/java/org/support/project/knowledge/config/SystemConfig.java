@@ -25,5 +25,7 @@ public class SystemConfig {
 	/** ユーザ登録を実施した後、通知しない(OFF) */
 	public static final String USER_ADD_NOTIFY_OFF = "OFF";
 	
+	/** インデックス再作成のための設定値 */
+	public static final String RE_INDEXING = "RE_INDEXING";
 	
 }

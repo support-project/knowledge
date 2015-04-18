@@ -30,7 +30,7 @@ public class TargetsDao extends AbstractDao {
 	 */
 	public List<LabelValue> selectOnKeyword(String keyword, int offset, int limit) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectOnKeyword.sql");
-		return executeQuery(sql, LabelValue.class, keyword, keyword, limit, offset);
+		return executeQueryList(sql, LabelValue.class, keyword, keyword, limit, offset);
 	}
 
 	
@@ -42,7 +42,7 @@ public class TargetsDao extends AbstractDao {
 	 */
 	public List<GroupsEntity> selectGroupsOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectGroupsOnKnowledgeId.sql");
-		return executeQuery(sql, GroupsEntity.class, knowledgeId);
+		return executeQueryList(sql, GroupsEntity.class, knowledgeId);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class TargetsDao extends AbstractDao {
 	 */
 	public List<UsersEntity> selectUsersOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectUsersOnKnowledgeId.sql");
-		return executeQuery(sql, UsersEntity.class, knowledgeId);
+		return executeQueryList(sql, UsersEntity.class, knowledgeId);
 	}
 
 	

@@ -1,8 +1,3 @@
--- Project Name : knowledge
--- Date/Time    : 2015/03/31 5:54:19
--- RDBMS Type   : PostgreSQL
--- Application  : A5:SQL Mk-2
-
 -- 通知待ちキュー
 drop table if exists NOTIFY_QUEUES cascade;
 
@@ -45,11 +40,11 @@ create table NOTIFY_CONFIGS (
 drop table if exists ACCOUNT_IMAGES cascade;
 
 create table ACCOUNT_IMAGES (
-  IMAGE_ID bigint not null AUTO_INCREMENT
+  IMAGE_ID BIGSERIAL not null
   , USER_ID integer
   , FILE_NAME character varying(256)
   , FILE_SIZE double precision
-  , FILE_BINARY blob
+  , FILE_BINARY BYTEA
   , EXTENSION character varying(256)
   , CONTENT_TYPE character varying(256)
   , INSERT_USER integer
@@ -67,7 +62,7 @@ create unique index IDX_ACCOUNT_IMAGES_USER_ID
 drop table if exists LIKES cascade;
 
 create table LIKES (
-  NO bigint not null AUTO_INCREMENT
+  NO BIGSERIAL not null
   , KNOWLEDGE_ID bigint not null
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
@@ -84,7 +79,7 @@ create index IDX_LIKES_KNOWLEDGE_ID
 drop table if exists COMMENTS cascade;
 
 create table COMMENTS (
-  COMMENT_NO bigint not null AUTO_INCREMENT
+  COMMENT_NO BIGSERIAL not null
   , KNOWLEDGE_ID bigint not null
   , COMMENT text
   , INSERT_USER integer
@@ -102,7 +97,7 @@ create index IDX_COMMENTS_KNOWLEDGE_ID
 drop table if exists VOTES cascade;
 
 create table VOTES (
-  VOTE_NO bigint not null AUTO_INCREMENT
+  VOTE_NO BIGSERIAL not null
   , KNOWLEDGE_ID bigint not null
   , VOTE_KIND integer not null
   , INSERT_USER integer
@@ -120,7 +115,7 @@ create index IDX_VOTES_KNOWLEDGE_ID
 drop table if exists VIEW_HISTORIES cascade;
 
 create table VIEW_HISTORIES (
-  HISTORY_NO bigint not null AUTO_INCREMENT
+  HISTORY_NO BIGSERIAL not null
   , KNOWLEDGE_ID bigint not null
   , VIEW_DATE_TIME timestamp not null
   , INSERT_USER integer
@@ -195,7 +190,7 @@ create table KNOWLEDGE_TAGS (
 drop table if exists TAGS cascade;
 
 create table TAGS (
-  TAG_ID integer not null AUTO_INCREMENT
+  TAG_ID SERIAL not null
   , TAG_NAME character varying(128) not null
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
@@ -209,12 +204,12 @@ create table TAGS (
 drop table if exists KNOWLEDGE_FILES cascade;
 
 create table KNOWLEDGE_FILES (
-  FILE_NO bigint not null AUTO_INCREMENT
+  FILE_NO BIGSERIAL not null
   , KNOWLEDGE_ID bigint
   , COMMENT_NO bigint
   , FILE_NAME character varying(256)
   , FILE_SIZE double precision
-  , FILE_BINARY blob
+  , FILE_BINARY BYTEA
   , PARSE_STATUS integer not null
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
@@ -231,7 +226,7 @@ create index IDX_KNOWLEDGE_FILES_KNOWLEDGE_ID
 drop table if exists KNOWLEDGES cascade;
 
 create table KNOWLEDGES (
-  KNOWLEDGE_ID bigint not null AUTO_INCREMENT
+  KNOWLEDGE_ID BIGSERIAL not null
   , TITLE character varying(1024) not null
   , CONTENT text
   , PUBLIC_FLAG integer

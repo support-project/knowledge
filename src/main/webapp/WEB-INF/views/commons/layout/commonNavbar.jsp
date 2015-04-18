@@ -129,6 +129,16 @@
 								<i class="fa fa-recycle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.data.backup") %>
 							</a>
 						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.database/connect" style="cursor: pointer;">
+								<i class="fa fa-database"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.data.connect") %>
+							</a>
+						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.database/reindexing" style="cursor: pointer;">
+								<i class="fa fa-refresh"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.data.reindexing") %>
+							</a>
+						</li>
 						
 						
 					</ul>

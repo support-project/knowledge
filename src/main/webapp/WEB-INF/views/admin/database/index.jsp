@@ -30,11 +30,19 @@ $("#input-id").fileinput();
 
 
 <c:param name="PARAM_CONTENT">
-<h4 class="title"><%= jspUtil.label("knowledge.navbar.data") %></h4>
+<h4 class="title"><%= jspUtil.label("knowledge.navbar.data.backup") %></h4>
+
 <div class="alert alert-warning alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <strong>Warning!</strong> <%= jspUtil.label("knowledge.data.label.restore.msg.danger") %>
 </div>
+
+<div class="alert alert-info alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Information</strong> <%= jspUtil.label("knowledge.data.label.restore.msg.info") %>
+</div>
+
+
 
 <%= jspUtil.label("knowledge.data.msg") %>
 

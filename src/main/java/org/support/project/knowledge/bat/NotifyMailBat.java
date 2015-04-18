@@ -40,7 +40,7 @@ import org.support.project.web.entity.MailsEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
-public class NotifyMailBat {
+public class NotifyMailBat extends AbstractBat {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(MailSendBat.class);
 	
@@ -52,6 +52,7 @@ public class NotifyMailBat {
 
 	public static void main(String[] args) throws Exception {
 		NotifyMailBat bat = new NotifyMailBat();
+		bat.dbInit();
 		bat.start();
 	}
 	

@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,56 +43,73 @@ public class GenKnowledgeUsersDao extends AbstractDao {
 	 */
 	public List<KnowledgeUsersEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeUsersDao/KnowledgeUsersDao_physical_select_all.sql");
-		return executeQuery(sql, KnowledgeUsersEntity.class);
+		return executeQueryList(sql, KnowledgeUsersEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public KnowledgeUsersEntity physicalSelectOnKey(Long knowledgeId, Integer userId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeUsersDao/KnowledgeUsersDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, KnowledgeUsersEntity.class, knowledgeId, userId);
+		return executeQuerySingle(sql, KnowledgeUsersEntity.class, knowledgeId, userId);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<KnowledgeUsersEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeUsersDao/KnowledgeUsersDao_select_all.sql");
-		return executeQuery(sql, KnowledgeUsersEntity.class);
+		return executeQueryList(sql, KnowledgeUsersEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public KnowledgeUsersEntity selectOnKey(Long knowledgeId, Integer userId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeUsersDao/KnowledgeUsersDao_select_on_key.sql");
-		return executeQueryOnKey(sql, KnowledgeUsersEntity.class, knowledgeId, userId);
+		return executeQuerySingle(sql, KnowledgeUsersEntity.class, knowledgeId, userId);
 	}
 	/**
 	 * KNOWLEDGE_ID でリストを取得
 	 */
 	public List<KnowledgeUsersEntity> selectOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeUsersDao/KnowledgeUsersDao_select_on_knowledge_id.sql");
-		return executeQuery(sql, KnowledgeUsersEntity.class, knowledgeId);
+		return executeQueryList(sql, KnowledgeUsersEntity.class, knowledgeId);
 	}
 	/**
 	 * USER_ID でリストを取得
 	 */
 	public List<KnowledgeUsersEntity> selectOnUserId(Integer userId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeUsersDao/KnowledgeUsersDao_select_on_user_id.sql");
-		return executeQuery(sql, KnowledgeUsersEntity.class, userId);
+		return executeQueryList(sql, KnowledgeUsersEntity.class, userId);
 	}
 	/**
 	 * KNOWLEDGE_ID でリストを取得
 	 */
 	public List<KnowledgeUsersEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeUsersDao/KnowledgeUsersDao_physical_select_on_knowledge_id.sql");
-		return executeQuery(sql, KnowledgeUsersEntity.class, knowledgeId);
+		return executeQueryList(sql, KnowledgeUsersEntity.class, knowledgeId);
 	}
 	/**
 	 * USER_ID でリストを取得
 	 */
 	public List<KnowledgeUsersEntity> physicalSelectOnUserId(Integer userId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeUsersDao/KnowledgeUsersDao_physical_select_on_user_id.sql");
-		return executeQuery(sql, KnowledgeUsersEntity.class, userId);
+		return executeQueryList(sql, KnowledgeUsersEntity.class, userId);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public KnowledgeUsersEntity rawPhysicalInsert(KnowledgeUsersEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeUsersDao/KnowledgeUsersDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getKnowledgeId()
+			, entity.getUserId()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 

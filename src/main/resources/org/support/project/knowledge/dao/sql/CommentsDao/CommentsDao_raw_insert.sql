@@ -1,0 +1,20 @@
+INSERT INTO COMMENTS
+( 
+COMMENT_NO
+ , KNOWLEDGE_ID
+ , COMMENT
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

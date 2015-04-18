@@ -53,6 +53,9 @@ public class KnowledgeLogic {
 	
 	public static final int TYPE_KNOWLEDGE = IndexType.knowledge.getValue();
 	public static final int TYPE_FILE = IndexType.KnowledgeFile.getValue();
+	public static final int TYPE_COMMENT = IndexType.KnowledgeComment.getValue();
+	
+	public static final String COMMENT_ID_PREFIX = "COMMENT-";
 
 	public static KnowledgeLogic get() {
 		return Container.getComp(KnowledgeLogic.class);
@@ -120,7 +123,7 @@ public class KnowledgeLogic {
 		fileLogic.setKnowledgeFiles(entity, fileNos, loginedUser);
 		
 		// 全文検索エンジンへ登録
-		saveIndex(entity, tags, targets, loginedUser);
+		saveIndex(entity, tags, targets, loginedUser.getUserId());
 		
 		// 一覧表示用の情報を更新
 		updateKnowledgeExInfo(entity);
@@ -159,7 +162,7 @@ public class KnowledgeLogic {
 		fileLogic.setKnowledgeFiles(entity, fileNos, loginedUser);
 		
 		// 全文検索エンジンへ登録
-		saveIndex(entity, tags, targets, loginedUser);
+		saveIndex(entity, tags, targets, loginedUser.getUserId());
 		
 		// 一覧表示用の情報を更新
 		updateKnowledgeExInfo(entity);
@@ -238,13 +241,13 @@ public class KnowledgeLogic {
 	 * @param loginedUser
 	 * @throws Exception
 	 */
-	private void saveIndex(KnowledgesEntity entity, List<TagsEntity> tags, List<LabelValue> targets, LoginedUser loginedUser) throws Exception {
+	private void saveIndex(KnowledgesEntity entity, List<TagsEntity> tags, List<LabelValue> targets, Integer creator) throws Exception {
 		IndexingValue indexingValue = new IndexingValue();
 		indexingValue.setType(TYPE_KNOWLEDGE);
 		indexingValue.setId(String.valueOf(entity.getKnowledgeId()));
 		indexingValue.setTitle(entity.getTitle());
 		indexingValue.setContents(entity.getContent());
-		indexingValue.addUser(loginedUser.getLoginUser().getUserId());
+		indexingValue.addUser(creator);
 		if (entity.getPublicFlag() == null || PUBLIC_FLAG_PUBLIC == entity.getPublicFlag()) {
 			indexingValue.addUser(ALL_USER);
 		}
@@ -268,7 +271,7 @@ public class KnowledgeLogic {
 			}
 		}
 		
-		indexingValue.setCreator(loginedUser.getUserId());
+		indexingValue.setCreator(creator);
 		indexingValue.setTime(entity.getUpdateDatetime().getTime()); // 更新日時をセットするので、更新日時でソート
 		
 		IndexLogic.get().save(indexingValue); //全文検索のエンジンにも保存（DBに保存する意味ないかも）
@@ -480,7 +483,7 @@ public class KnowledgeLogic {
 					entity.setTitle(entity.getTitle());
 					
 					StringBuilder builder = new StringBuilder();
-					builder.append("[添付]");
+					builder.append("[FILE] ");
 					
 					if (StringUtils.isNotEmpty(searchResultValue.getHighlightedTitle())) {
 						builder.append(searchResultValue.getHighlightedTitle());
@@ -488,6 +491,23 @@ public class KnowledgeLogic {
 						builder.append(filesEntity.getFileName());
 					}
 					builder.append("<br/>");
+					if (StringUtils.isNotEmpty(searchResultValue.getHighlightedContents())) {
+						builder.append(searchResultValue.getHighlightedContents());
+					}
+					entity.setContent(builder.toString());
+					knowledges.add(entity);
+				}
+			} else if (searchResultValue.getType() == TYPE_COMMENT) {
+				// TODO 1件づつ処理しているので、パフォーマンスが悪いので後で処理を検討
+				String id = searchResultValue.getId().substring(COMMENT_ID_PREFIX.length());
+				Long commentNo = new Long(id);
+				CommentsEntity commentsEntity = CommentsDao.get().selectOnKey(commentNo);
+				if (commentsEntity != null && commentsEntity.getKnowledgeId() != null) {
+					KnowledgesEntity entity = knowledgesDao.selectOnKeyWithUserName(commentsEntity.getKnowledgeId());
+					entity.setTitle(entity.getTitle());
+					
+					StringBuilder builder = new StringBuilder();
+					builder.append("[COMMENT] ");
 					if (StringUtils.isNotEmpty(searchResultValue.getHighlightedContents())) {
 						builder.append(searchResultValue.getHighlightedContents());
 					}
@@ -814,8 +834,9 @@ public class KnowledgeLogic {
 	 * コメント保存
 	 * @param knowledgeId
 	 * @param comment
+	 * @throws Exception 
 	 */
-	public void saveComment(Long knowledgeId, String comment) {
+	public void saveComment(Long knowledgeId, String comment) throws Exception {
 		CommentsDao commentsDao = CommentsDao.get();
 		CommentsEntity commentsEntity = new CommentsEntity();
 		commentsEntity.setKnowledgeId(knowledgeId);
@@ -824,8 +845,80 @@ public class KnowledgeLogic {
 		// 一覧表示用の情報を更新
 		KnowledgeLogic.get().updateKnowledgeExInfo(knowledgeId);
 		
+		// 検索エンジンに追加
+		addIndexOnComment(commentsEntity);
+		
 		// 通知（TODO 別スレッド化を検討）
 		NotifyLogic.get().notifyOnKnowledgeComment(knowledgeId, commentsEntity);
+	}
+	
+	
+	/**
+	 * コメントを全文検索エンジンへ登録
+	 * @param commentsEntity
+	 * @throws Exception 
+	 */
+	public void addIndexOnComment(CommentsEntity commentsEntity) throws Exception {
+		KnowledgesDao knowledgesDao = KnowledgesDao.get();
+		KnowledgesEntity entity = knowledgesDao.selectOnKey(commentsEntity.getKnowledgeId());
+		
+		IndexingValue indexingValue = new IndexingValue();
+		indexingValue.setType(TYPE_COMMENT);
+		indexingValue.setId(COMMENT_ID_PREFIX + String.valueOf(commentsEntity.getCommentNo()));
+		indexingValue.setTitle("");
+		indexingValue.setContents(commentsEntity.getComment());
+		indexingValue.addUser(entity.getInsertUser());
+		if (entity.getPublicFlag() == null || PUBLIC_FLAG_PUBLIC == entity.getPublicFlag()) {
+			indexingValue.addUser(ALL_USER);
+		}
+		
+		List<TagsEntity> tags = TagsDao.get().selectOnKnowledgeId(commentsEntity.getKnowledgeId());
+		if (tags != null) {
+			for (TagsEntity tagsEntity : tags) {
+				indexingValue.addTag(tagsEntity.getTagId());
+			}
+		}
+		if (entity.getPublicFlag() != null && entity.getPublicFlag().intValue() == PUBLIC_FLAG_PROTECT) {
+			TargetLogic targetLogic = TargetLogic.get();
+			List<LabelValue> targets = targetLogic.selectTargetsOnKnowledgeId(commentsEntity.getKnowledgeId());
+			if (targets != null) {
+				for (LabelValue target : targets) {
+					Integer id = TargetLogic.get().getGroupId(target.getValue());
+					if (id != Integer.MIN_VALUE) {
+						indexingValue.addGroup(id);
+					}
+					id = TargetLogic.get().getUserId(target.getValue());
+					if (id != Integer.MIN_VALUE) {
+						indexingValue.addUser(id);
+					}
+				}
+			}
+		}
+		indexingValue.setCreator(commentsEntity.getInsertUser());
+		indexingValue.setTime(commentsEntity.getUpdateDatetime().getTime()); // 更新日時をセットするので、更新日時でソート
+		
+		IndexLogic.get().save(indexingValue); //全文検索のエンジンにも保存（DBに保存する意味ないかも）
+	}
+
+	public void reindexing(KnowledgesEntity knowledgesEntity) throws Exception {
+		// ナレッジの情報を検索エンジンへ更新
+		List<TagsEntity> tags = tagsDao.selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
+		List<LabelValue> targets = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgesEntity.getKnowledgeId());
+		saveIndex(knowledgesEntity, tags, targets, knowledgesEntity.getInsertUser());
+		
+		// コメントを検索エンジンへ
+		List<CommentsEntity> comments = CommentsDao.get().selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
+		for (CommentsEntity commentsEntity : comments) {
+			addIndexOnComment(commentsEntity);
+		}
+		
+		//添付ファイルを検索エンジンへ
+		KnowledgeFilesDao filesDao = KnowledgeFilesDao.get();
+		List<KnowledgeFilesEntity> filesEntities = filesDao.selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
+		for (KnowledgeFilesEntity knowledgeFilesEntity : filesEntities) {
+			//添付ファイルのパースは、パースバッチに任せる（ステータスをパース待ちにしておけばバッチが処理する）
+			filesDao.changeStatus(knowledgeFilesEntity.getFileNo(), FileParseBat.PARSE_STATUS_WAIT, FileParseBat.UPDATE_USER_ID);
+		}
 	}
 
 }

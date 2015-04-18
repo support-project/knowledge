@@ -51,10 +51,13 @@ public class AccountControl extends Control {
 
 		LoginedUser loginedUser = super.getLoginedUser();
 		if (loginedUser == null) {
-			sendError(HttpStatus.SC_401_UNAUTHORIZED, "");
+			return sendError(HttpStatus.SC_401_UNAUTHORIZED, "");
 		}
 		Integer userId = loginedUser.getLoginUser().getUserId();
 		UsersEntity user = UsersDao.get().selectOnKey(userId);
+		if (user == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
 		user.setPassword(null);
 		
 		setAttributeOnProperty(user);
@@ -77,7 +80,7 @@ public class AccountControl extends Control {
 		
 		LoginedUser loginedUser = super.getLoginedUser();
 		if (loginedUser == null) {
-			sendError(HttpStatus.SC_401_UNAUTHORIZED, "");
+			return sendError(HttpStatus.SC_401_UNAUTHORIZED, "");
 		}
 		
 		Map<String, String> values = getParams();
@@ -102,7 +105,7 @@ public class AccountControl extends Control {
 			UsersDao dao = UsersDao.get();
 			user = dao.selectOnKey(getLoginUserId());
 			if (user == null) {
-				sendError(HttpStatus.SC_400_BAD_REQUEST, "user is allready removed.");
+				return sendError(HttpStatus.SC_400_BAD_REQUEST, "user is allready removed.");
 			}
 			if (userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_ADMIN)) {
 				//ユーザ登録を管理者が行っている場合、メールアドレスは変更出来ない（変更用の画面も使えない）

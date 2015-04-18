@@ -48,11 +48,6 @@ ${param.PARAM_CONTENT}
 <% jspUtil.debug(); %>
 </div>
 
-<c:import url="/WEB-INF/views/commons/layout/commonScripts.jsp" />
-
-<c:if test="${param.PARAM_SCRIPTS != null}">
-${param.PARAM_SCRIPTS}
-</c:if>
 
 
 
@@ -76,6 +71,13 @@ ${param.PARAM_SCRIPTS}
 		<!-- /copy -->
 	</div>
 	<!-- /footer -->
+
+<c:import url="/WEB-INF/views/commons/layout/commonScripts.jsp" />
+
+<c:if test="${param.PARAM_SCRIPTS != null}">
+${param.PARAM_SCRIPTS}
+</c:if>
+
 
 </body>
 </html>
