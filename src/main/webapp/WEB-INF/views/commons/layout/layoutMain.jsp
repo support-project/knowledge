@@ -66,7 +66,7 @@ ${param.PARAM_CONTENT}
 		<!-- /nav -->
 		<div class="clearfix"></div>
 		<div class="copy">
-			<span>Copyright &#169; 2015 support-project.org [Knowledge project]</span>
+			<span>Copyright &#169; 2015 <a href="https://support-project.org/knowledge_info/index">support-project.org [Knowledge project]</a></span>
 		</div>
 		<!-- /copy -->
 	</div>

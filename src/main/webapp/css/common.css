@@ -30,6 +30,15 @@ body {
 #footer .footer-menu li a:hover {
 	color: #fff;
 }
+#footer a {
+	color: #cccccc;
+}
+
+#footer a:hover {
+	color: #fff;
+}
+
+
 /*  Copyright
 /*--------------------------------- */ 
 .copy {

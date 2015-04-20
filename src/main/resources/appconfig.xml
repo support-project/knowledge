@@ -7,6 +7,16 @@
 	<databasePath>{base.path}/db/</databasePath>
 	<uploadMaxMBSize>500</uploadMaxMBSize>
 	<hashIterations>100</hashIterations>
+	<languages>
+		<language>
+			<label>Japanese</label>
+			<value>ja</value>
+		</language>
+		<language>
+			<label>English</label>
+			<value>en</value>
+		</language>
+	</languages>
 </app>
 
 

@@ -1,6 +1,10 @@
 package org.support.project.knowledge.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.support.project.common.config.ConfigLoader;
+import org.support.project.knowledge.vo.LabelValue;
 
 
 public class AppConfig extends org.support.project.web.config.AppConfig {
@@ -18,6 +22,10 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
 	private String indexPath;
 	
 	private boolean convIndexPath = false;
+	
+	private List<LabelValue> languages = new ArrayList<>();
+	
+	
 	
 	/**
 	 * @return the indexPath
@@ -46,6 +54,20 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
 	 */
 	public void setIndexPath(String indexPath) {
 		this.indexPath = indexPath;
+	}
+
+	/**
+	 * @return the languages
+	 */
+	public List<LabelValue> getLanguages() {
+		return languages;
+	}
+
+	/**
+	 * @param languages the languages to set
+	 */
+	public void setLanguages(List<LabelValue> languages) {
+		this.languages = languages;
 	}
 	
 }

@@ -1,3 +1,6 @@
+<%@page import="org.support.project.knowledge.vo.LabelValue"%>
+<%@page import="java.util.List"%>
+<%@page import="org.support.project.knowledge.config.AppConfig"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -130,13 +133,6 @@
 	text-align:left;
 	color: white;
 }
-#footer a {
-	color: #cccccc;
-}
-
-#footer a:hover {
-	color: #fff;
-}
 
 </style>
 
@@ -158,13 +154,19 @@
 		</a>
 		<br/><br/>
 		<br/><br/>
-		<a href="<%= request.getContextPath() %>/open.lang/select/ja" style="cursor: pointer;color: red;font-size: 18px">
-			<%= jspUtil.label("knowledge.navbar.lang.ja") %>
-		</a>
-		&nbsp;&nbsp;
-		<a href="<%= request.getContextPath() %>/open.lang/select/en" style="cursor: pointer;color: red;font-size: 18px">
-			<%= jspUtil.label("knowledge.navbar.lang.en") %>
-		</a>
+		
+		<%
+			AppConfig appConfig = AppConfig.get();
+			List<LabelValue> languages = appConfig.getLanguages();
+			for (LabelValue language : languages) {
+		%>
+			<a href="<%= request.getContextPath() %>/open.lang/select/<%= language.getValue() %>" style="cursor: pointer;color: red;font-size: 18px">
+				<%= language.getLabel() %>
+			</a>
+			&nbsp;&nbsp;
+		<%
+			}
+		%>
 	</div>
 	
 	<%--
