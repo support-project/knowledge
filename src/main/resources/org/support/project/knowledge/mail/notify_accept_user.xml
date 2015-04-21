@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>[Knowledge] 承認待ちのユーザ追加(通知)</title>
+	<title>Information from [Knowledge] on add user</title>
 	<contents xml:space="preserve">
-ユーザの登録リクエストがありました。
-管理者のページにて、確認をお願いします。
+There was a user of registration request.
+In the administrator of the page, please check.
 
 ------------------------------------------
-※本メールはシステムより自動で送信されています。
- このメールに対する返信は出来ませんので御了承ください。
+ This e-mail has been sent automatically from the system.
+ Please understand that it can not reply to this email.
 
 	</contents>
 	

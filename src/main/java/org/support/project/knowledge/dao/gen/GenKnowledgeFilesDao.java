@@ -12,6 +12,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -42,28 +44,55 @@ public class GenKnowledgeFilesDao extends AbstractDao {
 	 */
 	public List<KnowledgeFilesEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeFilesDao/KnowledgeFilesDao_physical_select_all.sql");
-		return executeQuery(sql, KnowledgeFilesEntity.class);
+		return executeQueryList(sql, KnowledgeFilesEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public KnowledgeFilesEntity physicalSelectOnKey(Long fileNo) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeFilesDao/KnowledgeFilesDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, KnowledgeFilesEntity.class, fileNo);
+		return executeQuerySingle(sql, KnowledgeFilesEntity.class, fileNo);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<KnowledgeFilesEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeFilesDao/KnowledgeFilesDao_select_all.sql");
-		return executeQuery(sql, KnowledgeFilesEntity.class);
+		return executeQueryList(sql, KnowledgeFilesEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public KnowledgeFilesEntity selectOnKey(Long fileNo) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeFilesDao/KnowledgeFilesDao_select_on_key.sql");
-		return executeQueryOnKey(sql, KnowledgeFilesEntity.class, fileNo);
+		return executeQuerySingle(sql, KnowledgeFilesEntity.class, fileNo);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public KnowledgeFilesEntity rawPhysicalInsert(KnowledgeFilesEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeFilesDao/KnowledgeFilesDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getFileNo()
+			, entity.getKnowledgeId()
+			, entity.getCommentNo()
+			, entity.getFileName()
+			, entity.getFileSize()
+			, entity.getFileBinary()
+			, entity.getParseStatus()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
+		if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
+			String setValSql = "select setval('KNOWLEDGE_FILES_FILE_NO_seq', (select max(FILE_NO) from KNOWLEDGE_FILES));";
+			executeQuerySingle(setValSql, Long.class);
+		}
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 
@@ -73,8 +102,8 @@ public class GenKnowledgeFilesDao extends AbstractDao {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeFilesDao/KnowledgeFilesDao_insert.sql");
 		Class<?> type = PropertyUtil.getPropertyType(entity, "fileNo");
 		Object key = executeInsert(sql, type, 
-			entity.getFileNo()
-			, entity.getKnowledgeId()
+			entity.getKnowledgeId()
+			, entity.getCommentNo()
 			, entity.getFileName()
 			, entity.getFileSize()
 			, entity.getFileBinary()
@@ -117,6 +146,7 @@ public class GenKnowledgeFilesDao extends AbstractDao {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeFilesDao/KnowledgeFilesDao_update.sql");
 		executeUpdate(sql, 
 			entity.getKnowledgeId()
+			, entity.getCommentNo()
 			, entity.getFileName()
 			, entity.getFileSize()
 			, entity.getFileBinary()

@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,28 +43,51 @@ public class GenVotesDao extends AbstractDao {
 	 */
 	public List<VotesEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/VotesDao/VotesDao_physical_select_all.sql");
-		return executeQuery(sql, VotesEntity.class);
+		return executeQueryList(sql, VotesEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public VotesEntity physicalSelectOnKey(Long voteNo) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/VotesDao/VotesDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, VotesEntity.class, voteNo);
+		return executeQuerySingle(sql, VotesEntity.class, voteNo);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<VotesEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/VotesDao/VotesDao_select_all.sql");
-		return executeQuery(sql, VotesEntity.class);
+		return executeQueryList(sql, VotesEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public VotesEntity selectOnKey(Long voteNo) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/VotesDao/VotesDao_select_on_key.sql");
-		return executeQueryOnKey(sql, VotesEntity.class, voteNo);
+		return executeQuerySingle(sql, VotesEntity.class, voteNo);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public VotesEntity rawPhysicalInsert(VotesEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/VotesDao/VotesDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getVoteNo()
+			, entity.getKnowledgeId()
+			, entity.getVoteKind()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
+		if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
+			String setValSql = "select setval('VOTES_VOTE_NO_seq', (select max(VOTE_NO) from VOTES));";
+			executeQuerySingle(setValSql, Long.class);
+		}
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 
@@ -72,8 +97,7 @@ public class GenVotesDao extends AbstractDao {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/VotesDao/VotesDao_insert.sql");
 		Class<?> type = PropertyUtil.getPropertyType(entity, "voteNo");
 		Object key = executeInsert(sql, type, 
-			entity.getVoteNo()
-			, entity.getKnowledgeId()
+			entity.getKnowledgeId()
 			, entity.getVoteKind()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()

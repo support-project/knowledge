@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,28 +43,56 @@ public class GenKnowledgesDao extends AbstractDao {
 	 */
 	public List<KnowledgesEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_physical_select_all.sql");
-		return executeQuery(sql, KnowledgesEntity.class);
+		return executeQueryList(sql, KnowledgesEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public KnowledgesEntity physicalSelectOnKey(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, KnowledgesEntity.class, knowledgeId);
+		return executeQuerySingle(sql, KnowledgesEntity.class, knowledgeId);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<KnowledgesEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_select_all.sql");
-		return executeQuery(sql, KnowledgesEntity.class);
+		return executeQueryList(sql, KnowledgesEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public KnowledgesEntity selectOnKey(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_select_on_key.sql");
-		return executeQueryOnKey(sql, KnowledgesEntity.class, knowledgeId);
+		return executeQuerySingle(sql, KnowledgesEntity.class, knowledgeId);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public KnowledgesEntity rawPhysicalInsert(KnowledgesEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getKnowledgeId()
+			, entity.getTitle()
+			, entity.getContent()
+			, entity.getPublicFlag()
+			, entity.getTagIds()
+			, entity.getTagNames()
+			, entity.getLikeCount()
+			, entity.getCommentCount()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
+		if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
+			String setValSql = "select setval('KNOWLEDGES_KNOWLEDGE_ID_seq', (select max(KNOWLEDGE_ID) from KNOWLEDGES));";
+			executeQuerySingle(setValSql, Long.class);
+		}
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 
@@ -72,8 +102,7 @@ public class GenKnowledgesDao extends AbstractDao {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_insert.sql");
 		Class<?> type = PropertyUtil.getPropertyType(entity, "knowledgeId");
 		Object key = executeInsert(sql, type, 
-			entity.getKnowledgeId()
-			, entity.getTitle()
+			entity.getTitle()
 			, entity.getContent()
 			, entity.getPublicFlag()
 			, entity.getTagIds()

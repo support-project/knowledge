@@ -12,7 +12,8 @@
     "bootstrap-fileinput": "4.1.6",
     "jquery-file-upload": "9.8.1",
     "teambox.free-file-icons": "teambox/Free-file-icons",
-    "echojs": "1.6.0"
+    "echojs": "1.6.0",
+    "notify.js": "1.2.5"
   },
   "devDependencies": {}
 }

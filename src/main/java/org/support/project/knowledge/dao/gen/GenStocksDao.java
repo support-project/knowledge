@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,56 +43,74 @@ public class GenStocksDao extends AbstractDao {
 	 */
 	public List<StocksEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_physical_select_all.sql");
-		return executeQuery(sql, StocksEntity.class);
+		return executeQueryList(sql, StocksEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public StocksEntity physicalSelectOnKey(Long knowledgeId, Integer userId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, StocksEntity.class, knowledgeId, userId);
+		return executeQuerySingle(sql, StocksEntity.class, knowledgeId, userId);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<StocksEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_select_all.sql");
-		return executeQuery(sql, StocksEntity.class);
+		return executeQueryList(sql, StocksEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public StocksEntity selectOnKey(Long knowledgeId, Integer userId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_select_on_key.sql");
-		return executeQueryOnKey(sql, StocksEntity.class, knowledgeId, userId);
+		return executeQuerySingle(sql, StocksEntity.class, knowledgeId, userId);
 	}
 	/**
 	 * KNOWLEDGE_ID でリストを取得
 	 */
 	public List<StocksEntity> selectOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_select_on_knowledge_id.sql");
-		return executeQuery(sql, StocksEntity.class, knowledgeId);
+		return executeQueryList(sql, StocksEntity.class, knowledgeId);
 	}
 	/**
 	 * USER_ID でリストを取得
 	 */
 	public List<StocksEntity> selectOnUserId(Integer userId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_select_on_user_id.sql");
-		return executeQuery(sql, StocksEntity.class, userId);
+		return executeQueryList(sql, StocksEntity.class, userId);
 	}
 	/**
 	 * KNOWLEDGE_ID でリストを取得
 	 */
 	public List<StocksEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_physical_select_on_knowledge_id.sql");
-		return executeQuery(sql, StocksEntity.class, knowledgeId);
+		return executeQueryList(sql, StocksEntity.class, knowledgeId);
 	}
 	/**
 	 * USER_ID でリストを取得
 	 */
 	public List<StocksEntity> physicalSelectOnUserId(Integer userId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_physical_select_on_user_id.sql");
-		return executeQuery(sql, StocksEntity.class, userId);
+		return executeQueryList(sql, StocksEntity.class, userId);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public StocksEntity rawPhysicalInsert(StocksEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getKnowledgeId()
+			, entity.getUserId()
+			, entity.getComment()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 
@@ -99,8 +119,8 @@ public class GenStocksDao extends AbstractDao {
 	public StocksEntity physicalInsert(StocksEntity entity) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_insert.sql");
 		executeUpdate(sql, 
-			entity.getUserId()
-			, entity.getKnowledgeId()
+			entity.getKnowledgeId()
+			, entity.getUserId()
 			, entity.getComment()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()

@@ -9,6 +9,7 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.deploy.v0_0_1.InitializeSystem;
 import org.support.project.knowledge.deploy.v0_4_4.Migrate_0_4_4;
+import org.support.project.knowledge.deploy.v0_5_0.Migrate_0_5_0;
 import org.support.project.web.dao.SystemsDao;
 import org.support.project.web.entity.SystemsEntity;
 
@@ -21,12 +22,13 @@ public class InitDB {
 	private static final Map<String, Migrate> MAP = new LinkedHashMap<>();
 	
 	private static final Migrate INIT = InitializeSystem.get();
-	private static final String CURRENT = "0.4.4";
+	private static final String CURRENT = "0.5.0";
 	
 	public InitDB() {
 		super();
 		MAP.put("0.3.1", INIT); // 初期公開バージョン
-		MAP.put(CURRENT, Migrate_0_4_4.get()); // ナレッジ一覧の付加情報をナレッジテーブルに持つ
+		MAP.put("0.4.4", Migrate_0_4_4.get()); // ナレッジ一覧の付加情報をナレッジテーブルに持つ
+		MAP.put(CURRENT, Migrate_0_5_0.get()); // 通知設定
 	}
 
 	public static void main(String[] args) throws Exception {

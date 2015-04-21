@@ -107,10 +107,10 @@ public class LuceneIndexer implements Indexer {
 		doc.add(timeField);
 		
 		if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
-			log.info("adding " + indexingValue.getId());
+			log.debug("adding " + indexingValue.getId());
 			writer.addDocument(doc);
 		} else {
-			log.info("updating " + indexingValue.getId());
+			log.debug("updating " + indexingValue.getId());
 			writer.updateDocument(new Term(FIELD_LABEL_ID, indexingValue.getId()), doc);
 		}
 	}

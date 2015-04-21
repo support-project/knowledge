@@ -1,6 +1,7 @@
 package org.support.project.knowledge.dao;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
 	public List<KnowledgesEntity> selectKnowledge(int offset, int limit, Integer userId) {
 		// String sql = "SELECT * FROM KNOWLEDGES WHERE DELETE_FLAG = 0 ORDER BY UPDATE_DATETIME DESC Limit ? offset ?;";
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectKnowledgeWithUserName.sql");
-		return executeQuery(sql, KnowledgesEntity.class, limit, offset);
+		return executeQueryList(sql, KnowledgesEntity.class, limit, offset);
 	}
 
 
@@ -65,6 +66,9 @@ public class KnowledgesDao extends GenKnowledgesDao {
 	 * @return
 	 */
 	public List<KnowledgesEntity> selectKnowledges(List<Long> knowledgeIds) {
+		if (knowledgeIds == null || knowledgeIds.isEmpty()) {
+			return new ArrayList<KnowledgesEntity>();
+		}
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
 		sql.append(" KNOWLEDGES.*");
@@ -83,7 +87,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
 			count++;
 		}
 		sql.append(")");
-		return executeQuery(sql.toString(), KnowledgesEntity.class, knowledgeIds.toArray(new Long[0]));
+		return executeQueryList(sql.toString(), KnowledgesEntity.class, knowledgeIds.toArray(new Long[0]));
 	}
 
 
@@ -95,7 +99,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
 	 */
 	public KnowledgesEntity selectOnKeyWithUserName(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectOnKeyWithUserName.sql");
-		return executeQueryOnKey(sql, KnowledgesEntity.class, knowledgeId);
+		return executeQuerySingle(sql, KnowledgesEntity.class, knowledgeId);
 	}
 
 
@@ -106,7 +110,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
 	 */
 	public List<Long> selectOnUser(Integer userId) {
 		String sql = "SELECT KNOWLEDGE_ID FROM KNOWLEDGES WHERE INSERT_USER = ? ORDER BY KNOWLEDGE_ID DESC";
-		return executeQuery(sql, Long.class, userId);
+		return executeQueryList(sql, Long.class, userId);
 	}
 
 
@@ -118,6 +122,19 @@ public class KnowledgesDao extends GenKnowledgesDao {
 	public void deleteOnUser(Integer loginUserId) {
 		String sql = "UPDATE KNOWLEDGES SET DELETE_FLAG = 1 , UPDATE_USER = ? , UPDATE_DATETIME = ? WHERE INSERT_USER = ?";
 		super.executeUpdate(sql, loginUserId, new Timestamp(new Date().getTime()), loginUserId);
+	}
+
+
+	
+	/**
+	 * 登録されているナレッジを、番号指定で取得
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public List<KnowledgesEntity> selectBetween(Long start, Long end) {
+		String sql = "SELECT * FROM knowledges WHERE knowledge_id BETWEEN ? AND ? AND DELETE_FLAG = 0 ORDER BY knowledge_id";
+		return executeQueryList(sql, KnowledgesEntity.class, start, end);
 	}
 
 

@@ -1,0 +1,36 @@
+INSERT INTO NOTIFY_CONFIGS
+( 
+USER_ID
+ , NOTIFY_MAIL
+ , NOTIFY_DESKTOP
+ , MY_ITEM_COMMENT
+ , MY_ITEM_LIKE
+ , MY_ITEM_STOCK
+ , TO_ITEM_SAVE
+ , TO_ITEM_COMMENT
+ , TO_ITEM_IGNORE_PUBLIC
+ , STOCK_ITEM_SAVE
+ , STOKE_ITEM_COMMENT
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

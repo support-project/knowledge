@@ -1,0 +1,21 @@
+<!-- 
+	<name>connection</name>
+	<driverClass>org.h2.Driver</driverClass>
+	<URL>jdbc:h2:tcp://localhost/./knowledge_db</URL>
+	<user>sa</user>
+	<password></password>
+	<schema>public</schema>
+	<maxConn>5</maxConn>
+	<autocommit>false</autocommit>
+
+	<name>connection</name>
+	<driverClass>org.postgresql.Driver</driverClass>
+	<URL>jdbc:postgresql://localhost:5432/ek003024</URL>
+	<user>ek003024</user>
+	<password></password>
+	<schema>public</schema>
+	<maxConn>5</maxConn>
+	<autocommit>false</autocommit>
+
+
+ -->

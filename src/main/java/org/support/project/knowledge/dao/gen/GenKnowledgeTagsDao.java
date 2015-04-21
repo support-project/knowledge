@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,56 +43,73 @@ public class GenKnowledgeTagsDao extends AbstractDao {
 	 */
 	public List<KnowledgeTagsEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_all.sql");
-		return executeQuery(sql, KnowledgeTagsEntity.class);
+		return executeQueryList(sql, KnowledgeTagsEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public KnowledgeTagsEntity physicalSelectOnKey(Long knowledgeId, Integer tagId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, KnowledgeTagsEntity.class, knowledgeId, tagId);
+		return executeQuerySingle(sql, KnowledgeTagsEntity.class, knowledgeId, tagId);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<KnowledgeTagsEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_all.sql");
-		return executeQuery(sql, KnowledgeTagsEntity.class);
+		return executeQueryList(sql, KnowledgeTagsEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public KnowledgeTagsEntity selectOnKey(Long knowledgeId, Integer tagId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_on_key.sql");
-		return executeQueryOnKey(sql, KnowledgeTagsEntity.class, knowledgeId, tagId);
+		return executeQuerySingle(sql, KnowledgeTagsEntity.class, knowledgeId, tagId);
 	}
 	/**
 	 * KNOWLEDGE_ID でリストを取得
 	 */
 	public List<KnowledgeTagsEntity> selectOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_on_knowledge_id.sql");
-		return executeQuery(sql, KnowledgeTagsEntity.class, knowledgeId);
+		return executeQueryList(sql, KnowledgeTagsEntity.class, knowledgeId);
 	}
 	/**
 	 * TAG_ID でリストを取得
 	 */
 	public List<KnowledgeTagsEntity> selectOnTagId(Integer tagId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_on_tag_id.sql");
-		return executeQuery(sql, KnowledgeTagsEntity.class, tagId);
+		return executeQueryList(sql, KnowledgeTagsEntity.class, tagId);
 	}
 	/**
 	 * KNOWLEDGE_ID でリストを取得
 	 */
 	public List<KnowledgeTagsEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_on_knowledge_id.sql");
-		return executeQuery(sql, KnowledgeTagsEntity.class, knowledgeId);
+		return executeQueryList(sql, KnowledgeTagsEntity.class, knowledgeId);
 	}
 	/**
 	 * TAG_ID でリストを取得
 	 */
 	public List<KnowledgeTagsEntity> physicalSelectOnTagId(Integer tagId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_on_tag_id.sql");
-		return executeQuery(sql, KnowledgeTagsEntity.class, tagId);
+		return executeQueryList(sql, KnowledgeTagsEntity.class, tagId);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public KnowledgeTagsEntity rawPhysicalInsert(KnowledgeTagsEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getKnowledgeId()
+			, entity.getTagId()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 

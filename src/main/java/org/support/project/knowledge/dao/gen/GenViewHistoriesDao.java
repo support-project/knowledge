@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,28 +43,51 @@ public class GenViewHistoriesDao extends AbstractDao {
 	 */
 	public List<ViewHistoriesEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_physical_select_all.sql");
-		return executeQuery(sql, ViewHistoriesEntity.class);
+		return executeQueryList(sql, ViewHistoriesEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public ViewHistoriesEntity physicalSelectOnKey(Long historyNo) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, ViewHistoriesEntity.class, historyNo);
+		return executeQuerySingle(sql, ViewHistoriesEntity.class, historyNo);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<ViewHistoriesEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_select_all.sql");
-		return executeQuery(sql, ViewHistoriesEntity.class);
+		return executeQueryList(sql, ViewHistoriesEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public ViewHistoriesEntity selectOnKey(Long historyNo) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_select_on_key.sql");
-		return executeQueryOnKey(sql, ViewHistoriesEntity.class, historyNo);
+		return executeQuerySingle(sql, ViewHistoriesEntity.class, historyNo);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public ViewHistoriesEntity rawPhysicalInsert(ViewHistoriesEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getHistoryNo()
+			, entity.getKnowledgeId()
+			, entity.getViewDateTime()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
+		if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
+			String setValSql = "select setval('VIEW_HISTORIES_HISTORY_NO_seq', (select max(HISTORY_NO) from VIEW_HISTORIES));";
+			executeQuerySingle(setValSql, Long.class);
+		}
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 
@@ -72,8 +97,7 @@ public class GenViewHistoriesDao extends AbstractDao {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_insert.sql");
 		Class<?> type = PropertyUtil.getPropertyType(entity, "historyNo");
 		Object key = executeInsert(sql, type, 
-			entity.getHistoryNo()
-			, entity.getKnowledgeId()
+			entity.getKnowledgeId()
 			, entity.getViewDateTime()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()

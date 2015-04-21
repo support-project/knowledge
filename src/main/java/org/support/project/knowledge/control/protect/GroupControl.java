@@ -219,7 +219,7 @@ public class GroupControl extends Control {
 		addMsgSuccess("message.success.delete");
 		
 		// return redirect("");
-		return super.devolution("protect.group/list");
+		return super.devolution("protect.Group/list");
 	}
 	
 	/**
@@ -279,7 +279,7 @@ public class GroupControl extends Control {
 		
 		addMsgSuccess("message.success.insert");
 		
-		return super.devolution("protect.group/view");
+		return super.devolution("protect.Group/view");
 	}
 	
 	/**
@@ -302,7 +302,7 @@ public class GroupControl extends Control {
 			userGroupsDao.save(userGroupsEntity);
 		}
 		addMsgSuccess("message.success.insert");
-		return super.devolution("protect.group/view");
+		return super.devolution("protect.Group/view");
 	}
 	
 	/**
@@ -338,7 +338,7 @@ public class GroupControl extends Control {
 				addMsgWarn("message.allready.updated");
 			}
 		}
-		return super.devolution("protect.group/view");
+		return super.devolution("protect.Group/view");
 	}
 	
 	/**
@@ -377,7 +377,7 @@ public class GroupControl extends Control {
 				addMsgSuccess("message.success.delete");
 			}
 		}
-		return super.devolution("protect.group/view");
+		return super.devolution("protect.Group/view");
 	}
 	
 	

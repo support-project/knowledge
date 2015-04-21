@@ -12,6 +12,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -42,28 +44,55 @@ public class GenAccountImagesDao extends AbstractDao {
 	 */
 	public List<AccountImagesEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/AccountImagesDao/AccountImagesDao_physical_select_all.sql");
-		return executeQuery(sql, AccountImagesEntity.class);
+		return executeQueryList(sql, AccountImagesEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public AccountImagesEntity physicalSelectOnKey(Long imageId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/AccountImagesDao/AccountImagesDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, AccountImagesEntity.class, imageId);
+		return executeQuerySingle(sql, AccountImagesEntity.class, imageId);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<AccountImagesEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/AccountImagesDao/AccountImagesDao_select_all.sql");
-		return executeQuery(sql, AccountImagesEntity.class);
+		return executeQueryList(sql, AccountImagesEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public AccountImagesEntity selectOnKey(Long imageId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/AccountImagesDao/AccountImagesDao_select_on_key.sql");
-		return executeQueryOnKey(sql, AccountImagesEntity.class, imageId);
+		return executeQuerySingle(sql, AccountImagesEntity.class, imageId);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public AccountImagesEntity rawPhysicalInsert(AccountImagesEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/AccountImagesDao/AccountImagesDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getImageId()
+			, entity.getUserId()
+			, entity.getFileName()
+			, entity.getFileSize()
+			, entity.getFileBinary()
+			, entity.getExtension()
+			, entity.getContentType()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
+		if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
+			String setValSql = "select setval('ACCOUNT_IMAGES_IMAGE_ID_seq', (select max(IMAGE_ID) from ACCOUNT_IMAGES));";
+			executeQuerySingle(setValSql, Long.class);
+		}
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 
@@ -73,8 +102,7 @@ public class GenAccountImagesDao extends AbstractDao {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/AccountImagesDao/AccountImagesDao_insert.sql");
 		Class<?> type = PropertyUtil.getPropertyType(entity, "imageId");
 		Object key = executeInsert(sql, type, 
-			entity.getImageId()
-			, entity.getUserId()
+			entity.getUserId()
 			, entity.getFileName()
 			, entity.getFileSize()
 			, entity.getFileBinary()

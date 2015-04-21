@@ -68,7 +68,7 @@ public class TagsDao extends GenTagsDao {
 	 */
 	public List<TagsEntity> selectOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectOnKnowledgeId.sql");
-		return executeQuery(sql, TagsEntity.class, knowledgeId);
+		return executeQueryList(sql, TagsEntity.class, knowledgeId);
 	}
 	
 	
@@ -82,7 +82,7 @@ public class TagsDao extends GenTagsDao {
 	 */
 	public List<TagsEntity> selectTagsWithCount(int offset, int limit) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectTagsWithCount.sql");
-		return executeQuery(sql, TagsEntity.class, limit, offset);
+		return executeQueryList(sql, TagsEntity.class, limit, offset);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class TagsDao extends GenTagsDao {
 	 */
 	public List<TagsEntity> selectTagsWithCountOnUser(int userid, int offset, int limit) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectTagsWithCountOnUser.sql");
-		return executeQuery(sql, TagsEntity.class, userid, limit, offset);
+		return executeQueryList(sql, TagsEntity.class, userid, limit, offset);
 	}
 	
 	/**
@@ -119,7 +119,7 @@ public class TagsDao extends GenTagsDao {
 		params.add(new Integer(offset));
 		sql = sql.replace("${groups}", builder.join(", "));
 		
-		return executeQuery(sql, TagsEntity.class, params.toArray(new Integer[0]));
+		return executeQueryList(sql, TagsEntity.class, params.toArray(new Integer[0]));
 	}
 	/**
 	 * タグの一覧と、それに紐づくナレッジの件数を取得
@@ -130,7 +130,7 @@ public class TagsDao extends GenTagsDao {
 	 */
 	public List<TagsEntity> selectWithKnowledgeCountAdmin(int offset, int limit) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectWithKnowledgeCountAdmin.sql");
-		return executeQuery(sql, TagsEntity.class, limit, offset);
+		return executeQueryList(sql, TagsEntity.class, limit, offset);
 	}
 
 }

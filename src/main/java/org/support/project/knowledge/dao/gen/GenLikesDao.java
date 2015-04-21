@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,28 +43,50 @@ public class GenLikesDao extends AbstractDao {
 	 */
 	public List<LikesEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_physical_select_all.sql");
-		return executeQuery(sql, LikesEntity.class);
+		return executeQueryList(sql, LikesEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public LikesEntity physicalSelectOnKey(Long no) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, LikesEntity.class, no);
+		return executeQuerySingle(sql, LikesEntity.class, no);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<LikesEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_select_all.sql");
-		return executeQuery(sql, LikesEntity.class);
+		return executeQueryList(sql, LikesEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public LikesEntity selectOnKey(Long no) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_select_on_key.sql");
-		return executeQueryOnKey(sql, LikesEntity.class, no);
+		return executeQuerySingle(sql, LikesEntity.class, no);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public LikesEntity rawPhysicalInsert(LikesEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getNo()
+			, entity.getKnowledgeId()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
+		if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
+			String setValSql = "select setval('LIKES_NO_seq', (select max(NO) from LIKES));";
+			executeQuerySingle(setValSql, Long.class);
+		}
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 
@@ -72,8 +96,7 @@ public class GenLikesDao extends AbstractDao {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_insert.sql");
 		Class<?> type = PropertyUtil.getPropertyType(entity, "no");
 		Object key = executeInsert(sql, type, 
-			entity.getNo()
-			, entity.getKnowledgeId()
+			entity.getKnowledgeId()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()

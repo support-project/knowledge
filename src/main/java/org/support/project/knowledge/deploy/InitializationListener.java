@@ -1,13 +1,11 @@
 package org.support.project.knowledge.deploy;
 
 import java.io.File;
-import java.util.TimeZone;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.support.project.common.config.ConfigLoader;
-import org.support.project.common.exception.SystemException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.config.AppConfig;
@@ -28,19 +26,10 @@ public class InitializationListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent contextEvent) {
 		LOG.debug("contextInitialized");
-		// 内部的には、日付はGMTとして扱う
-		TimeZone zone = TimeZone.getTimeZone("GMT");
-		TimeZone.setDefault(zone);
-		
-		InitDB initDB = new InitDB();
-		try {
-			initDB.start();
-		} catch (Exception e) {
-			throw new SystemException(e);
-		}
+		InitializationLogic.get().init();
 		
 		// 添付ファイル格納ディレクトリ（テンポラリディレクトリ）が存在しなければ生成
-		AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
+		AppConfig appConfig = AppConfig.get();
 		String tmpDir = appConfig.getTmpPath();
 		File tmp = new File(tmpDir);
 		if (!tmp.exists()) {
@@ -53,6 +42,10 @@ public class InitializationListener implements ServletContextListener {
 			idx.mkdirs();
 			LOG.info("idx directory created." + idxDir);
 		}
+		String path = contextEvent.getServletContext().getRealPath("/");
+		LOG.info("Knowledge start on '" + path + "'");
+		LOG.info(path);
+		appConfig.setWebRealPath(path);
 	}
 
 }

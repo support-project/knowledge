@@ -35,7 +35,7 @@ public class LikesDao extends GenLikesDao {
 
 	public List<LikesEntity> selectOnKnowledge(Long knowledgeId, int offset, int limit) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_selectOnKnowledge.sql");
-		return executeQuery(sql, LikesEntity.class, knowledgeId, limit, offset);
+		return executeQueryList(sql, LikesEntity.class, knowledgeId, limit, offset);
 	}
 
 

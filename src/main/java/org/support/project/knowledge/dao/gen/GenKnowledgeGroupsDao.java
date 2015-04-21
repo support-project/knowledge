@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,56 +43,73 @@ public class GenKnowledgeGroupsDao extends AbstractDao {
 	 */
 	public List<KnowledgeGroupsEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeGroupsDao/KnowledgeGroupsDao_physical_select_all.sql");
-		return executeQuery(sql, KnowledgeGroupsEntity.class);
+		return executeQueryList(sql, KnowledgeGroupsEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public KnowledgeGroupsEntity physicalSelectOnKey(Integer groupId, Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeGroupsDao/KnowledgeGroupsDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, KnowledgeGroupsEntity.class, groupId, knowledgeId);
+		return executeQuerySingle(sql, KnowledgeGroupsEntity.class, groupId, knowledgeId);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<KnowledgeGroupsEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeGroupsDao/KnowledgeGroupsDao_select_all.sql");
-		return executeQuery(sql, KnowledgeGroupsEntity.class);
+		return executeQueryList(sql, KnowledgeGroupsEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public KnowledgeGroupsEntity selectOnKey(Integer groupId, Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeGroupsDao/KnowledgeGroupsDao_select_on_key.sql");
-		return executeQueryOnKey(sql, KnowledgeGroupsEntity.class, groupId, knowledgeId);
+		return executeQuerySingle(sql, KnowledgeGroupsEntity.class, groupId, knowledgeId);
 	}
 	/**
 	 * GROUP_ID でリストを取得
 	 */
 	public List<KnowledgeGroupsEntity> selectOnGroupId(Integer groupId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeGroupsDao/KnowledgeGroupsDao_select_on_group_id.sql");
-		return executeQuery(sql, KnowledgeGroupsEntity.class, groupId);
+		return executeQueryList(sql, KnowledgeGroupsEntity.class, groupId);
 	}
 	/**
 	 * KNOWLEDGE_ID でリストを取得
 	 */
 	public List<KnowledgeGroupsEntity> selectOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeGroupsDao/KnowledgeGroupsDao_select_on_knowledge_id.sql");
-		return executeQuery(sql, KnowledgeGroupsEntity.class, knowledgeId);
+		return executeQueryList(sql, KnowledgeGroupsEntity.class, knowledgeId);
 	}
 	/**
 	 * GROUP_ID でリストを取得
 	 */
 	public List<KnowledgeGroupsEntity> physicalSelectOnGroupId(Integer groupId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeGroupsDao/KnowledgeGroupsDao_physical_select_on_group_id.sql");
-		return executeQuery(sql, KnowledgeGroupsEntity.class, groupId);
+		return executeQueryList(sql, KnowledgeGroupsEntity.class, groupId);
 	}
 	/**
 	 * KNOWLEDGE_ID でリストを取得
 	 */
 	public List<KnowledgeGroupsEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeGroupsDao/KnowledgeGroupsDao_physical_select_on_knowledge_id.sql");
-		return executeQuery(sql, KnowledgeGroupsEntity.class, knowledgeId);
+		return executeQueryList(sql, KnowledgeGroupsEntity.class, knowledgeId);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public KnowledgeGroupsEntity rawPhysicalInsert(KnowledgeGroupsEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeGroupsDao/KnowledgeGroupsDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getGroupId()
+			, entity.getKnowledgeId()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 
@@ -99,8 +118,8 @@ public class GenKnowledgeGroupsDao extends AbstractDao {
 	public KnowledgeGroupsEntity physicalInsert(KnowledgeGroupsEntity entity) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeGroupsDao/KnowledgeGroupsDao_insert.sql");
 		executeUpdate(sql, 
-			entity.getKnowledgeId()
-			, entity.getGroupId()
+			entity.getGroupId()
+			, entity.getKnowledgeId()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()

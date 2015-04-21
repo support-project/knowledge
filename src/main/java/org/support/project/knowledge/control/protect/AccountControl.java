@@ -13,6 +13,8 @@ import org.support.project.common.validate.ValidatorFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.AccountLogic;
 import org.support.project.knowledge.logic.UserLogic;
@@ -23,32 +25,62 @@ import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
+import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
+import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.logic.AuthenticationLogic;
 import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 
 @DI(instance=Instance.Prototype)
 public class AccountControl extends Control {
-
+	
+	/**
+	 * アカウント情報表示
+	 */
 	@Override
 	public Boundary index() {
+		SystemConfigsDao dao = SystemConfigsDao.get();
+		SystemConfigsEntity userAddType = dao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+		if (userAddType == null) {
+			userAddType = new SystemConfigsEntity(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+			userAddType.setConfigValue(SystemConfig.USER_ADD_TYPE_VALUE_ADMIN);
+		}
+		setAttribute("userAddType", userAddType.getConfigValue());
+
 		LoginedUser loginedUser = super.getLoginedUser();
 		if (loginedUser == null) {
-			sendError(HttpStatus.SC_401_UNAUTHORIZED, "");
+			return sendError(HttpStatus.SC_401_UNAUTHORIZED, "");
 		}
 		Integer userId = loginedUser.getLoginUser().getUserId();
 		UsersEntity user = UsersDao.get().selectOnKey(userId);
+		if (user == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
 		user.setPassword(null);
 		
 		setAttributeOnProperty(user);
 		return forward("index.jsp");
 	}
 	
+	/**
+	 * ユーザの情報更新
+	 * @return
+	 */
 	public Boundary update() {
+		SystemConfigsDao systemConfigsDao = SystemConfigsDao.get();
+
+		SystemConfigsEntity userAddType = systemConfigsDao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+		if (userAddType == null) {
+			userAddType = new SystemConfigsEntity(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+			userAddType.setConfigValue(SystemConfig.USER_ADD_TYPE_VALUE_ADMIN);
+		}
+		setAttribute("userAddType", userAddType.getConfigValue());
+		
 		LoginedUser loginedUser = super.getLoginedUser();
 		if (loginedUser == null) {
-			sendError(HttpStatus.SC_401_UNAUTHORIZED, "");
+			return sendError(HttpStatus.SC_401_UNAUTHORIZED, "");
 		}
 		
 		Map<String, String> values = getParams();
@@ -73,9 +105,17 @@ public class AccountControl extends Control {
 			UsersDao dao = UsersDao.get();
 			user = dao.selectOnKey(getLoginUserId());
 			if (user == null) {
-				sendError(HttpStatus.SC_400_BAD_REQUEST, "user is allready removed.");
+				return sendError(HttpStatus.SC_400_BAD_REQUEST, "user is allready removed.");
 			}
-			user.setUserKey(getParam("userKey"));
+			if (userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_ADMIN)) {
+				//ユーザ登録を管理者が行っている場合、メールアドレスは変更出来ない（変更用の画面も使えない）
+			} else if (userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_APPROVE)) {
+				// ユーザが自分で登録して管理者が承認の場合も変更出来ない（変更用の画面も使えない）
+			} else if (userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_MAIL)) {
+				// ダブルオプトインの場合も変更出来ない（変更用の画面で変更）
+			} else {
+				user.setUserKey(getParam("userKey"));
+			}
 			user.setUserName(getParam("userName"));
 			if (!StringUtils.isEmpty(getParam("password"))) {
 				user.setPassword(getParam("password"));
@@ -117,7 +157,7 @@ public class AccountControl extends Control {
 		authenticationLogic.clearSession(getRequest());
 		
 		addMsgInfo("knowledge.account.delete");
-		return devolution("index/index");
+		return devolution("Index/index");
 		//return redirect(getRequest().getContextPath());
 	}
 	
@@ -171,4 +211,85 @@ public class AccountControl extends Control {
 		Validator validator = ValidatorFactory.getInstance(Validator.EXTENSION);
 		return validator.validate(name, "icon", "png", "jpg", "jpeg", "gif");
 	}
+	
+	/**
+	 * メールアドレスの変更リクエストを登録する画面を表示
+	 * @return
+	 */
+	public Boundary changekey() {
+		SystemConfigsDao dao = SystemConfigsDao.get();
+		SystemConfigsEntity userAddType = dao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+		if (userAddType == null) {
+			userAddType = new SystemConfigsEntity(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+			userAddType.setConfigValue(SystemConfig.USER_ADD_TYPE_VALUE_ADMIN);
+		}
+		if (!userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_MAIL)) {
+			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		//ダブルオプトインでユーザ登録をしている場合のみ、メールアドレス変更通知にてアドレスを変更する
+		
+		return forward("changekey.jsp");
+	}
+	
+
+	/**
+	 * メールアドレスの変更リクエストを登録
+	 * @return
+	 */
+	public Boundary changerequest() {
+		SystemConfigsDao dao = SystemConfigsDao.get();
+		SystemConfigsEntity userAddType = dao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+		if (userAddType == null) {
+			userAddType = new SystemConfigsEntity(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+			userAddType.setConfigValue(SystemConfig.USER_ADD_TYPE_VALUE_ADMIN);
+		}
+		if (!userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_MAIL)) {
+			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		
+		//ダブルオプトインでユーザ登録をしている場合のみ、メールアドレス変更通知にてアドレスを変更する
+		AccountLogic accountLogic = AccountLogic.get();
+		List<ValidateError> results = accountLogic.saveChangeEmailRequest(getParam("userKey"), getLoginedUser());
+		
+		setResult("message.success.insert.target", results, getResource("knowledge.account.changekey.title"));
+		
+		if (results != null && !results.isEmpty()) {
+			return forward("changekey.jsp");
+		}
+		return forward("saveresult.jsp");
+	}
+	
+	/**
+	 * メールアドレス変更通知の確認
+	 * @return
+	 * @throws InvalidParamException 
+	 */
+	public Boundary confirm_mail() throws InvalidParamException {
+		// メールアドレス変更ができるのは、ダブルオプトインでユーザ登録する設定になっている場合のみ
+		SystemConfigsDao dao = SystemConfigsDao.get();
+		SystemConfigsEntity userAddType = dao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+		if (userAddType == null) {
+			userAddType = new SystemConfigsEntity(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+			userAddType.setConfigValue(SystemConfig.USER_ADD_TYPE_VALUE_ADMIN);
+		}
+		if (!userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_MAIL)) {
+			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		
+		String id = getPathString();
+		if (StringUtils.isEmpty(id)) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
+		
+		AccountLogic accountLogic = AccountLogic.get();
+		List<ValidateError> results = accountLogic.completeChangeEmailRequest(id, getLoginedUser());
+		setResult("knowledge.account.changekey.complete", results);
+		if (results != null && !results.isEmpty()) {
+			return index(); //何かエラーになった場合アカウントの画面へ遷移
+		}
+		//return forward("complete.jsp");
+		return index(); //エラーの無い場合でもアカウントの画面へ遷移（新しいメールアドレスになったことを確認）
+	}
+	
+	
 }

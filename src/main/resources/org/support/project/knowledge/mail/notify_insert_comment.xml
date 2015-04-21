@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail>
+	<title>[Knowledge] コメント登録 {KnowledgeId} - {KnowledgeTitle}</title>
+	<contents xml:space="preserve">
+
+以下のナレッジにコメントが登録されました：{KnowledgeId}
+
+{URL}
+
+------------------------------------------
+{CommentInsertUser}
+
+{CommentContents}
+
+------------------------------------------
+{KnowledgeTitle}
+
+{Contents}
+
+
+
+------------------------------------------
+ This e-mail has been sent automatically from the system.
+ Please understand that it can not reply to this email.
+
+	</contents>
+	
+</mail>
+
+

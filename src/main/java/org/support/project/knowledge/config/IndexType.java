@@ -2,7 +2,8 @@ package org.support.project.knowledge.config;
 
 public enum IndexType {
 	knowledge,
-	KnowledgeFile;
+	KnowledgeFile,
+	KnowledgeComment;
 	
 	
 	public int getValue() {

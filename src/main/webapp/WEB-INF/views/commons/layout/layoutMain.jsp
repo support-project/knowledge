@@ -48,11 +48,6 @@ ${param.PARAM_CONTENT}
 <% jspUtil.debug(); %>
 </div>
 
-<c:import url="/WEB-INF/views/commons/layout/commonScripts.jsp" />
-
-<c:if test="${param.PARAM_SCRIPTS != null}">
-${param.PARAM_SCRIPTS}
-</c:if>
 
 
 
@@ -71,11 +66,18 @@ ${param.PARAM_SCRIPTS}
 		<!-- /nav -->
 		<div class="clearfix"></div>
 		<div class="copy">
-			<span>Copyright &#169; 2015 support-project.org [Knowledge project]</span>
+			<span>Copyright &#169; 2015 <a href="https://support-project.org/knowledge_info/index">support-project.org [Knowledge project]</a></span>
 		</div>
 		<!-- /copy -->
 	</div>
 	<!-- /footer -->
+
+<c:import url="/WEB-INF/views/commons/layout/commonScripts.jsp" />
+
+<c:if test="${param.PARAM_SCRIPTS != null}">
+${param.PARAM_SCRIPTS}
+</c:if>
+
 
 </body>
 </html>

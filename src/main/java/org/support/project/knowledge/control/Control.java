@@ -11,6 +11,7 @@ import org.owasp.validator.html.Policy;
 import org.owasp.validator.html.PolicyException;
 import org.owasp.validator.html.ScanException;
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -18,6 +19,9 @@ import org.support.project.common.log.LogLevel;
 import org.support.project.common.util.HtmlUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.NotifyConfigsDao;
+import org.support.project.knowledge.entity.NotifyConfigsEntity;
+import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.common.HttpUtil;
 import org.support.project.web.util.JspUtil;
 
@@ -56,6 +60,10 @@ public abstract class Control extends org.support.project.web.control.Control {
 		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
 		return resources.getResource(key);
 	}
+	protected String getResource(String key, String... params) {
+		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+		return resources.getResource(key, params);
+	}
 
 	protected void addMsgInfo(String key, String... params) {
 		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
@@ -81,9 +89,9 @@ public abstract class Control extends org.support.project.web.control.Control {
 		errors.add(HtmlUtils.escapeHTML(msg));
 	}
 
-	protected void setResult(String successMsg, List<ValidateError> errors) {
+	protected void setResult(String successMsg, List<ValidateError> errors, String... params) {
 		if (errors == null || errors.isEmpty()) {
-			addMsgSuccess(successMsg);
+			addMsgSuccess(successMsg, params);
 		} else {
 			for (ValidateError validateError : errors) {
 				if (validateError.getLevel().intValue() == LogLevel.ERROR.getValue()) {
@@ -131,5 +139,49 @@ public abstract class Control extends org.support.project.web.control.Control {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.support.project.web.control.Control#forward(java.lang.String)
+	 */
+	@Override
+	protected ForwardBoundary forward(String path) {
+		// 画面表示を行う前に、全ての画面の共通処理を追記
+		
+		// デスクトップ通知するかどうか(ログインしているユーザのみ）
+		if (getLoginUserId() > 0) {
+			NotifyConfigsDao notifyConfigsDao = NotifyConfigsDao.get();
+			NotifyConfigsEntity notifyConfigsEntity = notifyConfigsDao.selectOnKey(getLoginUserId());
+			if (notifyConfigsEntity != null) {
+				if (flagCheck(notifyConfigsEntity.getNotifyDesktop())) {
+					// デスクトップ通知がON
+					
+					if (flagCheck(notifyConfigsEntity.getMyItemComment())
+							|| flagCheck(notifyConfigsEntity.getMyItemLike())
+							|| flagCheck(notifyConfigsEntity.getMyItemStock())
+							|| flagCheck(notifyConfigsEntity.getStockItemSave())
+							|| flagCheck(notifyConfigsEntity.getStokeItemComment())
+							|| flagCheck(notifyConfigsEntity.getToItemComment())
+							|| flagCheck(notifyConfigsEntity.getToItemSave())
+					) {
+						if (LOG.isTraceEnabled()) {
+							LOG.info("Notify On to [" + getLoginUserId() + "]");
+						}
+						setAttribute("desktopNotify", true);
+					}
+				}
+			}
+		}
+		return super.forward(path);
+	}
+
+	private boolean flagCheck(Integer check) {
+		if (check == null) {
+			return false;
+		}
+		if (check.intValue() == INT_FLAG.ON.getValue()) {
+			return true;
+		}
+		return false;
+	}
+	
 
 }

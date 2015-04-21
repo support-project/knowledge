@@ -15,6 +15,9 @@ public class SystemConfig {
 	/** ユーザ登録のやりかた: ユーザ自身で登録（メールアドレスのチェックあり） */
 	public static final String USER_ADD_TYPE_VALUE_MAIL = "MAIL";
 	
+	/** システムへアクセスするためのURLのシステム設定のラベル */
+	public static final String SYSTEM_URL = "SYSTEM_URL";
+	
 	/** ユーザ登録を実施した後、通知するか(ON/OFF) */
 	public static final String USER_ADD_NOTIFY = "USER_ADD_NOTIFY";
 	/** ユーザ登録を実施した後、通知する(ON) */
@@ -22,5 +25,7 @@ public class SystemConfig {
 	/** ユーザ登録を実施した後、通知しない(OFF) */
 	public static final String USER_ADD_NOTIFY_OFF = "OFF";
 	
+	/** インデックス再作成のための設定値 */
+	public static final String RE_INDEXING = "RE_INDEXING";
 	
 }

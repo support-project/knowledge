@@ -44,3 +44,25 @@ var addlike = function(knowledgeId) {
 		}
 	});
 };
+
+
+
+var viewProtect = function(knowledgeId) {
+	var url = _CONTEXT + '/protect.knowledge/view_targets/' + knowledgeId;
+	$.ajax({
+		type : 'GET',
+		url : url,
+		success : function(datas, dataType) {
+			var targets = '';
+			for ( var i = 0; i < datas.length; i++) {
+				var data = datas[i];
+//				console.log(data);
+				targets += data.label;
+			}
+			bootbox.alert(targets);
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown){
+			console.log(textStatus);
+		}
+	});
+};

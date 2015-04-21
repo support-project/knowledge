@@ -85,7 +85,7 @@ public class SignupControl extends Control {
 			// 招待のメールを送信
 			String url = HttpUtil.getContextUrl(getRequest());
 			MailLogic mailLogic = MailLogic.get();
-			mailLogic.sendInvitation(entity, url);
+			mailLogic.sendInvitation(entity, url, HttpUtil.getLocale(getRequest()));
 			return forward("mail_sended.jsp");
 		} else if (userAddType.getConfigValue().equals(SystemConfig.USER_ADD_TYPE_VALUE_APPROVE)){
 			// 管理者が承認

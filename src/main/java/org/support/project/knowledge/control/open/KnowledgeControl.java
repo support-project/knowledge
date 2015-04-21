@@ -10,6 +10,7 @@ import org.owasp.validator.html.ScanException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.KnowledgeControlBase;
@@ -20,17 +21,19 @@ import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
-import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TagLogic;
+import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
+import org.support.project.knowledge.vo.LabelValue;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.UploadFile;
+import org.support.project.knowledge.websocket.NotifyAction;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.MessageResult;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.dao.UsersDao;
-import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
@@ -122,7 +125,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttribute("comments", comments);
 		
 		// 表示するグループを取得
-		List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
+		//List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
+		List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
 		setAttribute("groups", groups);
 		
 		return forward("view.jsp");
@@ -147,9 +151,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String keyword = getParam("keyword");
 		String tag = getParam("tag");
 		String user = getParam("user");
-		
 		List<KnowledgesEntity> knowledges = new ArrayList<>();
-		
 		if (StringUtils.isInteger(tag)) {
 			//タグを選択している
 			LOG.trace("show on Tag");

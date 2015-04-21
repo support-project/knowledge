@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>[Knowledge] ユーザ追加(通知)</title>
+	<title>Information from [Knowledge] on add user</title>
 	<contents xml:space="preserve">
-ユーザを追加しました。念のため確認してください。
+I added the user. Please check just in case.
 
-ユーザ番号: {UserId}
+UserId: {UserId}
 
 ------------------------------------------
-※本メールはシステムより自動で送信されています。
- このメールに対する返信は出来ませんので御了承ください。
+ This e-mail has been sent automatically from the system.
+ Please understand that it can not reply to this email.
 
 	</contents>
 	

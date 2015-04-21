@@ -1,3 +1,6 @@
+<%@page import="org.support.project.knowledge.vo.LabelValue"%>
+<%@page import="java.util.List"%>
+<%@page import="org.support.project.knowledge.config.AppConfig"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -72,17 +75,20 @@
 						</li>
 						
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.lang") %></li>
+						
+						<%
+							AppConfig appConfig = AppConfig.get();
+							List<LabelValue> languages = appConfig.getLanguages();
+							for (LabelValue language : languages) {
+						%>
 						<li >
-							<a href="<%= request.getContextPath() %>/open.lang/en" style="cursor: pointer;">
-								<i class="fa fa-newspaper-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.lang.en") %>
+							<a href="<%= request.getContextPath() %>/open.lang/select/<%= language.getValue() %>" style="cursor: pointer;">
+								<i class="fa fa-newspaper-o"></i>&nbsp;<%= language.getLabel() %>
 							</a>
 						</li>
-						<li >
-							<a href="<%= request.getContextPath() %>/open.lang/ja" style="cursor: pointer;">
-								<i class="fa fa-newspaper-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.lang.ja") %>
-							</a>
-						</li>
-					
+						<%
+							}
+						%>
 					</ul>
 				</li>
 				
@@ -107,6 +113,12 @@
 						
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.system") %></li>
 						<li >
+							<a href="<%= request.getContextPath() %>/admin.config/system" style="cursor: pointer;">
+								<i class="fa fa-cog"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system.params") %>
+							</a>
+						</li>
+						
+						<li >
 							<a href="<%= request.getContextPath() %>/admin.config/config" style="cursor: pointer;">
 								<i class="fa fa-cogs"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system.general") %>
 							</a>
@@ -121,6 +133,16 @@
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.database/index" style="cursor: pointer;">
 								<i class="fa fa-recycle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.data.backup") %>
+							</a>
+						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.database/connect" style="cursor: pointer;">
+								<i class="fa fa-database"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.data.connect") %>
+							</a>
+						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.database/reindexing" style="cursor: pointer;">
+								<i class="fa fa-refresh"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.data.reindexing") %>
 							</a>
 						</li>
 						
@@ -145,6 +167,14 @@
 								<i class="fa fa-male"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.myknowledge") %>
 							</a>
 						</li>
+						
+						<li class="divider"></li>
+						<li id="tabLogout">
+							<a href="<%= request.getContextPath() %>/protect.notify" style="cursor: pointer;">
+								<i class="fa fa-bell-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.notify") %>
+							</a>
+						</li>
+						
 						
 						<li class="divider"></li>
 						<li id="tabLogout">

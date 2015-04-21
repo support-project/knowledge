@@ -11,6 +11,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
+import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
 import org.support.project.di.Container;
@@ -41,28 +43,50 @@ public class GenTagsDao extends AbstractDao {
 	 */
 	public List<TagsEntity> physicalSelectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_physical_select_all.sql");
-		return executeQuery(sql, TagsEntity.class);
+		return executeQueryList(sql, TagsEntity.class);
 	}
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
 	public TagsEntity physicalSelectOnKey(Integer tagId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_physical_select_on_key.sql");
-		return executeQueryOnKey(sql, TagsEntity.class, tagId);
+		return executeQuerySingle(sql, TagsEntity.class, tagId);
 	}
 	/**
 	 * 全て取得 
 	 */
 	public List<TagsEntity> selectAll() { 
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_select_all.sql");
-		return executeQuery(sql, TagsEntity.class);
+		return executeQueryList(sql, TagsEntity.class);
 	}
 	/**
 	 * キーで1件取得 
 	 */
 	public TagsEntity selectOnKey(Integer tagId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_select_on_key.sql");
-		return executeQueryOnKey(sql, TagsEntity.class, tagId);
+		return executeQuerySingle(sql, TagsEntity.class, tagId);
+	}
+	/**
+	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public TagsEntity rawPhysicalInsert(TagsEntity entity) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_raw_insert.sql");
+		executeUpdate(sql, 
+			entity.getTagId()
+			, entity.getTagName()
+			, entity.getInsertUser()
+			, entity.getInsertDatetime()
+			, entity.getUpdateUser()
+			, entity.getUpdateDatetime()
+			, entity.getDeleteFlag()
+		);
+		String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
+		if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
+			String setValSql = "select setval('TAGS_TAG_ID_seq', (select max(TAG_ID) from TAGS));";
+			executeQuerySingle(setValSql, Long.class);
+		}
+		return entity;
 	}
 	/**
 	 * 登録(データを生で操作) 
@@ -72,8 +96,7 @@ public class GenTagsDao extends AbstractDao {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_insert.sql");
 		Class<?> type = PropertyUtil.getPropertyType(entity, "tagId");
 		Object key = executeInsert(sql, type, 
-			entity.getTagId()
-			, entity.getTagName()
+			entity.getTagName()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()

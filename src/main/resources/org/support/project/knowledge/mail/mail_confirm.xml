@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail>
+	<title>[Knowledge] Confirmation of a new e-mail address</title>
+	<contents xml:space="preserve">
+
+Dear {UserName}
+
+This is the e-mail confirmation of the change e-mail address.
+If you click on the following URL, and you can see that your designated e-mail arrives.
+After confirmation, the new e-mail address is enabled.
+
+{URL}
+
+------------------------------------------
+ This e-mail has been sent automatically from the system.
+ Please understand that it can not reply to this email.
+
+	</contents>
+	
+</mail>
+
+

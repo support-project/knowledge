@@ -5,6 +5,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<% JspUtil jspUtil = new JspUtil(request, pageContext); %>
+
 <!-- scripts -->
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery/dist/jquery.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap/dist/js/bootstrap.js"></script>
@@ -17,6 +19,8 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/highlightjs/highlight.pack.js"></script>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootbox/bootbox.js"></script>
+
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/notify.js/notify.js"></script>
 
 
 <script type="text/javascript">
@@ -101,6 +105,61 @@ $.notify('<%= msg %>', 'error');
 }
 
 %>
+
+<% if (jspUtil.is(Boolean.TRUE, "desktopNotify")) { %>
+function onNotifyShow() {
+	console.log('notification was shown!');
+}
+
+function notifyDesktop(msg) {
+	$.notify(msg, 'info');
+	if (Notify.isSupported) {
+		Notify.requestPermission(
+			function() {
+				var myNotification = new Notify('Notify from Knowledge', {
+					body: msg,
+					notifyShow: onNotifyShow
+				});
+				myNotification.show();
+			},
+			function() {
+				console.log('notification off. msg show to console.');
+				console.log(msg);
+			}
+		);
+	}
+}
+
+if (Notify.isSupported) {
+	Notify.requestPermission(function() {
+		console.log('notification on.');
+	}, function() {
+		console.log('notification off.');
+	});
+}
+
+var webSocket;
+window.onload = function() {
+	var forRtoA = document.createElement('a');
+	forRtoA.href = '<%= request.getContextPath() %>/notify';
+	console.log(forRtoA.href.replace("http://", "ws://").replace("https://", "wss://"));
+	webSocket = new WebSocket(forRtoA.href.replace("http://", "ws://").replace("https://", "wss://"));
+	webSocket.onopen = function() {
+	}
+	webSocket.onclose = function() {
+	}
+	webSocket.onmessage = function(message) {
+		console.log('[RECEIVE] ');
+		var result = JSON.parse(message.data);
+		console.log(result);
+		notifyDesktop(result.message);
+	}
+	webSocket.onerror = function(message) {
+	}
+	<%-- //webSocket.send(message); --%>
+}
+<% } %>
+
 
 
 </script>

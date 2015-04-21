@@ -10,8 +10,10 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.KnowledgeGroupsDao;
+import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.vo.GroupUser;
+import org.support.project.knowledge.vo.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.config.CommonWebParameter;
 import org.support.project.web.dao.GroupsDao;
@@ -203,14 +205,17 @@ public class GroupLogic {
 	 * @param groups
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void saveKnowledgeGroup(Long knowledgeId, List<GroupsEntity> groups) {
+	public void saveKnowledgeGroup(Long knowledgeId, List<LabelValue> targets) {
 		this.removeKnowledgeGroup(knowledgeId);
 		KnowledgeGroupsDao knowledgeGroupsDao = KnowledgeGroupsDao.get();
-		if (groups != null && !groups.isEmpty()) {
-			for (int i = 0; i < groups.size(); i++) {
-				Integer groupid = groups.get(i).getGroupId();
-				KnowledgeGroupsEntity groupsEntity = new KnowledgeGroupsEntity(groupid, knowledgeId);
-				knowledgeGroupsDao.insert(groupsEntity);
+		if (targets != null && !targets.isEmpty()) {
+			for (int i = 0; i < targets.size(); i++) {
+				LabelValue labelValue = targets.get(i);
+				Integer id = TargetLogic.get().getGroupId(labelValue.getValue());
+				if (id != Integer.MIN_VALUE) {
+					KnowledgeGroupsEntity groupsEntity = new KnowledgeGroupsEntity(id, knowledgeId);
+					knowledgeGroupsDao.insert(groupsEntity);
+				}
 			}
 		}
 	}
@@ -252,7 +257,7 @@ public class GroupLogic {
 	 * @return
 	 */
 	public List<GroupsEntity> selectGroupsOnKnowledgeId(Long knowledgeId) {
-		GroupsDao groupsDao = GroupsDao.get();
+		TargetsDao groupsDao = TargetsDao.get();
 		return groupsDao.selectGroupsOnKnowledgeId(knowledgeId);
 	}
 

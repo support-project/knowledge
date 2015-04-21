@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>情報共有のサービス[Knowledge]へのご招待</title>
+	<title>Information from [Knowledge]</title>
 	<contents xml:space="preserve">
-{UserName} 様
+Dear {UserName} 
 
-Knowledgeに登録いただき、ありがとうございます。
-以下のURLにアクセスすることで登録が完了します。
-お手数ですが、以下のリンクからアクセス願います。
+We registered with the Knowledge, thank you.
+Registration is completed by accessing the following URL.
+Sorry to trouble you, but please access from the following link.
 
 {URL}
 
 ------------------------------------------
-※本メールはシステムより自動で送信されています。
- このメールに対する返信は出来ませんので御了承ください。
-※60分以内に登録いただけない場合、登録は無効となります。
+ This e-mail has been sent automatically from the system.
+ Please understand that it can not reply to this email.
+
+ If you do not register within 60 minutes, the registration will be invalid.
 
 	</contents>
 	

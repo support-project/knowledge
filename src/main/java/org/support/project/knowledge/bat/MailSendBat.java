@@ -33,7 +33,7 @@ import org.support.project.web.entity.MailsEntity;
  * @author Koda
  *
  */
-public class MailSendBat {
+public class MailSendBat extends AbstractBat {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(MailSendBat.class);
 
@@ -51,8 +51,8 @@ public class MailSendBat {
 
 	public static void main(String[] args) throws Exception {
 		MailSendBat bat = new MailSendBat();
+		bat.dbInit();
 		bat.start();
-
 	}
 
 	/**

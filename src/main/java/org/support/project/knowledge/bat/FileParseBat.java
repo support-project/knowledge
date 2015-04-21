@@ -29,7 +29,7 @@ import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.parser.ParserFactory;
 import org.support.project.knowledge.vo.ParseResult;
 
-public class FileParseBat {
+public class FileParseBat extends AbstractBat {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(FileParseBat.class);
 	
@@ -46,6 +46,7 @@ public class FileParseBat {
 	
 	public static void main(String[] args) throws Exception {
 		FileParseBat bat = new FileParseBat();
+		bat.dbInit();
 		bat.start();
 	}
 

@@ -55,6 +55,8 @@ public class GenKnowledgeFilesEntity implements Serializable {
 	private Long fileNo;
 	/** ナレッジID */
 	private Long knowledgeId;
+	/** コメント番号 */
+	private Long commentNo;
 	/** ファイル名 */
 	private String fileName;
 	/** ファイルサイズ */
@@ -101,6 +103,21 @@ public class GenKnowledgeFilesEntity implements Serializable {
 	 */
 	public GenKnowledgeFilesEntity setKnowledgeId(Long knowledgeId) {
 		this.knowledgeId = knowledgeId;
+		return this;
+	}
+
+	/**
+	 * コメント番号 を取得する
+	 */
+	public Long getCommentNo() {
+		return this.commentNo;
+	}
+	/**
+	 * コメント番号 を設定する
+	 * @param commentNo コメント番号
+	 */
+	public GenKnowledgeFilesEntity setCommentNo(Long commentNo) {
+		this.commentNo = commentNo;
 		return this;
 	}
 
@@ -285,6 +302,7 @@ public class GenKnowledgeFilesEntity implements Serializable {
 		StringBuilder builder = new StringBuilder();
 		builder.append("fileNo = ").append(fileNo).append("\n");
 		builder.append("knowledgeId = ").append(knowledgeId).append("\n");
+		builder.append("commentNo = ").append(commentNo).append("\n");
 		builder.append("fileName = ").append(fileName).append("\n");
 		builder.append("fileSize = ").append(fileSize).append("\n");
 		builder.append("fileBinary = ").append(fileBinary).append("\n");
