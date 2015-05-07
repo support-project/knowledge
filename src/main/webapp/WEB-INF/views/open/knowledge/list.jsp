@@ -76,7 +76,7 @@
 			</ul>
 		</nav>
 
-		<div class="row">
+		<div class="row" id="knowledgeList">
 			<div class="col-sm-12 col-md-8">
 			<c:if test="${empty knowledges}">
 			<%= jspUtil.label("knowledge.list.empty") %>

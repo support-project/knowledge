@@ -10,6 +10,9 @@
 	<display-name>knowledge</display-name>
 
 	<listener>
+		<listener-class>org.support.project.knowledge.listener.GlobalInitializationListener</listener-class>
+	</listener>
+	<listener>
 		<listener-class>org.support.project.web.listener.H2DBManagerListener</listener-class>
 	</listener>
 	<listener>

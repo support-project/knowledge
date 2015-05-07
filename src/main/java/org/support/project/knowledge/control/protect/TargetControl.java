@@ -9,6 +9,7 @@ import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.vo.LabelValue;
 import org.support.project.web.boundary.Boundary;
+import org.support.project.web.control.service.Get;
 import org.support.project.web.exception.InvalidParamException;
 
 public class TargetControl extends Control {
@@ -22,6 +23,7 @@ public class TargetControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary typeahead() throws InvalidParamException {
 		LOG.trace("call typeahead");
 		String keyword = super.getParam("keyword");

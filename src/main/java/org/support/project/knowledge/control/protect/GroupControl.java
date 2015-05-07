@@ -17,6 +17,9 @@ import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.CommonWebParameter;
+import org.support.project.web.config.HttpMethod;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.UserGroupsDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UserGroupsEntity;
@@ -33,6 +36,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary mygroups() throws InvalidParamException {
 		Integer offset = super.getPathInteger(0);
 		
@@ -57,6 +61,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary list() throws InvalidParamException {
 		Integer offset = super.getPathInteger(0);
 		String keyword = super.getParam("keyword");
@@ -80,6 +85,7 @@ public class GroupControl extends Control {
 	 * グループ追加の画面を表示
 	 * @return
 	 */
+	@Get
 	public Boundary view_add() {
 		return forward("add_group.jsp");
 	}
@@ -88,6 +94,7 @@ public class GroupControl extends Control {
 	 * グループを追加
 	 * @return
 	 */
+	@Post
 	public Boundary add() {
 		// 入力チェック
 		GroupsEntity groupsEntity = new GroupsEntity();
@@ -117,6 +124,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary view() throws InvalidParamException {
 		Integer groupId = super.getPathInteger(0);
 		GroupLogic groupLogic = GroupLogic.get();
@@ -156,6 +164,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary view_edit() throws InvalidParamException {
 		Integer groupId = super.getPathInteger(0);
 		GroupLogic groupLogic = GroupLogic.get();
@@ -173,6 +182,7 @@ public class GroupControl extends Control {
 	 * グループを更新
 	 * @return
 	 */
+	@Post
 	public Boundary update() {
 		// 入力チェック
 		GroupsEntity groupsEntity = new GroupsEntity();
@@ -202,6 +212,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException
 	 */
+	@Get
 	public Boundary delete() throws InvalidParamException {
 		Integer groupId = -1;
 		String id = getParam("groupId");
@@ -219,7 +230,7 @@ public class GroupControl extends Control {
 		addMsgSuccess("message.success.delete");
 		
 		// return redirect("");
-		return super.devolution("protect.Group/list");
+		return super.devolution(HttpMethod.get, "protect.Group/list");
 	}
 	
 	/**
@@ -227,6 +238,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary unsubscribe() throws InvalidParamException {
 		Integer groupId = super.getPathInteger(0);
 		GroupLogic groupLogic = GroupLogic.get();
@@ -259,6 +271,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary subscribe() throws InvalidParamException {
 		Integer groupId = super.getPathInteger(0);
 		GroupLogic groupLogic = GroupLogic.get();
@@ -279,7 +292,7 @@ public class GroupControl extends Control {
 		
 		addMsgSuccess("message.success.insert");
 		
-		return super.devolution("protect.Group/view");
+		return super.devolution(HttpMethod.get, "protect.Group/view");
 	}
 	
 	/**
@@ -287,6 +300,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary request() throws InvalidParamException {
 		Integer groupId = super.getPathInteger(0);
 		GroupLogic groupLogic = GroupLogic.get();
@@ -302,7 +316,7 @@ public class GroupControl extends Control {
 			userGroupsDao.save(userGroupsEntity);
 		}
 		addMsgSuccess("message.success.insert");
-		return super.devolution("protect.Group/view");
+		return super.devolution(HttpMethod.get, "protect.Group/view");
 	}
 	
 	/**
@@ -310,6 +324,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary accept() throws InvalidParamException {
 		Integer groupId = super.getPathInteger(0);
 		String userIdstr = super.getParam("userId");
@@ -338,7 +353,7 @@ public class GroupControl extends Control {
 				addMsgWarn("message.allready.updated");
 			}
 		}
-		return super.devolution("protect.Group/view");
+		return super.devolution(HttpMethod.get, "protect.Group/view");
 	}
 	
 	/**
@@ -346,6 +361,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException
 	 */
+	@Post
 	public Boundary change() throws InvalidParamException {
 		Integer groupId = super.getPathInteger(0);
 		String userIdstr = super.getParam("userId");
@@ -377,7 +393,7 @@ public class GroupControl extends Control {
 				addMsgSuccess("message.success.delete");
 			}
 		}
-		return super.devolution("protect.Group/view");
+		return super.devolution(HttpMethod.get, "protect.Group/view");
 	}
 	
 	
@@ -386,6 +402,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary typeahead() throws InvalidParamException {
 		String keyword = super.getParam("keyword");
 		int offset = 0;

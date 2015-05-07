@@ -13,6 +13,8 @@ import org.support.project.knowledge.logic.PasswordInitializationLogic;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.PasswordResetsDao;
 import org.support.project.web.entity.PasswordResetsEntity;
 import org.support.project.web.exception.InvalidParamException;
@@ -23,6 +25,7 @@ public class PasswordInitializationControl extends Control {
 	 * パスワード忘れの画面を表示
 	 * @return
 	 */
+	@Get
 	public Boundary view() {
 		return forward("forgot_pass_request.jsp");
 	}
@@ -31,6 +34,7 @@ public class PasswordInitializationControl extends Control {
 	 * パスワード初期化のリクエストの受付
 	 * @return
 	 */
+	@Post
 	public Boundary request() {
 		String email = getParam("username");
 		
@@ -73,6 +77,7 @@ public class PasswordInitializationControl extends Control {
 	 * @return
 	 * @throws InvalidParamException
 	 */
+	@Get
 	public Boundary init() throws InvalidParamException {
 		String key = getPathString();
 		PasswordResetsDao resetsDao = PasswordResetsDao.get();
@@ -95,6 +100,7 @@ public class PasswordInitializationControl extends Control {
 	 * パスワードの初期化
 	 * @return
 	 */
+	@Post
 	public Boundary change() {
 		String key = getParam("key");
 		PasswordResetsDao resetsDao = PasswordResetsDao.get();

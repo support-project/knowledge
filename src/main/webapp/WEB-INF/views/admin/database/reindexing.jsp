@@ -40,7 +40,7 @@ window.onload = function() {
 		);
 	}
 	webSocket.onmessage = function(message) {
-		console.log('[RECEIVE] ');
+		//console.log('[RECEIVE] ');
 		var result = JSON.parse(message.data);
 		console.log(result);
 		$('#log').val($('#log').val() + result.message + "\n");

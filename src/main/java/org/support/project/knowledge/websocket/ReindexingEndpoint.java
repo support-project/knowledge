@@ -23,18 +23,19 @@ import org.support.project.knowledge.bat.ReIndexingBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
+import org.support.project.web.websocket.EndpointConfigurator;
 
-@ServerEndpoint(value = "/reindexing", configurator=NotifyEndpointConfigurator.class)
+@ServerEndpoint(value = "/reindexing", configurator=EndpointConfigurator.class)
 public class ReindexingEndpoint {
 	/** ログ */
-	private static Log LOG = LogFactory.getLog(DataTransferEndpoint.class);
+	private static Log LOG = LogFactory.getLog(ReindexingEndpoint.class);
 	
 	private Thread thread;
 	
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
-		 if (session.getUserProperties().containsKey(NotifyEndpointConfigurator.LOCALE_KEY)) {
-			LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(NotifyEndpointConfigurator.LOGIN_USER_KEY);
+		 if (session.getUserProperties().containsKey(EndpointConfigurator.LOCALE_KEY)) {
+			LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
 			if (!loginuser.isAdmin()) {
 				// 管理者以外はアクセス出来ない
 				session.close();

@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-edit.css") %>" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
@@ -156,7 +157,7 @@ selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jsp
 	
 </form>
 
-<p class="preview" id="preview"></p>
+<p class="preview markdown" id="preview"></p>
 
 
 

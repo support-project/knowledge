@@ -44,13 +44,12 @@ public class NotifyMailBat extends AbstractBat {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(MailSendBat.class);
 	
-	/** 同じナレッジに何度もイイネを押しても通知は1つにするために保持する */
-	private List<Long> likesKnowledges = new ArrayList<Long>();
-	
 	private static final String MAIL_CONFIG_DIR = "/org/support/project/knowledge/mail/";
 	private static final DateFormat DAY_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
 
 	public static void main(String[] args) throws Exception {
+		AppConfig.initEnvKey("KNOWLEDGE_HOME");
+		
 		NotifyMailBat bat = new NotifyMailBat();
 		bat.dbInit();
 		bat.start();

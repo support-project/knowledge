@@ -18,6 +18,8 @@ public class DataTransferBat extends AbstractBat implements Runnable {
 	
 	public static void main(String[] args) throws Exception {
 		LOG.trace("start");
+		AppConfig.initEnvKey("KNOWLEDGE_HOME");
+		
 		DataTransferBat bat = new DataTransferBat();
 		bat.start();
 	}
@@ -50,32 +52,39 @@ public class DataTransferBat extends AbstractBat implements Runnable {
 	 * @throws Exception 
 	 */
 	private void start() throws Exception {
-		// 多重起動チェック
-		if (DataTransferLogic.get().isTransferStarted()) {
-			LOG.info("ALL Ready started.");
-			return;
-		}
-		// DBを起動
-		Thread thread = new Thread(this);
-		thread.start();
-		try {
-			// サーバーが起動するまで待機
-			while(!serverStarted) {
-				Thread.sleep(1000);
+		if (DataTransferLogic.get().isTransferRequested() || DataTransferLogic.get().isTransferBackRequested()) {
+			// 多重起動チェック
+			if (DataTransferLogic.get().isTransferStarted()) {
+				LOG.info("ALL Ready started.");
+				return;
 			}
-			// コネクションの設定を読み込み
-			ConnectionConfig defaultConnection = DBConnenctionLogic.get().getDefaultConnectionConfig();
-			ConnectionConfig customConnection = DBConnenctionLogic.get().getCustomConnectionConfig();
-			// データ移行を実行（すごく時間がかかる可能性あり）
-			DataTransferLogic.get().transferData(defaultConnection, customConnection);
-		} catch (Exception e) {
-			LOG.error("ERROR", e);
-		} finally {
-			// データ移行終了
-			DataTransferLogic.get().finishTransfer();
-			// DBを停止
-			runing = false;
-			thread.join();
+			
+			// DBを起動
+			Thread thread = new Thread(this);
+			thread.start();
+			try {
+				// サーバーが起動するまで待機
+				while(!serverStarted) {
+					Thread.sleep(1000);
+				}
+				// コネクションの設定を読み込み
+				ConnectionConfig defaultConnection = DBConnenctionLogic.get().getDefaultConnectionConfig();
+				ConnectionConfig customConnection = DBConnenctionLogic.get().getCustomConnectionConfig();
+				// データ移行を実行（すごく時間がかかる可能性あり）
+				if (DataTransferLogic.get().isTransferBackRequested()) {
+					DataTransferLogic.get().transferData(customConnection, defaultConnection);
+				} else {
+					DataTransferLogic.get().transferData(defaultConnection, customConnection);
+				}
+			} catch (Exception e) {
+				LOG.error("ERROR", e);
+			} finally {
+				// データ移行終了
+				DataTransferLogic.get().finishTransfer();
+				// DBを停止
+				runing = false;
+				thread.join();
+			}
 		}
 	}
 	

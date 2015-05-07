@@ -148,7 +148,7 @@
 		<h1><i class="fa fa-book"></i>&nbsp;Knowledge</h1>
 		<h2>Free Knowledge Base System</h2>
 		<br/>
-		<a class="btn btn-info btn-lg" role="button"
+		<a id="showlist" class="btn btn-info btn-lg" role="button"
 			href="<%=request.getContextPath()%>/open.knowledge/list">
 			<i class="fa fa-diamond"></i>&nbsp;<%=jspUtil.label("knowledge.top.use.button")%>
 		</a>

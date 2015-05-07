@@ -10,5 +10,8 @@ public abstract class AbstractBat {
 		DBConnenctionLogic.get().connectCustomConnection();
 	}
 	
-	
+	protected void send(String msg) {
+		System.out.println("[SEND]" + msg);
+	}
+
 }

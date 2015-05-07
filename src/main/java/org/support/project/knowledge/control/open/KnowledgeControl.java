@@ -10,17 +10,19 @@ import org.owasp.validator.html.ScanException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
-import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.CommentsEntity;
+import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
+import org.support.project.knowledge.logic.DiffLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
@@ -28,11 +30,11 @@ import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LabelValue;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.UploadFile;
-import org.support.project.knowledge.websocket.NotifyAction;
 import org.support.project.web.bean.LoginedUser;
-import org.support.project.web.bean.MessageResult;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
@@ -52,6 +54,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary view() throws InvalidParamException {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
@@ -137,6 +140,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @return
 	 * @throws Exception 
 	 */
+	@Get
 	public Boundary list() throws Exception {
 		LOG.trace("Call list");
 		Integer offset = super.getPathInteger(0);
@@ -237,6 +241,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary like() throws InvalidParamException {
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
@@ -258,6 +263,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @throws ScanException 
 	 * @throws PolicyException 
 	 */
+	@Post
 	public Boundary escape(KnowledgesEntity entity) throws PolicyException, ScanException {
 		super.setSendEscapeHtml(false);
 		entity.setTitle(doSamy(entity.getTitle()));
@@ -269,6 +275,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * 検索画面を表示
 	 * @return
 	 */
+	@Get
 	public Boundary search() {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
@@ -280,6 +287,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary likes() throws InvalidParamException {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
@@ -315,6 +323,79 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		return forward("likes.jsp");
 	}
 	
+	@Get
+	public Boundary histories() throws InvalidParamException {
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
+		
+		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
+		setAttribute("knowledgeId", knowledgeId);
+		// 権限チェック(いったんアクセスできるユーザは全て表示)
+		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+		KnowledgesEntity entity = knowledgeLogic.select(knowledgeId, getLoginedUser());
+		if (entity == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
+		
+		Integer page = 0;
+		String p = getParamWithDefault("page", "");
+		if (StringUtils.isInteger(p)) {
+			page = Integer.parseInt(p);
+		}
+		int previous = page -1;
+		if (previous < 0) {
+			previous = 0;
+		}
+		setAttribute("page", page);
+		setAttribute("previous", previous);
+		setAttribute("next", page + 1);
+		
+		// 履歴を取得
+		KnowledgeHistoriesDao historiesDao = KnowledgeHistoriesDao.get();
+		List<KnowledgeHistoriesEntity> histories = historiesDao.selectOnKnowledge(knowledgeId, page * PAGE_LIMIT, PAGE_LIMIT);
+		setAttribute("histories", histories);
+
+		return forward("histories.jsp");
+	}
+	
+	
+	@Get
+	public Boundary history() throws InvalidParamException {
+		// 共通処理呼の表示条件の保持の呼び出し
+		setViewParam();
+		
+		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
+		setAttribute("knowledgeId", knowledgeId);
+		// 権限チェック(いったんアクセスできるユーザは全て表示)
+		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+		KnowledgesEntity entity = knowledgeLogic.select(knowledgeId, getLoginedUser());
+		if (entity == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
+		
+		Integer page = 0;
+		String p = getParamWithDefault("page", "");
+		if (StringUtils.isInteger(p)) {
+			page = Integer.parseInt(p);
+		}
+		setAttribute("page", page);
+		
+		Integer historyNo = 0;
+		String h = getParamWithDefault("history_no", "");
+		if (StringUtils.isInteger(h)) {
+			historyNo = Integer.parseInt(h);
+		}
+		
+		KnowledgeHistoriesDao historiesDao = KnowledgeHistoriesDao.get();
+		KnowledgeHistoriesEntity history = historiesDao.selectOnKey(historyNo, knowledgeId);
+		setAttribute("history", history);
+		setAttribute("now", entity);
+		
+		List<String> changes = DiffLogic.get().diff(history.getContent(), entity.getContent());
+		setAttribute("changes", changes);
+		
+		return forward("history.jsp");
+	}
 	
 }
 

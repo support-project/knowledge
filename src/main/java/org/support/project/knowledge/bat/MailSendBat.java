@@ -22,6 +22,7 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.PasswordUtil;
 import org.support.project.common.util.StringUtils;
+import org.support.project.knowledge.config.AppConfig;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.entity.MailConfigsEntity;
@@ -50,6 +51,8 @@ public class MailSendBat extends AbstractBat {
 			+ "@" + "[a-zA-Z0-9][a-zA-Z0-9\\-]*(\\.[a-zA-Z0-9\\-]+)*$";
 
 	public static void main(String[] args) throws Exception {
+		AppConfig.initEnvKey("KNOWLEDGE_HOME");
+		
 		MailSendBat bat = new MailSendBat();
 		bat.dbInit();
 		bat.start();

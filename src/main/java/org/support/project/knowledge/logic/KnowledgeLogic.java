@@ -19,6 +19,7 @@ import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.KnowledgeGroupsDao;
+import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
 import org.support.project.knowledge.dao.KnowledgeTagsDao;
 import org.support.project.knowledge.dao.KnowledgeUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -28,6 +29,7 @@ import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
+import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
 import org.support.project.knowledge.entity.KnowledgeTagsEntity;
 import org.support.project.knowledge.entity.KnowledgeUsersEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
@@ -128,11 +130,15 @@ public class KnowledgeLogic {
 		// 一覧表示用の情報を更新
 		updateKnowledgeExInfo(entity);
 		
+		// 履歴登録
+		insertHistory(entity);
+		
 		// 通知（TODO 別スレッド化を検討）
 		NotifyLogic.get().notifyOnKnowledgeInsert(entity);
 		
 		return entity;
 	}
+
 	
 	/**
 	 * ナレッジを更新
@@ -167,13 +173,31 @@ public class KnowledgeLogic {
 		// 一覧表示用の情報を更新
 		updateKnowledgeExInfo(entity);
 		
+		// 履歴登録
+		insertHistory(entity);
+
 		// 通知（TODO 別スレッド化を検討）
 		NotifyLogic.get().notifyOnKnowledgeUpdate(entity);
 		
 		return entity;
 	}
 	
-	
+	/**
+	 * ナレッジの更新履歴を登録
+	 * @param entity
+	 */
+	public void insertHistory(KnowledgesEntity entity) {
+		// 既存のナレッジ情報を履歴へコピー
+		KnowledgesEntity origin = knowledgesDao.selectOnKey(entity.getKnowledgeId());
+		KnowledgeHistoriesEntity history = new KnowledgeHistoriesEntity();
+		PropertyUtil.copyPropertyValue(origin, history);
+		KnowledgeHistoriesDao historiesDao = KnowledgeHistoriesDao.get();
+		int max = historiesDao.selectMaxHistoryNo(entity.getKnowledgeId());
+		max++;
+		history.setHistoryNo(max);
+		historiesDao.physicalInsert(history);
+	}
+
 	
 	/**
 	 * タグを登録

@@ -27,5 +27,7 @@ public class SystemConfig {
 	
 	/** インデックス再作成のための設定値 */
 	public static final String RE_INDEXING = "RE_INDEXING";
+	/** エクスポートのための設定値 */
+	public static final String DATA_EXPORT = "DATA_EXPORT";
 	
 }

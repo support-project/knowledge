@@ -19,8 +19,9 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.websocket.EndpointConfigurator;
 
-@ServerEndpoint(value = "/notify", configurator=NotifyEndpointConfigurator.class)
+@ServerEndpoint(value = "/notify", configurator=EndpointConfigurator.class)
 public class NotifyEndpoint {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(NotifyEndpoint.class);
@@ -32,8 +33,8 @@ public class NotifyEndpoint {
 	public void onOpen(Session session) {
 		// 開始時
 		if (LOG.isInfoEnabled()) {
-			 if (session.getUserProperties().containsKey(NotifyEndpointConfigurator.LOCALE_KEY)) {
-				LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(NotifyEndpointConfigurator.LOGIN_USER_KEY);
+			 if (session.getUserProperties().containsKey(EndpointConfigurator.LOCALE_KEY)) {
+				LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
 				LOG.info("websocket open: " + session.getId() + " : " + loginuser.getUserId());
 			}
 		}
@@ -58,8 +59,8 @@ public class NotifyEndpoint {
 	public void onClose(Session session) {
 		// 完了時
 		if (LOG.isInfoEnabled()) {
-			 if (session.getUserProperties().containsKey(NotifyEndpointConfigurator.LOCALE_KEY)) {
-				LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(NotifyEndpointConfigurator.LOGIN_USER_KEY);
+			 if (session.getUserProperties().containsKey(EndpointConfigurator.LOCALE_KEY)) {
+				LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
 				LOG.info("websocket close: " + session.getId() + " : " + loginuser.getUserId());
 			}
 		}

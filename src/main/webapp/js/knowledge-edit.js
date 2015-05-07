@@ -206,7 +206,7 @@ var removeAddedFile = function(fileNo) {
 
 
 var preview = function() {
-	$.get(_CONTEXT + '/open.knowledge/escape', {
+	$.post(_CONTEXT + '/open.knowledge/escape', {
 		title : $('#input_title').val(),
 		content : $('#content').val()
 	}, function(data) {
@@ -226,6 +226,9 @@ var preview = function() {
 		html += '</div>';
 
 		$('#preview').html(html);
+		$('#preview').each(function(i, block) {
+			hljs.highlightBlock(block);
+		});
 	});
 };
 

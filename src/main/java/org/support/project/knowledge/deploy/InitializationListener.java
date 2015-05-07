@@ -5,7 +5,6 @@ import java.io.File;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.config.AppConfig;
@@ -43,8 +42,9 @@ public class InitializationListener implements ServletContextListener {
 			LOG.info("idx directory created." + idxDir);
 		}
 		String path = contextEvent.getServletContext().getRealPath("/");
-		LOG.info("Knowledge start on '" + path + "'");
-		LOG.info(path);
+		LOG.info("Knowledge start");
+		LOG.info("knowledge install path: '" + path + "'");
+		LOG.info("knowledge home path: '" + appConfig.getBasePath() + "'");
 		appConfig.setWebRealPath(path);
 	}
 

@@ -9,6 +9,7 @@ import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
+import org.support.project.web.control.service.Get;
 
 @DI(instance=Instance.Prototype)
 public class FileControl extends Control {
@@ -17,6 +18,7 @@ public class FileControl extends Control {
 	
 	private UploadedFileLogic fileLogic = UploadedFileLogic.get();
 	
+	@Get
 	public Boundary download() {
 		LOG.trace("download()");
 		

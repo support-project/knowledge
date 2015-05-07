@@ -145,6 +145,11 @@
 								<i class="fa fa-refresh"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.data.reindexing") %>
 							</a>
 						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.database/export" style="cursor: pointer;">
+								<i class="fa fa-external-link"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.data.export") %>
+							</a>
+						</li>
 						
 						
 					</ul>
@@ -178,7 +183,7 @@
 						
 						<li class="divider"></li>
 						<li id="tabLogout">
-							<a href="<%= request.getContextPath() %>/signout" style="cursor: pointer;">
+							<a id="menuSignout" href="<%= request.getContextPath() %>/signout" style="cursor: pointer;">
 								<i class="fa fa-sign-out"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signout") %>
 							</a>
 						</li>
@@ -186,7 +191,7 @@
 				</li>
 				<% } else { %>
 				<li>
-					<a href="<%= request.getContextPath() %>/signin?page=<%= top %>" style="cursor: pointer;">
+					<a id="menuSignin" href="<%= request.getContextPath() %>/signin?page=<%= top %>" style="cursor: pointer;">
 						<i class="fa fa-sign-in"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signin") %>
 					</a>
 				</li>

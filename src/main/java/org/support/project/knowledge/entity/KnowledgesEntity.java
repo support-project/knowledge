@@ -29,16 +29,6 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 	 * 登録者の名称
 	 */
 	private String insertUserName;
-	/**
-	 * タグ
-	 */
-	private String tags;
-	
-	/** いいねのカウント */
-	private Long likeCount;
-	/** コメントのカウント */
-	private int commentsCount;
-	
 	
 	/**
 	 * コンストラクタ

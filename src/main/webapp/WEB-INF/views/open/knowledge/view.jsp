@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-edit.css") %>" />
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-view.css") %>" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
@@ -70,8 +71,11 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("insertUser") %>" 
 							alt="icon" width="36" height="36" style="float:left" />
 						
+						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
 						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
+						</a>
 						&nbsp;&nbsp;&nbsp;
+						
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag", 
 								jspUtil.label("label.public.view")) %>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", 
@@ -99,7 +103,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 						</p>
 					</c:forEach>
 					
-					<p style="word-break:break-all" id="content">
+					<p style="word-break:break-all" id="content" class="markdown">
 					</p>
 					
 				</div>
