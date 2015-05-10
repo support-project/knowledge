@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/bower/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/bower/bootstrap/dist/css/bootstrap-theme.min.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/bower/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
 
 <title><%=jspUtil.label("knowledge.title")%></title>
 

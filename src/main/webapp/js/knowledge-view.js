@@ -7,7 +7,9 @@ $(document).ready(function(){
 			return code;
 		}
 	});
-	$('#content').html(marked($('#content_text').text()));
+	var emoji = window.emojiParser;
+	var content = emoji($('#content_text').text(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+	$('#content').html(marked(content));
 	echo.init();
 	
 	$('#commentsLink').click(function(){
@@ -22,6 +24,23 @@ $(document).ready(function(){
 	
 	$('#input_tags').on('beforeItemRemove', function(event) {
 		event.cancel = true;
+	});
+	
+	$('.arrow_question').each(function(i, block) {
+		var content = $(this).text().trim();
+		content = emoji(content, _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+		console.log(content);
+		content = marked(content);
+		console.log(content);
+		$(this).html(content);
+	});
+	$('.arrow_answer').each(function(i, block) {
+		var content = $(this).text().trim();
+		content = emoji(content, _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+		console.log(content);
+		content = marked(content);
+		console.log(content);
+		$(this).html(content);
 	});
 	
 });

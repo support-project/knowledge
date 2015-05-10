@@ -27,7 +27,7 @@ public class DiffLogic {
 		Patch patch = DiffUtils.diff(oldLines, newLines);
 		for (Delta delta : patch.getDeltas()) {
 			StringBuilder builder = new StringBuilder();
-			builder.append(String.format("[History (%d)]", delta.getOriginal().getPosition() + 1));
+			builder.append(String.format("[History line-(%d)]", delta.getOriginal().getPosition() + 1));
 			builder.append("\n");
 			for (Object line : delta.getOriginal().getLines()) {
 				builder.append(line);
@@ -38,12 +38,14 @@ public class DiffLogic {
 			builder.append("↓");
 			builder.append("\n");
 
-			builder.append(String.format("[Now (%d)]", delta.getRevised().getPosition() + 1));
+			builder.append(String.format("[Now line-(%d)]", delta.getRevised().getPosition() + 1));
 			builder.append("\n");
 			for (Object line : delta.getRevised().getLines()) {
 				builder.append(line);
 				builder.append("\n");
 			}
+			builder.append("\n\n"); // 次の差分表示までの間に2行あける
+			
 			changes.add(builder.toString());
 		}
 		return changes;

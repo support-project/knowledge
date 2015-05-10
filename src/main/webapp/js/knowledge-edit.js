@@ -206,6 +206,7 @@ var removeAddedFile = function(fileNo) {
 
 
 var preview = function() {
+	
 	$.post(_CONTEXT + '/open.knowledge/escape', {
 		title : $('#input_title').val(),
 		content : $('#content').val()
@@ -218,15 +219,17 @@ var preview = function() {
 		html += data.title;
 		html += '</h3>';
 		html += '<p style="word-break:break-all" id="content">';
-		html += marked(data.content);
+		var emoji = window.emojiParser;
+		var content = emoji(data.content, _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+		content = marked(content);
+		html += content;
 		html += '</p>';
 		html += '</div>';
 		html += '</div>';
 		html += '</div>';
 		html += '</div>';
-
 		$('#preview').html(html);
-		$('#preview').each(function(i, block) {
+		$('pre code').each(function(i, block) {
 			hljs.highlightBlock(block);
 		});
 	});
