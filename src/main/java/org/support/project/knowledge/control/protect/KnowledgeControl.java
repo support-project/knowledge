@@ -126,6 +126,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			}
 		}
 
+		entity.setTitle(super.doSamy(entity.getTitle())); //XSS対策
+		entity.setContent(super.doSamy(entity.getContent())); //XSS対策
 		
 		List<ValidateError> errors = entity.validate();
 		if (!errors.isEmpty()) {
@@ -192,6 +194,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			}
 		}
 
+		entity.setTitle(super.doSamy(entity.getTitle())); //XSS対策
+		entity.setContent(super.doSamy(entity.getContent())); //XSS対策
+		
 		KnowledgesDao dao = Container.getComp(KnowledgesDao.class);
 		List<ValidateError> errors = entity.validate();
 		if (!errors.isEmpty()) {
@@ -296,10 +301,14 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		// 共通処理呼の表示条件の保持の呼び出し
 		String params = setViewParam();
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		String comment = getParam("comment");
+		String comment = super.doSamy(getParam("comment"));
 		
+		// 必須チェック
+		if (StringUtils.isEmpty(comment)) {
+			addMsgWarn("errors.required", "Comment");
+			return super.devolution(HttpMethod.get, "/open.knowledge/view/" + knowledgeId + params);
+		}
 		KnowledgeLogic.get().saveComment(knowledgeId, comment);
-		
 		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
 	}
 	

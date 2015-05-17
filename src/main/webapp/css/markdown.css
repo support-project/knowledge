@@ -37,7 +37,7 @@
 .markdown h4:hover a.anchor,
 .markdown h5:hover a.anchor,
 .markdown h6:hover a.anchor {
-	background: url("../../images/modules/styleguide/para.png") no-repeat
+	background: url("../images/para.png") no-repeat
 		10px center;
 	text-decoration: none;
 }
@@ -113,7 +113,7 @@
 
 .markdown hr {
 	background: transparent
-		url("../../images/modules/pulls/dirty-shade.png") repeat-x 0 0;
+		url("../images/dirty-shade.png") repeat-x 0 0;
 	border: 0 none;
 	color: #cccccc;
 	height: 4px;

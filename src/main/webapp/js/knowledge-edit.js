@@ -206,7 +206,6 @@ var removeAddedFile = function(fileNo) {
 
 
 var preview = function() {
-	
 	$.post(_CONTEXT + '/open.knowledge/escape', {
 		title : $('#input_title').val(),
 		content : $('#content').val()

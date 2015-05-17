@@ -46,7 +46,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 					<c:if test="${!empty tagNames}">
 					<p class="tags">
 					<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput"
-						value="<%= jspUtil.out("tagNames") %>" disabled="disabled"/>
+						value="<%= jspUtil.out("tagNames", JspUtil.ESCAPE_CLEAR) %>" disabled="disabled"/>
 					</p>
 					</c:if>
 					
@@ -91,7 +91,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 						<br/>
 						
 						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("insertUser") %>">
-						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("insertUserName") %>
+						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("insertUserName", JspUtil.ESCAPE_CLEAR) %>
 						</a>
 					</p>
 					
@@ -150,7 +150,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 			alt="icon" width="64" height="64"/>
 	</div>
 	<div class="arrow_question">
-	<%= jspUtil.out("comment.comment") %>
+	<%= jspUtil.out("comment.comment", JspUtil.ESCAPE_CLEAR) %>
 	</div><!-- /.arrow_question -->
 	</div><!-- /.question_Box -->
 	<% } else { %>
@@ -166,7 +166,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 			alt="icon" width="64" height="64"/>
 	</div>
 	<div class="arrow_answer">
-	<%= jspUtil.out("comment.comment") %>
+	<%= jspUtil.out("comment.comment", JspUtil.ESCAPE_CLEAR) %>
 	</div><!-- /.arrow_answer -->
 	</div><!-- /.question_Box -->
 	<% } %>
@@ -175,12 +175,20 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 	<% if (request.getRemoteUser() != null) { %>
 		<form action="<%= request.getContextPath()%>/protect.knowledge/comment/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" method="post" role="form">
 		<textarea class="form-control" name="comment" rows="1" placeholder="Comment" id="comment"></textarea>
+		
+	<% if (jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
+		<button type="button" class="btn btn-info" onclick="previewans();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
+	<%	} else { %>
+		<button type="button" class="btn btn-info" onclick="preview();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
+	<%	} %>
+		
 		<button type="submit" class="btn btn-primary"><i class="fa fa-comment-o"></i>&nbsp;<%= jspUtil.label("knowledge.view.comment") %></button>
 		
 		<input type="hidden" name="offset" value="<%= jspUtil.out("offset") %>" />
 		<input type="hidden" name="keyword" value="<%= jspUtil.out("keyword") %>" />
 		<input type="hidden" name="tag" value="<%= jspUtil.out("tag") %>" />
 		<input type="hidden" name="user" value="<%= jspUtil.out("user") %>" />
+		<input type="hidden" name="loginuser" value="<%= request.getRemoteUser() %>" id="loginuser" />
 		
 		</form>
 	<% } else { %>
@@ -188,10 +196,15 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 		<button type="submit" class="btn btn-primary"><i class="fa fa-comment-o"></i>&nbsp;<%= jspUtil.label("knowledge.view.comment.with.login") %></button>
 		</form>
 	<% } %>
+
+
+<p class="preview markdown" id="preview"></p>
+
 	
 <span style="display: none;" id="content_text">
-<%= jspUtil.out("content") %>
+<%= jspUtil.out("content", JspUtil.ESCAPE_CLEAR) %>
 </span>
+
 
 
 </c:param>

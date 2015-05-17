@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.fileupload.FileItem;
+import org.owasp.validator.html.PolicyException;
+import org.owasp.validator.html.ScanException;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.util.StringUtils;
 import org.support.project.common.validate.Validator;
@@ -71,9 +73,11 @@ public class AccountControl extends Control {
 	/**
 	 * ユーザの情報更新
 	 * @return
+	 * @throws ScanException 
+	 * @throws PolicyException 
 	 */
 	@Post
-	public Boundary update() {
+	public Boundary update() throws PolicyException, ScanException {
 		SystemConfigsDao systemConfigsDao = SystemConfigsDao.get();
 
 		SystemConfigsEntity userAddType = systemConfigsDao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
@@ -94,6 +98,7 @@ public class AccountControl extends Control {
 		if (StringUtils.isEmpty(getParam("password"))) {
 			values.put("password", "-");
 		}
+		values.put("userName", super.doSamy(values.get("userName"))); // ユーザ名はXSS対策する
 		
 		UsersEntity user = new UsersEntity();
 		List<ValidateError> errors = user.validate(values);

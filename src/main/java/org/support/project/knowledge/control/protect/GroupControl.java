@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.owasp.validator.html.PolicyException;
+import org.owasp.validator.html.ScanException;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -93,13 +95,17 @@ public class GroupControl extends Control {
 	/**
 	 * グループを追加
 	 * @return
+	 * @throws ScanException 
+	 * @throws PolicyException 
 	 */
 	@Post
-	public Boundary add() {
+	public Boundary add() throws PolicyException, ScanException {
 		// 入力チェック
 		GroupsEntity groupsEntity = new GroupsEntity();
 		Map<String, String> params = super.getParams();
 		params.put("groupKey", "g-" + RandomUtil.randamGen(16));
+		params.put("groupName", super.doSamy(params.get("groupName"))); //XSS対策
+		
 		List<ValidateError> errors = groupsEntity.validate(params);
 		if (!errors.isEmpty()) {
 			setResult(null, errors);
@@ -181,12 +187,16 @@ public class GroupControl extends Control {
 	/**
 	 * グループを更新
 	 * @return
+	 * @throws ScanException 
+	 * @throws PolicyException 
 	 */
 	@Post
-	public Boundary update() {
+	public Boundary update() throws PolicyException, ScanException {
 		// 入力チェック
 		GroupsEntity groupsEntity = new GroupsEntity();
 		Map<String, String> params = super.getParams();
+		params.put("groupName", super.doSamy(params.get("groupName"))); //XSS対策
+		
 		List<ValidateError> errors = groupsEntity.validate(params);
 		if (!errors.isEmpty()) {
 			setResult(null, errors);
