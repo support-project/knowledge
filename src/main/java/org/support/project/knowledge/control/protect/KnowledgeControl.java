@@ -12,9 +12,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.KnowledgeControlBase;
-import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
-import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
@@ -24,6 +22,9 @@ import org.support.project.knowledge.vo.LabelValue;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
+import org.support.project.web.config.HttpMethod;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
@@ -38,6 +39,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * 登録画面を表示する
 	 * @return
 	 */
+	@Get
 	public Boundary view_add() {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
@@ -55,6 +57,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary view_edit() throws InvalidParamException {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
@@ -94,6 +97,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @return
 	 * @throws Exception 
 	 */
+	@Post
 	public Boundary add(KnowledgesEntity entity) throws Exception {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
@@ -122,6 +126,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			}
 		}
 
+		entity.setTitle(super.doSamy(entity.getTitle())); //XSS対策
+		entity.setContent(super.doSamy(entity.getContent())); //XSS対策
 		
 		List<ValidateError> errors = entity.validate();
 		if (!errors.isEmpty()) {
@@ -159,6 +165,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @return
 	 * @throws Exception 
 	 */
+	@Post
 	public Boundary update(KnowledgesEntity entity) throws Exception {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
@@ -187,6 +194,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			}
 		}
 
+		entity.setTitle(super.doSamy(entity.getTitle())); //XSS対策
+		entity.setContent(super.doSamy(entity.getContent())); //XSS対策
+		
 		KnowledgesDao dao = Container.getComp(KnowledgesDao.class);
 		List<ValidateError> errors = entity.validate();
 		if (!errors.isEmpty()) {
@@ -236,6 +246,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @return
 	 * @throws Exception
 	 */
+	@Post
 	public Boundary delete() throws Exception {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
@@ -263,7 +274,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		knowledgeLogic.delete(knowledgeId, getLoginedUser());
 		
 		addMsgSuccess("message.success.delete");
-		return super.devolution("open.Knowledge/list");
+		return super.devolution(HttpMethod.get, "open.Knowledge/list");
 	}
 	
 	/**
@@ -271,6 +282,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @return
 	 * @throws InvalidParamException
 	 */
+	@Get
 	public Boundary view() throws InvalidParamException {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
@@ -284,14 +296,19 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @return
 	 * @throws Exception 
 	 */
+	@Post
 	public Boundary comment() throws Exception {
 		// 共通処理呼の表示条件の保持の呼び出し
 		String params = setViewParam();
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		String comment = getParam("comment");
+		String comment = super.doSamy(getParam("comment"));
 		
+		// 必須チェック
+		if (StringUtils.isEmpty(comment)) {
+			addMsgWarn("errors.required", "Comment");
+			return super.devolution(HttpMethod.get, "/open.knowledge/view/" + knowledgeId + params);
+		}
 		KnowledgeLogic.get().saveComment(knowledgeId, comment);
-		
 		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
 	}
 	
@@ -301,6 +318,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary view_targets() throws InvalidParamException {
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
 		List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);

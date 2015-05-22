@@ -20,6 +20,8 @@ import org.support.project.web.boundary.Boundary;
 import org.support.project.web.boundary.JsonBoundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 
 @DI(instance=Instance.Prototype)
 public class FileControl extends Control {
@@ -34,6 +36,7 @@ public class FileControl extends Control {
 	 * @return
 	 * @throws Exception
 	 */
+	@Post
 	public Boundary upload() throws Exception {
 		UploadResults results = new UploadResults();
 		List<UploadFile> files = new ArrayList<UploadFile>();
@@ -65,6 +68,7 @@ public class FileControl extends Control {
 	
 	
 	
+	@Get
 	public JsonBoundary delete() {
 		LOG.trace("delete()");
 		

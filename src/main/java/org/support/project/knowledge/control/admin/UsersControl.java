@@ -16,9 +16,10 @@ import org.support.project.knowledge.logic.UserLogic;
 import org.support.project.knowledge.vo.Roles;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
-import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
 import org.support.project.web.config.CommonWebParameter;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.ProvisionalRegistrationsDao;
 import org.support.project.web.dao.RolesDao;
 import org.support.project.web.dao.UsersDao;
@@ -37,6 +38,7 @@ public class UsersControl extends Control {
 	 * @return
 	 * @throws InvalidParamException
 	 */
+	@Get
 	@Auth(roles="admin")
 	public Boundary list() throws InvalidParamException {
 		Integer offset = super.getPathInteger(0);
@@ -53,6 +55,7 @@ public class UsersControl extends Control {
 	 * @param keyword
 	 * @return
 	 */
+	@Get
 	@Auth(roles="admin")
 	private Boundary list(Integer offset, String keyword) {
 		UsersDao dao = UsersDao.get();
@@ -78,6 +81,7 @@ public class UsersControl extends Control {
 	 * 登録画面を表示する
 	 * @return
 	 */
+	@Get
 	@Auth(roles="admin")
 	public Boundary view_add() {
 		String offset = super.getParam("offset", String.class);
@@ -136,6 +140,7 @@ public class UsersControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	@Auth(roles="admin")
 	public Boundary view_edit() throws InvalidParamException {
 		String offset = super.getParam("offset", String.class);
@@ -167,6 +172,7 @@ public class UsersControl extends Control {
 	 * ユーザを追加
 	 * @return
 	 */
+	@Post
 	@Auth(roles="admin")
 	public Boundary create() {
 		String offset = super.getParam("offset", String.class);
@@ -216,6 +222,7 @@ public class UsersControl extends Control {
 	 * ユーザを更新
 	 * @return
 	 */
+	@Post
 	@Auth(roles="admin")
 	public Boundary save() {
 		String offset = super.getParam("offset", String.class);
@@ -280,6 +287,7 @@ public class UsersControl extends Control {
 	 * @return
 	 * @throws Exception 
 	 */
+	@Post
 	@Auth(roles="admin")
 	public Boundary delete() throws Exception {
 		String offset = super.getParam("offset", String.class);
@@ -302,6 +310,7 @@ public class UsersControl extends Control {
 	 * ユーザ登録承認待ちの一覧表示
 	 * @return
 	 */
+	@Get
 	@Auth(roles="admin")
 	public Boundary accept_list() {
 		ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
@@ -315,6 +324,7 @@ public class UsersControl extends Control {
 	 * ユーザ登録承認
 	 * @return
 	 */
+	@Get
 	@Auth(roles="admin")
 	public Boundary accept() {
 		String id = getPathInfo();

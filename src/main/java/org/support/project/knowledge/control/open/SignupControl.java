@@ -18,6 +18,9 @@ import org.support.project.knowledge.logic.UserLogic;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.config.HttpMethod;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.ProvisionalRegistrationsDao;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
@@ -33,6 +36,7 @@ public class SignupControl extends Control {
 	 * ユーザのサインアップ画面を表示
 	 * @return
 	 */
+	@Get
 	public Boundary view() {
 		return forward("signup.jsp");
 	}
@@ -41,6 +45,7 @@ public class SignupControl extends Control {
 	 * 新規登録処理を保存
 	 * @return
 	 */
+	@Post
 	public Boundary save() {
 		SystemConfigsDao systemConfigsDao = SystemConfigsDao.get();
 		SystemConfigsEntity userAddType = systemConfigsDao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
@@ -112,6 +117,7 @@ public class SignupControl extends Control {
 	 * 仮登録
 	 * @return 
 	 */
+	@Post
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	private ProvisionalRegistrationsEntity addProvisionalRegistration() {
 		ProvisionalRegistrationsEntity entity = super.getParams(ProvisionalRegistrationsEntity.class);
@@ -177,6 +183,7 @@ public class SignupControl extends Control {
 	 * 招待メールからの本登録
 	 * @return
 	 */
+	@Get
 	public Boundary activate() {
 		String id = getPathInfo();
 		if (StringUtils.isEmpty(id)) {
@@ -205,13 +212,12 @@ public class SignupControl extends Control {
 			mailLogic.sendNotifyAddUser(user);
 			
 		}
-
 		// ログイン処理
 		AuthenticationLogic logic = Container.getComp(DefaultAuthenticationLogicImpl.class);
 		logic.setSession(entity.getUserKey(), getRequest());
 		
 		addMsgInfo("knowledge.signup.done");
-		return devolution("Index/index");
+		return devolution(HttpMethod.get, "Index/index");
 	}
 	
 }

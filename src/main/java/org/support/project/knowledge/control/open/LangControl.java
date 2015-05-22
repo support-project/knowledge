@@ -2,16 +2,17 @@ package org.support.project.knowledge.control.open;
 
 import java.util.Locale;
 
-import org.apache.taglibs.standard.tag.common.fmt.SetLocaleSupport;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.control.Control;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.control.service.Get;
 import org.support.project.web.exception.InvalidParamException;
 
 public class LangControl extends Control {
 	
+	@Get
 	public Boundary en() {
 		Locale locale = Locale.ENGLISH;
 		HttpUtil.setLocale(super.getRequest(), locale);
@@ -20,6 +21,7 @@ public class LangControl extends Control {
 	}
 	
 	
+	@Get
 	public Boundary ja() {
 		Locale locale = Locale.JAPANESE;
 		HttpUtil.setLocale(super.getRequest(), locale);
@@ -35,6 +37,7 @@ public class LangControl extends Control {
 	}
 
 
+	@Get
 	public Boundary select() throws InvalidParamException {
 		String LocaleID = getPathString();
 		if (StringUtils.isEmpty(LocaleID)) {

@@ -26,8 +26,9 @@ import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.logic.DBConnenctionLogic;
+import org.support.project.web.websocket.EndpointConfigurator;
 
-@ServerEndpoint(value = "/data_transfer", configurator=NotifyEndpointConfigurator.class)
+@ServerEndpoint(value = "/data_transfer", configurator=EndpointConfigurator.class)
 public class DataTransferEndpoint {
 	
 	/** ログ */
@@ -37,8 +38,8 @@ public class DataTransferEndpoint {
 	
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
-		 if (session.getUserProperties().containsKey(NotifyEndpointConfigurator.LOCALE_KEY)) {
-			LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(NotifyEndpointConfigurator.LOGIN_USER_KEY);
+		 if (session.getUserProperties().containsKey(EndpointConfigurator.LOCALE_KEY)) {
+			LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
 			if (!loginuser.isAdmin()) {
 				// 管理者以外はアクセス出来ない
 				session.close();
@@ -81,7 +82,7 @@ public class DataTransferEndpoint {
 				public void finish(JobResult result) {
 					ConnectionManager.getInstance().addConnectionConfig(connectionConfig); //新しいコネクション設定をセット
 					MessageResult message = new MessageResult();
-					message.setMessage("Data Transfer is ended. [status]" + result.getResultCode());
+					message.setMessage("Processing has been completed. [status]" + result.getResultCode());
 					try {
 						session.getBasicRemote().sendText(JSON.encode(message));
 						session.close();

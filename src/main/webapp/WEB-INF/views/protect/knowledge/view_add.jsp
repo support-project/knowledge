@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-edit.css") %>" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
@@ -21,6 +22,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-edit.js") %>"></script>
 
 <script>
@@ -148,7 +150,7 @@ selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jsp
 
 
 
-<p class="preview" id="preview"></p>
+<p class="preview markdown" id="preview"></p>
 
 
 

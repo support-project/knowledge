@@ -13,7 +13,8 @@
     "jquery-file-upload": "9.8.1",
     "teambox.free-file-icons": "teambox/Free-file-icons",
     "echojs": "1.6.0",
-    "notify.js": "1.2.5"
+    "notify.js": "1.2.5",
+    "emoji-parser": "0.1.1"
   },
   "devDependencies": {}
 }

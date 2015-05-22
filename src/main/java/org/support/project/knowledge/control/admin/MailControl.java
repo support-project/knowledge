@@ -17,6 +17,8 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.entity.MailConfigsEntity;
 
@@ -26,6 +28,7 @@ public class MailControl extends Control {
 	 * メールの設定画面を表示
 	 * @return
 	 */
+	@Get
 	@Auth(roles="admin")
 	public Boundary config() {
 		MailConfigsDao dao = MailConfigsDao.get();
@@ -50,6 +53,7 @@ public class MailControl extends Control {
 	 * @throws NoSuchAlgorithmException 
 	 * @throws InvalidKeyException 
 	 */
+	@Post
 	@Auth(roles="admin")
 	public Boundary save() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		List<ValidateError> errors = new ArrayList<>();
@@ -97,6 +101,7 @@ public class MailControl extends Control {
 	 * メールの設定を削除
 	 * @return
 	 */
+	@Post
 	@Auth(roles="admin")
 	public Boundary delete() {
 		MailConfigsDao dao = MailConfigsDao.get();

@@ -11,6 +11,8 @@ import org.support.project.knowledge.control.Control;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.MailConfigsEntity;
@@ -23,6 +25,7 @@ public class ConfigControl extends Control {
 	 * 
 	 * @return
 	 */
+	@Get
 	@Auth(roles = "admin")
 	public Boundary config() {
 		SystemConfigsDao dao = SystemConfigsDao.get();
@@ -49,6 +52,7 @@ public class ConfigControl extends Control {
 	 * 
 	 * @return
 	 */
+	@Post
 	@Auth(roles = "admin")
 	public Boundary save() {
 		List<ValidateError> errors = new ArrayList<>();
@@ -89,6 +93,7 @@ public class ConfigControl extends Control {
 	 * 
 	 * @return
 	 */
+	@Get
 	@Auth(roles = "admin")
 	public Boundary system() {
 		SystemConfigsDao dao = SystemConfigsDao.get();
@@ -108,6 +113,7 @@ public class ConfigControl extends Control {
 	 * 
 	 * @return
 	 */
+	@Post
 	@Auth(roles = "admin")
 	public Boundary save_params() {
 		List<ValidateError> errors = new ArrayList<>();

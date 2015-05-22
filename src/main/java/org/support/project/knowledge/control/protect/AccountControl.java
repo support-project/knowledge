@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.fileupload.FileItem;
+import org.owasp.validator.html.PolicyException;
+import org.owasp.validator.html.ScanException;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.util.StringUtils;
 import org.support.project.common.validate.Validator;
@@ -25,6 +27,9 @@ import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.config.HttpMethod;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.SystemConfigsEntity;
@@ -39,6 +44,7 @@ public class AccountControl extends Control {
 	/**
 	 * アカウント情報表示
 	 */
+	@Get
 	@Override
 	public Boundary index() {
 		SystemConfigsDao dao = SystemConfigsDao.get();
@@ -67,8 +73,11 @@ public class AccountControl extends Control {
 	/**
 	 * ユーザの情報更新
 	 * @return
+	 * @throws ScanException 
+	 * @throws PolicyException 
 	 */
-	public Boundary update() {
+	@Post
+	public Boundary update() throws PolicyException, ScanException {
 		SystemConfigsDao systemConfigsDao = SystemConfigsDao.get();
 
 		SystemConfigsEntity userAddType = systemConfigsDao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
@@ -89,6 +98,7 @@ public class AccountControl extends Control {
 		if (StringUtils.isEmpty(getParam("password"))) {
 			values.put("password", "-");
 		}
+		values.put("userName", super.doSamy(values.get("userName"))); // ユーザ名はXSS対策する
 		
 		UsersEntity user = new UsersEntity();
 		List<ValidateError> errors = user.validate(values);
@@ -133,6 +143,7 @@ public class AccountControl extends Control {
 	 * 退会画面を表示
 	 * @return
 	 */
+	@Get
 	public Boundary withdrawal() {
 		return forward("withdrawal.jsp");
 	}
@@ -144,6 +155,7 @@ public class AccountControl extends Control {
 	 * @return
 	 * @throws Exception 
 	 */
+	@Post
 	public Boundary delete() throws Exception {
 		// アカウント削除(退会処理)
 		boolean knowledgeRemove = true;
@@ -157,7 +169,7 @@ public class AccountControl extends Control {
 		authenticationLogic.clearSession(getRequest());
 		
 		addMsgInfo("knowledge.account.delete");
-		return devolution("Index/index");
+		return devolution(HttpMethod.get, "Index/index");
 		//return redirect(getRequest().getContextPath());
 	}
 	
@@ -166,6 +178,7 @@ public class AccountControl extends Control {
 	 * @return
 	 * @throws IOException 
 	 */
+	@Post
 	public Boundary iconupload() throws IOException {
 		AccountLogic logic = AccountLogic.get();
 		UploadResults results = new UploadResults();
@@ -216,6 +229,7 @@ public class AccountControl extends Control {
 	 * メールアドレスの変更リクエストを登録する画面を表示
 	 * @return
 	 */
+	@Get
 	public Boundary changekey() {
 		SystemConfigsDao dao = SystemConfigsDao.get();
 		SystemConfigsEntity userAddType = dao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
@@ -236,6 +250,7 @@ public class AccountControl extends Control {
 	 * メールアドレスの変更リクエストを登録
 	 * @return
 	 */
+	@Post
 	public Boundary changerequest() {
 		SystemConfigsDao dao = SystemConfigsDao.get();
 		SystemConfigsEntity userAddType = dao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
@@ -264,6 +279,7 @@ public class AccountControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary confirm_mail() throws InvalidParamException {
 		// メールアドレス変更ができるのは、ダブルオプトインでユーザ登録する設定になっている場合のみ
 		SystemConfigsDao dao = SystemConfigsDao.get();

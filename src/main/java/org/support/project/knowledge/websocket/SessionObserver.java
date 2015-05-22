@@ -14,6 +14,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.vo.Notify;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
+import org.support.project.web.websocket.EndpointConfigurator;
 
 public class SessionObserver implements Observer {
 	/** ログ */
@@ -37,11 +38,11 @@ public class SessionObserver implements Observer {
 			Map<String, Object> prop = session.getUserProperties();
 			LoginedUser loginuser = null;
 			if (prop != null) {
-				if (prop.containsKey(NotifyEndpointConfigurator.LOCALE_KEY)) {
-					locale = (Locale) prop.get(NotifyEndpointConfigurator.LOCALE_KEY);
+				if (prop.containsKey(EndpointConfigurator.LOCALE_KEY)) {
+					locale = (Locale) prop.get(EndpointConfigurator.LOCALE_KEY);
 				}
-				if (prop.containsKey(NotifyEndpointConfigurator.LOCALE_KEY)) {
-					loginuser = (LoginedUser) prop.get(NotifyEndpointConfigurator.LOGIN_USER_KEY);
+				if (prop.containsKey(EndpointConfigurator.LOCALE_KEY)) {
+					loginuser = (LoginedUser) prop.get(EndpointConfigurator.LOGIN_USER_KEY);
 				}
 			}
 			

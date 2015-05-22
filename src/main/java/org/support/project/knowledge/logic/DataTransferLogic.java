@@ -6,25 +6,34 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.support.project.common.classanalysis.ClassSearch;
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.di.Container;
+import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.ormapping.config.ConnectionConfig;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.ormapping.dao.AbstractDao;
 import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.ormapping.transaction.TransactionManager;
-import org.support.project.web.config.AppConfig;
+import org.support.project.web.dao.SystemsDao;
+import org.support.project.web.entity.SystemsEntity;
 
 public class DataTransferLogic {
 	private static final String TRANSFER_REQEST = "TRANSFER_REQEST";
+	private static final String TRANSFER_REQEST_BACK = "TRANSFER_REQEST_BACK";
 	private static final String TRANSFER_STARTED = "TRANSFER_STARTED";
 	
 	/** ログ */
@@ -35,16 +44,31 @@ public class DataTransferLogic {
 	}
 	
 	public void transferData(ConnectionConfig from, ConnectionConfig to) throws Exception {
+		// FromのDBのDBのバージョンチェック
+		ConnectionManager.getInstance().addConnectionConfig(from);
+		SystemsDao systemsDao = SystemsDao.get();
+		SystemsEntity systemEntity = systemsDao.selectOnKey(AppConfig.SYSTEM_NAME);
+		if (systemEntity == null) {
+			// Systemバージョン情報が無い未初期化のDBからコピーしてもしょうがない
+			System.out.println("Data transfer is failed.");
+			return;
+		}
+		String version = systemEntity.getVersion();
+		if (!InitDB.CURRENT.equals(version)) {
+			// コピー元のDBのバージョンが古い（なんかおかしい）
+			System.out.println("Data transfer is failed.");
+			return;
+		}
+		
+		// コピー先のDBの初期化
 		InitDB initDB = new InitDB();
 		ConnectionManager.getInstance().addConnectionConfig(to);
 		InitializeDao initializeDao = InitializeDao.get();
 		initializeDao.setConnectionName(to.getName());
 		initializeDao.dropAllTable();
 		initDB.start();
-
+		
 		ConnectionManager.getInstance().addConnectionConfig(from);
-		// コピー元も念のため、バージョンを合わせるために初期化を行う？
-//		initDB.start();
 		
 		List<Class> targets = new ArrayList<Class>();
 		ClassSearch classSearch = Container.getComp(ClassSearch.class);
@@ -138,6 +162,28 @@ public class DataTransferLogic {
 	}
 	
 	/**
+	 * データコピーのリクエストを登録
+	 * (カスタムDBから組み込みDBへ)
+	 * @throws IOException
+	 */
+	public void requestTransferBack() throws IOException {
+		if (!isTransferRequested()) {
+			AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
+			File base = new File(appConfig.getBasePath());
+			File config = new File(base, TRANSFER_REQEST_BACK);
+			OutputStream out = null;
+			try {
+				out = new FileOutputStream(config);
+				out.write(new String("TRANSFER_REQEST_BACK").getBytes(Charset.forName("UTF-8")));
+			} finally {
+				if (out != null) {
+					out.close();
+				}
+			}
+		}
+	}
+	
+	/**
 	 * コピーのリクエストがあるかチェック
 	 * @return
 	 */
@@ -145,6 +191,17 @@ public class DataTransferLogic {
 		AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
 		File base = new File(appConfig.getBasePath());
 		File config = new File(base, TRANSFER_REQEST);
+		return config.exists();
+	}
+	/**
+	 * コピーのリクエストがあるかチェック
+	 * (カスタムDBから組み込みDBへ)
+	 * @return
+	 */
+	public boolean isTransferBackRequested() {
+		AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
+		File base = new File(appConfig.getBasePath());
+		File config = new File(base, TRANSFER_REQEST_BACK);
 		return config.exists();
 	}
 	
@@ -185,6 +242,21 @@ public class DataTransferLogic {
 		if (config.exists()) {
 			config.delete();
 		}
+		config = new File(base, TRANSFER_REQEST_BACK);
+		if (config.exists()) {
+			config.delete();
+		}
+	}
+	
+	/**
+	 * サーバー起動時に起動しているH2Databaseをバックアップする（リネーム)
+	 * @throws IOException 
+	 */
+	public void backupAndInitH2() throws IOException {
+		AppConfig appConfig = AppConfig.get();
+		Path source = Paths.get(appConfig.getDatabasePath());
+		Path target = Paths.get(appConfig.getBasePath() + "/db_" + DateUtils.TRANSFER_DATETIME.format(new Date()));
+		Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
 	}
 
 }

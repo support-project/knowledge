@@ -8,6 +8,7 @@ import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
+import org.support.project.web.control.service.Get;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
@@ -20,6 +21,7 @@ public class TagControl extends Control {
 	 * @return
 	 * @throws InvalidParamException 
 	 */
+	@Get
 	public Boundary list() throws InvalidParamException {
 		Integer offset = super.getPathInteger(0);
 		int userId = super.getLoginUserId();

@@ -20,7 +20,7 @@ SELECT
                 WHERE
                     GROUPS.DELETE_FLAG != 1
                     AND GROUPS.GROUP_NAME LIKE '%' || ? || '%'
-        )
+        ) AS TARGETS
     ORDER BY
         LABEL
     LIMIT ? OFFSET ?

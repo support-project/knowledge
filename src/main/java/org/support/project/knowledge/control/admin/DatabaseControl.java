@@ -1,7 +1,11 @@
 package org.support.project.knowledge.control.admin;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.List;
@@ -14,6 +18,7 @@ import org.support.project.common.logic.H2DBServerLogic;
 import org.support.project.common.serialize.SerializeUtils;
 import org.support.project.common.wrapper.FileInputStreamWithDeleteWrapper;
 import org.support.project.di.Container;
+import org.support.project.knowledge.bat.CreateExportDataBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
@@ -29,6 +34,8 @@ import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.transaction.TransactionManager;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.logic.DBConnenctionLogic;
@@ -39,6 +46,7 @@ public class DatabaseControl extends Control {
 	 * @see org.support.project.web.control.Control#index()
 	 */
 	@Override
+	@Get
 	public Boundary index() {
 		H2DBServerLogic h2dbServerLogic = H2DBServerLogic.get();
 		boolean active = h2dbServerLogic.isActive();
@@ -51,6 +59,7 @@ public class DatabaseControl extends Control {
 	 * @return
 	 */
 	@Auth(roles="admin")
+	@Get
 	public Boundary start() {
 		H2DBServerLogic h2dbServerLogic = H2DBServerLogic.get();
 		h2dbServerLogic.start();
@@ -75,6 +84,7 @@ public class DatabaseControl extends Control {
 	 * @throws SQLException
 	 */
 	@Auth(roles="admin")
+	@Get
 	public Boundary stop() throws ORMappingException, SQLException {
 		// 組み込みDBを使っている場合、コネクション解除
 		if (DBConnenctionLogic.get().getCustomConnectionConfig() == null) {
@@ -99,6 +109,7 @@ public class DatabaseControl extends Control {
 	 * @throws IOException 
 	 */
 	@Auth(roles="admin")
+	@Get
 	public Boundary backup() throws IOException {
 		
 		HttpServletResponse res = getResponse();
@@ -118,6 +129,7 @@ public class DatabaseControl extends Control {
 	 * @throws IOException
 	 */
 	@Auth(roles="admin")
+	@Post
 	public Boundary restore() throws IOException {
 		H2DBServerLogic h2dbServerLogic = H2DBServerLogic.get();
 		boolean active = h2dbServerLogic.isActive();
@@ -146,6 +158,7 @@ public class DatabaseControl extends Control {
 	 * データベースに接続
 	 * @return
 	 */
+	@Get
 	@Auth(roles="admin")
 	public Boundary connect() {
 		ConnectionConfig connectionConfig = DBConnenctionLogic.get().getCustomConnectionConfig();
@@ -156,7 +169,7 @@ public class DatabaseControl extends Control {
 			setAttribute("custom", Boolean.FALSE);
 		} else {
 			setAttribute("custom", Boolean.TRUE);
-			if (DataTransferLogic.get().isTransferRequested()) {
+			if (DataTransferLogic.get().isTransferRequested() || DataTransferLogic.get().isTransferBackRequested()) {
 				setAttribute("transfer", Boolean.TRUE);
 			} else {
 				setAttribute("transfer", Boolean.FALSE);
@@ -173,6 +186,7 @@ public class DatabaseControl extends Control {
 	 * @return
 	 * @throws Exception
 	 */
+	@Post
 	@Auth(roles="admin")
 	public Boundary custom_save() throws Exception {
 		ConnectionConfig connectionConfig = super.getParamOnProperty(ConnectionConfig.class);
@@ -208,12 +222,19 @@ public class DatabaseControl extends Control {
 	 * コネクションのカスタム設定を削除
 	 * @return
 	 */
+	@Get
 	@Auth(roles="admin")
 	public Boundary custom_delete() {
 		ConnectionConfig connectionConfig = DBConnenctionLogic.get().getCustomConnectionConfig();
 		if (connectionConfig != null) {
 			ConnectionManager.getInstance().removeConnectionConfig(connectionConfig);
 			DBConnenctionLogic.get().removeCustomConnectionConfig();
+		}
+		
+		// もしデフォルトのH2がとまっていれば起動
+		H2DBServerLogic h2dbServerLogic = H2DBServerLogic.get();
+		if (!h2dbServerLogic.isActive()) {
+			h2dbServerLogic.start();
 		}
 		
 		// カスタム設定を削除したので、デフォルトを切り替え
@@ -232,18 +253,46 @@ public class DatabaseControl extends Control {
 	 * @return
 	 * @throws IOException
 	 */
+	@Get
 	@Auth(roles="admin")
 	public Boundary data_transfer() throws IOException {
-		DataTransferLogic.get().requestTransfer();
-		addMsgSuccess("knowledge.connection.msg.custom.transfer.request");
+		ConnectionConfig connectionConfig = DBConnenctionLogic.get().getCustomConnectionConfig();
+		if (connectionConfig != null) {
+			DataTransferLogic.get().requestTransfer();
+			addMsgSuccess("knowledge.connection.msg.custom.transfer.request");
+		}
 		return connect();
 	}
 	
+	/**
+	 * データ移行のリクエストをうける
+	 * (カスタムDBから組み込みDBへ)
+	 * 組み込みDBはダウンロードできるので、データのバックアップに使える
+	 * @return
+	 * @throws IOException
+	 */
+	@Get
+	@Auth(roles="admin")
+	public Boundary data_transfer_back() throws IOException {
+		ConnectionConfig connectionConfig = DBConnenctionLogic.get().getCustomConnectionConfig();
+		if (connectionConfig != null) {
+			if (!DataTransferLogic.get().isTransferBackRequested()) {
+				// 組み込みのH2DatabaseはDropTable/CreateTableを繰り返すと、なぜか容量が大きくなる
+				// 完全初期化した方が使いやすいので、既存のDBはバックアップする
+				DataTransferLogic.get().backupAndInitH2();
+				
+				DataTransferLogic.get().requestTransferBack();
+				addMsgSuccess("knowledge.connection.msg.custom.transfer.request");
+			}
+		}
+		return connect();
+	}
 	
 	/**
 	 * インデックス再生性のページを表示
 	 * @return
 	 */
+	@Get
 	@Auth(roles="admin")
 	public Boundary reindexing() {
 		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.RE_INDEXING, AppConfig.SYSTEM_NAME);
@@ -259,6 +308,7 @@ public class DatabaseControl extends Control {
 	 * インデックス再生性のリクエストをうける
 	 * @return
 	 */
+	@Post
 	@Auth(roles="admin")
 	public Boundary start_reindexing() {
 		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.RE_INDEXING, AppConfig.SYSTEM_NAME);
@@ -266,7 +316,6 @@ public class DatabaseControl extends Control {
 			addMsgInfo("message.allready.started");
 			return reindexing();
 		}
-
 		Long start = getParam("start", Long.class);
 		Long end = getParam("end", Long.class);
 		String val = "start=" + start + ",end=" + end;
@@ -275,11 +324,64 @@ public class DatabaseControl extends Control {
 		entity.setSystemName(AppConfig.SYSTEM_NAME);
 		entity.setConfigName(SystemConfig.RE_INDEXING);
 		entity.setConfigValue(val);
-		
 		SystemConfigsDao.get().save(entity);
-		
 		return reindexing();
 	}
 	
+	/**
+	 * データエクスポートの画面を表示
+	 * @return
+	 */
+	@Get
+	@Auth(roles="admin")
+	public Boundary export() {
+		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.SYSTEM_NAME);
+		if (entity != null) {
+			setAttribute("start_export", Boolean.TRUE);
+		} else {
+			setAttribute("start_export", Boolean.FALSE);
+		}
+
+		return forward("export.jsp");
+	}
+	/**
+	 * データエクスポートのリクエストを受ける
+	 * @return
+	 */
+	@Get
+	@Auth(roles="admin")
+	public Boundary export_data_create() {
+		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.SYSTEM_NAME);
+		if (entity != null) {
+			addMsgInfo("message.allready.started");
+			return export();
+		}
+		entity = new SystemConfigsEntity();
+		entity.setSystemName(AppConfig.SYSTEM_NAME);
+		entity.setConfigName(SystemConfig.DATA_EXPORT);
+		entity.setConfigValue("START");
+		SystemConfigsDao.get().save(entity);
+		return export();
+	}
 	
+	/**
+	 * データエクスポートのリクエストを受ける
+	 * @return
+	 * @throws FileNotFoundException 
+	 */
+	@Get
+	@Auth(roles="admin")
+	public Boundary download() throws FileNotFoundException {
+		AppConfig config = AppConfig.get();
+		File base = new File(config.getTmpPath());
+		String name = CreateExportDataBat.DATA_DIR + ".zip";
+		File comp = new File(base, name);
+		InputStream inputStream = new FileInputStream(comp);
+		return download(name, inputStream, comp.length());
+	}
+	
+	
+	
+	
+
 }

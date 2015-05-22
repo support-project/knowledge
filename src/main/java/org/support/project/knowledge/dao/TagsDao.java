@@ -93,6 +93,7 @@ public class TagsDao extends GenTagsDao {
 	 * @param offset
 	 * @param limit
 	 * @return
+	 * @deprecated
 	 */
 	public List<TagsEntity> selectTagsWithCountOnUser(int userid, int offset, int limit) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectTagsWithCountOnUser.sql");
@@ -111,6 +112,9 @@ public class TagsDao extends GenTagsDao {
 		StringJoinBuilder builder = new StringJoinBuilder();
 		List<Integer> params = new ArrayList<>();
 		params.add(new Integer(userId));
+		
+		builder.append("?");
+		params.add(-1);
 		for (GroupsEntity group : groups) {
 			builder.append("?");
 			params.add(group.getGroupId());

@@ -8,6 +8,7 @@ import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.dao.AccountImagesDao;
 import org.support.project.knowledge.entity.AccountImagesEntity;
 import org.support.project.web.boundary.Boundary;
+import org.support.project.web.control.service.Get;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
@@ -17,6 +18,7 @@ public class AccountControl extends Control {
 	 * @return
 	 * @throws InvalidParamException
 	 */
+	@Get
 	public Boundary icon() throws InvalidParamException {
 		Integer userId = getPathInteger(-1);
 		

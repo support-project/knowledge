@@ -10,6 +10,8 @@ import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.web.boundary.Boundary;
+import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
@@ -19,6 +21,7 @@ public class NotifyControl extends Control {
 	 * @see org.support.project.web.control.Control#index()
 	 */
 	@Override
+	@Get
 	public Boundary index() {
 		NotifyConfigsDao notifyConfigsDao = NotifyConfigsDao.get();
 		NotifyConfigsEntity notifyConfigsEntity = notifyConfigsDao.selectOnKey(getLoginUserId());
@@ -29,6 +32,7 @@ public class NotifyControl extends Control {
 		return super.index();
 	}
 	
+	@Post
 	public Boundary save() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
 		NotifyConfigsEntity entity = super.getParamOnProperty(NotifyConfigsEntity.class);
 		NotifyConfigsDao notifyConfigsDao = NotifyConfigsDao.get();

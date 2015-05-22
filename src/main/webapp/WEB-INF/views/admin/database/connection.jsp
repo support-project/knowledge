@@ -35,7 +35,7 @@ window.onload = function() {
 		$("#transfer_msg").alert('close');
 	}
 	webSocket.onmessage = function(message) {
-		console.log('[RECEIVE] ');
+		//console.log('[RECEIVE] ');
 		var result = JSON.parse(message.data);
 		console.log(result);
 		if (result.message.lastIndexOf('Data Transfer is ended', 0) === 0) {
@@ -125,6 +125,10 @@ window.onload = function() {
 <% if(jspUtil.is(Boolean.TRUE, "custom") && !(jspUtil.is(Boolean.TRUE, "transfer"))) { %>
 	<a href="<%= request.getContextPath()%>/admin.database/data_transfer" class="btn btn-success">
 		<i class="fa fa-copy"></i>&nbsp;<%= jspUtil.label("knowledge.connection.label.transfer") %>
+	</a>
+	
+	<a href="<%= request.getContextPath()%>/admin.database/data_transfer_back" class="btn btn-success">
+		<i class="fa fa-copy"></i>&nbsp;<%= jspUtil.label("knowledge.connection.label.transfer.back") %>
 	</a>
 <% } %>
 	

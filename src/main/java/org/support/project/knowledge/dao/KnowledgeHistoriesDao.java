@@ -1,0 +1,46 @@
+package org.support.project.knowledge.dao;
+
+import java.util.List;
+
+import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.gen.GenKnowledgeHistoriesDao;
+import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
+import org.support.project.ormapping.common.SQLManager;
+
+/**
+ * ナレッジ更新履歴
+ */
+@DI(instance=Instance.Singleton)
+public class KnowledgeHistoriesDao extends GenKnowledgeHistoriesDao {
+
+	/** SerialVersion */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * インスタンス取得
+	 * AOPに対応
+	 * @return インスタンス
+	 */
+	public static KnowledgeHistoriesDao get() {
+		return Container.getComp(KnowledgeHistoriesDao.class);
+	}
+	
+	/**
+	 * 指定ナレッジの最大の履歴番号を取得
+	 * @param knowledgeId
+	 * @return
+	 */
+	public int selectMaxHistoryNo(Long knowledgeId) {
+		String sql = "SELECT MAX(HISTORY_NO) FROM KNOWLEDGE_HISTORIES WHERE KNOWLEDGE_ID = ? ";
+		return executeQuerySingle(sql, Integer.class, knowledgeId);
+	}
+
+	public List<KnowledgeHistoriesEntity> selectOnKnowledge(Long knowledgeId, int offset, int limit) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_selectOnKnowledge.sql");
+		return executeQueryList(sql, KnowledgeHistoriesEntity.class, knowledgeId, limit, offset);
+	}
+
+
+
+}

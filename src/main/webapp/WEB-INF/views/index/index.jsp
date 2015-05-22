@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/bower/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/bower/bootstrap/dist/css/bootstrap-theme.min.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/bower/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
 
 <title><%=jspUtil.label("knowledge.title")%></title>
 
@@ -148,7 +149,7 @@
 		<h1><i class="fa fa-book"></i>&nbsp;Knowledge</h1>
 		<h2>Free Knowledge Base System</h2>
 		<br/>
-		<a class="btn btn-info btn-lg" role="button"
+		<a id="showlist" class="btn btn-info btn-lg" role="button"
 			href="<%=request.getContextPath()%>/open.knowledge/list">
 			<i class="fa fa-diamond"></i>&nbsp;<%=jspUtil.label("knowledge.top.use.button")%>
 		</a>

@@ -26,3 +26,10 @@
 	-webkit-border-radius: 10px;	/* Safari,Google Chrome—p */
 	-moz-border-radius: 10px;	/* Firefox—p */
 }
+
+
+@media only screen and (max-width:767px){
+	.radio-inline { 
+		margin-left: 10px;
+	}
+}
