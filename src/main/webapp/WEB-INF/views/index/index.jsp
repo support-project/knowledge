@@ -12,23 +12,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<c:import url="/WEB-INF/views/commons/layout/commonHeader.jsp" />
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Style-Type" content="text/css" />
-<meta http-equiv="Content-Script-Type" content="text/javascript" />
-<meta http-equiv="imagetoolbar" content="no" />
-
-<meta content="<%=jspUtil.label("knowledge.header.meta.title")%>" name="title">
-<meta content="<%=jspUtil.label("knowledge.header.meta.description")%>" name="description">
-
-<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-
-<link rel="icon" href="<%=request.getContextPath()%>/favicon.ico" type="image/vnd.microsoft.icon" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/bower/highlightjs/styles/default.css" />
-<link rel="stylesheet" href="<%=request.getContextPath()%>/bower/bootstrap/dist/css/bootstrap.min.css" />
-<link rel="stylesheet" href="<%=request.getContextPath()%>/bower/bootstrap/dist/css/bootstrap-theme.min.css" />
-<link rel="stylesheet" href="<%=request.getContextPath()%>/bower/font-awesome/css/font-awesome.min.css" />
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
 
 <title><%=jspUtil.label("knowledge.title")%></title>
