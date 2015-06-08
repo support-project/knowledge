@@ -3,9 +3,9 @@ package org.support.project.knowledge.dao;
 import java.util.List;
 
 import org.support.project.di.Container;
-import org.support.project.knowledge.vo.LabelValue;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.dao.AbstractDao;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
 
@@ -52,6 +52,16 @@ public class TargetsDao extends AbstractDao {
 	 */
 	public List<UsersEntity> selectUsersOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectUsersOnKnowledgeId.sql");
+		return executeQueryList(sql, UsersEntity.class, knowledgeId);
+	}
+
+	public List<GroupsEntity> selectEditorGroupsOnKnowledgeId(Long knowledgeId) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectEditorGroupsOnKnowledgeId.sql");
+		return executeQueryList(sql, GroupsEntity.class, knowledgeId);
+	}
+
+	public List<UsersEntity> selectEditorUsersOnKnowledgeId(Long knowledgeId) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectEditorUsersOnKnowledgeId.sql");
 		return executeQueryList(sql, UsersEntity.class, knowledgeId);
 	}
 

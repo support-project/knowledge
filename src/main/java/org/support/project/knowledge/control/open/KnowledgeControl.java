@@ -27,9 +27,9 @@ import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
-import org.support.project.knowledge.vo.LabelValue;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.UploadFile;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
@@ -131,6 +131,13 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		//List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
 		List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
 		setAttribute("groups", groups);
+		
+		// 編集権限
+		List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+		setAttribute("editors", editors);
+		LoginedUser loginedUser = super.getLoginedUser();
+		boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
+		setAttribute("edit", edit);
 		
 		return forward("view.jsp");
 	}

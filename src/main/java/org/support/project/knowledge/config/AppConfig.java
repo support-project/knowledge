@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.util.StringUtils;
-import org.support.project.knowledge.vo.LabelValue;
+import org.support.project.web.bean.LabelValue;
 
 
 public class AppConfig extends org.support.project.web.config.AppConfig {
@@ -24,7 +24,6 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
 	
 	private boolean convIndexPath = false;
 	
-	private List<LabelValue> languages = new ArrayList<>();
 	
 	
 	/**
@@ -50,18 +49,5 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
 		this.indexPath = indexPath;
 	}
 
-	/**
-	 * @return the languages
-	 */
-	public List<LabelValue> getLanguages() {
-		return languages;
-	}
-
-	/**
-	 * @param languages the languages to set
-	 */
-	public void setLanguages(List<LabelValue> languages) {
-		this.languages = languages;
-	}
 	
 }

@@ -45,7 +45,6 @@
 
 <div class="container">
 ${param.PARAM_CONTENT}
-<% jspUtil.debug(); %>
 </div>
 
 

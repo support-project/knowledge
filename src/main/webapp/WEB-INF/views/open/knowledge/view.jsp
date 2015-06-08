@@ -113,8 +113,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 	</div>
 	
 	<% if (request.getRemoteUser() != null) { 
-		if (request.isUserInRole("admin") 
-			|| jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
+		if ((boolean) request.getAttribute("edit")) { %>
 		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>"
 		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
 		<%= jspUtil.label("label.edit") %>

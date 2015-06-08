@@ -8,7 +8,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.knowledge.dao.TargetsDao;
-import org.support.project.knowledge.vo.LabelValue;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.UsersDao;
@@ -105,6 +105,30 @@ public class TargetLogic {
 		return results;
 	}
 	
+	/**
+	 * ナレッジに指定されている編集可能なグループを取得
+	 * @param knowledgeId
+	 * @return
+	 */
+	public List<LabelValue> selectEditorsOnKnowledgeId(Long knowledgeId) {
+		List<LabelValue> results = new ArrayList<>();
+		TargetsDao targetsDao = TargetsDao.get();
+		List<GroupsEntity> groups = targetsDao.selectEditorGroupsOnKnowledgeId(knowledgeId);
+		for (GroupsEntity groupsEntity : groups) {
+			LabelValue labelValue = new LabelValue();
+			labelValue.setLabel(NAME_PREFIX_GROUP + groupsEntity.getGroupName());
+			labelValue.setValue(ID_PREFIX_GROUP + groupsEntity.getGroupId());
+			results.add(labelValue);
+		}
+		List<UsersEntity> users = targetsDao.selectEditorUsersOnKnowledgeId(knowledgeId);
+		for (UsersEntity usersEntity : users) {
+			LabelValue labelValue = new LabelValue();
+			labelValue.setLabel(NAME_PREFIX_USER + usersEntity.getUserName());
+			labelValue.setValue(ID_PREFIX_USER + usersEntity.getUserId());
+			results.add(labelValue);
+		}
+		return results;
+	}
 	
 	
 	/**
@@ -140,5 +164,6 @@ public class TargetLogic {
 		}
 		return Integer.MIN_VALUE;
 	}
+
 
 }

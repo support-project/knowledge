@@ -1,5 +1,7 @@
 var groups = [];
 var selectedGroups = [];
+var editors = [];
+var selectedEditors = [];
 
 $(document).ready(function() {
 	hljs.initHighlightingOnLoad();
@@ -79,6 +81,7 @@ $(document).ready(function() {
 		dispChangeGroupArea($( this ).val());
 	});
 	
+	// targets
 	var keyword = $('#groupKeyword').val();
 	var offset = 0;
 	$('#groupSelectModal').on('show.bs.modal', function (event) {
@@ -110,10 +113,47 @@ $(document).ready(function() {
 		viewGroup();
 	});
 	viewGroup();
+	
+	// editor
+	var editorKeyword = $('#editorKeyword').val();
+	var offset = 0;
+	$('#editorSelectModal').on('show.bs.modal', function (event) {
+		getGroups(keyword, offset, '#editorList', '#editorPage', 'selectEditor');
+	});
+	$('#editorSearchButton').click(function() {
+		keyword = $('#editorKeyword').val();
+		offset = 0;
+		getGroups(keyword, offset, '#editorList', '#editorPage', 'selectEditor');
+	});
+	$('#editorSearchPrevious').click(function() {
+		keyword = $('#editorKeyword').val();
+		offset--;
+		if (offset < 0){
+			offset = 0;
+		}
+		getGroups(keyword, offset, '#editorList', '#editorPage', 'selectEditor');
+	});
+	$('#editorSearchNext').click(function() {
+		keyword = $('#editorKeyword').val();
+		offset++;
+		getGroups(keyword, offset, '#editorList', '#editorPage', 'selectEditor');
+	});
+	$('#clearSelectedEditor').click(function() {
+		selectedEditors = [];
+		viewEditor();
+	});
+	viewEditor();
+	
+	
 });
 
-var getGroups = function(keyword, offset) {
-	$('#groupList').html('Now loading...');
+var getGroups = function(keyword, offset, listId, pageId, selectFunc) {
+	if (!listId) {
+		listId = '#groupList';
+		pageId = '#groupPage';
+		selectFunc = 'selectGroup';
+	}
+	$(listId).html('Now loading...');
 	var url = _CONTEXT + '/protect.target/typeahead'
 	var params = {
 			keyword : keyword,
@@ -122,20 +162,21 @@ var getGroups = function(keyword, offset) {
 	
 	$.get(url, params, function(result){
 		groups = result;
+		editors = result;
 		var html = '';
 		if (result.length == 0) {
 			html += 'empty';
 		} else {
 			html+= '<div class="list-group">';
 			for (var int = 0; int < result.length; int++) {
-				html += '<a href="#" class="list-group-item" onclick="selectGroup(' + int + ')">';
+				html += '<a href="#" class="list-group-item" onclick="' + selectFunc + '(' + int + ')">';
 				html += result[int].label;
 				html += '</a>';
 			}
 			html += '</div>';
 		}
-		$('#groupList').html(html);
-		$('#groupPage').text('- page:' + (offset + 1) + ' -');
+		$(listId).html(html);
+		$(pageId).text('- page:' + (offset + 1) + ' -');
 	});
 };
 
@@ -174,6 +215,39 @@ var viewGroup = function() {
 	$('#groups').val(values.join(','));
 };
 
+var selectEditor = function(idx) {
+	var exist = false;
+	for (var i = 0; i < selectedEditors.length; i++) {
+		var item = selectedEditors[i];
+		if (item.value == editors[idx].value) {
+			exist = true;
+			break;
+		}
+	}
+	if (!exist) {
+		selectedEditors.push(editors[idx]);
+	}
+	viewEditor();
+};
+
+var viewEditor = function() {
+	var values = [];
+	var labels = [];
+	for (var i = 0; i < selectedEditors.length; i++) {
+		var item = selectedEditors[i];
+		values.push(item.value);
+		labels.push(item.label);
+	}
+	if (selectedEditors.length == 0) {
+		$('#clearSelectedEditor').hide();
+	} else {
+		$('#clearSelectedEditor').show();
+	}
+	
+	$('#selectedEditorList').text(labels.join(','));
+	$('#editorsLabel').text(labels.join(','));
+	$('#editors').val(values.join(','));
+};
 
 
 

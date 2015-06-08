@@ -14,7 +14,7 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.vo.GroupUser;
-import org.support.project.knowledge.vo.LabelValue;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;

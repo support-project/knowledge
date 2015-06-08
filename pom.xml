@@ -135,15 +135,5 @@
 
 	</build>
 
-	<distributionManagement>
-		<repository>
-			<id>org.support.project-releases</id>
-			<url>https://support-project.org/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>org.support.project-snapshots</id>
-			<url>https://support-project.org/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 </project>

@@ -1,4 +1,4 @@
-<%@page import="org.support.project.knowledge.vo.LabelValue"%>
+<%@page import="org.support.project.web.bean.LabelValue"%>
 <%@page import="java.util.List"%>
 <%@page import="org.support.project.knowledge.config.AppConfig"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
@@ -82,7 +82,7 @@
 							for (LabelValue language : languages) {
 						%>
 						<li >
-							<a href="<%= request.getContextPath() %>/open.lang/select/<%= language.getValue() %>" style="cursor: pointer;">
+							<a href="<%= request.getContextPath() %>/lang/select/<%= language.getValue() %>" style="cursor: pointer;">
 								<i class="fa fa-newspaper-o"></i>&nbsp;<%= language.getLabel() %>
 							</a>
 						</li>

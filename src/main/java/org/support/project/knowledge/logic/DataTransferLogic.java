@@ -255,8 +255,10 @@ public class DataTransferLogic {
 	public void backupAndInitH2() throws IOException {
 		AppConfig appConfig = AppConfig.get();
 		Path source = Paths.get(appConfig.getDatabasePath());
-		Path target = Paths.get(appConfig.getBasePath() + "/db_" + DateUtils.TRANSFER_DATETIME.format(new Date()));
-		Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+		if (Files.exists(source)) {
+			Path target = Paths.get(appConfig.getBasePath() + "/db_" + DateUtils.TRANSFER_DATETIME.format(new Date()));
+			Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+		}
 	}
 
 }

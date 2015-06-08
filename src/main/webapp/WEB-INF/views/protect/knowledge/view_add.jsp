@@ -36,6 +36,9 @@ var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
 <c:forEach var="group" items="${groups}" varStatus="status">
 selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jspUtil.out("group.value") %>'});
 </c:forEach>
+<c:forEach var="editor" items="${editors}" varStatus="status">
+selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= jspUtil.out("editor.value") %>'});
+</c:forEach>
 
 </script>
 
@@ -133,6 +136,17 @@ selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jsp
 		</p>
 	</div>
 	
+	<div class="form-group" id="editor_area">
+		<label for="input_groups"><%= jspUtil.label("knowledge.add.label.editors") %></label>
+		<p>
+			<input type="hidden" name="editors" id="editors" value="">
+			<span id="editorsLabel"></span>
+		</p>
+		<a id="groupselect" class="btn btn-info" data-toggle="modal" href="#editorSelectModal">
+			<i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.editors.select") %>
+		</a>
+	</div>
+	
 	<input type="hidden" name="offset" value="<%= jspUtil.out("offset") %>" />
 	<input type="hidden" name="keyword" value="<%= jspUtil.out("keyword") %>" />
 	<input type="hidden" name="tag" value="<%= jspUtil.out("tag") %>" />
@@ -153,7 +167,54 @@ selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jsp
 <p class="preview markdown" id="preview"></p>
 
 
+<%-- Editors --%>
+<div class="modal fade" id="editorSelectModal" tabindex="-1" role="dialog" aria-labelledby="editorModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
+				<span class="sr-only"><%= jspUtil.label("label.close") %></span></button>
+				<h4 class="modal-title" id="editorModalLabel">
+					<%= jspUtil.label("knowledge.add.label.editors.select") %>
+					<span style="font-size: 14px;" id="editorPage"></span>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div role="form" class="form-inline">
+					<input type="text" name="keyword" class="form-control" value="<%= jspUtil.out("keyword") %>" placeholder="Keyword" id="editorKeyword">
+					<button type="button" class="btn btn-success" id="editorSearchButton">
+						<i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("label.filter") %>
+					</button>
+					<button type="button" class="btn btn-default" id="editorSearchPrevious">
+						<i class="fa fa-arrow-circle-left"></i>&nbsp;<%= jspUtil.label("label.previous") %>
+					</button>
+					<button type="button" class="btn btn-default" id="editorSearchNext">
+						<%= jspUtil.label("label.next") %>&nbsp;<i class="fa fa-arrow-circle-right "></i>
+					</button>
+				</div>
+				<hr/>
+				<p>
+					<%-- 選択済みの一覧 --%>
+					<span id="selectedEditorList"></span>
+					<button type="button" class="btn btn-default" id="clearSelectedEditor">
+						<i class="fa fa-eraser"></i>&nbsp;<%= jspUtil.label("label.clear") %>&nbsp;
+					</button>
+				</p>
+				<hr/>
+				<p id="editorList">
+					<%-- 選択するための一覧 --%>
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<i class="fa fa-close"></i>&nbsp;<%= jspUtil.label("label.close") %>
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
+<%-- Targets --%>
 <div class="modal fade" id="groupSelectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
