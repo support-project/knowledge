@@ -32,10 +32,12 @@ import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.Notify;
+import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.MailsEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
@@ -127,6 +129,13 @@ public class NotifyMailBat extends AbstractBat {
 	}
 
 	private void sendLikeMail(LikesEntity like, KnowledgesEntity knowledge, UsersEntity likeUser, UsersEntity user, MailConfig config) {
+		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		if (mailConfigsEntity == null) {
+			// メールの設定が登録されていなければ、送信処理は終了
+			return;
+		}
+
 		MailsEntity mailsEntity = new MailsEntity();
 		String mailId = idGenu("Notify");
 		mailsEntity.setMailId(mailId);
@@ -229,6 +238,13 @@ public class NotifyMailBat extends AbstractBat {
 	 * @param user メールの送信先
 	 */
 	private void sendCommentMail(CommentsEntity comment, KnowledgesEntity knowledge, UsersEntity commentUser, UsersEntity user, MailConfig config) {
+		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		if (mailConfigsEntity == null) {
+			// メールの設定が登録されていなければ、送信処理は終了
+			return;
+		}
+
 		MailsEntity mailsEntity = new MailsEntity();
 		String mailId = idGenu("Notify");
 		mailsEntity.setMailId(mailId);
@@ -367,6 +383,13 @@ public class NotifyMailBat extends AbstractBat {
 	 * @param config
 	 */
 	private void insertNotifyKnowledgeUpdateMailQue(KnowledgesEntity knowledge, UsersEntity usersEntity, MailConfig config) {
+		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		if (mailConfigsEntity == null) {
+			// メールの設定が登録されていなければ、送信処理は終了
+			return;
+		}
+		
 		MailsEntity mailsEntity = new MailsEntity();
 		String mailId = idGenu("Notify");
 		mailsEntity.setMailId(mailId);

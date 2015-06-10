@@ -69,7 +69,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 					
 					<p class="insert_info">
 						<img src="<%= request.getContextPath()%>/images/loader.gif" 
-							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("insertUser") %>" 
+							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("updateUser") %>" 
 							alt="icon" width="36" height="36" style="float:left" />
 						
 						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
@@ -90,8 +90,8 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 						<% } %>
 						<br/>
 						
-						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("insertUser") %>">
-						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("insertUserName", JspUtil.ESCAPE_CLEAR) %>
+						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("updateUser") %>">
+						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("updateUserName", JspUtil.ESCAPE_CLEAR) %>
 						</a>
 					</p>
 					

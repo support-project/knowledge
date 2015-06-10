@@ -32,6 +32,7 @@ var _FAIL_UPLOAD = '<%= jspUtil.label("knowledge.edit.label.fail.upload") %>';
 var _REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.delete.upload") %>';
 var _FAIL_REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.fail.delete.upload") %>';
 var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
+var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 
 <c:forEach var="group" items="${groups}" varStatus="status">
 selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jspUtil.out("group.value") %>'});
@@ -86,14 +87,14 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 	<div class="form-group" id="files">
 	<c:forEach var="file" items="${files}" >
 		<div class="filediv" id="file-<%= jspUtil.out("file.fileNo") %>">
-			<div class="file-label">
-				<img src="<%= jspUtil.out("file.thumbnailUrl") %>" />
-				<a href="<%= jspUtil.out("file.url") %>">
-				<%= jspUtil.out("file.name") %>
-				</a>
-			</div>
+			<div class="file-image"><img src="<%= jspUtil.out("file.thumbnailUrl") %>" /></div>
+			<div class="file-label"><a href="<%= jspUtil.out("file.url") %>"><%= jspUtil.out("file.name") %></a></div>
+			<br class="fileLabelBr"/>
 			<input type="hidden" name="files" value="<%= jspUtil.out("file.fileNo") %>" />
 			&nbsp;&nbsp;&nbsp;
+			<button type="button" class="btn btn-success" onclick="setImagePath('<%= jspUtil.out("file.url") %>', '<%= jspUtil.out("file.name") %>')">
+				<i class="fa fa-file-image-o"></i>&nbsp;<%= jspUtil.label("knowledge.edit.set.image.path") %>
+			</button>
 			<button type="button" class="btn btn-danger" onclick="removeAddedFile(<%= jspUtil.out("file.fileNo") %>)">
 				<i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %>
 			</button>

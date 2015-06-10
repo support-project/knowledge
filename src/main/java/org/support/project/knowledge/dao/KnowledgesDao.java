@@ -73,10 +73,13 @@ public class KnowledgesDao extends GenKnowledgesDao {
 		sql.append("SELECT ");
 		sql.append(" KNOWLEDGES.*");
         sql.append(" ,USERS.USER_NAME AS INSERT_USER_NAME");
+        sql.append(" ,UP_USER.USER_NAME AS UPDATE_USER_NAME");
         sql.append(" FROM");
         sql.append(" KNOWLEDGES");
         sql.append(" LEFT OUTER JOIN USERS");
         sql.append(" ON USERS.USER_ID = KNOWLEDGES.INSERT_USER");
+        sql.append(" LEFT OUTER JOIN USERS AS UP_USER");
+        sql.append(" ON UP_USER.USER_ID = KNOWLEDGES.UPDATE_USER");
 		sql.append(" WHERE KNOWLEDGE_ID IN (");
 		int count = 0;
 		for (Long integer : knowledgeIds) {

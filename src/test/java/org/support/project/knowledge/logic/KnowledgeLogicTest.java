@@ -69,6 +69,7 @@ public class KnowledgeLogicTest extends TestCommon {
 		eqdb(entity, saved);
 		
 		entity.setInsertUserName(loginedUser.getLoginUser().getUserName());
+		entity.setUpdateUserName(loginedUser.getLoginUser().getUserName());
 		saved = KnowledgesDao.get().selectOnKeyWithUserName(entity.getKnowledgeId());
 		eqdb(entity, saved);
 		entity.setLikeCount((long) 0);
@@ -97,6 +98,7 @@ public class KnowledgeLogicTest extends TestCommon {
 
 		saved = KnowledgesDao.get().selectOnKeyWithUserName(entity.getKnowledgeId());
 		entity.setInsertUserName(loginedUser2.getLoginUser().getUserName());
+		entity.setUpdateUserName(loginedUser2.getLoginUser().getUserName());
 		eqdb(entity, saved);
 		entity.setLikeCount((long) 0);
 		list.add(entity);

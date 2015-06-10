@@ -23,8 +23,8 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notify.js/notify.js"></script>
 
 <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="<%= request.getContextPath() %>/bower/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="<%= request.getContextPath() %>/bower/respond/dest/respond.min.js"></script>
 <![endif]-->
 
 

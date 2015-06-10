@@ -15,10 +15,23 @@
 	</c:param>
 
 	<c:param name="PARAM_SCRIPTS">
+	<script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
+	<script>
+	echo.init();
+	</script>
 	</c:param>
 
 	<c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.histories.title") %></h4>
+
+<p>
+<img src="<%= request.getContextPath()%>/images/loader.gif" 
+	data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("history.updateUser") %>" 
+	alt="icon" width="36" height="36" style="float:left" />
+<br/>
+<i class="fa fa-user"></i>&nbsp;<%= jspUtil.out("history.userName") %>&nbsp;
+<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("history.updateDatetime")%>
+</p>
 
 <h5 class="sub_title"><%= jspUtil.label("knowledge.histories.label.diff") %></h5>
 <pre><c:if test="${empty changes}"><%= jspUtil.label("knowledge.histories.list.label.empty") %></c:if>

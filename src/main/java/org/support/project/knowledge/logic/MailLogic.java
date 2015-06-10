@@ -17,10 +17,12 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.ConfirmMailChangesEntity;
+import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.MailsEntity;
 import org.support.project.web.entity.PasswordResetsEntity;
 import org.support.project.web.entity.ProvisionalRegistrationsEntity;
@@ -102,6 +104,13 @@ public class MailLogic {
 	 * @param url
 	 */
 	public void sendInvitation(ProvisionalRegistrationsEntity entity, String url, Locale locale) {
+		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		if (mailConfigsEntity == null) {
+			// メールの設定が登録されていなければ、送信処理は終了
+			return;
+		}
+		
 		LOG.trace("sendInvitation");
 		MailsDao mailsDao = MailsDao.get();
 		MailsEntity mailsEntity = new MailsEntity();
@@ -133,6 +142,13 @@ public class MailLogic {
 	 * @param url
 	 */
 	public void sendAcceptedAddRequest(ProvisionalRegistrationsEntity entity, String url) {
+		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		if (mailConfigsEntity == null) {
+			// メールの設定が登録されていなければ、送信処理は終了
+			return;
+		}
+		
 		LOG.trace("sendAcceptedAddRequest");
 		MailsDao mailsDao = MailsDao.get();
 		MailsEntity mailsEntity = new MailsEntity();
@@ -166,6 +182,13 @@ public class MailLogic {
 	 * @param user
 	 */
 	public void sendNotifyAddUser(UsersEntity user) {
+		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		if (mailConfigsEntity == null) {
+			// メールの設定が登録されていなければ、送信処理は終了
+			return;
+		}
+		
 		LOG.trace("sendNotifyAddUser");
 		SystemConfigsDao configsDao = SystemConfigsDao.get();
 		SystemConfigsEntity configsEntity = configsDao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.SYSTEM_NAME);
@@ -201,6 +224,13 @@ public class MailLogic {
 	 * @param entity
 	 */
 	public void sendNotifyAcceptUser(ProvisionalRegistrationsEntity registrationsEntity) {
+		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		if (mailConfigsEntity == null) {
+			// メールの設定が登録されていなければ、送信処理は終了
+			return;
+		}
+		
 		LOG.trace("sendNotifyAcceptUser");
 		SystemConfigsDao configsDao = SystemConfigsDao.get();
 		SystemConfigsEntity configsEntity = configsDao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.SYSTEM_NAME);
@@ -237,6 +267,13 @@ public class MailLogic {
 	 * @param resetsEntity
 	 */
 	public void sendPasswordReset(String email, Locale locale, PasswordResetsEntity resetsEntity) {
+		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		if (mailConfigsEntity == null) {
+			// メールの設定が登録されていなければ、送信処理は終了
+			return;
+		}
+		
 		MailsEntity mailsEntity = new MailsEntity();
 		String mailId = idGen("MAIL-RESET");
 		mailsEntity.setMailId(mailId);
@@ -264,6 +301,13 @@ public class MailLogic {
 	 * @param loginedUser
 	 */
 	public void sendChangeEmailRequest(ConfirmMailChangesEntity mailChangesEntity, LoginedUser loginedUser) {
+		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		if (mailConfigsEntity == null) {
+			// メールの設定が登録されていなければ、送信処理は終了
+			return;
+		}
+		
 		MailsEntity mailsEntity = new MailsEntity();
 		String mailId = idGen("MAIL-CHANGE");
 		mailsEntity.setMailId(mailId);

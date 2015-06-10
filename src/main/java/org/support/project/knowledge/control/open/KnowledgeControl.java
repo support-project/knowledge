@@ -394,7 +394,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		}
 		
 		KnowledgeHistoriesDao historiesDao = KnowledgeHistoriesDao.get();
-		KnowledgeHistoriesEntity history = historiesDao.selectOnKey(historyNo, knowledgeId);
+		KnowledgeHistoriesEntity history = historiesDao.selectOnKeyWithName(historyNo, knowledgeId);
 		setAttribute("history", history);
 		setAttribute("now", entity);
 		

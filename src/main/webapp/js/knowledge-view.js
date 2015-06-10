@@ -8,8 +8,13 @@ $(document).ready(function(){
 		}
 	});
 	var emoji = window.emojiParser;
-	var content = emoji($('#content_text').text(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-	$('#content').html(marked(content));
+	$('#content').html(marked($('#content_text').text()));
+	$('#content pre code').each(function(i, block) {
+		hljs.highlightBlock(block);
+	});
+	var content = emoji($('#content').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+	$('#content').html(content);
+	
 	echo.init();
 	
 	$('#commentsLink').click(function(){
@@ -28,17 +33,23 @@ $(document).ready(function(){
 	
 	$('.arrow_question').each(function(i, block) {
 		var content = $(this).text().trim();
-		content = emoji(content, _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		console.log(content);
 		content = marked(content);
+		$(this).html(content);
+		$(this).find('pre code').each(function(i, block) {
+			hljs.highlightBlock(block);
+		});
+		var content = emoji($(this).html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
 		console.log(content);
 		$(this).html(content);
 	});
 	$('.arrow_answer').each(function(i, block) {
 		var content = $(this).text().trim();
-		content = emoji(content, _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		console.log(content);
 		content = marked(content);
+		$(this).html(content);
+		$(this).find('pre code').each(function(i, block) {
+			hljs.highlightBlock(block);
+		});
+		var content = emoji($(this).html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
 		console.log(content);
 		$(this).html(content);
 	});
@@ -102,18 +113,19 @@ var preview = function() {
 		html += '<div class="arrow_question">';
 		
 		html += '<p style="word-break:break-all" id="content">';
-		var emoji = window.emojiParser;
-		var content = emoji(data.content, _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		content = marked(content);
+		content = marked(data.content);
 		html += content;
 		
 		html += '</div><!-- /.arrow_question -->';
 		html += '</div><!-- /.question_Box -->';
 		
 		$('#preview').html(html);
-		$('pre code').each(function(i, block) {
+		$('#preview').find('pre code').each(function(i, block) {
 			hljs.highlightBlock(block);
 		});
+		var emoji = window.emojiParser;
+		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+		$('#preview').html(content);
 	});
 };
 
@@ -131,18 +143,19 @@ var previewans = function() {
 		html += '<div class="arrow_answer">';
 		
 		html += '<p style="word-break:break-all" id="content">';
-		var emoji = window.emojiParser;
-		var content = emoji(data.content, _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		content = marked(content);
+		content = marked(data.content);
 		html += content;
 		
 		html += '</div>';
 		html += '</div>';
 		
 		$('#preview').html(html);
-		$('pre code').each(function(i, block) {
+		$('#preview').find('pre code').each(function(i, block) {
 			hljs.highlightBlock(block);
 		});
+		var emoji = window.emojiParser;
+		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+		$('#preview').html(content);
 	});
 };
 

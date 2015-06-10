@@ -24,15 +24,21 @@ $(document).ready(function() {
 		$.each(data.result.files, function(index, file) {
 			console.log(file);
 			var filediv = '<div class="filediv" id="file-' + file.fileNo + '">';
-			filediv += '<div class="file-label">';
+			filediv += '<div class="file-image">';
 			filediv += '<img src="' + file.thumbnailUrl + '" />';
+			filediv += '</div>';
+			filediv += '<div class="file-label">';
 			filediv += '<a href="' + file.url + '">';
 			filediv += file.name;
 			filediv += '</a>';
 			filediv += '</div>';
+			filediv += '<br class="fileLabelBr"/>';
 			
 			filediv += '<input type="hidden" name="files" value="' + file.fileNo + '" />';
 			filediv += '&nbsp;&nbsp;&nbsp;';
+			filediv += '<button type="button" class="btn btn-success" onclick="setImagePath(\'' + file.url + '\', \'' + file.name + '\')">';
+			filediv += '<i class="fa fa-file-image-o"></i>&nbsp;' + _SET_IMAGE_LABEL;
+			filediv += '</button>';
 			filediv += '<button type="button" class="btn btn-danger" onclick="removeAddedFile(' + file.fileNo + ')">';
 			filediv += '<i class="fa fa-remove"></i>';
 			filediv += '&nbsp;' + _DELETE_LABEL + '</button>';
@@ -278,7 +284,15 @@ var removeAddedFile = function(fileNo) {
 	});
 };
 
+var setImagePath = function(url, name) {
+	var text = '\n![' + name + '](' + url + ')\n';
+	var textarea = $('#content');
+	textarea.val(textarea.val() + text);
+}
 
+
+
+var emoji = window.emojiParser;
 var preview = function() {
 	$.post(_CONTEXT + '/open.knowledge/escape', {
 		title : $('#input_title').val(),
@@ -292,9 +306,7 @@ var preview = function() {
 		html += data.title;
 		html += '</h3>';
 		html += '<p style="word-break:break-all" id="content">';
-		var emoji = window.emojiParser;
-		var content = emoji(data.content, _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		content = marked(content);
+		var content = marked(data.content);
 		html += content;
 		html += '</p>';
 		html += '</div>';
@@ -305,8 +317,11 @@ var preview = function() {
 		$('pre code').each(function(i, block) {
 			hljs.highlightBlock(block);
 		});
+		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+		$('#preview').html(content);
 	});
 };
+
 
 
 function deleteKnowledge() {
