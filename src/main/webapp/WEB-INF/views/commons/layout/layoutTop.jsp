@@ -66,8 +66,6 @@ ${param.PARAM_CONTENT}
 ${param.PARAM_SCRIPTS}
 </c:if>
 
-
-
 </body>
 </html>
 

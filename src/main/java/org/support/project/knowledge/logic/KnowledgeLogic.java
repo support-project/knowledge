@@ -188,7 +188,7 @@ public class KnowledgeLogic {
 		fileLogic.setKnowledgeFiles(entity, fileNos, loginedUser);
 		
 		// 全文検索エンジンへ登録
-		saveIndex(entity, tags, targets, loginedUser.getUserId());
+		saveIndex(entity, tags, targets, entity.getInsertUser());
 		
 		// 一覧表示用の情報を更新
 		updateKnowledgeExInfo(entity);
@@ -920,7 +920,7 @@ public class KnowledgeLogic {
 		
 		// 更新
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
-		knowledgesDao.update(entity);
+		knowledgesDao.update(entity.getUpdateUser(), entity);
 	}
 	
 	

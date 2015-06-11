@@ -55,28 +55,9 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 							<i class="fa fa-thumbs-o-up"></i>&nbsp;
 							<%= jspUtil.label("knowledge.view.like") %>
 						</button>
-						
-						<a class="btn btn-link" href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
-							<i class="fa fa-thumbs-o-up"></i>&nbsp;
-							× <span id="like_count"><%= jspUtil.out("like_count") %></span>
-						</a>
-						
-						<a class="btn btn-link" href="#comments" id="commentsLink">
-							<i class="fa fa-comments-o"></i>&nbsp;
-							× <%= jspUtil.out("comments.size()") %>
-						</a>
 					</p>
 					
-					<p class="insert_info">
-						<img src="<%= request.getContextPath()%>/images/loader.gif" 
-							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("updateUser") %>" 
-							alt="icon" width="36" height="36" style="float:left" />
-						
-						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
-						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
-						</a>
-						&nbsp;&nbsp;&nbsp;
-						
+					<p>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag", 
 								jspUtil.label("label.public.view")) %>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", 
@@ -88,12 +69,51 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 							</button>
 							
 						<% } %>
-						<br/>
+					
+						<a class="btn btn-link" href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
+							<i class="fa fa-thumbs-o-up"></i>&nbsp;
+							× <span id="like_count"><%= jspUtil.out("like_count") %></span>
+						</a>
 						
+						<a class="btn btn-link" href="#comments" id="commentsLink">
+							<i class="fa fa-comments-o"></i>&nbsp;
+							× <%= jspUtil.out("comments.size()") %>
+						</a>
+					</p>
+					
+					
+					<p class="insert_info">
+						<div class="saveType">
+						[<%= jspUtil.label("label.registration") %>]
+						</div>
+						<img src="<%= request.getContextPath()%>/images/loader.gif" 
+							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("insertUser") %>" 
+							alt="icon" width="36" height="36" style="float:left" />
+						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("insertUser") %>">
+						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("insertUserName", JspUtil.ESCAPE_CLEAR) %>
+						</a>
+						<br/>
+						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
+						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("insertDatetime")%>
+						</a>
+					</p>
+					
+					<p class="insert_info">
+						<div class="saveType">
+						[<%= jspUtil.label("label.update") %>]
+						</div>
+						<img src="<%= request.getContextPath()%>/images/loader.gif" 
+							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("updateUser") %>" 
+							alt="icon" width="36" height="36" style="float:left" />
 						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("updateUser") %>">
 						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("updateUserName", JspUtil.ESCAPE_CLEAR) %>
 						</a>
+						<br/>
+						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
+						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
+						</a>
 					</p>
+					
 					
 					<c:forEach var="file" items="${files}" >
 						<p>

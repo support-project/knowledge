@@ -99,7 +99,7 @@
 						
 						<p class="insert_info">
 						<img src="<%= request.getContextPath()%>/images/loader.gif" 
-							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("knowledge.updateUser") %>" 
+							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("knowledge.insertUser") %>" 
 							alt="icon" width="36" height="36" style="float:left"/>
 						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("knowledge.updateDatetime")%>
 						<br/>
@@ -114,7 +114,7 @@
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "knowledge.publicFlag", 
 								jspUtil.label("label.protect.view")) %>
 						<br/>
-						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("knowledge.updateUserName") %>
+						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("knowledge.insertUserName") %>
 						</p>
 						<p style="clear:left;">
 						
