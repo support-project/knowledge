@@ -30,6 +30,7 @@ public class CommentsDao extends GenCommentsDao {
 		builder.append("SELECT *, USERS.USER_NAME AS UPDATE_USER_NAME FROM COMMENTS ");
 		builder.append("LEFT OUTER JOIN USERS ON USERS.USER_ID = COMMENTS.UPDATE_USER ");
 		builder.append("WHERE KNOWLEDGE_ID = ? ");
+		builder.append("ORDER BY COMMENTS.INSERT_DATETIME ");
 		return executeQueryList(builder.toString(), CommentsEntity.class, knowledgeId);
 	}
 	

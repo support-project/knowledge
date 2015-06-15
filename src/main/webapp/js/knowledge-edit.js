@@ -298,6 +298,8 @@ var preview = function() {
 		title : $('#input_title').val(),
 		content : $('#content').val()
 	}, function(data) {
+		$('#content_text').html(data.content);
+		
 		var html = '<div class="row">';
 		html += '<div class="col-sm-12">';
 		html += '<div class="thumbnail">';
@@ -306,7 +308,7 @@ var preview = function() {
 		html += data.title;
 		html += '</h3>';
 		html += '<p style="word-break:break-all" id="content">';
-		var content = marked(data.content);
+		var content = marked($('#content_text').html());
 		html += content;
 		html += '</p>';
 		html += '</div>';

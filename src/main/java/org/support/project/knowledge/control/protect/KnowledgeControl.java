@@ -98,7 +98,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			setAttribute("edit", false);
 			addMsgWarn("knowledge.edit.noaccess");
 			//return forward("/open/knowledge/view.jsp");
-			return devolution(HttpMethod.get, "open.knowledge/view", String.valueOf(knowledgeId));
+			return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
 		}
 		
 		return forward("view_edit.jsp");
@@ -248,7 +248,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			setAttribute("edit", false);
 			addMsgWarn("knowledge.edit.noaccess");
 			//return forward("/open/knowledge/view.jsp");
-			return devolution(HttpMethod.get, "open.knowledge/view", String.valueOf(entity.getKnowledgeId()));
+			return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(entity.getKnowledgeId()));
 		}
 		
 		LOG.trace("save");
@@ -295,7 +295,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			setAttribute("edit", false);
 			addMsgWarn("knowledge.edit.noaccess");
 			//return forward("/open/knowledge/view.jsp");
-			return devolution(HttpMethod.get, "open.knowledge/view", String.valueOf(knowledgeId));
+			return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
 		}
 		LOG.trace("save");
 		knowledgeLogic.delete(knowledgeId, getLoginedUser());
@@ -328,12 +328,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		// 共通処理呼の表示条件の保持の呼び出し
 		String params = setViewParam();
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		String comment = super.doSamy(getParam("comment"));
+		String comment = super.doSamy(getParam("addcomment"));
 		
 		// 必須チェック
 		if (StringUtils.isEmpty(comment)) {
 			addMsgWarn("errors.required", "Comment");
-			return super.devolution(HttpMethod.get, "/open.knowledge/view/" + knowledgeId + params);
+			return super.devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
 		}
 		KnowledgeLogic.get().saveComment(knowledgeId, comment);
 		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);

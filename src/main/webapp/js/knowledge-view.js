@@ -103,6 +103,7 @@ var preview = function() {
 		title : '',
 		content : $('#comment').val()
 	}, function(data) {
+		$('#comment_text').html(data.content);
 		var html = '<div class="question_Box">';
 		html += '<div class="question_image">';
 		html += '<img src="' + _CONTEXT + '/open.account/icon/' + $('#loginuser').val() + '" ';
@@ -113,7 +114,7 @@ var preview = function() {
 		html += '<div class="arrow_question">';
 		
 		html += '<p style="word-break:break-all" id="content">';
-		content = marked(data.content);
+		var content = marked($('#comment_text').html());
 		html += content;
 		
 		html += '</div><!-- /.arrow_question -->';
@@ -135,6 +136,7 @@ var previewans = function() {
 		title : '',
 		content : $('#comment').val()
 	}, function(data) {
+		$('#comment_text').html(data.content);
 		var html = '<div class="question_Box">';
 		html += '<div class="answer_image">';
 		html += '<img src="' + _CONTEXT + '/open.account/icon/' + $('#loginuser').val() + '" ';
@@ -143,7 +145,7 @@ var previewans = function() {
 		html += '<div class="arrow_answer">';
 		
 		html += '<p style="word-break:break-all" id="content">';
-		content = marked(data.content);
+		var content = marked($('#comment_text').html());
 		html += content;
 		
 		html += '</div>';

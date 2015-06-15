@@ -166,6 +166,8 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 
 
 <p class="preview markdown" id="preview"></p>
+<span style="display: none;" id="content_text">
+</span>
 
 
 <%-- Editors --%>

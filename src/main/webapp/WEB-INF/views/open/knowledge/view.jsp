@@ -193,7 +193,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 	
 	<% if (request.getRemoteUser() != null) { %>
 		<form action="<%= request.getContextPath()%>/protect.knowledge/comment/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" method="post" role="form">
-		<textarea class="form-control" name="comment" rows="1" placeholder="Comment" id="comment"></textarea>
+		<textarea class="form-control" name="addcomment" rows="1" placeholder="Comment" id="comment"><%= jspUtil.out("addcomment") %></textarea>
 		
 	<% if (jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
 		<button type="button" class="btn btn-info" onclick="previewans();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
@@ -218,6 +218,8 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 
 
 <p class="preview markdown" id="preview"></p>
+<span style="display: none;" id="comment_text">
+</span>
 
 	
 <span style="display: none;" id="content_text">

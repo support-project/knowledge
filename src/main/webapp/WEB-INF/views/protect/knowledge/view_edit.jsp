@@ -174,7 +174,8 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 </form>
 
 <p class="preview markdown" id="preview"></p>
-
+<span style="display: none;" id="content_text">
+</span>
 
 <%-- Editors --%>
 <div class="modal fade" id="editorSelectModal" tabindex="-1" role="dialog" aria-labelledby="editorModalLabel" aria-hidden="true">
