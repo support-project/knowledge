@@ -61,8 +61,17 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 		<input type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="<%= jspUtil.out("title") %>" />
 	</div>
 	<div class="form-group">
-		<label for="input_content"><%= jspUtil.label("knowledge.add.label.content") %></label>
-		<textarea class="form-control" name="content" rows="5" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
+		<label for="input_content"><%= jspUtil.label("knowledge.add.label.content") %>
+		<span class="helpMarkdownLabel">
+		<a data-toggle="modal" data-target="#helpMarkdownModal">Markdown supported</a>
+		</span>
+		</label>
+		<textarea class="form-control" name="content" rows="8" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/objects" data-target="#emojiObjectsModal">objects</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
 	</div>
 	
 	<div class="form-group">
@@ -274,7 +283,8 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-
+<jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
+<jsp:include page="markdown.jsp"></jsp:include>
 
 </c:param>
 

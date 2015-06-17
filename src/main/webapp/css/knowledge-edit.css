@@ -55,3 +55,22 @@
 		margin-left: 10px;
 	}
 }
+
+
+.emoji {
+	width: 24px;
+	height: 24px;
+}
+.emojis li {
+	list-style-type: none;
+}
+.emojis li .name {
+	cursor: pointer;
+	border-bottom: 1px solid gray;
+}
+.helpMarkdownLabel {
+	font-size: small;
+}
+.sampleMarkdownText {
+	word-wrap: break-word;
+}

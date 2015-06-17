@@ -194,6 +194,12 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 	<% if (request.getRemoteUser() != null) { %>
 		<form action="<%= request.getContextPath()%>/protect.knowledge/comment/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" method="post" role="form">
 		<textarea class="form-control" name="addcomment" rows="1" placeholder="Comment" id="comment"><%= jspUtil.out("addcomment") %></textarea>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/objects" data-target="#emojiObjectsModal">objects</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
+		<br/>
 		
 	<% if (jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
 		<button type="button" class="btn btn-info" onclick="previewans();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
@@ -226,6 +232,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 <%= jspUtil.out("content", JspUtil.ESCAPE_CLEAR) %>
 </span>
 
+<jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
 
 
 </c:param>

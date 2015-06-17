@@ -54,6 +54,23 @@ $(document).ready(function(){
 		$(this).html(content);
 	});
 	
+	$('#emojiPeopleModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiPeopleModal');
+	});
+	$('#emojiNatureModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiNatureModal');
+	});
+	$('#emojiObjectsModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiObjectsModal');
+	});
+	$('#emojiPlacesModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiPlacesModal');
+	});
+	$('#emojiSymbolsModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiSymbolsModal');
+	});
+	
+	
 });
 
 
@@ -161,4 +178,14 @@ var previewans = function() {
 	});
 };
 
+var emojiSelect = function(id) {
+	$(id).find('.name').each(function(i, block) {
+		$(this).click(function(event) {
+			var val = ' :' + $(this).text() + ': ';
+			var textarea = $('#content');
+			textarea.val(textarea.val() + val);
+			$(id).modal('hide');
+		});
+	});
+};
 

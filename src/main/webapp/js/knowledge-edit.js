@@ -150,6 +150,31 @@ $(document).ready(function() {
 	});
 	viewEditor();
 	
+	$('#emojiPeopleModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiPeopleModal');
+	});
+	$('#emojiNatureModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiNatureModal');
+	});
+	$('#emojiObjectsModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiObjectsModal');
+	});
+	$('#emojiPlacesModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiPlacesModal');
+	});
+	$('#emojiSymbolsModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiSymbolsModal');
+	});
+	
+	$('#sampleMarkdownCheck').click(function() {
+		var text = $('#sampleMarkdownText').val();
+		var textarea = $('#content');
+		textarea.val(text);
+		preview();
+		$('#helpMarkdownModal').modal('hide');
+		var p = $("#preview").offset().top - 60;
+		$('html,body').animate({ scrollTop: p }, 'fast');
+	});
 	
 });
 
@@ -304,9 +329,10 @@ var preview = function() {
 		html += '<div class="col-sm-12">';
 		html += '<div class="thumbnail">';
 		html += '<div class="caption">';
+		html += '[preview]';
 		html += '<h3>';
 		html += data.title;
-		html += '</h3>';
+		html += '</h3><hr/>';
 		html += '<p style="word-break:break-all" id="content">';
 		var content = marked($('#content_text').html());
 		html += content;
@@ -324,7 +350,16 @@ var preview = function() {
 	});
 };
 
-
+var emojiSelect = function(id) {
+	$(id).find('.name').each(function(i, block) {
+		$(this).click(function(event) {
+			var val = ' :' + $(this).text() + ': ';
+			var textarea = $('#content');
+			textarea.val(textarea.val() + val);
+			$(id).modal('hide');
+		});
+	});
+};
 
 function deleteKnowledge() {
 	bootbox.confirm(_CONFIRM, function(result) {
