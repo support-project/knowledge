@@ -182,7 +182,7 @@ var emojiSelect = function(id) {
 	$(id).find('.name').each(function(i, block) {
 		$(this).click(function(event) {
 			var val = ' :' + $(this).text() + ': ';
-			var textarea = $('#content');
+			var textarea = $('#comment');
 			textarea.val(textarea.val() + val);
 			$(id).modal('hide');
 		});
