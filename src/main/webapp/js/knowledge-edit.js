@@ -1,5 +1,7 @@
 var groups = [];
 var selectedGroups = [];
+var editors = [];
+var selectedEditors = [];
 
 $(document).ready(function() {
 	hljs.initHighlightingOnLoad();
@@ -22,15 +24,21 @@ $(document).ready(function() {
 		$.each(data.result.files, function(index, file) {
 			console.log(file);
 			var filediv = '<div class="filediv" id="file-' + file.fileNo + '">';
-			filediv += '<div class="file-label">';
+			filediv += '<div class="file-image">';
 			filediv += '<img src="' + file.thumbnailUrl + '" />';
+			filediv += '</div>';
+			filediv += '<div class="file-label">';
 			filediv += '<a href="' + file.url + '">';
 			filediv += file.name;
 			filediv += '</a>';
 			filediv += '</div>';
+			filediv += '<br class="fileLabelBr"/>';
 			
 			filediv += '<input type="hidden" name="files" value="' + file.fileNo + '" />';
 			filediv += '&nbsp;&nbsp;&nbsp;';
+			filediv += '<button type="button" class="btn btn-success" onclick="setImagePath(\'' + file.url + '\', \'' + file.name + '\')">';
+			filediv += '<i class="fa fa-file-image-o"></i>&nbsp;' + _SET_IMAGE_LABEL;
+			filediv += '</button>';
 			filediv += '<button type="button" class="btn btn-danger" onclick="removeAddedFile(' + file.fileNo + ')">';
 			filediv += '<i class="fa fa-remove"></i>';
 			filediv += '&nbsp;' + _DELETE_LABEL + '</button>';
@@ -79,6 +87,7 @@ $(document).ready(function() {
 		dispChangeGroupArea($( this ).val());
 	});
 	
+	// targets
 	var keyword = $('#groupKeyword').val();
 	var offset = 0;
 	$('#groupSelectModal').on('show.bs.modal', function (event) {
@@ -110,10 +119,72 @@ $(document).ready(function() {
 		viewGroup();
 	});
 	viewGroup();
+	
+	// editor
+	var editorKeyword = $('#editorKeyword').val();
+	var offset = 0;
+	$('#editorSelectModal').on('show.bs.modal', function (event) {
+		getGroups(keyword, offset, '#editorList', '#editorPage', 'selectEditor');
+	});
+	$('#editorSearchButton').click(function() {
+		keyword = $('#editorKeyword').val();
+		offset = 0;
+		getGroups(keyword, offset, '#editorList', '#editorPage', 'selectEditor');
+	});
+	$('#editorSearchPrevious').click(function() {
+		keyword = $('#editorKeyword').val();
+		offset--;
+		if (offset < 0){
+			offset = 0;
+		}
+		getGroups(keyword, offset, '#editorList', '#editorPage', 'selectEditor');
+	});
+	$('#editorSearchNext').click(function() {
+		keyword = $('#editorKeyword').val();
+		offset++;
+		getGroups(keyword, offset, '#editorList', '#editorPage', 'selectEditor');
+	});
+	$('#clearSelectedEditor').click(function() {
+		selectedEditors = [];
+		viewEditor();
+	});
+	viewEditor();
+	
+	$('#emojiPeopleModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiPeopleModal');
+	});
+	$('#emojiNatureModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiNatureModal');
+	});
+	$('#emojiObjectsModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiObjectsModal');
+	});
+	$('#emojiPlacesModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiPlacesModal');
+	});
+	$('#emojiSymbolsModal').on('loaded.bs.modal', function (event) {
+		emojiSelect('#emojiSymbolsModal');
+	});
+	
+	$('#sampleMarkdownCheck').click(function() {
+		var text = $('#sampleMarkdownText').val();
+		var textarea = $('#content');
+		textarea.val(text);
+		preview();
+		$('#helpMarkdownModal').modal('hide');
+		var p = $("#preview").offset().top - 60;
+		$('html,body').animate({ scrollTop: p }, 'fast');
+	});
+	
 });
 
-var getGroups = function(keyword, offset) {
-	$('#groupList').html('Now loading...');
+var getGroups = function(keyword, offset, listId, pageId, selectFunc) {
+	if (!listId) {
+		listId = '#groupList';
+		pageId = '#groupPage';
+		selectFunc = 'selectGroup';
+	}
+	$(listId).html('Now loading...');
 	var url = _CONTEXT + '/protect.target/typeahead'
 	var params = {
 			keyword : keyword,
@@ -122,20 +193,21 @@ var getGroups = function(keyword, offset) {
 	
 	$.get(url, params, function(result){
 		groups = result;
+		editors = result;
 		var html = '';
 		if (result.length == 0) {
 			html += 'empty';
 		} else {
 			html+= '<div class="list-group">';
 			for (var int = 0; int < result.length; int++) {
-				html += '<a href="#" class="list-group-item" onclick="selectGroup(' + int + ')">';
+				html += '<a href="#" class="list-group-item" onclick="' + selectFunc + '(' + int + ')">';
 				html += result[int].label;
 				html += '</a>';
 			}
 			html += '</div>';
 		}
-		$('#groupList').html(html);
-		$('#groupPage').text('- page:' + (offset + 1) + ' -');
+		$(listId).html(html);
+		$(pageId).text('- page:' + (offset + 1) + ' -');
 	});
 };
 
@@ -174,6 +246,39 @@ var viewGroup = function() {
 	$('#groups').val(values.join(','));
 };
 
+var selectEditor = function(idx) {
+	var exist = false;
+	for (var i = 0; i < selectedEditors.length; i++) {
+		var item = selectedEditors[i];
+		if (item.value == editors[idx].value) {
+			exist = true;
+			break;
+		}
+	}
+	if (!exist) {
+		selectedEditors.push(editors[idx]);
+	}
+	viewEditor();
+};
+
+var viewEditor = function() {
+	var values = [];
+	var labels = [];
+	for (var i = 0; i < selectedEditors.length; i++) {
+		var item = selectedEditors[i];
+		values.push(item.value);
+		labels.push(item.label);
+	}
+	if (selectedEditors.length == 0) {
+		$('#clearSelectedEditor').hide();
+	} else {
+		$('#clearSelectedEditor').show();
+	}
+	
+	$('#selectedEditorList').text(labels.join(','));
+	$('#editorsLabel').text(labels.join(','));
+	$('#editors').val(values.join(','));
+};
 
 
 
@@ -204,23 +309,32 @@ var removeAddedFile = function(fileNo) {
 	});
 };
 
+var setImagePath = function(url, name) {
+	var text = '\n![' + name + '](' + url + ')\n';
+	var textarea = $('#content');
+	textarea.val(textarea.val() + text);
+}
 
+
+
+var emoji = window.emojiParser;
 var preview = function() {
 	$.post(_CONTEXT + '/open.knowledge/escape', {
 		title : $('#input_title').val(),
 		content : $('#content').val()
 	}, function(data) {
+		$('#content_text').html(data.content);
+		
 		var html = '<div class="row">';
 		html += '<div class="col-sm-12">';
 		html += '<div class="thumbnail">';
 		html += '<div class="caption">';
+		html += '[preview]';
 		html += '<h3>';
 		html += data.title;
-		html += '</h3>';
+		html += '</h3><hr/>';
 		html += '<p style="word-break:break-all" id="content">';
-		var emoji = window.emojiParser;
-		var content = emoji(data.content, _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		content = marked(content);
+		var content = marked($('#content_text').html());
 		html += content;
 		html += '</p>';
 		html += '</div>';
@@ -231,9 +345,21 @@ var preview = function() {
 		$('pre code').each(function(i, block) {
 			hljs.highlightBlock(block);
 		});
+		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+		$('#preview').html(content);
 	});
 };
 
+var emojiSelect = function(id) {
+	$(id).find('.name').each(function(i, block) {
+		$(this).click(function(event) {
+			var val = ' :' + $(this).text() + ': ';
+			var textarea = $('#content');
+			textarea.val(textarea.val() + val);
+			$(id).modal('hide');
+		});
+	});
+};
 
 function deleteKnowledge() {
 	bootbox.confirm(_CONFIRM, function(result) {

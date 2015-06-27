@@ -8,8 +8,8 @@
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
 <!-- scripts -->
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery/dist/jquery.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap/dist/js/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/notify.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/notify-combined.js"></script>
@@ -21,6 +21,11 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootbox/bootbox.js"></script>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notify.js/notify.js"></script>
+
+<!--[if lt IE 9]>
+    <script src="<%= request.getContextPath() %>/bower/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="<%= request.getContextPath() %>/bower/respond/dest/respond.min.js"></script>
+<![endif]-->
 
 
 <script type="text/javascript">

@@ -60,7 +60,7 @@ public class KnowledgeLogicTest extends TestCommon {
 		entity.setTitle("Test1");
 		entity.setContent("テストだよ");
 		KnowledgeLogic logic = KnowledgeLogic.get();
-		entity = logic.insert(entity, null, new ArrayList<Long>(), null, loginedUser);
+		entity = logic.insert(entity, null, new ArrayList<Long>(), null, null, loginedUser);
 		
 		// publicFlagは指定しないでDBに保存すると、公開になる
 		entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
@@ -69,6 +69,7 @@ public class KnowledgeLogicTest extends TestCommon {
 		eqdb(entity, saved);
 		
 		entity.setInsertUserName(loginedUser.getLoginUser().getUserName());
+		entity.setUpdateUserName(loginedUser.getLoginUser().getUserName());
 		saved = KnowledgesDao.get().selectOnKeyWithUserName(entity.getKnowledgeId());
 		eqdb(entity, saved);
 		entity.setLikeCount((long) 0);
@@ -84,7 +85,7 @@ public class KnowledgeLogicTest extends TestCommon {
 		entity.setTitle(RandomUtil.randamGen(64));
 		entity.setContent(RandomUtil.randamGen(1024));
 		KnowledgeLogic logic = KnowledgeLogic.get();
-		entity = logic.insert(entity, null, new  ArrayList<Long>(), null, loginedUser2);
+		entity = logic.insert(entity, null, new  ArrayList<Long>(), null, null, loginedUser2);
 		// publicFlagは指定しないでDBに保存すると、公開になる
 		entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
 		KnowledgesEntity saved = KnowledgesDao.get().selectOnKey(entity.getKnowledgeId());
@@ -93,10 +94,11 @@ public class KnowledgeLogicTest extends TestCommon {
 		entity.setTitle(RandomUtil.randamGen(64));
 		entity.setContent(RandomUtil.randamGen(1024));
 		entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
-		logic.update(entity, null, new  ArrayList<Long>(), null, loginedUser2);
+		logic.update(entity, null, new  ArrayList<Long>(), null, null, loginedUser2);
 
 		saved = KnowledgesDao.get().selectOnKeyWithUserName(entity.getKnowledgeId());
 		entity.setInsertUserName(loginedUser2.getLoginUser().getUserName());
+		entity.setUpdateUserName(loginedUser2.getLoginUser().getUserName());
 		eqdb(entity, saved);
 		entity.setLikeCount((long) 0);
 		list.add(entity);

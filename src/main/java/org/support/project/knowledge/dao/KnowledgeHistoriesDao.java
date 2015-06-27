@@ -41,6 +41,11 @@ public class KnowledgeHistoriesDao extends GenKnowledgeHistoriesDao {
 		return executeQueryList(sql, KnowledgeHistoriesEntity.class, knowledgeId, limit, offset);
 	}
 
+	public KnowledgeHistoriesEntity selectOnKeyWithName(Integer historyNo, Long knowledgeId) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_selectOnKeyWithName.sql");
+		return executeQuerySingle(sql, KnowledgeHistoriesEntity.class, knowledgeId, historyNo);
+	}
+
 
 
 }

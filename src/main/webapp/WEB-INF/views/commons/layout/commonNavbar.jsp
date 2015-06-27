@@ -1,4 +1,4 @@
-<%@page import="org.support.project.knowledge.vo.LabelValue"%>
+<%@page import="org.support.project.web.bean.LabelValue"%>
 <%@page import="java.util.List"%>
 <%@page import="org.support.project.knowledge.config.AppConfig"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
@@ -10,28 +10,33 @@
 <% String top = "/open.knowledge/list"; %>
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-<!-- navbar -->
-<div class="navbar navbar-default navbar-fixed-top">
-	<div class="container" id="myNavbar">
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="<%= request.getContextPath() %><%= top %>" style="cursor: pointer;">
-				<i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
+			<a class="navbar-brand"
+				href="<%= request.getContextPath() %><%= top %>"
+				style="cursor: pointer;"> <i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
 				<span style="font-size: 8pt;"><%= jspUtil.label("label.version") %></span>
 			</a>
 		</div>
-		<div class="navbar-collapse collapse">
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
-				
-				<li class="dropdown" id="tabMenu">
-					<a class="dropdown-toggle" data-toggle="dropdown">
-						<i class="fa fa-bolt" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.menu") %><b class="caret"></b>
-					</a>
-					<ul class="dropdown-menu">
+			
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" role="button" aria-expanded="false">
+						<i class="fa fa-bolt" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.menu") %>
+						<span class="caret"></span>
+				</a>
+					<ul class="dropdown-menu" role="menu">
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.menu.knowledge") %></li>
 						<li >
 							<a href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;">
@@ -82,7 +87,7 @@
 							for (LabelValue language : languages) {
 						%>
 						<li >
-							<a href="<%= request.getContextPath() %>/open.lang/select/<%= language.getValue() %>" style="cursor: pointer;">
+							<a href="<%= request.getContextPath() %>/lang/select/<%= language.getValue() %>" style="cursor: pointer;">
 								<i class="fa fa-newspaper-o"></i>&nbsp;<%= language.getLabel() %>
 							</a>
 						</li>
@@ -92,14 +97,14 @@
 					</ul>
 				</li>
 				
-				
 				<% if (request.isUserInRole("admin")) { %>
-				<li class="dropdown" id="tabConfig">
-					<a class="dropdown-toggle" data-toggle="dropdown">
-						<i class="fa fa-cog" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config") %><b class="caret"></b>
-					</a>
-					<ul class="dropdown-menu">
-						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin") %></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" role="button" aria-expanded="false">
+						<i class="fa fa-cog" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config") %>
+						<span class="caret"></span>
+				</a>
+					<ul class="dropdown-menu" role="menu">
+<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin") %></li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.users/list" style="cursor: pointer;">
 								<i class="fa fa-users"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.users") %>
@@ -150,18 +155,19 @@
 								<i class="fa fa-external-link"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.data.export") %>
 							</a>
 						</li>
-						
-						
 					</ul>
 				</li>
 				<% } %>
 				
+
+
 				<% if (request.getRemoteUser() != null) { %>
-				<li class="dropdown" id="tabProfile">
-					<a class="dropdown-toggle" data-toggle="dropdown">
-						<i class="fa fa-user" ></i>&nbsp;<%= jspUtil.name() %><b class="caret"></b>
-					</a>
-					<ul class="dropdown-menu">
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" role="button" aria-expanded="false">
+						<i class="fa fa-user" ></i>&nbsp;<%= jspUtil.name() %>
+						<span class="caret"></span>
+				</a>
+					<ul class="dropdown-menu" role="menu">
 						<li>
 							<a href="<%= request.getContextPath() %>/protect.account" style="cursor: pointer;">
 								<i class="fa fa-smile-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.myaccount") %>
@@ -196,8 +202,8 @@
 					</a>
 				</li>
 				<% } %>
+				
 			</ul>
-			
 			
 			<form class="nav navbar-nav navbar-form navbar-right" role="search"
 				action="<%= request.getContextPath() %><%= top %>">
@@ -213,7 +219,8 @@
 			</form>
 			
 		</div>
+		<!-- /.navbar-collapse -->
 	</div>
-</div>
-<!-- /navbar -->
+	<!-- /.container-fluid -->
+</nav>
 

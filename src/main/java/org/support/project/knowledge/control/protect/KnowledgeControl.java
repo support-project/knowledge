@@ -12,19 +12,24 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.KnowledgeControlBase;
+import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
+import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
+import org.support.project.knowledge.entity.KnowledgeUsersEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
-import org.support.project.knowledge.vo.LabelValue;
 import org.support.project.knowledge.vo.UploadFile;
+import org.support.project.web.bean.LabelValue;
+import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.HttpMethod;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
@@ -80,13 +85,20 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttribute("files", files);
 		
 		// 表示するグループを取得
-		//List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
 		List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
 		setAttribute("groups", groups);
 		
-		if (!super.getLoginedUser().isAdmin() && entity.getInsertUser().intValue() != super.getLoginUserId().intValue()) {
+		// 共同編集者
+		List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+		setAttribute("editors", editors);
+		// 編集権限チェック
+		LoginedUser loginedUser = super.getLoginedUser();
+		boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
+		if (!edit) {
+			setAttribute("edit", false);
 			addMsgWarn("knowledge.edit.noaccess");
-			return forward("/open/knowledge/view.jsp");
+			//return forward("/open/knowledge/view.jsp");
+			return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
 		}
 		
 		return forward("view_edit.jsp");
@@ -107,6 +119,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		//List<GroupsEntity> groups = GroupLogic.get().selectGroups(targets);
 		List<LabelValue> groups = TargetLogic.get().selectTargets(targets);
 		setAttribute("groups", groups);
+		
+		String editorsstr = super.getParam("editors");
+		String[] editordids = editorsstr.split(",");
+		List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
+		setAttribute("editors", editors);
 
 		List<Long> fileNos = new ArrayList<Long>();
 		Object obj = getParam("files", Object.class);
@@ -150,7 +167,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String tags = super.getParam("tagNames");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
 		
-		entity = knowledgeLogic.insert(entity, tagList, fileNos, groups, super.getLoginedUser());
+		entity = knowledgeLogic.insert(entity, tagList, fileNos, groups, editors, super.getLoginedUser());
 		setAttributeOnProperty(entity);
 		
 		List<UploadFile> files = fileLogic.selectOnKnowledgeId(entity.getKnowledgeId(), getRequest().getContextPath());
@@ -172,9 +189,13 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		
 		String groupsstr = super.getParam("groups");
 		String[] targets = groupsstr.split(",");
-//		List<GroupsEntity> groups = GroupLogic.get().selectGroups(targets);
 		List<LabelValue> groups = TargetLogic.get().selectTargets(targets);
 		setAttribute("groups", groups);
+		
+		String editorsstr = super.getParam("editors");
+		String[] editordids = editorsstr.split(",");
+		List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
+		setAttribute("editors", editors);
 		
 		List<Long> fileNos = new ArrayList<Long>();
 		Object obj = getParam("files", Object.class);
@@ -222,16 +243,19 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		if (check == null) {
 			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
 		}
-		if (!super.getLoginedUser().isAdmin() && check.getInsertUser().intValue() != super.getLoginUserId().intValue()) {
+		// 編集権限チェック
+		if (!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors)) {
+			setAttribute("edit", false);
 			addMsgWarn("knowledge.edit.noaccess");
-			return forward("/open/knowledge/view.jsp");
+			//return forward("/open/knowledge/view.jsp");
+			return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(entity.getKnowledgeId()));
 		}
 		
 		LOG.trace("save");
 		String tags = super.getParam("tagNames");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
 		
-		entity = knowledgeLogic.update(entity, tagList, fileNos, groups, super.getLoginedUser());
+		entity = knowledgeLogic.update(entity, tagList, fileNos, groups, editors, super.getLoginedUser());
 		setAttributeOnProperty(entity);
 		addMsgSuccess("message.success.update");
 		
@@ -266,9 +290,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		if (check == null) {
 			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
 		}
-		if (!super.getLoginedUser().isAdmin() && check.getInsertUser().intValue() != super.getLoginUserId().intValue()) {
+		List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+		if (!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors)) {
+			setAttribute("edit", false);
 			addMsgWarn("knowledge.edit.noaccess");
-			return forward("/open/knowledge/view.jsp");
+			//return forward("/open/knowledge/view.jsp");
+			return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
 		}
 		LOG.trace("save");
 		knowledgeLogic.delete(knowledgeId, getLoginedUser());
@@ -301,12 +328,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		// 共通処理呼の表示条件の保持の呼び出し
 		String params = setViewParam();
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		String comment = super.doSamy(getParam("comment"));
+		String comment = super.doSamy(getParam("addcomment"));
 		
 		// 必須チェック
 		if (StringUtils.isEmpty(comment)) {
 			addMsgWarn("errors.required", "Comment");
-			return super.devolution(HttpMethod.get, "/open.knowledge/view/" + knowledgeId + params);
+			return super.devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
 		}
 		KnowledgeLogic.get().saveComment(knowledgeId, comment);
 		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);

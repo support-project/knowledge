@@ -55,28 +55,9 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 							<i class="fa fa-thumbs-o-up"></i>&nbsp;
 							<%= jspUtil.label("knowledge.view.like") %>
 						</button>
-						
-						<a class="btn btn-link" href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
-							<i class="fa fa-thumbs-o-up"></i>&nbsp;
-							× <span id="like_count"><%= jspUtil.out("like_count") %></span>
-						</a>
-						
-						<a class="btn btn-link" href="#comments" id="commentsLink">
-							<i class="fa fa-comments-o"></i>&nbsp;
-							× <%= jspUtil.out("comments.size()") %>
-						</a>
 					</p>
 					
-					<p class="insert_info">
-						<img src="<%= request.getContextPath()%>/images/loader.gif" 
-							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("insertUser") %>" 
-							alt="icon" width="36" height="36" style="float:left" />
-						
-						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
-						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
-						</a>
-						&nbsp;&nbsp;&nbsp;
-						
+					<p>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag", 
 								jspUtil.label("label.public.view")) %>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", 
@@ -88,12 +69,51 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 							</button>
 							
 						<% } %>
-						<br/>
+					
+						<a class="btn btn-link" href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
+							<i class="fa fa-thumbs-o-up"></i>&nbsp;
+							× <span id="like_count"><%= jspUtil.out("like_count") %></span>
+						</a>
 						
+						<a class="btn btn-link" href="#comments" id="commentsLink">
+							<i class="fa fa-comments-o"></i>&nbsp;
+							× <%= jspUtil.out("comments.size()") %>
+						</a>
+					</p>
+					
+					
+					<p class="insert_info">
+						<div class="saveType">
+						[<%= jspUtil.label("label.registration") %>]
+						</div>
+						<img src="<%= request.getContextPath()%>/images/loader.gif" 
+							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("insertUser") %>" 
+							alt="icon" width="36" height="36" style="float:left" />
 						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("insertUser") %>">
 						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("insertUserName", JspUtil.ESCAPE_CLEAR) %>
 						</a>
+						<br/>
+						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
+						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("insertDatetime")%>
+						</a>
 					</p>
+					
+					<p class="insert_info">
+						<div class="saveType">
+						[<%= jspUtil.label("label.update") %>]
+						</div>
+						<img src="<%= request.getContextPath()%>/images/loader.gif" 
+							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("updateUser") %>" 
+							alt="icon" width="36" height="36" style="float:left" />
+						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("updateUser") %>">
+						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("updateUserName", JspUtil.ESCAPE_CLEAR) %>
+						</a>
+						<br/>
+						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
+						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
+						</a>
+					</p>
+					
 					
 					<c:forEach var="file" items="${files}" >
 						<p>
@@ -113,8 +133,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 	</div>
 	
 	<% if (request.getRemoteUser() != null) { 
-		if (request.isUserInRole("admin") 
-			|| jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
+		if ((boolean) request.getAttribute("edit")) { %>
 		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>"
 		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
 		<%= jspUtil.label("label.edit") %>
@@ -174,7 +193,13 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 	
 	<% if (request.getRemoteUser() != null) { %>
 		<form action="<%= request.getContextPath()%>/protect.knowledge/comment/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" method="post" role="form">
-		<textarea class="form-control" name="comment" rows="1" placeholder="Comment" id="comment"></textarea>
+		<textarea class="form-control" name="addcomment" rows="1" placeholder="Comment" id="comment"><%= jspUtil.out("addcomment") %></textarea>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/objects" data-target="#emojiObjectsModal">objects</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
+		<br/>
 		
 	<% if (jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
 		<button type="button" class="btn btn-info" onclick="previewans();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
@@ -199,12 +224,15 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 
 
 <p class="preview markdown" id="preview"></p>
+<span style="display: none;" id="comment_text">
+</span>
 
 	
 <span style="display: none;" id="content_text">
 <%= jspUtil.out("content", JspUtil.ESCAPE_CLEAR) %>
 </span>
 
+<jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
 
 
 </c:param>

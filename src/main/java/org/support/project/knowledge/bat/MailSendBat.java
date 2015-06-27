@@ -35,6 +35,9 @@ import org.support.project.web.entity.MailsEntity;
  *
  */
 public class MailSendBat extends AbstractBat {
+	//private static final String MAIL_ENCODE = "ISO-2022-JP";
+	private static final String MAIL_ENCODE = "UTF-8";
+
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(MailSendBat.class);
 
@@ -154,12 +157,12 @@ public class MailSendBat extends AbstractBat {
 			}
 
 			MimeMessage mimeMessage = new MimeMessage(session);
-			InternetAddress toAddress = new InternetAddress(to, toName, "ISO-2022-JP");
+			InternetAddress toAddress = new InternetAddress(to, toName, MAIL_ENCODE);
 			mimeMessage.setRecipient(Message.RecipientType.TO, toAddress);
-			InternetAddress fromAddress = new InternetAddress(from, fromName, "ISO-2022-JP");
+			InternetAddress fromAddress = new InternetAddress(from, fromName, MAIL_ENCODE);
 			mimeMessage.setFrom(fromAddress);
-			mimeMessage.setSubject(title, "ISO-2022-JP");
-			mimeMessage.setText(message, "ISO-2022-JP");
+			mimeMessage.setSubject(title, MAIL_ENCODE);
+			mimeMessage.setText(message, MAIL_ENCODE);
 
 			// メールの形式を指定
 			// mimeMessage.setHeader( "Content-Type", "text/html" );

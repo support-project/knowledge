@@ -45,7 +45,6 @@
 
 <div class="container">
 ${param.PARAM_CONTENT}
-<% jspUtil.debug(); %>
 </div>
 
 
@@ -77,7 +76,6 @@ ${param.PARAM_CONTENT}
 <c:if test="${param.PARAM_SCRIPTS != null}">
 ${param.PARAM_SCRIPTS}
 </c:if>
-
 
 </body>
 </html>

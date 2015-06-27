@@ -33,7 +33,7 @@
 <body>
 
 	<div class="navbar navbar-default navbar-fixed-top">
-		<div class="container" id="myNavbar">
+		<div class="container">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="<%=request.getContextPath()%>/">
 				<i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>

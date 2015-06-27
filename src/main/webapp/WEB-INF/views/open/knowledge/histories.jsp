@@ -15,6 +15,10 @@
 	</c:param>
 
 	<c:param name="PARAM_SCRIPTS">
+	<script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
+	<script>
+	echo.init();
+	</script>
 	</c:param>
 
 	<c:param name="PARAM_CONTENT">
@@ -45,12 +49,18 @@
 
 <c:forEach var="history" items="${histories}" varStatus="status">
 	<a class="list-group-item" href="<%= request.getContextPath() %>/open.knowledge/history/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>&page=<%= jspUtil.out("page") %>&history_no=<%= jspUtil.out("history.historyNo") %>" >
+
+		<img src="<%= request.getContextPath()%>/images/loader.gif" 
+			data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("history.updateUser") %>" 
+			alt="icon" width="36" height="36" style="float:left" />
+
 		<h4 class="list-group-item-heading">
 		<%= jspUtil.out("history.historyNo") %>
 		<%= jspUtil.out("history.title") %>
 		</h4>
 		
 		<p class="list-group-item-text">
+		
 		<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("history.updateDatetime")%>
 		<i class="fa fa-user"></i>&nbsp;
 		<%= jspUtil.out("history.userName") %>

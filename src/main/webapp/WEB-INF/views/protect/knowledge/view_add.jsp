@@ -32,9 +32,13 @@ var _FAIL_UPLOAD = '<%= jspUtil.label("knowledge.edit.label.fail.upload") %>';
 var _REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.delete.upload") %>';
 var _FAIL_REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.fail.delete.upload") %>';
 var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
+var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 
 <c:forEach var="group" items="${groups}" varStatus="status">
 selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jspUtil.out("group.value") %>'});
+</c:forEach>
+<c:forEach var="editor" items="${editors}" varStatus="status">
+selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= jspUtil.out("editor.value") %>'});
 </c:forEach>
 
 </script>
@@ -53,9 +57,19 @@ selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jsp
 		<input type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="<%= jspUtil.out("title") %>">
 	</div>
 	<div class="form-group">
-		<label for="input_content"><%= jspUtil.label("knowledge.add.label.content") %></label>
-		<textarea class="form-control" name="content" rows="5" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
+		<label for="input_content"><%= jspUtil.label("knowledge.add.label.content") %>
+		<span class="helpMarkdownLabel">
+		<a data-toggle="modal" data-target="#helpMarkdownModal">Markdown supported</a>
+		</span>
+		</label>
+		<textarea class="form-control" name="content" rows="8" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/objects" data-target="#emojiObjectsModal">objects</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
+		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
 	</div>
+	
 	
 	<div class="form-group">
 		<label for="input_fileupload"><%= jspUtil.label("knowledge.add.label.files") %></label><br/>
@@ -79,14 +93,14 @@ selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jsp
 	<div class="form-group" id="files">
 	<c:forEach var="file" items="${files}" >
 		<div class="filediv" id="file-<%= jspUtil.out("file.fileNo") %>">
-			<div class="file-label">
-				<img src="<%= jspUtil.out("file.thumbnailUrl") %>" />
-				<a href="<%= jspUtil.out("file.url") %>">
-				<%= jspUtil.out("file.name") %>">
-				</a>
-			</div>
+			<div class="file-image"><img src="<%= jspUtil.out("file.thumbnailUrl") %>" /></div>
+			<div class="file-label"><a href="<%= jspUtil.out("file.url") %>"><%= jspUtil.out("file.name") %></a></div>
+			<br class="fileLabelBr"/>
 			<input type="hidden" name="files" value="<%= jspUtil.out("file.fileNo") %>" />
 			&nbsp;&nbsp;&nbsp;
+			<button type="button" class="btn btn-success" onclick="setImagePath('<%= jspUtil.out("file.url") %>', '<%= jspUtil.out("file.name") %>')">
+				<i class="fa fa-file-image-o"></i>&nbsp;<%= jspUtil.label("knowledge.edit.set.image.path") %>
+			</button>
 			<button type="button" class="btn btn-danger" onclick="removeAddedFile(<%= jspUtil.out("file.fileNo") %>)">
 				<i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %>
 			</button>
@@ -133,6 +147,17 @@ selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jsp
 		</p>
 	</div>
 	
+	<div class="form-group" id="editor_area">
+		<label for="input_groups"><%= jspUtil.label("knowledge.add.label.editors") %></label>
+		<p>
+			<input type="hidden" name="editors" id="editors" value="">
+			<span id="editorsLabel"></span>
+		</p>
+		<a id="groupselect" class="btn btn-info" data-toggle="modal" href="#editorSelectModal">
+			<i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.editors.select") %>
+		</a>
+	</div>
+	
 	<input type="hidden" name="offset" value="<%= jspUtil.out("offset") %>" />
 	<input type="hidden" name="keyword" value="<%= jspUtil.out("keyword") %>" />
 	<input type="hidden" name="tag" value="<%= jspUtil.out("tag") %>" />
@@ -151,9 +176,58 @@ selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jsp
 
 
 <p class="preview markdown" id="preview"></p>
+<span style="display: none;" id="content_text">
+</span>
 
 
+<%-- Editors --%>
+<div class="modal fade" id="editorSelectModal" tabindex="-1" role="dialog" aria-labelledby="editorModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
+				<span class="sr-only"><%= jspUtil.label("label.close") %></span></button>
+				<h4 class="modal-title" id="editorModalLabel">
+					<%= jspUtil.label("knowledge.add.label.editors.select") %>
+					<span style="font-size: 14px;" id="editorPage"></span>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div role="form" class="form-inline">
+					<input type="text" name="keyword" class="form-control" value="<%= jspUtil.out("keyword") %>" placeholder="Keyword" id="editorKeyword">
+					<button type="button" class="btn btn-success" id="editorSearchButton">
+						<i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("label.filter") %>
+					</button>
+					<button type="button" class="btn btn-default" id="editorSearchPrevious">
+						<i class="fa fa-arrow-circle-left"></i>&nbsp;<%= jspUtil.label("label.previous") %>
+					</button>
+					<button type="button" class="btn btn-default" id="editorSearchNext">
+						<%= jspUtil.label("label.next") %>&nbsp;<i class="fa fa-arrow-circle-right "></i>
+					</button>
+				</div>
+				<hr/>
+				<p>
+					<%-- 選択済みの一覧 --%>
+					<span id="selectedEditorList"></span>
+					<button type="button" class="btn btn-default" id="clearSelectedEditor">
+						<i class="fa fa-eraser"></i>&nbsp;<%= jspUtil.label("label.clear") %>&nbsp;
+					</button>
+				</p>
+				<hr/>
+				<p id="editorList">
+					<%-- 選択するための一覧 --%>
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<i class="fa fa-close"></i>&nbsp;<%= jspUtil.label("label.close") %>
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
+<%-- Targets --%>
 <div class="modal fade" id="groupSelectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
@@ -204,6 +278,11 @@ selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jsp
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+<jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
+<jsp:include page="markdown.jsp"></jsp:include>
+
 
 </c:param>
 

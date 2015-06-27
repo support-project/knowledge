@@ -12,11 +12,33 @@
 
 .filediv {
 	margin: 10px;
+	border-bottom: 1px dotted #cccccc;
+	padding-bottom: 2px;
+}
+.file-image {
+	float: left;
 }
 .file-label {
-	width: 70%;
+	height: 30px;
+	width: 40%;
+	line-height: 30px;
+	margin: 0 auto;
+	vertical-align: middle;
 	float: left;
-	vertical-align: center;
+}
+@media only screen and (max-width:767px){
+	.file-label {
+		white-space: pre;
+	}
+	.file-label:after {
+		white-space: pre;
+		content: "\A";
+	}
+}
+@media only screen and (min-width:768px){
+	.fileLabelBr {
+		display: none;
+	}
 }
 
 #drop_target {
@@ -32,4 +54,23 @@
 	.radio-inline { 
 		margin-left: 10px;
 	}
+}
+
+
+.emoji {
+	width: 24px;
+	height: 24px;
+}
+.emojis li {
+	list-style-type: none;
+}
+.emojis li .name {
+	cursor: pointer;
+	border-bottom: 1px solid gray;
+}
+.helpMarkdownLabel {
+	font-size: small;
+}
+.sampleMarkdownText {
+	word-wrap: break-word;
 }

@@ -17,6 +17,8 @@ import org.support.project.di.Container;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.KnowledgeEditGroupsDao;
+import org.support.project.knowledge.dao.KnowledgeEditUsersDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
@@ -27,6 +29,8 @@ import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
+import org.support.project.knowledge.entity.KnowledgeEditGroupsEntity;
+import org.support.project.knowledge.entity.KnowledgeEditUsersEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
@@ -39,7 +43,7 @@ import org.support.project.knowledge.entity.ViewHistoriesEntity;
 import org.support.project.knowledge.indexer.IndexingValue;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
-import org.support.project.knowledge.vo.LabelValue;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.entity.GroupsEntity;
 
@@ -107,17 +111,21 @@ public class KnowledgeLogic {
 	 * @param entity
 	 * @param tags 
 	 * @param fileNos 
+	 * @param editors 
 	 * @param groups 
 	 * @param loginedUser
 	 * @return
 	 * @throws Exception
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgesEntity insert(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos, List<LabelValue> targets, LoginedUser loginedUser) throws Exception {
+	public KnowledgesEntity insert(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos,
+			List<LabelValue> targets, List<LabelValue> editors, LoginedUser loginedUser) throws Exception {
 		// ナレッジを登録
 		entity = knowledgesDao.insert(entity);
 		// アクセス権を登録
 		saveAccessUser(entity, loginedUser, targets);
+		// 編集権を登録
+		saveEditorsUser(entity, loginedUser, editors);
 		// タグを登録
 		setTags(entity, tags);
 		
@@ -140,16 +148,19 @@ public class KnowledgeLogic {
 	}
 
 	
+
 	/**
 	 * ナレッジを更新
 	 * @param entity
 	 * @param fileNos 
+	 * @param editors 
 	 * @param loginedUser
 	 * @return
 	 * @throws Exception 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgesEntity update(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos, List<LabelValue> targets, LoginedUser loginedUser) throws Exception {
+	public KnowledgesEntity update(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos,
+			List<LabelValue> targets, List<LabelValue> editors, LoginedUser loginedUser) throws Exception {
 		// ナレッッジを更新
 		entity = knowledgesDao.update(entity);
 		// ユーザのアクセス権を解除
@@ -157,8 +168,17 @@ public class KnowledgeLogic {
 		// グループとナレッジのヒモ付を解除
 		GroupLogic groupLogic = GroupLogic.get();
 		groupLogic.removeKnowledgeGroup(entity.getKnowledgeId());
+		// 編集権限を削除
+		KnowledgeEditUsersDao editUsersDao = KnowledgeEditUsersDao.get();
+		KnowledgeEditGroupsDao editGroupsDao = KnowledgeEditGroupsDao.get();
+		editUsersDao.deleteOnKnowledgeId(entity.getKnowledgeId());
+		editGroupsDao.deleteOnKnowledgeId(entity.getKnowledgeId());
+		
+		
 		// アクセス権を登録
 		saveAccessUser(entity, loginedUser, targets);
+		// 編集権を登録
+		saveEditorsUser(entity, loginedUser, editors);
 		
 		// タグを登録
 		knowledgeTagsDao.deleteOnKnowledgeId(entity.getKnowledgeId());
@@ -168,7 +188,7 @@ public class KnowledgeLogic {
 		fileLogic.setKnowledgeFiles(entity, fileNos, loginedUser);
 		
 		// 全文検索エンジンへ登録
-		saveIndex(entity, tags, targets, loginedUser.getUserId());
+		saveIndex(entity, tags, targets, entity.getInsertUser());
 		
 		// 一覧表示用の情報を更新
 		updateKnowledgeExInfo(entity);
@@ -182,6 +202,7 @@ public class KnowledgeLogic {
 		return entity;
 	}
 	
+
 	/**
 	 * ナレッジの更新履歴を登録
 	 * @param entity
@@ -212,7 +233,49 @@ public class KnowledgeLogic {
 			}
 		}
 	}
-
+	/**
+	 * 編集権限を登録
+	 * @param entity
+	 * @param loginedUser
+	 * @param editors
+	 */
+	private void saveEditorsUser(KnowledgesEntity entity, LoginedUser loginedUser, List<LabelValue> editors) {
+		KnowledgeEditUsersDao editUsersDao = KnowledgeEditUsersDao.get();
+		KnowledgeEditGroupsDao editGroupsDao = KnowledgeEditGroupsDao.get();
+		
+		// ナレッジにアクセス可能なユーザに、自分自身をセット
+		KnowledgeEditUsersEntity editUsersEntity = new KnowledgeEditUsersEntity();
+		editUsersEntity.setKnowledgeId(entity.getKnowledgeId());
+		editUsersEntity.setUserId(loginedUser.getLoginUser().getUserId());
+		editUsersDao.save(editUsersEntity);
+		
+		// 編集権限を設定
+		if (editors != null && !editors.isEmpty()) {
+			for (int i = 0; i < editors.size(); i++) {
+				LabelValue labelValue = editors.get(i);
+				
+				Integer id = TargetLogic.get().getGroupId(labelValue.getValue());
+				if (id != Integer.MIN_VALUE) {
+					KnowledgeEditGroupsEntity editGroupsEntity = new KnowledgeEditGroupsEntity();
+					editGroupsEntity.setKnowledgeId(entity.getKnowledgeId());
+					editGroupsEntity.setGroupId(id);
+					editGroupsDao.save(editGroupsEntity);
+				} else {
+					id = TargetLogic.get().getUserId(labelValue.getValue());
+					if (id != Integer.MIN_VALUE 
+							&& loginedUser.getUserId().intValue() != id.intValue()
+							&& ALL_USER != id.intValue()
+					) {
+						editUsersEntity = new KnowledgeEditUsersEntity();
+						editUsersEntity.setKnowledgeId(entity.getKnowledgeId());
+						editUsersEntity.setUserId(id);
+						editUsersDao.save(editUsersEntity);
+					}
+				}
+			}
+		}
+	}
+	
 	
 	/**
 	 * アクセス権を登録
@@ -724,6 +787,7 @@ public class KnowledgeLogic {
 		
 		// アクセス権削除
 		knowledgeUsersDao.deleteOnKnowledgeId(knowledgeId);
+
 		// タグを削除
 		knowledgeTagsDao.deleteOnKnowledgeId(knowledgeId);
 		
@@ -732,6 +796,12 @@ public class KnowledgeLogic {
 		
 		// ナレッジにアクセス可能なグループ削除
 		GroupLogic.get().removeKnowledgeGroup(knowledgeId);
+		
+		// 編集権限を削除
+		KnowledgeEditUsersDao editUsersDao = KnowledgeEditUsersDao.get();
+		KnowledgeEditGroupsDao editGroupsDao = KnowledgeEditGroupsDao.get();
+		editUsersDao.deleteOnKnowledgeId(knowledgeId);
+		editGroupsDao.deleteOnKnowledgeId(knowledgeId);
 		
 		//全文検索エンジンから削除
 		IndexLogic indexLogic = IndexLogic.get();
@@ -850,7 +920,7 @@ public class KnowledgeLogic {
 		
 		// 更新
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
-		knowledgesDao.update(entity);
+		knowledgesDao.update(entity.getUpdateUser(), entity);
 	}
 	
 	
@@ -943,6 +1013,45 @@ public class KnowledgeLogic {
 			//添付ファイルのパースは、パースバッチに任せる（ステータスをパース待ちにしておけばバッチが処理する）
 			filesDao.changeStatus(knowledgeFilesEntity.getFileNo(), FileParseBat.PARSE_STATUS_WAIT, FileParseBat.UPDATE_USER_ID);
 		}
+	}
+
+	/**
+	 * ナレッジに対し編集権限があるかチェック
+	 * @param loginedUser
+	 * @param entity
+	 * @param editors
+	 * @return
+	 */
+	public boolean isEditor(LoginedUser loginedUser, KnowledgesEntity entity, List<LabelValue> editors) {
+		if (loginedUser == null) {
+			// ログインしていないユーザに編集権限は無し
+			return false;
+		}
+		if (loginedUser.isAdmin()) {
+			return true;
+		} else {
+			for (LabelValue labelValue : editors) {
+				Integer id = TargetLogic.get().getGroupId(labelValue.getValue());
+				if (id != Integer.MIN_VALUE) {
+					List<GroupsEntity> groups = loginedUser.getGroups();
+					if (groups != null) {
+						for (GroupsEntity groupsEntity : groups) {
+							if (groupsEntity.getGroupId().intValue() == id.intValue()) {
+								return true;
+							}
+						}
+					}
+				} else {
+					id = TargetLogic.get().getUserId(labelValue.getValue());
+					if (id != Integer.MIN_VALUE) {
+						if (id.intValue() == loginedUser.getUserId().intValue()) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 }

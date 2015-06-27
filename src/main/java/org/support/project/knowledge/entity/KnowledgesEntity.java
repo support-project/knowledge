@@ -29,6 +29,10 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 	 * 登録者の名称
 	 */
 	private String insertUserName;
+	/**
+	 * 更新者の名称
+	 */
+	private String updateUserName;
 	
 	/**
 	 * コンストラクタ
@@ -90,6 +94,20 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 	 */
 	public void setInsertUserName(String insertUserName) {
 		this.insertUserName = insertUserName;
+	}
+
+	/**
+	 * @return the updateUserName
+	 */
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	/**
+	 * @param updateUserName the updateUserName to set
+	 */
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
 	}
 	
 	

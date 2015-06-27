@@ -13,7 +13,7 @@ import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.vo.GroupUser;
-import org.support.project.knowledge.vo.LabelValue;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.config.CommonWebParameter;
 import org.support.project.web.dao.GroupsDao;

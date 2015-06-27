@@ -110,7 +110,7 @@ public class AddSampleKnowledge {
 			entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
 		}
 		List<TagsEntity> tagList = KnowledgeLogic.get().manegeTags(tags);
-		KnowledgeLogic.get().insert(entity, tagList, new ArrayList<Long>(), null, loginedUser);
+		KnowledgeLogic.get().insert(entity, tagList, new ArrayList<Long>(), null, null, loginedUser);
 		
 		LOG.info("サンプル登録 :" + org.apache.commons.lang.StringUtils.abbreviate(line, 50));
 		count++;
