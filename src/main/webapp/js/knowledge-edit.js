@@ -80,7 +80,27 @@ $(document).ready(function() {
 	 }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 	
 	var elt= $('#input_tags');
-	elt.tagsinput();
+	elt.tagsinput({
+		typeahead: {
+			source: _TAGS,
+			displayText: function(item) {
+				if (item) {
+					return item.name || item;
+				}
+				return '';
+			}
+		},
+		freeInput: true
+	});
+	elt.on('typeahead:selected', function(event, datum) {
+		console.log(datum);
+	});
+	/*
+	$('#input_tags').on('itemAdded', function(event) {
+		console.log(event);
+		$('#input_tags').tagsinput('refresh');
+	});
+	*/
 	
 	dispChangeGroupArea($('input[name="publicFlag"]:checked').val());
 	$('input[name="publicFlag"]:radio').change( function() {
@@ -176,6 +196,7 @@ $(document).ready(function() {
 		$('html,body').animate({ scrollTop: p }, 'fast');
 	});
 	
+	setUpTagSelect();
 });
 
 var getGroups = function(keyword, offset, listId, pageId, selectFunc) {

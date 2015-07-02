@@ -53,6 +53,22 @@
 		</div>
 	</c:if>
 
+	<c:if test="${!empty searchTags}">
+		<div class="row">
+			<div class="col-sm-12 selected_tag">
+			<c:forEach var="searchTag" items="${searchTags}" varStatus="status">
+			<a class="text-primary" 
+				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%=jspUtil.out("searchTag.tagId") %>" >
+					<i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("searchTag.tagName") %>
+			</a>
+			</c:forEach>
+			<a class="text-primary" 
+				href="<%= request.getContextPath() %>/open.knowledge/list" >
+					<i class="fa fa-times-circle"></i>&nbsp;
+			</a>
+			</div>
+		</div>
+	</c:if>
 
 
 
@@ -120,7 +136,7 @@
 						
 						<p style="word-break:break-all" class="content">
 						<%-- <c:out value="${knowledge.content}"></c:out>--%>
-						<%= jspUtil.out("knowledge.content", JspUtil.ESCAPE_CLEAR, 200) %>
+						<%= jspUtil.out("knowledge.content", JspUtil.ESCAPE_CLEAR, 300) %>
 						</p>
 					</div>
 				</div>

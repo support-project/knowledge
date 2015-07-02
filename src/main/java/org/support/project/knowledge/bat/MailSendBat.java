@@ -54,6 +54,7 @@ public class MailSendBat extends AbstractBat {
 			+ "@" + "[a-zA-Z0-9][a-zA-Z0-9\\-]*(\\.[a-zA-Z0-9\\-]+)*$";
 
 	public static void main(String[] args) throws Exception {
+		initLogName("MailSendBat.log");
 		AppConfig.initEnvKey("KNOWLEDGE_HOME");
 		
 		MailSendBat bat = new MailSendBat();

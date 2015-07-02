@@ -74,3 +74,10 @@
 .sampleMarkdownText {
 	word-wrap: break-word;
 }
+
+#tagDatas .name {
+	cursor: pointer;
+	border-bottom: 1px solid gray;
+}
+
+

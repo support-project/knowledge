@@ -16,6 +16,7 @@ import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.bat.KnowledgeFileClearBat;
 import org.support.project.knowledge.bat.MailSendBat;
 import org.support.project.knowledge.bat.NotifyMailBat;
+import org.support.project.knowledge.config.AppConfig;
 
 public class CronListener implements ServletContextListener {
 	
@@ -29,6 +30,9 @@ public class CronListener implements ServletContextListener {
 	
 	@Override
 	public void contextInitialized(final ServletContextEvent sce) {
+		String rootPath = AppConfig.get().getBasePath();
+		File logDir = new File(rootPath + "/logs");
+
 		service = new ScheduledThreadPoolExecutor(1);
 		fileClearfuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -37,6 +41,7 @@ public class CronListener implements ServletContextListener {
 				
 				// Java を別のVMで実行（添付ファイルの定期的なクリア）
 				JavaJob job = new JavaJob();
+				job.setCurrentDirectory(logDir);
 				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
 				job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
 				job.setMainClass(KnowledgeFileClearBat.class.getName());
@@ -52,7 +57,7 @@ public class CronListener implements ServletContextListener {
 					LOG.error("Faild clear files.", e);
 				}
 			}
-		}, 10, 60, TimeUnit.MINUTES); // 10分後に実行、60分毎に実行
+		}, 1, 60, TimeUnit.MINUTES); // 1分後に実行、60分毎に実行
 		
 		parsefuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -60,6 +65,7 @@ public class CronListener implements ServletContextListener {
 				LOG.trace("called. [parsefuture]");
 				// Java を別のVMで実行（添付ファイルの中身を抽出し検索可能にする）
 				JavaJob job = new JavaJob();
+				job.setCurrentDirectory(logDir);
 				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
 				job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
 				job.setMainClass(FileParseBat.class.getName());
@@ -75,7 +81,7 @@ public class CronListener implements ServletContextListener {
 					LOG.error("Faild parse.", e);
 				}
 			}
-		}, 120, 30, TimeUnit.SECONDS); // 30秒毎に実行
+		}, 70, 30, TimeUnit.SECONDS); // 30秒毎に実行
 		
 		mailfuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -83,6 +89,7 @@ public class CronListener implements ServletContextListener {
 				LOG.trace("called. [mailfuture]");
 				// Java を別のVMで実行（添付ファイルの中身を抽出し検索可能にする）
 				JavaJob job = new JavaJob();
+				job.setCurrentDirectory(logDir);
 				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
 				job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
 				job.setMainClass(MailSendBat.class.getName());
@@ -98,7 +105,7 @@ public class CronListener implements ServletContextListener {
 					LOG.error("Failed send mail.", e);
 				}
 			}
-		}, 120, 10, TimeUnit.SECONDS); // 10秒毎に実行
+		}, 50, 10, TimeUnit.SECONDS); // 10秒毎に実行
 		
 		notifyfuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -106,6 +113,7 @@ public class CronListener implements ServletContextListener {
 				LOG.trace("called. [notifyfuture]");
 				// Java を別のVMで実行（添付ファイルの中身を抽出し検索可能にする）
 				JavaJob job = new JavaJob();
+				job.setCurrentDirectory(logDir);
 				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
 				job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
 				job.setMainClass(NotifyMailBat.class.getName());
@@ -121,7 +129,7 @@ public class CronListener implements ServletContextListener {
 					LOG.error("Failed to Notify", e);
 				}
 			}
-		}, 120, 10, TimeUnit.SECONDS); // 10秒毎に実行
+		}, 45, 10, TimeUnit.SECONDS); // 10秒毎に実行
 
 	}
 

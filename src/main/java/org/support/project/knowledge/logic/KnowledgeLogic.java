@@ -2,6 +2,7 @@ package org.support.project.knowledge.logic;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -385,41 +386,24 @@ public class KnowledgeLogic {
 		return result;
 	}
 	
-
 	/**
-	 * ナレッジの検索
+	 * ナレッジ検索
 	 * @param keyword
+	 * @param tags
 	 * @param loginedUser
-	 * @param offset
-	 * @param limit
+	 * @param i
+	 * @param pageLimit
 	 * @return
-	 * @throws Exception
+	 * @throws Exception 
 	 */
-	public List<KnowledgesEntity> searchKnowledge(String keyword, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+	public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags,
+			LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
 		SearchingValue searchingValue = new SearchingValue();
 		searchingValue.setKeyword(keyword);
 		searchingValue.setOffset(offset);
 		searchingValue.setLimit(limit);
 		
-		if (loginedUser != null && loginedUser.isAdmin()) {
-			// 管理者の場合はユーザのアクセス権を考慮しないので、何もセットしない
-			
-// DBからの直接取得はやめた
-//			if (StringUtils.isEmpty(keyword)) {
-//				//キーワードが指定されていなければDBから直接取得
-//				List<KnowledgesEntity> list = knowledgesDao.selectKnowledge(offset, limit, loginedUser.getUserId());
-//				for (KnowledgesEntity entity : list) {
-//					entity.setContent(org.apache.commons.lang.StringUtils.abbreviate(entity.getContent(), LuceneSearcher.CONTENTS_LIMIT_LENGTH));
-//					// タグを取得（1件づつ処理するのでパフォーマンス悪いかも？）
-//					setTags(entity);
-//					// いいねの回数
-//					setLikeCount(entity);
-//					// コメント件数
-//					setCommentsCount(entity);
-//				}
-//				return list;
-//			}
-		} else {
+		if (loginedUser == null || !loginedUser.isAdmin()) {
 			searchingValue.addUser(ALL_USER);
 			Integer userId = null;
 			if (loginedUser != null) {
@@ -434,7 +418,25 @@ public class KnowledgeLogic {
 				}
 			}
 		}
+		if (tags != null && !tags.isEmpty()) {
+			for (TagsEntity tagsEntity : tags) {
+				searchingValue.addTag(tagsEntity.getTagId());
+			}
+		}
 		return searchKnowledge(searchingValue);
+	}
+
+	/**
+	 * ナレッジの検索
+	 * @param keyword
+	 * @param loginedUser
+	 * @param offset
+	 * @param limit
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgesEntity> searchKnowledge(String keyword, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+		return searchKnowledge(keyword, null, loginedUser, offset, limit);
 	}
 	
 	/**
@@ -1053,5 +1055,6 @@ public class KnowledgeLogic {
 		}
 		return false;
 	}
+
 
 }

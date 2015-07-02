@@ -162,6 +162,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String keyword = getParam("keyword");
 		String tag = getParam("tag");
 		String user = getParam("user");
+		String tagNames = getParam("tagNames");
+		
 		List<KnowledgesEntity> knowledges = new ArrayList<>();
 		if (StringUtils.isInteger(tag)) {
 			//タグを選択している
@@ -177,6 +179,23 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			UsersEntity usersEntity = UsersDao.get().selectOnKey(userId);
 			usersEntity.setPassword("");
 			setAttribute("selectedUser", usersEntity);
+		} else if (StringUtils.isNotEmpty(tagNames)) {
+			// タグとキーワードで検索
+			LOG.trace("show on Tags and keyword");
+			String[] taglist = tagNames.split(",");
+			List<TagsEntity> tags = new ArrayList<>();
+			for (String string : taglist) {
+				String tagname = string.trim();
+				if (tagname.startsWith(" ") && tagname.length() > " ".length()) {
+					tagname = tagname.substring(" ".length());
+				}
+				TagsEntity tagsEntity = tagsDao.selectOnTagName(tagname);
+				if (tagsEntity != null) {
+					tags.add(tagsEntity);
+				}
+			}
+			setAttribute("searchTags", tags);
+			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 		} else {
 			// その他(キーワード検索)
 			LOG.trace("search");
@@ -284,6 +303,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 */
 	@Get
 	public Boundary search() {
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
+
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
 		return forward("search.jsp");

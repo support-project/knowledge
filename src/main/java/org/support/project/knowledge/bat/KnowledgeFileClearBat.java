@@ -11,6 +11,7 @@ public class KnowledgeFileClearBat extends AbstractBat {
 	private static Log LOG = LogFactory.getLog(KnowledgeFileClearBat.class);
 	
 	public static void main(String[] args) {
+		initLogName("KnowledgeFileClearBat.log");
 		LOG.trace("start");
 		AppConfig.initEnvKey("KNOWLEDGE_HOME");
 		

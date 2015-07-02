@@ -14,37 +14,67 @@
 
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
-	<c:param name="PARAM_HEAD">
-	</c:param>
+<c:param name="PARAM_HEAD">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-edit.css") %>" />
+</c:param>
 
-	<c:param name="PARAM_SCRIPTS">
-	</c:param>
+<c:param name="PARAM_SCRIPTS">
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/tagselect.js") %>"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/search.js") %>"></script>
 
-	<c:param name="PARAM_CONTENT">
-		<h4 class="title"><%= jspUtil.label("knowledge.view.title") %></h4>
+<script>
+var _TAGS = [];
+<c:forEach var="tagitem" items="${tagitems}" varStatus="status">
+_TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
+</c:forEach>
 
-		<div class="row">
-			<br/>
-			<div class="col-sm-12 col-md-8">
-			<form role="search" action="<%=request.getContextPath()%><%=top%>">
-				<div class="input-group">
-					<div class="input-group-addon"><i class="fa fa-pencil-square-o"></i></div>
-					<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.search.placeholder") %>"
-						name="keyword" id="keyword" value="<%=jspUtil.out("keyword")%>" />
-					<div class="input-group-btn">
-					</div>
-				</div>
-			<br/>
-				<button class="btn btn-primary" type="submit">
-					<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("label.search") %>
-				</button>
-				<a href="<%= request.getContextPath() %>/open.knowledge/list/<%=jspUtil.out("offset")%><%= jspUtil.out("params") %>"
-				class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>
-			</form>
-			</div>
+</script>
+
+</c:param>
+
+<c:param name="PARAM_CONTENT">
+
+	<h4 class="title"><%= jspUtil.label("knowledge.search.title") %></h4>
+	
+	<form role="form" action="<%=request.getContextPath()%><%=top%>">
+	
+
+		<div class="form-group">
+			<label for="input_tag">
+			<%= jspUtil.label("knowledge.search.keyword") %>
+			</label>
+			<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.search.placeholder") %>"
+				name="keyword" id="keyword" value="<%=jspUtil.out("keyword")%>" />
 		</div>
 
-	</c:param>
+		<div class="form-group">
+			<label for="input_tag">
+			<%= jspUtil.label("knowledge.search.tags") %>
+			<span class="helpMarkdownLabel">
+			<a data-toggle="modal" data-target="#tagSelectModal">Tag Select</a>
+			</span>
+			</label>
+			<p class="tags">
+			<input type="text" class="form-control" name="tagNames" id="input_tags" data-role="tags input"
+				placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="<%= jspUtil.out("tagNames") %>" />
+			</p>
+		</div>
+
+		<button class="btn btn-primary" type="submit">
+			<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("label.search") %>
+		</button>
+		<a href="<%= request.getContextPath() %>/open.knowledge/list/<%=jspUtil.out("offset")%><%= jspUtil.out("params") %>"
+		class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>
+	</form>
+
+
+	<jsp:include page="../tag/dialog.jsp"></jsp:include>
+
+
+</c:param>
 
 </c:import>
 

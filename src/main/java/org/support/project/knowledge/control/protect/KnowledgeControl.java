@@ -12,10 +12,8 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.KnowledgeControlBase;
-import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
-import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
-import org.support.project.knowledge.entity.KnowledgeUsersEntity;
+import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
@@ -29,7 +27,6 @@ import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.HttpMethod;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
-import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
@@ -54,7 +51,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			offset = "0";
 		}
 		setAttribute("offset", offset);
-
+		
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
+		
 		return forward("view_add.jsp");
 	}
 	/**
@@ -101,6 +101,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
 		}
 		
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
+		
 		return forward("view_edit.jsp");
 	}
 	
@@ -125,6 +128,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
 		setAttribute("editors", editors);
 
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
+		
 		List<Long> fileNos = new ArrayList<Long>();
 		Object obj = getParam("files", Object.class);
 		if (obj != null) {
@@ -196,6 +202,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String[] editordids = editorsstr.split(",");
 		List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
 		setAttribute("editors", editors);
+		
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
 		
 		List<Long> fileNos = new ArrayList<Long>();
 		Object obj = getParam("files", Object.class);
@@ -285,6 +294,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			//return super.devolution("open.knowledge/list");
 			return forward("/commons/errors/server_error.jsp");
 		}
+		
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
+		
 		Long knowledgeId = new Long(id);
 		KnowledgesEntity check = dao.selectOnKey(knowledgeId);
 		if (check == null) {

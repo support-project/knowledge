@@ -14,6 +14,7 @@ import org.support.project.web.entity.SystemConfigsEntity;
 public class ReIndexingBat extends AbstractBat {
 	
 	public static void main(String[] args) throws Exception {
+		initLogName("ReIndexingBat.log");
 		AppConfig.initEnvKey("KNOWLEDGE_HOME");
 		
 		ReIndexingBat bat = new ReIndexingBat();

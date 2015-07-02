@@ -19,8 +19,6 @@ public class TagLogic {
 		return Container.getComp(TagLogic.class);
 	}
 	
-	private TagsDao tagsDao = TagsDao.get();
-	
 	/**
 	 * タグの一覧を取得
 	 * 同時に、ナレッジの件数も取得する

@@ -10,6 +10,8 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.common.validate.Validator;
 import org.support.project.common.validate.ValidatorFactory;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
@@ -30,6 +32,7 @@ import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.logic.AuthenticationLogic;
 import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 
+@DI(instance=Instance.Prototype)
 public class SignupControl extends Control {
 
 	/**

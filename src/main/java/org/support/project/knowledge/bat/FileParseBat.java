@@ -45,6 +45,7 @@ public class FileParseBat extends AbstractBat {
 	public static final String ID_PREFIX = "FILE-";
 	
 	public static void main(String[] args) throws Exception {
+		initLogName("FileParseBat.log");
 		AppConfig.initEnvKey("KNOWLEDGE_HOME");
 		
 		FileParseBat bat = new FileParseBat();

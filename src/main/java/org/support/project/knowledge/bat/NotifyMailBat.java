@@ -50,6 +50,7 @@ public class NotifyMailBat extends AbstractBat {
 	private static final DateFormat DAY_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
 
 	public static void main(String[] args) throws Exception {
+		initLogName("NotifyMailBat.log");
 		AppConfig.initEnvKey("KNOWLEDGE_HOME");
 		
 		NotifyMailBat bat = new NotifyMailBat();

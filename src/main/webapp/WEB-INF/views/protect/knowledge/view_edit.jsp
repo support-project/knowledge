@@ -19,10 +19,12 @@
 
 <c:param name="PARAM_SCRIPTS">
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/tagselect.js") %>"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-edit.js") %>"></script>
 
 <script>
@@ -39,6 +41,11 @@ selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jsp
 </c:forEach>
 <c:forEach var="editor" items="${editors}" varStatus="status">
 selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= jspUtil.out("editor.value") %>'});
+</c:forEach>
+
+var _TAGS = [];
+<c:forEach var="tagitem" items="${tagitems}" varStatus="status">
+_TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 </c:forEach>
 
 </script>
@@ -142,9 +149,14 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 	</div>
 	
 	<div class="form-group">
-		<label for="input_tag"><%= jspUtil.label("knowledge.add.label.tags") %></label>
+		<label for="input_tag">
+		<%= jspUtil.label("knowledge.add.label.tags") %>
+		<span class="helpMarkdownLabel">
+		<a data-toggle="modal" data-target="#tagSelectModal">Tag Select</a>
+		</span>
+		</label>
 		<p class="tags">
-		<input type="text" class="form-control" name="tagNames" id="input_tags" 
+		<input type="text" class="form-control" name="tagNames" id="input_tags" data-role="tags input"
 			placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="<%= jspUtil.out("tagNames") %>" />
 		</p>
 	</div>
@@ -285,6 +297,7 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 
 <jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
 <jsp:include page="markdown.jsp"></jsp:include>
+<jsp:include page="../../open/tag/dialog.jsp"></jsp:include>
 
 </c:param>
 

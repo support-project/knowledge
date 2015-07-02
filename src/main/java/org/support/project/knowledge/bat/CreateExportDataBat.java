@@ -37,6 +37,7 @@ public class CreateExportDataBat extends AbstractBat {
 	public static final String DATA_DIR = "DataExport";
 	
 	public static void main(String[] args) throws Exception {
+		initLogName("CreateExportDataBat.log");
 		LOG.trace("start");
 		AppConfig.initEnvKey("KNOWLEDGE_HOME");
 		CreateExportDataBat bat = new CreateExportDataBat();

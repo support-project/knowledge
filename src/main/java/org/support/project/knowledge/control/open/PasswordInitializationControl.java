@@ -8,6 +8,8 @@ import org.support.project.common.bean.ValidateError;
 import org.support.project.common.util.StringUtils;
 import org.support.project.common.validate.Validator;
 import org.support.project.common.validate.ValidatorFactory;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.PasswordInitializationLogic;
 import org.support.project.web.boundary.Boundary;
@@ -19,6 +21,7 @@ import org.support.project.web.dao.PasswordResetsDao;
 import org.support.project.web.entity.PasswordResetsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
+@DI(instance=Instance.Prototype)
 public class PasswordInitializationControl extends Control {
 
 	/**
