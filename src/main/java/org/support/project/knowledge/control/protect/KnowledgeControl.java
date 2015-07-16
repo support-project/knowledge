@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
@@ -111,9 +112,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * 登録する
 	 * @return
 	 * @throws Exception 
+	 * @throws ParseException 
 	 */
 	@Post
-	public Boundary add(KnowledgesEntity entity) throws Exception {
+	public Boundary add(KnowledgesEntity entity) throws Exception, ParseException {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
 		
@@ -149,8 +151,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			}
 		}
 
-		entity.setTitle(super.doSamy(entity.getTitle())); //XSS対策
-		entity.setContent(super.doSamy(entity.getContent())); //XSS対策
+		//entity.setTitle(super.sanitize(entity.getTitle())); //XSS対策
+		//entity.setContent(super.sanitize(entity.getContent())); //XSS対策
 		
 		List<ValidateError> errors = entity.validate();
 		if (!errors.isEmpty()) {
@@ -224,8 +226,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			}
 		}
 
-		entity.setTitle(super.doSamy(entity.getTitle())); //XSS対策
-		entity.setContent(super.doSamy(entity.getContent())); //XSS対策
+		//entity.setTitle(super.sanitize(entity.getTitle())); //XSS対策
+		//entity.setContent(super.sanitize(entity.getContent())); //XSS対策
 		
 		KnowledgesDao dao = Container.getComp(KnowledgesDao.class);
 		List<ValidateError> errors = entity.validate();
@@ -341,7 +343,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		// 共通処理呼の表示条件の保持の呼び出し
 		String params = setViewParam();
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		String comment = super.doSamy(getParam("addcomment"));
+		//String comment = super.sanitize(getParam("addcomment"));
+		String comment = getParam("addcomment");
 		
 		// 必須チェック
 		if (StringUtils.isEmpty(comment)) {

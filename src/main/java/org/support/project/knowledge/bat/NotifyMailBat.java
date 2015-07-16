@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import org.apache.commons.lang.ClassUtils;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.config.LocaleConfigLoader;
 import org.support.project.common.log.Log;
@@ -51,7 +52,7 @@ public class NotifyMailBat extends AbstractBat {
 
 	public static void main(String[] args) throws Exception {
 		initLogName("NotifyMailBat.log");
-		AppConfig.initEnvKey("KNOWLEDGE_HOME");
+		configInit(ClassUtils.getShortClassName(NotifyMailBat.class));
 		
 		NotifyMailBat bat = new NotifyMailBat();
 		bat.dbInit();
@@ -77,6 +78,7 @@ public class NotifyMailBat extends AbstractBat {
 			notifyQueuesDao.delete(notifyQueuesEntity);
 			//notifyQueuesDao.physicalDelete(notifyQueuesEntity);
 		}
+		LOG.info("Notify process finished. count: " + notifyQueuesEntities.size());
 	}
 	
 	/**
@@ -86,7 +88,7 @@ public class NotifyMailBat extends AbstractBat {
 	 */
 	private String makeURL(KnowledgesEntity knowledge) {
 		SystemConfigsDao dao = SystemConfigsDao.get();
-		SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
 		if (config == null) {
 			return "";
 		}
@@ -131,9 +133,15 @@ public class NotifyMailBat extends AbstractBat {
 
 	private void sendLikeMail(LikesEntity like, KnowledgesEntity knowledge, UsersEntity likeUser, UsersEntity user, MailConfig config) {
 		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
 		if (mailConfigsEntity == null) {
 			// メールの設定が登録されていなければ、送信処理は終了
+			LOG.info("mail config is not exists.");
+			return;
+		}
+		if (!StringUtils.isEmailAddress(user.getMailAddress())) {
+			// 送信先のメールアドレスが不正なので、送信処理は終了
+			LOG.warn("mail targget [" + user.getMailAddress() + "] is wrong.");
 			return;
 		}
 
@@ -141,7 +149,7 @@ public class NotifyMailBat extends AbstractBat {
 		String mailId = idGenu("Notify");
 		mailsEntity.setMailId(mailId);
 		mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
-		mailsEntity.setToAddress(user.getUserKey());
+		mailsEntity.setToAddress(user.getMailAddress());
 		mailsEntity.setToName(user.getUserName());
 		
 		String title = config.getTitle();
@@ -240,9 +248,15 @@ public class NotifyMailBat extends AbstractBat {
 	 */
 	private void sendCommentMail(CommentsEntity comment, KnowledgesEntity knowledge, UsersEntity commentUser, UsersEntity user, MailConfig config) {
 		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
 		if (mailConfigsEntity == null) {
 			// メールの設定が登録されていなければ、送信処理は終了
+			LOG.info("mail config is not exists.");
+			return;
+		}
+		if (!StringUtils.isEmailAddress(user.getMailAddress())) {
+			// 送信先のメールアドレスが不正なので、送信処理は終了
+			LOG.warn("mail targget [" + user.getMailAddress() + "] is wrong.");
 			return;
 		}
 
@@ -250,7 +264,7 @@ public class NotifyMailBat extends AbstractBat {
 		String mailId = idGenu("Notify");
 		mailsEntity.setMailId(mailId);
 		mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
-		mailsEntity.setToAddress(user.getUserKey());
+		mailsEntity.setToAddress(user.getMailAddress());
 		mailsEntity.setToName(user.getUserName());
 		
 		String title = config.getTitle();
@@ -360,9 +374,22 @@ public class NotifyMailBat extends AbstractBat {
 	 * @param users
 	 */
 	private void notifyKnowledgeUpdateToUsers(NotifyQueuesEntity notifyQueuesEntity, KnowledgesEntity knowledge, List<UsersEntity> users) {
+		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
+		if (mailConfigsEntity == null) {
+			// メールの設定が登録されていなければ、送信処理は終了
+			LOG.info("mail config is not exists.");
+			return;
+		}
+
 		for (UsersEntity usersEntity : users) {
+			if (!StringUtils.isEmailAddress(usersEntity.getMailAddress())) {
+				// 送信先のメールアドレスが不正なのでこのユーザにはメール送信しない
+				LOG.warn("mail targget [" + usersEntity.getMailAddress() + "] is wrong.");
+				continue;
+			}
 			if (LOG.isTraceEnabled()) {
-				LOG.trace("[Notify] " + usersEntity.getUserKey());
+				LOG.trace("[Notify] " + usersEntity.getMailAddress());
 			}
 			Locale locale = usersEntity.getLocale();
 			MailConfig config = null;
@@ -385,9 +412,15 @@ public class NotifyMailBat extends AbstractBat {
 	 */
 	private void insertNotifyKnowledgeUpdateMailQue(KnowledgesEntity knowledge, UsersEntity usersEntity, MailConfig config) {
 		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
 		if (mailConfigsEntity == null) {
 			// メールの設定が登録されていなければ、送信処理は終了
+			LOG.info("mail config is not exists.");
+			return;
+		}
+		if (!StringUtils.isEmailAddress(usersEntity.getMailAddress())) {
+			// 送信先のメールアドレスが不正なので、送信処理は終了
+			LOG.warn("mail targget [" + usersEntity.getMailAddress() + "] is wrong.");
 			return;
 		}
 		
@@ -395,7 +428,7 @@ public class NotifyMailBat extends AbstractBat {
 		String mailId = idGenu("Notify");
 		mailsEntity.setMailId(mailId);
 		mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
-		mailsEntity.setToAddress(usersEntity.getUserKey());
+		mailsEntity.setToAddress(usersEntity.getMailAddress());
 		mailsEntity.setToName(usersEntity.getUserName());
 		String title = config.getTitle();
 		title = title.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());

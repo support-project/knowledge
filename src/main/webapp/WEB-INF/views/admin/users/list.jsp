@@ -46,6 +46,11 @@
 		<%= jspUtil.label("label.regist.datetime") %> / <%= jspUtil.label("label.update.datetime") %>
 			<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("user.insertDatetime")%> / 
 			<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("user.updateDatetime")%>
+			<% if (jspUtil.is(1, "user.authLdap")) { %>
+			[LDAP USER]
+			<% } else { %>
+			[DB USER]
+			<% } %>
 		</p>
 		
 	</a>

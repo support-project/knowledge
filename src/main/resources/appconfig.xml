@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <app>
+	<systemName>knowledge</systemName>
 	<time_zone>Asia/Tokyo</time_zone>
 	<basePath>{user.home}/.knowledge</basePath>
 	<indexPath>{base.path}/index/</indexPath>

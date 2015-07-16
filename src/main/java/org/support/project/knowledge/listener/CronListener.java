@@ -1,6 +1,8 @@
 package org.support.project.knowledge.listener;
 
 import java.io.File;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -12,11 +14,13 @@ import org.support.project.common.bat.JavaJob;
 import org.support.project.common.bat.JobResult;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.bat.KnowledgeFileClearBat;
 import org.support.project.knowledge.bat.MailSendBat;
 import org.support.project.knowledge.bat.NotifyMailBat;
 import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.SystemConfig;
 
 public class CronListener implements ServletContextListener {
 	
@@ -32,7 +36,8 @@ public class CronListener implements ServletContextListener {
 	public void contextInitialized(final ServletContextEvent sce) {
 		String rootPath = AppConfig.get().getBasePath();
 		File logDir = new File(rootPath + "/logs");
-
+		String envValue = System.getenv(SystemConfig.KNOWLEDGE_ENV_KEY);
+		
 		service = new ScheduledThreadPoolExecutor(1);
 		fileClearfuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -45,6 +50,9 @@ public class CronListener implements ServletContextListener {
 				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
 				job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
 				job.setMainClass(KnowledgeFileClearBat.class.getName());
+				if (StringUtils.isNotEmpty(envValue)) {
+					job.addEnvironment(SystemConfig.KNOWLEDGE_ENV_KEY, envValue);
+				}
 				try {
 					JobResult result = job.execute();
 					if (LOG.isDebugEnabled()) {
@@ -69,6 +77,9 @@ public class CronListener implements ServletContextListener {
 				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
 				job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
 				job.setMainClass(FileParseBat.class.getName());
+				if (StringUtils.isNotEmpty(envValue)) {
+					job.addEnvironment(SystemConfig.KNOWLEDGE_ENV_KEY, envValue);
+				}
 				try {
 					JobResult result = job.execute();
 					if (LOG.isDebugEnabled()) {
@@ -93,6 +104,9 @@ public class CronListener implements ServletContextListener {
 				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
 				job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
 				job.setMainClass(MailSendBat.class.getName());
+				if (StringUtils.isNotEmpty(envValue)) {
+					job.addEnvironment(SystemConfig.KNOWLEDGE_ENV_KEY, envValue);
+				}
 				try {
 					JobResult result = job.execute();
 					if (LOG.isDebugEnabled()) {
@@ -117,10 +131,13 @@ public class CronListener implements ServletContextListener {
 				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
 				job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
 				job.setMainClass(NotifyMailBat.class.getName());
+				if (StringUtils.isNotEmpty(envValue)) {
+					job.addEnvironment(SystemConfig.KNOWLEDGE_ENV_KEY, envValue);
+				}
 				try {
 					JobResult result = job.execute();
-					if (LOG.isTraceEnabled()) {
-						LOG.trace("finish NotifyMailBat [result]" + result.getResultCode());
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("finish NotifyMailBat [result]" + result.getResultCode());
 					}
 					if (LOG.isTraceEnabled()) {
 						LOG.trace(result.getStdout());
@@ -130,16 +147,35 @@ public class CronListener implements ServletContextListener {
 				}
 			}
 		}, 45, 10, TimeUnit.SECONDS); // 10秒毎に実行
-
 	}
 
 	@Override
 	public void contextDestroyed(final ServletContextEvent sce) {
-		fileClearfuture.cancel(true);
-		parsefuture.cancel(true);
-		mailfuture.cancel(true);
-		notifyfuture.cancel(true);
-		service.shutdown();
+		LOG.info("finish batch processes.");
+		try {
+			fileClearfuture.cancel(true);
+			fileClearfuture.get();
+		} catch (Exception e) {
+			LOG.debug("An error has occurred in the end processing of the batch", e); // 基本は無視でOK
+		}
+		try {
+			parsefuture.cancel(true);
+			parsefuture.get();
+		} catch (Exception e) {
+			LOG.debug("An error has occurred in the end processing of the batch", e); // 基本は無視でOK
+		}
+		try {
+			mailfuture.cancel(true);
+			mailfuture.get();
+		} catch (Exception e) {
+			LOG.debug("An error has occurred in the end processing of the batch", e); // 基本は無視でOK
+		}
+		try {
+			notifyfuture.cancel(true);
+			service.shutdown();
+			notifyfuture.get();
+		} catch (Exception e) {
+			LOG.debug("An error has occurred in the end processing of the batch", e); // 基本は無視でOK
+		}
 	}
-
 }

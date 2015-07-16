@@ -340,12 +340,10 @@ var setImagePath = function(url, name) {
 
 var emoji = window.emojiParser;
 var preview = function() {
-	$.post(_CONTEXT + '/open.knowledge/escape', {
+	$.post(_CONTEXT + '/open.knowledge/marked', {
 		title : $('#input_title').val(),
 		content : $('#content').val()
 	}, function(data) {
-		$('#content_text').html(data.content);
-		
 		var html = '<div class="row">';
 		html += '<div class="col-sm-12">';
 		html += '<div class="thumbnail">';
@@ -355,7 +353,7 @@ var preview = function() {
 		html += data.title;
 		html += '</h3><hr/>';
 		html += '<p style="word-break:break-all" id="content">';
-		var content = marked($('#content_text').html());
+		var content = data.content;
 		html += content;
 		html += '</p>';
 		html += '</div>';

@@ -18,6 +18,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.lang.ClassUtils;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.PasswordUtil;
@@ -55,7 +56,7 @@ public class MailSendBat extends AbstractBat {
 
 	public static void main(String[] args) throws Exception {
 		initLogName("MailSendBat.log");
-		AppConfig.initEnvKey("KNOWLEDGE_HOME");
+		configInit(ClassUtils.getShortClassName(MailSendBat.class));
 		
 		MailSendBat bat = new MailSendBat();
 		bat.dbInit();
@@ -76,7 +77,7 @@ public class MailSendBat extends AbstractBat {
 	public void start() throws UnsupportedEncodingException, MessagingException, InvalidKeyException, NoSuchAlgorithmException,
 			NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
 		if (mailConfigsEntity == null) {
 			// メールの設定が登録されていなければ、送信処理は終了
 			return;

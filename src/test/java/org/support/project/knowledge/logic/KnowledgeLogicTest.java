@@ -7,7 +7,6 @@ import java.util.List;
 
 import net.arnx.jsonic.JSON;
 
-import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -22,8 +21,6 @@ import org.support.project.common.util.RandomUtil;
 import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
-import org.support.project.knowledge.logic.KnowledgeLogic;
-import org.support.project.knowledge.searcher.impl.LuceneSearcher;
 import org.support.project.ormapping.common.DBUserPool;
 
 @RunWith(OrderedRunner.class)

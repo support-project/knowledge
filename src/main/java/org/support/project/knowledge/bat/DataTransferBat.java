@@ -1,5 +1,6 @@
 package org.support.project.knowledge.bat;
 
+import org.apache.commons.lang.ClassUtils;
 import org.h2.tools.Server;
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.log.Log;
@@ -18,10 +19,10 @@ public class DataTransferBat extends AbstractBat implements Runnable {
 	
 	public static void main(String[] args) throws Exception {
 		initLogName("DataTransferBat.log");
-		LOG.trace("start");
-		AppConfig.initEnvKey("KNOWLEDGE_HOME");
+		configInit(ClassUtils.getShortClassName(DataTransferBat.class));
 		
 		DataTransferBat bat = new DataTransferBat();
+		bat.dbInit();
 		bat.start();
 	}
 

@@ -1,8 +1,7 @@
 package org.support.project.knowledge.config;
 
 public class SystemConfig {
-	public static final String ROLE_ADMIN = "admin";
-	public static final String ROLE_USER = "user";
+	public static final String KNOWLEDGE_ENV_KEY = "KNOWLEDGE_HOME";
 	
 	/** ユーザ登録のやりかたを判定するシステム設定のラベル */
 	public static final String USER_ADD_TYPE = "USER_ADD_TYPE";

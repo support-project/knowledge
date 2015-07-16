@@ -47,7 +47,7 @@ public class DataTransferLogic {
 		// FromのDBのDBのバージョンチェック
 		ConnectionManager.getInstance().addConnectionConfig(from);
 		SystemsDao systemsDao = SystemsDao.get();
-		SystemsEntity systemEntity = systemsDao.selectOnKey(AppConfig.SYSTEM_NAME);
+		SystemsEntity systemEntity = systemsDao.selectOnKey(AppConfig.get().getSystemName());
 		if (systemEntity == null) {
 			// Systemバージョン情報が無い未初期化のDBからコピーしてもしょうがない
 			System.out.println("Data transfer is failed.");

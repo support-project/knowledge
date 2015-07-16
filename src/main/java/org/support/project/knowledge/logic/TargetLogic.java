@@ -19,11 +19,11 @@ public class TargetLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(TargetLogic.class);
 	
-	private static final String ID_PREFIX_GROUP = "G-";
-	private static final String ID_PREFIX_USER = "U-";
+	public static final String ID_PREFIX_GROUP = "G-";
+	public static final String ID_PREFIX_USER = "U-";
 	
-	private static final String NAME_PREFIX_GROUP = "[GROUP] ";
-	private static final String NAME_PREFIX_USER = "[USER] ";
+	public static final String NAME_PREFIX_GROUP = "[GROUP] ";
+	public static final String NAME_PREFIX_USER = "[USER] ";
 	
 	public static TargetLogic get() {
 		return Container.getComp(TargetLogic.class);
@@ -163,6 +163,19 @@ public class TargetLogic {
 			}
 		}
 		return Integer.MIN_VALUE;
+	}
+
+	public List<LabelValue> selectUsersOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {
+		UsersDao usersDao = UsersDao.get();
+		List<UsersEntity> users = usersDao.selectOnKeyword(offset, limit, keyword);
+		List<LabelValue> list = new ArrayList<>();
+		for (UsersEntity user : users) {
+			LabelValue labelValue = new LabelValue();
+			labelValue.setValue(ID_PREFIX_USER + user.getUserId());
+			labelValue.setLabel(NAME_PREFIX_USER + user.getUserName());
+			list.add(labelValue);
+		}
+		return list;
 	}
 
 

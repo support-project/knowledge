@@ -8,12 +8,14 @@ $(document).ready(function(){
 		}
 	});
 	var emoji = window.emojiParser;
-	$('#content').html(marked($('#content_text').text()));
-	$('#content pre code').each(function(i, block) {
+	$('#content').find('pre code').each(function(i, block) {
 		hljs.highlightBlock(block);
 	});
-	var content = emoji($('#content').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-	$('#content').html(content);
+	
+	console.log($('#content').html());
+	var html = emoji($('#content').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+	$('#content').html(html);
+	console.log($('#content').html());
 	
 	echo.init();
 	
@@ -32,8 +34,8 @@ $(document).ready(function(){
 	});
 	
 	$('.arrow_question').each(function(i, block) {
-		var content = $(this).text().trim();
-		content = marked(content);
+		var content = $(this).html().trim();
+		//content = marked(content);
 		$(this).html(content);
 		$(this).find('pre code').each(function(i, block) {
 			hljs.highlightBlock(block);
@@ -43,8 +45,8 @@ $(document).ready(function(){
 		$(this).html(content);
 	});
 	$('.arrow_answer').each(function(i, block) {
-		var content = $(this).text().trim();
-		content = marked(content);
+		var content = $(this).html().trim();
+		//content = marked(content);
 		$(this).html(content);
 		$(this).find('pre code').each(function(i, block) {
 			hljs.highlightBlock(block);
@@ -116,11 +118,10 @@ var viewProtect = function(knowledgeId) {
 
 
 var preview = function() {
-	$.post(_CONTEXT + '/open.knowledge/escape', {
+	$.post(_CONTEXT + '/open.knowledge/marked', {
 		title : '',
 		content : $('#comment').val()
 	}, function(data) {
-		$('#comment_text').html(data.content);
 		var html = '<div class="question_Box">';
 		html += '<div class="question_image">';
 		html += '<img src="' + _CONTEXT + '/open.account/icon/' + $('#loginuser').val() + '" ';
@@ -131,7 +132,7 @@ var preview = function() {
 		html += '<div class="arrow_question">';
 		
 		html += '<p style="word-break:break-all" id="content">';
-		var content = marked($('#comment_text').html());
+		var content = data.content;
 		html += content;
 		
 		html += '</div><!-- /.arrow_question -->';
@@ -149,11 +150,10 @@ var preview = function() {
 
 
 var previewans = function() {
-	$.post(_CONTEXT + '/open.knowledge/escape', {
+	$.post(_CONTEXT + '/open.knowledge/marked', {
 		title : '',
 		content : $('#comment').val()
 	}, function(data) {
-		$('#comment_text').html(data.content);
 		var html = '<div class="question_Box">';
 		html += '<div class="answer_image">';
 		html += '<img src="' + _CONTEXT + '/open.account/icon/' + $('#loginuser').val() + '" ';
@@ -162,7 +162,7 @@ var previewans = function() {
 		html += '<div class="arrow_answer">';
 		
 		html += '<p style="word-break:break-all" id="content">';
-		var content = marked($('#comment_text').html());
+		var content = data.content;
 		html += content;
 		
 		html += '</div>';

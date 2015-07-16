@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypes;
 import org.support.project.common.config.ConfigLoader;
@@ -46,7 +47,7 @@ public class FileParseBat extends AbstractBat {
 	
 	public static void main(String[] args) throws Exception {
 		initLogName("FileParseBat.log");
-		AppConfig.initEnvKey("KNOWLEDGE_HOME");
+		configInit(ClassUtils.getShortClassName(FileParseBat.class));
 		
 		FileParseBat bat = new FileParseBat();
 		bat.dbInit();

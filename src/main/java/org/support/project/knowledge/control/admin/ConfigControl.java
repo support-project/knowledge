@@ -13,8 +13,10 @@ import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpUtil;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.dao.LdapConfigsDao;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.SystemConfigsDao;
+import org.support.project.web.entity.LdapConfigsEntity;
 import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
 
@@ -30,20 +32,28 @@ public class ConfigControl extends Control {
 	public Boundary config() {
 		SystemConfigsDao dao = SystemConfigsDao.get();
 
-		SystemConfigsEntity userAddType = dao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity userAddType = dao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.get().getSystemName());
 		if (userAddType == null) {
-			userAddType = new SystemConfigsEntity(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+			userAddType = new SystemConfigsEntity(SystemConfig.USER_ADD_TYPE, AppConfig.get().getSystemName());
 			userAddType.setConfigValue(SystemConfig.USER_ADD_TYPE_VALUE_ADMIN);
 		}
 		setAttribute("userAddType", userAddType.getConfigValue());
 
-		SystemConfigsEntity userAddNotify = dao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity userAddNotify = dao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.get().getSystemName());
 		if (userAddNotify == null) {
-			userAddNotify = new SystemConfigsEntity(SystemConfig.USER_ADD_NOTIFY, AppConfig.SYSTEM_NAME);
+			userAddNotify = new SystemConfigsEntity(SystemConfig.USER_ADD_NOTIFY, AppConfig.get().getSystemName());
 			userAddNotify.setConfigValue(SystemConfig.USER_ADD_NOTIFY_OFF);
 		}
 		setAttribute("userAddNotify", userAddNotify.getConfigValue());
 
+		LdapConfigsDao ldapConfigsDao = LdapConfigsDao.get();
+		LdapConfigsEntity ldapConfigsEntity = ldapConfigsDao.selectOnKey(AppConfig.get().getSystemName());
+		if (ldapConfigsEntity == null || ldapConfigsEntity.getAuthType() == null) {
+			setAttribute("authType", 0);
+		} else {
+			setAttribute("authType", ldapConfigsEntity.getAuthType().intValue());
+		}
+		
 		return forward("config.jsp");
 	}
 
@@ -62,7 +72,7 @@ public class ConfigControl extends Control {
 		if ((type != null && type.equals(SystemConfig.USER_ADD_TYPE_VALUE_MAIL))
 				|| (notify != null && notify.equals(SystemConfig.USER_ADD_NOTIFY_ON))) {
 			MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-			MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.SYSTEM_NAME);
+			MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
 			if (mailConfigsEntity == null) {
 				ValidateError error = new ValidateError("knowledge.config.mail.require");
 				errors.add(error);
@@ -74,11 +84,11 @@ public class ConfigControl extends Control {
 		}
 
 		SystemConfigsDao dao = SystemConfigsDao.get();
-		SystemConfigsEntity userAddType = new SystemConfigsEntity(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity userAddType = new SystemConfigsEntity(SystemConfig.USER_ADD_TYPE, AppConfig.get().getSystemName());
 		userAddType.setConfigValue(type);
 		dao.save(userAddType);
 
-		SystemConfigsEntity userAddNotify = new SystemConfigsEntity(SystemConfig.USER_ADD_NOTIFY, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity userAddNotify = new SystemConfigsEntity(SystemConfig.USER_ADD_NOTIFY, AppConfig.get().getSystemName());
 		userAddNotify.setConfigValue(notify);
 		dao.save(userAddNotify);
 
@@ -97,10 +107,10 @@ public class ConfigControl extends Control {
 	@Auth(roles = "admin")
 	public Boundary system() {
 		SystemConfigsDao dao = SystemConfigsDao.get();
-		SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
 		if (config == null) {
 			String url = HttpUtil.getContextUrl(getRequest());
-			config = new SystemConfigsEntity(SystemConfig.SYSTEM_URL, AppConfig.SYSTEM_NAME);
+			config = new SystemConfigsEntity(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
 			config.setConfigValue(url);
 			dao.save(config);
 		}
@@ -129,7 +139,7 @@ public class ConfigControl extends Control {
 		}
 
 		SystemConfigsDao dao = SystemConfigsDao.get();
-		SystemConfigsEntity config = new SystemConfigsEntity(SystemConfig.SYSTEM_URL, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity config = new SystemConfigsEntity(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
 		config.setConfigValue(systemurl);
 		dao.save(config);
 		

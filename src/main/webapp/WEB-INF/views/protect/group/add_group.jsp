@@ -45,13 +45,11 @@
 			<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.group.edit.label.protect") %>
 		</label>
 		<br/>
-		<%-- 
 		<label class="radio-inline">
 			<input type="radio" value="<%= CommonWebParameter.GROUP_CLASS_PRIVATE %>" name="groupClass" 
 				id="groupClass_private" <%= jspUtil.checked(CommonWebParameter.GROUP_CLASS_PRIVATE, "groupClass") %>/>
 			<i class="fa fa-lock"></i>&nbsp;<%= jspUtil.label("knowledge.group.edit.label.private") %>
 		</label>
-		--%>
 	</div>
 
 

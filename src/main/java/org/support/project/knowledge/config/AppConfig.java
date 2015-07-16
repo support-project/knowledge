@@ -1,11 +1,7 @@
 package org.support.project.knowledge.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.util.StringUtils;
-import org.support.project.web.bean.LabelValue;
 
 
 public class AppConfig extends org.support.project.web.config.AppConfig {
@@ -17,8 +13,6 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
 		return appConfig;
 	}
 	private static AppConfig appConfig = null;
-	
-	public static final String SYSTEM_NAME = "knowledge";
 	
 	private String indexPath;
 	

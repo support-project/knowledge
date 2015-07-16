@@ -28,6 +28,30 @@
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.config.title") %></h4>
 
+<% if(jspUtil.is(0, "authType")) { %>
+<div class="alert alert-info alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<strong>Information</strong><br/>
+	- DBに登録されているユーザでサインインします。下記のユーザの追加方法の設定は有効です。
+</div>
+<% } %>
+<% if(jspUtil.is(1, "authType")) { %>
+<div class="alert alert-warning alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<strong>Warning</strong><br/>
+	- Ldap認証のみでサインインします。下記のユーザの追加方法の設定は無効です。（ユーザの追加はLdapで行ってください）
+</div>
+<% } %>
+<% if(jspUtil.is(2, "authType")) { %>
+<div class="alert alert-success alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<strong>Information</strong><br/>
+	- Ldap認証、もしくはDBに登録されているユーザでサインインします。Ldapに登録されていれば、Ldapの情報でサインインし、なければDBに登録されているかチェックします。<br/>
+	- 下記のユーザの追加方法の設定は有効です。追加したユーザはDBに登録します。（Ldapの情報には登録しません）
+</div>
+<% } %>
+
+
 <form action="<%= request.getContextPath()%>/admin.config/save" method="post" role="form">
 
 	<div class="form-group">

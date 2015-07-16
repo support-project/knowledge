@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control.protect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.support.project.common.log.Log;
@@ -11,6 +12,7 @@ import org.support.project.web.bean.LabelValue;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.exception.InvalidParamException;
+import org.support.project.web.logic.UserLogic;
 
 public class TargetControl extends Control {
 	/** ログ */
@@ -33,10 +35,16 @@ public class TargetControl extends Control {
 		if (StringUtils.isInteger(off)) {
 			offset = Integer.parseInt(off);
 		}
-		
-		TargetLogic groupLogic = TargetLogic.get();
-		List<LabelValue> aHeads = groupLogic.selectOnKeyword(keyword, super.getLoginedUser(), offset * limit, limit);
-		return send(aHeads);
+		String filter = getParam("filter");
+		if (!StringUtils.isEmpty(filter) && "user".equals(filter)) {
+			TargetLogic groupLogic = TargetLogic.get();
+			List<LabelValue> aHeads = groupLogic.selectUsersOnKeyword(keyword, super.getLoginedUser(), offset * limit, limit);
+			return send(aHeads);
+		} else {
+			TargetLogic groupLogic = TargetLogic.get();
+			List<LabelValue> aHeads = groupLogic.selectOnKeyword(keyword, super.getLoginedUser(), offset * limit, limit);
+			return send(aHeads);
+		}
 	}
 	
 }

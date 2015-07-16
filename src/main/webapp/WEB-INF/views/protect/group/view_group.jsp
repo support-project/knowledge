@@ -55,7 +55,7 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 		</button>
 	</div>
 	</c:if>
-	<input type="hidden" name="groupId" value="<%= jspUtil.out("groupId") %>">
+	<input type="hidden" name="groupId" value="<%= jspUtil.out("groupId") %>" id="groupId">
 	<input type="hidden" name="groupKey" value="<%= jspUtil.out("groupKey") %>">
 </form>
 
@@ -84,10 +84,19 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 </c:if>
 
 <c:if test="${ belong }">
+<% if(!jspUtil.is(CommonWebParameter.GROUP_CLASS_PRIVATE, "groupClass")) { %>
 	<a href="<%= request.getContextPath() %>/protect.group/unsubscribe/<%= jspUtil.out("groupId") %>" 
 			class="btn btn-danger" role="button"><i class="fa fa-sign-out"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.unsubscribe") %>
 	</a>
+<% } %>
 </c:if>
+
+<% if(jspUtil.is(CommonWebParameter.GROUP_CLASS_PRIVATE, "groupClass") && jspUtil.is(Boolean.TRUE, "editAble")) { %>
+<%-- 非公開グループのメンバー選択 --%>
+		<a id="groupselect" class="btn btn-info" data-toggle="modal" href="#groupSelectModal">
+			<i class="fa fa-th-list"></i>&nbsp;メンバー選択
+		</a>
+<% } %>
 <p>
 
 <div class="list-group">
@@ -97,14 +106,19 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 
 <c:forEach var="user" items="${users}" varStatus="status">
 	<div class="list-group-item">
-		<h4 class="list-group-item-heading"><%= jspUtil.out("user.userName") %></h4>
+		<h4 class="list-group-item-heading">
+		<%= jspUtil.out("user.userName") %>
+		<span style="font-size: small;">
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<%= jspUtil.label("label.status") %>: 
+		<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_WAIT, "user.groupRole", jspUtil.label("knowledge.group.view.label.role.wait")) %>
+		<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_ADMIN, "user.groupRole", jspUtil.label("knowledge.group.view.label.role.admin")) %>
+		<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_MEMBER, "user.groupRole", jspUtil.label("knowledge.group.view.label.role.member")) %>
+		</span>
+		
+		</h4>
 		<p class="list-group-item-text">
-			<%= jspUtil.label("label.status") %>: 
-			<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_WAIT, "user.groupRole", jspUtil.label("knowledge.group.view.label.role.wait")) %>
-			<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_ADMIN, "user.groupRole", jspUtil.label("knowledge.group.view.label.role.admin")) %>
-			<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_MEMBER, "user.groupRole", jspUtil.label("knowledge.group.view.label.role.member")) %>
-			
-			&nbsp;&nbsp;&nbsp;&nbsp;
+		
 		<% if (jspUtil.is(Boolean.TRUE, "editAble")) { %>
 			<% if(jspUtil.is(CommonWebParameter.GROUP_ROLE_WAIT, "user.groupRole")) { %>
 			<a href="<%= request.getContextPath() %>/protect.group/accept/<%= jspUtil.out("groupId") %>?userId=<%= jspUtil.out("user.userId") %>" class="btn btn-primary">
@@ -137,7 +151,63 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 
 	<a href="<%= request.getContextPath() %>/protect.group/list"
 	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.list") %></a>
-	
+
+
+
+
+<%-- Targets --%>
+<div class="modal fade" id="groupSelectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
+				<span class="sr-only"><%= jspUtil.label("label.close") %></span></button>
+				<h4 class="modal-title" id="myModalLabel">
+					メンバー選択
+					<span style="font-size: 14px;" id="groupPage"></span>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div role="form" class="form-inline">
+					<input type="text" name="keyword" class="form-control" value="<%= jspUtil.out("keyword") %>" placeholder="Keyword" id="groupKeyword">
+					<button type="button" class="btn btn-success" id="groupSearchButton">
+						<i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("label.filter") %>
+					</button>
+					<button type="button" class="btn btn-default" id="groupSearchPrevious">
+						<i class="fa fa-arrow-circle-left"></i>&nbsp;<%= jspUtil.label("label.previous") %>
+					</button>
+					<button type="button" class="btn btn-default" id="groupSearchNext">
+						<%= jspUtil.label("label.next") %>&nbsp;<i class="fa fa-arrow-circle-right "></i>
+					</button>
+				</div>
+				<hr/>
+				<p>
+					<%-- 選択済みの一覧 --%>
+					<span id="selectedList"></span>
+					<button type="button" class="btn btn-default" id="clearSelectedGroup">
+						<i class="fa fa-eraser"></i>&nbsp;<%= jspUtil.label("label.clear") %>&nbsp;
+					</button>
+				</p>
+				<hr/>
+				<p id="groupList">
+					<%-- 選択するための一覧 --%>
+				</p>
+			</div>
+			<div class="modal-footer">
+				<span id="loading"></span>
+				<button type="button" class="btn btn-info" id="groupAdd">
+					<i class="fa fa-users"></i>&nbsp;<%= jspUtil.label("label.add") %>
+				</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<i class="fa fa-close"></i>&nbsp;<%= jspUtil.label("label.close") %>
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
 </c:param>
 
 </c:import>

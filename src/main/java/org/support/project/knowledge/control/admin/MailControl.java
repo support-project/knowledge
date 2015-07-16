@@ -32,11 +32,11 @@ public class MailControl extends Control {
 	@Auth(roles="admin")
 	public Boundary config() {
 		MailConfigsDao dao = MailConfigsDao.get();
-		MailConfigsEntity entity = dao.selectOnKey(AppConfig.SYSTEM_NAME);
+		MailConfigsEntity entity = dao.selectOnKey(AppConfig.get().getSystemName());
 		if (entity == null) {
 			entity = new MailConfigsEntity();
 		}
-		entity.setSystemName(AppConfig.SYSTEM_NAME);
+		entity.setSystemName(AppConfig.get().getSystemName());
 		entity.setSmtpPassword(""); // パスワードは送らない
 		setAttributeOnProperty(entity);
 		
@@ -105,10 +105,10 @@ public class MailControl extends Control {
 	@Auth(roles="admin")
 	public Boundary delete() {
 		MailConfigsDao dao = MailConfigsDao.get();
-		dao.physicalDelete(AppConfig.SYSTEM_NAME); // 物理削除で消してしまう
+		dao.physicalDelete(AppConfig.get().getSystemName()); // 物理削除で消してしまう
 		
 		MailConfigsEntity entity = new MailConfigsEntity();
-		entity.setSystemName(AppConfig.SYSTEM_NAME);
+		entity.setSystemName(AppConfig.get().getSystemName());
 		setAttributeOnProperty(entity);
 		
 		addMsgInfo("message.success.delete.target", getResource("knowledge.config.mail"));

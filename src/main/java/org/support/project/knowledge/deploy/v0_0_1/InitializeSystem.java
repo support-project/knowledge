@@ -1,8 +1,8 @@
 package org.support.project.knowledge.deploy.v0_0_1;
 
-import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.deploy.Migrate;
 import org.support.project.ormapping.tool.dao.InitializeDao;
+import org.support.project.web.config.WebConfig;
 import org.support.project.web.dao.RolesDao;
 import org.support.project.web.dao.UserRolesDao;
 import org.support.project.web.dao.UsersDao;
@@ -27,13 +27,13 @@ public class InitializeSystem implements Migrate {
 		//権限の追加
 		RolesEntity adminRole = RolesEntity.get();
 		adminRole.setRoleId(1);
-		adminRole.setRoleKey(SystemConfig.ROLE_ADMIN);
+		adminRole.setRoleKey(WebConfig.ROLE_ADMIN);
 		adminRole.setRoleName("Administrator");
 		RolesDao.get().insert(adminRole);
 		
 		RolesEntity userRole = RolesEntity.get();
 		userRole.setRoleId(2);
-		userRole.setRoleKey(SystemConfig.ROLE_USER);
+		userRole.setRoleKey(WebConfig.ROLE_USER);
 		userRole.setRoleName("User");
 		RolesDao.get().insert(userRole);
 		
@@ -61,7 +61,8 @@ public class InitializeSystem implements Migrate {
 		
 		String[] sqlpaths = {
 				"/org/support/project/web/database/ddl.sql",
-				"/org/support/project/knowledge/database/ddl.sql"
+				"/org/support/project/knowledge/database/ddl.sql",
+				"/org/support/project/knowledge/database/init_datas.sql"
 		};
 		initializeDao.initializeDatabase(sqlpaths);
 	}
