@@ -1,31 +1,21 @@
 package org.support.project.knowledge.logic;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
-import java.util.UUID;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.bean.ValidateError;
-import org.support.project.common.config.LocaleConfigLoader;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.di.Container;
-import org.support.project.knowledge.bat.MailSendBat;
-import org.support.project.knowledge.config.AppConfig;
-import org.support.project.knowledge.config.MailConfig;
-import org.support.project.knowledge.config.SystemConfig;
-import org.support.project.web.dao.MailsDao;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.web.dao.PasswordResetsDao;
-import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
-import org.support.project.web.entity.MailsEntity;
 import org.support.project.web.entity.PasswordResetsEntity;
-import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
+@DI(instance=Instance.Singleton)
 public class PasswordInitializationLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(PasswordInitializationLogic.class);

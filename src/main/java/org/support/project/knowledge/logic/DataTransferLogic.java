@@ -21,6 +21,8 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.DateUtils;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.ormapping.config.ConnectionConfig;
@@ -31,6 +33,7 @@ import org.support.project.ormapping.transaction.TransactionManager;
 import org.support.project.web.dao.SystemsDao;
 import org.support.project.web.entity.SystemsEntity;
 
+@DI(instance=Instance.Singleton)
 public class DataTransferLogic {
 	private static final String TRANSFER_REQEST = "TRANSFER_REQEST";
 	private static final String TRANSFER_REQEST_BACK = "TRANSFER_REQEST_BACK";

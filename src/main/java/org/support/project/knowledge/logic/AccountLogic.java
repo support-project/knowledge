@@ -17,6 +17,8 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.common.validate.Validator;
 import org.support.project.common.validate.ValidatorFactory;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.AccountImagesDao;
 import org.support.project.knowledge.entity.AccountImagesEntity;
 import org.support.project.knowledge.vo.UploadFile;
@@ -26,6 +28,7 @@ import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.ConfirmMailChangesEntity;
 import org.support.project.web.entity.UsersEntity;
 
+@DI(instance=Instance.Singleton)
 public class AccountLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(AccountLogic.class);
@@ -195,6 +198,7 @@ public class AccountLogic {
 			errors.add(error);
 		} else {
 			usersEntity.setUserKey(mailChangesEntity.getMailAddress());
+			usersEntity.setMailAddress(mailChangesEntity.getMailAddress());
 			usersDao.update(usersEntity);
 		}
 		// メール変更を無効化

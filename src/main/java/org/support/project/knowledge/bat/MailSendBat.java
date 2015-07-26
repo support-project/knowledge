@@ -89,6 +89,8 @@ public class MailSendBat extends AbstractBat {
 		for (MailsEntity mailsEntity : entities) {
 			if (mailsEntity.getToAddress().matches(MAIL_FORMAT)) {
 				mailSend(mailConfigsEntity, mailsEntity);
+				// 正常に送信できたら、物理削除
+				dao.physicalDelete(mailsEntity);
 			} else {
 				mailsEntity.setStatus(MAIL_STATUS_FORMAT_ERROR);
 				dao.save(mailsEntity);

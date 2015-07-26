@@ -1,19 +1,20 @@
 package org.support.project.knowledge.control.protect;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.exception.InvalidParamException;
-import org.support.project.web.logic.UserLogic;
 
+@DI(instance=Instance.Prototype)
 public class TargetControl extends Control {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(GroupControl.class);

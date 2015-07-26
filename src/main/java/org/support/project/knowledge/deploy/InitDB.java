@@ -13,6 +13,7 @@ import org.support.project.knowledge.deploy.v0_5_0.Migrate_0_5_0;
 import org.support.project.knowledge.deploy.v0_5_1.Migrate_0_5_1;
 import org.support.project.knowledge.deploy.v0_5_2pre2.Migrate_0_5_2pre2;
 import org.support.project.knowledge.deploy.v0_5_3pre2.Migrate_0_5_3pre2;
+import org.support.project.knowledge.deploy.v0_5_3pre3.Migrate_0_5_3pre3;
 import org.support.project.web.dao.SystemsDao;
 import org.support.project.web.entity.SystemsEntity;
 
@@ -25,7 +26,7 @@ public class InitDB {
 	private static final Map<String, Migrate> MAP = new LinkedHashMap<>();
 	
 	private static final Migrate INIT = InitializeSystem.get();
-	public static final String CURRENT = "0.5.3.pre2";
+	public static final String CURRENT = "0.5.3.pre3";
 	
 	public InitDB() {
 		super();
@@ -34,7 +35,8 @@ public class InitDB {
 		MAP.put("0.5.0", Migrate_0_5_0.get()); // 通知設定
 		MAP.put("0.5.1", Migrate_0_5_1.get()); // ナレッジの更新履歴
 		MAP.put("0.5.2.pre2", Migrate_0_5_2pre2.get()); // 共同編集
-		MAP.put(CURRENT, Migrate_0_5_3pre2.get()); // ALLグループ
+		MAP.put("0.5.3.pre2", Migrate_0_5_3pre2.get()); // ALLグループ
+		MAP.put(CURRENT, Migrate_0_5_3pre3.get()); // メールアドレス
 	}
 
 	public static void main(String[] args) throws Exception {

@@ -45,11 +45,14 @@ import org.support.project.web.entity.UsersEntity;
 
 public class NotifyMailBat extends AbstractBat {
 	/** ログ */
-	private static Log LOG = LogFactory.getLog(MailSendBat.class);
+	private static Log LOG = LogFactory.getLog(NotifyMailBat.class);
 	
 	private static final String MAIL_CONFIG_DIR = "/org/support/project/knowledge/mail/";
 	private static final DateFormat DAY_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
-
+	
+	private List<Long> sendedCommentKnowledgeIds = new ArrayList<>();
+	private List<Long> sendedLikeKnowledgeIds = new ArrayList<>();
+	
 	public static void main(String[] args) throws Exception {
 		initLogName("NotifyMailBat.log");
 		configInit(ClassUtils.getShortClassName(NotifyMailBat.class));
@@ -57,6 +60,7 @@ public class NotifyMailBat extends AbstractBat {
 		NotifyMailBat bat = new NotifyMailBat();
 		bat.dbInit();
 		bat.start();
+		LOG.info("finished");
 	}
 	
 	/**
@@ -75,8 +79,8 @@ public class NotifyMailBat extends AbstractBat {
 				notifyLikeInsert(notifyQueuesEntity);
 			}
 			// 通知のキューから削除
-			notifyQueuesDao.delete(notifyQueuesEntity);
-			//notifyQueuesDao.physicalDelete(notifyQueuesEntity);
+			//notifyQueuesDao.delete(notifyQueuesEntity);
+			notifyQueuesDao.physicalDelete(notifyQueuesEntity); // とっておいてもしょうがないので物理削除
 		}
 		LOG.info("Notify process finished. count: " + notifyQueuesEntities.size());
 	}
@@ -114,6 +118,15 @@ public class NotifyMailBat extends AbstractBat {
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
 		KnowledgesEntity knowledge = knowledgesDao.selectOnKey(like.getKnowledgeId());
 		
+		if (sendedLikeKnowledgeIds.contains(knowledge.getKnowledgeId())) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Knowledge [" + knowledge.getKnowledgeId() + "] ");
+			}
+			return;
+		} else {
+			sendedLikeKnowledgeIds.add(knowledge.getKnowledgeId());
+		}
+
 		UsersDao usersDao = UsersDao.get();
 		UsersEntity likeUser = usersDao.selectOnKey(like.getInsertUser());
 		
@@ -168,6 +181,10 @@ public class NotifyMailBat extends AbstractBat {
 		contents = contents.replace("{URL}", makeURL(knowledge));
 		
 		mailsEntity.setContent(contents);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("News email has been registered. [type] Like added. [knowledge]" + knowledge.getKnowledgeId().toString()
+					+ " [target] " + user.getMailAddress());
+		}
 		MailsDao.get().insert(mailsEntity);
 	}
 
@@ -180,6 +197,15 @@ public class NotifyMailBat extends AbstractBat {
 		CommentsEntity comment = commentsDao.selectOnKey(notifyQueuesEntity.getId());
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
 		KnowledgesEntity knowledge = knowledgesDao.selectOnKey(comment.getKnowledgeId());
+		
+		if (sendedCommentKnowledgeIds.contains(knowledge.getKnowledgeId())) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Knowledge [" + knowledge.getKnowledgeId() + "] ");
+			}
+			return;
+		} else {
+			sendedCommentKnowledgeIds.add(knowledge.getKnowledgeId());
+		}
 		
 		UsersDao usersDao = UsersDao.get();
 		UsersEntity commentUser = usersDao.selectOnKey(comment.getInsertUser());
@@ -284,6 +310,10 @@ public class NotifyMailBat extends AbstractBat {
 		contents = contents.replace("{URL}", makeURL(knowledge));
 
 		mailsEntity.setContent(contents);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("News email has been registered. [type] comment added. [knowledge]" + knowledge.getKnowledgeId().toString()
+					+ " [target] " + user.getMailAddress());
+		}
 		MailsDao.get().insert(mailsEntity);
 	}
 
@@ -441,6 +471,11 @@ public class NotifyMailBat extends AbstractBat {
 		contents = contents.replace("{URL}", makeURL(knowledge));
 
 		mailsEntity.setContent(contents);
+		
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("News email has been registered. [type] knowledge update. [knowledge]" + knowledge.getKnowledgeId().toString()
+					+ " [target] " + usersEntity.getMailAddress());
+		}
 		MailsDao.get().insert(mailsEntity);
 	}
 	

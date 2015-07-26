@@ -33,10 +33,6 @@ public class Migrate_0_5_3pre2 implements Migrate {
 			userGroupsEntity.setGroupId(0); //ALL
 			userGroupsEntity.setGroupRole(CommonWebParameter.GROUP_ROLE_MEMBER);
 			userGroupsDao.save(userGroupsEntity);
-			
-			if (StringUtils.isEmailAddress(usersEntity.getUserKey())) {
-				usersEntity.setMailAddress(usersEntity.getUserKey());
-			}
 		}
 		return true;
 	}

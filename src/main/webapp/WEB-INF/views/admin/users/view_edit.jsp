@@ -41,11 +41,11 @@ function deleteUser() {
 <form action="<%= request.getContextPath()%>/admin.users/save" method="post" role="form" id="userForm">
 <% if(jspUtil.is(1, "authLdap")) { %>
 	<div class="form-group">
-		<label for="userKey">User ID</label>
+		<label for="userKey"><%= jspUtil.label("knowledge.account.id") %></label>
 		<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("userKey") %>" readonly="readonly" />
 	</div>
 	<div class="form-group">
-		<label for="userKey">Mail Address</label>
+		<label for="userKey"><%= jspUtil.label("knowledge.account.mail") %></label>
 		<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("mailAddress") %>" readonly="readonly" />
 	</div>
 	<div class="form-group">
@@ -55,8 +55,12 @@ function deleteUser() {
 
 <% } else { %>
 	<div class="form-group">
-		<label for="userKey"><%= jspUtil.label("knowledge.signup.label.mail") %></label>
+		<label for="userKey"><%= jspUtil.label("knowledge.account.id") %></label>
 		<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("userKey") %>" />
+	</div>
+	<div class="form-group">
+		<label for="userKey"><%= jspUtil.label("knowledge.account.mail") %></label>
+		<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("mailAddress") %>" readonly="readonly" />
 	</div>
 	<div class="form-group">
 		<label for="userName"><%= jspUtil.label("knowledge.signup.label.name") %></label>

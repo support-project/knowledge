@@ -92,7 +92,7 @@ public class CronListener implements ServletContextListener {
 					LOG.error("Faild parse.", e);
 				}
 			}
-		}, 70, 30, TimeUnit.SECONDS); // 30秒毎に実行
+		}, 70, 60, TimeUnit.SECONDS); // 60秒毎に実行
 		
 		mailfuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -119,7 +119,7 @@ public class CronListener implements ServletContextListener {
 					LOG.error("Failed send mail.", e);
 				}
 			}
-		}, 50, 10, TimeUnit.SECONDS); // 10秒毎に実行
+		}, 50, 60, TimeUnit.SECONDS); // 60秒毎に実行
 		
 		notifyfuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -146,7 +146,7 @@ public class CronListener implements ServletContextListener {
 					LOG.error("Failed to Notify", e);
 				}
 			}
-		}, 45, 10, TimeUnit.SECONDS); // 10秒毎に実行
+		}, 40, 60, TimeUnit.SECONDS); // 60秒毎に実行
 	}
 
 	@Override

@@ -16,6 +16,8 @@ import org.support.project.common.bean.ValidateError;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.util.PasswordUtil;
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.web.annotation.Auth;
@@ -28,6 +30,7 @@ import org.support.project.web.entity.LdapConfigsEntity;
 import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.logic.LdapLogic;
 
+@DI(instance=Instance.Prototype)
 public class LdapControl extends Control {
 	
 	private static final String NO_CHANGE_PASSWORD = "NO_CHANGE_PASSWORD-fXLSJ_V-ZJ2E-X6c2_iGCpkE"; //パスワードを更新しなかったことを表すパスワード

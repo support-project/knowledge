@@ -10,6 +10,8 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.vo.GroupUser;
@@ -27,6 +29,7 @@ import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UserGroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
+@DI(instance=Instance.Prototype)
 public class GroupControl extends Control {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(GroupControl.class);
@@ -158,6 +161,14 @@ public class GroupControl extends Control {
 				belong = true;
 			}
 		}
+		
+		int previous = offset -1;
+		if (previous < 0) {
+			previous = 0;
+		}
+		setAttribute("offset", offset);
+		setAttribute("previous", previous);
+		setAttribute("next", offset + 1);
 		
 		setAttribute("users", users);
 		setAttribute("belong", belong);

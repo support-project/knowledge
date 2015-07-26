@@ -13,6 +13,8 @@ import org.support.project.common.bean.ValidateError;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.util.PasswordUtil;
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.web.annotation.Auth;
@@ -22,6 +24,7 @@ import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.entity.MailConfigsEntity;
 
+@DI(instance=Instance.Prototype)
 public class MailControl extends Control {
 
 	/**

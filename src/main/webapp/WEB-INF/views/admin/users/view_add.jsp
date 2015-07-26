@@ -22,6 +22,13 @@
 <h4 class="title"><%= jspUtil.label("knowledge.user.add.title") %></h4>
 
 <form action="<%= request.getContextPath()%>/admin.users/create" method="post" role="form">
+<div class="alert alert-info alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<strong>Information</strong><br/>
+	- <%= jspUtil.label("knowledge.account.id.info1") %><br/>
+	- <%= jspUtil.label("knowledge.account.id.info2") %>
+</div>
+
 
 	<div class="form-group">
 		<label for="userKey"><%= jspUtil.label("knowledge.signup.label.mail") %></label>

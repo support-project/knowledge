@@ -7,7 +7,10 @@ import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.NumberUtils;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -26,6 +29,7 @@ import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.entity.GroupsEntity;
 
+@DI(instance=Instance.Singleton)
 public class NotifyLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(NotifyLogic.class);
@@ -42,7 +46,26 @@ public class NotifyLogic {
 		// Mail通知
 		NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
 		NotifyQueuesEntity notifyQueuesEntity = notify.getQueue();
-		notifyQueuesDao.insert(notifyQueuesEntity);
+		// 重複チェックし
+		if (NumberUtils.is(notifyQueuesEntity.getType(), Notify.TYPE_KNOWLEDGE_INSERT)) {
+			// ナレッジの新規登録は必ず通知のキューに入れる
+			notifyQueuesDao.insert(notifyQueuesEntity);
+		} else if (NumberUtils.is(notifyQueuesEntity.getType(), Notify.TYPE_KNOWLEDGE_UPDATE)) {
+			// ナレッジが更新された場合、キューに「登録通知」もしくは「更新通知」が存在しているのであれば登録しない
+			NotifyQueuesEntity exist = notifyQueuesDao.selectOnTypeAndId(notifyQueuesEntity.getType(), notifyQueuesEntity.getId());
+			if (exist == null) {
+				exist = notifyQueuesDao.selectOnTypeAndId(Notify.TYPE_KNOWLEDGE_INSERT, notifyQueuesEntity.getId());
+				if (exist == null) {
+					notifyQueuesDao.insert(notifyQueuesEntity);
+				}
+			}
+		} else if (NumberUtils.is(notifyQueuesEntity.getType(), Notify.TYPE_KNOWLEDGE_LIKE)
+				|| NumberUtils.is(notifyQueuesEntity.getType(), Notify.TYPE_KNOWLEDGE_COMMENT)) {
+			NotifyQueuesEntity exist = notifyQueuesDao.selectOnTypeAndId(notifyQueuesEntity.getType(), notifyQueuesEntity.getId());
+			if (exist == null) {
+				notifyQueuesDao.insert(notifyQueuesEntity);
+			}
+		}
 		
 		// Desktop通知
 		NotifyAction notifyAction = Container.getComp(NotifyAction.class);

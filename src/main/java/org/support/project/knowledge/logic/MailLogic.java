@@ -12,6 +12,8 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.MailSendBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
@@ -30,6 +32,7 @@ import org.support.project.web.entity.ProvisionalRegistrationsEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
+@DI(instance=Instance.Singleton)
 public class MailLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(MailLogic.class);

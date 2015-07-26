@@ -135,6 +135,11 @@ public class AccountControl extends Control {
 				user.setPassword(getParam("password"));
 				user.setEncrypted(false);
 			}
+			if (StringUtils.isEmpty(user.getMailAddress())) {
+				if (StringUtils.isEmailAddress(user.getUserKey())) {
+					user.setMailAddress(user.getUserKey());
+				}
+			}
 			dao.update(user);
 		}
 		String successMsg = "message.success.update";

@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.logic.SystemConfigLogic;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpUtil;
@@ -20,6 +23,7 @@ import org.support.project.web.entity.LdapConfigsEntity;
 import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
 
+@DI(instance=Instance.Prototype)
 public class ConfigControl extends Control {
 
 	/**
@@ -115,6 +119,12 @@ public class ConfigControl extends Control {
 			dao.save(config);
 		}
 		setAttribute("systemurl", config.getConfigValue());
+		
+		config = dao.selectOnKey(SystemConfig.SYSTEM_EXPOSE_TYPE, AppConfig.get().getSystemName());
+		if (config != null) {
+			setAttribute("system_open_type", config.getConfigValue());
+		}
+		
 		return forward("system.jsp");
 	}
 
@@ -142,6 +152,19 @@ public class ConfigControl extends Control {
 		SystemConfigsEntity config = new SystemConfigsEntity(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
 		config.setConfigValue(systemurl);
 		dao.save(config);
+		
+		String system_open_type = getParam("system_open_type");
+		if (StringUtils.isNotEmpty(system_open_type)) {
+			config = new SystemConfigsEntity(SystemConfig.SYSTEM_EXPOSE_TYPE, AppConfig.get().getSystemName());
+			config.setConfigValue(system_open_type);
+			dao.save(config);
+			
+			if (SystemConfig.SYSTEM_EXPOSE_TYPE_CLOSE.equals(system_open_type)) {
+				SystemConfigLogic.get().setClose(true);
+			} else {
+				SystemConfigLogic.get().setClose(false);
+			}
+		}
 		
 		String successMsg = "message.success.save";
 		setResult(successMsg, errors);

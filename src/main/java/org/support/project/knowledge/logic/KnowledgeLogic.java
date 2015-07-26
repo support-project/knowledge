@@ -2,7 +2,6 @@ package org.support.project.knowledge.logic;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +14,8 @@ import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringJoinBuilder;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.dao.CommentsDao;
@@ -48,6 +49,7 @@ import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.entity.GroupsEntity;
 
+@DI(instance=Instance.Singleton)
 public class KnowledgeLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(KnowledgeLogic.class);
@@ -95,6 +97,15 @@ public class KnowledgeLogic {
 		}
 		
 		for (String tag : splits) {
+			tag = tag.trim();
+			if (tag.startsWith(" ")) {
+				tag = tag.substring(" ".length());
+			}
+			if (tag.startsWith("　")) {
+				tag = tag.substring("　".length());
+			}
+			
+			
 			TagsEntity tagsEntity = tagsDao.selectOnTagName(tag);
 			if (tagsEntity == null) {
 				tagsEntity = new TagsEntity();

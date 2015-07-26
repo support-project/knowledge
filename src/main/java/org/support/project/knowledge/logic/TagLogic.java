@@ -6,11 +6,14 @@ import java.util.List;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.entity.GroupsEntity;
 
+@DI(instance=Instance.Singleton)
 public class TagLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(TagLogic.class);

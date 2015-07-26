@@ -59,7 +59,10 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 	<input type="hidden" name="groupKey" value="<%= jspUtil.out("groupKey") %>">
 </form>
 
-<h4 class="title"><%= jspUtil.label("knowledge.group.view.label.member") %></h4>
+<h4 class="title">
+	<%= jspUtil.label("knowledge.group.view.label.member") %>
+	<span style="font-size: -1">page[<%= jspUtil.getValue("offset", Integer.class) + 1 %>]</span>
+</h4>
 
 <p>
 <% if(jspUtil.is(CommonWebParameter.GROUP_CLASS_PROTECT, "groupClass")) { %>
@@ -99,9 +102,25 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 <% } %>
 <p>
 
+
 <div class="list-group">
+<nav>
+	<ul class="pager">
+		<li class="previous">
+			<a href="<%= request.getContextPath() %>/protect.group/view/<%= jspUtil.out("groupId") %>?offset=<%= jspUtil.out("previous") %>">
+				<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
+			</a>
+		</li>
+		<li class="next">
+			<a href="<%= request.getContextPath() %>/protect.group/view/<%= jspUtil.out("groupId") %>?offset=<%= jspUtil.out("next") %>">
+				<%= jspUtil.label("label.next") %><span aria-hidden="true">&rarr;</span>
+			</a>
+		</li>
+	</ul>
+</nav>
+
 <c:if test="${empty users}">
-<%= jspUtil.label("knowledge.accept.label.list.empty") %>
+<%= jspUtil.label("knowledge.group.list.empty") %>
 </c:if>
 
 <c:forEach var="user" items="${users}" varStatus="status">
@@ -143,6 +162,22 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 	</div>
 		
 </c:forEach>
+
+<nav>
+	<ul class="pager">
+		<li class="previous">
+			<a href="<%= request.getContextPath() %>/protect.group/view/<%= jspUtil.out("groupId") %>?offset=<%= jspUtil.out("previous") %>">
+				<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
+			</a>
+		</li>
+		<li class="next">
+			<a href="<%= request.getContextPath() %>/protect.group/view/<%= jspUtil.out("groupId") %>?offset=<%= jspUtil.out("next") %>">
+				<%= jspUtil.label("label.next") %><span aria-hidden="true">&rarr;</span>
+			</a>
+		</li>
+	</ul>
+</nav>
+
 </div>
 
 

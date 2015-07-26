@@ -12,6 +12,11 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<style>
+.radio_block {
+	margin-bottom: 10px;
+}
+</style>
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
@@ -28,6 +33,21 @@
 		<input type="text" class="form-control" name="systemurl" id="host" placeholder="URL" value="<%= jspUtil.out("systemurl") %>" />
 	</div>
 	
+	
+	<div class="form-group">
+		<label for="authType_lock"><%= jspUtil.label("knowledge.config.system.open") %></label><br/>
+		<label class="radio-inline radio_block">
+			<input type="radio" value="<%=SystemConfig.SYSTEM_EXPOSE_TYPE_OPEN%>" name="system_open_type" 
+				id="system_open_type_open" <%=jspUtil.checked(SystemConfig.SYSTEM_EXPOSE_TYPE_OPEN, "system_open_type", true)%>/>
+			<i class="fa fa-gavel fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.system.open") %>
+		</label>
+		<br/>
+		<label class="radio-inline radio_block">
+			<input type="radio" value="<%=SystemConfig.SYSTEM_EXPOSE_TYPE_CLOSE%>" name="system_open_type" 
+				id="system_open_type_close" <%=jspUtil.checked(SystemConfig.SYSTEM_EXPOSE_TYPE_CLOSE, "system_open_type", false)%>/>
+			<i class="fa fa-lock fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.system.close") %>
+		</label>
+	</div>
 	
 	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
 </form>

@@ -24,8 +24,10 @@ public abstract class AbstractBat {
 		AppConfig.initEnvKey(SystemConfig.KNOWLEDGE_ENV_KEY);
 		String envValue = System.getenv(SystemConfig.KNOWLEDGE_ENV_KEY);
 		LOG.info(batName + " is start.");
-		LOG.info("Env [" + SystemConfig.KNOWLEDGE_ENV_KEY + "] is [" + envValue + "].");
-		LOG.info("Config :" + PropertyUtil.reflectionToString(AppConfig.get()));
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Env [" + SystemConfig.KNOWLEDGE_ENV_KEY + "] is [" + envValue + "].");
+			LOG.debug("Config :" + PropertyUtil.reflectionToString(AppConfig.get()));
+		}
 	}
 	
 	/**

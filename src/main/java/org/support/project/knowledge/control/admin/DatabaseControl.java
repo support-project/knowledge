@@ -18,6 +18,8 @@ import org.support.project.common.logic.H2DBServerLogic;
 import org.support.project.common.serialize.SerializeUtils;
 import org.support.project.common.wrapper.FileInputStreamWithDeleteWrapper;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.CreateExportDataBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
@@ -40,6 +42,7 @@ import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.logic.DBConnenctionLogic;
 
+@DI(instance=Instance.Prototype)
 public class DatabaseControl extends Control {
 	
 	/* (non-Javadoc)

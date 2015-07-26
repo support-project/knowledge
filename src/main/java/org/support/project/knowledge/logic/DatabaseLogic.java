@@ -22,8 +22,11 @@ import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.FileUtil;
 import org.support.project.common.wrapper.FileInputStreamWithDeleteWrapper;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 
+@DI(instance=Instance.Singleton)
 public class DatabaseLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(DatabaseLogic.class);

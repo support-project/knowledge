@@ -12,12 +12,15 @@ import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LoginedUser;
 
+@DI(instance=Instance.Singleton)
 public class UploadedFileLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(UploadedFileLogic.class);
