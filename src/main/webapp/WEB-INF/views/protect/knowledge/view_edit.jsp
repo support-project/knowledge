@@ -156,7 +156,7 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		</span>
 		</label>
 		<p class="tags">
-		<input type="text" class="form-control" name="tagNames" id="input_tags" data-role="tags input"
+		<input type="text" name="tagNames" id="input_tags" data-role="tags input"
 			placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="<%= jspUtil.out("tagNames") %>" />
 		</p>
 	</div>

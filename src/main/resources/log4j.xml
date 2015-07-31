@@ -43,7 +43,7 @@
 	</category>
 	
 	<category name="org.support.project.knowledge.bat">
-		<level value="DEBUG" />
+		<level value="INFO" />
 	</category>
 	<category name="org.support.project.knowledge.listener">
 		<level value="INFO" />

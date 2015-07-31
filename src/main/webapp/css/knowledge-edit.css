@@ -5,6 +5,9 @@
 
 
 .bootstrap-tagsinput { width: 100%; }
+.bootstrap-tagsinput input {
+	min-width: 300px;
+}
 
 
 .filediv {

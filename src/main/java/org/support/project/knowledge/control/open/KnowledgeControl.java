@@ -28,6 +28,7 @@ import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LikeCount;
+import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
@@ -104,7 +105,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		}
 		//Markdownを処理
 		entity.setTitle(sanitize(entity.getTitle()));
-		entity.setContent(MarkdownLogic.get().markdownToHtml(entity.getContent()));
+		MarkDown markDown = MarkdownLogic.get().markdownToHtml(entity.getContent());
+		entity.setContent(markDown.getHtml());
 		
 		setAttributeOnProperty(entity);
 		
@@ -132,7 +134,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<CommentsEntity> comments = commentsDao.selectOnKnowledgeId(knowledgeId);
 		// Markdown を処理
 		for (CommentsEntity commentsEntity : comments) {
-			commentsEntity.setComment(MarkdownLogic.get().markdownToHtml(commentsEntity.getComment()));
+			MarkDown markDown2 = MarkdownLogic.get().markdownToHtml(commentsEntity.getComment());
+			commentsEntity.setComment(markDown2.getHtml());
 		}
 		setAttribute("comments", comments);
 		
@@ -186,8 +189,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			int userId = Integer.parseInt(user);
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnUser(userId, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			UsersEntity usersEntity = UsersDao.get().selectOnKey(userId);
-			usersEntity.setPassword("");
-			setAttribute("selectedUser", usersEntity);
+			if (user != null) {
+				usersEntity.setPassword("");
+				setAttribute("selectedUser", usersEntity);
+			}
 		} else if (StringUtils.isNotEmpty(tagNames)) {
 			// タグとキーワードで検索
 			LOG.trace("show on Tags and keyword");
@@ -313,7 +318,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	public Boundary marked(KnowledgesEntity entity) throws ParseException {
 		super.setSendEscapeHtml(false);
 		entity.setTitle(sanitize(entity.getTitle()));
-		entity.setContent(MarkdownLogic.get().markdownToHtml(entity.getContent()));
+		MarkDown markDown = MarkdownLogic.get().markdownToHtml(entity.getContent());
+		entity.setContent(markDown.getHtml());
 		return super.send(entity);
 	}	
 	

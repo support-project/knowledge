@@ -3,7 +3,6 @@ package org.support.project.knowledge.logic;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.httpclient.HttpStatus;
 import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -281,7 +280,7 @@ public class GroupLogic {
 			if (groupsDao.selectAccessAbleGroup(groupId, loginedUser) == null) {
 				MessageResult messageResult = new MessageResult();
 				messageResult.setStatus(MessageStatus.Error.getValue());
-				messageResult.setCode(HttpStatus.SC_FORBIDDEN);
+				messageResult.setCode(org.support.project.web.common.HttpStatus.SC_403_FORBIDDEN);
 				return messageResult; // アクセス権がないユーザ
 			}
 		}
