@@ -2,6 +2,7 @@ package org.support.project.knowledge.bat;
 
 import java.util.List;
 
+import org.apache.commons.lang.ClassUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -14,7 +15,8 @@ import org.support.project.web.entity.SystemConfigsEntity;
 public class ReIndexingBat extends AbstractBat {
 	
 	public static void main(String[] args) throws Exception {
-		AppConfig.initEnvKey("KNOWLEDGE_HOME");
+		initLogName("ReIndexingBat.log");
+		configInit(ClassUtils.getShortClassName(ReIndexingBat.class));
 		
 		ReIndexingBat bat = new ReIndexingBat();
 		bat.dbInit(); //カスタマイズDBが設定されていてばそれを参照
@@ -23,7 +25,7 @@ public class ReIndexingBat extends AbstractBat {
 	
 	private void start() throws Exception {
 		out("start");
-		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.RE_INDEXING, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.RE_INDEXING, AppConfig.get().getSystemName());
 		if (entity != null) {
 			String[] values = entity.getConfigValue().split(",");
 			Long start = Long.valueOf(values[0].substring("start=".length()));

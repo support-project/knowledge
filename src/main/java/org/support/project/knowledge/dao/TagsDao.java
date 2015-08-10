@@ -137,4 +137,21 @@ public class TagsDao extends GenTagsDao {
 		return executeQueryList(sql, TagsEntity.class, limit, offset);
 	}
 
+
+	
+	/**
+	 * タグの一覧と、それに紐づくナレッジの件数を取得
+	 * 管理者用で、ナレッジにアクセス可能かのアクセス権限チェックはしない
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	public List<TagsEntity> selectWithKnowledgeCountOnTagName(String keyword, int offset, int limit) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectWithKnowledgeCountOnTagName.sql");
+		StringBuilder builder = new StringBuilder();
+		builder.append("%").append(keyword).append("%");
+		return executeQueryList(sql, TagsEntity.class, builder.toString(), limit, offset);
+	}
+	
+	
 }

@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypes;
 import org.support.project.common.config.ConfigLoader;
@@ -35,6 +36,7 @@ public class FileParseBat extends AbstractBat {
 	
 	public static final int PARSE_STATUS_WAIT = 0;
 	public static final int PARSE_STATUS_PARSING = 1;
+	public static final int PARSE_STATUS_ERROR_FINISHED = -100;
 	public static final int PARSE_STATUS_PARSED = 100;
 	
 	public static final int PARSE_STATUS_NO_TARGET = -1;
@@ -45,15 +47,16 @@ public class FileParseBat extends AbstractBat {
 	public static final String ID_PREFIX = "FILE-";
 	
 	public static void main(String[] args) throws Exception {
-		AppConfig.initEnvKey("KNOWLEDGE_HOME");
+		initLogName("FileParseBat.log");
+		configInit(ClassUtils.getShortClassName(FileParseBat.class));
 		
 		FileParseBat bat = new FileParseBat();
 		bat.dbInit();
 		bat.start();
+		LOG.info("finished");
 	}
 
 	private void start() throws Exception {
-		LOG.info("start");
 		KnowledgeFilesDao filesDao = KnowledgeFilesDao.get();
 		IndexLogic indexLogic = IndexLogic.get();
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
@@ -68,7 +71,8 @@ public class FileParseBat extends AbstractBat {
 			// ナレッジを取得
 			KnowledgesEntity knowledgesEntity = knowledgesDao.selectOnKey(knowledgeFilesEntity.getKnowledgeId());
 			if (knowledgesEntity == null) {
-				// 紐づくナレッジが存在していないのであれば解析はしない
+				// 紐づくナレッジが存在していないのであれば解析はしない（例えば、一度添付ファイル付きのナレッジを登録後、ナレッジを削除した場合）
+				// ナレッジに紐づいていないファイルで、かつ更新日が24時間前のものは削除される
 				filesDao.changeStatus(knowledgeFilesEntity.getFileNo(), PARSE_STATUS_NO_TARGET, UPDATE_USER_ID);
 				continue;
 			}
@@ -108,33 +112,40 @@ public class FileParseBat extends AbstractBat {
 			// パースステータスをパース中（1）に変更(もしパースでエラーが発生しても、次回から対象外になる）
 			filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_PARSING, UPDATE_USER_ID);
 			
-			// パースを実行
-			Parser parser = ParserFactory.getParser(tmp.getAbsolutePath());
-			ParseResult result = parser.parse(tmp);
-			LOG.info("content text(length): " + result.getText().length());
-			
-			// 全文検索エンジンへ登録
-			IndexingValue value = new IndexingValue();
-			value.setType(TYPE_FILE);
-			value.setId(ID_PREFIX + entity.getFileNo());
-			value.setTitle(entity.getFileName());
-			value.setContents(result.getText());
-			value.addUser(entity.getInsertUser());
-			if (knowledgesEntity.getPublicFlag() == null
-					|| KnowledgeLogic.PUBLIC_FLAG_PUBLIC == knowledgesEntity.getPublicFlag()) {
-				value.addUser(KnowledgeLogic.ALL_USER);
+			try {
+				// パースを実行
+				Parser parser = ParserFactory.getParser(tmp.getAbsolutePath());
+				ParseResult result = parser.parse(tmp);
+				LOG.info("content text(length): " + result.getText().length());
+				
+				// 全文検索エンジンへ登録
+				IndexingValue value = new IndexingValue();
+				value.setType(TYPE_FILE);
+				value.setId(ID_PREFIX + entity.getFileNo());
+				value.setTitle(entity.getFileName());
+				value.setContents(result.getText());
+				value.addUser(entity.getInsertUser());
+				if (knowledgesEntity.getPublicFlag() == null
+						|| KnowledgeLogic.PUBLIC_FLAG_PUBLIC == knowledgesEntity.getPublicFlag()) {
+					value.addUser(KnowledgeLogic.ALL_USER);
+				}
+				for (TagsEntity tagsEntity : tagsEntities) {
+					value.addTag(tagsEntity.getTagId());
+				}
+				value.setCreator(entity.getInsertUser());
+				value.setTime(entity.getUpdateDatetime().getTime()); // 更新日時をセットするので、更新日時でソート
+				indexLogic.save(value);
+				
+				// パースステータスをパース完了に変更(もしパースでエラーが発生しても、次回から対象外になる）
+				filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_PARSED, UPDATE_USER_ID);
+				
+			} catch (Exception e) {
+				// パースの解析でなんらかのエラー
+				filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_ERROR_FINISHED, UPDATE_USER_ID);
+				LOG.error("File parse error.", e);
+				throw e;
 			}
-			for (TagsEntity tagsEntity : tagsEntities) {
-				value.addTag(tagsEntity.getTagId());
-			}
-			value.setCreator(entity.getInsertUser());
-			value.setTime(entity.getUpdateDatetime().getTime()); // 更新日時をセットするので、更新日時でソート
-			indexLogic.save(value);
-			
-			// パースステータスをパース完了に変更(もしパースでエラーが発生しても、次回から対象外になる）
-			filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_PARSED, UPDATE_USER_ID);
-			
-			// 正常に終了すれば、テンポラリを削除
+			// 終了すれば、テンポラリを削除
 			tmp.delete();
 			LOG.info("deleteed: " + tmp.getAbsolutePath());
 		}

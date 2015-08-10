@@ -8,6 +8,7 @@ import javax.servlet.http.Cookie;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.support.project.common.exception.ParseException;
 import org.support.project.common.test.Order;
 import org.support.project.common.test.TestCase;
 import org.support.project.web.exception.InvalidParamException;
@@ -29,7 +30,7 @@ public class KnowledgeControlTest extends TestCase {
 	}
 	@Test
 	@Order(order= 1)
-	public void testView() throws InvalidParamException {
+	public void testView() throws InvalidParamException, ParseException {
 		KnowledgeControl control = container.getComp(KnowledgeControl.class);
 		control.view();
 	}

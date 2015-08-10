@@ -204,11 +204,13 @@ public class UsersControl extends Control {
 		// エラーが無い場合のみ登録
 		user = super.getParams(UsersEntity.class);
 		String[] roles = getRequest().getParameterValues("roles");
-		user = UserLogic.get().insert(user, roles, getLoginedUser());
+		user = UserLogic.get().insert(user, roles);
 		setAttributeOnProperty(user);
 		
 		// 登録されているロールをセット
 		setSystemRoles(user);
+		
+		UserLogic.get().insertDefaultGroup(user);
 		
 		String successMsg = "message.success.insert";
 		setResult(successMsg, errors);

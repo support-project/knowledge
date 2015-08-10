@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.lang.ClassUtils;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.serialize.SerializeUtils;
@@ -37,16 +38,18 @@ public class CreateExportDataBat extends AbstractBat {
 	public static final String DATA_DIR = "DataExport";
 	
 	public static void main(String[] args) throws Exception {
-		LOG.trace("start");
-		AppConfig.initEnvKey("KNOWLEDGE_HOME");
+		initLogName("CreateExportDataBat.log");
+		configInit(ClassUtils.getShortClassName(CreateExportDataBat.class));
+		
 		CreateExportDataBat bat = new CreateExportDataBat();
+		bat.dbInit();
 		bat.start();
 	}
 	
 	
 	private void start() throws Exception {
 		super.dbInit();
-		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.get().getSystemName());
 		if (entity == null) {
 			send("[Fail] create fail. please try again.");
 			return;

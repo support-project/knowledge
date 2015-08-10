@@ -10,15 +10,17 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.common.validate.Validator;
 import org.support.project.common.validate.ValidatorFactory;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.MailLogic;
-import org.support.project.knowledge.logic.UserLogic;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
 import org.support.project.web.config.HttpMethod;
+import org.support.project.web.config.WebConfig;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.ProvisionalRegistrationsDao;
@@ -28,8 +30,10 @@ import org.support.project.web.entity.ProvisionalRegistrationsEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.logic.AuthenticationLogic;
+import org.support.project.web.logic.UserLogic;
 import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 
+@DI(instance=Instance.Prototype)
 public class SignupControl extends Control {
 
 	/**
@@ -48,7 +52,7 @@ public class SignupControl extends Control {
 	@Post
 	public Boundary save() {
 		SystemConfigsDao systemConfigsDao = SystemConfigsDao.get();
-		SystemConfigsEntity userAddType = systemConfigsDao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity userAddType = systemConfigsDao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.get().getSystemName());
 		if (userAddType == null) {
 			// ユーザによるデータの追加は認められていない
 			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
@@ -138,8 +142,8 @@ public class SignupControl extends Control {
 	private void addUser() {
 		// エラーが無い場合のみ登録
 		UsersEntity user = super.getParams(UsersEntity.class);
-		String[] roles = {SystemConfig.ROLE_USER};
-		user = UserLogic.get().insert(user, roles, getLoginedUser());
+		String[] roles = {WebConfig.ROLE_USER};
+		user = UserLogic.get().insert(user, roles);
 		setAttributeOnProperty(user);
 		
 		// 管理者へユーザが追加されたことを通知

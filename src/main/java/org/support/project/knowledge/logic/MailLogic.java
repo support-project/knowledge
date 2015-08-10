@@ -12,11 +12,14 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.MailSendBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.config.WebConfig;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.SystemConfigsDao;
@@ -29,6 +32,7 @@ import org.support.project.web.entity.ProvisionalRegistrationsEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
+@DI(instance=Instance.Singleton)
 public class MailLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(MailLogic.class);
@@ -76,7 +80,7 @@ public class MailLogic {
 	 */
 	private CharSequence makeURL(String servletPath, String id) {
 		SystemConfigsDao dao = SystemConfigsDao.get();
-		SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
 		if (config == null) {
 			return "";
 		}
@@ -105,7 +109,7 @@ public class MailLogic {
 	 */
 	public void sendInvitation(ProvisionalRegistrationsEntity entity, String url, Locale locale) {
 		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.get().getSystemName());
 		if (mailConfigsEntity == null) {
 			// メールの設定が登録されていなければ、送信処理は終了
 			return;
@@ -143,7 +147,7 @@ public class MailLogic {
 	 */
 	public void sendAcceptedAddRequest(ProvisionalRegistrationsEntity entity, String url) {
 		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.get().getSystemName());
 		if (mailConfigsEntity == null) {
 			// メールの設定が登録されていなければ、送信処理は終了
 			return;
@@ -183,7 +187,7 @@ public class MailLogic {
 	 */
 	public void sendNotifyAddUser(UsersEntity user) {
 		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.get().getSystemName());
 		if (mailConfigsEntity == null) {
 			// メールの設定が登録されていなければ、送信処理は終了
 			return;
@@ -191,12 +195,17 @@ public class MailLogic {
 		
 		LOG.trace("sendNotifyAddUser");
 		SystemConfigsDao configsDao = SystemConfigsDao.get();
-		SystemConfigsEntity configsEntity = configsDao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity configsEntity = configsDao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.get().getSystemName());
 		if (configsEntity != null && SystemConfig.USER_ADD_NOTIFY_ON.equals(configsEntity.getConfigValue())) {
 			// 管理者へのメール通知がONなので、メールを送信する
 			UsersDao usersDao = UsersDao.get();
-			List<UsersEntity> users = usersDao.selectOnRoleKey(SystemConfig.ROLE_ADMIN);
+			List<UsersEntity> users = usersDao.selectOnRoleKey(WebConfig.ROLE_ADMIN);
 			for (UsersEntity entity : users) {
+				if (!StringUtils.isEmailAddress(entity.getMailAddress())) {
+					// 送信先のメールアドレスが不正なので、送信処理は終了
+					LOG.warn("mail targget [" + entity.getMailAddress() + "] is wrong.");
+					continue;
+				}
 				Locale locale = entity.getLocale();
 				MailConfig mailConfig = load("notify_add_user", locale);
 				
@@ -209,7 +218,7 @@ public class MailLogic {
 				String mailId = idGen("Notify");
 				mailsEntity.setMailId(mailId);
 				mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
-				mailsEntity.setToAddress(entity.getUserKey());
+				mailsEntity.setToAddress(entity.getMailAddress());
 				mailsEntity.setToName(entity.getUserName());
 				mailsEntity.setTitle(title);
 				mailsEntity.setContent(contents);
@@ -225,7 +234,7 @@ public class MailLogic {
 	 */
 	public void sendNotifyAcceptUser(ProvisionalRegistrationsEntity registrationsEntity) {
 		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.get().getSystemName());
 		if (mailConfigsEntity == null) {
 			// メールの設定が登録されていなければ、送信処理は終了
 			return;
@@ -233,12 +242,17 @@ public class MailLogic {
 		
 		LOG.trace("sendNotifyAcceptUser");
 		SystemConfigsDao configsDao = SystemConfigsDao.get();
-		SystemConfigsEntity configsEntity = configsDao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity configsEntity = configsDao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.get().getSystemName());
 		if (configsEntity != null && SystemConfig.USER_ADD_NOTIFY_ON.equals(configsEntity.getConfigValue())) {
 			// 管理者へのメール通知がONなので、メールを送信する
 			UsersDao usersDao = UsersDao.get();
-			List<UsersEntity> users = usersDao.selectOnRoleKey(SystemConfig.ROLE_ADMIN);
+			List<UsersEntity> users = usersDao.selectOnRoleKey(WebConfig.ROLE_ADMIN);
 			for (UsersEntity entity : users) {
+				if (!StringUtils.isEmailAddress(entity.getMailAddress())) {
+					// 送信先のメールアドレスが不正なので、送信処理は終了
+					LOG.warn("mail targget [" + entity.getMailAddress() + "] is wrong.");
+					continue;
+				}
 				Locale locale = entity.getLocale();
 				MailConfig mailConfig = load("notify_accept_user", locale);
 				
@@ -250,7 +264,7 @@ public class MailLogic {
 				String mailId = idGen("Notify");
 				mailsEntity.setMailId(mailId);
 				mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
-				mailsEntity.setToAddress(entity.getUserKey());
+				mailsEntity.setToAddress(entity.getMailAddress());
 				mailsEntity.setToName(entity.getUserName());
 				mailsEntity.setTitle(title);
 				mailsEntity.setContent(contents);
@@ -268,7 +282,7 @@ public class MailLogic {
 	 */
 	public void sendPasswordReset(String email, Locale locale, PasswordResetsEntity resetsEntity) {
 		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.get().getSystemName());
 		if (mailConfigsEntity == null) {
 			// メールの設定が登録されていなければ、送信処理は終了
 			return;
@@ -302,7 +316,7 @@ public class MailLogic {
 	 */
 	public void sendChangeEmailRequest(ConfirmMailChangesEntity mailChangesEntity, LoginedUser loginedUser) {
 		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.SYSTEM_NAME);
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.get().getSystemName());
 		if (mailConfigsEntity == null) {
 			// メールの設定が登録されていなければ、送信処理は終了
 			return;

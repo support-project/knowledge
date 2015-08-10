@@ -5,14 +5,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.owasp.validator.html.AntiSamy;
-import org.owasp.validator.html.CleanResults;
-import org.owasp.validator.html.Policy;
-import org.owasp.validator.html.PolicyException;
-import org.owasp.validator.html.ScanException;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.config.Resources;
+import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.log.LogLevel;
@@ -23,14 +19,12 @@ import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.common.HttpUtil;
-import org.support.project.web.util.JspUtil;
+import org.support.project.web.logic.SanitizingLogic;
 
 @DI(instance=Instance.Prototype)
 public abstract class Control extends org.support.project.web.control.Control {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(Control.class);
-
-	public static final String PATH_ANTISAMY_POLICY = JspUtil.PATH_ANTISAMY_POLICY;
 
 	public static final String MSG_INFO = "NOTIFY_MSG_INFO";
 	public static final String MSG_SUCCESS = "NOTIFY_MSG_SUCCESS";
@@ -103,17 +97,8 @@ public abstract class Control extends org.support.project.web.control.Control {
 		}
 	}
 
-	public static String doSamy(String str) throws PolicyException, ScanException {
-		Policy policy = Policy.getInstance(Control.class.getResourceAsStream(PATH_ANTISAMY_POLICY));
-		AntiSamy as = new AntiSamy();
-		CleanResults cr = as.scan(str, policy);
-		String escape = cr.getCleanHTML();
-		if (LOG.isDebugEnabled()) {
-			if (str != null && !str.equals(escape)) {
-				LOG.debug("escape string\n before:" + str + "\naftter:" + escape);
-			}
-		}
-		return escape;
+	public static String sanitize(String str) throws ParseException {
+		return SanitizingLogic.get().sanitize(str);
 	}
 
 	/* (non-Javadoc)

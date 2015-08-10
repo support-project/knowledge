@@ -8,6 +8,8 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.TargetsDao;
@@ -15,12 +17,15 @@ import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.MessageResult;
 import org.support.project.web.config.CommonWebParameter;
+import org.support.project.web.config.MessageStatus;
 import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.UserGroupsDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UserGroupsEntity;
 
+@DI(instance=Instance.Singleton)
 public class GroupLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(GroupLogic.class);
@@ -259,6 +264,47 @@ public class GroupLogic {
 	public List<GroupsEntity> selectGroupsOnKnowledgeId(Long knowledgeId) {
 		TargetsDao groupsDao = TargetsDao.get();
 		return groupsDao.selectGroupsOnKnowledgeId(knowledgeId);
+	}
+	
+	
+	/**
+	 * グループ管理者におけるユーザの追加
+	 * @param loginedUser
+	 * @param groupId
+	 * @param users
+	 * @return
+	 */
+	public MessageResult addUsers(LoginedUser loginedUser, Integer groupId, String users) {
+		GroupsDao groupsDao = GroupsDao.get();
+		if (!loginedUser.isAdmin()) {
+			if (groupsDao.selectAccessAbleGroup(groupId, loginedUser) == null) {
+				MessageResult messageResult = new MessageResult();
+				messageResult.setStatus(MessageStatus.Error.getValue());
+				messageResult.setCode(org.support.project.web.common.HttpStatus.SC_403_FORBIDDEN);
+				return messageResult; // アクセス権がないユーザ
+			}
+		}
+		
+		UserGroupsDao userGroupsDao = UserGroupsDao.get();
+		String[] split = users.split(",");
+		for (String string : split) {
+			if (string.startsWith(TargetLogic.ID_PREFIX_USER)) {
+				string = string.substring(TargetLogic.ID_PREFIX_USER.length());
+			}
+			if (StringUtils.isInteger(string)) {
+				Integer user = Integer.parseInt(string);
+				if (userGroupsDao.selectOnKey(groupId, user) == null) {
+					UserGroupsEntity userGroupsEntity = new UserGroupsEntity();
+					userGroupsEntity.setGroupId(groupId);
+					userGroupsEntity.setUserId(user);
+					userGroupsEntity.setGroupRole(CommonWebParameter.GROUP_ROLE_MEMBER);
+					userGroupsDao.insert(userGroupsEntity);
+				}
+			}
+		}
+		MessageResult messageResult = new MessageResult();
+		messageResult.setMessage("message.success.insert");
+		return messageResult;
 	}
 
 

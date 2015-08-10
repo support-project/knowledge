@@ -4,7 +4,7 @@
 	<groupId>org.support-project</groupId>
 	<artifactId>knowledge</artifactId>
 	<packaging>war</packaging>
-	<version>0.5.2</version>
+	<version>0.5.3</version>
 	<name>webapp for knowledge</name>
 	<url>https://support-project.org/</url>
 
@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>org.support-project</groupId>
 			<artifactId>web</artifactId>
-			<version>0.5.2</version>
+			<version>0.5.3</version>
 		</dependency>
 
 		<dependency>
@@ -78,7 +78,13 @@
 		<dependency>
 			<groupId>org.apache.tika</groupId>
 			<artifactId>tika-parsers</artifactId>
-			<version>1.6</version>
+			<version>1.9</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.ow2.asm</groupId>
+					<artifactId>asm-debug-all</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -97,6 +103,12 @@
 			<groupId>com.googlecode.java-diff-utils</groupId>
 			<artifactId>diffutils</artifactId>
 			<version>1.2.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.pegdown</groupId>
+			<artifactId>pegdown</artifactId>
+			<version>1.5.0</version>
 		</dependency>
 		
 	</dependencies>

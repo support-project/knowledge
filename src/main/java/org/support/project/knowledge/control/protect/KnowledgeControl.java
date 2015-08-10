@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
@@ -12,10 +13,8 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.KnowledgeControlBase;
-import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
-import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
-import org.support.project.knowledge.entity.KnowledgeUsersEntity;
+import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
@@ -29,7 +28,6 @@ import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.HttpMethod;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
-import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
@@ -54,7 +52,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			offset = "0";
 		}
 		setAttribute("offset", offset);
-
+		
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
+		
 		return forward("view_add.jsp");
 	}
 	/**
@@ -101,6 +102,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
 		}
 		
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
+		
 		return forward("view_edit.jsp");
 	}
 	
@@ -108,9 +112,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * 登録する
 	 * @return
 	 * @throws Exception 
+	 * @throws ParseException 
 	 */
 	@Post
-	public Boundary add(KnowledgesEntity entity) throws Exception {
+	public Boundary add(KnowledgesEntity entity) throws Exception, ParseException {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
 		
@@ -125,6 +130,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
 		setAttribute("editors", editors);
 
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
+		
 		List<Long> fileNos = new ArrayList<Long>();
 		Object obj = getParam("files", Object.class);
 		if (obj != null) {
@@ -143,8 +151,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			}
 		}
 
-		entity.setTitle(super.doSamy(entity.getTitle())); //XSS対策
-		entity.setContent(super.doSamy(entity.getContent())); //XSS対策
+		//entity.setTitle(super.sanitize(entity.getTitle())); //XSS対策
+		//entity.setContent(super.sanitize(entity.getContent())); //XSS対策
 		
 		List<ValidateError> errors = entity.validate();
 		if (!errors.isEmpty()) {
@@ -197,6 +205,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
 		setAttribute("editors", editors);
 		
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
+		
 		List<Long> fileNos = new ArrayList<Long>();
 		Object obj = getParam("files", Object.class);
 		if (obj != null) {
@@ -215,8 +226,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			}
 		}
 
-		entity.setTitle(super.doSamy(entity.getTitle())); //XSS対策
-		entity.setContent(super.doSamy(entity.getContent())); //XSS対策
+		//entity.setTitle(super.sanitize(entity.getTitle())); //XSS対策
+		//entity.setContent(super.sanitize(entity.getContent())); //XSS対策
 		
 		KnowledgesDao dao = Container.getComp(KnowledgesDao.class);
 		List<ValidateError> errors = entity.validate();
@@ -285,6 +296,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			//return super.devolution("open.knowledge/list");
 			return forward("/commons/errors/server_error.jsp");
 		}
+		
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
+		
 		Long knowledgeId = new Long(id);
 		KnowledgesEntity check = dao.selectOnKey(knowledgeId);
 		if (check == null) {
@@ -328,7 +343,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		// 共通処理呼の表示条件の保持の呼び出し
 		String params = setViewParam();
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		String comment = super.doSamy(getParam("addcomment"));
+		//String comment = super.sanitize(getParam("addcomment"));
+		String comment = getParam("addcomment");
 		
 		// 必須チェック
 		if (StringUtils.isEmpty(comment)) {

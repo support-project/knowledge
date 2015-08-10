@@ -25,7 +25,18 @@
 	vertical-align: middle;
 }
 
+.insert_info {
+	margin-top: 5px;
+	border-bottom: 1px solid #cccccc;
+}
 
+.downloadfile {
+	margin-top: 5px;
+}
+
+#content {
+	margin-top: 20px;
+}
 
 
 /*============================================================
@@ -68,7 +79,7 @@ Comments
 .arrow_answer:before,
 .arrow_question:after,
 .arrow_question:before {
-    top: 50%;
+    top: 30px;
     border: solid transparent;
     content: " ";
     height: 0;

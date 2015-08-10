@@ -14,6 +14,8 @@ import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringJoinBuilder;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.dao.CommentsDao;
@@ -47,6 +49,7 @@ import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.entity.GroupsEntity;
 
+@DI(instance=Instance.Singleton)
 public class KnowledgeLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(KnowledgeLogic.class);
@@ -94,6 +97,15 @@ public class KnowledgeLogic {
 		}
 		
 		for (String tag : splits) {
+			tag = tag.trim();
+			if (tag.startsWith(" ")) {
+				tag = tag.substring(" ".length());
+			}
+			if (tag.startsWith("　")) {
+				tag = tag.substring("　".length());
+			}
+			
+			
 			TagsEntity tagsEntity = tagsDao.selectOnTagName(tag);
 			if (tagsEntity == null) {
 				tagsEntity = new TagsEntity();
@@ -385,41 +397,24 @@ public class KnowledgeLogic {
 		return result;
 	}
 	
-
 	/**
-	 * ナレッジの検索
+	 * ナレッジ検索
 	 * @param keyword
+	 * @param tags
 	 * @param loginedUser
-	 * @param offset
-	 * @param limit
+	 * @param i
+	 * @param pageLimit
 	 * @return
-	 * @throws Exception
+	 * @throws Exception 
 	 */
-	public List<KnowledgesEntity> searchKnowledge(String keyword, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+	public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags,
+			LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
 		SearchingValue searchingValue = new SearchingValue();
 		searchingValue.setKeyword(keyword);
 		searchingValue.setOffset(offset);
 		searchingValue.setLimit(limit);
 		
-		if (loginedUser != null && loginedUser.isAdmin()) {
-			// 管理者の場合はユーザのアクセス権を考慮しないので、何もセットしない
-			
-// DBからの直接取得はやめた
-//			if (StringUtils.isEmpty(keyword)) {
-//				//キーワードが指定されていなければDBから直接取得
-//				List<KnowledgesEntity> list = knowledgesDao.selectKnowledge(offset, limit, loginedUser.getUserId());
-//				for (KnowledgesEntity entity : list) {
-//					entity.setContent(org.apache.commons.lang.StringUtils.abbreviate(entity.getContent(), LuceneSearcher.CONTENTS_LIMIT_LENGTH));
-//					// タグを取得（1件づつ処理するのでパフォーマンス悪いかも？）
-//					setTags(entity);
-//					// いいねの回数
-//					setLikeCount(entity);
-//					// コメント件数
-//					setCommentsCount(entity);
-//				}
-//				return list;
-//			}
-		} else {
+		if (loginedUser == null || !loginedUser.isAdmin()) {
 			searchingValue.addUser(ALL_USER);
 			Integer userId = null;
 			if (loginedUser != null) {
@@ -434,7 +429,25 @@ public class KnowledgeLogic {
 				}
 			}
 		}
+		if (tags != null && !tags.isEmpty()) {
+			for (TagsEntity tagsEntity : tags) {
+				searchingValue.addTag(tagsEntity.getTagId());
+			}
+		}
 		return searchKnowledge(searchingValue);
+	}
+
+	/**
+	 * ナレッジの検索
+	 * @param keyword
+	 * @param loginedUser
+	 * @param offset
+	 * @param limit
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgesEntity> searchKnowledge(String keyword, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+		return searchKnowledge(keyword, null, loginedUser, offset, limit);
 	}
 	
 	/**
@@ -1053,5 +1066,6 @@ public class KnowledgeLogic {
 		}
 		return false;
 	}
+
 
 }

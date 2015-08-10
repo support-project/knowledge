@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.owasp.validator.html.PolicyException;
-import org.owasp.validator.html.ScanException;
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.MessageResult;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.CommonWebParameter;
@@ -27,6 +29,7 @@ import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UserGroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
+@DI(instance=Instance.Prototype)
 public class GroupControl extends Control {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(GroupControl.class);
@@ -95,16 +98,17 @@ public class GroupControl extends Control {
 	/**
 	 * グループを追加
 	 * @return
+	 * @throws ParseException 
 	 * @throws ScanException 
 	 * @throws PolicyException 
 	 */
 	@Post
-	public Boundary add() throws PolicyException, ScanException {
+	public Boundary add() throws ParseException {
 		// 入力チェック
 		GroupsEntity groupsEntity = new GroupsEntity();
 		Map<String, String> params = super.getParams();
 		params.put("groupKey", "g-" + RandomUtil.randamGen(16));
-		params.put("groupName", super.doSamy(params.get("groupName"))); //XSS対策
+		params.put("groupName", super.sanitize(params.get("groupName"))); //XSS対策
 		
 		List<ValidateError> errors = groupsEntity.validate(params);
 		if (!errors.isEmpty()) {
@@ -158,6 +162,14 @@ public class GroupControl extends Control {
 			}
 		}
 		
+		int previous = offset -1;
+		if (previous < 0) {
+			previous = 0;
+		}
+		setAttribute("offset", offset);
+		setAttribute("previous", previous);
+		setAttribute("next", offset + 1);
+		
 		setAttribute("users", users);
 		setAttribute("belong", belong);
 		
@@ -187,15 +199,16 @@ public class GroupControl extends Control {
 	/**
 	 * グループを更新
 	 * @return
+	 * @throws ParseException 
 	 * @throws ScanException 
 	 * @throws PolicyException 
 	 */
 	@Post
-	public Boundary update() throws PolicyException, ScanException {
+	public Boundary update() throws ParseException {
 		// 入力チェック
 		GroupsEntity groupsEntity = new GroupsEntity();
 		Map<String, String> params = super.getParams();
-		params.put("groupName", super.doSamy(params.get("groupName"))); //XSS対策
+		params.put("groupName", super.sanitize(params.get("groupName"))); //XSS対策
 		
 		List<ValidateError> errors = groupsEntity.validate(params);
 		if (!errors.isEmpty()) {
@@ -371,7 +384,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException
 	 */
-	@Post
+	@Get
 	public Boundary change() throws InvalidParamException {
 		Integer groupId = super.getPathInteger(0);
 		String userIdstr = super.getParam("userId");
@@ -395,12 +408,19 @@ public class GroupControl extends Control {
 			addMsgWarn("message.allready.updated");
 		} else if (userGroupsEntity != null) {
 			if (status >= CommonWebParameter.GROUP_ROLE_MEMBER) {
+				// 権限変更
 				userGroupsEntity.setGroupRole(status);
 				userGroupsDao.save(userGroupsEntity);
-				addMsgSuccess("message.success.accept");
+				addMsgSuccess("message.success.update");
 			} else {
-				userGroupsDao.physicalDelete(userGroupsEntity);
-				addMsgSuccess("message.success.delete");
+				// グループから削除
+				if (groupId.intValue() == 0) {
+					// ALLグループから削除は出来ない
+					addMsgWarn("Can not remove user from Group [ALL].");
+				} else {
+					userGroupsDao.physicalDelete(userGroupsEntity);
+					addMsgSuccess("message.success.delete");
+				}
 			}
 		}
 		return super.devolution(HttpMethod.get, "protect.Group/view");
@@ -434,5 +454,17 @@ public class GroupControl extends Control {
 		return send(aHeads);
 	}
 	
-	
+	/**
+	 * 非公開グループにユーザを追加
+	 * @return
+	 */
+	@Post
+	public Boundary addUsers() {
+		Integer groupId = getParam("group", Integer.class);
+		String users = getParam("users");
+		GroupLogic groupLogic = GroupLogic.get();
+		MessageResult result = groupLogic.addUsers(super.getLoginedUser(), groupId, users);
+		return send(result);
+	}
+
 }

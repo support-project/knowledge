@@ -30,12 +30,37 @@ function deleteUser() {
 
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.user.edit.title") %></h4>
+<% if(jspUtil.is(1, "authLdap")) { %>
+<div class="alert alert-warning alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<strong>Warning</strong><br/>
+	- Ldapのユーザです。権限のみ更新が可能です。
+</div>
+<% } %>
 
 <form action="<%= request.getContextPath()%>/admin.users/save" method="post" role="form" id="userForm">
-
+<% if(jspUtil.is(1, "authLdap")) { %>
 	<div class="form-group">
-		<label for="userKey"><%= jspUtil.label("knowledge.signup.label.mail") %></label>
+		<label for="userKey"><%= jspUtil.label("knowledge.account.id") %></label>
+		<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("userKey") %>" readonly="readonly" />
+	</div>
+	<div class="form-group">
+		<label for="userKey"><%= jspUtil.label("knowledge.account.mail") %></label>
+		<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("mailAddress") %>" readonly="readonly" />
+	</div>
+	<div class="form-group">
+		<label for="userName"><%= jspUtil.label("knowledge.signup.label.name") %></label>
+		<input type="text" class="form-control" name="userName" id="userName" placeholder="User Name" value="<%= jspUtil.out("userName") %>" readonly="readonly" />
+	</div>
+
+<% } else { %>
+	<div class="form-group">
+		<label for="userKey"><%= jspUtil.label("knowledge.account.id") %></label>
 		<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("userKey") %>" />
+	</div>
+	<div class="form-group">
+		<label for="userKey"><%= jspUtil.label("knowledge.account.mail") %></label>
+		<input type="text" class="form-control" name="userKey" id="userKey" placeholder="Mail Address" value="<%= jspUtil.out("mailAddress") %>" readonly="readonly" />
 	</div>
 	<div class="form-group">
 		<label for="userName"><%= jspUtil.label("knowledge.signup.label.name") %></label>
@@ -50,6 +75,7 @@ function deleteUser() {
 		<label for="confirm_password"><%= jspUtil.label("knowledge.signup.label.confirm.password") %></label>
 		<input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Confirm Password" value="<%= jspUtil.out("confirm_password") %>" />
 	</div>
+<% } %>
 	
 	<div class="form-group">
 		<label for="role_${role.roleId}"><%= jspUtil.label("label.role") %></label><br/>

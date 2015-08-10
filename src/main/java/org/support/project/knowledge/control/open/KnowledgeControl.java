@@ -5,8 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.Cookie;
 
-import org.owasp.validator.html.PolicyException;
-import org.owasp.validator.html.ScanException;
+import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
@@ -24,10 +23,12 @@ import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.DiffLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LikeCount;
+import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
@@ -53,9 +54,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 * ナレッジを表示
 	 * @return
 	 * @throws InvalidParamException 
+	 * @throws ParseException 
 	 */
 	@Get
-	public Boundary view() throws InvalidParamException {
+	public Boundary view() throws InvalidParamException, ParseException {
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
 		
@@ -101,6 +103,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		if (entity == null) {
 			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
 		}
+		//Markdownを処理
+		entity.setTitle(sanitize(entity.getTitle()));
+		MarkDown markDown = MarkdownLogic.get().markdownToHtml(entity.getContent());
+		entity.setContent(markDown.getHtml());
+		
 		setAttributeOnProperty(entity);
 		
 		String offset = super.getParam("offset", String.class);
@@ -125,6 +132,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		// コメント取得
 		CommentsDao commentsDao = CommentsDao.get();
 		List<CommentsEntity> comments = commentsDao.selectOnKnowledgeId(knowledgeId);
+		// Markdown を処理
+		for (CommentsEntity commentsEntity : comments) {
+			MarkDown markDown2 = MarkdownLogic.get().markdownToHtml(commentsEntity.getComment());
+			commentsEntity.setComment(markDown2.getHtml());
+		}
 		setAttribute("comments", comments);
 		
 		// 表示するグループを取得
@@ -162,6 +174,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String keyword = getParam("keyword");
 		String tag = getParam("tag");
 		String user = getParam("user");
+		String tagNames = getParam("tagNames");
+		
 		List<KnowledgesEntity> knowledges = new ArrayList<>();
 		if (StringUtils.isInteger(tag)) {
 			//タグを選択している
@@ -175,8 +189,27 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			int userId = Integer.parseInt(user);
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnUser(userId, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			UsersEntity usersEntity = UsersDao.get().selectOnKey(userId);
-			usersEntity.setPassword("");
-			setAttribute("selectedUser", usersEntity);
+			if (user != null) {
+				usersEntity.setPassword("");
+				setAttribute("selectedUser", usersEntity);
+			}
+		} else if (StringUtils.isNotEmpty(tagNames)) {
+			// タグとキーワードで検索
+			LOG.trace("show on Tags and keyword");
+			String[] taglist = tagNames.split(",");
+			List<TagsEntity> tags = new ArrayList<>();
+			for (String string : taglist) {
+				String tagname = string.trim();
+				if (tagname.startsWith(" ") && tagname.length() > " ".length()) {
+					tagname = tagname.substring(" ".length());
+				}
+				TagsEntity tagsEntity = tagsDao.selectOnTagName(tagname);
+				if (tagsEntity != null) {
+					tags.add(tagsEntity);
+				}
+			}
+			setAttribute("searchTags", tags);
+			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 		} else {
 			// その他(キーワード検索)
 			LOG.trace("search");
@@ -263,20 +296,32 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	
 	/**
 	 * タイトルとコンテンツの危険なタグをエスケープした結果を返す
-	 * (KnowledgesEntityのgetXXXで実施しているので、entityにセットしてJSONで返すだけで良い)
-	 * TODO クライアント側で出来ないか？
 	 * @param entity
 	 * @return
-	 * @throws ScanException 
-	 * @throws PolicyException 
+	 * @throws ParseException 
 	 */
 	@Post
-	public Boundary escape(KnowledgesEntity entity) throws PolicyException, ScanException {
+	public Boundary escape(KnowledgesEntity entity) throws ParseException {
 		super.setSendEscapeHtml(false);
-		entity.setTitle(doSamy(entity.getTitle()));
-		entity.setContent(doSamy(entity.getContent()));
+		entity.setTitle(sanitize(entity.getTitle()));
+		entity.setContent(sanitize(entity.getContent()));
 		return super.send(entity);
 	}
+	
+	/**
+	 * タイトルの危険なタグをサニタイズし、コンテンツのmarkdownをHTMLへ変換する
+	 * @param entity
+	 * @return
+	 * @throws ParseException 
+	 */
+	@Post
+	public Boundary marked(KnowledgesEntity entity) throws ParseException {
+		super.setSendEscapeHtml(false);
+		entity.setTitle(sanitize(entity.getTitle()));
+		MarkDown markDown = MarkdownLogic.get().markdownToHtml(entity.getContent());
+		entity.setContent(markDown.getHtml());
+		return super.send(entity);
+	}	
 	
 	/**
 	 * 検索画面を表示
@@ -284,6 +329,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 */
 	@Get
 	public Boundary search() {
+		List<TagsEntity> tagitems = TagsDao.get().selectAll();
+		setAttribute("tagitems", tagitems);
+
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
 		return forward("search.jsp");

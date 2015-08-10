@@ -1,8 +1,7 @@
 package org.support.project.knowledge.config;
 
 public class SystemConfig {
-	public static final String ROLE_ADMIN = "admin";
-	public static final String ROLE_USER = "user";
+	public static final String KNOWLEDGE_ENV_KEY = "KNOWLEDGE_HOME";
 	
 	/** ユーザ登録のやりかたを判定するシステム設定のラベル */
 	public static final String USER_ADD_TYPE = "USER_ADD_TYPE";
@@ -29,5 +28,13 @@ public class SystemConfig {
 	public static final String RE_INDEXING = "RE_INDEXING";
 	/** エクスポートのための設定値 */
 	public static final String DATA_EXPORT = "DATA_EXPORT";
+	
+	/** 「公開」の情報であれば、ログインしなくても参照出来る */
+	public static final String SYSTEM_EXPOSE_TYPE = "SYSTEM_EXPOSE_TYPE";
+	/** 「公開」の情報であれば、ログインしなくても参照出来る */
+	public static final String SYSTEM_EXPOSE_TYPE_OPEN = "OPEN";
+	/** 全ての機能は、ログインしないとアクセス出来ない */
+	public static final String SYSTEM_EXPOSE_TYPE_CLOSE = "CLOSE";
+	
 	
 }

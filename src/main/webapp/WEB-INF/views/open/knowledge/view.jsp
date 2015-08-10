@@ -30,19 +30,18 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 
 </c:param>
 
+<c:param name="PARAM_PAGE_TITLE">
+Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title") %>
+</c:param>
 
 
 <c:param name="PARAM_CONTENT">
-<h4 class="title"><%= jspUtil.label("knowledge.view.title") %></h4>
-
+<%-- <h4 class="title"><%= jspUtil.label("knowledge.view.title") %></h4> --%>
+<h4 class="title">[<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title") %></h4>
 	<div class="row">
 		<div class="col-sm-12">
 			<div class="thumbnail">
 				<div class="caption">
-					<h3>
-					[<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title") %>
-					</h3>
-					
 					<c:if test="${!empty tagNames}">
 					<p class="tags">
 					<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput"
@@ -82,7 +81,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 					</p>
 					
 					
-					<p class="insert_info">
+					<div class="insert_info">
 						<div class="saveType">
 						[<%= jspUtil.label("label.registration") %>]
 						</div>
@@ -96,9 +95,9 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
 						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("insertDatetime")%>
 						</a>
-					</p>
+					</div>
 					
-					<p class="insert_info">
+					<div class="insert_info">
 						<div class="saveType">
 						[<%= jspUtil.label("label.update") %>]
 						</div>
@@ -112,20 +111,21 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
 						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
 						</a>
-					</p>
+					</div>
 					
 					
 					<c:forEach var="file" items="${files}" >
-						<p>
+						<div class="downloadfile">
 							<img src="<%= jspUtil.out("file.thumbnailUrl") %>" />
 							<a href="<%= jspUtil.out("file.url") %>">
 							<%= jspUtil.out("file.name") %>
 							</a>
-						</p>
+						</div>
 					</c:forEach>
 					
-					<p style="word-break:break-all" id="content" class="markdown">
-					</p>
+					<div style="word-break:break-all" id="content" class="markdown">
+					<%= jspUtil.out("content", JspUtil.ESCAPE_NONE) %>
+					</div>
 					
 				</div>
 			</div>
@@ -169,7 +169,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 			alt="icon" width="64" height="64"/>
 	</div>
 	<div class="arrow_question">
-	<%= jspUtil.out("comment.comment", JspUtil.ESCAPE_CLEAR) %>
+	<%= jspUtil.out("comment.comment", JspUtil.ESCAPE_NONE) %>
 	</div><!-- /.arrow_question -->
 	</div><!-- /.question_Box -->
 	<% } else { %>
@@ -185,7 +185,7 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 			alt="icon" width="64" height="64"/>
 	</div>
 	<div class="arrow_answer">
-	<%= jspUtil.out("comment.comment", JspUtil.ESCAPE_CLEAR) %>
+	<%= jspUtil.out("comment.comment", JspUtil.ESCAPE_NONE) %>
 	</div><!-- /.arrow_answer -->
 	</div><!-- /.question_Box -->
 	<% } %>
@@ -227,10 +227,6 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 <span style="display: none;" id="comment_text">
 </span>
 
-	
-<span style="display: none;" id="content_text">
-<%= jspUtil.out("content", JspUtil.ESCAPE_CLEAR) %>
-</span>
 
 <jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
 

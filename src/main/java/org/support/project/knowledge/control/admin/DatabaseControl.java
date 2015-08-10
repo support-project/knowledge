@@ -18,6 +18,8 @@ import org.support.project.common.logic.H2DBServerLogic;
 import org.support.project.common.serialize.SerializeUtils;
 import org.support.project.common.wrapper.FileInputStreamWithDeleteWrapper;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.CreateExportDataBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
@@ -40,6 +42,7 @@ import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.logic.DBConnenctionLogic;
 
+@DI(instance=Instance.Prototype)
 public class DatabaseControl extends Control {
 	
 	/* (non-Javadoc)
@@ -295,7 +298,7 @@ public class DatabaseControl extends Control {
 	@Get
 	@Auth(roles="admin")
 	public Boundary reindexing() {
-		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.RE_INDEXING, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.RE_INDEXING, AppConfig.get().getSystemName());
 		if (entity != null) {
 			setAttribute("start_reindexing", Boolean.TRUE);
 		} else {
@@ -311,7 +314,7 @@ public class DatabaseControl extends Control {
 	@Post
 	@Auth(roles="admin")
 	public Boundary start_reindexing() {
-		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.RE_INDEXING, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.RE_INDEXING, AppConfig.get().getSystemName());
 		if (entity != null) {
 			addMsgInfo("message.allready.started");
 			return reindexing();
@@ -321,7 +324,7 @@ public class DatabaseControl extends Control {
 		String val = "start=" + start + ",end=" + end;
 		
 		entity = new SystemConfigsEntity();
-		entity.setSystemName(AppConfig.SYSTEM_NAME);
+		entity.setSystemName(AppConfig.get().getSystemName());
 		entity.setConfigName(SystemConfig.RE_INDEXING);
 		entity.setConfigValue(val);
 		SystemConfigsDao.get().save(entity);
@@ -335,7 +338,7 @@ public class DatabaseControl extends Control {
 	@Get
 	@Auth(roles="admin")
 	public Boundary export() {
-		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.get().getSystemName());
 		if (entity != null) {
 			setAttribute("start_export", Boolean.TRUE);
 		} else {
@@ -351,13 +354,13 @@ public class DatabaseControl extends Control {
 	@Get
 	@Auth(roles="admin")
 	public Boundary export_data_create() {
-		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.SYSTEM_NAME);
+		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.get().getSystemName());
 		if (entity != null) {
 			addMsgInfo("message.allready.started");
 			return export();
 		}
 		entity = new SystemConfigsEntity();
-		entity.setSystemName(AppConfig.SYSTEM_NAME);
+		entity.setSystemName(AppConfig.get().getSystemName());
 		entity.setConfigName(SystemConfig.DATA_EXPORT);
 		entity.setConfigValue("START");
 		SystemConfigsDao.get().save(entity);

@@ -13,11 +13,11 @@
 
 	<!-- FileAppender -->
 	<appender name="APP_FILEOUT" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="applog.log" />
+		<param name="File" value="${user.dir}/app.log" />
 		<param name="Append" value="true" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-5p [%t] %d [%c{1}]  %m%n" />
+			<param name="ConversionPattern" value="%-5p %d [%c{1}(%L)] %m%n" />
 		</layout>
 	</appender>
 
@@ -38,15 +38,6 @@
 	<category name="org.support.project.ormapping">
 		<level value="INFO" />
 	</category>
-	<category name="org.support.project.ormapping.common.ResultSetLoader">
-		<level value="INFO" />
-	</category>
-	<category name="org.support.project.ormapping.transaction">
-		<level value="INFO" />
-	</category>
-	<category name="org.support.project.ormapping.dao">
-		<level value="INFO" />
-	</category>
 	<category name="org.support.project.web">
 		<level value="INFO" />
 	</category>
@@ -58,11 +49,11 @@
 		<level value="INFO" />
 	</category>
 	
-	
 	<!-- Root Logger: Other -->
 	<root>
 		<priority value="INFO" />
 		<appender-ref ref="APP_STDOUT" />
+		<appender-ref ref="APP_FILEOUT" />
 	</root>
 
 </log4j:configuration>

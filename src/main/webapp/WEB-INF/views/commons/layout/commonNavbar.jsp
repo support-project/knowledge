@@ -133,6 +133,11 @@
 								<i class="fa fa-inbox"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system.mail") %>
 							</a>
 						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.ldap/config" style="cursor: pointer;">
+								<i class="fa fa-user-plus"></i>&nbsp;<%= jspUtil.label("knowledge.ldap.title") %>
+							</a>
+						</li>
 						
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.data") %></li>
 						<li >

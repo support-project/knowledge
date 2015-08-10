@@ -6,11 +6,14 @@ import java.util.List;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 
 import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
 
+@DI(instance=Instance.Singleton)
 public class DiffLogic {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(DiffLogic.class);

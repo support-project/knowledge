@@ -80,7 +80,27 @@ $(document).ready(function() {
 	 }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 	
 	var elt= $('#input_tags');
-	elt.tagsinput();
+	elt.tagsinput({
+		typeahead: {
+			source: _TAGS,
+			displayText: function(item) {
+				if (item) {
+					return item.name || item;
+				}
+				return '';
+			}
+		},
+		freeInput: true
+	});
+	elt.on('typeahead:selected', function(event, datum) {
+		console.log(datum);
+	});
+	/*
+	$('#input_tags').on('itemAdded', function(event) {
+		console.log(event);
+		$('#input_tags').tagsinput('refresh');
+	});
+	*/
 	
 	dispChangeGroupArea($('input[name="publicFlag"]:checked').val());
 	$('input[name="publicFlag"]:radio').change( function() {
@@ -176,6 +196,7 @@ $(document).ready(function() {
 		$('html,body').animate({ scrollTop: p }, 'fast');
 	});
 	
+	setUpTagSelect();
 });
 
 var getGroups = function(keyword, offset, listId, pageId, selectFunc) {
@@ -319,12 +340,10 @@ var setImagePath = function(url, name) {
 
 var emoji = window.emojiParser;
 var preview = function() {
-	$.post(_CONTEXT + '/open.knowledge/escape', {
+	$.post(_CONTEXT + '/open.knowledge/marked', {
 		title : $('#input_title').val(),
 		content : $('#content').val()
 	}, function(data) {
-		$('#content_text').html(data.content);
-		
 		var html = '<div class="row">';
 		html += '<div class="col-sm-12">';
 		html += '<div class="thumbnail">';
@@ -334,7 +353,7 @@ var preview = function() {
 		html += data.title;
 		html += '</h3><hr/>';
 		html += '<p style="word-break:break-all" id="content">';
-		var content = marked($('#content_text').html());
+		var content = data.content;
 		html += content;
 		html += '</p>';
 		html += '</div>';
