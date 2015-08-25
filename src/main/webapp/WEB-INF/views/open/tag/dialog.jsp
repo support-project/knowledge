@@ -13,7 +13,7 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Tag Select [page-<span id='tagselectPageNo'></span>]</h4>
+				<h4 class="modal-title"><%= jspUtil.label("label.search.tags") %> [page-<span id='tagselectPageNo'></span>]</h4>
 			</div>
 			
 			

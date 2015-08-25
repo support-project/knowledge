@@ -152,7 +152,7 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		<label for="input_tag">
 		<%= jspUtil.label("knowledge.add.label.tags") %>
 		<span class="helpMarkdownLabel">
-		<a data-toggle="modal" data-target="#tagSelectModal">Tag Select</a>
+		<a data-toggle="modal" data-target="#tagSelectModal"><%= jspUtil.label("label.search.tags") %></a>
 		</span>
 		</label>
 		<p class="tags">
