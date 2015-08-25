@@ -31,13 +31,13 @@ var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
 </c:param>
 
 <c:param name="PARAM_PAGE_TITLE">
-Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title") %>
+Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil.ESCAPE_CLEAR) %>
 </c:param>
 
 
 <c:param name="PARAM_CONTENT">
 <%-- <h4 class="title"><%= jspUtil.label("knowledge.view.title") %></h4> --%>
-<h4 class="title">[<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title") %></h4>
+<h4 class="title">[<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil.ESCAPE_CLEAR) %></h4>
 	<div class="row">
 		<div class="col-sm-12">
 			<div class="thumbnail">
