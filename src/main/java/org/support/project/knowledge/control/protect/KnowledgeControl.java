@@ -1,8 +1,11 @@
 package org.support.project.knowledge.control.protect;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import net.arnx.jsonic.JSONException;
 
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.exception.ParseException;
@@ -13,8 +16,10 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.KnowledgeControlBase;
+import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.TagsDao;
+import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
@@ -367,6 +372,131 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
 		return super.send(groups);
 	}
+	
+	
+	/**
+	 * コメント編集画面を表示
+	 * @return
+	 * @throws InvalidParamException 
+	 */
+	@Get
+	public Boundary edit_comment() throws InvalidParamException {
+		Long commentNo = super.getPathLong(Long.valueOf(-1));
+		CommentsDao commentsDao = CommentsDao.get();
+		CommentsEntity commentsEntity = commentsDao.selectOnKey(commentNo);
+		
+		if (commentsEntity == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+		}
+		
+//		// 権限チェック（ナレッジが表示できること）
+//		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+//		KnowledgesEntity entity = knowledgeLogic.select(commentsEntity.getKnowledgeId(), getLoginedUser());
+//		if (entity == null) {
+//			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+//		}
+		
+		// 権限チェック（コメントの編集は、システム管理者 or コメントの登録者
+		LoginedUser loginedUser = super.getLoginedUser();
+		if (loginedUser == null) {
+			// ログインしていないユーザに編集権限は無し
+			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		if (!loginedUser.isAdmin() && 
+				loginedUser.getUserId().intValue() != commentsEntity.getInsertUser().intValue()) {
+			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		
+		setAttributeOnProperty(commentsEntity);
+		return forward("edit_comment.jsp");
+	}
+	
+	/**
+	 * コメントを更新
+	 * @return
+	 * @throws InvalidParamException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws JSONException
+	 * @throws IOException
+	 */
+	@Post
+	public Boundary update_comment() throws InvalidParamException, InstantiationException, IllegalAccessException, JSONException, IOException {
+		CommentsEntity commentsEntity = getParamOnProperty(CommentsEntity.class);
+		
+		CommentsDao commentsDao = CommentsDao.get();
+		CommentsEntity db = commentsDao.selectOnKey(commentsEntity.getCommentNo());
+		
+		if (db == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+		}
+		// 権限チェック（コメントの編集は、システム管理者 or コメントの登録者 or ナレッジの編集可能ユーザ
+		LoginedUser loginedUser = super.getLoginedUser();
+		if (loginedUser == null) {
+			// ログインしていないユーザに編集権限は無し
+			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		KnowledgesEntity check = KnowledgesDao.get().selectOnKey(db.getKnowledgeId());
+		if (check == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+		}
+		List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(db.getKnowledgeId());
+		if (!loginedUser.isAdmin()) {
+			if (loginedUser.getUserId().intValue() != db.getInsertUser().intValue() && 
+					!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors))
+				return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		
+		db.setComment(commentsEntity.getComment());
+		commentsDao.update(db);
+		setAttributeOnProperty(db);
+
+		addMsgSuccess("message.success.update");
+		return forward("edit_comment.jsp");
+	}
+	
+	
+	/**
+	 * コメントを削除
+	 * @return
+	 * @throws InvalidParamException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws JSONException
+	 * @throws IOException
+	 */
+	@Get
+	public Boundary delete_comment() throws InvalidParamException, InstantiationException, IllegalAccessException, JSONException, IOException {
+		Long commentNo = super.getPathLong(Long.valueOf(-1));
+		CommentsDao commentsDao = CommentsDao.get();
+		CommentsEntity db = commentsDao.selectOnKey(commentNo);
+		
+		if (db == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+		}
+		// 権限チェック（コメントの削除は、システム管理者 or コメントの登録者 or ナレッジの編集可能ユーザ
+		LoginedUser loginedUser = super.getLoginedUser();
+		if (loginedUser == null) {
+			// ログインしていないユーザに編集権限は無し
+			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		KnowledgesEntity check = KnowledgesDao.get().selectOnKey(db.getKnowledgeId());
+		if (check == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+		}
+		List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(db.getKnowledgeId());
+		
+		if (!loginedUser.isAdmin()) {
+			if (loginedUser.getUserId().intValue() != db.getInsertUser().intValue() && 
+					!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors))
+				return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		commentsDao.delete(db);
+		addMsgSuccess("message.success.delete.target", getResource("label.comment"));
+		return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(db.getKnowledgeId()));
+	}	
+	
+	
 	
 }
 

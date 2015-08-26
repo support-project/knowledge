@@ -27,9 +27,10 @@ public class CommentsDao extends GenCommentsDao {
 	
 	public List<CommentsEntity> selectOnKnowledgeId(Long knowledgeId) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT *, USERS.USER_NAME AS UPDATE_USER_NAME FROM COMMENTS ");
-		builder.append("LEFT OUTER JOIN USERS ON USERS.USER_ID = COMMENTS.UPDATE_USER ");
-		builder.append("WHERE KNOWLEDGE_ID = ? ");
+		builder.append("SELECT COMMENTS.*, UPDATE_USER.USER_NAME AS UPDATE_USER_NAME, INSERT_USER.USER_NAME AS INSERT_USER_NAME FROM COMMENTS ");
+		builder.append("LEFT OUTER JOIN USERS AS UPDATE_USER ON UPDATE_USER.USER_ID = COMMENTS.UPDATE_USER ");
+		builder.append("LEFT OUTER JOIN USERS AS INSERT_USER ON INSERT_USER.USER_ID = COMMENTS.INSERT_USER ");
+		builder.append("WHERE COMMENTS.KNOWLEDGE_ID = ? AND COMMENTS.DELETE_FLAG = 0 ");
 		builder.append("ORDER BY COMMENTS.INSERT_DATETIME ");
 		return executeQueryList(builder.toString(), CommentsEntity.class, knowledgeId);
 	}
@@ -40,7 +41,7 @@ public class CommentsDao extends GenCommentsDao {
 	 * @return
 	 */
 	public Integer countOnKnowledgeId(Long knowledgeId) {
-		String sql = "SELECT COUNT(*) FROM COMMENTS WHERE KNOWLEDGE_ID = ?";
+		String sql = "SELECT COUNT(*) FROM COMMENTS WHERE KNOWLEDGE_ID = ?  AND DELETE_FLAG = 0 ";
 		return super.executeQuerySingle(sql, Integer.class, knowledgeId);
 	}
 

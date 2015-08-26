@@ -10,6 +10,7 @@ import java.util.Map;
 import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.HtmlUtils;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringJoinBuilder;
 import org.support.project.common.util.StringUtils;
@@ -569,8 +570,12 @@ public class KnowledgeLogic {
 					if (StringUtils.isNotEmpty(searchResultValue.getHighlightedContents())) {
 						entity.setContent(searchResultValue.getHighlightedContents());
 					} else {
+						String content = HtmlUtils.escapeHTML(entity.getContent());
+						entity.setContent(content);
 						// entity.setContent(org.apache.commons.lang.StringUtils.abbreviate(entity.getContent(), LuceneSearcher.CONTENTS_LIMIT_LENGTH));
 					}
+					
+					entity.setScore(searchResultValue.getScore());
 					knowledges.add(entity);
 				}
 			} else if (searchResultValue.getType() == TYPE_FILE) {
@@ -595,6 +600,7 @@ public class KnowledgeLogic {
 						builder.append(searchResultValue.getHighlightedContents());
 					}
 					entity.setContent(builder.toString());
+					entity.setScore(searchResultValue.getScore());
 					knowledges.add(entity);
 				}
 			} else if (searchResultValue.getType() == TYPE_COMMENT) {
@@ -612,6 +618,7 @@ public class KnowledgeLogic {
 						builder.append(searchResultValue.getHighlightedContents());
 					}
 					entity.setContent(builder.toString());
+					entity.setScore(searchResultValue.getScore());
 					knowledges.add(entity);
 				}
 			}

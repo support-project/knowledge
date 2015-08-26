@@ -1,10 +1,5 @@
 package org.support.project.knowledge.entity;
 
-import java.util.List;
-import java.util.Map;
-import java.sql.Timestamp;
-
-import org.support.project.common.bean.ValidateError;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -20,9 +15,17 @@ public class CommentsEntity extends GenCommentsEntity {
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
 	
+	/** 登録ユーザ名 */
+	private String insertUserName;
 	/** 更新ユーザ名 */
 	private String updateUserName;
 	
+	public boolean isUpdate() {
+		if (getInsertDatetime().getTime() != getUpdateDatetime().getTime()) {
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * インスタンス取得
@@ -61,6 +64,20 @@ public class CommentsEntity extends GenCommentsEntity {
 	 */
 	public void setUpdateUserName(String updateUserName) {
 		this.updateUserName = updateUserName;
+	}
+
+	/**
+	 * @return the insertUserName
+	 */
+	public String getInsertUserName() {
+		return insertUserName;
+	}
+
+	/**
+	 * @param insertUserName the insertUserName to set
+	 */
+	public void setInsertUserName(String insertUserName) {
+		this.insertUserName = insertUserName;
 	}
 
 }

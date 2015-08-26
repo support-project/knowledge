@@ -60,7 +60,8 @@ public class NotifyMailBat extends AbstractBat {
 		NotifyMailBat bat = new NotifyMailBat();
 		bat.dbInit();
 		bat.start();
-		LOG.info("finished");
+		
+		finishInfo();
 	}
 	
 	/**

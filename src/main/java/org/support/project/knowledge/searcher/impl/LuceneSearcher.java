@@ -36,6 +36,7 @@ import org.apache.lucene.util.Version;
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.HtmlUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.IndexType;
@@ -65,6 +66,7 @@ public class LuceneSearcher implements Searcher {
 
 	private String getIndexPath() {
 		AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
+		log.debug("lucene index: " + appConfig.getIndexPath());
 		return appConfig.getIndexPath();
 	}
 	
@@ -129,7 +131,8 @@ public class LuceneSearcher implements Searcher {
 			}
 			
 			if (StringUtils.isNotEmpty(resultValue.getContents())) {
-				String bestFragment = getHighlightedField(query, analyzer, FIELD_LABEL_CONTENTS, resultValue.getContents());
+				String content = HtmlUtils.escapeHTML(resultValue.getContents()); // 一覧で表示する際には、HTMLタグはエスケープする
+				String bestFragment = getHighlightedField(query, analyzer, FIELD_LABEL_CONTENTS, content);
 				if (log.isDebugEnabled()) {
 					log.debug("----- highlited contents -----\n" + bestFragment);
 				}
@@ -181,7 +184,7 @@ public class LuceneSearcher implements Searcher {
 		
 		if (StringUtils.isNotEmpty(value.getTags())) {
 			QueryParser queryParser = new QueryParser(Version.LUCENE_4_10_2, FIELD_LABEL_TAGS, analyzer);
-			queryParser.setDefaultOperator(Operator.OR);
+			queryParser.setDefaultOperator(Operator.AND);
 			Query query = queryParser.parse(value.getTags());
 			container.add(query, BooleanClause.Occur.MUST);
 		}

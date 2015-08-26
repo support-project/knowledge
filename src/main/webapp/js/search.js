@@ -16,5 +16,9 @@ $(document).ready(function() {
 		console.log(datum);
 	});
 	setUpTagSelect();
+	$('#searchParamClear').click(function(){
+		$('#searchkeyword').val('');
+		elt.tagsinput('removeAll');
+	});
 });
 

@@ -53,7 +53,8 @@ public class FileParseBat extends AbstractBat {
 		FileParseBat bat = new FileParseBat();
 		bat.dbInit();
 		bat.start();
-		LOG.info("finished");
+		
+		finishInfo();
 	}
 
 	private void start() throws Exception {
@@ -66,6 +67,7 @@ public class FileParseBat extends AbstractBat {
 		List<KnowledgeFilesEntity> filesEntities = filesDao.selectWaitStateFiles();
 		AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
 		File tmpDir = new File(appConfig.getTmpPath());
+		LOG.info("target count: " + filesEntities.size());
 		
 		for (KnowledgeFilesEntity knowledgeFilesEntity : filesEntities) {
 			// ナレッジを取得
@@ -117,6 +119,7 @@ public class FileParseBat extends AbstractBat {
 				Parser parser = ParserFactory.getParser(tmp.getAbsolutePath());
 				ParseResult result = parser.parse(tmp);
 				LOG.info("content text(length): " + result.getText().length());
+				LOG.info("content text        : " + StringUtils.abbreviate(result.getText(), 300));
 				
 				// 全文検索エンジンへ登録
 				IndexingValue value = new IndexingValue();

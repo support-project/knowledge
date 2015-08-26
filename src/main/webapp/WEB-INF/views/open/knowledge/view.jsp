@@ -42,6 +42,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		<div class="col-sm-12">
 			<div class="thumbnail">
 				<div class="caption">
+<%-- ナレッジの属性 --%>
 					<c:if test="${!empty tagNames}">
 					<p class="tags">
 					<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput"
@@ -69,6 +70,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 							
 						<% } %>
 					
+<%-- イイネ！など --%>
 						<a class="btn btn-link" href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
 							<i class="fa fa-thumbs-o-up"></i>&nbsp;
 							× <span id="like_count"><%= jspUtil.out("like_count") %></span>
@@ -113,7 +115,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 						</a>
 					</div>
 					
-					
+<%-- 添付ファイル --%>
 					<c:forEach var="file" items="${files}" >
 						<div class="downloadfile">
 							<img src="<%= jspUtil.out("file.thumbnailUrl") %>" />
@@ -123,6 +125,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 						</div>
 					</c:forEach>
 					
+<%-- ナレッジ表示 --%>
 					<div style="word-break:break-all" id="content" class="markdown">
 					<%= jspUtil.out("content", JspUtil.ESCAPE_NONE) %>
 					</div>
@@ -132,6 +135,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		</div>
 	</div>
 	
+<%-- 操作ボタン --%>
 	<% if (request.getRemoteUser() != null) { 
 		if ((boolean) request.getAttribute("edit")) { %>
 		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>"
@@ -149,6 +153,8 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 	<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
 	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
 	
+	
+<%-- コメント表示 --%>
 	<hr/>
 	<h5 id="comments"><i class="fa fa-comments-o"></i>&nbsp;Comment</h5>
 	<c:forEach var="comment" items="${comments}" varStatus="status">
@@ -159,13 +165,26 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 	%>
 	<div class="row">
 		<div class="col-sm-12">
-		<%= jspUtil.date("comment.updateDatetime")%> [<%= jspUtil.out("comment.updateUserName") %>]
+		[<%= jspUtil.label("label.registration") %>]
+		<%= jspUtil.date("comment.updateDatetime")%> [<%= jspUtil.out("comment.insertUserName") %>]
+		<% if (comment.isUpdate()) { %>
+			<br/>[<%= jspUtil.label("label.update") %>]
+			<%= jspUtil.date("comment.updateDatetime")%> [<%= jspUtil.out("comment.updateUserName") %>]
+		<% } %>
+		
+		<% if (jspUtil.isAdmin() || jspUtil.is(jspUtil.id(), "comment.insertUser")) { %>
+			&nbsp;
+			<a class="btn btn-primary btn-xs" href="<%= request.getContextPath() %>/protect.knowledge/edit_comment/<%= comment.getCommentNo() %>">
+				<i class="fa fa-edit"></i> Edit
+			</a>
+		<% } %>
+		
 		</div>
 	</div>
 	<div class="question_Box">
 	<div class="question_image">
 		<img src="<%= request.getContextPath()%>/images/loader.gif" 
-			data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("comment.updateUser") %>" 
+			data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("comment.insertUser") %>" 
 			alt="icon" width="64" height="64"/>
 	</div>
 	<div class="arrow_question">
@@ -175,13 +194,27 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 	<% } else { %>
 	<div class="row">
 		<div class="col-sm-12" style="text-align: right;">
-		<%= jspUtil.date("comment.updateDatetime")%> [<%= jspUtil.out("comment.updateUserName") %>]
+		
+		<% if (jspUtil.isAdmin() || jspUtil.is(jspUtil.id(), "comment.insertUser")) { %>
+			&nbsp;
+			<a class="btn btn-primary btn-xs" href="<%= request.getContextPath() %>/protect.knowledge/edit_comment/<%= comment.getCommentNo() %>">
+				<i class="fa fa-edit"></i> Edit
+			</a>
+		<% } %>
+		
+		[<%= jspUtil.label("label.registration") %>]
+		<%= jspUtil.date("comment.updateDatetime")%> [<%= jspUtil.out("comment.insertUserName") %>]
+		<% if (comment.isUpdate()) { %>
+			<br/>[<%= jspUtil.label("label.update") %>]
+			<%= jspUtil.date("comment.updateDatetime")%> [<%= jspUtil.out("comment.updateUserName") %>]
+		<% } %>
+		
 		</div>
 	</div>
 	<div class="question_Box">
 	<div class="answer_image">
 		<img src="<%= request.getContextPath()%>/images/loader.gif" 
-			data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("comment.updateUser") %>" 
+			data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("comment.insertUser") %>" 
 			alt="icon" width="64" height="64"/>
 	</div>
 	<div class="arrow_answer">
@@ -191,9 +224,14 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 	<% } %>
 	</c:forEach>
 	
+	<br/>
+	<br/>
+	
+<%-- コメント登録 --%>
+<%= jspUtil.label("knowledge.comment.add") %>
 	<% if (request.getRemoteUser() != null) { %>
 		<form action="<%= request.getContextPath()%>/protect.knowledge/comment/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" method="post" role="form">
-		<textarea class="form-control" name="addcomment" rows="1" placeholder="Comment" id="comment"><%= jspUtil.out("addcomment") %></textarea>
+		<textarea class="form-control" name="addcomment" rows="4" placeholder="Comment" id="comment"><%= jspUtil.out("addcomment") %></textarea>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/objects" data-target="#emojiObjectsModal">objects</a>
@@ -201,11 +239,11 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
 		<br/>
 		
-	<% if (jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
-		<button type="button" class="btn btn-info" onclick="previewans();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
-	<%	} else { %>
-		<button type="button" class="btn btn-info" onclick="preview();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
-	<%	} %>
+		<% if (jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
+			<button type="button" class="btn btn-info" onclick="previewans();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
+		<%	} else { %>
+			<button type="button" class="btn btn-info" onclick="preview();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
+		<%	} %>
 		
 		<button type="submit" class="btn btn-primary"><i class="fa fa-comment-o"></i>&nbsp;<%= jspUtil.label("knowledge.view.comment") %></button>
 		
