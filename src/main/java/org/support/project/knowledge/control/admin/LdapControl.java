@@ -44,12 +44,22 @@ public class LdapControl extends Control {
 	public Boundary config() {
 		LdapConfigsDao dao = LdapConfigsDao.get();
 		LdapConfigsEntity entity = dao.selectOnKey(AppConfig.get().getSystemName());
+		String configType = "config1";
 		if (entity == null) {
 			entity = new LdapConfigsEntity();
 		} else {
 			entity.setBindPassword(NO_CHANGE_PASSWORD);
 			entity.setSalt("");
+			
+			if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP_2) {
+				configType = "config2";
+				entity.setAuthType(LdapConfigsEntity.AUTH_TYPE_LDAP);
+			} else if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_BOTH_2) {
+				configType = "config2";
+				entity.setAuthType(LdapConfigsEntity.AUTH_TYPE_BOTH);
+			}
 		}
+		setAttribute("configType", configType);
 		entity.setSystemName(AppConfig.get().getSystemName());
 		setAttributeOnProperty(entity);
 		
@@ -60,6 +70,7 @@ public class LdapControl extends Control {
 		} else {
 			setAttribute("security", "plain");
 		}
+		
 		return forward("config.jsp");
 	}
 	
@@ -88,6 +99,36 @@ public class LdapControl extends Control {
 				entity.setUseTls(INT_FLAG.ON.getValue());
 			}
 		}
+		
+		String configType = getParam("configType");
+		if ("config2".equals(configType)) {
+			if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP) {
+				entity.setAuthType(LdapConfigsEntity.AUTH_TYPE_LDAP_2);
+			} else if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_BOTH) {
+				entity.setAuthType(LdapConfigsEntity.AUTH_TYPE_BOTH_2);
+			}
+			
+			entity.setHost(getParam("host2"));
+			entity.setPort(getParam("port2", Integer.class));
+			security = getParam("security2");
+			if (!StringUtils.isEmpty(security)) {
+				if (security.toLowerCase().equals("usessl")) {
+					entity.setUseSsl(INT_FLAG.ON.getValue());
+				} else if (security.toLowerCase().equals("usetls")) {
+					entity.setUseTls(INT_FLAG.ON.getValue());
+				}
+			}
+			entity.setBindDn(getParam("bindDn2"));
+			entity.setBindPassword(getParam("bindPassword2"));
+			entity.setBaseDn(getParam("baseDn2"));
+			entity.setFilter(getParam("filter2"));
+			entity.setIdAttr(getParam("idAttr2"));
+			entity.setNameAttr(getParam("nameAttr2"));
+			entity.setMailAttr(getParam("mailAttr2"));
+			entity.setAdminCheckFilter(getParam("adminCheckFilter2"));
+			setAttributeOnProperty(entity);
+		}
+		
 		String password = entity.getBindPassword();
 		if (password.equals(NO_CHANGE_PASSWORD)) {
 			LdapConfigsEntity saved = dao.selectOnKey(AppConfig.get().getSystemName());
@@ -98,6 +139,7 @@ public class LdapControl extends Control {
 				entity.setBindPassword(password);
 			}
 		}
+		
 		return entity;
 	}	
 	
@@ -127,15 +169,25 @@ public class LdapControl extends Control {
 		LdapConfigsEntity entity = loadLdapConfig();
 		
 		LdapLogic ldapLogic = LdapLogic.get();
-		LdapInfo result = ldapLogic.auth(entity, entity.getBindDn(), entity.getBindPassword());
-		if (result == null) {
-			addMsgWarn("knowledge.ldap.msg.connect.error");
+		String configType = getParam("configType");
+		if ("config2".equals(configType)) {
+			boolean check = ldapLogic.check(entity);
+			if (!check) {
+				addMsgWarn("knowledge.ldap.msg.connect.error");
+			} else {
+				addMsgSuccess("knowledge.ldap.msg.connect.success2");
+			}
 		} else {
-			addMsgSuccess("knowledge.ldap.msg.connect.success"
-					, result.getId()
-					, result.getName() 
-					, result.getMail() 
-					, String.valueOf(result.isAdmin()));
+			LdapInfo result = ldapLogic.auth(entity, entity.getBindDn(), entity.getBindPassword());
+			if (result == null) {
+				addMsgWarn("knowledge.ldap.msg.connect.error");
+			} else {
+				addMsgSuccess("knowledge.ldap.msg.connect.success"
+						, result.getId()
+						, result.getName() 
+						, result.getMail() 
+						, String.valueOf(result.isAdmin()));
+			}
 		}
 		return forward("config.jsp");
 	}
@@ -168,8 +220,17 @@ public class LdapControl extends Control {
 		}
 		LdapConfigsEntity entity = loadLdapConfig();
 		LdapLogic ldapLogic = LdapLogic.get();
-		LdapInfo result = ldapLogic.auth(entity, entity.getBindDn(), entity.getBindPassword());
-		if (result == null) {
+		String configType = getParam("configType");
+		boolean check = false;
+		if ("config2".equals(configType)) {
+			check = ldapLogic.check(entity);
+		} else {
+			LdapInfo result = ldapLogic.auth(entity, entity.getBindDn(), entity.getBindPassword());
+			if (result != null) {
+				check = true;
+			}
+		}
+		if (!check) {
 			addMsgWarn("knowledge.ldap.msg.save.error");
 		} else {
 			//Ldap設定を保存

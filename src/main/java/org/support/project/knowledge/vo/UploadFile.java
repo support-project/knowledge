@@ -11,6 +11,7 @@ public class UploadFile {
 	private String deleteUrl;
 	private String deleteType;
 	private Long knowlegeId;
+	private Long commentNo;
 	
 	/**
 	 * @return the url
@@ -119,6 +120,18 @@ public class UploadFile {
 	 */
 	public void setKnowlegeId(Long knowlegeId) {
 		this.knowlegeId = knowlegeId;
+	}
+	/**
+	 * @return the commentNo
+	 */
+	public Long getCommentNo() {
+		return commentNo;
+	}
+	/**
+	 * @param commentNo the commentNo to set
+	 */
+	public void setCommentNo(Long commentNo) {
+		this.commentNo = commentNo;
 	}
 	
 	

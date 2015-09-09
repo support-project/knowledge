@@ -11,12 +11,26 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
+
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-edit.css") %>" />
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
 </c:param>
 <c:param name="PARAM_SCRIPTS">
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+
 	<script>
 	var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
+	var _UPLOADED = '<%= jspUtil.label("knowledge.edit.label.uploaded") %>';
+	var _DELETE_LABEL= '<%= jspUtil.label("label.delete") %>';
+	var _FAIL_UPLOAD = '<%= jspUtil.label("knowledge.edit.label.fail.upload") %>';
+	var _REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.delete.upload") %>';
+	var _FAIL_REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.fail.delete.upload") %>';
+	var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
+	var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 	</script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
 	<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/comment.js") %>"></script>
@@ -27,7 +41,7 @@
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.comment.edit") %></h4>
 
-<form action="<%= request.getContextPath()%>/protect.knowledge/update_comment" method="post" role="form" id="commentForm">
+<form action="<%= request.getContextPath()%>/protect.knowledge/update_comment" method="post" role="form" id="commentForm" enctype="multipart/form-data">
 
 	<div class="form-group">
 		<label for="comment">Comment
@@ -44,6 +58,46 @@
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
 	</div>
+	
+	
+		<div class="form-group">
+			<label for="input_fileupload"><%= jspUtil.label("knowledge.add.label.files") %></label><br/>
+			<div id="fileupload">
+				<span class="btn btn-info fileinput-button">
+					<i class="fa fa-cloud-upload"></i>&nbsp;<span><%= jspUtil.label("knowledge.add.label.select.file") %></span>
+					<input type="file" name="files[]" multiple>
+				</span>
+			</div>
+		</div>
+		<div class="form-group" id="drop_target">
+			<%= jspUtil.label("knowledge.add.label.area.upload") %>
+		</div>
+		<div class="form-group" style="display: none;" id="progress">
+			<div class="progress">
+				<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+				0%
+				</div>
+			</div>
+		</div>
+		<div class="form-group" id="files">
+		<c:forEach var="file" items="${comment_files}" >
+			<div class="filediv" id="file-<%= jspUtil.out("file.fileNo") %>">
+				<div class="file-image"><img src="<%= jspUtil.out("file.thumbnailUrl") %>" /></div>
+				<div class="file-label"><a href="<%= jspUtil.out("file.url") %>"><%= jspUtil.out("file.name") %></a></div>
+				<br class="fileLabelBr"/>
+				<input type="hidden" name="files" value="<%= jspUtil.out("file.fileNo") %>" />
+				&nbsp;&nbsp;&nbsp;
+				<button type="button" class="btn btn-success" onclick="setImagePath('<%= jspUtil.out("file.url") %>', '<%= jspUtil.out("file.name") %>')">
+					<i class="fa fa-file-image-o"></i>&nbsp;<%= jspUtil.label("knowledge.edit.set.image.path") %>
+				</button>
+				<button type="button" class="btn btn-danger" onclick="removeAddedFile(<%= jspUtil.out("file.fileNo") %>)">
+					<i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %>
+				</button>
+			</div>
+		</c:forEach>
+		</div>
+	
+	
 	
 	<button type="submit" class="btn btn-primary">
 		<i class="fa fa-save"></i>&nbsp;

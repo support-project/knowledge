@@ -87,7 +87,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttributeOnProperty(entity);
 		
 		// ナレッジに紐づく添付ファイルを取得
-		List<UploadFile> files = fileLogic.selectOnKnowledgeId(knowledgeId, getRequest().getContextPath());
+		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(knowledgeId, getRequest().getContextPath());
 		setAttribute("files", files);
 		
 		// 表示するグループを取得
@@ -183,7 +183,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		entity = knowledgeLogic.insert(entity, tagList, fileNos, groups, editors, super.getLoginedUser());
 		setAttributeOnProperty(entity);
 		
-		List<UploadFile> files = fileLogic.selectOnKnowledgeId(entity.getKnowledgeId(), getRequest().getContextPath());
+		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(entity.getKnowledgeId(), getRequest().getContextPath());
 		setAttribute("files", files);
 		
 		addMsgSuccess("message.success.insert");
@@ -275,7 +275,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttributeOnProperty(entity);
 		addMsgSuccess("message.success.update");
 		
-		List<UploadFile> files = fileLogic.selectOnKnowledgeId(entity.getKnowledgeId(), getRequest().getContextPath());
+		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(entity.getKnowledgeId(), getRequest().getContextPath());
 		setAttribute("files", files);
 		
 		return forward("view_edit.jsp");
@@ -349,14 +349,48 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String params = setViewParam();
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
 		//String comment = super.sanitize(getParam("addcomment"));
+		
+		List<Long> fileNos = new ArrayList<Long>();
+		Object obj = getParam("files", Object.class);
+		if (obj != null) {
+			if (obj instanceof String) {
+				String string = (String) obj;
+				if (StringUtils.isLong(string)) {
+					fileNos.add(new Long(string));
+				}
+			} else if (obj instanceof List) {
+				List<String> strings = (List<String>) obj;
+				for (String string : strings) {
+					if (StringUtils.isLong(string)) {
+						fileNos.add(new Long(string));
+					}
+				}
+			}
+		}
+		
 		String comment = getParam("addcomment");
 		
 		// 必須チェック
 		if (StringUtils.isEmpty(comment)) {
 			addMsgWarn("errors.required", "Comment");
+			
+			// バリデーションエラーが発生した場合、設定されていた添付ファイルの情報は再取得
+			List<UploadFile> files = fileLogic.selectOnFileNos(fileNos, getRequest().getContextPath());
+			Iterator<UploadFile> iterator = files.iterator();
+			while (iterator.hasNext()) {
+				UploadFile uploadFile = (UploadFile) iterator.next();
+				if (uploadFile.getKnowlegeId() != null) {
+					// 新規登録なのに、添付ファイルが既にナレッジに紐づいている（おかしい）
+					iterator.remove();
+				}
+			}
+			setAttribute("comment_files", files);
+			
 			return super.devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
 		}
-		KnowledgeLogic.get().saveComment(knowledgeId, comment);
+		
+		KnowledgeLogic.get().saveComment(knowledgeId, comment, fileNos, getLoginedUser());
+		
 		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
 	}
 	
@@ -396,7 +430,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 //			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
 //		}
 		
-		// 権限チェック（コメントの編集は、システム管理者 or コメントの登録者
+		// 権限チェック（コメントの編集は、システム管理者 or コメントの登録者 or ナレッジ編集者
 		LoginedUser loginedUser = super.getLoginedUser();
 		if (loginedUser == null) {
 			// ログインしていないユーザに編集権限は無し
@@ -404,8 +438,25 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		}
 		if (!loginedUser.isAdmin() && 
 				loginedUser.getUserId().intValue() != commentsEntity.getInsertUser().intValue()) {
-			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+			KnowledgesEntity check = KnowledgesDao.get().selectOnKey(commentsEntity.getKnowledgeId());
+			if (check == null) {
+				return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+			}		
+			List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(commentsEntity.getKnowledgeId());
+			if (!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors)) {
+				return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+			}
 		}
+		
+		// ナレッジに紐づく添付ファイルを取得
+		List<UploadFile> files = fileLogic.selectOnKnowledgeId(commentsEntity.getKnowledgeId(), getRequest().getContextPath());
+		List<UploadFile> commentFiles = new ArrayList<>();
+		for (UploadFile uploadFile : files) {
+			if (commentsEntity.getCommentNo().equals(uploadFile.getCommentNo())) {
+				commentFiles.add(uploadFile);
+			}
+		}
+		setAttribute("comment_files", commentFiles);
 		
 		setAttributeOnProperty(commentsEntity);
 		return forward("edit_comment.jsp");
@@ -414,14 +465,40 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	/**
 	 * コメントを更新
 	 * @return
-	 * @throws InvalidParamException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws JSONException
-	 * @throws IOException
+	 * @throws Exception 
 	 */
 	@Post
-	public Boundary update_comment() throws InvalidParamException, InstantiationException, IllegalAccessException, JSONException, IOException {
+	public Boundary update_comment() throws Exception {
+		List<Long> fileNos = new ArrayList<Long>();
+		Object obj = getParam("files", Object.class);
+		if (obj != null) {
+			if (obj instanceof String) {
+				String string = (String) obj;
+				if (StringUtils.isLong(string)) {
+					fileNos.add(new Long(string));
+				}
+			} else if (obj instanceof List) {
+				List<String> strings = (List<String>) obj;
+				for (String string : strings) {
+					if (StringUtils.isLong(string)) {
+						fileNos.add(new Long(string));
+					}
+				}
+			}
+		}
+		// 設定されていた添付ファイルの情報は再取得
+		List<UploadFile> files = fileLogic.selectOnFileNos(fileNos, getRequest().getContextPath());
+		Iterator<UploadFile> iterator = files.iterator();
+		while (iterator.hasNext()) {
+			UploadFile uploadFile = (UploadFile) iterator.next();
+			if (uploadFile.getKnowlegeId() != null) {
+				// 新規登録なのに、添付ファイルが既にナレッジに紐づいている（おかしい）
+				iterator.remove();
+			}
+		}
+		setAttribute("comment_files", files);
+
+		
 		CommentsEntity commentsEntity = getParamOnProperty(CommentsEntity.class);
 		
 		CommentsDao commentsDao = CommentsDao.get();
@@ -447,26 +524,29 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
 		}
 		
+		// 必須チェック
+		if (StringUtils.isEmpty(commentsEntity.getComment())) {
+			addMsgWarn("errors.required", "Comment");
+			return super.devolution(HttpMethod.get, "/protect.knowledge/edit_comment", String.valueOf(commentsEntity.getCommentNo()));
+		}
 		db.setComment(commentsEntity.getComment());
-		commentsDao.update(db);
+		KnowledgeLogic.get().updateComment(db, fileNos, getLoginedUser());
 		setAttributeOnProperty(db);
 
 		addMsgSuccess("message.success.update");
-		return forward("edit_comment.jsp");
+		
+		setPathInfo(String.valueOf(commentsEntity.getCommentNo()));
+		return edit_comment();
 	}
 	
 	
 	/**
 	 * コメントを削除
 	 * @return
-	 * @throws InvalidParamException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws JSONException
-	 * @throws IOException
+	 * @throws Exception 
 	 */
 	@Get
-	public Boundary delete_comment() throws InvalidParamException, InstantiationException, IllegalAccessException, JSONException, IOException {
+	public Boundary delete_comment() throws Exception {
 		Long commentNo = super.getPathLong(Long.valueOf(-1));
 		CommentsDao commentsDao = CommentsDao.get();
 		CommentsEntity db = commentsDao.selectOnKey(commentNo);
@@ -491,8 +571,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 					!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors))
 				return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
 		}
-		commentsDao.delete(db);
+		
+		KnowledgeLogic.get().deleteComment(db, getLoginedUser());
 		addMsgSuccess("message.success.delete.target", getResource("label.comment"));
+		setAttribute("comment", null);
 		return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(db.getKnowledgeId()));
 	}	
 	

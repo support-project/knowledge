@@ -143,7 +143,7 @@ public class KnowledgeLogic {
 		setTags(entity, tags);
 		
 		// 添付ファイルを更新（紐付けをセット）
-		fileLogic.setKnowledgeFiles(entity, fileNos, loginedUser);
+		fileLogic.setKnowledgeFiles(entity.getKnowledgeId(), fileNos, loginedUser);
 		
 		// 全文検索エンジンへ登録
 		saveIndex(entity, tags, targets, loginedUser.getUserId());
@@ -198,7 +198,7 @@ public class KnowledgeLogic {
 		setTags(entity, tags);
 		
 		// 添付ファイルを更新（紐付けをセット）
-		fileLogic.setKnowledgeFiles(entity, fileNos, loginedUser);
+		fileLogic.setKnowledgeFiles(entity.getKnowledgeId(), fileNos, loginedUser);
 		
 		// 全文検索エンジンへ登録
 		saveIndex(entity, tags, targets, entity.getInsertUser());
@@ -948,22 +948,67 @@ public class KnowledgeLogic {
 	 * コメント保存
 	 * @param knowledgeId
 	 * @param comment
+	 * @param fileNos 
 	 * @throws Exception 
 	 */
-	public void saveComment(Long knowledgeId, String comment) throws Exception {
+	public void saveComment(Long knowledgeId, String comment, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
 		CommentsDao commentsDao = CommentsDao.get();
 		CommentsEntity commentsEntity = new CommentsEntity();
 		commentsEntity.setKnowledgeId(knowledgeId);
 		commentsEntity.setComment(comment);
-		commentsDao.insert(commentsEntity);
+		commentsEntity = commentsDao.insert(commentsEntity);
 		// 一覧表示用の情報を更新
 		KnowledgeLogic.get().updateKnowledgeExInfo(knowledgeId);
 		
 		// 検索エンジンに追加
 		addIndexOnComment(commentsEntity);
 		
+		// 添付ファイルを更新（紐付けをセット）
+		fileLogic.setKnowledgeFiles(knowledgeId, fileNos, loginedUser, commentsEntity.getCommentNo());
+		
+		
 		// 通知（TODO 別スレッド化を検討）
 		NotifyLogic.get().notifyOnKnowledgeComment(knowledgeId, commentsEntity);
+	}
+	
+	/**
+	 * コメント更新
+	 * @param commentsEntity
+	 * @param fileNos
+	 * @param loginedUser
+	 * @throws Exception 
+	 */
+	public void updateComment(CommentsEntity commentsEntity, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
+		CommentsDao commentsDao = CommentsDao.get();
+		commentsEntity = commentsDao.update(commentsEntity);
+		// 一覧表示用の情報を更新
+		KnowledgeLogic.get().updateKnowledgeExInfo(commentsEntity.getKnowledgeId());
+
+		// 検索エンジンに追加
+		addIndexOnComment(commentsEntity);
+		
+		// 添付ファイルを更新（紐付けをセット）
+		fileLogic.setKnowledgeFiles(commentsEntity.getKnowledgeId(), fileNos, loginedUser, commentsEntity.getCommentNo());
+	}
+	
+	/**
+	 * コメント削除
+	 * @param commentsEntity
+	 * @param loginedUser
+	 * @throws Exception 
+	 */
+	public void deleteComment(CommentsEntity commentsEntity, LoginedUser loginedUser) throws Exception {
+		CommentsDao commentsDao = CommentsDao.get();
+		commentsDao.delete(commentsEntity);
+		// 一覧表示用の情報を更新
+		KnowledgeLogic.get().updateKnowledgeExInfo(commentsEntity.getKnowledgeId());
+		
+		// 検索エンジンから削除
+		IndexLogic indexLogic = IndexLogic.get();
+		indexLogic.delete(COMMENT_ID_PREFIX + String.valueOf(commentsEntity.getCommentNo()));
+		
+		// 添付ファイルを更新（紐付けをセット）
+		fileLogic.setKnowledgeFiles(commentsEntity.getKnowledgeId(), new ArrayList(), loginedUser, commentsEntity.getCommentNo());
 	}
 	
 	
@@ -1073,6 +1118,8 @@ public class KnowledgeLogic {
 		}
 		return false;
 	}
+
+
 
 
 }

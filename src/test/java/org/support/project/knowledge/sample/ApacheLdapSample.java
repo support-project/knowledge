@@ -37,6 +37,7 @@ public class ApacheLdapSample {
 			cursor = conn.search(base, filter, scope);
 			while (cursor.next()) {
 				Entry entry = cursor.get();
+				System.out.println(entry.getDn());
 				System.out.println(entry.get("uid").toString());
 				System.out.println(entry.get("cn").toString());
 				if (entry.get("mail") != null) {
