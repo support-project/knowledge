@@ -38,12 +38,11 @@ public class StocksEntity extends GenStocksEntity {
 
 	/**
 	 * コンストラクタ
-	 * @param knowledgeId ナレッジID
-	 * @param userId USER_ID
+	 * @param stockId stockId
 	 */
 
-	public StocksEntity(Long knowledgeId, Integer userId) {
-		super(knowledgeId, userId);
+	public StocksEntity(Long stockId) {
+		super(stockId);
 	}
 
 }

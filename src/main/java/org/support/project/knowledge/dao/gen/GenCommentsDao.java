@@ -76,6 +76,7 @@ public class GenCommentsDao extends AbstractDao {
 			entity.getCommentNo()
 			, entity.getKnowledgeId()
 			, entity.getComment()
+			, entity.getCommentStatus()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()
@@ -99,6 +100,7 @@ public class GenCommentsDao extends AbstractDao {
 		Object key = executeInsert(sql, type, 
 			entity.getKnowledgeId()
 			, entity.getComment()
+			, entity.getCommentStatus()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()
@@ -138,6 +140,7 @@ public class GenCommentsDao extends AbstractDao {
 		executeUpdate(sql, 
 			entity.getKnowledgeId()
 			, entity.getComment()
+			, entity.getCommentStatus()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()

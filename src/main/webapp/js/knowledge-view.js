@@ -136,9 +136,9 @@ $(document).ready(function(){
 			console.log(data);
 			$.notify('アップロードに失敗しました', 'warn');
 		}
-	 }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');	
+	}).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');	
 	
-	
+	changeTemplate();
 });
 
 
@@ -278,4 +278,50 @@ var setImagePath = function(url, name) {
 	var textarea = $('#comment');
 	textarea.val(textarea.val() + text);
 }
+
+
+
+
+var changeTemplate = function() {
+	var typeId = $('#typeId').val();
+	var url = _CONTEXT + '/open.knowledge/template';
+	var knowledgeId = null;
+	if ($('#knowledgeId')) {
+		knowledgeId = $('#knowledgeId').val();
+	}
+	$.ajax({
+		type : 'GET',
+		url : url,
+		data : 'type_id=' + typeId + '&knowledge_id=' + knowledgeId,
+		success : function(data, dataType) {
+			console.log(data);
+			addTemplateItem(data);
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown){
+			$.notify('[fail] get template info', 'warn');
+		}
+	});
+};
+
+var addTemplateItem = function(template) {
+	var templateTag = '<i class="fa ' + template.typeIcon + '"></i>&nbsp;' + template.typeName;
+	$('#template').html(templateTag);
+	
+	if (template.items && template.items.length > 0) {
+		for (var i = 0; i < template.items.length; i++) {
+			var item = template.items[i];
+			console.log(item);
+			var tag = item.itemName + ': ';
+			var url = '';
+			if (item.itemValue) {
+				url = item.itemValue;
+			}
+			
+			tag += '<a href="' + url + '" target="_blank" >' + url + '</a>';
+			$('#template_items').append(tag);
+			$('#template_items_area').show();
+		}
+	}
+};
+
 

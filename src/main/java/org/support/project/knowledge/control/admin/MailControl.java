@@ -26,6 +26,7 @@ import org.support.project.web.entity.MailConfigsEntity;
 
 @DI(instance=Instance.Prototype)
 public class MailControl extends Control {
+	private static final String NO_CHANGE_PASSWORD = "NO_CHANGE_PASSWORD-fXLSJ_V-ZJ2E-GBAghu_usb-gtaG"; //パスワードを更新しなかったことを表すパスワード
 
 	/**
 	 * メールの設定画面を表示
@@ -38,9 +39,10 @@ public class MailControl extends Control {
 		MailConfigsEntity entity = dao.selectOnKey(AppConfig.get().getSystemName());
 		if (entity == null) {
 			entity = new MailConfigsEntity();
+		} else {
+			entity.setSmtpPassword(NO_CHANGE_PASSWORD); // パスワードは送らない
 		}
 		entity.setSystemName(AppConfig.get().getSystemName());
-		entity.setSmtpPassword(""); // パスワードは送らない
 		setAttributeOnProperty(entity);
 		
 		return forward("config.jsp");
@@ -80,13 +82,19 @@ public class MailControl extends Control {
 		}
 		
 		MailConfigsEntity entity = super.getParams(MailConfigsEntity.class);
-		
-		// パスワードは暗号化する
-		String salt = PasswordUtil.getSalt();
-		entity.setSmtpPassword(PasswordUtil.encrypt(entity.getSmtpPassword(), salt));
-		entity.setSalt(salt);
-		
 		MailConfigsDao dao = MailConfigsDao.get();
+		
+		if (entity.getSmtpPassword().equals(NO_CHANGE_PASSWORD)) {
+			MailConfigsEntity db = dao.selectOnKey(AppConfig.get().getSystemName());
+			entity.setSmtpPassword(db.getSmtpPassword());
+			entity.setSalt(db.getSalt());
+		} else {
+			// パスワードは暗号化する
+			String salt = PasswordUtil.getSalt();
+			entity.setSmtpPassword(PasswordUtil.encrypt(entity.getSmtpPassword(), salt));
+			entity.setSalt(salt);
+		}
+		
 		entity = dao.save(entity);
 		setAttributeOnProperty(entity);
 		

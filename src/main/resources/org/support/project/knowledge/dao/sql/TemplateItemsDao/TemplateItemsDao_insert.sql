@@ -1,0 +1,22 @@
+INSERT INTO TEMPLATE_ITEMS
+( 
+ITEM_NO
+ , TYPE_ID
+ , ITEM_NAME
+ , ITEM_TYPE
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

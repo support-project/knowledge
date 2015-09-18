@@ -138,6 +138,11 @@
 								<i class="fa fa-user-plus"></i>&nbsp;<%= jspUtil.label("knowledge.ldap.title") %>
 							</a>
 						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.proxy/config" style="cursor: pointer;">
+								<i class="fa fa-globe"></i>&nbsp;<%= jspUtil.label("knowledge.proxy.title") %>
+							</a>
+						</li>
 						
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.data") %></li>
 						<li >

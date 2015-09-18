@@ -21,7 +21,7 @@ import org.support.project.di.Instance;
 import org.support.project.aop.Aspect;
 
 /**
- * ストックしたナレッジ
+ * ストック
  */
 @DI(instance=Instance.Singleton)
 public class GenStocksDao extends AbstractDao {
@@ -48,9 +48,9 @@ public class GenStocksDao extends AbstractDao {
 	/**
 	 * キーで1件取得(削除フラグを無視して取得) 
 	 */
-	public StocksEntity physicalSelectOnKey(Long knowledgeId, Integer userId) {
+	public StocksEntity physicalSelectOnKey(Long stockId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_physical_select_on_key.sql");
-		return executeQuerySingle(sql, StocksEntity.class, knowledgeId, userId);
+		return executeQuerySingle(sql, StocksEntity.class, stockId);
 	}
 	/**
 	 * 全て取得 
@@ -62,37 +62,9 @@ public class GenStocksDao extends AbstractDao {
 	/**
 	 * キーで1件取得 
 	 */
-	public StocksEntity selectOnKey(Long knowledgeId, Integer userId) {
+	public StocksEntity selectOnKey(Long stockId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_select_on_key.sql");
-		return executeQuerySingle(sql, StocksEntity.class, knowledgeId, userId);
-	}
-	/**
-	 * KNOWLEDGE_ID でリストを取得
-	 */
-	public List<StocksEntity> selectOnKnowledgeId(Long knowledgeId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_select_on_knowledge_id.sql");
-		return executeQueryList(sql, StocksEntity.class, knowledgeId);
-	}
-	/**
-	 * USER_ID でリストを取得
-	 */
-	public List<StocksEntity> selectOnUserId(Integer userId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_select_on_user_id.sql");
-		return executeQueryList(sql, StocksEntity.class, userId);
-	}
-	/**
-	 * KNOWLEDGE_ID でリストを取得
-	 */
-	public List<StocksEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_physical_select_on_knowledge_id.sql");
-		return executeQueryList(sql, StocksEntity.class, knowledgeId);
-	}
-	/**
-	 * USER_ID でリストを取得
-	 */
-	public List<StocksEntity> physicalSelectOnUserId(Integer userId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_physical_select_on_user_id.sql");
-		return executeQueryList(sql, StocksEntity.class, userId);
+		return executeQuerySingle(sql, StocksEntity.class, stockId);
 	}
 	/**
 	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
@@ -101,15 +73,21 @@ public class GenStocksDao extends AbstractDao {
 	public StocksEntity rawPhysicalInsert(StocksEntity entity) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_raw_insert.sql");
 		executeUpdate(sql, 
-			entity.getKnowledgeId()
-			, entity.getUserId()
-			, entity.getComment()
+			entity.getStockId()
+			, entity.getStockName()
+			, entity.getStockType()
+			, entity.getDescription()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()
 			, entity.getUpdateDatetime()
 			, entity.getDeleteFlag()
 		);
+		String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
+		if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
+			String setValSql = "select setval('STOCKS_STOCK_ID_seq', (select max(STOCK_ID) from STOCKS));";
+			executeQuerySingle(setValSql, Long.class);
+		}
 		return entity;
 	}
 	/**
@@ -118,16 +96,18 @@ public class GenStocksDao extends AbstractDao {
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public StocksEntity physicalInsert(StocksEntity entity) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_insert.sql");
-		executeUpdate(sql, 
-			entity.getKnowledgeId()
-			, entity.getUserId()
-			, entity.getComment()
+		Class<?> type = PropertyUtil.getPropertyType(entity, "stockId");
+		Object key = executeInsert(sql, type, 
+			entity.getStockName()
+			, entity.getStockType()
+			, entity.getDescription()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()
 			, entity.getUpdateDatetime()
 			, entity.getDeleteFlag()
 		);
+		PropertyUtil.setPropertyValue(entity, "stockId", key);
 		return entity;
 	}
 	/**
@@ -158,14 +138,15 @@ public class GenStocksDao extends AbstractDao {
 	public StocksEntity physicalUpdate(StocksEntity entity) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_update.sql");
 		executeUpdate(sql, 
-			entity.getComment()
+			entity.getStockName()
+			, entity.getStockType()
+			, entity.getDescription()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()
 			, entity.getUpdateDatetime()
 			, entity.getDeleteFlag()
-			, entity.getKnowledgeId()
-			, entity.getUserId()
+			, entity.getStockId()
 		);
 		return entity;
 	}
@@ -174,7 +155,7 @@ public class GenStocksDao extends AbstractDao {
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public StocksEntity update(Integer user, StocksEntity entity) {
-		StocksEntity db = selectOnKey(entity.getKnowledgeId(), entity.getUserId());
+		StocksEntity db = selectOnKey(entity.getStockId());
 		entity.setInsertUser(db.getInsertUser());
 		entity.setInsertDatetime(db.getInsertDatetime());
 		entity.setDeleteFlag(db.getDeleteFlag());
@@ -196,7 +177,7 @@ public class GenStocksDao extends AbstractDao {
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public StocksEntity save(Integer user, StocksEntity entity) {
-		StocksEntity db = selectOnKey(entity.getKnowledgeId(), entity.getUserId());
+		StocksEntity db = selectOnKey(entity.getStockId());
 		if (db == null) {
 			return insert(user, entity);
 		} else {
@@ -208,7 +189,7 @@ public class GenStocksDao extends AbstractDao {
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public StocksEntity save(StocksEntity entity) {
-		StocksEntity db = selectOnKey(entity.getKnowledgeId(), entity.getUserId());
+		StocksEntity db = selectOnKey(entity.getStockId());
 		if (db == null) {
 			return insert(entity);
 		} else {
@@ -219,24 +200,24 @@ public class GenStocksDao extends AbstractDao {
 	 * 削除(データを生で操作/物理削除) 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void physicalDelete(Long knowledgeId, Integer userId) {
+	public void physicalDelete(Long stockId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_delete.sql");
-		executeUpdate(sql, knowledgeId, userId);
+		executeUpdate(sql, stockId);
 	}
 	/**
 	 * 削除(データを生で操作/物理削除) 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public void physicalDelete(StocksEntity entity) {
-		physicalDelete(entity.getKnowledgeId(), entity.getUserId());
+		physicalDelete(entity.getStockId());
 
 	}
 	/**
 	 * 削除(削除ユーザを指定／論理削除があれば論理削除) 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Integer user, Long knowledgeId, Integer userId) {
-		StocksEntity db = selectOnKey(knowledgeId, userId);
+	public void delete(Integer user, Long stockId) {
+		StocksEntity db = selectOnKey(stockId);
 		db.setDeleteFlag(1);
 		db.setUpdateUser(user);
 		db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
@@ -246,17 +227,17 @@ public class GenStocksDao extends AbstractDao {
 	 * 削除(論理削除があれば論理削除) 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Long knowledgeId, Integer userId) {
+	public void delete(Long stockId) {
 		DBUserPool pool = Container.getComp(DBUserPool.class);
 		Integer user = (Integer) pool.getUser();
-		delete(user, knowledgeId, userId);
+		delete(user, stockId);
 	}
 	/**
 	 * 削除(削除ユーザを指定／論理削除があれば論理削除) 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public void delete(Integer user, StocksEntity entity) {
-		delete(user, entity.getKnowledgeId(), entity.getUserId());
+		delete(user, entity.getStockId());
 
 	}
 	/**
@@ -264,15 +245,15 @@ public class GenStocksDao extends AbstractDao {
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public void delete(StocksEntity entity) {
-		delete(entity.getKnowledgeId(), entity.getUserId());
+		delete(entity.getStockId());
 
 	}
 	/**
 	 復元(論理削除されていたものを有効化) 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(Integer user, Long knowledgeId, Integer userId) {
-		StocksEntity db = physicalSelectOnKey(knowledgeId, userId);
+	public void activation(Integer user, Long stockId) {
+		StocksEntity db = physicalSelectOnKey(stockId);
 		db.setDeleteFlag(0);
 		db.setUpdateUser(user);
 		db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
@@ -282,17 +263,17 @@ public class GenStocksDao extends AbstractDao {
 	 * 復元(論理削除されていたものを有効化) 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(Long knowledgeId, Integer userId) {
+	public void activation(Long stockId) {
 		DBUserPool pool = Container.getComp(DBUserPool.class);
 		Integer user = (Integer) pool.getUser();
-		activation(user, knowledgeId, userId);
+		activation(user, stockId);
 	}
 	/**
 	 * 復元(論理削除されていたものを有効化) 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public void activation(Integer user, StocksEntity entity) {
-		activation(user, entity.getKnowledgeId(), entity.getUserId());
+		activation(user, entity.getStockId());
 
 	}
 	/**
@@ -300,7 +281,7 @@ public class GenStocksDao extends AbstractDao {
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public void activation(StocksEntity entity) {
-		activation(entity.getKnowledgeId(), entity.getUserId());
+		activation(entity.getStockId());
 
 	}
 

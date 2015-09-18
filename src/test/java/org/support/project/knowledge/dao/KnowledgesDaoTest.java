@@ -50,7 +50,7 @@ public class KnowledgesDaoTest extends TestCommon {
 			entity.setTitle("Test-" + i);
 			entity.setContent("テスト");
 			KnowledgeLogic logic = KnowledgeLogic.get();
-			entity = logic.insert(entity, null, new  ArrayList<Long>(), null, null, loginedUser);
+			entity = logic.insert(entity, null, new  ArrayList<Long>(), null, null, null, loginedUser);
 			knowledgeIds.add(entity.getKnowledgeId());
 		}
 		KnowledgesDao dao = KnowledgesDao.get();

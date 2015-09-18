@@ -17,7 +17,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 
 /**
- * ストックしたナレッジ
+ * ストック
  */
 @DI(instance=Instance.Prototype)
 public class GenStocksEntity implements Serializable {
@@ -43,21 +43,21 @@ public class GenStocksEntity implements Serializable {
 
 	/**
 	 * コンストラクタ
-	 * @param knowledgeId ナレッジID
-	 * @param userId USER_ID
+	 * @param stockId STOCK ID
 	 */
 
-	public GenStocksEntity(Long knowledgeId, Integer userId) {
+	public GenStocksEntity(Long stockId) {
 		super();
-		this.knowledgeId = knowledgeId;
-		this.userId = userId;
+		this.stockId = stockId;
 	}
-	/** USER_ID */
-	private Integer userId;
-	/** ナレッジID */
-	private Long knowledgeId;
-	/** コメント */
-	private String comment;
+	/** STOCK ID */
+	private Long stockId;
+	/** STOCK 名 */
+	private String stockName;
+	/** 区分 */
+	private Integer stockType;
+	/** 説明 */
+	private String description;
 	/** 登録ユーザ */
 	private Integer insertUser;
 	/** 登録日時 */
@@ -70,47 +70,62 @@ public class GenStocksEntity implements Serializable {
 	private Integer deleteFlag;
 
 	/**
-	 * USER_ID を取得する
+	 * STOCK ID を取得する
 	 */
-	public Integer getUserId() {
-		return this.userId;
+	public Long getStockId() {
+		return this.stockId;
 	}
 	/**
-	 * USER_ID を設定する
-	 * @param userId USER_ID
+	 * STOCK ID を設定する
+	 * @param stockId STOCK ID
 	 */
-	public GenStocksEntity setUserId(Integer userId) {
-		this.userId = userId;
+	public GenStocksEntity setStockId(Long stockId) {
+		this.stockId = stockId;
 		return this;
 	}
 
 	/**
-	 * ナレッジID を取得する
+	 * STOCK 名 を取得する
 	 */
-	public Long getKnowledgeId() {
-		return this.knowledgeId;
+	public String getStockName() {
+		return this.stockName;
 	}
 	/**
-	 * ナレッジID を設定する
-	 * @param knowledgeId ナレッジID
+	 * STOCK 名 を設定する
+	 * @param stockName STOCK 名
 	 */
-	public GenStocksEntity setKnowledgeId(Long knowledgeId) {
-		this.knowledgeId = knowledgeId;
+	public GenStocksEntity setStockName(String stockName) {
+		this.stockName = stockName;
 		return this;
 	}
 
 	/**
-	 * コメント を取得する
+	 * 区分 を取得する
 	 */
-	public String getComment() {
-		return this.comment;
+	public Integer getStockType() {
+		return this.stockType;
 	}
 	/**
-	 * コメント を設定する
-	 * @param comment コメント
+	 * 区分 を設定する
+	 * @param stockType 区分
 	 */
-	public GenStocksEntity setComment(String comment) {
-		this.comment = comment;
+	public GenStocksEntity setStockType(Integer stockType) {
+		this.stockType = stockType;
+		return this;
+	}
+
+	/**
+	 * 説明 を取得する
+	 */
+	public String getDescription() {
+		return this.description;
+	}
+	/**
+	 * 説明 を設定する
+	 * @param description 説明
+	 */
+	public GenStocksEntity setDescription(String description) {
+		this.description = description;
 		return this;
 	}
 
@@ -193,19 +208,16 @@ public class GenStocksEntity implements Serializable {
 	 * キーの値を取得 
 	 */
 	public Object[] getKeyValues() {
-		Object[] keyValues = new Object[2];
-		keyValues[0] = this.knowledgeId;
-		keyValues[1] = this.userId;
+		Object[] keyValues = new Object[1];
+		keyValues[0] = this.stockId;
 		return keyValues;
 	}
 	/**
 	 * キーの値を設定 
-	 * @param knowledgeId ナレッジID
-	 * @param userId USER_ID
+	 * @param stockId STOCK ID
 	 */
-	public void setKeyValues(Long knowledgeId, Integer userId) {
-		this.knowledgeId = knowledgeId;
-		this.userId = userId;
+	public void setKeyValues(Long stockId) {
+		this.stockId = stockId;
 	}
 	/**
 	 * キーで比較 
@@ -236,9 +248,10 @@ public class GenStocksEntity implements Serializable {
 	 */
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("knowledgeId = ").append(knowledgeId).append("\n");
-		builder.append("userId = ").append(userId).append("\n");
-		builder.append("comment = ").append(comment).append("\n");
+		builder.append("stockId = ").append(stockId).append("\n");
+		builder.append("stockName = ").append(stockName).append("\n");
+		builder.append("stockType = ").append(stockType).append("\n");
+		builder.append("description = ").append(description).append("\n");
 		builder.append("insertUser = ").append(insertUser).append("\n");
 		builder.append("insertDatetime = ").append(insertDatetime).append("\n");
 		builder.append("updateUser = ").append(updateUser).append("\n");
@@ -260,22 +273,27 @@ public class GenStocksEntity implements Serializable {
 		Validator validator;
 		ValidateError error;
 		validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-		error = validator.validate(this.userId, convLabelName("User Id"));
-		if (error != null) {
-			errors.add(error);
-		}
-		validator = ValidatorFactory.getInstance(Validator.INTEGER);
-		error = validator.validate(this.userId, convLabelName("User Id"));
-		if (error != null) {
-			errors.add(error);
-		}
-		validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-		error = validator.validate(this.knowledgeId, convLabelName("Knowledge Id"));
+		error = validator.validate(this.stockName, convLabelName("Stock Name"));
 		if (error != null) {
 			errors.add(error);
 		}
 		validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-		error = validator.validate(this.comment, convLabelName("Comment"), 1024);
+		error = validator.validate(this.stockName, convLabelName("Stock Name"), 256);
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+		error = validator.validate(this.stockType, convLabelName("Stock Type"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.INTEGER);
+		error = validator.validate(this.stockType, convLabelName("Stock Type"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+		error = validator.validate(this.description, convLabelName("Description"), 1024);
 		if (error != null) {
 			errors.add(error);
 		}
@@ -304,22 +322,27 @@ public class GenStocksEntity implements Serializable {
 		Validator validator;
 		ValidateError error;
 		validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-		error = validator.validate(values.get("userId"), convLabelName("User Id"));
-		if (error != null) {
-			errors.add(error);
-		}
-		validator = ValidatorFactory.getInstance(Validator.INTEGER);
-		error = validator.validate(values.get("userId"), convLabelName("User Id"));
-		if (error != null) {
-			errors.add(error);
-		}
-		validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-		error = validator.validate(values.get("knowledgeId"), convLabelName("Knowledge Id"));
+		error = validator.validate(values.get("stockName"), convLabelName("Stock Name"));
 		if (error != null) {
 			errors.add(error);
 		}
 		validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-		error = validator.validate(values.get("comment"), convLabelName("Comment"), 1024);
+		error = validator.validate(values.get("stockName"), convLabelName("Stock Name"), 256);
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+		error = validator.validate(values.get("stockType"), convLabelName("Stock Type"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.INTEGER);
+		error = validator.validate(values.get("stockType"), convLabelName("Stock Type"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+		error = validator.validate(values.get("description"), convLabelName("Description"), 1024);
 		if (error != null) {
 			errors.add(error);
 		}

@@ -1,11 +1,10 @@
 package org.support.project.knowledge.control.protect;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import net.arnx.jsonic.JSONException;
+import java.util.Map;
 
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.exception.ParseException;
@@ -19,9 +18,12 @@ import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.TagsDao;
+import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
+import org.support.project.knowledge.entity.TemplateItemsEntity;
+import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
@@ -60,6 +62,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		
 		List<TagsEntity> tagitems = TagsDao.get().selectAll();
 		setAttribute("tagitems", tagitems);
+		
+		List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+		setAttribute("templates", templates);
+		
+		setAttribute("typeId", KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE);
 		
 		return forward("view_add.jsp");
 	}
@@ -110,6 +117,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<TagsEntity> tagitems = TagsDao.get().selectAll();
 		setAttribute("tagitems", tagitems);
 		
+		List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+		setAttribute("templates", templates);
+
 		return forward("view_edit.jsp");
 	}
 	
@@ -155,10 +165,17 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				}
 			}
 		}
-
-		//entity.setTitle(super.sanitize(entity.getTitle())); //XSS対策
-		//entity.setContent(super.sanitize(entity.getContent())); //XSS対策
 		
+		List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+		setAttribute("templates", templates);
+		
+		TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(entity.getTypeId());
+		List<TemplateItemsEntity> items = template.getItems();
+		for (TemplateItemsEntity item : items) {
+			String itemValue = super.getParam("item_" + item.getItemNo());
+			item.setItemValue(itemValue);
+		}
+
 		List<ValidateError> errors = entity.validate();
 		if (!errors.isEmpty()) {
 			setResult(null, errors);
@@ -180,7 +197,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String tags = super.getParam("tagNames");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
 		
-		entity = knowledgeLogic.insert(entity, tagList, fileNos, groups, editors, super.getLoginedUser());
+		entity = knowledgeLogic.insert(entity, tagList, fileNos, groups, editors, template, super.getLoginedUser());
 		setAttributeOnProperty(entity);
 		
 		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(entity.getKnowledgeId(), getRequest().getContextPath());
@@ -230,9 +247,16 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				}
 			}
 		}
-
-		//entity.setTitle(super.sanitize(entity.getTitle())); //XSS対策
-		//entity.setContent(super.sanitize(entity.getContent())); //XSS対策
+		
+		List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+		setAttribute("templates", templates);
+		
+		TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(entity.getTypeId());
+		List<TemplateItemsEntity> items = template.getItems();
+		for (TemplateItemsEntity item : items) {
+			String itemValue = super.getParam("item_" + item.getItemNo());
+			item.setItemValue(itemValue);
+		}
 		
 		KnowledgesDao dao = Container.getComp(KnowledgesDao.class);
 		List<ValidateError> errors = entity.validate();
@@ -271,7 +295,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String tags = super.getParam("tagNames");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
 		
-		entity = knowledgeLogic.update(entity, tagList, fileNos, groups, editors, super.getLoginedUser());
+		entity = knowledgeLogic.update(entity, tagList, fileNos, groups, editors, template, super.getLoginedUser());
 		setAttributeOnProperty(entity);
 		addMsgSuccess("message.success.update");
 		
@@ -304,6 +328,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		
 		List<TagsEntity> tagitems = TagsDao.get().selectAll();
 		setAttribute("tagitems", tagitems);
+
+		List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+		setAttribute("templates", templates);
 		
 		Long knowledgeId = new Long(id);
 		KnowledgesEntity check = dao.selectOnKey(knowledgeId);

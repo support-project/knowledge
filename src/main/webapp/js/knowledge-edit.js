@@ -197,6 +197,12 @@ $(document).ready(function() {
 	});
 	
 	setUpTagSelect();
+	
+	$('input[name="typeId"]:radio').change(function() {
+		changeTemplate();
+	});
+	changeTemplate();
+	
 });
 
 var getGroups = function(keyword, offset, listId, pageId, selectFunc) {
@@ -366,6 +372,11 @@ var preview = function() {
 		});
 		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
 		$('#preview').html(content);
+		
+		var speed = 500;
+		var target = $('#preview');
+		var position = target.offset().top;
+		$("html, body").animate({scrollTop:position}, speed, "swing");
 	});
 };
 
@@ -388,4 +399,45 @@ function deleteKnowledge() {
 		}
 	}); 
 };
+
+var changeTemplate = function() {
+	var typeId = $('input[name="typeId"]:checked').val();
+	console.log(typeId);
+	var url = _CONTEXT + '/open.knowledge/template';
+	var knowledgeId = null;
+	if ($('#knowledgeId')) {
+		knowledgeId = $('#knowledgeId').val();
+	}
+	$.ajax({
+		type : 'GET',
+		url : url,
+		data : 'type_id=' + typeId + '&knowledge_id=' + knowledgeId,
+		success : function(data, dataType) {
+			console.log(data);
+			addTemplateItem(data);
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown){
+			$.notify('[fail] get template info', 'warn');
+		}
+	});
+};
+
+var addTemplateItem = function(template) {
+	$('#template_items').html('');
+	if (template.items && template.items.length > 0) {
+		for (var i = 0; i < template.items.length; i++) {
+			var item = template.items[i];
+			console.log(item);
+			var tag = '<label for="item_' + item.itemNo + '">' + item.itemName + '</label>';
+			tag += '<input type="text" class="form-control" name="item_' + item.itemNo + '" for="item_' + item.itemNo
+			var val = '';
+			if (item.itemValue) {
+				val = item.itemValue;
+			}
+			tag += '" value="' + val + '" />';
+			$('#template_items').append(tag);
+		}
+	}
+};
+
 

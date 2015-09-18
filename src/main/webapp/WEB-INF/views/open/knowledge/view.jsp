@@ -58,47 +58,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		<div class="col-sm-12">
 			<div class="thumbnail">
 				<div class="caption">
-<%-- ナレッジの属性 --%>
-					<c:if test="${!empty tagNames}">
-					<p class="tags">
-					<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput"
-						value="<%= jspUtil.out("tagNames", JspUtil.ESCAPE_CLEAR) %>" disabled="disabled"/>
-					</p>
-					</c:if>
-					
-					<p>
-						<button class="btn btn-warning" onclick="addlike(<%= jspUtil.out("knowledgeId") %>);">
-							<i class="fa fa-thumbs-o-up"></i>&nbsp;
-							<%= jspUtil.label("knowledge.view.like") %>
-						</button>
-					</p>
-					
-					<p>
-						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag", 
-								jspUtil.label("label.public.view")) %>
-						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", 
-								jspUtil.label("label.private.view")) %>
-								
-						<% if(jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag")) { %>
-							<button class="btn btn-link" onclick="viewProtect(<%= jspUtil.out("knowledgeId") %>);">
-								<%= jspUtil.label("label.protect.view") %>
-							</button>
-							
-						<% } %>
-					
-<%-- イイネ！など --%>
-						<a class="btn btn-link" href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
-							<i class="fa fa-thumbs-o-up"></i>&nbsp;
-							× <span id="like_count"><%= jspUtil.out("like_count") %></span>
-						</a>
-						
-						<a class="btn btn-link" href="#comments" id="commentsLink">
-							<i class="fa fa-comments-o"></i>&nbsp;
-							× <%= jspUtil.out("comments.size()") %>
-						</a>
-					</p>
-					
-					
+<%-- 登録者情報 --%>
 					<div class="insert_info">
 						<div class="saveType">
 						[<%= jspUtil.label("label.registration") %>]
@@ -131,6 +91,40 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 						</a>
 					</div>
 					
+<%-- 公開区分やイイネ件数など --%>
+					<p>
+						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag", 
+								jspUtil.label("label.public.view")) %>
+						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", 
+								jspUtil.label("label.private.view")) %>
+								
+						<% if(jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag")) { %>
+							<button class="btn btn-link" onclick="viewProtect(<%= jspUtil.out("knowledgeId") %>);">
+								<%= jspUtil.label("label.protect.view") %>
+							</button>
+							
+						<% } %>
+						
+						<a class="btn btn-link" href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
+							<i class="fa fa-thumbs-o-up"></i>&nbsp;
+							× <span id="like_count"><%= jspUtil.out("like_count") %></span>
+						</a>
+						
+						<a class="btn btn-link" href="#comments" id="commentsLink">
+							<i class="fa fa-comments-o"></i>&nbsp;
+							× <%= jspUtil.out("comments.size()") %>
+						</a>
+					</p>
+				
+<%-- タグ --%>
+					<c:if test="${!empty tagNames}">
+					<p class="tags">
+					<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput"
+						value="<%= jspUtil.out("tagNames", JspUtil.ESCAPE_CLEAR) %>" disabled="disabled"/>
+					</p>
+					</c:if>
+
+					
 <%-- 添付ファイル --%>
 					<c:forEach var="file" items="${files}" >
 						<c:if test="${file.commentNo == 0}">
@@ -144,16 +138,29 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 					</c:forEach>
 					
 <%-- ナレッジ表示 --%>
-					<div style="word-break:break-all" id="content" class="markdown">
-					<%= jspUtil.out("content", JspUtil.ESCAPE_NONE) %>
+					<div style="margin-top: 10px;">
+					<input type="hidden" id="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" />
+					<input type="hidden" id="typeId" value="<%= jspUtil.out("typeId") %>" />
+					<span id="template"></span>
+					</div>
+					<div style="word-break:break-all;display: none;" id="template_items_area" class="markdown viewarea">
+					<span id="template_items"></span>
 					</div>
 					
+					<div style="word-break:break-all;" id="content" class="markdown viewarea">
+					<%= jspUtil.out("content", JspUtil.ESCAPE_NONE) %>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	
 <%-- 操作ボタン --%>
+	<button class="btn btn-warning" onclick="addlike(<%= jspUtil.out("knowledgeId") %>);">
+		<i class="fa fa-thumbs-o-up"></i>&nbsp;
+		<%= jspUtil.label("knowledge.view.like") %>
+	</button>
+
 	<% if (request.getRemoteUser() != null) { 
 		if ((boolean) request.getAttribute("edit")) { %>
 		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>"

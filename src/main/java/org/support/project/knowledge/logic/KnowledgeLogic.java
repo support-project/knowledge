@@ -25,11 +25,13 @@ import org.support.project.knowledge.dao.KnowledgeEditUsersDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
+import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgeTagsDao;
 import org.support.project.knowledge.dao.KnowledgeUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.TagsDao;
+import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgeEditGroupsEntity;
@@ -37,11 +39,14 @@ import org.support.project.knowledge.entity.KnowledgeEditUsersEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
+import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgeTagsEntity;
 import org.support.project.knowledge.entity.KnowledgeUsersEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
+import org.support.project.knowledge.entity.TemplateItemsEntity;
+import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.entity.ViewHistoriesEntity;
 import org.support.project.knowledge.indexer.IndexingValue;
 import org.support.project.knowledge.searcher.SearchResultValue;
@@ -60,6 +65,9 @@ public class KnowledgeLogic {
 	public static final int PUBLIC_FLAG_PUBLIC = 0;
 	public static final int PUBLIC_FLAG_PRIVATE = 1;
 	public static final int PUBLIC_FLAG_PROTECT = 2;
+	
+	public static final int TEMPLATE_TYPE_KNOWLEDGE = -100;
+	public static final int TEMPLATE_TYPE_BOOKMARK = -99;
 	
 	public static final int TYPE_KNOWLEDGE = IndexType.knowledge.getValue();
 	public static final int TYPE_FILE = IndexType.KnowledgeFile.getValue();
@@ -124,15 +132,17 @@ public class KnowledgeLogic {
 	 * @param entity
 	 * @param tags 
 	 * @param fileNos 
+	 * @param targets 
 	 * @param editors 
-	 * @param groups 
+	 * @param template 
 	 * @param loginedUser
 	 * @return
 	 * @throws Exception
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public KnowledgesEntity insert(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos,
-			List<LabelValue> targets, List<LabelValue> editors, LoginedUser loginedUser) throws Exception {
+			List<LabelValue> targets, List<LabelValue> editors, TemplateMastersEntity template,
+			LoginedUser loginedUser) throws Exception {
 		// ナレッジを登録
 		entity = knowledgesDao.insert(entity);
 		// アクセス権を登録
@@ -141,19 +151,17 @@ public class KnowledgeLogic {
 		saveEditorsUser(entity, loginedUser, editors);
 		// タグを登録
 		setTags(entity, tags);
-		
 		// 添付ファイルを更新（紐付けをセット）
 		fileLogic.setKnowledgeFiles(entity.getKnowledgeId(), fileNos, loginedUser);
+		// 拡張項目の保存
+		saveTemplateItemValue(entity.getKnowledgeId(), template, loginedUser);
 		
 		// 全文検索エンジンへ登録
-		saveIndex(entity, tags, targets, loginedUser.getUserId());
-		
+		saveIndex(entity, tags, targets, template, loginedUser.getUserId());
 		// 一覧表示用の情報を更新
 		updateKnowledgeExInfo(entity);
-		
 		// 履歴登録
 		insertHistory(entity);
-		
 		// 通知（TODO 別スレッド化を検討）
 		NotifyLogic.get().notifyOnKnowledgeInsert(entity);
 		
@@ -166,14 +174,17 @@ public class KnowledgeLogic {
 	 * ナレッジを更新
 	 * @param entity
 	 * @param fileNos 
+	 * @param targets
 	 * @param editors 
+	 * @param template 
 	 * @param loginedUser
 	 * @return
 	 * @throws Exception 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public KnowledgesEntity update(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos,
-			List<LabelValue> targets, List<LabelValue> editors, LoginedUser loginedUser) throws Exception {
+			List<LabelValue> targets, List<LabelValue> editors, TemplateMastersEntity template,
+			LoginedUser loginedUser) throws Exception {
 		// ナレッッジを更新
 		entity = knowledgesDao.update(entity);
 		// ユーザのアクセス権を解除
@@ -197,11 +208,14 @@ public class KnowledgeLogic {
 		knowledgeTagsDao.deleteOnKnowledgeId(entity.getKnowledgeId());
 		setTags(entity, tags);
 		
+		// 拡張項目の保存
+		saveTemplateItemValue(entity.getKnowledgeId(), template, loginedUser);
+		
 		// 添付ファイルを更新（紐付けをセット）
 		fileLogic.setKnowledgeFiles(entity.getKnowledgeId(), fileNos, loginedUser);
 		
 		// 全文検索エンジンへ登録
-		saveIndex(entity, tags, targets, entity.getInsertUser());
+		saveIndex(entity, tags, targets, template, entity.getInsertUser());
 		
 		// 一覧表示用の情報を更新
 		updateKnowledgeExInfo(entity);
@@ -215,6 +229,30 @@ public class KnowledgeLogic {
 		return entity;
 	}
 	
+	/**
+	 * テンプレートにある拡張項目値を保存
+	 * @param knowledgeId 
+	 * @param template
+	 * @param loginedUser
+	 */
+	private void saveTemplateItemValue(Long knowledgeId, TemplateMastersEntity template, LoginedUser loginedUser) {
+		if (template == null) {
+			return;
+		}
+		List<TemplateItemsEntity> items = template.getItems();
+		if (items == null) {
+			return;
+		}
+		for (TemplateItemsEntity item : items) {
+			KnowledgeItemValuesEntity val = new KnowledgeItemValuesEntity();
+			val.setKnowledgeId(knowledgeId);
+			val.setTypeId(template.getTypeId());
+			val.setItemNo(item.getItemNo());
+			val.setItemValue(item.getItemValue());
+			val.setItemStatus(KnowledgeItemValuesEntity.STATUS_SAVED);
+			KnowledgeItemValuesDao.get().save(val);
+		}
+	}
 
 	/**
 	 * ナレッジの更新履歴を登録
@@ -337,16 +375,26 @@ public class KnowledgeLogic {
 	 * 全文検索エンジンへ保存
 	 * @param entity
 	 * @param tags 
+	 * @param template 
 	 * @param groups 
 	 * @param loginedUser
 	 * @throws Exception
 	 */
-	private void saveIndex(KnowledgesEntity entity, List<TagsEntity> tags, List<LabelValue> targets, Integer creator) throws Exception {
+	private void saveIndex(KnowledgesEntity entity, List<TagsEntity> tags, List<LabelValue> targets,
+			TemplateMastersEntity template, Integer creator) throws Exception {
 		IndexingValue indexingValue = new IndexingValue();
 		indexingValue.setType(TYPE_KNOWLEDGE);
 		indexingValue.setId(String.valueOf(entity.getKnowledgeId()));
 		indexingValue.setTitle(entity.getTitle());
-		indexingValue.setContents(entity.getContent());
+		
+		StringBuilder content = new StringBuilder(entity.getContent());
+		if (template != null) {
+			List<TemplateItemsEntity> items = template.getItems();
+			for (TemplateItemsEntity item : items) {
+				content.append(item.getItemName()).append(':').append(item.getItemValue());
+			}
+		}
+		indexingValue.setContents(content.toString());
 		indexingValue.addUser(creator);
 		if (entity.getPublicFlag() == null || PUBLIC_FLAG_PUBLIC == entity.getPublicFlag()) {
 			indexingValue.addUser(ALL_USER);
@@ -621,6 +669,25 @@ public class KnowledgeLogic {
 					entity.setScore(searchResultValue.getScore());
 					knowledges.add(entity);
 				}
+			} else if (searchResultValue.getType() == IndexType.bookmarkContent.getValue()) {
+				// TODO 1件づつ処理しているので、パフォーマンスが悪いので後で処理を検討
+				String id = searchResultValue.getId().substring(FileParseBat.WEB_ID_PREFIX.length());
+				Long knowledgeId = new Long(id);
+				KnowledgesEntity entity = knowledgesDao.selectOnKeyWithUserName(knowledgeId);
+				if (entity != null && entity.getKnowledgeId() != null) {
+					StringBuilder builder = new StringBuilder();
+					builder.append("[Bookmark Content] ");
+					if (StringUtils.isNotEmpty(searchResultValue.getHighlightedTitle())) {
+						builder.append(searchResultValue.getHighlightedTitle());
+					}
+					builder.append("<br/>");
+					if (StringUtils.isNotEmpty(searchResultValue.getHighlightedContents())) {
+						builder.append(searchResultValue.getHighlightedContents());
+					}
+					entity.setContent(builder.toString());
+					entity.setScore(searchResultValue.getScore());
+					knowledges.add(entity);
+				}
 			}
 		}
 
@@ -642,7 +709,7 @@ public class KnowledgeLogic {
 	
 //	/**
 //	 * コメントの件数を取得
-//	 * TODO 再度SQLを実行するのでは無く、ナレッジ取得時にカウントもjoinして取得したほうが早い
+//	 * 再度SQLを実行するのでは無く、ナレッジ取得時にカウントもjoinして取得したほうが早い
 //	 * 
 //	 * @param entity
 //	 */
@@ -654,7 +721,7 @@ public class KnowledgeLogic {
 //
 //	/**
 //	 * いいねの件数を取得
-//	 * TODO 再度SQLを実行するのでは無く、ナレッジ取得時にカウントもjoinして取得したほうが早い
+//	 * 再度SQLを実行するのでは無く、ナレッジ取得時にカウントもjoinして取得したほうが早い
 //	 * 
 //	 * @param entity
 //	 */
@@ -1063,7 +1130,20 @@ public class KnowledgeLogic {
 		// ナレッジの情報を検索エンジンへ更新
 		List<TagsEntity> tags = tagsDao.selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
 		List<LabelValue> targets = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgesEntity.getKnowledgeId());
-		saveIndex(knowledgesEntity, tags, targets, knowledgesEntity.getInsertUser());
+		
+		// 拡張値を取得
+		TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(knowledgesEntity.getTypeId());
+		List<TemplateItemsEntity> items = template.getItems();
+		List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
+		for (TemplateItemsEntity item : items) {
+			for (KnowledgeItemValuesEntity val : values) {
+				if (item.getItemNo().equals(val.getItemNo())) {
+					item.setItemValue(val.getItemValue());
+				}
+			}
+		}
+		// インデックス更新
+		saveIndex(knowledgesEntity, tags, targets, template, knowledgesEntity.getInsertUser());
 		
 		// コメントを検索エンジンへ
 		List<CommentsEntity> comments = CommentsDao.get().selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());

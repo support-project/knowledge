@@ -38,6 +38,17 @@
 	margin-top: 20px;
 }
 
+.viewarea {
+/*	background: #EEE; */
+	border: 1px solid #DDD;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	color: #111;
+/*	width: 100px; */
+	padding: 10px;
+}
+
 
 /*============================================================
 Comments 
