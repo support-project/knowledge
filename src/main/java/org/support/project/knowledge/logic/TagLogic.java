@@ -46,7 +46,7 @@ public class TagLogic {
 		if (loginedUser != null && loginedUser.isAdmin()) {
 			tags = tagsDao.selectWithKnowledgeCountAdmin(offset, limit);
 		} else {
-			tags = tagsDao.selectWithKnowledgeCount(userid, groups, offset * offset, limit);
+			tags = tagsDao.selectWithKnowledgeCount(userid, groups, offset, limit);
 		}
 		return tags;
 	}
