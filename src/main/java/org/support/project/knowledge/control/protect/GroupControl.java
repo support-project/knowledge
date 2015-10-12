@@ -235,7 +235,7 @@ public class GroupControl extends Control {
 	 * @return
 	 * @throws InvalidParamException
 	 */
-	@Get
+	@Post
 	public Boundary delete() throws InvalidParamException {
 		Integer groupId = -1;
 		String id = getParam("groupId");
