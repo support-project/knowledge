@@ -177,11 +177,11 @@ Knowledge 0.6.0 からのLdapの設定です。<br/>
 			
 			<div class="form-group">
 				<label for="host"><%= jspUtil.label("knowledge.ldap.label.host") %><%= jspUtil.label("label.required") %></label>
-				<input type="text" class="form-control" name="host2" id="host" placeholder="HOST" value="<%= jspUtil.out("host") %>" />
+				<input type="text" class="form-control" name="host2" id="host" placeholder="HOST" value="<%= jspUtil.out("host2") %>" />
 			</div>
 			<div class="form-group">
 				<label for="port"><%= jspUtil.label("knowledge.ldap.label.port") %><%= jspUtil.label("label.required") %></label>
-				<input type="text" class="form-control" name="port2" id="port" placeholder="PORT" value="<%= jspUtil.out("port") %>" />
+				<input type="text" class="form-control" name="port2" id="port" placeholder="PORT" value="<%= jspUtil.out("port2") %>" />
 			</div>
 			
 			<div class="form-group">
@@ -246,7 +246,7 @@ Knowledge 0.6.0 からのLdapの設定です。<br/>
 	</div>
 	
 	
-	<input type="hidden" name="configType" id="configType" value="<%= jspUtil.out("configType") %>" />
+	<input type="text" name="configType" id="configType" value="<%= jspUtil.out("configType") %>" />
 	
 	<input type="hidden" name="systemName" value="<%= jspUtil.out("systemName") %>" />
 	
