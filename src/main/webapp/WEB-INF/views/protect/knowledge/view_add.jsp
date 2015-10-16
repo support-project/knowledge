@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-edit.css") %>" />
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/bootstrap-select.css") %>" />
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
@@ -27,6 +28,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/tagselect.js") %>"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-edit.js") %>"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/bootstrap-select.js") %>"></script>
 
 <script>
 var _UPLOADED = '<%= jspUtil.label("knowledge.edit.label.uploaded") %>';
@@ -60,6 +62,9 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 
 <form action="<%= request.getContextPath()%>/protect.knowledge/add" method="post" role="form" enctype="multipart/form-data">
 	
+<!-- テンプレート選択 -->
+<jsp:include page="template.jsp"></jsp:include>
+
 	<!-- template -->
 	<div class="form-group">
 		<label for="input_title"><%= jspUtil.label("knowledge.add.label.type") %></label><br/>
@@ -80,23 +85,34 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 	<!-- title -->
 	<div class="form-group">
 		<label for="input_title"><%= jspUtil.label("knowledge.add.label.title") %></label>
-		<input type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="<%= jspUtil.out("title") %>">
+		<input onKeyup="preview();" type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="<%= jspUtil.out("title") %>">
 	</div>
 	
 	<!-- contents -->
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td width="50%" valign="top">
 	<div class="form-group">
 		<label for="input_content"><%= jspUtil.label("knowledge.add.label.content") %>
 		<span class="helpMarkdownLabel">
 		<a data-toggle="modal" data-target="#helpMarkdownModal">Markdown supported</a>
 		</span>
 		</label>
-		<textarea class="form-control" name="content" rows="8" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
+		<textarea onKeyup="preview();" class="form-control" name="content" rows="16" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/objects" data-target="#emojiObjectsModal">objects</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
 	</div>
+</td>	
+<td width="50%" valign="top">
+		<div style="height: 360px;overflow-y: scroll;overflow-x: auto;">
+			<p class="preview markdown" id="preview" style="margin-top: 0px;"></p>
+		</div>
+</td>	
+</tr>
+</table>
 	
 	<!-- items -->
 	<div class="form-group" id="template_items">
@@ -206,7 +222,9 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 	<!-- buttons -->
 	<hr/>
 	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
+<!--
 	<button type="button" class="btn btn-info" onclick="preview();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
+-->
 	<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
 		class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %>
 	</a>
@@ -217,7 +235,6 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 
 
 
-<p class="preview markdown" id="preview"></p>
 <span style="display: none;" id="content_text">
 </span>
 

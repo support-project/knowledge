@@ -43,6 +43,9 @@
 
 <form action="<%= request.getContextPath()%>/protect.knowledge/update_comment" method="post" role="form" id="commentForm" enctype="multipart/form-data">
 
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td width="50%" valign="top">
 	<div class="form-group">
 		<label for="comment">Comment
 		<span class="helpMarkdownLabel">
@@ -50,7 +53,7 @@
 		</span>
 		</label>
 		<input type="hidden" name="commentNo" value="<%= jspUtil.out("commentNo") %>" id="commentNo"/>
-		<textarea class="form-control" name="comment" rows="8" 
+		<textarea onKeyup="preview();" class="form-control" name="comment" rows="16"
 		placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="comment"><%= jspUtil.out("comment") %></textarea>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>
@@ -58,8 +61,16 @@
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
 	</div>
-	
-	
+</td>
+<td width="50%" valign="top">
+		<div style="height: 360px;overflow-y: scroll;overflow-x: auto;">
+			<p class="preview markdown" id="preview" style="margin-top: 0px;"></p>
+		</div>
+</td>
+</tr>
+</table>
+
+
 		<div class="form-group">
 			<label for="input_fileupload"><%= jspUtil.label("knowledge.add.label.files") %></label><br/>
 			<div id="fileupload">
@@ -96,33 +107,39 @@
 			</div>
 		</c:forEach>
 		</div>
-	
-	
-	
+
 	<button type="submit" class="btn btn-primary">
 		<i class="fa fa-save"></i>&nbsp;
 		<%= jspUtil.label("label.update") %>
 	</button>
-	
+<!--
 	<button type="button" class="btn btn-info" onclick="preview();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
-	
+-->
 	<button type="button" class="btn btn-danger" onclick="deleteComment();"><i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %></button>
-	
+
 	<a href="<%= request.getContextPath()%>/protect.knowledge/view/<%= jspUtil.out("knowledgeId") %>" class="btn btn-warning">
 		<i class="fa fa-undo"></i>&nbsp;
 		<%= jspUtil.label("label.cancel") %>
 	</a>
-	
+
 </form>
 
 <br/>
-<p class="preview markdown" id="preview"></p>
 <span style="display: none;" id="comment_text">
 </span>
 
 
 <jsp:include page="markdown.jsp"></jsp:include>
 <jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
+
+<script>
+<!--
+//初期表示
+window.onload = function() {
+  preview();
+};
+-->
+</script>
 
 </c:param>
 
