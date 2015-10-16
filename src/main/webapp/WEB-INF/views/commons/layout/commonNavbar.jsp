@@ -7,6 +7,7 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+
 <% String top = "/open.knowledge/list"; %>
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
@@ -25,12 +26,18 @@
 				style="cursor: pointer;"> <i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
 				<span style="font-size: 8pt;"><%= jspUtil.label("label.version") %></span>
 			</a>
+
+			<a class="navbar-brand"
+				href="http://10.2.1.167:10083/projects/knowledge"
+				style="cursor: pointer;">
+				 <i class="fa fa-reply"></i>&nbsp;<span style="font-size: 10pt;">戻る</span>
+			</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
-			
+
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" role="button" aria-expanded="false">
 						<i class="fa fa-bolt" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.menu") %>
@@ -43,7 +50,7 @@
 								<i class="fa fa-list-alt"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.all") %>
 							</a>
 						</li>
-						
+
 						<% if (jspUtil.logined()) { %>
 						<li>
 							<a href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.id() %>" >
@@ -51,7 +58,7 @@
 							</a>
 						</li>
 						<% } %>
-						
+
 						<li >
 							<a href="<%= request.getContextPath() %>/open.knowledge/search" >
 								<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.search") %>
@@ -62,7 +69,7 @@
 								<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.menu.knowledge.add") %>
 							</a>
 						</li>
-							
+
 						<% if (jspUtil.logined()) { %>
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.group") %></li>
 						<li >
@@ -71,16 +78,16 @@
 							</a>
 						</li>
 						<% } %>
-						
+
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.tag") %></li>
 						<li >
 							<a href="<%= request.getContextPath() %>/open.tag/list">
 								<i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("knowledge.list.tags.list") %>
 							</a>
 						</li>
-						
+
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.lang") %></li>
-						
+
 						<%
 							AppConfig appConfig = AppConfig.get();
 							List<LabelValue> languages = appConfig.getLanguages();
@@ -96,7 +103,7 @@
 						%>
 					</ul>
 				</li>
-				
+
 				<% if (request.isUserInRole("admin")) { %>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" role="button" aria-expanded="false">
@@ -112,17 +119,17 @@
 						</li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.users/accept_list" style="cursor: pointer;">
-								<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.acccept") %> 
+								<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.acccept") %>
 							</a>
 						</li>
-						
+
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.system") %></li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.config/system" style="cursor: pointer;">
 								<i class="fa fa-cog"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system.params") %>
 							</a>
 						</li>
-						
+
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.config/config" style="cursor: pointer;">
 								<i class="fa fa-cogs"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system.general") %>
@@ -143,7 +150,7 @@
 								<i class="fa fa-globe"></i>&nbsp;<%= jspUtil.label("knowledge.proxy.title") %>
 							</a>
 						</li>
-						
+
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.data") %></li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.database/index" style="cursor: pointer;">
@@ -188,15 +195,15 @@
 								<i class="fa fa-male"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.myknowledge") %>
 							</a>
 						</li>
-						
+
 						<li class="divider"></li>
 						<li id="tabLogout">
 							<a href="<%= request.getContextPath() %>/protect.notify" style="cursor: pointer;">
 								<i class="fa fa-bell-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.notify") %>
 							</a>
 						</li>
-						
-						
+
+
 						<li class="divider"></li>
 						<li id="tabLogout">
 							<a id="menuSignout" href="<%= request.getContextPath() %>/signout" style="cursor: pointer;">
@@ -212,9 +219,9 @@
 					</a>
 				</li>
 				<% } %>
-				
+
 			</ul>
-			
+
 			<form class="nav navbar-nav navbar-form navbar-right" role="search"
 				action="<%= request.getContextPath() %><%= top %>">
 				<div class="input-group">
@@ -227,7 +234,7 @@
 					</div>
 				</div>
 			</form>
-			
+
 		</div>
 		<!-- /.navbar-collapse -->
 	</div>

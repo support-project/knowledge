@@ -18,6 +18,13 @@
 			<value>en</value>
 		</language>
 	</languages>
+
+	<hostName>10.2.1.167</hostName>
+	<redmineURL>http://10.2.1.167:10083/</redmineURL>
+<!--
+	<hostName>127.0.0.1</hostName>
+	<redmineURL>http://127.0.0.1/redmine/</redmineURL>
+ -->
 </app>
 
 

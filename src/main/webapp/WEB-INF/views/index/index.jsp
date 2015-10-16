@@ -9,6 +9,12 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
+<script type="text/javascript">
+<!--
+location.href="./open.knowledge/list";
+-->
+</script>
+
 <c:import url="/WEB-INF/views/commons/layout/layoutTop.jsp">
 
 <c:param name="PARAM_HEAD">
@@ -18,6 +24,7 @@
 </c:param>
 
 <c:param name="PARAM_CONTENT">
+<!--
 	<div id="headerimg">
 		<div id="headerwrap">
 			<h1><span><i class="fa fa-book"></i>&nbsp;Knowledge</span></h1>
@@ -44,7 +51,8 @@
 			%>
 		</div>
 	</div>
-
+-->
+<!--
 <div class="container">
 		<div class="contects" id="about">
 			<div class="row">
@@ -126,6 +134,7 @@
 		
 		</div>
 </div>
+-->
 
 </c:param>
 
