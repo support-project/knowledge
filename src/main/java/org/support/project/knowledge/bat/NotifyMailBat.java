@@ -63,11 +63,12 @@ public class NotifyMailBat extends AbstractBat {
 		
 		finishInfo();
 	}
-	
+
 	/**
 	 * 通知キューを処理して、メール送信テーブルにメール通知を登録する
 	 */
 	private void start() {
+		LOG.info("Notify process started.");
 		NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
 		List<NotifyQueuesEntity> notifyQueuesEntities = notifyQueuesDao.selectAll();
 		for (NotifyQueuesEntity notifyQueuesEntity : notifyQueuesEntities) {
@@ -116,8 +117,17 @@ public class NotifyMailBat extends AbstractBat {
 	private void notifyLikeInsert(NotifyQueuesEntity notifyQueuesEntity) {
 		LikesDao likesDao = LikesDao.get();
 		LikesEntity like = likesDao.selectOnKey(notifyQueuesEntity.getId());
+		if (null == like) {
+			LOG.warn("Like record not found. id: " + notifyQueuesEntity.getId());
+			return;
+		}
+
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
 		KnowledgesEntity knowledge = knowledgesDao.selectOnKey(like.getKnowledgeId());
+		if (null == knowledge) {
+			LOG.warn("Knowledge record not found. id: " + notifyQueuesEntity.getId());
+			return;
+		}
 		
 		if (sendedLikeKnowledgeIds.contains(knowledge.getKnowledgeId())) {
 			if (LOG.isDebugEnabled()) {
@@ -196,9 +206,18 @@ public class NotifyMailBat extends AbstractBat {
 	private void notifyCommentInsert(NotifyQueuesEntity notifyQueuesEntity) {
 		CommentsDao commentsDao = CommentsDao.get();
 		CommentsEntity comment = commentsDao.selectOnKey(notifyQueuesEntity.getId());
+		if (null == comment) {
+			LOG.warn("Comment record not found. id: " + notifyQueuesEntity.getId());
+			return;
+		}
+
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
 		KnowledgesEntity knowledge = knowledgesDao.selectOnKey(comment.getKnowledgeId());
-		
+		if (null == knowledge) {
+			LOG.warn("Knowledge record not found. id: " + notifyQueuesEntity.getId());
+			return;
+		}
+
 		if (sendedCommentKnowledgeIds.contains(knowledge.getKnowledgeId())) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Knowledge [" + knowledge.getKnowledgeId() + "] ");
@@ -326,6 +345,11 @@ public class NotifyMailBat extends AbstractBat {
 		// ナレッジが登録/更新された
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
 		KnowledgesEntity knowledge = knowledgesDao.selectOnKey(notifyQueuesEntity.getId());
+		if (null == knowledge) {
+			LOG.warn("Knowledge record not found. id: " + notifyQueuesEntity.getId());
+			return;
+		}
+
 		if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
 			notifyPublicKnowledgeUpdate(notifyQueuesEntity, knowledge);
 		} else if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
