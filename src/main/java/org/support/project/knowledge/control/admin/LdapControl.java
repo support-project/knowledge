@@ -34,6 +34,8 @@ import org.support.project.web.logic.LdapLogic;
 @DI(instance=Instance.Prototype)
 public class LdapControl extends Control {
 	
+	private static final String CONFIG_TYPE2 = "config2";
+	private static final String CONFIG_TYPE1 = "config1";
 	private static final String NO_CHANGE_PASSWORD = "NO_CHANGE_PASSWORD-fXLSJ_V-ZJ2E-X6c2_iGCpkE"; //パスワードを更新しなかったことを表すパスワード
 	
 	/**
@@ -45,7 +47,7 @@ public class LdapControl extends Control {
 	public Boundary config() {
 		LdapConfigsDao dao = LdapConfigsDao.get();
 		LdapConfigsEntity entity = dao.selectOnKey(AppConfig.get().getSystemName());
-		String configType = "config1";
+		String configType = CONFIG_TYPE1;
 		if (entity == null) {
 			entity = new LdapConfigsEntity();
 		} else {
@@ -53,10 +55,10 @@ public class LdapControl extends Control {
 			entity.setSalt("");
 			
 			if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP_2) {
-				configType = "config2";
+				configType = CONFIG_TYPE2;
 				entity.setAuthType(LdapConfigsEntity.AUTH_TYPE_LDAP);
 			} else if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_BOTH_2) {
-				configType = "config2";
+				configType = CONFIG_TYPE2;
 				entity.setAuthType(LdapConfigsEntity.AUTH_TYPE_BOTH);
 			}
 		}
@@ -105,7 +107,7 @@ public class LdapControl extends Control {
 		}
 		
 		String configType = getParam("configType");
-		if ("config2".equals(configType)) {
+		if (CONFIG_TYPE2.equals(configType)) {
 			if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP) {
 				entity.setAuthType(LdapConfigsEntity.AUTH_TYPE_LDAP_2);
 			} else if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_BOTH) {
@@ -165,35 +167,22 @@ public class LdapControl extends Control {
 	@Post
 	@Auth(roles="admin")
 	public Boundary check() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException, LdapException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-//		Map<String, String> params = getParams();
-//		String configType = getParam("configType");
-//		if ("config2".equals(configType)) {
-//			params.put("host", params.get("host2"));
-//			params.put("port", params.get("port2"));
-//		}
-//		List<ValidateError> errors = LdapConfigsEntity.get().validate(params);
-//		if (errors != null && !errors.isEmpty()) {
-//			super.setResult("", errors);
-//			return forward("config.jsp");
-//		}
-//		LdapConfigsEntity entity = loadLdapConfig();
-		
 		LdapConfigsDao dao = LdapConfigsDao.get();
 		LdapConfigsEntity entity = dao.selectOnKey(AppConfig.get().getSystemName());
-		String configType = "config1";
+		String configType = CONFIG_TYPE1;
 		if (entity == null) {
 			addMsgWarn("knowledge.ldap.msg.connect.error");
 			return forward("config.jsp");
 		} else {
 			if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP_2) {
-				configType = "config2";
+				configType = CONFIG_TYPE2;
 			} else if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_BOTH_2) {
-				configType = "config2";
+				configType = CONFIG_TYPE2;
 			}
 		}
 		
 		LdapLogic ldapLogic = LdapLogic.get();
-		if ("config2".equals(configType)) {
+		if (CONFIG_TYPE2.equals(configType)) {
 			boolean check = ldapLogic.check(entity);
 			if (!check) {
 				addMsgWarn("knowledge.ldap.msg.connect.error");
@@ -238,7 +227,7 @@ public class LdapControl extends Control {
 	public Boundary save() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException, LdapException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		Map<String, String> params = getParams();
 		String configType = getParam("configType");
-		if ("config2".equals(configType)) {
+		if (CONFIG_TYPE2.equals(configType)) {
 			params.put("host", params.get("host2"));
 			params.put("port", params.get("port2"));
 		}
@@ -250,7 +239,7 @@ public class LdapControl extends Control {
 		LdapConfigsEntity entity = loadLdapConfig();
 		LdapLogic ldapLogic = LdapLogic.get();
 		boolean check = false;
-		if ("config2".equals(configType)) {
+		if (CONFIG_TYPE2.equals(configType)) {
 			if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP_2) {
 				check = ldapLogic.check(entity);
 			} else {
