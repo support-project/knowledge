@@ -211,6 +211,8 @@ public class MailLogic {
 				
 				String contents = mailConfig.getContents();
 				contents = contents.replace("{UserId}", String.valueOf(user.getUserId()));
+				contents = contents.replace("{UserName}", user.getUserName());
+				contents = contents.replace("{UserMail}", user.getMailAddress());
 				String title = mailConfig.getTitle();
 				
 				MailsDao mailsDao = MailsDao.get();
