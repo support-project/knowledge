@@ -246,7 +246,7 @@ Knowledge 0.6.0 からのLdapの設定です。<br/>
 	</div>
 	
 	
-	<input type="text" name="configType" id="configType" value="<%= jspUtil.out("configType") %>" />
+	<input type="hidden" name="configType" id="configType" value="<%= jspUtil.out("configType") %>" />
 	
 	<input type="hidden" name="systemName" value="<%= jspUtil.out("systemName") %>" />
 	
