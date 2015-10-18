@@ -190,7 +190,11 @@ public class LdapControl extends Control {
 				addMsgSuccess("knowledge.ldap.msg.connect.success2");
 			}
 		} else {
-			LdapInfo result = ldapLogic.auth(entity, entity.getBindDn(), entity.getBindPassword());
+			String pass = entity.getBindPassword();
+			if (StringUtils.isNotEmpty(entity.getSalt())) {
+				pass = PasswordUtil.decrypt(pass, entity.getSalt());
+			}
+			LdapInfo result = ldapLogic.auth(entity, entity.getBindDn(), pass);
 			if (result == null) {
 				addMsgWarn("knowledge.ldap.msg.connect.error");
 			} else {
