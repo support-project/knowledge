@@ -17,7 +17,6 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
-import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -31,16 +30,15 @@ import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.NotifyLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.Notify;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
-import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.MailsEntity;
-import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
 public class NotifyMailBat extends AbstractBat {
@@ -87,27 +85,6 @@ public class NotifyMailBat extends AbstractBat {
 		LOG.info("Notify process finished. count: " + notifyQueuesEntities.size());
 	}
 	
-	/**
-	 * 指定のナレッジにアクセスするURLを作成
-	 * @param knowledge
-	 * @return
-	 */
-	private String makeURL(KnowledgesEntity knowledge) {
-		SystemConfigsDao dao = SystemConfigsDao.get();
-		SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
-		if (config == null) {
-			return "";
-		}
-		
-		StringBuilder builder = new StringBuilder();
-		builder.append(config.getConfigValue());
-		if (!config.getConfigValue().endsWith("/")) {
-			builder.append("/");
-		}
-		builder.append("protect.knowledge/view/");
-		builder.append(knowledge.getKnowledgeId());
-		return builder.toString();
-	}
 	
 	
 	/**
@@ -189,7 +166,7 @@ public class NotifyMailBat extends AbstractBat {
 		} else {
 			contents = contents.replace("{LikeInsertUser}", "");
 		}
-		contents = contents.replace("{URL}", makeURL(knowledge));
+		contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
 		
 		mailsEntity.setContent(contents);
 		if (LOG.isDebugEnabled()) {
@@ -327,7 +304,7 @@ public class NotifyMailBat extends AbstractBat {
 			contents = contents.replace("{CommentInsertUser}", "");
 		}
 		contents = contents.replace("{CommentContents}", comment.getComment());
-		contents = contents.replace("{URL}", makeURL(knowledge));
+		contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
 
 		mailsEntity.setContent(contents);
 		if (LOG.isDebugEnabled()) {
@@ -493,7 +470,7 @@ public class NotifyMailBat extends AbstractBat {
 		contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
 		contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
 		contents = contents.replace("{Contents}", knowledge.getContent());
-		contents = contents.replace("{URL}", makeURL(knowledge));
+		contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
 
 		mailsEntity.setContent(contents);
 		
