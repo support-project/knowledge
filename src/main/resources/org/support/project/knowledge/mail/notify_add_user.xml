@@ -4,7 +4,9 @@
 	<contents xml:space="preserve">
 I added the user. Please check just in case.
 
-UserId: {UserId}
+No: {UserId}
+Name: {UserName}
+Mail: {UserMail}
 
 ------------------------------------------
  This e-mail has been sent automatically from the system.
