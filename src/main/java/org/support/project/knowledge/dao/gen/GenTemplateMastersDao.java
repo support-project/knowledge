@@ -284,5 +284,20 @@ public class GenTemplateMastersDao extends AbstractDao {
 		activation(entity.getTypeId());
 
 	}
-
+	/**
+	 * データをtruncateする
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public void truncate() {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateMastersDao/TemplateMastersDao_truncate.sql");
+		executeUpdate(sql);
+	}
+	/**
+	 * sequenceをリセットする
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public void resetSequence() {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateMastersDao/TemplateMastersDao_alter_sequence.sql");
+		executeUpdate(sql);
+	}
 }

@@ -306,5 +306,12 @@ public class GenTemplateItemsDao extends AbstractDao {
 		activation(entity.getItemNo(), entity.getTypeId());
 
 	}
-
+	/**
+	 * データをtruncateする
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public void truncate() {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_truncate.sql");
+		executeUpdate(sql);
+	}
 }
