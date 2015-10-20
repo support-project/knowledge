@@ -116,14 +116,20 @@ function onNotifyShow() {
 	console.log('notification was shown!');
 }
 
-function notifyDesktop(msg) {
+function notifyDesktop(msg, link) {
 	$.notify(msg, 'info');
 	if (Notify.isSupported) {
 		Notify.requestPermission(
 			function() {
 				var myNotification = new Notify('Notify from Knowledge', {
 					body: msg,
-					notifyShow: onNotifyShow
+					notifyShow: onNotifyShow,
+					timeout: 3,
+					notifyClick: function() {
+						if (link) {
+							window.location.href=link;
+						}
+					}
 				});
 				myNotification.show();
 			},
@@ -157,7 +163,7 @@ window.onload = function() {
 		console.log('[RECEIVE] ');
 		var result = JSON.parse(message.data);
 		console.log(result);
-		notifyDesktop(result.message);
+		notifyDesktop(result.message, result.result);
 	}
 	webSocket.onerror = function(message) {
 	}
