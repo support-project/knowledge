@@ -113,12 +113,17 @@ public class GroupLogic {
 		}
 		GroupsDao groupsDao = GroupsDao.get();
 		if (loginedUser.isAdmin()) {
-			list = groupsDao.selectAll(offset, limit);
-		}
-		if (StringUtils.isEmpty(keyword)) {
-			list = groupsDao.selectAccessAbleGroups(loginedUser, offset, limit);
+			if (StringUtils.isEmpty(keyword)) {
+				list = groupsDao.selectAll(offset, limit);
+			} else {
+				list = groupsDao.selectOnKeyword(keyword, loginedUser, offset, limit);
+			}
 		} else {
-			list = groupsDao.selectOnKeyword(keyword, loginedUser, offset, limit);
+			if (StringUtils.isEmpty(keyword)) {
+				list = groupsDao.selectAccessAbleGroups(loginedUser, offset, limit);
+			} else {
+				list = groupsDao.selectOnKeyword(keyword, loginedUser, offset, limit);
+			}
 		}
 		
 		for (GroupsEntity groupsEntity : list) {
