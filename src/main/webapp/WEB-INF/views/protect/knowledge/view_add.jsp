@@ -77,6 +77,11 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		</c:forEach>
 	</div>
 	
+	<div class="alert alert-info hide" role="alert" id="template_info">
+		<strong id="template_name"></strong><br/>
+		<span id="template_msg"></span>
+	</div>
+	
 	<!-- title -->
 	<div class="form-group">
 		<label for="input_title"><%= jspUtil.label("knowledge.add.label.title") %></label>
