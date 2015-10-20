@@ -284,5 +284,4 @@ public class GenTemplateMastersDao extends AbstractDao {
 		activation(entity.getTypeId());
 
 	}
-
 }

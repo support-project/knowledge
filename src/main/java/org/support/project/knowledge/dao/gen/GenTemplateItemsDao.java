@@ -306,5 +306,4 @@ public class GenTemplateItemsDao extends AbstractDao {
 		activation(entity.getItemNo(), entity.getTypeId());
 
 	}
-
 }

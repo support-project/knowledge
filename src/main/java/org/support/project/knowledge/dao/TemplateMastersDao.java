@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -9,17 +10,17 @@ import org.support.project.knowledge.dao.gen.GenTemplateMastersDao;
 import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
+import org.support.project.ormapping.common.SQLManager;
 
 /**
  * テンプレートのマスタ
  */
 @DI(instance=Instance.Singleton)
 public class TemplateMastersDao extends GenTemplateMastersDao {
-	
+
 	public static final int TYPE_ID_KNOWLEDGE = -100;
 	public static final int TYPE_ID_BOOKMARK = -99;
-	
-	
+
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
 	/**
@@ -30,7 +31,6 @@ public class TemplateMastersDao extends GenTemplateMastersDao {
 	public static TemplateMastersDao get() {
 		return Container.getComp(TemplateMastersDao.class);
 	}
-
 
 	/**
 	 * ID 
@@ -52,7 +52,7 @@ public class TemplateMastersDao extends GenTemplateMastersDao {
 		currentId++;
 		return currentId;
 	}
-	
+
 	/**
 	 * 登録されているテンプレートを全て取得
 	 * @return
@@ -70,5 +70,24 @@ public class TemplateMastersDao extends GenTemplateMastersDao {
 		return template;
 	}
 
-
+	/**
+	 * データをtruncateする
+	 * 
+	 * @return void
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public void truncate() {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateMastersDao/TemplateMastersDao_truncate.sql");
+		executeUpdate(sql);
+	}
+	/**
+	 * sequenceをリセットする
+	 * 
+	 * @return void
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public void resetSequence() {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateMastersDao/TemplateMastersDao_alter_sequence.sql");
+		executeUpdate(sql);
+	}
 }

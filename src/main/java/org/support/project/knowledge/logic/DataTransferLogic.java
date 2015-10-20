@@ -24,14 +24,21 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.dao.TemplateItemsDao;
+import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.ormapping.config.ConnectionConfig;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.ormapping.dao.AbstractDao;
 import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.ormapping.transaction.TransactionManager;
+import org.support.project.web.dao.GroupsDao;
+import org.support.project.web.dao.RolesDao;
 import org.support.project.web.dao.SystemsDao;
+import org.support.project.web.dao.UserRolesDao;
+import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.SystemsEntity;
+import org.support.project.web.entity.UsersEntity;
 
 @DI(instance=Instance.Singleton)
 public class DataTransferLogic {
@@ -79,34 +86,32 @@ public class DataTransferLogic {
 		targets.addAll(Arrays.asList(classes));
 		classes = classSearch.classSearch("org.support.project.web.dao.gen", false);
 		targets.addAll(Arrays.asList(classes));
-		
-// 削除してから、再登録する場合、H2SQLだと同じ番号になるが、Postgresqlだと次の番号になりNG
-//		//初期ロールと初期ユーザを削除
-//		UserRolesDao userRolesDao = UserRolesDao.get();
-//		userRolesDao.setConnectionName(to.getName());
-//		List<UserRolesEntity> userRolesEntities = userRolesDao.physicalSelectAll();
-//		for (UserRolesEntity userRolesEntity : userRolesEntities) {
-//			userRolesDao.physicalDelete(userRolesEntity);
-//		}
-//		UsersDao usersDao = UsersDao.get();
-//		usersDao.setConnectionName(to.getName());
-//		List<UsersEntity> usersEntities = usersDao.physicalSelectAll();
-//		for (UsersEntity usersEntity : usersEntities) {
-//			usersDao.physicalDelete(usersEntity);
-//		}
-//		RolesDao rolesDao = RolesDao.get();
-//		rolesDao.setConnectionName(to.getName());
-//		List<RolesEntity> rolesEntities = rolesDao.physicalSelectAll();
-//		for (RolesEntity rolesEntity : rolesEntities) {
-//			rolesDao.physicalDelete(rolesEntity);
-//		}
-//		SystemsDao systemsDao = SystemsDao.get();
-//		systemsDao.setConnectionName(to.getName());
-//		List<SystemsEntity> systemsEntities = systemsDao.physicalSelectAll();
-//		for (SystemsEntity systemsEntity : systemsEntities) {
-//			systemsDao.physicalDelete(systemsEntity);
-//		}
-		
+
+
+		// 組み込みDBからカスタムDBへの移行の時のみ初期データを削除
+		List<AbstractDao> truncateTargets = new ArrayList<AbstractDao>();
+		truncateTargets.add(GroupsDao.get());
+		truncateTargets.add(RolesDao.get());
+		truncateTargets.add(UserRolesDao.get());
+		truncateTargets.add(UsersDao.get());
+		truncateTargets.add(SystemsDao.get());
+		truncateTargets.add(TemplateItemsDao.get());
+		truncateTargets.add(TemplateMastersDao.get());
+
+		for (AbstractDao targetDao : truncateTargets) {
+			targetDao.setConnectionName(to.getName());
+			Method truncateMethods = targetDao.getClass().getMethod("truncate");
+			truncateMethods.invoke(targetDao);
+
+			if (isTransferRequested()) {
+				try {
+					Method resetSequenceMethods = targetDao.getClass().getMethod("resetSequence");
+					resetSequenceMethods.invoke(targetDao);
+				} catch (Exception e) { }
+			}
+		}
+
+
 		// データコピー
 		for (Class class1 : targets) {
 			if (AbstractDao.class.isAssignableFrom(class1)) {
@@ -128,17 +133,11 @@ public class DataTransferLogic {
 						LOG.trace(entity);
 					}
 					Method insertMethods = class1.getMethod("rawPhysicalInsert", entity.getClass());
-					try {
-						insertMethods.invoke(dao, entity);
-					} catch (Exception e) {
-						// 初期登録ユーザなどをコピーしようとすると、主キー制約違反になるが無視する
-						LOG.warn("Data copy error");
-					}
+					insertMethods.invoke(dao, entity);
 				}
 				transactionManager.commit(to.getName());
 			}
 		}
-		
 	}
 	
 	
