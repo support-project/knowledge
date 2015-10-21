@@ -1,5 +1,5 @@
+var emoji;
 $(document).ready(function(){
-	hljs.initHighlightingOnLoad();
 	marked.setOptions({
 		langPrefix: '',
 		highlight: function(code, lang) {
@@ -7,15 +7,15 @@ $(document).ready(function(){
 			return code;
 		}
 	});
-	var emoji = window.emojiParser;
-	$('#content').find('pre code').each(function(i, block) {
-		hljs.highlightBlock(block);
-	});
+	emoji = window.emojiParser;
 	
-	console.log($('#content').html());
+	codeHighlight($('#content'))
+	.then(function() {console.log('finish codeHighlight.'); return;});
+	
+	//console.log($('#content').html());
 	var html = emoji($('#content').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
 	$('#content').html(html);
-	console.log($('#content').html());
+	//console.log($('#content').html());
 	
 	echo.init();
 	
@@ -35,25 +35,25 @@ $(document).ready(function(){
 	
 	$('.arrow_question').each(function(i, block) {
 		var content = $(this).html().trim();
-		//content = marked(content);
-		$(this).html(content);
-		$(this).find('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
+		var jqObj = $(this);
+		jqObj.html(content);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+			return;
 		});
-		var content = emoji($(this).html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		console.log(content);
-		$(this).html(content);
 	});
 	$('.arrow_answer').each(function(i, block) {
 		var content = $(this).html().trim();
-		//content = marked(content);
-		$(this).html(content);
-		$(this).find('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
+		var jqObj = $(this);
+		jqObj.html(content);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+			return;
 		});
-		var content = emoji($(this).html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		console.log(content);
-		$(this).html(content);
 	});
 	
 	$('#emojiPeopleModal').on('loaded.bs.modal', function (event) {
@@ -204,13 +204,14 @@ var preview = function() {
 		html += '</div><!-- /.arrow_question -->';
 		html += '</div><!-- /.question_Box -->';
 		
-		$('#preview').html(html);
-		$('#preview').find('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
+		var jqObj = $('#preview');
+		jqObj.html(html);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+			return;
 		});
-		var emoji = window.emojiParser;
-		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		$('#preview').html(content);
 	});
 };
 
@@ -234,13 +235,14 @@ var previewans = function() {
 		html += '</div>';
 		html += '</div>';
 		
-		$('#preview').html(html);
-		$('#preview').find('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
+		var jqObj = $('#preview');
+		jqObj.html(html);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+			return;
 		});
-		var emoji = window.emojiParser;
-		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		$('#preview').html(content);
 	});
 };
 
@@ -324,4 +326,26 @@ var addTemplateItem = function(template) {
 	}
 };
 
-
+var codeHighlight = function(block) {
+	var highlightPromises = [];
+	block.find('pre code').each(function(i, block) {
+		var jqobj = $(this);
+		highlightPromises.push(new Promise(function(resolve, reject) {
+			try {
+				var text = jqobj.text();
+				if (text.indexOf('://') != -1) {
+					console.log('skip on hljs freeze word');
+					console.log(text);
+					return resolve();
+				}
+				var result = hljs.highlightAuto(text);
+				jqobj.html(result.value);
+				return resolve();
+			} catch(err) {
+				console.err(err);
+				return reject(err);
+			}
+		}));
+	});
+	return Promise.all(highlightPromises);
+};

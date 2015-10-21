@@ -11,6 +11,8 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap/dist/js/bootstrap.min.js"></script>
 
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bluebird/js/browser/bluebird.min.js"></script>
+
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/notify.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/notify-combined.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/styles/bootstrap/notify-bootstrap.js"></script>
