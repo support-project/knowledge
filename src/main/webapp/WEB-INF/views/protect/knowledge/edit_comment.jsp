@@ -33,6 +33,8 @@
 	var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 	</script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
+	
+	<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
 	<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/comment.js") %>"></script>
 </c:param>
 

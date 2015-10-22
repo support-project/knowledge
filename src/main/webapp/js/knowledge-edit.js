@@ -4,7 +4,6 @@ var editors = [];
 var selectedEditors = [];
 
 $(document).ready(function() {
-	hljs.initHighlightingOnLoad();
 	marked.setOptions({
 		langPrefix : '',
 		highlight : function(code, lang) {
@@ -366,17 +365,22 @@ var preview = function() {
 		html += '</div>';
 		html += '</div>';
 		html += '</div>';
-		$('#preview').html(html);
-		$('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
-		});
-		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		$('#preview').html(content);
 		
-		var speed = 500;
-		var target = $('#preview');
-		var position = target.offset().top;
-		$("html, body").animate({scrollTop:position}, speed, "swing");
+		var jqObj = $('#preview');
+		jqObj.html(html);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+			
+			var speed = 500;
+			var target = $('#preview');
+			var position = target.offset().top;
+			$("html, body").animate({scrollTop:position}, speed, "swing");
+			
+			return;
+		});
+		
 	});
 };
 
