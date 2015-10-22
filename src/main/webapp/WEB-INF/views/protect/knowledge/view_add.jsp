@@ -26,6 +26,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/tagselect.js") %>"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-edit.js") %>"></script>
 
 <script>
