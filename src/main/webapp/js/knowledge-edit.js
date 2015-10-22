@@ -401,6 +401,8 @@ function deleteKnowledge() {
 };
 
 var changeTemplate = function() {
+	$('#template_info').removeClass('show');
+	$('#template_info').addClass('hide');
 	var typeId = $('input[name="typeId"]:checked').val();
 	console.log(typeId);
 	var url = _CONTEXT + '/open.knowledge/template';
@@ -423,6 +425,12 @@ var changeTemplate = function() {
 };
 
 var addTemplateItem = function(template) {
+	$('#template_name').text(template.typeName);
+	$('#template_msg').text(template.description);
+	$('#template_info').removeClass('hide');
+	$('#template_info').addClass('show');
+	
+
 	$('#template_items').html('');
 	if (template.items && template.items.length > 0) {
 		for (var i = 0; i < template.items.length; i++) {

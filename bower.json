@@ -3,7 +3,7 @@
   "dependencies": {
     "jquery": "1.11.3",
     "bootstrap": "3.3.4",
-    "font-awesome": "4.3.0",
+    "font-awesome": "4.4.0",
     "html5shiv": "3.7.2",
     "respond": "1.4.2",
     "notifyjs": "0.3.2",
