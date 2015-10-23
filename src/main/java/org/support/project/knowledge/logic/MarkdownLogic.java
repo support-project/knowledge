@@ -1,5 +1,8 @@
 package org.support.project.knowledge.logic;
 
+import io.github.gitbucket.markedj.Marked;
+import io.github.gitbucket.markedj.Options;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -30,6 +33,7 @@ public class MarkdownLogic {
 	
 	public static final int ENGINE_PEGDOWN = 1;
 	public static final int ENGINE_MARKEDJS = 2;
+	public static final int ENGINE_MARKEDJ = 3; // スライド表示用の独自拡張（デフォルト）
 	
 	private ScriptEngine engine = null;
 	private boolean initEngine = false;
@@ -57,14 +61,17 @@ public class MarkdownLogic {
 	public MarkDown markdownToHtml(String markdown, int engine) throws ParseException {
 		MarkDown result = new MarkDown();
 		if (engine == ENGINE_MARKEDJS) {
+			LOG.warn("marked.js parser was deprecated");
 			markdownToHtmlOnMarkedJs(markdown, result);
-		} else {
+		} else if (engine == ENGINE_PEGDOWN) {
+			LOG.warn("PegDown parser was deprecated");
 			markdownToHtmlOnPegDown(markdown, result);
+		} else {
+			markdownToHtmlOnMarkedJ(markdown, result);
 		}
 		return sanitize(markdown, result);
 	}
 
-	
 	/**
 	 * サニタイジング
 	 * @param markdown
@@ -91,6 +98,37 @@ public class MarkdownLogic {
 			throw new ParseException(e);
 		}
 	}
+	
+	/**
+	 * support-project/markedj (https://github.com/support-project/markedj) でマークダウンをパース
+	 * スライド表示の独自拡張を行っている
+	 * 
+	 * @param markdown
+	 * @param result
+	 */
+	private void markdownToHtmlOnMarkedJ(String markdown, MarkDown result) {
+// TODO サニタイズの検討
+// 既に、SanitizingLogic の中で org.owasp のモジュールを使ってサニタイズしている
+// このため、MarkedJを利用してサニタイズは利用する必要無し？
+// Specify options
+//		Options options = new  Options();
+//		options.setSanitize(true);
+//		String html2 = Marked.marked(markdown, options);
+		
+		Date start = new Date();
+		
+		result.setMarkdown(markdown);
+		String html = Marked.marked(markdown);
+		result.setHtml(html);
+		result.setParsed(true);
+
+		if (LOG.isDebugEnabled()) {
+			Date end = new Date();
+			// 以前、別のMarkdownパーサーのパースが凄く時間がかかったので、パース時間を出力している
+			LOG.debug("Parse time (MarkedJ): " + (end.getTime() - start.getTime()) + " [ms]");
+		}
+	}
+	
 	
 	/**
 	 * PegDownでMarkDownのパース
