@@ -39,6 +39,11 @@ function deleteUser() {
 <% } %>
 
 <form action="<%= request.getContextPath()%>/admin.users/save" method="post" role="form" id="userForm">
+	<div class="form-group">
+		<label for="userId"><%= jspUtil.label("knowledge.account.label.no") %></label>
+		<input type="text" class="form-control" name="userId" id="userId" placeholder="No"
+			value="<%= jspUtil.out("userId") %>" readonly="readonly" />
+	</div>
 <% if(jspUtil.is(1, "authLdap")) { %>
 	<div class="form-group">
 		<label for="userKey"><%= jspUtil.label("knowledge.account.id") %></label>

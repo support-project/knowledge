@@ -116,12 +116,15 @@ var preview = function() {
 		html += '</div>';
 		html += '</div>';
 		html += '</div>';
-		$('#preview').html(html);
-		$('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
+		
+		var jqObj = $('#preview');
+		jqObj.html(html);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+			return;
 		});
-		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		$('#preview').html(content);
 	});
 };
 	

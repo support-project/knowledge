@@ -4,7 +4,6 @@ var editors = [];
 var selectedEditors = [];
 
 $(document).ready(function() {
-	hljs.initHighlightingOnLoad();
 	marked.setOptions({
 		langPrefix : '',
 		highlight : function(code, lang) {
@@ -196,44 +195,12 @@ $(document).ready(function() {
 		$('html,body').animate({ scrollTop: p }, 'fast');
 	});
 	
-	$('#select_template').change(function() {
-		var sel = $('#select_template').val();
-		var title = $('#Title' + sel).val();
-		var text = $('#Template' + sel).val();
-		var textarea = $('#content');
-		var inputtitle = $('#input_title');
-		//入力済みチェック
-		if (!(inputtitle.val() == '' && textarea.val() == '')) {
-			if(!confirm("編集内容が失われますがよろしいですか？")) {
-				return;
-			}
-		}
-		//変数置換
-		var date = new Date();
-		title=title.replace("%{Year}", date.getFullYear());
-		title=title.replace("%{month}", date.getMonth()+1);
-		title=title.replace("%{day}", date.getDate());
-		title=title.replace("%{user}", $("#userName").val());
-		text=text.replace("%{Year}", date.getFullYear());
-		text=text.replace("%{month}", date.getMonth()+1);
-		text=text.replace("%{day}", date.getDate());
-		text=text.replace("%{user}", $("#userName").val());
-		//セット
-		inputtitle.val(title);
-		textarea.val(text);
-		preview();
-	});
-	
 	setUpTagSelect();
-
-	if ($('.selectpicker').length) {
-		$('.selectpicker').selectpicker();
-		
-		$('input[name="typeId"]:radio').change(function() {
-			changeTemplate();
-		});
+	
+	$('input[name="typeId"]:radio').change(function() {
 		changeTemplate();
-	}
+	});
+	changeTemplate();
 	
 });
 
@@ -398,17 +365,22 @@ var preview = function() {
 		html += '</div>';
 		html += '</div>';
 		html += '</div>';
-		$('#preview').html(html);
-		$('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
-		});
-		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		$('#preview').html(content);
 		
-		//var speed = 500;
-		//var target = $('#preview');
-		//var position = target.offset().top;
-		//$("html, body").animate({scrollTop:position}, speed, "swing");
+		var jqObj = $('#preview');
+		jqObj.html(html);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+			
+			var speed = 500;
+			var target = $('#preview');
+			var position = target.offset().top;
+			$("html, body").animate({scrollTop:position}, speed, "swing");
+			
+			return;
+		});
+		
 	});
 };
 
@@ -433,6 +405,8 @@ function deleteKnowledge() {
 };
 
 var changeTemplate = function() {
+	$('#template_info').removeClass('show');
+	$('#template_info').addClass('hide');
 	var typeId = $('input[name="typeId"]:checked').val();
 	console.log(typeId);
 	var url = _CONTEXT + '/open.knowledge/template';
@@ -455,6 +429,12 @@ var changeTemplate = function() {
 };
 
 var addTemplateItem = function(template) {
+	$('#template_name').text(template.typeName);
+	$('#template_msg').text(template.description);
+	$('#template_info').removeClass('hide');
+	$('#template_info').addClass('show');
+	
+
 	$('#template_items').html('');
 	if (template.items && template.items.length > 0) {
 		for (var i = 0; i < template.items.length; i++) {

@@ -7,7 +7,6 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-
 <% String top = "/open.knowledge/list"; %>
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
@@ -30,7 +29,7 @@
 			<a class="navbar-brand"
 				href="http://10.2.1.167:10083/projects/knowledge"
 				style="cursor: pointer;">
-				 <i class="fa fa-reply"></i>&nbsp;<span style="font-size: 10pt;">æˆ»ã‚‹</span>
+				 <i class="fa fa-reply"></i>&nbsp;<span style="font-size: 10pt;">–ß‚é</span>
 			</a>
 		</div>
 
@@ -120,6 +119,11 @@
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.users/accept_list" style="cursor: pointer;">
 								<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.acccept") %>
+							</a>
+						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.template/list" style="cursor: pointer;">
+								<i class="fa fa-sticky-note"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.template") %> 
 							</a>
 						</li>
 

@@ -78,18 +78,17 @@ public class FileControl extends Control {
 			// 既に削除済
 			return send(HttpStatus.SC_200_OK, "success: " + fileNo);
 		}
-		if (0 == entity.getKnowledgeId() || entity.getKnowledgeId() == null) {
-			// ナレッジと紐づいていないものなので削除してOK
-			// 紐づいているものは、ナレッジを更新した際に、紐付きがなければ削除になるので、実際の削除処理は実施しない
-			if (!getLoginedUser().isAdmin()) {
-				if (entity.getInsertUser().intValue() != getLoginUserId().intValue())  {
-					// 登録者以外に削除はさせない
-					return send(HttpStatus.SC_400_BAD_REQUEST, "fail: " + fileNo);
-				}
+
+		if (!getLoginedUser().isAdmin()) {
+			if (entity.getInsertUser().intValue() != getLoginUserId().intValue())  {
+				// 登録者以外に削除はさせない
+				return send(HttpStatus.SC_400_BAD_REQUEST, "fail: " + fileNo);
 			}
-			// 削除実行
-			fileLogic.removeFile(fileNo, getLoginedUser());
 		}
+
+		// 削除実行
+		fileLogic.removeFile(fileNo, getLoginedUser());
+
 		return send(HttpStatus.SC_200_OK, "success: " + fileNo);
 	}
 	

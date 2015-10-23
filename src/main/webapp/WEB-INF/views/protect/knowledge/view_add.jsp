@@ -27,6 +27,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/tagselect.js") %>"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-edit.js") %>"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/bootstrap-select.js") %>"></script>
 
@@ -80,6 +81,11 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 				<%= jspUtil.out("template.typeName") %>
 			</label>
 		</c:forEach>
+	</div>
+	
+	<div class="alert alert-info hide" role="alert" id="template_info">
+		<strong id="template_name"></strong><br/>
+		<span id="template_msg"></span>
 	</div>
 	
 	<!-- title -->

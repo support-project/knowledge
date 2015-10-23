@@ -11,6 +11,8 @@ import org.support.project.common.util.NumberUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -27,7 +29,9 @@ import org.support.project.knowledge.vo.Notify;
 import org.support.project.knowledge.websocket.NotifyAction;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
+import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.entity.SystemConfigsEntity;
 
 @DI(instance=Instance.Singleton)
 public class NotifyLogic {
@@ -37,6 +41,29 @@ public class NotifyLogic {
 	public static NotifyLogic get() {
 		return Container.getComp(NotifyLogic.class);
 	}
+	
+	/**
+	 * 指定のナレッジにアクセスするURLを作成
+	 * @param knowledge
+	 * @return
+	 */
+	public String makeURL(Long knowledgeId) {
+		SystemConfigsDao dao = SystemConfigsDao.get();
+		SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
+		if (config == null) {
+			return "";
+		}
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append(config.getConfigValue());
+		if (!config.getConfigValue().endsWith("/")) {
+			builder.append("/");
+		}
+		builder.append("protect.knowledge/view/");
+		builder.append(knowledgeId);
+		return builder.toString();
+	}
+	
 	
 	/**
 	 * 通知を処理
@@ -129,6 +156,7 @@ public class NotifyLogic {
 		if (isToKnowledgeSave(loginuser, knowledge)) {
 			MessageResult messageResult = new MessageResult();
 			messageResult.setMessage(Resources.getInstance(locale).getResource("knowledge.notify.msg.desktop.to.insert", String.valueOf(knowledge.getKnowledgeId())));
+			messageResult.setResult(makeURL(knowledge.getKnowledgeId()));// Knowledgeへのリンク
 			return messageResult;
 		}
 		return null;
@@ -145,6 +173,7 @@ public class NotifyLogic {
 		if (isToKnowledgeSave(loginuser, knowledge)) {
 			MessageResult messageResult = new MessageResult();
 			messageResult.setMessage(Resources.getInstance(locale).getResource("knowledge.notify.msg.desktop.to.update", String.valueOf(knowledge.getKnowledgeId())));
+			messageResult.setResult(makeURL(knowledge.getKnowledgeId()));// Knowledgeへのリンク
 			return messageResult;
 		}
 		return null;
@@ -253,6 +282,7 @@ public class NotifyLogic {
 			// 自分で投稿したナレッジにコメントがついたので通知
 			MessageResult messageResult = new MessageResult();
 			messageResult.setMessage(Resources.getInstance(locale).getResource("knowledge.notify.msg.desktop.myitem.comment", String.valueOf(knowledge.getKnowledgeId())));
+			messageResult.setResult(makeURL(knowledge.getKnowledgeId()));// Knowledgeへのリンク
 			return messageResult;
 		}
 		
@@ -260,6 +290,7 @@ public class NotifyLogic {
 			// 自分宛てのナレッジにコメントがついたので通知
 			MessageResult messageResult = new MessageResult();
 			messageResult.setMessage(Resources.getInstance(locale).getResource("knowledge.notify.msg.desktop.to.comment", String.valueOf(knowledge.getKnowledgeId())));
+			messageResult.setResult(makeURL(knowledge.getKnowledgeId()));// Knowledgeへのリンク
 			return messageResult;
 		}
 		return null;
@@ -285,6 +316,7 @@ public class NotifyLogic {
 			// 自分で投稿したナレッジにイイネが押されたので通知
 			MessageResult messageResult = new MessageResult();
 			messageResult.setMessage(Resources.getInstance(locale).getResource("knowledge.notify.msg.desktop.myitem.like", String.valueOf(knowledge.getKnowledgeId())));
+			messageResult.setResult(makeURL(knowledge.getKnowledgeId()));// Knowledgeへのリンク
 			return messageResult;
 		}
 		

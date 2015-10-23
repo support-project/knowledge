@@ -17,7 +17,6 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
-import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -31,16 +30,15 @@ import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.NotifyLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.Notify;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
-import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.MailsEntity;
-import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
 public class NotifyMailBat extends AbstractBat {
@@ -63,11 +61,12 @@ public class NotifyMailBat extends AbstractBat {
 		
 		finishInfo();
 	}
-	
+
 	/**
 	 * 通知キューを処理して、メール送信テーブルにメール通知を登録する
 	 */
 	private void start() {
+		LOG.info("Notify process started.");
 		NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
 		List<NotifyQueuesEntity> notifyQueuesEntities = notifyQueuesDao.selectAll();
 		for (NotifyQueuesEntity notifyQueuesEntity : notifyQueuesEntities) {
@@ -86,27 +85,6 @@ public class NotifyMailBat extends AbstractBat {
 		LOG.info("Notify process finished. count: " + notifyQueuesEntities.size());
 	}
 	
-	/**
-	 * 指定のナレッジにアクセスするURLを作成
-	 * @param knowledge
-	 * @return
-	 */
-	private String makeURL(KnowledgesEntity knowledge) {
-		SystemConfigsDao dao = SystemConfigsDao.get();
-		SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
-		if (config == null) {
-			return "";
-		}
-		
-		StringBuilder builder = new StringBuilder();
-		builder.append(config.getConfigValue());
-		if (!config.getConfigValue().endsWith("/")) {
-			builder.append("/");
-		}
-		builder.append("protect.knowledge/view/");
-		builder.append(knowledge.getKnowledgeId());
-		return builder.toString();
-	}
 	
 	
 	/**
@@ -116,8 +94,17 @@ public class NotifyMailBat extends AbstractBat {
 	private void notifyLikeInsert(NotifyQueuesEntity notifyQueuesEntity) {
 		LikesDao likesDao = LikesDao.get();
 		LikesEntity like = likesDao.selectOnKey(notifyQueuesEntity.getId());
+		if (null == like) {
+			LOG.warn("Like record not found. id: " + notifyQueuesEntity.getId());
+			return;
+		}
+
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
 		KnowledgesEntity knowledge = knowledgesDao.selectOnKey(like.getKnowledgeId());
+		if (null == knowledge) {
+			LOG.warn("Knowledge record not found. id: " + notifyQueuesEntity.getId());
+			return;
+		}
 		
 		if (sendedLikeKnowledgeIds.contains(knowledge.getKnowledgeId())) {
 			if (LOG.isDebugEnabled()) {
@@ -179,7 +166,7 @@ public class NotifyMailBat extends AbstractBat {
 		} else {
 			contents = contents.replace("{LikeInsertUser}", "");
 		}
-		contents = contents.replace("{URL}", makeURL(knowledge));
+		contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
 		
 		mailsEntity.setContent(contents);
 		if (LOG.isDebugEnabled()) {
@@ -196,9 +183,18 @@ public class NotifyMailBat extends AbstractBat {
 	private void notifyCommentInsert(NotifyQueuesEntity notifyQueuesEntity) {
 		CommentsDao commentsDao = CommentsDao.get();
 		CommentsEntity comment = commentsDao.selectOnKey(notifyQueuesEntity.getId());
+		if (null == comment) {
+			LOG.warn("Comment record not found. id: " + notifyQueuesEntity.getId());
+			return;
+		}
+
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
 		KnowledgesEntity knowledge = knowledgesDao.selectOnKey(comment.getKnowledgeId());
-		
+		if (null == knowledge) {
+			LOG.warn("Knowledge record not found. id: " + notifyQueuesEntity.getId());
+			return;
+		}
+
 		if (sendedCommentKnowledgeIds.contains(knowledge.getKnowledgeId())) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Knowledge [" + knowledge.getKnowledgeId() + "] ");
@@ -308,7 +304,7 @@ public class NotifyMailBat extends AbstractBat {
 			contents = contents.replace("{CommentInsertUser}", "");
 		}
 		contents = contents.replace("{CommentContents}", comment.getComment());
-		contents = contents.replace("{URL}", makeURL(knowledge));
+		contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
 
 		mailsEntity.setContent(contents);
 		if (LOG.isDebugEnabled()) {
@@ -326,6 +322,11 @@ public class NotifyMailBat extends AbstractBat {
 		// ナレッジが登録/更新された
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
 		KnowledgesEntity knowledge = knowledgesDao.selectOnKey(notifyQueuesEntity.getId());
+		if (null == knowledge) {
+			LOG.warn("Knowledge record not found. id: " + notifyQueuesEntity.getId());
+			return;
+		}
+
 		if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
 			notifyPublicKnowledgeUpdate(notifyQueuesEntity, knowledge);
 		} else if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
@@ -469,7 +470,7 @@ public class NotifyMailBat extends AbstractBat {
 		contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
 		contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
 		contents = contents.replace("{Contents}", knowledge.getContent());
-		contents = contents.replace("{URL}", makeURL(knowledge));
+		contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
 
 		mailsEntity.setContent(contents);
 		

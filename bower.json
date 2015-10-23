@@ -3,12 +3,12 @@
   "dependencies": {
     "jquery": "1.11.3",
     "bootstrap": "3.3.4",
-    "font-awesome": "4.3.0",
+    "font-awesome": "4.4.0",
     "html5shiv": "3.7.2",
     "respond": "1.4.2",
     "notifyjs": "0.3.2",
     "marked": "0.3.2",
-    "highlightjs": "8.3.0",
+    "highlightjs": "8.8.0",
     "bootbox": "4.3.0",
     "bootstrap-tagsinput": "0.4.2",
     "bootstrap3-typeahead": "3.1.1",
@@ -17,7 +17,8 @@
     "teambox.free-file-icons": "teambox/Free-file-icons",
     "echojs": "1.6.0",
     "notify.js": "1.2.5",
-    "emoji-parser": "0.1.1"
+    "emoji-parser": "0.1.1",
+    "bluebird": "2.10.2"
   },
   "devDependencies": {}
 }

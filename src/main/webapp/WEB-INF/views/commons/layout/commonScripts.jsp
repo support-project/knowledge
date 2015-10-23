@@ -11,6 +11,8 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap/dist/js/bootstrap.min.js"></script>
 
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bluebird/js/browser/bluebird.min.js"></script>
+
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/notify.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/notify-combined.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/styles/bootstrap/notify-bootstrap.js"></script>
@@ -116,14 +118,20 @@ function onNotifyShow() {
 	console.log('notification was shown!');
 }
 
-function notifyDesktop(msg) {
+function notifyDesktop(msg, link) {
 	$.notify(msg, 'info');
 	if (Notify.isSupported) {
 		Notify.requestPermission(
 			function() {
 				var myNotification = new Notify('Notify from Knowledge', {
 					body: msg,
-					notifyShow: onNotifyShow
+					notifyShow: onNotifyShow,
+					timeout: 3,
+					notifyClick: function() {
+						if (link) {
+							window.location.href=link;
+						}
+					}
 				});
 				myNotification.show();
 			},
@@ -157,7 +165,7 @@ window.onload = function() {
 		console.log('[RECEIVE] ');
 		var result = JSON.parse(message.data);
 		console.log(result);
-		notifyDesktop(result.message);
+		notifyDesktop(result.message, result.result);
 	}
 	webSocket.onerror = function(message) {
 	}
