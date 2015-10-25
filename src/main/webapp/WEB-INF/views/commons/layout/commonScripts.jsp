@@ -23,6 +23,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootbox/bootbox.js"></script>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notify.js/notify.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-oembed-all/jquery.oembed.js"></script>
 
 <!--[if lt IE 9]>
     <script src="<%= request.getContextPath() %>/bower/html5shiv/dist/html5shiv.min.js"></script>
@@ -172,8 +173,6 @@ window.onload = function() {
 	<%-- //webSocket.send(message); --%>
 }
 <% } %>
-
-
 
 </script>
 

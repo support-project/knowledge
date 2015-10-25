@@ -49,7 +49,7 @@ public class MarkdownLogic {
 	 * @throws ParseException
 	 */
 	public MarkDown markdownToHtml(String markdown) throws ParseException {
-		return markdownToHtml(markdown, ENGINE_PEGDOWN);
+		return markdownToHtml(markdown, ENGINE_MARKEDJ);
 	}
 	/**
 	 * マークダウンをパースしてHTMLを取得(エンジンを指定)
@@ -107,14 +107,6 @@ public class MarkdownLogic {
 	 * @param result
 	 */
 	private void markdownToHtmlOnMarkedJ(String markdown, MarkDown result) {
-// TODO サニタイズの検討
-// 既に、SanitizingLogic の中で org.owasp のモジュールを使ってサニタイズしている
-// このため、MarkedJを利用してサニタイズは利用する必要無し？
-// Specify options
-//		Options options = new  Options();
-//		options.setSanitize(true);
-//		String html2 = Marked.marked(markdown, options);
-		
 		Date start = new Date();
 		
 		result.setMarkdown(markdown);

@@ -377,10 +377,9 @@ var preview = function() {
 			var target = $('#preview');
 			var position = target.offset().top;
 			$("html, body").animate({scrollTop:position}, speed, "swing");
-			
-			return;
+		}).then(function () {
+			jqObj.find('a.oembed').oembed();
 		});
-		
 	});
 };
 
