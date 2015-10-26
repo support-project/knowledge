@@ -72,6 +72,7 @@ create table TEMPLATE_ITEMS (
   , ITEM_NO integer not null
   , ITEM_NAME character varying(32) not null
   , ITEM_TYPE integer not null
+  , DESCRIPTION character varying(1024)
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -426,6 +427,7 @@ comment on column TEMPLATE_ITEMS.TYPE_ID is 'テンプレートの種類ID';
 comment on column TEMPLATE_ITEMS.ITEM_NO is '項目NO';
 comment on column TEMPLATE_ITEMS.ITEM_NAME is '項目名';
 comment on column TEMPLATE_ITEMS.ITEM_TYPE is '項目の種類';
+comment on column TEMPLATE_ITEMS.DESCRIPTION is '説明';
 comment on column TEMPLATE_ITEMS.INSERT_USER is '登録ユーザ';
 comment on column TEMPLATE_ITEMS.INSERT_DATETIME is '登録日時';
 comment on column TEMPLATE_ITEMS.UPDATE_USER is '更新ユーザ';

@@ -255,10 +255,11 @@ Field="テンプレートの種類ID","TYPE_ID","@INT","NOT NULL",0,"","",$FFFFF
 Field="項目NO","ITEM_NO","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 Field="項目名","ITEM_NAME","@VARCHAR(32)","NOT NULL",,"","",$FFFFFFFF,""
 Field="項目の種類","ITEM_TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="説明","DESCRIPTION","@VARCHAR(1024)",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20150910041108
+ModifiedDateTime=20151027035632
 Position="MAIN",1870,390
 
 [Relation]
