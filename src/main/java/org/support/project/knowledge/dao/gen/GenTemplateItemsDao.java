@@ -105,6 +105,7 @@ public class GenTemplateItemsDao extends AbstractDao {
 			, entity.getTypeId()
 			, entity.getItemName()
 			, entity.getItemType()
+			, entity.getDescription()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()
@@ -124,6 +125,7 @@ public class GenTemplateItemsDao extends AbstractDao {
 			, entity.getTypeId()
 			, entity.getItemName()
 			, entity.getItemType()
+			, entity.getDescription()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()
@@ -162,6 +164,7 @@ public class GenTemplateItemsDao extends AbstractDao {
 		executeUpdate(sql, 
 			entity.getItemName()
 			, entity.getItemType()
+			, entity.getDescription()
 			, entity.getInsertUser()
 			, entity.getInsertDatetime()
 			, entity.getUpdateUser()
@@ -306,4 +309,5 @@ public class GenTemplateItemsDao extends AbstractDao {
 		activation(entity.getItemNo(), entity.getTypeId());
 
 	}
+
 }
