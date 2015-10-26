@@ -195,12 +195,44 @@ $(document).ready(function() {
 		$('html,body').animate({ scrollTop: p }, 'fast');
 	});
 	
+	$('#select_template').change(function() {
+		var sel = $('#select_template').val();
+		var title = $('#Title' + sel).val();
+		var text = $('#Template' + sel).val();
+		var textarea = $('#content');
+		var inputtitle = $('#input_title');
+		//入力済みチェック
+		if (!(inputtitle.val() == '' && textarea.val() == '')) {
+			if(!confirm("編集内容が失われますがよろしいですか？")) {
+				return;
+			}
+		}
+		//変数置換
+		var date = new Date();
+		title=title.replace("%{Year}", date.getFullYear());
+		title=title.replace("%{month}", date.getMonth()+1);
+		title=title.replace("%{day}", date.getDate());
+		title=title.replace("%{user}", $("#userName").val());
+		text=text.replace("%{Year}", date.getFullYear());
+		text=text.replace("%{month}", date.getMonth()+1);
+		text=text.replace("%{day}", date.getDate());
+		text=text.replace("%{user}", $("#userName").val());
+		//セット
+		inputtitle.val(title);
+		textarea.val(text);
+		preview();
+	});
+	
 	setUpTagSelect();
 	
-	$('input[name="typeId"]:radio').change(function() {
+	if ($('.selectpicker').length) {
+		$('.selectpicker').selectpicker();
+		
+		$('input[name="typeId"]:radio').change(function() {
+			changeTemplate();
+		});
 		changeTemplate();
-	});
-	changeTemplate();
+	}
 	
 });
 
@@ -373,10 +405,10 @@ var preview = function() {
 			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
 			jqObj.html(content);
 			
-			var speed = 500;
-			var target = $('#preview');
-			var position = target.offset().top;
-			$("html, body").animate({scrollTop:position}, speed, "swing");
+			//var speed = 500;
+			//var target = $('#preview');
+			//var position = target.offset().top;
+			//$("html, body").animate({scrollTop:position}, speed, "swing");
 			
 			return;
 		});

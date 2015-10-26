@@ -63,9 +63,6 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 
 <form action="<%= request.getContextPath()%>/protect.knowledge/add" method="post" role="form" enctype="multipart/form-data">
 	
-<!-- テンプレート選択 -->
-<jsp:include page="template.jsp"></jsp:include>
-
 	<!-- template -->
 	<div class="form-group">
 		<label for="input_title"><%= jspUtil.label("knowledge.add.label.type") %></label><br/>
@@ -88,6 +85,9 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		<span id="template_msg"></span>
 	</div>
 	
+<!-- テンプレート選択 -->
+<jsp:include page="template.jsp"></jsp:include>
+
 	<!-- title -->
 	<div class="form-group">
 		<label for="input_title"><%= jspUtil.label("knowledge.add.label.title") %></label>
