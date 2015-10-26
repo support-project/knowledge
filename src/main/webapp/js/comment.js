@@ -123,7 +123,8 @@ var preview = function() {
 		.then(function() {
 			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
 			jqObj.html(content);
-			return;
+		}).then(function () {
+			jqObj.find('a.oembed').oembed();
 		});
 	});
 };

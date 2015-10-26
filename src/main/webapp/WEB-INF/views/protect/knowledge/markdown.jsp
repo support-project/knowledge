@@ -59,6 +59,13 @@
 <%= jspUtil.label("knowledge.sample.markdown.76") %>
 <%= jspUtil.label("knowledge.sample.markdown.77") %>
 
+<%= jspUtil.label("knowledge.sample.markdown.78") %>
+<%= jspUtil.label("knowledge.sample.markdown.79") %>
+<%= jspUtil.label("knowledge.sample.markdown.80") %>
+<%= jspUtil.label("knowledge.sample.markdown.81") %>
+<%= jspUtil.label("knowledge.sample.markdown.82") %>
+<%= jspUtil.label("knowledge.sample.markdown.83") %>
+
 <%= jspUtil.label("knowledge.sample.markdown.501") %>
 <%= jspUtil.label("knowledge.sample.markdown.502") %>
 

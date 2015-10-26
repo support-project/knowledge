@@ -1,19 +1,15 @@
 $(document).ready(function(){
-	marked.setOptions({
-		langPrefix: '',
-		highlight: function(code, lang) {
-			console.log('[highlight]' + lang);
-			return code;
-		}
+	var jqObj = $('#content');
+	codeHighlight(jqObj)
+	.then(function() {console.log('finish codeHighlight.'); return;})
+	.then(function () {
+		//console.log($('#content').html());
+		var html = emoji(jqObj.html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+		jqObj.html(html);
+		//console.log($('#content').html());
+	}).then(function () {
+		jqObj.find('a.oembed').oembed();
 	});
-	
-	codeHighlight($('#content'))
-	.then(function() {console.log('finish codeHighlight.'); return;});
-	
-	//console.log($('#content').html());
-	var html = emoji($('#content').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-	$('#content').html(html);
-	//console.log($('#content').html());
 	
 	echo.init();
 	
@@ -39,7 +35,8 @@ $(document).ready(function(){
 		.then(function() {
 			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
 			jqObj.html(content);
-			return;
+		}).then(function () {
+			jqObj.find('a.oembed').oembed();
 		});
 	});
 	$('.arrow_answer').each(function(i, block) {
@@ -51,6 +48,8 @@ $(document).ready(function(){
 			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
 			jqObj.html(content);
 			return;
+		}).then(function () {
+			jqObj.find('a.oembed').oembed();
 		});
 	});
 	
@@ -209,6 +208,8 @@ var preview = function() {
 			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
 			jqObj.html(content);
 			return;
+		}).then(function () {
+			jqObj.find('a.oembed').oembed();
 		});
 	});
 };
@@ -239,7 +240,8 @@ var previewans = function() {
 		.then(function() {
 			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
 			jqObj.html(content);
-			return;
+		}).then(function () {
+			jqObj.find('a.oembed').oembed();
 		});
 	});
 };

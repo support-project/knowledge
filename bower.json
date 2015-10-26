@@ -18,7 +18,8 @@
     "echojs": "1.6.0",
     "notify.js": "1.2.5",
     "emoji-parser": "0.1.1",
-    "bluebird": "2.10.2"
+    "bluebird": "2.10.2",
+    "jquery-oembed-all": "nfl/jquery-oembed-all"
   },
   "devDependencies": {}
 }
