@@ -8,8 +8,10 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.ItemChoicesDao;
 import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
+import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.web.bean.LoginedUser;
@@ -63,6 +65,35 @@ public class TemplateLogic {
 		}
 		
 		return template;
+	}
+	
+	
+	
+	/**
+	 * テンプレートの削除
+	 * @param typeId
+	 * @param loginedUser
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public void deleteTemplate(Integer typeId, LoginedUser loginedUser) {
+		TemplateMastersDao templateDao = TemplateMastersDao.get();
+		TemplateItemsDao itemsDao = TemplateItemsDao.get();
+		ItemChoicesDao choicesDao = ItemChoicesDao.get();
+		
+		TemplateMastersEntity entity = templateDao.selectOnKey(typeId);
+		if (entity != null) {
+			templateDao.delete(entity);
+		}
+		
+		List<TemplateItemsEntity> itemsEntities = itemsDao.selectOnTypeId(typeId);
+		for (TemplateItemsEntity templateItemsEntity : itemsEntities) {
+			itemsDao.delete(templateItemsEntity);
+		}
+		
+		List<ItemChoicesEntity> choicesEntities = choicesDao.selectOnTypeId(typeId);
+		for (ItemChoicesEntity itemChoicesEntity : choicesEntities) {
+			choicesDao.delete(itemChoicesEntity);
+		}
 	}
 
 	

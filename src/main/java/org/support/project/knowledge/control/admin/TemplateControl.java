@@ -228,11 +228,7 @@ public class TemplateControl extends Control {
 			return view_edit();
 		}
 		
-		TemplateMastersEntity entity = dao.selectOnKey(typeId);
-		if (entity != null) {
-			dao.delete(entity);
-		}
-		
+		TemplateLogic.get().deleteTemplate(typeId, getLoginedUser());
 		String successMsg = "message.success.delete";
 		setResult(successMsg, null);
 		return list();
