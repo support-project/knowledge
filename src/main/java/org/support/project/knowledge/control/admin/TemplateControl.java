@@ -1,6 +1,7 @@
 package org.support.project.knowledge.control.admin;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,10 +10,13 @@ import net.arnx.jsonic.JSONException;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.dao.TemplateMastersDao;
+import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
@@ -73,6 +77,73 @@ public class TemplateControl extends Control {
 	}
 	
 	/**
+	 * リクエスト情報にあるテンプレートの情報を取得する
+	 * 同時にバリデーションエラーもチェックし、もしバリデーションエラーが発生する場合、
+	 * 引数のerrorsのリストに追加していく
+	 * 
+	 * @param errors
+	 * @return
+	 * @throws InvalidParamException 
+	 * @throws IOException 
+	 * @throws JSONException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 */
+	public TemplateMastersEntity loadParams(List<ValidateError> errors) throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
+		TemplateMastersEntity template = new TemplateMastersEntity();
+		Map<String, String> values = getParams();
+		errors.addAll(template.validate(values));
+		if (!errors.isEmpty()) {
+			return null;
+		}
+		template = getParamOnProperty(TemplateMastersEntity.class);
+		
+		String[] itemTypes = getParam("itemType", String[].class);
+		for (int i = 0; i < itemTypes.length; i++) {
+			String itemType = itemTypes[i]; // text_1 や radio_3 といった形式
+			if (itemType.indexOf("_") == -1) {
+				errors.add(new ValidateError("errors.invalid", "Request Data"));
+				return null;
+			}
+			String type = itemType.split("_")[0];
+			String itemId = itemType.split("_")[1];
+			if (!itemId.startsWith("item")) {
+				errors.add(new ValidateError("errors.invalid", "Request Data"));
+				return null;
+			}
+			String idx = itemId.substring(4);
+			
+			if (!StringUtils.isInteger(idx)) {
+				errors.add(new ValidateError("errors.invalid", "Request Data"));
+				return null;
+			}
+			int typeNum = TemplateLogic.get().convType(type);
+			if (typeNum == -1) {
+				errors.add(new ValidateError("errors.invalid", "Request Data"));
+				return null;
+			}
+			
+			String itemTitle = getParam("title_" + itemId);
+			String itemDescription = getParam("description_" + itemId);
+			
+			if (StringUtils.isEmpty(itemTitle)) {
+				errors.add(new ValidateError("errors.required", "Item title"));
+				return null;
+			}
+			
+			TemplateItemsEntity itemsEntity = new TemplateItemsEntity();
+			itemsEntity.setItemNo(Integer.parseInt(idx));
+			itemsEntity.setItemType(typeNum);
+			itemsEntity.setItemName(itemTitle);
+			itemsEntity.setDescription(itemDescription);
+			template.getItems().add(itemsEntity);
+		}
+		
+		return template;
+	}
+	
+	
+	/**
 	 * 登録
 	 * @return
 	 * @throws InvalidParamException 
@@ -84,17 +155,14 @@ public class TemplateControl extends Control {
 	@Post
 	@Auth(roles="admin")
 	public Boundary create() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
-		TemplateMastersEntity template = new TemplateMastersEntity();
-		Map<String, String> values = getParams();
-		List<ValidateError> errors = template.validate(values);
+		List<ValidateError> errors = new ArrayList<ValidateError>();
+		TemplateMastersEntity template = loadParams(errors);
 		if (!errors.isEmpty()) {
 			setResult(null, errors);
 			return forward("view_add.jsp");
 		}
-		template = getParamOnProperty(TemplateMastersEntity.class);
-		
-		TemplateMastersDao templateDao = TemplateMastersDao.get();
-		template = templateDao.insert(template);
+		// 保存
+		TemplateLogic.get().addTemplate(template, getLoginedUser());
 		
 		super.setPathInfo(String.valueOf(template.getTypeId()));
 		
@@ -116,9 +184,8 @@ public class TemplateControl extends Control {
 	@Post
 	@Auth(roles="admin")
 	public Boundary update() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
-		TemplateMastersEntity template = new TemplateMastersEntity();
-		Map<String, String> values = getParams();
-		List<ValidateError> errors = template.validate(values);
+		List<ValidateError> errors = new ArrayList<ValidateError>();
+		TemplateMastersEntity template = loadParams(errors);
 		if (!errors.isEmpty()) {
 			setResult(null, errors);
 			return forward("view_edit.jsp");

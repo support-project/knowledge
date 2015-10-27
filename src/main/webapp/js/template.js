@@ -38,14 +38,14 @@ var addChoice = function(itemId) {
 	addItem += '<label for="">';
 	addItem += LABEL_CHOICE_LABEL;
 	addItem += '</label>';
-	addItem += '<input type="text" class="form-control" name="label_' + itemId + '_1" id="label_' + itemId + '_1" /> ';
+	addItem += '<input type="text" class="form-control" name="label_' + itemId + '_' + c + '" id="label_' + itemId + '_' + c + '" /> ';
 	addItem += '</div>';
 	
 	addItem += '<div class="form-group choice_item_bottom">';
 	addItem += '<label for="">';
 	addItem += LABEL_CHOICE_VALUE;
 	addItem += '</label>';
-	addItem += '<input type="text" class="form-control" name="value_' + itemId + '_1" id="value_' + itemId + '_1" /> ';
+	addItem += '<input type="text" class="form-control" name="value_' + itemId + '_' + c + '" id="value_' + itemId + '_' + c + '" /> ';
 	addItem += '</div>';
 	
 	$(tb).append(addItem);
@@ -83,7 +83,7 @@ $(document).ready(function() {
 			addItem += '</div>';
 			addItem += '<div class="form-group">';
 			addItem += '<label for="">' + LABEL_ITEM_DESCRIPTION + '</label>';
-			addItem += '<input type="text" class="form-control" name="explanation_' + itemId + '" id="explanation_' + itemId + '" />';
+			addItem += '<input type="text" class="form-control" name="description_' + itemId + '" id="description_' + itemId + '" />';
 			addItem += '</div>';
 			
 		addItem += '</div>';
@@ -114,7 +114,7 @@ $(document).ready(function() {
 			addItem += '</div>';
 			addItem += '<div class="form-group">';
 			addItem += '<label for="">' + LABEL_ITEM_DESCRIPTION + '</label>';
-			addItem += '<input type="text" class="form-control" name="explanation_' + itemId + '" id="explanation_' + itemId + '" />';
+			addItem += '<input type="text" class="form-control" name="description_' + itemId + '" id="description_' + itemId + '" />';
 			addItem += '</div>';
 			
 			addItem += '<div id="ch_' + itemId + '" class="choice_item_list">';
@@ -162,7 +162,7 @@ $(document).ready(function() {
 			addItem += '</div>';
 			addItem += '<div class="form-group">';
 			addItem += '<label for="">' + LABEL_ITEM_DESCRIPTION + '</label>';
-			addItem += '<input type="text" class="form-control" name="explanation_' + itemId + '" id="explanation_' + itemId + '" />';
+			addItem += '<input type="text" class="form-control" name="description_' + itemId + '" id="description_' + itemId + '" />';
 			addItem += '</div>';
 			
 			addItem += '<div id="ch_' + itemId + '" class="choice_item_list">';
