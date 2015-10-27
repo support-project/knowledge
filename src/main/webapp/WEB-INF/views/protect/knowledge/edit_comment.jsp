@@ -55,7 +55,7 @@
 		</span>
 		</label>
 		<input type="hidden" name="commentNo" value="<%= jspUtil.out("commentNo") %>" id="commentNo"/>
-		<textarea onKeyup="preview();" class="form-control" name="comment" rows="16"
+		<textarea onKeyup="previewInput();" class="form-control" name="comment" rows="16"
 		placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="comment"><%= jspUtil.out("comment") %></textarea>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>

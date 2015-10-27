@@ -376,6 +376,14 @@ var setImagePath = function(url, name) {
 
 
 var emoji = window.emojiParser;
+
+var previewTimer;
+
+var previewInput = function() {
+	clearTimeout(previewTimer);
+	previewTimer = setTimeout('preview();',400);
+}
+
 var preview = function() {
 	$.post(_CONTEXT + '/open.knowledge/marked', {
 		title : $('#input_title').val(),

@@ -92,7 +92,7 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 	<!-- title -->
 	<div class="form-group">
 		<label for="input_title"><%= jspUtil.label("knowledge.add.label.title") %></label>
-		<input onKeyup="preview();" type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="<%= jspUtil.out("title") %>" />
+		<input onKeyup="previewInput();" type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="<%= jspUtil.out("title") %>" />
 	</div>
 
 	<!-- contents -->
@@ -105,7 +105,7 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		<a data-toggle="modal" data-target="#helpMarkdownModal">Markdown supported</a>
 		</span>
 		</label>
-		<textarea onKeyup="preview();" class="form-control" name="content" rows="16" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
+		<textarea onKeyup="previewInput();" class="form-control" name="content" rows="16" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/objects" data-target="#emojiObjectsModal">objects</a>
