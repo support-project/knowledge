@@ -10,10 +10,11 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/template.css") %>" />
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
-
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/template.js") %>"></script>
 </c:param>
 
 
@@ -34,6 +35,14 @@
 		<label for="description"><%= jspUtil.label("knowledge.template.label.description") %></label>
 		<textarea class="form-control" name="description" id="description" placeholder="Description" ><%= jspUtil.out("description") %></textarea>
 	</div>
+	
+	<h5><b>項目</b></h5>
+	<div class="form-group">
+		<a href="#" class="btn btn-info" id="addText"><i class="fa fa-pencil"></i>&nbsp;テキスト項目追加</a>
+		<a href="#" class="btn btn-info" id="addRadio"><i class="fa fa-dot-circle-o"></i>&nbsp;ラジオボタン項目追加</a>
+		<a href="#" class="btn btn-info" id="addCheckbox"><i class="fa fa-check-square-o"></i>&nbsp;チェックボックス項目追加</a>
+	</div>
+	<div id="items"></div>
 	
 	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.registration") %></button>
 	<a href="<%= request.getContextPath() %>/admin.template/list/<%= jspUtil.out("offset") %>"
