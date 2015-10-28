@@ -30,7 +30,7 @@ public class TemplateLogic {
 	public static final int ITEM_TYPE_TEXT = 0;
 	public static final int ITEM_TYPE_TEXTAREA = 1;
 	public static final int ITEM_TYPE_RADIO = 10;
-	public static final int ITEM_TYPE_CHECKBOX = 10;
+	public static final int ITEM_TYPE_CHECKBOX = 11;
 	
 	public static final String ITEM_TYPE_TEXT_STRING = "text";
 	public static final String ITEM_TYPE_TEXTAREA_STRING = "textarea";
@@ -52,7 +52,26 @@ public class TemplateLogic {
 		} else if (ITEM_TYPE_CHECKBOX_STRING.equals(type)) {
 			return ITEM_TYPE_CHECKBOX;
 		}
+		LOG.warn("Item type: " + type + " is undefined.");
 		return -1;
+	}
+	/**
+	 * DBの項目種類をテキストに変換
+	 * @param type
+	 * @return
+	 */
+	public String convType(int type) {
+		if (ITEM_TYPE_TEXT == type) {
+			return ITEM_TYPE_TEXT_STRING;
+		} else if (ITEM_TYPE_TEXTAREA == type) {
+			return ITEM_TYPE_TEXTAREA_STRING;
+		} else if (ITEM_TYPE_RADIO == type) {
+			return ITEM_TYPE_RADIO_STRING;
+		} else if (ITEM_TYPE_CHECKBOX == type) {
+			return ITEM_TYPE_CHECKBOX_STRING;
+		}
+		LOG.warn("Item type: " + type + " is undefined.");
+		return "";
 	}
 	
 	/**
@@ -67,14 +86,21 @@ public class TemplateLogic {
 		ItemChoicesDao choicesDao = ItemChoicesDao.get();
 		// テンプレート保存
 		template = templateDao.insert(template);
+		Integer typeId = template.getTypeId();
 		// テンプレートの入力項目を保存
-		List<TemplateItemsEntity> itemsEntities = template.getItems();
-		for (TemplateItemsEntity templateItemsEntity : itemsEntities) {
-			templateItemsEntity.setTypeId(template.getTypeId());
-			itemsDao.insert(templateItemsEntity);
-		}
+		insertItems(template, itemsDao, typeId);
 		
 		return template;
+	}
+	protected void insertItems(TemplateMastersEntity template, TemplateItemsDao itemsDao, Integer typeId) {
+		List<TemplateItemsEntity> itemsEntities = template.getItems();
+		int count = 1;
+		for (TemplateItemsEntity templateItemsEntity : itemsEntities) {
+			templateItemsEntity.setTypeId(typeId);
+			templateItemsEntity.setItemNo(count);
+			itemsDao.insert(templateItemsEntity);
+			count++;
+		}
 	}
 	
 	
@@ -104,6 +130,15 @@ public class TemplateLogic {
 		db.setDescription(template.getDescription());
 		templateDao.update(db);
 		
+		Integer typeId = template.getTypeId();
+		if (KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE == typeId) {
+			// 項目の増減はできない
+			return template;
+		} else if(KnowledgeLogic.TEMPLATE_TYPE_BOOKMARK == typeId) {
+			// 項目の増減はできない
+			return template;
+		}
+		
 		// 項目、選択肢はデリートインサート
 		List<TemplateItemsEntity> itemsEntities = itemsDao.physicalSelectOnTypeId(template.getTypeId());
 		for (TemplateItemsEntity templateItemsEntity : itemsEntities) {
@@ -118,11 +153,7 @@ public class TemplateLogic {
 		}
 
 		// テンプレートの入力項目を保存
-		itemsEntities = template.getItems();
-		for (TemplateItemsEntity templateItemsEntity : itemsEntities) {
-			templateItemsEntity.setTypeId(template.getTypeId());
-			itemsDao.insert(templateItemsEntity);
-		}
+		insertItems(template, itemsDao, typeId);
 		
 		return db;
 	}

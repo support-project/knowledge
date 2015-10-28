@@ -1,3 +1,4 @@
+<%@page import="org.support.project.knowledge.logic.TemplateLogic"%>
 <%@page import="org.support.project.knowledge.vo.Roles"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
@@ -69,12 +70,44 @@ function deleteUser() {
 	</div>
 	
 	<h5><b><%= jspUtil.label("knowledge.template.label.item") %></b></h5>
+	<% if(jspUtil.is(Boolean.TRUE, "editable")) { %>
 	<div class="form-group">
 		<a href="#" class="btn btn-info" id="addText"><i class="fa fa-pencil"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.text.add") %></a>
 		<a href="#" class="btn btn-info" id="addRadio"><i class="fa fa-dot-circle-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.radio.add") %></a>
 		<a href="#" class="btn btn-info" id="addCheckbox"><i class="fa fa-check-square-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.checkbox.add") %></a>
 	</div>
-	<div id="items"></div>
+	<% } %>
+	<div id="items">
+	<c:forEach var="item" items="${items}" varStatus="status">
+		<div id="item<%= jspUtil.out("item.itemNo") %>" class="add_item">
+			<h5 class="item_title">
+			
+				<%= jspUtil.is(String.valueOf(TemplateLogic.ITEM_TYPE_TEXT), "item.itemType", "<i class=\"fa fa-pencil\"></i>&nbsp;") %>
+				<%= jspUtil.is(String.valueOf(TemplateLogic.ITEM_TYPE_RADIO), "item.itemType", "<i class=\"fa fa-dot-circle-o\"></i>&nbsp;") %>
+				<%= jspUtil.is(String.valueOf(TemplateLogic.ITEM_TYPE_CHECKBOX), "item.itemType", "<i class=\"fa fa-check-square-o\"></i>&nbsp;") %>
+				
+				<%= jspUtil.is(String.valueOf(TemplateLogic.ITEM_TYPE_TEXT), "item.itemType", jspUtil.label("knowledge.template.label.item.text")) %>
+				<%= jspUtil.is(String.valueOf(TemplateLogic.ITEM_TYPE_RADIO), "item.itemType", jspUtil.label("knowledge.template.label.item.radio")) %>
+				<%= jspUtil.is(String.valueOf(TemplateLogic.ITEM_TYPE_CHECKBOX), "item.itemType", jspUtil.label("knowledge.template.label.item.checkbox")) %>
+				
+				<input type="hidden" name="itemType" value="<%= jspUtil.out("item.itemTypeText") %>_item<%= jspUtil.out("item.itemNo") %>"/>
+			<button type="button" class="btn btn-warning" onclick="deleteItem('item<%= jspUtil.out("item.itemNo") %>');" >
+			<i class="fa fa-minus-square"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.delete") %>
+			</button></h5>
+			<div class="form-group">
+			<label for="">
+			<%= jspUtil.label("knowledge.template.label.item.title") %></label>
+			<input type="text" class="form-control" name="title_item<%= jspUtil.out("item.itemNo") %>" id="title_item<%= jspUtil.out("item.itemNo") %>"
+			value="<%= jspUtil.out("item.itemName") %>" />
+			</div>
+			<div class="form-group">
+			<label for=""><%= jspUtil.label("knowledge.template.label.item.description") %></label>
+			<input type="text" class="form-control" name="description_item<%= jspUtil.out("item.itemNo") %>" id="description_item<%= jspUtil.out("item.itemNo") %>"
+			value="<%= jspUtil.out("item.description") %>" />
+			</div>
+		</div>
+	</c:forEach>
+	</div>
 	
 	<input type="hidden" name="typeId" value="<%= jspUtil.out("typeId") %>" id="typeId"/>
 	

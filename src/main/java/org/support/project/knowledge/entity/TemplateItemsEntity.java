@@ -8,6 +8,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.gen.GenTemplateItemsEntity;
+import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.web.util.ThreadResources;
 
 
@@ -66,7 +67,20 @@ public class TemplateItemsEntity extends GenTemplateItemsEntity {
 	public void setItemValue(String itemValue) {
 		this.itemValue = itemValue;
 	}
-
+	/**
+	 * アイテム種類のテキストを取得
+	 * @return
+	 */
+	public String getItemTypeText() {
+		return TemplateLogic.get().convType(getItemType());
+	}
+	/**
+	 * アイテム種類のテキストを設定
+	 * @return
+	 */
+	public void setItemTypeText(String type) {
+		super.setItemType(TemplateLogic.get().convType(type));
+	}
 	
 	/**
 	 * 表示用の名称を変換 

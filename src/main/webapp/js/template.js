@@ -56,6 +56,10 @@ var deleteChoice = function(itemId) {
 };
 
 $(document).ready(function() {
+	//item数初期化
+	item = $('.add_item').length;
+	console.log($('.add_item').length);
+	
 	// フォームのサブミットは禁止
 	$('#templateForm').submit(function(event) {
 		console.log('submit');

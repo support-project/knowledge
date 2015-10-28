@@ -13,6 +13,7 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
@@ -69,6 +70,10 @@ public class TemplateControl extends Control {
 			sendError(404, null);
 		}
 		setAttributeOnProperty(entity);
+		
+		TemplateItemsDao itemsDao = TemplateItemsDao.get();
+		List<TemplateItemsEntity> itemsEntities = itemsDao.selectOnTypeId(id);
+		setAttribute("items", itemsEntities);
 		
 		boolean editable = true;
 		if (KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE == id || KnowledgeLogic.TEMPLATE_TYPE_BOOKMARK == id) {
@@ -193,12 +198,6 @@ public class TemplateControl extends Control {
 		TemplateMastersEntity template = loadParams(errors);
 		if (!errors.isEmpty()) {
 			return sendValidateError(errors);
-		}
-		Integer typeId = getParam("typeId", Integer.class);
-		if (KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE == typeId) {
-			// TODO 項目の増減はできない
-		} else if(KnowledgeLogic.TEMPLATE_TYPE_BOOKMARK == typeId) {
-			// TODO 項目の増減はできない
 		}
 		
 		// 保存
