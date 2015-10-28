@@ -26,6 +26,7 @@ var LABEL_ADD_CHOICE = '<%= jspUtil.label("knowledge.template.label.choice.add")
 var LABEL_DELETE_CHOICE = '<%= jspUtil.label("knowledge.template.label.choice.remove") %>';
 var LABEL_CHOICE_LABEL = '<%= jspUtil.label("knowledge.template.label.choice.label") %>';
 var LABEL_CHOICE_VALUE = '<%= jspUtil.label("knowledge.template.label.choice.value") %>';
+var LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
 </script>
 </c:param>
 
@@ -56,7 +57,9 @@ var LABEL_CHOICE_VALUE = '<%= jspUtil.label("knowledge.template.label.choice.val
 	</div>
 	<div id="items"></div>
 	
-	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.registration") %></button>
+	<input type="hidden" name="typeId" value="-1" id="typeId"/>
+	
+	<button type="submit" class="btn btn-primary" id="savebutton"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.registration") %></button>
 	<a href="<%= request.getContextPath() %>/admin.template/list/<%= jspUtil.out("offset") %>"
 		class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>
 	

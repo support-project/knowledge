@@ -10,9 +10,24 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/template.css") %>" />
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/template.js") %>"></script>
+<script>
+var LABEL_DELETE = '<%= jspUtil.label("knowledge.template.label.item.delete") %>';
+var LABEL_TEXT_ITEM = '<i class="fa fa-pencil"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.text") %>';
+var LABEL_RADIO_ITEM = '<i class="fa fa-dot-circle-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.radio") %>';
+var LABEL_CHECKBOX_ITEM = '<i class="fa fa-check-square-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.checkbox") %>';
+var LABEL_ITEM_TITLE = '<%= jspUtil.label("knowledge.template.label.item.title") %>';
+var LABEL_ITEM_DESCRIPTION = '<%= jspUtil.label("knowledge.template.label.item.description") %>';
+var LABEL_ADD_CHOICE = '<%= jspUtil.label("knowledge.template.label.choice.add") %>';
+var LABEL_DELETE_CHOICE = '<%= jspUtil.label("knowledge.template.label.choice.remove") %>';
+var LABEL_CHOICE_LABEL = '<%= jspUtil.label("knowledge.template.label.choice.label") %>';
+var LABEL_CHOICE_VALUE = '<%= jspUtil.label("knowledge.template.label.choice.value") %>';
+var LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
+</script>
 <script>
 function deleteUser() {
 	bootbox.confirm("本当に削除しますか?", function(result) {
@@ -53,9 +68,17 @@ function deleteUser() {
 		<textarea class="form-control" name="description" id="description" placeholder="Description" ><%= jspUtil.out("description") %></textarea>
 	</div>
 	
-	<input type="hidden" name="typeId" value="<%= jspUtil.out("typeId") %>" />
+	<h5><b><%= jspUtil.label("knowledge.template.label.item") %></b></h5>
+	<div class="form-group">
+		<a href="#" class="btn btn-info" id="addText"><i class="fa fa-pencil"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.text.add") %></a>
+		<a href="#" class="btn btn-info" id="addRadio"><i class="fa fa-dot-circle-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.radio.add") %></a>
+		<a href="#" class="btn btn-info" id="addCheckbox"><i class="fa fa-check-square-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.checkbox.add") %></a>
+	</div>
+	<div id="items"></div>
 	
-	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.update") %></button>
+	<input type="hidden" name="typeId" value="<%= jspUtil.out("typeId") %>" id="typeId"/>
+	
+	<button type="submit" class="btn btn-primary" id="savebutton"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.update") %></button>
 	<c:if test="${editable}">
 	<button type="button" class="btn btn-danger" onclick="deleteUser();"><i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %></button>
 	</c:if>

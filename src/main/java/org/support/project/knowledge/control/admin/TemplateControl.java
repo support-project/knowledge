@@ -167,6 +167,7 @@ public class TemplateControl extends Control {
 		if (!errors.isEmpty()) {
 			return sendValidateError(errors);
 		}
+		template.setTypeId(null); //自動採番する
 		// 保存
 		template = TemplateLogic.get().addTemplate(template, getLoginedUser());
 		
@@ -191,10 +192,8 @@ public class TemplateControl extends Control {
 		List<ValidateError> errors = new ArrayList<ValidateError>();
 		TemplateMastersEntity template = loadParams(errors);
 		if (!errors.isEmpty()) {
-			setResult(null, errors);
-			return forward("view_edit.jsp");
+			return sendValidateError(errors);
 		}
-		
 		Integer typeId = getParam("typeId", Integer.class);
 		if (KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE == typeId) {
 			// TODO 項目の増減はできない
@@ -202,17 +201,15 @@ public class TemplateControl extends Control {
 			// TODO 項目の増減はできない
 		}
 		
-		template = getParamOnProperty(TemplateMastersEntity.class);
-		
-		TemplateMastersDao templateDao = TemplateMastersDao.get();
-		template = templateDao.save(template);
-		
-		super.setPathInfo(String.valueOf(template.getTypeId()));
-		
-		String successMsg = "message.success.update";
-		setResult(successMsg, errors);
-		
-		return view_edit();
+		// 保存
+		try {
+			template = TemplateLogic.get().uodateTemplate(template, getLoginedUser());
+		} catch (InvalidParamException e) {
+			// エラーメッセージ送信
+			return send(e.getMessageResult());
+		}
+		// メッセージ送信
+		return sendMsg(MessageStatus.Success, HttpStatus.SC_OK, String.valueOf(template.getTypeId()), "message.success.update");
 	}
 	
 	

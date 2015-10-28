@@ -58,11 +58,15 @@ var deleteChoice = function(itemId) {
 $(document).ready(function() {
 	// フォームのサブミットは禁止
 	$('#templateForm').submit(function(event) {
-		// ページ遷移を禁止して、Ajaxで保存
 		console.log('submit');
-		event.preventDefault();
 		// 操作対象のフォーム要素を取得
 		var $form = $(this);
+		if ($form.attr('action') == (_CONTEXT + '/admin.template/delete')) {
+			return true;
+		}
+		
+		// ページ遷移を禁止して、Ajaxで保存
+		event.preventDefault();
 		
 		// 送信ボタンを取得
 		// （後で使う: 二重送信を防止する。）
@@ -92,7 +96,10 @@ $(document).ready(function() {
 				console.log(result);
 				$.notify(result.message, 'info');
 				
+				$form.attr('action', _CONTEXT + '/admin.template/update');
 				var typeid = result.result;
+				$('#typeId').val(typeid);
+				$('#savebutton').html('<i class="fa fa-save"></i>&nbsp;' + LABEL_UPDATE);
 			},
 			// 通信失敗時の処理
 			error: function(xhr, textStatus, error) {
