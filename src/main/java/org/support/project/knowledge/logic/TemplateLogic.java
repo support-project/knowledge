@@ -82,27 +82,13 @@ public class TemplateLogic {
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public TemplateMastersEntity addTemplate(TemplateMastersEntity template, LoginedUser loginedUser) {
 		TemplateMastersDao templateDao = TemplateMastersDao.get();
-		TemplateItemsDao itemsDao = TemplateItemsDao.get();
-		ItemChoicesDao choicesDao = ItemChoicesDao.get();
 		// テンプレート保存
 		template = templateDao.insert(template);
 		Integer typeId = template.getTypeId();
 		// テンプレートの入力項目を保存
-		insertItems(template, itemsDao, typeId);
-		
+		insertItems(template, typeId);
 		return template;
 	}
-	protected void insertItems(TemplateMastersEntity template, TemplateItemsDao itemsDao, Integer typeId) {
-		List<TemplateItemsEntity> itemsEntities = template.getItems();
-		int count = 1;
-		for (TemplateItemsEntity templateItemsEntity : itemsEntities) {
-			templateItemsEntity.setTypeId(typeId);
-			templateItemsEntity.setItemNo(count);
-			itemsDao.insert(templateItemsEntity);
-			count++;
-		}
-	}
-	
 	
 	/**
 	 * テンプレートを更新
@@ -153,11 +139,42 @@ public class TemplateLogic {
 		}
 
 		// テンプレートの入力項目を保存
-		insertItems(template, itemsDao, typeId);
+		insertItems(template, typeId);
 		
 		return db;
 	}
 	
+	/**
+	 * テンプレートの項目を登録
+	 * （先に物理削除しておき、全てインサートする）
+	 * @param template
+	 * @param itemsDao
+	 * @param typeId
+	 */
+	private void insertItems(TemplateMastersEntity template, Integer typeId) {
+		TemplateItemsDao itemsDao = TemplateItemsDao.get();
+		ItemChoicesDao choicesDao = ItemChoicesDao.get();
+
+		List<TemplateItemsEntity> itemsEntities = template.getItems();
+		int itemNo = 1;
+		for (TemplateItemsEntity templateItemsEntity : itemsEntities) {
+			templateItemsEntity.setTypeId(typeId);
+			templateItemsEntity.setItemNo(itemNo);
+			itemsDao.insert(templateItemsEntity);
+			
+			int choiceNo = 0;
+			List<ItemChoicesEntity> choicesEntities = templateItemsEntity.getChoices();
+			for (ItemChoicesEntity itemChoicesEntity : choicesEntities) {
+				itemChoicesEntity.setTypeId(typeId);
+				itemChoicesEntity.setItemNo(itemNo);
+				itemChoicesEntity.setChoiceNo(choiceNo);
+				choicesDao.insert(itemChoicesEntity);
+				choiceNo++;
+			}
+			itemNo++;
+		}
+	}
+
 	
 	
 	/**

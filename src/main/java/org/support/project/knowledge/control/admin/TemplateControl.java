@@ -15,6 +15,7 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
+import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
@@ -148,6 +149,31 @@ public class TemplateControl extends Control {
 					return null;
 				}
 				template.getItems().add(itemsEntity);
+				
+				// 選択肢
+				if (typeNum == TemplateLogic.ITEM_TYPE_RADIO || typeNum == TemplateLogic.ITEM_TYPE_CHECKBOX) {
+					String[] choice_labels = getParam("label_item" + idx, String[].class);
+					String[] choice_values = getParam("value_item" + idx, String[].class);
+					if (choice_labels.length != choice_values.length) {
+						errors.add(new ValidateError("errors.invalid", "Request Data"));
+						return null;
+					}
+					for (int j = 0; j < choice_labels.length; j++) {
+						String label = choice_labels[j];
+						String value = choice_values[j];
+						ItemChoicesEntity choicesEntity = new ItemChoicesEntity();
+						choicesEntity.setTypeId(-1);
+						choicesEntity.setItemNo(-1);
+						choicesEntity.setChoiceLabel(label);
+						choicesEntity.setChoiceValue(value);
+						errors.addAll(itemsEntity.validate());
+						if (!errors.isEmpty()) {
+							// エラーが発生した時点で抜ける
+							return null;
+						}
+						itemsEntity.getChoices().add(choicesEntity);
+					}
+				}
 			}
 		}
 		return template;
