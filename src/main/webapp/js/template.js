@@ -1,14 +1,3 @@
-var LABEL_DELETE = '項目削除';
-var LABEL_TEXT_ITEM = '<i class="fa fa-pencil"></i>&nbsp;テキスト入力項目';
-var LABEL_RADIO_ITEM = '<i class="fa fa-dot-circle-o"></i>&nbsp;ラジオボタン入力項目';
-var LABEL_CHECKBOX_ITEM = '<i class="fa fa-check-square-o"></i>&nbsp;チェックボックスの選択項目';
-var LABEL_ITEM_TITLE = '項目名';
-var LABEL_ITEM_DESCRIPTION = '説明文';
-var LABEL_ADD_CHOICE = '選択肢追加';
-var LABEL_DELETE_CHOICE = '選択肢削除';
-var LABEL_CHOICE_LABEL = '表示する値';
-var LABEL_CHOICE_VALUE = 'データの値';
-
 var item = 0;
 var choiceCount = new Array();
 
@@ -38,14 +27,16 @@ var addChoice = function(itemId) {
 	addItem += '<label for="">';
 	addItem += LABEL_CHOICE_LABEL;
 	addItem += '</label>';
-	addItem += '<input type="text" class="form-control" name="label_' + itemId + '_' + c + '" id="label_' + itemId + '_' + c + '" /> ';
+	addItem += '<input type="text" class="form-control" name="label_' + itemId // + '_' + c 
+		+ '" id="label_' + itemId + '_' + c + '" /> ';
 	addItem += '</div>';
 	
 	addItem += '<div class="form-group choice_item_bottom">';
 	addItem += '<label for="">';
 	addItem += LABEL_CHOICE_VALUE;
 	addItem += '</label>';
-	addItem += '<input type="text" class="form-control" name="value_' + itemId + '_' + c + '" id="value_' + itemId + '_' + c + '" /> ';
+	addItem += '<input type="text" class="form-control" name="value_' + itemId // + '_' + c 
+		+ '" id="value_' + itemId + '_' + c + '" /> ';
 	addItem += '</div>';
 	
 	$(tb).append(addItem);
@@ -65,6 +56,62 @@ var deleteChoice = function(itemId) {
 };
 
 $(document).ready(function() {
+	// フォームのサブミットは禁止
+	$('#templateForm').submit(function(event) {
+		// ページ遷移を禁止して、Ajaxで保存
+		console.log('submit');
+		event.preventDefault();
+		// 操作対象のフォーム要素を取得
+		var $form = $(this);
+		
+		// 送信ボタンを取得
+		// （後で使う: 二重送信を防止する。）
+		var $button = $form.find('button');
+		
+		// 送信
+		$.ajax({
+			url: $form.attr('action'),
+			type: $form.attr('method'),
+			data: $form.serialize(),
+			timeout: 10000,  // 単位はミリ秒
+
+			// 送信前
+			beforeSend: function(xhr, settings) {
+				// ボタンを無効化し、二重送信を防止
+				$button.attr('disabled', true);
+			},
+			// 応答後
+			complete: function(xhr, textStatus) {
+				// ボタンを有効化し、再送信を許可
+				$button.attr('disabled', false);
+			},
+			
+			// 通信成功時の処理
+			success: function(result, textStatus, xhr) {
+				// 入力値を初期化
+				console.log(result);
+				$.notify(result.message, 'info');
+				
+				var typeid = result.result;
+			},
+			// 通信失敗時の処理
+			error: function(xhr, textStatus, error) {
+				// 入力値を初期化
+				console.log(xhr.responseJSON);
+				var msg = xhr.responseJSON;
+				if (msg.children) {
+					for (var i = 0; i < msg.children.length; i++) {
+						var child = msg.children[i];
+						console.log(child);
+						$.notify(child.message, 'warn');
+					}
+				}
+			}
+		});
+		return false;
+	});
+	
+	
 	//テキストのアイテムを追加
 	$("#addText").click(function(){
 		var itemId = createItemId();
@@ -122,14 +169,14 @@ $(document).ready(function() {
 				addItem += '<label for="">';
 				addItem += LABEL_CHOICE_LABEL;
 				addItem += '</label>';
-				addItem += '<input type="text" class="form-control" name="label_' + itemId + '_1" id="label_' + itemId + '_1" /> ';
+				addItem += '<input type="text" class="form-control" name="label_' + itemId + '" id="label_' + itemId + '_1" /> ';
 				addItem += '</div>';
 				
 				addItem += '<div class="form-group choice_item_bottom">';
 				addItem += '<label for="">';
 				addItem += LABEL_CHOICE_VALUE;
 				addItem += '</label>';
-				addItem += '<input type="text" class="form-control" name="value_' + itemId + '_1" id="value_' + itemId + '_1" /> ';
+				addItem += '<input type="text" class="form-control" name="value_' + itemId + '" id="value_' + itemId + '_1" /> ';
 				addItem += '</div>';
 			addItem += '</div>';
 		addItem += '</div>';
@@ -170,14 +217,14 @@ $(document).ready(function() {
 				addItem += '<label for="">';
 				addItem += LABEL_CHOICE_LABEL;
 				addItem += '</label>';
-				addItem += '<input type="text" class="form-control" name="label_' + itemId + '_1" id="label_' + itemId + '_1" /> ';
+				addItem += '<input type="text" class="form-control" name="label_' + itemId + '" id="label_' + itemId + '_1" /> ';
 				addItem += '</div>';
 				
 				addItem += '<div class="form-group choice_item_bottom">';
 				addItem += '<label for="">';
 				addItem += LABEL_CHOICE_VALUE;
 				addItem += '</label>';
-				addItem += '<input type="text" class="form-control" name="value_' + itemId + '_1" id="value_' + itemId + '_1" /> ';
+				addItem += '<input type="text" class="form-control" name="value_' + itemId + '" id="value_' + itemId + '_1" /> ';
 				addItem += '</div>';
 			addItem += '</div>';
 		addItem += '</div>';

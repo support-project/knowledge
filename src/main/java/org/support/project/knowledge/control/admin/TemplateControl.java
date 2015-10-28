@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.arnx.jsonic.JSONException;
 
+import org.apache.http.HttpStatus;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -19,6 +20,7 @@ import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
+import org.support.project.web.config.MessageStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.exception.InvalidParamException;
@@ -76,6 +78,7 @@ public class TemplateControl extends Control {
 		return forward("view_edit.jsp");
 	}
 	
+	
 	/**
 	 * リクエスト情報にあるテンプレートの情報を取得する
 	 * 同時にバリデーションエラーもチェックし、もしバリデーションエラーが発生する場合、
@@ -99,52 +102,56 @@ public class TemplateControl extends Control {
 		template = getParamOnProperty(TemplateMastersEntity.class);
 		
 		String[] itemTypes = getParam("itemType", String[].class);
-		for (int i = 0; i < itemTypes.length; i++) {
-			String itemType = itemTypes[i]; // text_1 や radio_3 といった形式
-			if (itemType.indexOf("_") == -1) {
-				errors.add(new ValidateError("errors.invalid", "Request Data"));
-				return null;
+		if (itemTypes != null) {
+			for (int i = 0; i < itemTypes.length; i++) {
+				String itemType = itemTypes[i]; // text_1 や radio_3 といった形式
+				if (itemType.indexOf("_") == -1) {
+					errors.add(new ValidateError("errors.invalid", "Request Data"));
+					return null;
+				}
+				String type = itemType.split("_")[0];
+				String itemId = itemType.split("_")[1];
+				if (!itemId.startsWith("item")) {
+					errors.add(new ValidateError("errors.invalid", "Request Data"));
+					return null;
+				}
+				String idx = itemId.substring(4);
+				
+				if (!StringUtils.isInteger(idx)) {
+					errors.add(new ValidateError("errors.invalid", "Request Data"));
+					return null;
+				}
+				int typeNum = TemplateLogic.get().convType(type);
+				if (typeNum == -1) {
+					errors.add(new ValidateError("errors.invalid", "Request Data"));
+					return null;
+				}
+				
+				String itemTitle = getParam("title_" + itemId);
+				String itemDescription = getParam("description_" + itemId);
+				
+				TemplateItemsEntity itemsEntity = new TemplateItemsEntity();
+				itemsEntity.setTypeId(-1); // バリデーションエラー対策
+				itemsEntity.setItemNo(Integer.parseInt(idx));
+				itemsEntity.setItemType(typeNum);
+				itemsEntity.setItemName(itemTitle);
+				itemsEntity.setDescription(itemDescription);
+				
+				errors.addAll(itemsEntity.validate());
+				if (!errors.isEmpty()) {
+					// エラーが発生した時点で抜ける
+					return null;
+				}
+				template.getItems().add(itemsEntity);
 			}
-			String type = itemType.split("_")[0];
-			String itemId = itemType.split("_")[1];
-			if (!itemId.startsWith("item")) {
-				errors.add(new ValidateError("errors.invalid", "Request Data"));
-				return null;
-			}
-			String idx = itemId.substring(4);
-			
-			if (!StringUtils.isInteger(idx)) {
-				errors.add(new ValidateError("errors.invalid", "Request Data"));
-				return null;
-			}
-			int typeNum = TemplateLogic.get().convType(type);
-			if (typeNum == -1) {
-				errors.add(new ValidateError("errors.invalid", "Request Data"));
-				return null;
-			}
-			
-			String itemTitle = getParam("title_" + itemId);
-			String itemDescription = getParam("description_" + itemId);
-			
-			if (StringUtils.isEmpty(itemTitle)) {
-				errors.add(new ValidateError("errors.required", "Item title"));
-				return null;
-			}
-			
-			TemplateItemsEntity itemsEntity = new TemplateItemsEntity();
-			itemsEntity.setItemNo(Integer.parseInt(idx));
-			itemsEntity.setItemType(typeNum);
-			itemsEntity.setItemName(itemTitle);
-			itemsEntity.setDescription(itemDescription);
-			template.getItems().add(itemsEntity);
 		}
-		
 		return template;
 	}
 	
 	
 	/**
 	 * 登録
+	 * 画面遷移すると再度画面を作るのが面倒なので、Ajaxアクセスとする
 	 * @return
 	 * @throws InvalidParamException 
 	 * @throws IOException 
@@ -158,20 +165,17 @@ public class TemplateControl extends Control {
 		List<ValidateError> errors = new ArrayList<ValidateError>();
 		TemplateMastersEntity template = loadParams(errors);
 		if (!errors.isEmpty()) {
-			setResult(null, errors);
-			return forward("view_add.jsp");
+			return sendValidateError(errors);
 		}
 		// 保存
-		TemplateLogic.get().addTemplate(template, getLoginedUser());
+		template = TemplateLogic.get().addTemplate(template, getLoginedUser());
 		
-		super.setPathInfo(String.valueOf(template.getTypeId()));
-		
-		String successMsg = "message.success.insert";
-		setResult(successMsg, errors);
-
-		return view_edit();
+		// メッセージ送信
+		return sendMsg(MessageStatus.Success, HttpStatus.SC_OK, String.valueOf(template.getTypeId()), "message.success.insert");
 	}
 	
+
+
 	/**
 	 * 更新
 	 * @return

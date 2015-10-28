@@ -3,10 +3,12 @@ package org.support.project.knowledge.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.support.project.common.config.Resources;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.gen.GenTemplateItemsEntity;
+import org.support.project.web.util.ThreadResources;
 
 
 /**
@@ -65,4 +67,21 @@ public class TemplateItemsEntity extends GenTemplateItemsEntity {
 		this.itemValue = itemValue;
 	}
 
+	
+	/**
+	 * 表示用の名称を変換 
+	 */
+	@Override
+	protected String convLabelName(String label) {
+		Resources resources = ThreadResources.get().getResources();
+		if ("Item Name".equals(label)) {
+			String resource = resources.getResource("knowledge.template.label.item.title");
+			return resource;
+		} else if ("Description".equals(label)) {
+			String resource = resources.getResource("knowledge.template.label.item.description");
+			return resource;
+		}
+		return label;
+	}
+	
 }
