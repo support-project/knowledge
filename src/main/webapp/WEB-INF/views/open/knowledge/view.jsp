@@ -150,6 +150,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 					<span id="template_items"></span>
 					</div>
 					
+					<h5>content</h5>
 					<div style="word-break:break-all;" id="content" class="markdown viewarea">
 					<%= jspUtil.out("content", JspUtil.ESCAPE_NONE) %>
 					</div>
