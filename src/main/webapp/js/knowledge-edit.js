@@ -434,19 +434,59 @@ var addTemplateItem = function(template) {
 	$('#template_info').removeClass('hide');
 	$('#template_info').addClass('show');
 	
-
 	$('#template_items').html('');
 	if (template.items && template.items.length > 0) {
 		for (var i = 0; i < template.items.length; i++) {
 			var item = template.items[i];
 			console.log(item);
 			var tag = '<label for="item_' + item.itemNo + '">' + item.itemName + '</label>';
-			tag += '<input type="text" class="form-control" name="item_' + item.itemNo + '" for="item_' + item.itemNo
-			var val = '';
-			if (item.itemValue) {
-				val = item.itemValue;
+			
+			// テンプレートの項目の種類毎に生成する入力項目を変化
+			if (item.itemType === 1) {
+				// textarea
+			} else if (item.itemType === 10) {
+				// Radio
+				if (item.choices) {
+					tag += '<br/>';
+					for (var j = 0; j < item.choices.length; j++) {
+						var choice = item.choices[j];
+						tag += '<label class="radio-inline"><input type="radio" class="" name="item_' + item.itemNo;
+						tag += '" value="' + choice.choiceValue + '" ';
+						if (choice.choiceValue == item.itemValue) {
+							tag += 'checked="checked" ';
+						}
+						tag += '/> &nbsp;' + choice.choiceValue + '</label><br/>';
+					}
+				}
+			} else if (item.itemType === 11) {
+				// Checkbox
+				if (item.choices) {
+					tag += '<br/>';
+					for (var j = 0; j < item.choices.length; j++) {
+						var choice = item.choices[j];
+						tag += '<label class="checkbox-inline"><input type="checkbox" class="" name="item_' + item.itemNo;
+						tag += '" value="' + choice.choiceValue + '" ';
+						if (item.itemValue) {
+							var vals = item.itemValue.split(',');
+							for (var k = 0; k < vals.length; k++) {
+								if (choice.choiceValue == vals[k].trim()) {
+									tag += 'checked="checked" ';
+									break;
+								}
+							}
+						}
+						tag += '/> &nbsp;' + choice.choiceValue + '</label><br/>';
+					}
+				}
+			} else {
+				// text
+				tag += '<input type="text" class="form-control" name="item_' + item.itemNo;
+				var val = '';
+				if (item.itemValue) {
+					val = item.itemValue;
+				}
+				tag += '" value="' + val + '" />';
 			}
-			tag += '" value="' + val + '" />';
 			$('#template_items').append(tag);
 		}
 	}
