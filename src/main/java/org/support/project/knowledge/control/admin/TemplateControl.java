@@ -2,6 +2,8 @@ package org.support.project.knowledge.control.admin;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +15,6 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.control.Control;
-import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
@@ -41,6 +42,15 @@ public class TemplateControl extends Control {
 		// テンプレートの個数はあまり多く出来ないようにする（でないと登録の画面が微妙）
 		TemplateMastersDao mastersDao = TemplateMastersDao.get();
 		List<TemplateMastersEntity> templates = mastersDao.selectAll();
+		Collections.sort(templates, new Comparator<TemplateMastersEntity>() {
+			@Override
+			public int compare(TemplateMastersEntity o1, TemplateMastersEntity o2) {
+				if (!o1.getTypeId().equals(o2.getTypeId())) {
+					return o1.getTypeId().compareTo(o2.getTypeId());
+				}
+				return 0;
+			}
+		});
 		setAttribute("templates", templates);
 		return forward("list.jsp");
 	}
@@ -65,16 +75,12 @@ public class TemplateControl extends Control {
 	@Auth(roles="admin")
 	public Boundary view_edit() throws InvalidParamException {
 		Integer id = super.getPathInteger();
-		TemplateMastersDao mastersDao = TemplateMastersDao.get();
-		TemplateMastersEntity entity = mastersDao.selectOnKey(id);
+		TemplateMastersEntity entity = TemplateLogic.get().loadTemplate(id);
 		if (entity == null) {
 			sendError(404, null);
 		}
 		setAttributeOnProperty(entity);
-		
-		TemplateItemsDao itemsDao = TemplateItemsDao.get();
-		List<TemplateItemsEntity> itemsEntities = itemsDao.selectOnTypeId(id);
-		setAttribute("items", itemsEntities);
+		setAttribute("items", entity.getItems());
 		
 		boolean editable = true;
 		if (KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE == id || KnowledgeLogic.TEMPLATE_TYPE_BOOKMARK == id) {
@@ -98,7 +104,7 @@ public class TemplateControl extends Control {
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	public TemplateMastersEntity loadParams(List<ValidateError> errors) throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
+	private TemplateMastersEntity loadParams(List<ValidateError> errors) throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
 		TemplateMastersEntity template = new TemplateMastersEntity();
 		Map<String, String> values = getParams();
 		errors.addAll(template.validate(values));

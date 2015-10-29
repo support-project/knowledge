@@ -1,6 +1,11 @@
 package org.support.project.knowledge.logic;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpStatus;
 import org.support.project.aop.Aspect;
@@ -203,9 +208,51 @@ public class TemplateLogic {
 			choicesDao.delete(itemChoicesEntity);
 		}
 	}
-
-
 	
+	/**
+	 * テンプレートの情報を取得
+	 * @param id
+	 * @return
+	 */
+	public TemplateMastersEntity loadTemplate(Integer id) {
+		TemplateMastersDao mastersDao = TemplateMastersDao.get();
+		TemplateMastersEntity entity = mastersDao.selectOnKey(id);
+		
+		TemplateItemsDao itemsDao = TemplateItemsDao.get();
+		List<TemplateItemsEntity> itemsEntities = itemsDao.selectOnTypeId(id);
+		entity.setItems(itemsEntities);
+		Map<Integer, TemplateItemsEntity> itemMap = new HashMap<Integer, TemplateItemsEntity>();
+		for (TemplateItemsEntity templateItemsEntity : itemsEntities) {
+			templateItemsEntity.setChoices(new ArrayList<ItemChoicesEntity>());
+			itemMap.put(templateItemsEntity.getItemNo(), templateItemsEntity);
+		}
+		
+		ItemChoicesDao choicesDao = ItemChoicesDao.get();
+		List<ItemChoicesEntity> choicesEntities = choicesDao.selectOnTypeId(id);
+		// 念のためソート
+		Collections.sort(choicesEntities, new Comparator<ItemChoicesEntity>() {
+			@Override
+			public int compare(ItemChoicesEntity o1, ItemChoicesEntity o2) {
+				if (!o1.getTypeId().equals(o2.getTypeId())) {
+					return o1.getTypeId().compareTo(o2.getTypeId());
+				}
+				if (!o1.getItemNo().equals(o2.getItemNo())) {
+					return o1.getItemNo().compareTo(o2.getItemNo());
+				}
+				if (!o1.getChoiceNo().equals(o2.getChoiceNo())) {
+					return o1.getChoiceNo().compareTo(o2.getChoiceNo());
+				}
+				return 0;
+			}
+		});
+		for (ItemChoicesEntity itemChoicesEntity : choicesEntities) {
+			if (itemMap.containsKey(itemChoicesEntity.getItemNo())) {
+				TemplateItemsEntity templateItemsEntity = itemMap.get(itemChoicesEntity.getItemNo());
+				templateItemsEntity.getChoices().add(itemChoicesEntity);
+			}
+		}
+		return entity;
+	}
 	
 	
 
