@@ -61,6 +61,8 @@ public class MailSendBat extends AbstractBat {
 		MailSendBat bat = new MailSendBat();
 		bat.dbInit();
 		bat.start();
+		
+		finishInfo();
 	}
 
 	/**

@@ -1,21 +1,15 @@
 $(document).ready(function(){
-	hljs.initHighlightingOnLoad();
-	marked.setOptions({
-		langPrefix: '',
-		highlight: function(code, lang) {
-			console.log('[highlight]' + lang);
-			return code;
-		}
+	var jqObj = $('#content');
+	codeHighlight(jqObj)
+	.then(function() {console.log('finish codeHighlight.'); return;})
+	.then(function () {
+		//console.log($('#content').html());
+		var html = emoji(jqObj.html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+		jqObj.html(html);
+		//console.log($('#content').html());
+	}).then(function () {
+		jqObj.find('a.oembed').oembed();
 	});
-	var emoji = window.emojiParser;
-	$('#content').find('pre code').each(function(i, block) {
-		hljs.highlightBlock(block);
-	});
-	
-	console.log($('#content').html());
-	var html = emoji($('#content').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-	$('#content').html(html);
-	console.log($('#content').html());
 	
 	echo.init();
 	
@@ -35,25 +29,28 @@ $(document).ready(function(){
 	
 	$('.arrow_question').each(function(i, block) {
 		var content = $(this).html().trim();
-		//content = marked(content);
-		$(this).html(content);
-		$(this).find('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
+		var jqObj = $(this);
+		jqObj.html(content);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+		}).then(function () {
+			jqObj.find('a.oembed').oembed();
 		});
-		var content = emoji($(this).html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		console.log(content);
-		$(this).html(content);
 	});
 	$('.arrow_answer').each(function(i, block) {
 		var content = $(this).html().trim();
-		//content = marked(content);
-		$(this).html(content);
-		$(this).find('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
+		var jqObj = $(this);
+		jqObj.html(content);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+			return;
+		}).then(function () {
+			jqObj.find('a.oembed').oembed();
 		});
-		var content = emoji($(this).html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		console.log(content);
-		$(this).html(content);
 	});
 	
 	$('#emojiPeopleModal').on('loaded.bs.modal', function (event) {
@@ -72,7 +69,73 @@ $(document).ready(function(){
 		emojiSelect('#emojiSymbolsModal');
 	});
 	
+	var url = _CONTEXT + '/protect.file/upload';
+	$('#fileupload').fileupload({
+		url : url,
+		dataType : 'json',
+		autoUpload: true,
+		maxFileSize: 5000000, // 5 MB
+	}).on('fileuploaddone', function (e, data) {
+		//$('#files').show();
+		$.each(data.result.files, function(index, file) {
+			console.log(file);
+			var filediv = '<div class="filediv" id="file-' + file.fileNo + '">';
+			filediv += '<div class="file-image">';
+			filediv += '<img src="' + file.thumbnailUrl + '" />';
+			filediv += '</div>';
+			filediv += '<div class="file-label">';
+			filediv += '<a href="' + file.url + '">';
+			filediv += file.name;
+			filediv += '</a>';
+			filediv += '</div>';
+			filediv += '<br class="fileLabelBr"/>';
+			
+			filediv += '<input type="hidden" name="files" value="' + file.fileNo + '" />';
+			filediv += '&nbsp;&nbsp;&nbsp;';
+			filediv += '<button type="button" class="btn btn-success" onclick="setImagePath(\'' + file.url + '\', \'' + file.name + '\')">';
+			filediv += '<i class="fa fa-file-image-o"></i>&nbsp;' + _SET_IMAGE_LABEL;
+			filediv += '</button>';
+			filediv += '<button type="button" class="btn btn-danger" onclick="removeAddedFile(' + file.fileNo + ')">';
+			filediv += '<i class="fa fa-remove"></i>';
+			filediv += '&nbsp;' + _DELETE_LABEL + '</button>';
+			filediv += '</div>';
+			$('#files').append(filediv);
+		});
+		$.notify(_UPLOADED, 'success');
+		setTimeout(function() {
+			$('#progress').hide();
+		}, 5000);
+		
+	 }).on('fileuploadprogressall', function (e, data) {
+			$('#progress').show();
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+			console.log('' + progress + '%');
+			$('.progress .progress-bar').css('width', progress + '%');
+			$('.progress .progress-bar').text(progress + '%');
+			
+	 }).on('fileuploadfail', function (e, data) {
+		if (data && data.jqXHR && data.jqXHR.responseJSON && data.jqXHR.responseJSON.msg) {
+			var msg = data.jqXHR.responseJSON.msg;
+			$.each(data.files, function (index) {
+				var filediv = '<div class="alert alert-warning alert-dismissible" role="alert">';
+				filediv += '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+				filediv += '<strong>';
+				filediv += '<i class="fa fa-remove"></i>&nbsp;';
+				filediv += data.files[index].name;
+				filediv += '</strong>&nbsp;&nbsp;';
+				filediv += msg;
+				filediv += '</div>';
+				$('#files').append(filediv);
+				$.notify(_FAIL_UPLOAD, 'warn');
+			});
+		} else {
+			console.log(e);
+			console.log(data);
+			$.notify('アップロードに失敗しました', 'warn');
+		}
+	}).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');	
 	
+	changeTemplate();
 });
 
 
@@ -138,13 +201,16 @@ var preview = function() {
 		html += '</div><!-- /.arrow_question -->';
 		html += '</div><!-- /.question_Box -->';
 		
-		$('#preview').html(html);
-		$('#preview').find('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
+		var jqObj = $('#preview');
+		jqObj.html(html);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+			return;
+		}).then(function () {
+			jqObj.find('a.oembed').oembed();
 		});
-		var emoji = window.emojiParser;
-		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		$('#preview').html(content);
 	});
 };
 
@@ -168,13 +234,15 @@ var previewans = function() {
 		html += '</div>';
 		html += '</div>';
 		
-		$('#preview').html(html);
-		$('#preview').find('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
+		var jqObj = $('#preview');
+		jqObj.html(html);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+		}).then(function () {
+			jqObj.find('a.oembed').oembed();
 		});
-		var emoji = window.emojiParser;
-		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		$('#preview').html(content);
 	});
 };
 
@@ -188,4 +256,74 @@ var emojiSelect = function(id) {
 		});
 	});
 };
+
+
+var removeAddedFile = function(fileNo) {
+	var url = _CONTEXT + '/protect.file/delete';
+	$.ajax({
+		type : 'GET',
+		url : url,
+		data : 'fileNo=' + fileNo,
+		success : function(data, dataType) {
+			$.notify(_REMOVE_FILE, 'info');
+			$('#file-' + fileNo).remove();
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown){
+			//alert("error: " + textStatus);
+			$.notify(_FAIL_REMOVE_FILE, 'warn');
+		}
+	});
+};
+
+var setImagePath = function(url, name) {
+	var text = '\n![' + name + '](' + url + ')\n';
+	var textarea = $('#comment');
+	textarea.val(textarea.val() + text);
+}
+
+
+
+
+var changeTemplate = function() {
+	var typeId = $('#typeId').val();
+	var url = _CONTEXT + '/open.knowledge/template';
+	var knowledgeId = null;
+	if ($('#knowledgeId')) {
+		knowledgeId = $('#knowledgeId').val();
+	}
+	$.ajax({
+		type : 'GET',
+		url : url,
+		data : 'type_id=' + typeId + '&knowledge_id=' + knowledgeId,
+		success : function(data, dataType) {
+			console.log(data);
+			addTemplateItem(data);
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown){
+			$.notify('[fail] get template info', 'warn');
+		}
+	});
+};
+
+var addTemplateItem = function(template) {
+	var templateTag = '<i class="fa ' + template.typeIcon + '"></i>&nbsp;' + template.typeName;
+	$('#template').html(templateTag);
+	
+	if (template.items && template.items.length > 0) {
+		for (var i = 0; i < template.items.length; i++) {
+			var item = template.items[i];
+			console.log(item);
+			var tag = item.itemName + ': ';
+			var url = '';
+			if (item.itemValue) {
+				url = item.itemValue;
+			}
+			
+			tag += '<a href="' + url + '" target="_blank" >' + url + '</a>';
+			$('#template_items').append(tag);
+			$('#template_items_area').show();
+		}
+	}
+};
+
 

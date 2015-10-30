@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Map;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -33,6 +34,8 @@ import org.support.project.web.logic.LdapLogic;
 @DI(instance=Instance.Prototype)
 public class LdapControl extends Control {
 	
+	private static final String CONFIG_TYPE2 = "config2";
+	private static final String CONFIG_TYPE1 = "config1";
 	private static final String NO_CHANGE_PASSWORD = "NO_CHANGE_PASSWORD-fXLSJ_V-ZJ2E-X6c2_iGCpkE"; //パスワードを更新しなかったことを表すパスワード
 	
 	/**
@@ -44,14 +47,27 @@ public class LdapControl extends Control {
 	public Boundary config() {
 		LdapConfigsDao dao = LdapConfigsDao.get();
 		LdapConfigsEntity entity = dao.selectOnKey(AppConfig.get().getSystemName());
+		String configType = CONFIG_TYPE1;
 		if (entity == null) {
 			entity = new LdapConfigsEntity();
 		} else {
 			entity.setBindPassword(NO_CHANGE_PASSWORD);
 			entity.setSalt("");
+			
+			if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP_2) {
+				configType = CONFIG_TYPE2;
+				entity.setAuthType(LdapConfigsEntity.AUTH_TYPE_LDAP);
+			} else if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_BOTH_2) {
+				configType = CONFIG_TYPE2;
+				entity.setAuthType(LdapConfigsEntity.AUTH_TYPE_BOTH);
+			}
 		}
+		setAttribute("configType", configType);
 		entity.setSystemName(AppConfig.get().getSystemName());
 		setAttributeOnProperty(entity);
+		
+		setAttribute("host2", entity.getHost());
+		setAttribute("port2", entity.getPort());
 		
 		if (entity.getUseSsl() != null && entity.getUseSsl().intValue() == INT_FLAG.ON.getValue()) {
 			setAttribute("security", "usessl");
@@ -60,6 +76,7 @@ public class LdapControl extends Control {
 		} else {
 			setAttribute("security", "plain");
 		}
+		
 		return forward("config.jsp");
 	}
 	
@@ -88,6 +105,36 @@ public class LdapControl extends Control {
 				entity.setUseTls(INT_FLAG.ON.getValue());
 			}
 		}
+		
+		String configType = getParam("configType");
+		if (CONFIG_TYPE2.equals(configType)) {
+			if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP) {
+				entity.setAuthType(LdapConfigsEntity.AUTH_TYPE_LDAP_2);
+			} else if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_BOTH) {
+				entity.setAuthType(LdapConfigsEntity.AUTH_TYPE_BOTH_2);
+			}
+			
+			entity.setHost(getParam("host2"));
+			entity.setPort(getParam("port2", Integer.class));
+			security = getParam("security2");
+			if (!StringUtils.isEmpty(security)) {
+				if (security.toLowerCase().equals("usessl")) {
+					entity.setUseSsl(INT_FLAG.ON.getValue());
+				} else if (security.toLowerCase().equals("usetls")) {
+					entity.setUseTls(INT_FLAG.ON.getValue());
+				}
+			}
+			entity.setBindDn(getParam("bindDn2"));
+			entity.setBindPassword(getParam("bindPassword2"));
+			entity.setBaseDn(getParam("baseDn2"));
+			entity.setFilter(getParam("filter2"));
+			entity.setIdAttr(getParam("idAttr2"));
+			entity.setNameAttr(getParam("nameAttr2"));
+			entity.setMailAttr(getParam("mailAttr2"));
+			entity.setAdminCheckFilter(getParam("adminCheckFilter2"));
+			setAttributeOnProperty(entity);
+		}
+		
 		String password = entity.getBindPassword();
 		if (password.equals(NO_CHANGE_PASSWORD)) {
 			LdapConfigsEntity saved = dao.selectOnKey(AppConfig.get().getSystemName());
@@ -98,6 +145,7 @@ public class LdapControl extends Control {
 				entity.setBindPassword(password);
 			}
 		}
+		
 		return entity;
 	}	
 	
@@ -119,25 +167,45 @@ public class LdapControl extends Control {
 	@Post
 	@Auth(roles="admin")
 	public Boundary check() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException, LdapException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-		List<ValidateError> errors = LdapConfigsEntity.get().validate(getParams());
-		if (errors != null && !errors.isEmpty()) {
-			super.setResult("", errors);
+		LdapConfigsDao dao = LdapConfigsDao.get();
+		LdapConfigsEntity entity = dao.selectOnKey(AppConfig.get().getSystemName());
+		String configType = CONFIG_TYPE1;
+		if (entity == null) {
+			addMsgWarn("knowledge.ldap.msg.connect.error");
 			return forward("config.jsp");
+		} else {
+			if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP_2) {
+				configType = CONFIG_TYPE2;
+			} else if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_BOTH_2) {
+				configType = CONFIG_TYPE2;
+			}
 		}
-		LdapConfigsEntity entity = loadLdapConfig();
 		
 		LdapLogic ldapLogic = LdapLogic.get();
-		LdapInfo result = ldapLogic.auth(entity, entity.getBindDn(), entity.getBindPassword());
-		if (result == null) {
-			addMsgWarn("knowledge.ldap.msg.connect.error");
+		if (CONFIG_TYPE2.equals(configType)) {
+			boolean check = ldapLogic.check(entity);
+			if (!check) {
+				addMsgWarn("knowledge.ldap.msg.connect.error");
+			} else {
+				addMsgSuccess("knowledge.ldap.msg.connect.success2");
+			}
 		} else {
-			addMsgSuccess("knowledge.ldap.msg.connect.success"
-					, result.getId()
-					, result.getName() 
-					, result.getMail() 
-					, String.valueOf(result.isAdmin()));
+			String pass = entity.getBindPassword();
+			if (StringUtils.isNotEmpty(entity.getSalt())) {
+				pass = PasswordUtil.decrypt(pass, entity.getSalt());
+			}
+			LdapInfo result = ldapLogic.auth(entity, entity.getBindDn(), pass);
+			if (result == null) {
+				addMsgWarn("knowledge.ldap.msg.connect.error");
+			} else {
+				addMsgSuccess("knowledge.ldap.msg.connect.success"
+						, result.getId()
+						, result.getName() 
+						, result.getMail() 
+						, String.valueOf(result.isAdmin()));
+			}
 		}
-		return forward("config.jsp");
+		return config();
 	}
 
 
@@ -161,15 +229,37 @@ public class LdapControl extends Control {
 	@Post
 	@Auth(roles="admin")
 	public Boundary save() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException, LdapException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-		List<ValidateError> errors = LdapConfigsEntity.get().validate(getParams());
+		Map<String, String> params = getParams();
+		String configType = getParam("configType");
+		if (CONFIG_TYPE2.equals(configType)) {
+			params.put("host", params.get("host2"));
+			params.put("port", params.get("port2"));
+		}
+		List<ValidateError> errors = LdapConfigsEntity.get().validate(params);
 		if (errors != null && !errors.isEmpty()) {
 			super.setResult("", errors);
 			return forward("config.jsp");
 		}
 		LdapConfigsEntity entity = loadLdapConfig();
 		LdapLogic ldapLogic = LdapLogic.get();
-		LdapInfo result = ldapLogic.auth(entity, entity.getBindDn(), entity.getBindPassword());
-		if (result == null) {
+		boolean check = false;
+		if (CONFIG_TYPE2.equals(configType)) {
+			if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP_2) {
+				check = ldapLogic.check(entity);
+			} else {
+				check = true;
+			}
+		} else {
+			if (entity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP) {
+				LdapInfo result = ldapLogic.auth(entity, entity.getBindDn(), entity.getBindPassword());
+				if (result != null) {
+					check = true;
+				}
+			} else {
+				check = true;
+			}
+		}
+		if (!check) {
 			addMsgWarn("knowledge.ldap.msg.save.error");
 		} else {
 			//Ldap設定を保存
@@ -185,7 +275,7 @@ public class LdapControl extends Control {
 			setAttributeOnProperty(entity);
 			addMsgSuccess("knowledge.ldap.msg.save.success");
 		}
-		return forward("config.jsp");
+		return config();
 	}
 	
 	/**

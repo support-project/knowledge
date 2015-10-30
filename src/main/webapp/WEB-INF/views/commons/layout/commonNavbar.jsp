@@ -104,7 +104,7 @@
 						<span class="caret"></span>
 				</a>
 					<ul class="dropdown-menu" role="menu">
-<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin") %></li>
+						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin") %></li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.users/list" style="cursor: pointer;">
 								<i class="fa fa-users"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.users") %>
@@ -113,6 +113,11 @@
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.users/accept_list" style="cursor: pointer;">
 								<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.acccept") %> 
+							</a>
+						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.template/list" style="cursor: pointer;">
+								<i class="fa fa-sticky-note"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.template") %> 
 							</a>
 						</li>
 						
@@ -136,6 +141,11 @@
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.ldap/config" style="cursor: pointer;">
 								<i class="fa fa-user-plus"></i>&nbsp;<%= jspUtil.label("knowledge.ldap.title") %>
+							</a>
+						</li>
+						<li >
+							<a href="<%= request.getContextPath() %>/admin.proxy/config" style="cursor: pointer;">
+								<i class="fa fa-globe"></i>&nbsp;<%= jspUtil.label("knowledge.proxy.title") %>
 							</a>
 						</li>
 						

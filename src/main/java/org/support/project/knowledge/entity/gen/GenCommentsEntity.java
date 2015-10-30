@@ -56,6 +56,8 @@ public class GenCommentsEntity implements Serializable {
 	private Long knowledgeId;
 	/** コメント */
 	private String comment;
+	/** ステータス */
+	private Integer commentStatus;
 	/** 登録ユーザ */
 	private Integer insertUser;
 	/** 登録日時 */
@@ -109,6 +111,21 @@ public class GenCommentsEntity implements Serializable {
 	 */
 	public GenCommentsEntity setComment(String comment) {
 		this.comment = comment;
+		return this;
+	}
+
+	/**
+	 * ステータス を取得する
+	 */
+	public Integer getCommentStatus() {
+		return this.commentStatus;
+	}
+	/**
+	 * ステータス を設定する
+	 * @param commentStatus ステータス
+	 */
+	public GenCommentsEntity setCommentStatus(Integer commentStatus) {
+		this.commentStatus = commentStatus;
 		return this;
 	}
 
@@ -234,6 +251,7 @@ public class GenCommentsEntity implements Serializable {
 		builder.append("commentNo = ").append(commentNo).append("\n");
 		builder.append("knowledgeId = ").append(knowledgeId).append("\n");
 		builder.append("comment = ").append(comment).append("\n");
+		builder.append("commentStatus = ").append(commentStatus).append("\n");
 		builder.append("insertUser = ").append(insertUser).append("\n");
 		builder.append("insertDatetime = ").append(insertDatetime).append("\n");
 		builder.append("updateUser = ").append(updateUser).append("\n");
@@ -256,6 +274,11 @@ public class GenCommentsEntity implements Serializable {
 		ValidateError error;
 		validator = ValidatorFactory.getInstance(Validator.REQUIRED);
 		error = validator.validate(this.knowledgeId, convLabelName("Knowledge Id"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.INTEGER);
+		error = validator.validate(this.commentStatus, convLabelName("Comment Status"));
 		if (error != null) {
 			errors.add(error);
 		}
@@ -285,6 +308,11 @@ public class GenCommentsEntity implements Serializable {
 		ValidateError error;
 		validator = ValidatorFactory.getInstance(Validator.REQUIRED);
 		error = validator.validate(values.get("knowledgeId"), convLabelName("Knowledge Id"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.INTEGER);
+		error = validator.validate(values.get("commentStatus"), convLabelName("Comment Status"));
 		if (error != null) {
 			errors.add(error);
 		}

@@ -68,8 +68,17 @@
 		<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_ADMIN, "group.status", jspUtil.label("knowledge.group.mylist.label.admin")) %>
 		<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_MEMBER, "group.status", jspUtil.label("knowledge.group.mylist.label.member")) %>
 		<%= jspUtil.is(CommonWebParameter.GROUP_ROLE_WAIT, "group.status", jspUtil.label("knowledge.group.mylist.label.wait")) %>
-		<br/>
+		<span class="badge pull-right"><%= jspUtil.out("group.groupKnowledgeCount") %></span>
+		</p>
+		<p>
+		<c:choose>
+		<c:when test="${ '' != group.description }">
 		<%= jspUtil.out("group.description") %>
+		</c:when>
+		<c:otherwise>
+		&nbsp;
+		</c:otherwise>
+		</c:choose>
 		</p>
 	</a>
 </c:forEach>

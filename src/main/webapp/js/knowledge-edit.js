@@ -4,7 +4,6 @@ var editors = [];
 var selectedEditors = [];
 
 $(document).ready(function() {
-	hljs.initHighlightingOnLoad();
 	marked.setOptions({
 		langPrefix : '',
 		highlight : function(code, lang) {
@@ -197,6 +196,12 @@ $(document).ready(function() {
 	});
 	
 	setUpTagSelect();
+	
+	$('input[name="typeId"]:radio').change(function() {
+		changeTemplate();
+	});
+	changeTemplate();
+	
 });
 
 var getGroups = function(keyword, offset, listId, pageId, selectFunc) {
@@ -360,12 +365,21 @@ var preview = function() {
 		html += '</div>';
 		html += '</div>';
 		html += '</div>';
-		$('#preview').html(html);
-		$('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
+		
+		var jqObj = $('#preview');
+		jqObj.html(html);
+		codeHighlight(jqObj)
+		.then(function() {
+			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+			jqObj.html(content);
+			
+			var speed = 500;
+			var target = $('#preview');
+			var position = target.offset().top;
+			$("html, body").animate({scrollTop:position}, speed, "swing");
+		}).then(function () {
+			jqObj.find('a.oembed').oembed();
 		});
-		var content = emoji($('#preview').html(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-		$('#preview').html(content);
 	});
 };
 
@@ -388,4 +402,53 @@ function deleteKnowledge() {
 		}
 	}); 
 };
+
+var changeTemplate = function() {
+	$('#template_info').removeClass('show');
+	$('#template_info').addClass('hide');
+	var typeId = $('input[name="typeId"]:checked').val();
+	console.log(typeId);
+	var url = _CONTEXT + '/open.knowledge/template';
+	var knowledgeId = null;
+	if ($('#knowledgeId')) {
+		knowledgeId = $('#knowledgeId').val();
+	}
+	$.ajax({
+		type : 'GET',
+		url : url,
+		data : 'type_id=' + typeId + '&knowledge_id=' + knowledgeId,
+		success : function(data, dataType) {
+			console.log(data);
+			addTemplateItem(data);
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown){
+			$.notify('[fail] get template info', 'warn');
+		}
+	});
+};
+
+var addTemplateItem = function(template) {
+	$('#template_name').text(template.typeName);
+	$('#template_msg').text(template.description);
+	$('#template_info').removeClass('hide');
+	$('#template_info').addClass('show');
+	
+
+	$('#template_items').html('');
+	if (template.items && template.items.length > 0) {
+		for (var i = 0; i < template.items.length; i++) {
+			var item = template.items[i];
+			console.log(item);
+			var tag = '<label for="item_' + item.itemNo + '">' + item.itemName + '</label>';
+			tag += '<input type="text" class="form-control" name="item_' + item.itemNo + '" for="item_' + item.itemNo
+			var val = '';
+			if (item.itemValue) {
+				val = item.itemValue;
+			}
+			tag += '" value="' + val + '" />';
+			$('#template_items').append(tag);
+		}
+	}
+};
+
 

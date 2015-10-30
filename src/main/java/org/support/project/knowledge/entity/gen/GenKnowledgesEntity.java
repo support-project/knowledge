@@ -66,6 +66,8 @@ public class GenKnowledgesEntity implements Serializable {
 	private Long likeCount;
 	/** コメント件数 */
 	private Integer commentCount;
+	/** テンプレートの種類ID */
+	private Integer typeId;
 	/** 登録ユーザ */
 	private Integer insertUser;
 	/** 登録日時 */
@@ -198,6 +200,21 @@ public class GenKnowledgesEntity implements Serializable {
 	}
 
 	/**
+	 * テンプレートの種類ID を取得する
+	 */
+	public Integer getTypeId() {
+		return this.typeId;
+	}
+	/**
+	 * テンプレートの種類ID を設定する
+	 * @param typeId テンプレートの種類ID
+	 */
+	public GenKnowledgesEntity setTypeId(Integer typeId) {
+		this.typeId = typeId;
+		return this;
+	}
+
+	/**
 	 * 登録ユーザ を取得する
 	 */
 	public Integer getInsertUser() {
@@ -324,6 +341,7 @@ public class GenKnowledgesEntity implements Serializable {
 		builder.append("tagNames = ").append(tagNames).append("\n");
 		builder.append("likeCount = ").append(likeCount).append("\n");
 		builder.append("commentCount = ").append(commentCount).append("\n");
+		builder.append("typeId = ").append(typeId).append("\n");
 		builder.append("insertUser = ").append(insertUser).append("\n");
 		builder.append("insertDatetime = ").append(insertDatetime).append("\n");
 		builder.append("updateUser = ").append(updateUser).append("\n");
@@ -366,6 +384,11 @@ public class GenKnowledgesEntity implements Serializable {
 		}
 		validator = ValidatorFactory.getInstance(Validator.INTEGER);
 		error = validator.validate(this.commentCount, convLabelName("Comment Count"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.INTEGER);
+		error = validator.validate(this.typeId, convLabelName("Type Id"));
 		if (error != null) {
 			errors.add(error);
 		}
@@ -415,6 +438,11 @@ public class GenKnowledgesEntity implements Serializable {
 		}
 		validator = ValidatorFactory.getInstance(Validator.INTEGER);
 		error = validator.validate(values.get("commentCount"), convLabelName("Comment Count"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.INTEGER);
+		error = validator.validate(values.get("typeId"), convLabelName("Type Id"));
 		if (error != null) {
 			errors.add(error);
 		}

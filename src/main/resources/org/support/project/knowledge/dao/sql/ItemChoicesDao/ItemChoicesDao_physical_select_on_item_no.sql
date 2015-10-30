@@ -1,0 +1,5 @@
+SELECT * FROM ITEM_CHOICES
+ WHERE 
+ITEM_NO = ?
+;
+;

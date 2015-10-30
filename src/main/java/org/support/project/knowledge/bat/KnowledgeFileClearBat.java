@@ -25,7 +25,8 @@ public class KnowledgeFileClearBat extends AbstractBat {
 		KnowledgeFileClearBat bat = new KnowledgeFileClearBat();
 		bat.dbInit();
 		bat.start();
-		LOG.info("finished");
+		
+		finishInfo();
 	}
 
 	private void start() {

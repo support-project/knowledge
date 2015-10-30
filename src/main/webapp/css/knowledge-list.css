@@ -39,3 +39,7 @@
 .selected_tag {
 	border-bottom: 1px dotted #ccc;
 }
+
+.score {
+	font-size: 10px;
+}

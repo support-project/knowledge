@@ -34,6 +34,9 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 	 */
 	private String updateUserName;
 	
+	/** スコア(検索した際のスコア) */
+	private Float score;
+	
 	/**
 	 * コンストラクタ
 	 */
@@ -108,6 +111,20 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 	 */
 	public void setUpdateUserName(String updateUserName) {
 		this.updateUserName = updateUserName;
+	}
+
+	/**
+	 * @return the score
+	 */
+	public Float getScore() {
+		return score;
+	}
+
+	/**
+	 * @param score the score to set
+	 */
+	public void setScore(Float score) {
+		this.score = score;
 	}
 	
 	

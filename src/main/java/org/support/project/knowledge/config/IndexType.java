@@ -3,7 +3,8 @@ package org.support.project.knowledge.config;
 public enum IndexType {
 	knowledge,
 	KnowledgeFile,
-	KnowledgeComment;
+	KnowledgeComment,
+	bookmarkContent;
 	
 	
 	public int getValue() {

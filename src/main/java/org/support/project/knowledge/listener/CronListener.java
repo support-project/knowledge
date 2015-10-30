@@ -1,8 +1,6 @@
 package org.support.project.knowledge.listener;
 
 import java.io.File;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -92,7 +90,7 @@ public class CronListener implements ServletContextListener {
 					LOG.error("Faild parse.", e);
 				}
 			}
-		}, 70, 60, TimeUnit.SECONDS); // 60秒毎に実行
+		}, 5, 5, TimeUnit.MINUTES); // 5分毎に実行
 		
 		mailfuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -119,7 +117,7 @@ public class CronListener implements ServletContextListener {
 					LOG.error("Failed send mail.", e);
 				}
 			}
-		}, 50, 60, TimeUnit.SECONDS); // 60秒毎に実行
+		}, 180, 180, TimeUnit.SECONDS); // 180秒毎に実行
 		
 		notifyfuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -146,7 +144,7 @@ public class CronListener implements ServletContextListener {
 					LOG.error("Failed to Notify", e);
 				}
 			}
-		}, 40, 60, TimeUnit.SECONDS); // 60秒毎に実行
+		}, 90, 180, TimeUnit.SECONDS); // 180秒毎に実行
 	}
 
 	@Override

@@ -1,8 +1,10 @@
 package org.support.project.knowledge.control.protect;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.exception.ParseException;
@@ -13,10 +15,15 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.KnowledgeControlBase;
+import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.TagsDao;
+import org.support.project.knowledge.dao.TemplateMastersDao;
+import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
+import org.support.project.knowledge.entity.TemplateItemsEntity;
+import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
@@ -56,6 +63,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<TagsEntity> tagitems = TagsDao.get().selectAll();
 		setAttribute("tagitems", tagitems);
 		
+		List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+		setAttribute("templates", templates);
+		
+		setAttribute("typeId", KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE);
+		
 		return forward("view_add.jsp");
 	}
 	/**
@@ -82,7 +94,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttributeOnProperty(entity);
 		
 		// ナレッジに紐づく添付ファイルを取得
-		List<UploadFile> files = fileLogic.selectOnKnowledgeId(knowledgeId, getRequest().getContextPath());
+		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(knowledgeId, getRequest().getContextPath());
 		setAttribute("files", files);
 		
 		// 表示するグループを取得
@@ -105,6 +117,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<TagsEntity> tagitems = TagsDao.get().selectAll();
 		setAttribute("tagitems", tagitems);
 		
+		List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+		setAttribute("templates", templates);
+
 		return forward("view_edit.jsp");
 	}
 	
@@ -150,10 +165,17 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				}
 			}
 		}
-
-		//entity.setTitle(super.sanitize(entity.getTitle())); //XSS対策
-		//entity.setContent(super.sanitize(entity.getContent())); //XSS対策
 		
+		List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+		setAttribute("templates", templates);
+		
+		TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(entity.getTypeId());
+		List<TemplateItemsEntity> items = template.getItems();
+		for (TemplateItemsEntity item : items) {
+			String itemValue = super.getParam("item_" + item.getItemNo());
+			item.setItemValue(itemValue);
+		}
+
 		List<ValidateError> errors = entity.validate();
 		if (!errors.isEmpty()) {
 			setResult(null, errors);
@@ -175,10 +197,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String tags = super.getParam("tagNames");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
 		
-		entity = knowledgeLogic.insert(entity, tagList, fileNos, groups, editors, super.getLoginedUser());
+		entity = knowledgeLogic.insert(entity, tagList, fileNos, groups, editors, template, super.getLoginedUser());
 		setAttributeOnProperty(entity);
 		
-		List<UploadFile> files = fileLogic.selectOnKnowledgeId(entity.getKnowledgeId(), getRequest().getContextPath());
+		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(entity.getKnowledgeId(), getRequest().getContextPath());
 		setAttribute("files", files);
 		
 		addMsgSuccess("message.success.insert");
@@ -225,9 +247,16 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				}
 			}
 		}
-
-		//entity.setTitle(super.sanitize(entity.getTitle())); //XSS対策
-		//entity.setContent(super.sanitize(entity.getContent())); //XSS対策
+		
+		List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+		setAttribute("templates", templates);
+		
+		TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(entity.getTypeId());
+		List<TemplateItemsEntity> items = template.getItems();
+		for (TemplateItemsEntity item : items) {
+			String itemValue = super.getParam("item_" + item.getItemNo());
+			item.setItemValue(itemValue);
+		}
 		
 		KnowledgesDao dao = Container.getComp(KnowledgesDao.class);
 		List<ValidateError> errors = entity.validate();
@@ -266,11 +295,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String tags = super.getParam("tagNames");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
 		
-		entity = knowledgeLogic.update(entity, tagList, fileNos, groups, editors, super.getLoginedUser());
+		entity = knowledgeLogic.update(entity, tagList, fileNos, groups, editors, template, super.getLoginedUser());
 		setAttributeOnProperty(entity);
 		addMsgSuccess("message.success.update");
 		
-		List<UploadFile> files = fileLogic.selectOnKnowledgeId(entity.getKnowledgeId(), getRequest().getContextPath());
+		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(entity.getKnowledgeId(), getRequest().getContextPath());
 		setAttribute("files", files);
 		
 		return forward("view_edit.jsp");
@@ -299,6 +328,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		
 		List<TagsEntity> tagitems = TagsDao.get().selectAll();
 		setAttribute("tagitems", tagitems);
+
+		List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+		setAttribute("templates", templates);
 		
 		Long knowledgeId = new Long(id);
 		KnowledgesEntity check = dao.selectOnKey(knowledgeId);
@@ -344,14 +376,48 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String params = setViewParam();
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
 		//String comment = super.sanitize(getParam("addcomment"));
+		
+		List<Long> fileNos = new ArrayList<Long>();
+		Object obj = getParam("files", Object.class);
+		if (obj != null) {
+			if (obj instanceof String) {
+				String string = (String) obj;
+				if (StringUtils.isLong(string)) {
+					fileNos.add(new Long(string));
+				}
+			} else if (obj instanceof List) {
+				List<String> strings = (List<String>) obj;
+				for (String string : strings) {
+					if (StringUtils.isLong(string)) {
+						fileNos.add(new Long(string));
+					}
+				}
+			}
+		}
+		
 		String comment = getParam("addcomment");
 		
 		// 必須チェック
 		if (StringUtils.isEmpty(comment)) {
 			addMsgWarn("errors.required", "Comment");
+			
+			// バリデーションエラーが発生した場合、設定されていた添付ファイルの情報は再取得
+			List<UploadFile> files = fileLogic.selectOnFileNos(fileNos, getRequest().getContextPath());
+			Iterator<UploadFile> iterator = files.iterator();
+			while (iterator.hasNext()) {
+				UploadFile uploadFile = (UploadFile) iterator.next();
+				if (uploadFile.getKnowlegeId() != null) {
+					// 新規登録なのに、添付ファイルが既にナレッジに紐づいている（おかしい）
+					iterator.remove();
+				}
+			}
+			setAttribute("comment_files", files);
+			
 			return super.devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
 		}
-		KnowledgeLogic.get().saveComment(knowledgeId, comment);
+		
+		KnowledgeLogic.get().saveComment(knowledgeId, comment, fileNos, getLoginedUser());
+		
 		return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
 	}
 	
@@ -367,6 +433,179 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
 		return super.send(groups);
 	}
+	
+	
+	/**
+	 * コメント編集画面を表示
+	 * @return
+	 * @throws InvalidParamException 
+	 */
+	@Get
+	public Boundary edit_comment() throws InvalidParamException {
+		Long commentNo = super.getPathLong(Long.valueOf(-1));
+		CommentsDao commentsDao = CommentsDao.get();
+		CommentsEntity commentsEntity = commentsDao.selectOnKey(commentNo);
+		
+		if (commentsEntity == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+		}
+		
+//		// 権限チェック（ナレッジが表示できること）
+//		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+//		KnowledgesEntity entity = knowledgeLogic.select(commentsEntity.getKnowledgeId(), getLoginedUser());
+//		if (entity == null) {
+//			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+//		}
+		
+		// 権限チェック（コメントの編集は、システム管理者 or コメントの登録者 or ナレッジ編集者
+		LoginedUser loginedUser = super.getLoginedUser();
+		if (loginedUser == null) {
+			// ログインしていないユーザに編集権限は無し
+			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		if (!loginedUser.isAdmin() && 
+				loginedUser.getUserId().intValue() != commentsEntity.getInsertUser().intValue()) {
+			KnowledgesEntity check = KnowledgesDao.get().selectOnKey(commentsEntity.getKnowledgeId());
+			if (check == null) {
+				return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+			}		
+			List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(commentsEntity.getKnowledgeId());
+			if (!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors)) {
+				return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+			}
+		}
+		
+		// ナレッジに紐づく添付ファイルを取得
+		List<UploadFile> files = fileLogic.selectOnKnowledgeId(commentsEntity.getKnowledgeId(), getRequest().getContextPath());
+		List<UploadFile> commentFiles = new ArrayList<>();
+		for (UploadFile uploadFile : files) {
+			if (commentsEntity.getCommentNo().equals(uploadFile.getCommentNo())) {
+				commentFiles.add(uploadFile);
+			}
+		}
+		setAttribute("comment_files", commentFiles);
+		
+		setAttributeOnProperty(commentsEntity);
+		return forward("edit_comment.jsp");
+	}
+	
+	/**
+	 * コメントを更新
+	 * @return
+	 * @throws Exception 
+	 */
+	@Post
+	public Boundary update_comment() throws Exception {
+		List<Long> fileNos = new ArrayList<Long>();
+		Object obj = getParam("files", Object.class);
+		if (obj != null) {
+			if (obj instanceof String) {
+				String string = (String) obj;
+				if (StringUtils.isLong(string)) {
+					fileNos.add(new Long(string));
+				}
+			} else if (obj instanceof List) {
+				List<String> strings = (List<String>) obj;
+				for (String string : strings) {
+					if (StringUtils.isLong(string)) {
+						fileNos.add(new Long(string));
+					}
+				}
+			}
+		}
+		// 設定されていた添付ファイルの情報は再取得
+		List<UploadFile> files = fileLogic.selectOnFileNos(fileNos, getRequest().getContextPath());
+		Iterator<UploadFile> iterator = files.iterator();
+		while (iterator.hasNext()) {
+			UploadFile uploadFile = (UploadFile) iterator.next();
+			if (uploadFile.getKnowlegeId() != null) {
+				// 新規登録なのに、添付ファイルが既にナレッジに紐づいている（おかしい）
+				iterator.remove();
+			}
+		}
+		setAttribute("comment_files", files);
+
+		
+		CommentsEntity commentsEntity = getParamOnProperty(CommentsEntity.class);
+		
+		CommentsDao commentsDao = CommentsDao.get();
+		CommentsEntity db = commentsDao.selectOnKey(commentsEntity.getCommentNo());
+		
+		if (db == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+		}
+		// 権限チェック（コメントの編集は、システム管理者 or コメントの登録者 or ナレッジの編集可能ユーザ
+		LoginedUser loginedUser = super.getLoginedUser();
+		if (loginedUser == null) {
+			// ログインしていないユーザに編集権限は無し
+			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		KnowledgesEntity check = KnowledgesDao.get().selectOnKey(db.getKnowledgeId());
+		if (check == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+		}
+		List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(db.getKnowledgeId());
+		if (!loginedUser.isAdmin()) {
+			if (loginedUser.getUserId().intValue() != db.getInsertUser().intValue() && 
+					!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors))
+				return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		
+		// 必須チェック
+		if (StringUtils.isEmpty(commentsEntity.getComment())) {
+			addMsgWarn("errors.required", "Comment");
+			return super.devolution(HttpMethod.get, "/protect.knowledge/edit_comment", String.valueOf(commentsEntity.getCommentNo()));
+		}
+		db.setComment(commentsEntity.getComment());
+		KnowledgeLogic.get().updateComment(db, fileNos, getLoginedUser());
+		setAttributeOnProperty(db);
+
+		addMsgSuccess("message.success.update");
+		
+		setPathInfo(String.valueOf(commentsEntity.getCommentNo()));
+		return edit_comment();
+	}
+	
+	
+	/**
+	 * コメントを削除
+	 * @return
+	 * @throws Exception 
+	 */
+	@Get
+	public Boundary delete_comment() throws Exception {
+		Long commentNo = super.getPathLong(Long.valueOf(-1));
+		CommentsDao commentsDao = CommentsDao.get();
+		CommentsEntity db = commentsDao.selectOnKey(commentNo);
+		
+		if (db == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+		}
+		// 権限チェック（コメントの削除は、システム管理者 or コメントの登録者 or ナレッジの編集可能ユーザ
+		LoginedUser loginedUser = super.getLoginedUser();
+		if (loginedUser == null) {
+			// ログインしていないユーザに編集権限は無し
+			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		KnowledgesEntity check = KnowledgesDao.get().selectOnKey(db.getKnowledgeId());
+		if (check == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+		}
+		List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(db.getKnowledgeId());
+		
+		if (!loginedUser.isAdmin()) {
+			if (loginedUser.getUserId().intValue() != db.getInsertUser().intValue() && 
+					!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors))
+				return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		
+		KnowledgeLogic.get().deleteComment(db, getLoginedUser());
+		addMsgSuccess("message.success.delete.target", getResource("label.comment"));
+		setAttribute("comment", null);
+		return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(db.getKnowledgeId()));
+	}	
+	
+	
 	
 }
 

@@ -12,6 +12,7 @@ public class KnowledgeControlBase extends Control {
 		params.append("&tag=").append(getParamWithDefault("tag", ""));
 		params.append("&user=").append(getParamWithDefault("user", ""));
 		params.append("&offset=").append(getParamWithDefault("offset", ""));
+		params.append("&tagNames=").append(getParamWithDefault("tagNames", ""));
 		setAttribute("params", params.toString());
 		return params.toString();
 	}

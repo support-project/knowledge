@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	hljs.initHighlightingOnLoad();
+//	hljs.initHighlightingOnLoad();
 	marked.setOptions({
 		langPrefix : '',
 		highlight : function(code, lang) {

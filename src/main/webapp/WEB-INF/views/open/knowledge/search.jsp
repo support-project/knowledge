@@ -47,7 +47,7 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 			<%= jspUtil.label("knowledge.search.keyword") %>
 			</label>
 			<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.search.placeholder") %>"
-				name="keyword" id="keyword" value="<%=jspUtil.out("keyword")%>" />
+				name="keyword" id="searchkeyword" value="<%=jspUtil.out("keyword")%>" />
 		</div>
 
 		<div class="form-group">
@@ -65,6 +65,9 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 
 		<button class="btn btn-primary" type="submit">
 			<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("label.search") %>
+		</button>
+		<button class="btn btn-warning" type="button" id="searchParamClear">
+			<i class="fa fa-times-circle"></i>&nbsp;<%= jspUtil.label("label.clear") %>
 		</button>
 		<a href="<%= request.getContextPath() %>/open.knowledge/list/<%=jspUtil.out("offset")%><%= jspUtil.out("params") %>"
 		class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>

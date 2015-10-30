@@ -1,3 +1,4 @@
+<%@page import="org.support.project.common.util.StringUtils"%>
 <%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
@@ -25,6 +26,8 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/tagselect.js") %>"></script>
+
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-edit.js") %>"></script>
 
 <script>
@@ -58,15 +61,41 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.edit.title") %></h4>
 <form action="<%= request.getContextPath()%>/protect.knowledge/update" method="post" role="form" id="knowledgeForm" enctype="multipart/form-data">
-
+	<!-- info -->
 	<div class="form-group">
 		<label for="input_no"><%= jspUtil.label("knowledge.edit.label.key") %></label>
 		<p class="form-control-static"><i class="fa fa-key"></i>&nbsp;<%= jspUtil.out("knowledgeId") %> / <i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%></p> 
 	</div>
+	
+	<!-- template -->
+	<div class="form-group">
+		<label for="input_title"><%= jspUtil.label("knowledge.add.label.type") %></label><br/>
+		<c:forEach var="template" items="${templates}" >
+			<label class="radio-inline">
+				<input type="radio" value="<%= jspUtil.out("template.typeId") %>" name="typeId" 
+					id="typeId_<%= jspUtil.out("template.typeId") %>" <%= jspUtil.checked(jspUtil.out("template.typeId"), "typeId", false) %>/>
+				<% if (!StringUtils.isEmpty(jspUtil.out("template.typeIcon"))) { %>
+					<i class="fa <%= jspUtil.out("template.typeIcon") %>"></i>&nbsp;
+				<% } else { %>
+					<i class="fa fa-edit"></i>&nbsp;
+				<% } %>
+				<%= jspUtil.out("template.typeName") %>
+			</label>
+		</c:forEach>
+	</div>
+	
+	<div class="alert alert-info hide" role="alert" id="template_info">
+		<strong id="template_name"></strong><br/>
+		<span id="template_msg"></span>
+	</div>
+	
+	<!-- title -->
 	<div class="form-group">
 		<label for="input_title"><%= jspUtil.label("knowledge.add.label.title") %></label>
 		<input type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="<%= jspUtil.out("title") %>" />
 	</div>
+	
+	<!-- contents -->
 	<div class="form-group">
 		<label for="input_content"><%= jspUtil.label("knowledge.add.label.content") %>
 		<span class="helpMarkdownLabel">
@@ -81,10 +110,17 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
 	</div>
 	
+	
+	<!-- items -->
+	<div class="form-group" id="template_items">
+	</div>
+	
+	
+	<!-- upload files -->
 	<div class="form-group">
-		<label for="input_fileupload"><%= jspUtil.label("knowledge.add.label.files") %></label><br/>
 		<div id="fileupload">
-			<span class="btn btn-info fileinput-button">
+		<label for="input_fileupload"><%= jspUtil.label("knowledge.add.label.files") %></label>
+			<span class="btn btn-primary fileinput-button btn-xs">
 				<i class="fa fa-cloud-upload"></i>&nbsp;<span><%= jspUtil.label("knowledge.add.label.select.file") %></span>
 				<input type="file" name="files[]" multiple>
 			</span>
@@ -117,7 +153,10 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		</div>
 	</c:forEach>
 	</div>
-		
+	
+	
+
+	<!-- view targets -->
 	<div class="form-group">
 		<label for="input_content"><%= jspUtil.label("knowledge.add.label.public.class") %></label><br/>
 		<label class="radio-inline">
@@ -139,15 +178,18 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 	
 	<div class="form-group" id="grops_area" <%= jspUtil.isnot(KnowledgeLogic.PUBLIC_FLAG_PROTECT, "publicFlag", "style=\"display: none;\"") %>>
 		<label for="input_groups"><%= jspUtil.label("knowledge.add.label.groups") %></label>
+		<a id="groupselect" class="btn btn-primary btn-xs" data-toggle="modal" href="#groupSelectModal">
+			<i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.groups.select") %>
+		</a>
 		<p>
 			<input type="hidden" name="groups" id="groups" value="">
 			<span id="groupsLabel"></span>
 		</p>
-		<a id="groupselect" class="btn btn-info" data-toggle="modal" href="#groupSelectModal">
-			<i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.groups.select") %>
-		</a>
 	</div>
 	
+	
+	
+	<!-- tags -->
 	<div class="form-group">
 		<label for="input_tag">
 		<%= jspUtil.label("knowledge.add.label.tags") %>
@@ -161,24 +203,28 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		</p>
 	</div>
 
+
+	<!-- editors -->
 	<div class="form-group" id="editor_area">
 		<label for="input_groups"><%= jspUtil.label("knowledge.add.label.editors") %></label>
+		<a id="groupselect" class="btn btn-primary btn-xs" data-toggle="modal" href="#editorSelectModal">
+			<i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.editors.select") %>
+		</a>
 		<p>
 			<input type="hidden" name="editors" id="editors" value="">
 			<span id="editorsLabel"></span>
 		</p>
-		<a id="groupselect" class="btn btn-info" data-toggle="modal" href="#editorSelectModal">
-			<i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.editors.select") %>
-		</a>
 	</div>
 	
-	<input type="hidden" name="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" />
+	<input type="hidden" name="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" id="knowledgeId" />
 
 	<input type="hidden" name="offset" value="<%= jspUtil.out("offset") %>" />
 	<input type="hidden" name="keyword" value="<%= jspUtil.out("keyword") %>" />
 	<input type="hidden" name="tag" value="<%= jspUtil.out("tag") %>" />
 	<input type="hidden" name="user" value="<%= jspUtil.out("user") %>" />
 
+	<!-- buttons -->
+	<hr/>
 	
 	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
 	<button type="button" class="btn btn-info" onclick="preview();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>

@@ -2,6 +2,8 @@ package org.support.project.knowledge.logic;
 
 import java.util.List;
 
+import net.arnx.jsonic.JSON;
+
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
@@ -12,8 +14,6 @@ import org.support.project.knowledge.indexer.IndexingValue;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.Searcher;
 import org.support.project.knowledge.searcher.SearchingValue;
-
-import net.arnx.jsonic.JSON;
 
 /**
  * 全文検索インデックスを使った処理
@@ -60,8 +60,16 @@ public class IndexLogic {
 	 * @throws Exception 
 	 */
 	public void delete(Long knowledgeId) throws Exception {
+		delete(String.valueOf(knowledgeId));
+	}
+	/**
+	 * 全文検索エンジンから削除
+	 * @param knowledgeId
+	 * @throws Exception 
+	 */
+	public void delete(String id) throws Exception {
 		Indexer indexer = Container.getComp(Indexer.class);
-		indexer.deleteItem(String.valueOf(knowledgeId));
+		indexer.deleteItem(id);
 	}
 	
 	/**

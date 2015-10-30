@@ -41,7 +41,9 @@
 
 <c:forEach var="user" items="${users}" varStatus="status">
 	<a href="<%= request.getContextPath() %>/admin.users/view_edit/<%= jspUtil.out("user.userId") %>?offset=<%= jspUtil.out("offset") %>" class="list-group-item">
-		<h4 class="list-group-item-heading"><%= jspUtil.out("user.userName") %> (<%= jspUtil.out("user.userKey") %>)</h4>
+		<h4 class="list-group-item-heading">
+			[<%= jspUtil.out("user.userId") %>] <%= jspUtil.out("user.userName") %> (<%= jspUtil.out("user.userKey") %>)
+		</h4>
 		<p class="list-group-item-text">
 		<%= jspUtil.label("label.regist.datetime") %> / <%= jspUtil.label("label.update.datetime") %>
 			<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("user.insertDatetime")%> / 

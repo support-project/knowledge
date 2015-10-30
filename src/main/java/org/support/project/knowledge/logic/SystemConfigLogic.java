@@ -39,7 +39,7 @@ public class SystemConfigLogic {
 		
 		LdapConfigsDao ldapConfigsDao = LdapConfigsDao.get();
 		LdapConfigsEntity ldapConfigsEntity = ldapConfigsDao.selectOnKey(AppConfig.get().getSystemName());
-		if (ldapConfigsEntity != null && ldapConfigsEntity.getAuthType().intValue() == LdapConfigsEntity.AUTH_TYPE_LDAP) {
+		if (ldapConfigsEntity != null && ldapConfigsEntity.isLdapLoginOnly()) {
 			return false; // Ldapでのみ認証するので、新規ユーザの追加はできない
 		}
 		return true;

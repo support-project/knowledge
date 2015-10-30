@@ -30,6 +30,15 @@ public abstract class AbstractBat {
 		}
 	}
 	
+	protected static void finishInfo() {
+		if (LOG.isDebugEnabled()) {
+			String sysinfo = org.support.project.common.util.SystemUtils.systemInfo();
+			LOG.debug(sysinfo);
+		}
+		LOG.info("Finished");
+	}
+	
+	
 	/**
 	 * コネクションの接続先がカスタマイズされていたら、バッチでもカスタマイズ先を参照する
 	 */

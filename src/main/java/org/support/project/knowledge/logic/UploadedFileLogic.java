@@ -74,6 +74,7 @@ public class UploadedFileLogic {
 		if (entity.getKnowledgeId() != null && 0 != entity.getKnowledgeId().longValue()) {
 			file.setKnowlegeId(entity.getKnowledgeId());
 		}
+		file.setCommentNo(entity.getCommentNo());
 		return file;
 	}
 
@@ -91,14 +92,17 @@ public class UploadedFileLogic {
 	 * @param entity
 	 * @param fileNos
 	 * @param loginedUser
+	 * @param commentNo 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void setKnowledgeFiles(KnowledgesEntity knowledgesEntity, List<Long> fileNos, LoginedUser loginedUser) {
+	public void setKnowledgeFiles(Long knowledgeId, List<Long> fileNos, LoginedUser loginedUser) {
 		// 現在、すでに紐づいている添付ファイルを取得
-		List<KnowledgeFilesEntity> filesEntities = filesDao.selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
+		List<KnowledgeFilesEntity> filesEntities = filesDao.selectOnKnowledgeId(knowledgeId);
 		Map<Long, KnowledgeFilesEntity> filemap = new HashMap<>();
 		for (KnowledgeFilesEntity entity : filesEntities) {
-			filemap.put(entity.getFileNo(), entity);
+			if (entity.getCommentNo() == null) {
+				filemap.put(entity.getFileNo(), entity);
+			}
 		}
 		
 		// 画面で設定されている添付ファイルの番号で紐付けを作成
@@ -106,7 +110,7 @@ public class UploadedFileLogic {
 			KnowledgeFilesEntity entity = filesDao.selectOnKeyWithoutBinary(fileNo);
 			if (entity != null) {
 				if (entity.getKnowledgeId() == null || 0 == entity.getKnowledgeId().longValue()) {
-					filesDao.connectKnowledge(fileNo, knowledgesEntity.getKnowledgeId(), loginedUser);
+					filesDao.connectKnowledge(fileNo, knowledgeId, null, loginedUser);
 				}
 			}
 			filemap.remove(fileNo);
@@ -118,11 +122,54 @@ public class UploadedFileLogic {
 			Long fileNo = (Long) iterator.next();
 			//filesDao.delete(fileNo);
 			filesDao.physicalDelete(fileNo); // バイナリは大きいので、物理削除する
-			
 			// TODO 全文検索エンジンから情報を削除
-			
 		}
 	}
+	
+	/**
+	 * コメントでナレッジに紐付く添付ファイルを更新
+	 * 
+	 * 1. 現在のナレッジに紐づくファイルを一覧取得する
+	 * 2. 紐づけるファイルの番号のファイルが存在しない場合、ファイル番号でファイル情報を取得
+	 * 2-1. 取得したファイル情報に、ナレッジ番号をセットし更新
+	 * 3. 1で取得したファイル一覧から、処理済（紐付け済）ファイル番号を削除する
+	 * 4. 1で取得したファイルの一覧で、残っているものがあれば、そのファイルは削除（紐付けがきれている）
+	 * 
+	 * @param entity
+	 * @param fileNos
+	 * @param loginedUser
+	 * @param commentNo 
+	 */
+	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
+	public void setKnowledgeFiles(Long knowledgeId, List<Long> fileNos, LoginedUser loginedUser, Long commentNo) {
+		// 現在、すでに紐づいている添付ファイルを取得
+		List<KnowledgeFilesEntity> filesEntities = filesDao.selectOnKnowledgeId(knowledgeId);
+		Map<Long, KnowledgeFilesEntity> filemap = new HashMap<>();
+		for (KnowledgeFilesEntity entity : filesEntities) {
+			if (entity.getCommentNo() != null && entity.getCommentNo().equals(commentNo)) {
+				filemap.put(entity.getFileNo(), entity);
+			}
+		}
+		// 画面で設定されている添付ファイルの番号で紐付けを作成
+		for (Long fileNo : fileNos) {
+			KnowledgeFilesEntity entity = filesDao.selectOnKeyWithoutBinary(fileNo);
+			if (entity != null) {
+				if (entity.getKnowledgeId() == null || 0 == entity.getKnowledgeId().longValue()) {
+					filesDao.connectKnowledge(fileNo, knowledgeId, commentNo, loginedUser);
+				}
+			}
+			filemap.remove(fileNo);
+		}
+		
+		// 始めに取得した一覧で、紐付けが作成されなかった（＝紐付けが切れた）ファイルを削除
+		Iterator<Long> iterator = filemap.keySet().iterator();
+		while (iterator.hasNext()) {
+			Long fileNo = (Long) iterator.next();
+			//filesDao.delete(fileNo);
+			filesDao.physicalDelete(fileNo); // バイナリは大きいので、物理削除する
+			// TODO 全文検索エンジンから情報を削除
+		}
+	}	
 	
 	
 	/**
@@ -151,7 +198,24 @@ public class UploadedFileLogic {
 		}
 		return files;
 	}
-	
+
+	/**
+	 * 指定のナレッジに紐づく添付ファイルの情報を取得
+	 * @param knowledgeId
+	 * @param context
+	 * @return
+	 */
+	public List<UploadFile> selectOnKnowledgeIdWithoutCommentFiles(Long knowledgeId, String context) {
+		List<UploadFile> files = new ArrayList<UploadFile>();
+		List<KnowledgeFilesEntity> filesEntities = filesDao.selectOnKnowledgeId(knowledgeId);
+		for (KnowledgeFilesEntity entity : filesEntities) {
+			if (entity.getCommentNo() == null || entity.getCommentNo() == 0) {
+				files.add(convUploadFile(context, entity));
+			}
+		}
+		return files;
+	}
+
 	
 	/**
 	 * 指定の添付ファイル番号の情報を取得

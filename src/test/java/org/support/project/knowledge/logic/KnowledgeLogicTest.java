@@ -56,8 +56,9 @@ public class KnowledgeLogicTest extends TestCommon {
 		KnowledgesEntity entity = new KnowledgesEntity();
 		entity.setTitle("Test1");
 		entity.setContent("テストだよ");
+		entity.setTypeId(-100);
 		KnowledgeLogic logic = KnowledgeLogic.get();
-		entity = logic.insert(entity, null, new ArrayList<Long>(), null, null, loginedUser);
+		entity = logic.insert(entity, null, new ArrayList<Long>(), null, null, null, loginedUser);
 		
 		// publicFlagは指定しないでDBに保存すると、公開になる
 		entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
@@ -81,8 +82,9 @@ public class KnowledgeLogicTest extends TestCommon {
 		KnowledgesEntity entity = new KnowledgesEntity();
 		entity.setTitle(RandomUtil.randamGen(64));
 		entity.setContent(RandomUtil.randamGen(1024));
+		entity.setTypeId(-99);
 		KnowledgeLogic logic = KnowledgeLogic.get();
-		entity = logic.insert(entity, null, new  ArrayList<Long>(), null, null, loginedUser2);
+		entity = logic.insert(entity, null, new  ArrayList<Long>(), null, null, null, loginedUser2);
 		// publicFlagは指定しないでDBに保存すると、公開になる
 		entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
 		KnowledgesEntity saved = KnowledgesDao.get().selectOnKey(entity.getKnowledgeId());
@@ -91,7 +93,7 @@ public class KnowledgeLogicTest extends TestCommon {
 		entity.setTitle(RandomUtil.randamGen(64));
 		entity.setContent(RandomUtil.randamGen(1024));
 		entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
-		logic.update(entity, null, new  ArrayList<Long>(), null, null, loginedUser2);
+		logic.update(entity, null, new  ArrayList<Long>(), null, null, null, loginedUser2);
 
 		saved = KnowledgesDao.get().selectOnKeyWithUserName(entity.getKnowledgeId());
 		entity.setInsertUserName(loginedUser2.getLoginUser().getUserName());
@@ -112,11 +114,13 @@ public class KnowledgeLogicTest extends TestCommon {
 //		entity.setDeleteFlag(INT_FLAG.OFF.getValue());
 		List<KnowledgesEntity> checks = new ArrayList<KnowledgesEntity>();
 		checks.add(list.get(0));
+		List<String> ignores = new ArrayList<>();
+		ignores.add("score");// スコアは、Luceneが算出する値なのでテストしない（Luceneの実装が変化すると値が変わるので）
 		
 		KnowledgeLogic logic = KnowledgeLogic.get();
 		List<KnowledgesEntity> entities = logic.searchKnowledge(null, loginedUser, 0, 100);
 		LOG.info(JSON.encode(entities, true));
-		eqdb(checks, entities);
+		eqdb(checks, entities, ignores);
 		
 		checks = new ArrayList<KnowledgesEntity>();
 		list.get(1).setContent(list.get(1).getContent());
@@ -125,7 +129,7 @@ public class KnowledgeLogicTest extends TestCommon {
 		
 		entities = logic.searchKnowledge(null, loginedUser2, 0, 100);
 		LOG.info(JSON.encode(entities, true));
-		eqdb(checks, entities);
+		eqdb(checks, entities, ignores);
 		
 		checks = new ArrayList<KnowledgesEntity>();
 		checks.add(list.get(0));
@@ -134,7 +138,7 @@ public class KnowledgeLogicTest extends TestCommon {
 		list.get(0).setContent("<span class=\"mark\">テスト</span>だよ");
 		
 		LOG.info(JSON.encode(entities, true));
-		eqdb(checks, entities);
+		eqdb(checks, entities, ignores);
 		
 	}
 

@@ -14,13 +14,18 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
+import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.TagsDao;
+import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
+import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
+import org.support.project.knowledge.entity.TemplateItemsEntity;
+import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.DiffLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
@@ -451,6 +456,41 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		
 		return forward("history.jsp");
 	}
+	
+	
+	/**
+	 * ナレッジのテンプレート情報を取得
+	 * @return
+	 * @throws InvalidParamException
+	 */
+	@Get
+	public Boundary template() throws InvalidParamException {
+		Integer typeId = super.getParam("type_id", Integer.class);
+		TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(typeId);
+		
+		String knowledgeId = super.getParam("knowledge_id");
+		if (StringUtils.isNotEmpty(knowledgeId) && StringUtils.isLong(knowledgeId)) {
+			KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+			KnowledgesEntity entity = knowledgeLogic.select(new Long(knowledgeId), getLoginedUser());
+			if (entity == null) {
+				return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+			}
+			
+			// 保存している値も返す
+			List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(entity.getKnowledgeId());
+			List<TemplateItemsEntity> items = template.getItems();
+			for (KnowledgeItemValuesEntity val : values) {
+				for (TemplateItemsEntity item : items) {
+					if (val.getItemNo().equals(item.getItemNo())) {
+						item.setItemValue(val.getItemValue());
+						break;
+					}
+				}
+			}
+		}
+		return send(template);
+	}
+	
 	
 }
 

@@ -10,7 +10,6 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenKnowledgeFilesDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
-import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.web.bean.LoginedUser;
 
 /**
@@ -39,7 +38,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
 	 */
 	public List<KnowledgeFilesEntity> selectOnKnowledgeId(Long knowledgeId) {
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT FILE_NO, KNOWLEDGE_ID, FILE_NAME, FILE_SIZE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
+		sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, FILE_SIZE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
 		sql.append("FROM KNOWLEDGE_FILES WHERE KNOWLEDGE_ID = ?;");
 		return executeQueryList(sql.toString(), KnowledgeFilesEntity.class, knowledgeId);
 	}
@@ -50,7 +49,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
 	 */
 	public KnowledgeFilesEntity selectOnKeyWithoutBinary(Long fileNo) {
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT FILE_NO, KNOWLEDGE_ID, FILE_NAME, FILE_SIZE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
+		sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, FILE_SIZE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
 		sql.append("FROM KNOWLEDGE_FILES WHERE FILE_NO = ?;");
 		return executeQuerySingle(sql.toString(), KnowledgeFilesEntity.class, fileNo);
 	}
@@ -59,14 +58,15 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
 	 * 添付ファイルのナレッジIDをセット
 	 * @param fileNo
 	 * @param knowledgeId
+	 * @param commentNo Nullがありえる
 	 * @param loginedUser
 	 */
-	public void connectKnowledge(Long fileNo, Long knowledgeId, LoginedUser loginedUser) {
+	public void connectKnowledge(Long fileNo, Long knowledgeId, Long commentNo, LoginedUser loginedUser) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("UPDATE KNOWLEDGE_FILES ");
-		sql.append("SET KNOWLEDGE_ID = ?, UPDATE_USER = ?, UPDATE_DATETIME = ? ");
+		sql.append("SET KNOWLEDGE_ID = ?, UPDATE_USER = ?, UPDATE_DATETIME = ?, COMMENT_NO = ? ");
 		sql.append("WHERE FILE_NO = ? ");
-		executeUpdate(sql.toString(), knowledgeId, loginedUser.getUserId(), new Timestamp(new Date().getTime()), fileNo);
+		executeUpdate(sql.toString(), knowledgeId, loginedUser.getUserId(), new Timestamp(new Date().getTime()), commentNo, fileNo);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
 	 */
 	public List<KnowledgeFilesEntity> selectWaitStateFiles() {
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT FILE_NO, KNOWLEDGE_ID, FILE_NAME, FILE_SIZE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
+		sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, FILE_SIZE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
 		sql.append("FROM KNOWLEDGE_FILES WHERE PARSE_STATUS = 0 AND KNOWLEDGE_ID IS NOT NULL");
 		return executeQueryList(sql.toString(), KnowledgeFilesEntity.class);
 	}

@@ -1,3 +1,4 @@
+<%@page import="org.support.project.common.util.NumberUtils"%>
 <%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
@@ -23,45 +24,41 @@
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.list.title") %> <span style="font-size: 14px">page[<%= jspUtil.getValue("offset", Integer.class) + 1 %>]</span></h4>
 
-	<c:if test="${!empty selectedTag}">
+	<c:if test="${!empty selectedTag || !empty selectedUser || !empty searchTags || !empty keyword}">
 		<div class="row">
 			<div class="col-sm-12 selected_tag">
+			
+			<c:if test="${!empty selectedTag}">
 			<a class="text-primary" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%=jspUtil.out("selectedTag.tagId") %>" >
 					<i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("selectedTag.tagName") %>
 			</a>
-			<a class="text-primary" 
-				href="<%= request.getContextPath() %>/open.knowledge/list" >
-					<i class="fa fa-times-circle"></i>&nbsp;
-			</a>
-			</div>
-		</div>
-	</c:if>
-
-	<c:if test="${!empty selectedUser}">
-		<div class="row">
-			<div class="col-sm-12 selected_tag">
+			</c:if>
+			
+			<c:if test="${!empty selectedUser}">
 			<a class="text-primary" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.out("selectedUser.userId") %>" >
 					<i class="fa fa-user"></i>&nbsp;<%= jspUtil.out("selectedUser.userName") %>
 			</a>
-			<a class="text-primary" 
-				href="<%= request.getContextPath() %>/open.knowledge/list" >
-					<i class="fa fa-times-circle"></i>&nbsp;
-			</a>
-			</div>
-		</div>
-	</c:if>
-
-	<c:if test="${!empty searchTags}">
-		<div class="row">
-			<div class="col-sm-12 selected_tag">
+			</c:if>
+			
+			<c:if test="${!empty searchTags}">
 			<c:forEach var="searchTag" items="${searchTags}" varStatus="status">
 			<a class="text-primary" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%=jspUtil.out("searchTag.tagId") %>" >
 					<i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("searchTag.tagName") %>
 			</a>
 			</c:forEach>
+			</c:if>
+			
+			<c:if test="${!empty keyword}">
+			<a class="text-primary" 
+				href="<%= request.getContextPath() %>/open.knowledge/list?keyword=<%=jspUtil.out("keyword") %>" >
+					<i class="fa fa-search"></i>&nbsp;<%=jspUtil.out("keyword") %>
+			</a>
+			</c:if>
+			
+			
 			<a class="text-primary" 
 				href="<%= request.getContextPath() %>/open.knowledge/list" >
 					<i class="fa fa-times-circle"></i>&nbsp;
@@ -69,8 +66,7 @@
 			</div>
 		</div>
 	</c:if>
-
-
+	
 
 		<nav>
 			<ul class="pager">
@@ -105,8 +101,19 @@
 						'<%= jspUtil.out("tag") %>', '<%= jspUtil.out("user") %>');">
 					<div class="discription" id="discription_<%= jspUtil.out("knowledge.knowledgeId") %>"><i class="fa fa-check-square-o"></i>&nbsp;show!</div>
 					<div class="caption">
-						<h4>[<%= jspUtil.out("knowledge.knowledgeId") %>]&nbsp;
-						<%= jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR) %></h4>
+						<h4>
+						[<%= jspUtil.out("knowledge.knowledgeId") %>]&nbsp;
+						<%= jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR) %>
+						
+						<%--
+						<span class="score">
+						<%if (jspUtil.getValue("knowledge.score", Float.class) > 0) { %>
+						(<%= NumberUtils.NUMBER_FORMAT.format(jspUtil.getValue("knowledge.score", Float.class)) %>)
+						<% } %>
+						</span>
+						--%>
+						
+						</h4>
 						<c:if test="${!empty knowledge.tagNames}">
 						<p class="tags">
 						<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput" value="<%= jspUtil.out("knowledge.tagNames") %>" disabled="disabled"/>
@@ -157,7 +164,7 @@
 				</a>
 				<% } %>
 				<a class="list-group-item " 
-				href="<%= request.getContextPath() %>/open.knowledge/search" >
+				href="<%= request.getContextPath() %>/open.knowledge/search<%= jspUtil.out("params") %>" >
 					<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.search") %>
 				</a>
 				<a class="list-group-item " 

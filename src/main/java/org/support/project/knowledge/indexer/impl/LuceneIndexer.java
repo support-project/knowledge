@@ -44,6 +44,7 @@ public class LuceneIndexer implements Indexer {
 
 	private String getIndexPath() {
 		AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
+		log.debug("lucene index: " + appConfig.getIndexPath());
 		return appConfig.getIndexPath();
 	}
 	

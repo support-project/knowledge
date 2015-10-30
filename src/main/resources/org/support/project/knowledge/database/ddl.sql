@@ -1,3 +1,85 @@
+-- ストック
+drop table if exists STOCKS cascade;
+
+create table STOCKS (
+  STOCK_ID BIGSERIAL not null
+  , STOCK_NAME character varying(256) not null
+  , STOCK_TYPE integer not null
+  , DESCRIPTION character varying(1024)
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint STOCKS_PKC primary key (STOCK_ID)
+) ;
+
+-- ナレッジの項目値
+drop table if exists KNOWLEDGE_ITEM_VALUES cascade;
+
+create table KNOWLEDGE_ITEM_VALUES (
+  KNOWLEDGE_ID bigint not null
+  , TYPE_ID integer not null
+  , ITEM_NO integer not null
+  , ITEM_VALUE text
+  , ITEM_STATUS integer not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint KNOWLEDGE_ITEM_VALUES_PKC primary key (KNOWLEDGE_ID,TYPE_ID,ITEM_NO)
+) ;
+
+-- 選択肢の値
+drop table if exists ITEM_CHOICES cascade;
+
+create table ITEM_CHOICES (
+  TYPE_ID integer not null
+  , ITEM_NO integer not null
+  , CHOICE_NO integer not null
+  , CHOICE_VALUE character varying(256) not null
+  , CHOICE_LABEL character varying(256) not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint ITEM_CHOICES_PKC primary key (TYPE_ID,ITEM_NO,CHOICE_NO)
+) ;
+
+-- テンプレートのマスタ
+drop table if exists TEMPLATE_MASTERS cascade;
+
+create table TEMPLATE_MASTERS (
+  TYPE_ID serial not null
+  , TYPE_NAME character varying(256) not null
+  , TYPE_ICON character varying(64)
+  , DESCRIPTION character varying(1024)
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint TEMPLATE_MASTERS_PKC primary key (TYPE_ID)
+) ;
+
+-- テンプレートの項目
+drop table if exists TEMPLATE_ITEMS cascade;
+
+create table TEMPLATE_ITEMS (
+  TYPE_ID integer not null
+  , ITEM_NO integer not null
+  , ITEM_NAME character varying(32) not null
+  , ITEM_TYPE integer not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint TEMPLATE_ITEMS_PKC primary key (TYPE_ID,ITEM_NO)
+) ;
+
 -- 編集可能なグループ
 drop table if exists KNOWLEDGE_EDIT_GROUPS cascade;
 
@@ -131,6 +213,7 @@ create table COMMENTS (
   COMMENT_NO BIGSERIAL not null
   , KNOWLEDGE_ID bigint not null
   , COMMENT text
+  , COMMENT_STATUS integer
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -179,10 +262,10 @@ create index IDX_VIEW_HISTORIES_KNOWLEDGE_ID
   on VIEW_HISTORIES(KNOWLEDGE_ID);
 
 -- ストックしたナレッジ
-drop table if exists STOCKS cascade;
+drop table if exists STOCK_KNOWLEDGES cascade;
 
-create table STOCKS (
-  USER_ID integer not null
+create table STOCK_KNOWLEDGES (
+  STOCK_ID bigint not null
   , KNOWLEDGE_ID bigint not null
   , COMMENT character varying(1024)
   , INSERT_USER integer
@@ -190,7 +273,7 @@ create table STOCKS (
   , UPDATE_USER integer
   , UPDATE_DATETIME timestamp
   , DELETE_FLAG integer
-  , constraint STOCKS_PKC primary key (USER_ID,KNOWLEDGE_ID)
+  , constraint STOCK_KNOWLEDGES_PKC primary key (STOCK_ID,KNOWLEDGE_ID)
 ) ;
 
 -- アクセス可能なグループ
@@ -283,6 +366,7 @@ create table KNOWLEDGES (
   , TAG_NAMES text
   , LIKE_COUNT bigint
   , COMMENT_COUNT integer
+  , TYPE_ID integer
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -290,6 +374,63 @@ create table KNOWLEDGES (
   , DELETE_FLAG integer
   , constraint KNOWLEDGES_PKC primary key (KNOWLEDGE_ID)
 ) ;
+
+comment on table STOCKS is 'ストック';
+comment on column STOCKS.STOCK_ID is 'STOCK ID';
+comment on column STOCKS.STOCK_NAME is 'STOCK 名';
+comment on column STOCKS.STOCK_TYPE is '区分';
+comment on column STOCKS.DESCRIPTION is '説明';
+comment on column STOCKS.INSERT_USER is '登録ユーザ';
+comment on column STOCKS.INSERT_DATETIME is '登録日時';
+comment on column STOCKS.UPDATE_USER is '更新ユーザ';
+comment on column STOCKS.UPDATE_DATETIME is '更新日時';
+comment on column STOCKS.DELETE_FLAG is '削除フラグ';
+
+comment on table KNOWLEDGE_ITEM_VALUES is 'ナレッジの項目値';
+comment on column KNOWLEDGE_ITEM_VALUES.KNOWLEDGE_ID is 'ナレッジID';
+comment on column KNOWLEDGE_ITEM_VALUES.TYPE_ID is 'テンプレートの種類ID';
+comment on column KNOWLEDGE_ITEM_VALUES.ITEM_NO is '項目NO';
+comment on column KNOWLEDGE_ITEM_VALUES.ITEM_VALUE is '項目値';
+comment on column KNOWLEDGE_ITEM_VALUES.ITEM_STATUS is 'ステータス';
+comment on column KNOWLEDGE_ITEM_VALUES.INSERT_USER is '登録ユーザ';
+comment on column KNOWLEDGE_ITEM_VALUES.INSERT_DATETIME is '登録日時';
+comment on column KNOWLEDGE_ITEM_VALUES.UPDATE_USER is '更新ユーザ';
+comment on column KNOWLEDGE_ITEM_VALUES.UPDATE_DATETIME is '更新日時';
+comment on column KNOWLEDGE_ITEM_VALUES.DELETE_FLAG is '削除フラグ';
+
+comment on table ITEM_CHOICES is '選択肢の値';
+comment on column ITEM_CHOICES.TYPE_ID is 'テンプレートの種類ID';
+comment on column ITEM_CHOICES.ITEM_NO is '項目NO';
+comment on column ITEM_CHOICES.CHOICE_NO is '選択肢番号';
+comment on column ITEM_CHOICES.CHOICE_VALUE is '選択肢値';
+comment on column ITEM_CHOICES.CHOICE_LABEL is '選択肢ラベル';
+comment on column ITEM_CHOICES.INSERT_USER is '登録ユーザ';
+comment on column ITEM_CHOICES.INSERT_DATETIME is '登録日時';
+comment on column ITEM_CHOICES.UPDATE_USER is '更新ユーザ';
+comment on column ITEM_CHOICES.UPDATE_DATETIME is '更新日時';
+comment on column ITEM_CHOICES.DELETE_FLAG is '削除フラグ';
+
+comment on table TEMPLATE_MASTERS is 'テンプレートのマスタ';
+comment on column TEMPLATE_MASTERS.TYPE_ID is 'テンプレートの種類ID';
+comment on column TEMPLATE_MASTERS.TYPE_NAME is 'テンプレート名';
+comment on column TEMPLATE_MASTERS.TYPE_ICON is 'アイコン';
+comment on column TEMPLATE_MASTERS.DESCRIPTION is '説明';
+comment on column TEMPLATE_MASTERS.INSERT_USER is '登録ユーザ';
+comment on column TEMPLATE_MASTERS.INSERT_DATETIME is '登録日時';
+comment on column TEMPLATE_MASTERS.UPDATE_USER is '更新ユーザ';
+comment on column TEMPLATE_MASTERS.UPDATE_DATETIME is '更新日時';
+comment on column TEMPLATE_MASTERS.DELETE_FLAG is '削除フラグ';
+
+comment on table TEMPLATE_ITEMS is 'テンプレートの項目';
+comment on column TEMPLATE_ITEMS.TYPE_ID is 'テンプレートの種類ID';
+comment on column TEMPLATE_ITEMS.ITEM_NO is '項目NO';
+comment on column TEMPLATE_ITEMS.ITEM_NAME is '項目名';
+comment on column TEMPLATE_ITEMS.ITEM_TYPE is '項目の種類';
+comment on column TEMPLATE_ITEMS.INSERT_USER is '登録ユーザ';
+comment on column TEMPLATE_ITEMS.INSERT_DATETIME is '登録日時';
+comment on column TEMPLATE_ITEMS.UPDATE_USER is '更新ユーザ';
+comment on column TEMPLATE_ITEMS.UPDATE_DATETIME is '更新日時';
+comment on column TEMPLATE_ITEMS.DELETE_FLAG is '削除フラグ';
 
 comment on table KNOWLEDGE_EDIT_GROUPS is '編集可能なグループ';
 comment on column KNOWLEDGE_EDIT_GROUPS.KNOWLEDGE_ID is 'ナレッジID';
@@ -380,6 +521,7 @@ comment on table COMMENTS is 'コメント';
 comment on column COMMENTS.COMMENT_NO is 'コメント番号';
 comment on column COMMENTS.KNOWLEDGE_ID is 'ナレッジID';
 comment on column COMMENTS.COMMENT is 'コメント';
+comment on column COMMENTS.COMMENT_STATUS is 'ステータス';
 comment on column COMMENTS.INSERT_USER is '登録ユーザ';
 comment on column COMMENTS.INSERT_DATETIME is '登録日時';
 comment on column COMMENTS.UPDATE_USER is '更新ユーザ';
@@ -406,15 +548,15 @@ comment on column VIEW_HISTORIES.UPDATE_USER is '更新ユーザ';
 comment on column VIEW_HISTORIES.UPDATE_DATETIME is '更新日時';
 comment on column VIEW_HISTORIES.DELETE_FLAG is '削除フラグ';
 
-comment on table STOCKS is 'ストックしたナレッジ';
-comment on column STOCKS.USER_ID is 'USER_ID';
-comment on column STOCKS.KNOWLEDGE_ID is 'ナレッジID';
-comment on column STOCKS.COMMENT is 'コメント';
-comment on column STOCKS.INSERT_USER is '登録ユーザ';
-comment on column STOCKS.INSERT_DATETIME is '登録日時';
-comment on column STOCKS.UPDATE_USER is '更新ユーザ';
-comment on column STOCKS.UPDATE_DATETIME is '更新日時';
-comment on column STOCKS.DELETE_FLAG is '削除フラグ';
+comment on table STOCK_KNOWLEDGES is 'ストックしたナレッジ';
+comment on column STOCK_KNOWLEDGES.STOCK_ID is 'STOCK ID';
+comment on column STOCK_KNOWLEDGES.KNOWLEDGE_ID is 'ナレッジID';
+comment on column STOCK_KNOWLEDGES.COMMENT is 'コメント';
+comment on column STOCK_KNOWLEDGES.INSERT_USER is '登録ユーザ';
+comment on column STOCK_KNOWLEDGES.INSERT_DATETIME is '登録日時';
+comment on column STOCK_KNOWLEDGES.UPDATE_USER is '更新ユーザ';
+comment on column STOCK_KNOWLEDGES.UPDATE_DATETIME is '更新日時';
+comment on column STOCK_KNOWLEDGES.DELETE_FLAG is '削除フラグ';
 
 comment on table KNOWLEDGE_GROUPS is 'アクセス可能なグループ';
 comment on column KNOWLEDGE_GROUPS.KNOWLEDGE_ID is 'ナレッジID';
@@ -475,6 +617,7 @@ comment on column KNOWLEDGES.TAG_IDS is 'タグID一覧';
 comment on column KNOWLEDGES.TAG_NAMES is 'タグ名称一覧';
 comment on column KNOWLEDGES.LIKE_COUNT is 'いいね件数';
 comment on column KNOWLEDGES.COMMENT_COUNT is 'コメント件数';
+comment on column KNOWLEDGES.TYPE_ID is 'テンプレートの種類ID';
 comment on column KNOWLEDGES.INSERT_USER is '登録ユーザ';
 comment on column KNOWLEDGES.INSERT_DATETIME is '登録日時';
 comment on column KNOWLEDGES.UPDATE_USER is '更新ユーザ';
