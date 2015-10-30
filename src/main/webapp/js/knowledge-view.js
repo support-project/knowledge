@@ -311,7 +311,11 @@ var addTemplateItem = function(template) {
 		for (var i = 0; i < template.items.length; i++) {
 			var item = template.items[i];
 			console.log(item);
-			var tag = item.itemName + ': ';
+			var tag = '';
+			if (i > 0) {
+				tag += '<br/>';
+			}
+			tag += item.itemName + ': ';
 			
 			// Bookmrkの場合は、項目はURLのみ
 			if (template.typeId == -99) {
@@ -335,7 +339,7 @@ var addTemplateItem = function(template) {
 							if (choice.choiceValue == item.itemValue) {
 								tag += 'checked="checked" ';
 							}
-							tag += ' disable="disable" /> &nbsp;' + choice.choiceValue + '</label><br/>';
+							tag += ' disable="disable" /> &nbsp;' + choice.choiceLabel + '</label><br/>';
 						}
 					}
 				} else if (item.itemType === 11) {
@@ -355,11 +359,12 @@ var addTemplateItem = function(template) {
 									}
 								}
 							}
-							tag += ' disable="disable" /> &nbsp;' + choice.choiceValue + '</label><br/>';
+							tag += ' disable="disable" /> &nbsp;' + choice.choiceLabel + '</label><br/>';
 						}
 					}
 				} else {
 					// text
+					tag += '<br/>';
 					tag += item.itemValue;
 				}
 			}

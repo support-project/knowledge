@@ -439,7 +439,7 @@ var addTemplateItem = function(template) {
 		for (var i = 0; i < template.items.length; i++) {
 			var item = template.items[i];
 			console.log(item);
-			var tag = '<label for="item_' + item.itemNo + '">' + item.itemName + '</label>';
+			var tag = '<div class="form-group"><label for="item_' + item.itemNo + '">' + item.itemName + '</label>';
 			
 			// テンプレートの項目の種類毎に生成する入力項目を変化
 			if (item.itemType === 1) {
@@ -455,7 +455,7 @@ var addTemplateItem = function(template) {
 						if (choice.choiceValue == item.itemValue) {
 							tag += 'checked="checked" ';
 						}
-						tag += '/> &nbsp;' + choice.choiceValue + '</label><br/>';
+						tag += '/> &nbsp;' + choice.choiceLabel + '</label><br/>';
 					}
 				}
 			} else if (item.itemType === 11) {
@@ -475,7 +475,7 @@ var addTemplateItem = function(template) {
 								}
 							}
 						}
-						tag += '/> &nbsp;' + choice.choiceValue + '</label><br/>';
+						tag += '/> &nbsp;' + choice.choiceLabel + '</label><br/>';
 					}
 				}
 			} else {
@@ -487,6 +487,7 @@ var addTemplateItem = function(template) {
 				}
 				tag += '" value="' + val + '" />';
 			}
+			tag += '</div>';
 			$('#template_items').append(tag);
 		}
 	}
