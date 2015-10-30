@@ -4,7 +4,7 @@
 	<groupId>org.support-project</groupId>
 	<artifactId>knowledge</artifactId>
 	<packaging>war</packaging>
-	<version>0.6.0</version>
+	<version>0.7.0-SNAPSHOT</version>
 	<name>webapp for knowledge</name>
 	<url>https://support-project.org/</url>
 
@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>org.support-project</groupId>
 			<artifactId>web</artifactId>
-			<version>0.6.0</version>
+			<version>0.7.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
