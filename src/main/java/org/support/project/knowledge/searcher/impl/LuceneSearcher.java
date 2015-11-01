@@ -191,19 +191,23 @@ public class LuceneSearcher implements Searcher {
 		if (StringUtils.isNotEmpty(value.getUsers()) || StringUtils.isNotEmpty(value.getGroups())) {
 			// ユーザかグループのどちらかにアクセス権があること
 			BooleanQuery miniContainer = new BooleanQuery();
-			
-			QueryParser queryParser = new QueryParser(Version.LUCENE_4_10_2, FIELD_LABEL_USERS, analyzer);
-			queryParser.setDefaultOperator(Operator.OR);
-			Query query = queryParser.parse(value.getUsers());
-			miniContainer.add(query, BooleanClause.Occur.SHOULD);
-			
+			QueryParser queryParser;
+			Query query;
+
+			if (StringUtils.isNotEmpty(value.getUsers())) {
+				queryParser = new QueryParser(Version.LUCENE_4_10_2, FIELD_LABEL_USERS, analyzer);
+				queryParser.setDefaultOperator(Operator.OR);
+				query = queryParser.parse(value.getUsers());
+				miniContainer.add(query, BooleanClause.Occur.SHOULD);
+			}
+
 			if (StringUtils.isNotEmpty(value.getGroups())) {
 				queryParser = new QueryParser(Version.LUCENE_4_10_2, FIELD_LABEL_GROUPS, analyzer);
 				queryParser.setDefaultOperator(Operator.OR);
 				query = queryParser.parse(value.getGroups());
 				miniContainer.add(query, BooleanClause.Occur.SHOULD);
 			}
-			
+
 			container.add(miniContainer, BooleanClause.Occur.MUST);
 		}
 		if (StringUtils.isNotEmpty(value.getCreator())) {

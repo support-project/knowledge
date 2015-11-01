@@ -53,6 +53,7 @@ import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.entity.GroupsEntity;
 
 @DI(instance=Instance.Singleton)
@@ -450,39 +451,54 @@ public class KnowledgeLogic {
 	 * ナレッジ検索
 	 * @param keyword
 	 * @param tags
+	 * @param groups
 	 * @param loginedUser
-	 * @param i
-	 * @param pageLimit
+	 * @param offset
+	 * @param limit
 	 * @return
 	 * @throws Exception 
 	 */
 	public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags,
-			LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+			List<GroupsEntity> groups, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
 		SearchingValue searchingValue = new SearchingValue();
 		searchingValue.setKeyword(keyword);
 		searchingValue.setOffset(offset);
 		searchingValue.setLimit(limit);
-		
-		if (loginedUser == null || !loginedUser.isAdmin()) {
-			searchingValue.addUser(ALL_USER);
-			Integer userId = null;
-			if (loginedUser != null) {
-				userId = loginedUser.getLoginUser().getUserId();
-				searchingValue.addUser(userId);
-				
-				List<GroupsEntity> groups = loginedUser.getGroups();
-				if (groups != null && !groups.isEmpty()) {
-					for (GroupsEntity groupsEntity : groups) {
-						searchingValue.addGroup(groupsEntity.getGroupId());
-					}
-				}
-			}
-		}
+
+		// タグが指定されてる場合はユーザに関係なく条件に追加する
 		if (tags != null && !tags.isEmpty()) {
 			for (TagsEntity tagsEntity : tags) {
 				searchingValue.addTag(tagsEntity.getTagId());
 			}
 		}
+
+		// ログインしてない場合はグループ検索ができないので公開記事のみを対象にして検索する
+		if (loginedUser == null) {
+			searchingValue.addUser(ALL_USER);
+			return searchKnowledge(searchingValue);
+		}
+
+		// グループが指定されてる場合はグループのみ対象にして検索する
+		if (groups != null) {
+			for (GroupsEntity groupsEntity : groups) {
+				searchingValue.addGroup(groupsEntity.getGroupId());
+			}
+			return searchKnowledge(searchingValue);
+		}
+
+		// 管理者じゃなければ自身が参加してる公開記事、自身の記事、グループの記事を条件に追加する
+		if (!loginedUser.isAdmin()) {
+			searchingValue.addUser(ALL_USER);
+			searchingValue.addUser(loginedUser.getLoginUser().getUserId());
+
+			List<GroupsEntity> logiedUserGroups = loginedUser.getGroups();
+			if (logiedUserGroups != null && !logiedUserGroups.isEmpty()) {
+				for (GroupsEntity groupsEntity : logiedUserGroups) {
+					searchingValue.addGroup(groupsEntity.getGroupId());
+				}
+			}
+		}
+
 		return searchKnowledge(searchingValue);
 	}
 
@@ -496,12 +512,12 @@ public class KnowledgeLogic {
 	 * @throws Exception
 	 */
 	public List<KnowledgesEntity> searchKnowledge(String keyword, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
-		return searchKnowledge(keyword, null, loginedUser, offset, limit);
+		return searchKnowledge(keyword, null, null, loginedUser, offset, limit);
 	}
 	
 	/**
 	 * ナレッジをタグ指定で表示
-	 * @param keyword
+	 * @param tag
 	 * @param loginedUser
 	 * @param offset
 	 * @param limit
@@ -537,6 +553,44 @@ public class KnowledgeLogic {
 		}
 		
 		return searchKnowledge(searchingValue);
+	}
+
+	/**
+	 * ナレッジをグループ指定で表示
+	 *
+	 * @param group
+	 * @param loginedUser
+	 * @param offset
+	 * @param limit
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgesEntity> showKnowledgeOnGroup(String group, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+		List<KnowledgesEntity> knowledges = new ArrayList<KnowledgesEntity>();
+		if (loginedUser == null) {
+			return knowledges;
+		}
+
+		SearchingValue searchingValue = new SearchingValue();
+		searchingValue.setOffset(offset);
+		searchingValue.setLimit(limit);
+
+		GroupsEntity targetGroup = GroupsDao.get().selectOnKey(new Integer(group));
+		
+		if (loginedUser.isAdmin()) {
+			searchingValue.addGroup(targetGroup.getGroupId());
+			return searchKnowledge(searchingValue);		
+		}
+
+		List<GroupsEntity> groups = loginedUser.getGroups();
+		for (GroupsEntity groupsEntity : groups) {
+			if (groupsEntity.getGroupId().intValue() == targetGroup.getGroupId().intValue()) {
+				searchingValue.addGroup(targetGroup.getGroupId());
+				return searchKnowledge(searchingValue);
+			}
+		}
+
+		return knowledges;
 	}
 	
 	/**

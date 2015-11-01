@@ -80,4 +80,7 @@
 	border-bottom: 1px solid gray;
 }
 
-
+#groupDatas .name {
+	cursor: pointer;
+	border-bottom: 1px solid gray;
+}

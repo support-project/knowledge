@@ -41,7 +41,9 @@ import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.UsersDao;
+import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
@@ -173,13 +175,16 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setViewParam();
 		
 		TagsDao tagsDao = TagsDao.get();
+		GroupsDao groupsDao = GroupsDao.get();
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
 		
 		LoginedUser loginedUser = super.getLoginedUser();
 		String keyword = getParam("keyword");
 		String tag = getParam("tag");
+		String group = getParam("group");
 		String user = getParam("user");
 		String tagNames = getParam("tagNames");
+		String groupNames = getParam("groupNames");
 		
 		List<KnowledgesEntity> knowledges = new ArrayList<>();
 		if (StringUtils.isInteger(tag)) {
@@ -188,6 +193,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
 			setAttribute("selectedTag", tagsEntity);
+		} else if (StringUtils.isInteger(group)) {
+			//グループを選択している
+			LOG.trace("show on Group");
+			knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+			GroupsEntity groupsEntity = groupsDao.selectOnKey(new Integer(group));
+			setAttribute("selectedGroup", groupsEntity);
 		} else if (StringUtils.isNotEmpty(user) && StringUtils.isInteger(user)) {
 			// ユーザを選択している
 			LOG.trace("show on User");
@@ -198,9 +209,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				usersEntity.setPassword("");
 				setAttribute("selectedUser", usersEntity);
 			}
-		} else if (StringUtils.isNotEmpty(tagNames)) {
+		} else if (StringUtils.isNotEmpty(tagNames) || StringUtils.isNotEmpty(groupNames)) {
 			// タグとキーワードで検索
-			LOG.trace("show on Tags and keyword");
+			LOG.trace("show on Tags and Groups and keyword");
 			String[] taglist = tagNames.split(",");
 			List<TagsEntity> tags = new ArrayList<>();
 			for (String string : taglist) {
@@ -213,8 +224,26 @@ public class KnowledgeControl extends KnowledgeControlBase {
 					tags.add(tagsEntity);
 				}
 			}
+
+			List<GroupsEntity> groups = new ArrayList<>();
+			if (loginedUser != null) {
+				String[] grouplist = groupNames.split(",");
+				for (String string : grouplist) {
+					String groupname = string.trim();
+					if (groupname.startsWith(" ") && groupname.length() > " ".length()) {
+						groupname = groupname.substring(" ".length());
+					}
+					GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupname);
+					if (groupsEntity != null) {
+						groups.add(groupsEntity);
+					}
+				}
+			}
+
 			setAttribute("searchTags", tags);
-			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+			setAttribute("searchGroups", groups);
+
+			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 		} else {
 			// その他(キーワード検索)
 			LOG.trace("search");
@@ -334,9 +363,18 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 */
 	@Get
 	public Boundary search() {
+		LoginedUser loginedUser = super.getLoginedUser();
+		List<GroupsEntity> groupitems = new ArrayList<GroupsEntity>();
 		List<TagsEntity> tagitems = TagsDao.get().selectAll();
 		setAttribute("tagitems", tagitems);
-
+		if (loginedUser != null) {
+			if (loginedUser.isAdmin()) {
+				groupitems = GroupsDao.get().selectAll();
+			} else {
+				groupitems = loginedUser.getGroups();
+			}
+		}
+		setAttribute("groupitems", groupitems);
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
 		return forward("search.jsp");

@@ -1,6 +1,6 @@
 $(document).ready(function() {
-	var elt= $('#input_tags');
-	elt.tagsinput({
+	var tagElt= $('#input_tags');
+	tagElt.tagsinput({
 		typeahead: {
 			source: _TAGS,
 			displayText: function(item) {
@@ -12,13 +12,32 @@ $(document).ready(function() {
 		},
 		freeInput: false
 	});
-	elt.on('typeahead:selected', function(event, datum) {
+	tagElt.on('typeahead:selected', function(event, datum) {
 		console.log(datum);
 	});
 	setUpTagSelect();
+
+	var groupElt= $('#input_groups');
+	groupElt.tagsinput({
+		typeahead: {
+			source: _GROUPS,
+			displayText: function(item) {
+				if (item) {
+					return item.label || item;
+				}
+				return '';
+			}
+		},
+		freeInput: false
+	});
+	groupElt.on('typeahead:selected', function(event, datum) {
+		console.log(datum);
+	});
+	setUpGroupSelect();
+
 	$('#searchParamClear').click(function(){
 		$('#searchkeyword').val('');
-		elt.tagsinput('removeAll');
+		tagElt.tagsinput('removeAll');
+		groupElt.tagsinput('removeAll');
 	});
 });
-
