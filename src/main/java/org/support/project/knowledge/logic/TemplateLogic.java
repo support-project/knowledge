@@ -101,7 +101,7 @@ public class TemplateLogic {
 	 * @param loginedUser
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public TemplateMastersEntity uodateTemplate(TemplateMastersEntity template, LoginedUser loginedUser) throws InvalidParamException {
+	public TemplateMastersEntity updateTemplate(TemplateMastersEntity template, LoginedUser loginedUser) throws InvalidParamException {
 		TemplateMastersDao templateDao = TemplateMastersDao.get();
 		TemplateItemsDao itemsDao = TemplateItemsDao.get();
 		ItemChoicesDao choicesDao = ItemChoicesDao.get();

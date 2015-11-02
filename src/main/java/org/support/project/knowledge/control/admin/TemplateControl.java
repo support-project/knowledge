@@ -234,7 +234,7 @@ public class TemplateControl extends Control {
 		
 		// 保存
 		try {
-			template = TemplateLogic.get().uodateTemplate(template, getLoginedUser());
+			template = TemplateLogic.get().updateTemplate(template, getLoginedUser());
 		} catch (InvalidParamException e) {
 			// エラーメッセージ送信
 			return send(e.getMessageResult());
