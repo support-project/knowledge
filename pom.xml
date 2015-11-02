@@ -20,6 +20,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.support-project</groupId>
+			<artifactId>markedj</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>1.4.183</version>
@@ -115,12 +121,6 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.3.1</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>io.github.gitbucket</groupId>
-			<artifactId>markedj</artifactId>
-			<version>1.0.4-SNAPSHOT</version>
 		</dependency>
 		
 	</dependencies>
