@@ -166,13 +166,13 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 
 	<% if (request.getRemoteUser() != null) { 
 		if ((boolean) request.getAttribute("edit")) { %>
-		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>"
+		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
 		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
 		<%= jspUtil.label("label.edit") %>
 		</a>
 	<%	} %>
 	<% } else { %>
-		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>"
+		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
 		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
 		<%= jspUtil.label("knowledge.view.edit.with.login") %>
 		</a>

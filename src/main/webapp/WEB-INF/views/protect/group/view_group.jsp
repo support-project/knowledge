@@ -180,15 +180,18 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 
 </div>
 
-
 	<a href="<%= request.getContextPath() %>/protect.group/mygroups"
 	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.mygroup") %></a>
 
 	<a href="<%= request.getContextPath() %>/protect.group/list"
 	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.list") %></a>
 
-
-
+	<% if (jspUtil.is(CommonWebParameter.GROUP_ROLE_MEMBER, "status")
+			|| jspUtil.is(CommonWebParameter.GROUP_ROLE_ADMIN, "status")
+			|| jspUtil.user().isAdmin()) { %>
+	<a href="<%= request.getContextPath() %>/open.knowledge/list?group=<%= jspUtil.out("groupId") %>"
+	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.group.knowledges") %></a>
+	<% } %>
 
 <%-- Targets --%>
 <div class="modal fade" id="groupSelectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

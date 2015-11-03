@@ -24,7 +24,7 @@
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.list.title") %> <span style="font-size: 14px">page[<%= jspUtil.getValue("offset", Integer.class) + 1 %>]</span></h4>
 
-	<c:if test="${!empty selectedTag || !empty selectedUser || !empty searchTags || !empty keyword}">
+	<c:if test="${!empty selectedTag || !empty selectedGroup || !empty selectedUser || !empty searchTags || !empty searchGroups || !empty keyword}">
 		<div class="row">
 			<div class="col-sm-12 selected_tag">
 			
@@ -35,6 +35,13 @@
 			</a>
 			</c:if>
 			
+			<c:if test="${!empty selectedGroup}">
+			<a class="text-primary"
+				href="<%= request.getContextPath() %>/open.knowledge/list?group=<%=jspUtil.out("selectedGroup.groupId") %>" >
+					<i class="fa fa-group"></i>&nbsp;<%=jspUtil.out("selectedGroup.groupName") %>
+			</a>
+			</c:if>
+
 			<c:if test="${!empty selectedUser}">
 			<a class="text-primary" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.out("selectedUser.userId") %>" >
@@ -47,6 +54,15 @@
 			<a class="text-primary" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%=jspUtil.out("searchTag.tagId") %>" >
 					<i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("searchTag.tagName") %>
+			</a>
+			</c:forEach>
+			</c:if>
+
+			<c:if test="${!empty searchGroups}">
+			<c:forEach var="searchGroup" items="${searchGroups}" varStatus="status">
+			<a class="text-primary" 
+				href="<%= request.getContextPath() %>/open.knowledge/list?group=<%=jspUtil.out("searchGroup.groupId") %>" >
+					<i class="fa fa-group"></i>&nbsp;<%=jspUtil.out("searchGroup.groupName") %>
 			</a>
 			</c:forEach>
 			</c:if>
