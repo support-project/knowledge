@@ -1,10 +1,8 @@
 package org.support.project.knowledge.control.protect;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.exception.ParseException;
@@ -173,7 +171,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<TemplateItemsEntity> items = template.getItems();
 		for (TemplateItemsEntity item : items) {
 			String itemValue = super.getParam("item_" + item.getItemNo());
-			item.setItemValue(itemValue);
+			if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
+				itemValue = itemValue.substring(1, itemValue.length() -1);
+				item.setItemValue(itemValue);
+			} else {
+				item.setItemValue(itemValue);
+			}
 		}
 
 		List<ValidateError> errors = entity.validate();
@@ -255,7 +258,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<TemplateItemsEntity> items = template.getItems();
 		for (TemplateItemsEntity item : items) {
 			String itemValue = super.getParam("item_" + item.getItemNo());
-			item.setItemValue(itemValue);
+			if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
+				itemValue = itemValue.substring(1, itemValue.length() -1);
+				item.setItemValue(itemValue);
+			} else {
+				item.setItemValue(itemValue);
+			}
 		}
 		
 		KnowledgesDao dao = Container.getComp(KnowledgesDao.class);

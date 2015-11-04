@@ -4,6 +4,7 @@ ITEM_NO
  , TYPE_ID
  , ITEM_NAME
  , ITEM_TYPE
+ , DESCRIPTION
  , INSERT_USER
  , INSERT_DATETIME
  , UPDATE_USER
@@ -11,6 +12,7 @@ ITEM_NO
  , DELETE_FLAG
 ) VALUES (
 ?
+ , ?
  , ?
  , ?
  , ?

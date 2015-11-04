@@ -1,0 +1,26 @@
+.add_item {
+	border-top: 1px solid gray;
+	padding-top: 5px;
+	border-bottom: 1px solid gray;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+}
+
+.choice_item_top {
+	border-top: 1px dashed #7f7f7f;
+	padding-top: 2px;
+}
+.choice_item_bottom {
+	border-bottom: 1px dashed #7f7f7f;
+	padding-bottom: 2px;
+}
+
+.item_title {
+	font-size: +2;
+	font-weight: bold;
+	color: navy;
+}
+
+
+
+
