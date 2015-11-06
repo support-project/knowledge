@@ -18,6 +18,8 @@ public class KnowledgeItemValuesEntity extends GenKnowledgeItemValuesEntity {
 	public static final Integer STATUS_SAVED = 0;
 	/** ステータス: Webの値取得済み */
 	public static final Integer STATUS_WEBACCESSED = 1;
+	/** ステータス: Webの値取得済み */
+	public static final Integer STATUS_WEBACCESS_ERROR = -1;
 
 	/**
 	 * インスタンス取得

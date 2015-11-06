@@ -92,7 +92,16 @@ public class FileParseBat extends AbstractBat {
 				// タグを取得
 				List<TagsEntity> tagsEntities = TagsDao.get().selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
 				// Webアクセス
-				String content = logic.crawle(proxyConfigs, itemValue.getItemValue());
+				String content = null;
+				try {
+					content = logic.crawle(proxyConfigs, itemValue.getItemValue());
+				} catch (Exception e) {
+					LOG.error("crawl error:" + itemValue.getItemValue(), e);
+					// ステータス更新(エラー)
+					itemValue.setItemStatus(KnowledgeItemValuesEntity.STATUS_WEBACCESS_ERROR);
+					itemValuesDao.update(itemValue);
+					continue;
+				}
 				if (StringUtils.isNotEmpty(content)) {
 					LOG.info("[SUCCESS] " + itemValue.getItemValue());
 					// 全文検索エンジンにのみ、検索できるように情報登録
