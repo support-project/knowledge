@@ -1,10 +1,5 @@
 package org.support.project.knowledge.entity;
 
-import java.util.List;
-import java.util.Map;
-import java.sql.Timestamp;
-
-import org.support.project.common.bean.ValidateError;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -16,7 +11,10 @@ import org.support.project.knowledge.entity.gen.GenStocksEntity;
  */
 @DI(instance=Instance.Prototype)
 public class StocksEntity extends GenStocksEntity {
-
+	
+	public static final int STOCKTYPE_PRIVATE = 0;
+	public static final int STOCKTYPE_PUBLIC = 1;
+	
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
 

@@ -1,9 +1,14 @@
 package org.support.project.knowledge.dao;
 
+import java.util.List;
+
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenStocksDao;
+import org.support.project.knowledge.entity.StocksEntity;
+import org.support.project.ormapping.common.SQLManager;
+import org.support.project.web.bean.LoginedUser;
 
 /**
  * ストックしたナレッジ
@@ -20,6 +25,18 @@ public class StocksDao extends GenStocksDao {
 	 */
 	public static StocksDao get() {
 		return Container.getComp(StocksDao.class);
+	}
+	
+	/**
+	 * 自分が登録したストックを取得
+	 * @param loginedUser
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	public List<StocksEntity> selectMyStocksWithKnowledgeCount(LoginedUser loginedUser, int offset, int limit) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_selectMyStocksWithKnowledgeCount.sql");
+		return executeQueryList(sql, StocksEntity.class, loginedUser.getUserId(), limit, offset);
 	}
 
 
