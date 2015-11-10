@@ -31,6 +31,7 @@ import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.MarkDown;
@@ -505,6 +506,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	public Boundary template() throws InvalidParamException {
 		Integer typeId = super.getParam("type_id", Integer.class);
 		TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(typeId);
+		if (template == null) {
+			//そのテンプレートは既に削除済みの場合、通常のナレッジのテンプレートで表示する（ナレッジのテンプレートは削除できないようにする）
+			typeId = TemplateMastersDao.TYPE_ID_KNOWLEDGE;
+			template = TemplateMastersDao.get().selectWithItems(typeId);
+		}
 		
 		String knowledgeId = super.getParam("knowledge_id");
 		if (StringUtils.isNotEmpty(knowledgeId) && StringUtils.isLong(knowledgeId)) {
