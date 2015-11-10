@@ -635,7 +635,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	@Post
 	public Boundary stock() throws IOException, InvalidParamException {
 		Long knowledgeId = getPathLong();
-		LOG.info(knowledgeId);
+		if (LOG.isTraceEnabled()) {
+			LOG.trace(knowledgeId);
+		}
 		
 		List<Stock> stocks = new ArrayList<>();
 		BufferedReader reader = getRequest().getReader();
@@ -647,12 +649,16 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				while (keys.hasNext()) {
 					String key = (String) keys.next();
 					Object value = map.get(key);
-					LOG.info(key + " = " + value + "  (" + value.getClass().getName() + ")");
+					if (LOG.isTraceEnabled()) {
+						LOG.trace(key + " = " + value + "  (" + value.getClass().getName() + ")");
+					}
 					Object val = PropertyUtil.convValue(value.toString(), PropertyUtil.getPropertyType(stock, key));
 					PropertyUtil.setPropertyValue(stock, key, val);
 				}
 				stocks.add(stock);
-				LOG.info(PropertyUtil.reflectionToString(stock));
+				if (LOG.isTraceEnabled()) {
+					LOG.trace(PropertyUtil.reflectionToString(stock));
+				}
 			}
 		} finally {
 			reader.close();

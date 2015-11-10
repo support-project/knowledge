@@ -16,40 +16,43 @@
 </c:param>
 
 <c:param name="PARAM_CONTENT">
-<h4 class="title"><%= jspUtil.label("knowledge.navbar.account.mystock") %></h4>
+<h4 class="title">
+	<%= jspUtil.out("stockName") %>
+	<a class="btn btn-info" href="<%= request.getContextPath() %>/protect.stock/edit/<%= jspUtil.out("stockId") %>" >
+		<i class="fa fa-tag"></i>&nbsp;<%= jspUtil.label("label.edit") %>
+	</a>
+</h4>
+	<%= jspUtil.out("description") %>
 	
 	<nav>
 		<ul class="pager">
 			<li class="previous">
-				<a href="<%= request.getContextPath() %>/protect.stock/mylist/<%= jspUtil.out("previous") %>">
+				<a href="<%= request.getContextPath() %>/protect.stock/knowledge?stockId=<%= jspUtil.out("stockId") %>&offset=<%= jspUtil.out("previous") %>">
 					<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
 				</a>
 			</li>
-			<li>
-				<a href="<%= request.getContextPath() %>/protect.stock/add" style="cursor: pointer;">
-					<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("label.add") %>
-				</a>
-			</li>
 			<li class="next">
-				<a href="<%= request.getContextPath() %>/protect.stock/mylist/<%= jspUtil.out("next") %>">
+				<a href="<%= request.getContextPath() %>/protect.stock/knowledge?stockId=<%= jspUtil.out("stockId") %>&offset=<%= jspUtil.out("next") %>">
 					<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
 				</a>
 			</li>
 		</ul>
 	</nav>
 
-	<c:if test="${empty stocks}">
+	<c:if test="${empty knowledges}">
 		<div class="col-sm-12">
 		empty
 		</div>
 	</c:if>
 	
 	<div class="list-group">
-		<c:forEach var="stock" items="${stocks}">
-			<a class="list-group-item " 
-			href="<%= request.getContextPath() %>/protect.stock/knowledge?stockId=<%= jspUtil.out("stock.stockId") %>&offset=0" >
-				<span class="badge"><%= jspUtil.out("stock.knowledgeCount") %></span>
-				<i class="fa fa-tag"></i>&nbsp;<%= jspUtil.out("stock.stockName") %>
+		<c:forEach var="knowledge" items="${knowledges}">
+			<a class="list-group-item" 
+			href="<%= request.getContextPath() %>/open.knowledge/view/<%= jspUtil.out("knowledge.knowledgeId") %>" >
+				<h4 class="list-group-item-heading">
+					<i class="fa fa-book"></i>&nbsp;[<%= jspUtil.out("knowledge.knowledgeId") %>]&nbsp;<%= jspUtil.out("knowledge.title") %>
+				</h4>
+				<p class="list-group-item-text"><%= jspUtil.out("knowledge.comment") %></p>
 			</a>
 			
 		</c:forEach>
@@ -58,17 +61,12 @@
 	<nav>
 		<ul class="pager">
 			<li class="previous">
-				<a href="<%= request.getContextPath() %>/protect.stock/mylist/<%= jspUtil.out("previous") %>">
+				<a href="<%= request.getContextPath() %>/protect.stock/knowledge?stockId=<%= jspUtil.out("stockId") %>&offset=<%= jspUtil.out("previous") %>">
 					<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
 				</a>
 			</li>
-			<li>
-				<a href="<%= request.getContextPath() %>/protect.stock/add" style="cursor: pointer;">
-					<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("label.add") %>
-				</a>
-			</li>
 			<li class="next">
-				<a href="<%= request.getContextPath() %>/protect.stock/mylist/<%= jspUtil.out("next") %>">
+				<a href="<%= request.getContextPath() %>/protect.stock/knowledge?stockId=<%= jspUtil.out("stockId") %>&offset=<%= jspUtil.out("next") %>">
 					<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
 				</a>
 			</li>

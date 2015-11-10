@@ -19,6 +19,11 @@ public class StocksEntity extends GenStocksEntity {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * ストックに登録されたナレッジの件数
+	 */
+	private Integer knowledgeCount;
+	
+	/**
 	 * インスタンス取得
 	 * AOPに対応
 	 * @return インスタンス
@@ -41,6 +46,20 @@ public class StocksEntity extends GenStocksEntity {
 
 	public StocksEntity(Long stockId) {
 		super(stockId);
+	}
+
+	/**
+	 * @return the knowledgeCount
+	 */
+	public Integer getKnowledgeCount() {
+		return knowledgeCount;
+	}
+
+	/**
+	 * @param knowledgeCount the knowledgeCount to set
+	 */
+	public void setKnowledgeCount(Integer knowledgeCount) {
+		this.knowledgeCount = knowledgeCount;
 	}
 
 }

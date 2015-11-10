@@ -452,9 +452,11 @@ var saveStocks = function(knowledgeId) {
 		success : function(datas, dataType) {
 			console.log(datas);
 			$.notify(datas.message, 'success');
+			$('#stockModal').modal('hide');
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown){
 			$.notify('[fail] save stock info', 'warn');
+			$('#stockModal').modal('hide');
 		}
 	});
 };
