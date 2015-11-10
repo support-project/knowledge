@@ -223,8 +223,8 @@
 			<form class="nav navbar-nav navbar-form navbar-right" role="search"
 				action="<%= request.getContextPath() %><%= top %>">
 				<div class="input-group">
-					<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
-						name="keyword" id="keyword" value="<%= jspUtil.out("keyword") %>" />
+					<input type="text" class="form-control" style="width: 350px;" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
+						name="keyword" id="keyword" value="<%= jspUtil.out("searchKeyword") %>" />
 					<div class="input-group-btn">
 						<button class="btn btn-default" type="submit">
 							<i class="glyphicon glyphicon-search"></i>

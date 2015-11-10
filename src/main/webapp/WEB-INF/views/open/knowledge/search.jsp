@@ -52,7 +52,7 @@ _GROUPS.push('<%= jspUtil.out("groupitem.groupName") %>');
 			<%= jspUtil.label("knowledge.search.keyword") %>
 			</label>
 			<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.search.placeholder") %>"
-				name="keyword" id="searchkeyword" value="<%=jspUtil.out("keyword")%>" />
+				name="keyword" id="searchkeyword" value="<%=jspUtil.out("searchKeyword")%>" />
 		</div>
 
 		<div class="form-group">

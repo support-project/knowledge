@@ -27,6 +27,7 @@ import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.DiffLogic;
+import org.support.project.knowledge.logic.KeywordLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
@@ -171,15 +172,17 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		LOG.trace("Call list");
 		Integer offset = super.getPathInteger(0);
 		setAttribute("offset", offset);
+		String keyword = getParam("keyword");
+		setAttribute("searchKeyword", keyword);
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
-		
+
 		TagsDao tagsDao = TagsDao.get();
 		GroupsDao groupsDao = GroupsDao.get();
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+		KeywordLogic keywordLogic = KeywordLogic.get();
 		
 		LoginedUser loginedUser = super.getLoginedUser();
-		String keyword = getParam("keyword");
 		String tag = getParam("tag");
 		String group = getParam("group");
 		String user = getParam("user");
@@ -247,8 +250,41 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		} else {
 			// その他(キーワード検索)
 			LOG.trace("search");
-			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+			List<GroupsEntity> groups = null;
+			List<TagsEntity> tags = null;
+
+			if (loginedUser != null) {
+				String groupKeyword = keywordLogic.parseQuery("groups", keyword);
+				if (groupKeyword != null) {
+					groups = new ArrayList<GroupsEntity>();
+					for (String groupName : groupKeyword.split(",")) {
+						GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupName);
+						if (groupsEntity != null) {
+							groups.add(groupsEntity);
+						}
+					}
+					setAttribute("searchGroups", groups);
+				}
+			}
+
+			String tagKeyword = keywordLogic.parseQuery("tags", keyword);
+			if (tagKeyword != null) {
+				tags = new ArrayList<TagsEntity>();
+				for (String tagName : tagKeyword.split(",")) {
+					TagsEntity tagsEntity = tagsDao.selectOnTagName(tagName);
+					if (tagsEntity != null) {
+						tags.add(tagsEntity);
+					}
+				}
+				setAttribute("searchTags", tags);
+			}
+
+			keyword = keywordLogic.parseKeyword(keyword);
+
+			setAttribute("keyword", keyword);
+			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 		}
+
 		setAttribute("knowledges", knowledges);
 		LOG.trace("検索終了");
 		
@@ -363,6 +399,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 */
 	@Get
 	public Boundary search() {
+		KeywordLogic keywordLogic = KeywordLogic.get();
 		LoginedUser loginedUser = super.getLoginedUser();
 		List<GroupsEntity> groupitems = new ArrayList<GroupsEntity>();
 		List<TagsEntity> tagitems = TagsDao.get().selectAll();
@@ -377,6 +414,15 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttribute("groupitems", groupitems);
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
+
+		// groups:やtags:などの検索クエリを分解してフォームに表示するために分解したデータをセットする
+		String keyword = getParam("keyword");
+		setAttribute("searchKeyword", keywordLogic.parseKeyword(keyword));
+		setAttribute("tagNames", keywordLogic.parseQuery("tags", keyword));
+		if (loginedUser != null) {
+			setAttribute("groupNames", keywordLogic.parseQuery("groups", keyword));
+		}
+
 		return forward("search.jsp");
 	}
 	
