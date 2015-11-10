@@ -127,6 +127,44 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 					</p>
 					</c:if>
 
+
+<%-- 操作ボタン --%>
+	<button class="btn btn-warning" onclick="addlike(<%= jspUtil.out("knowledgeId") %>);">
+		<i class="fa fa-thumbs-o-up"></i>&nbsp;
+		<%= jspUtil.label("knowledge.view.like") %>
+	</button>
+	
+	<% if (request.getRemoteUser() != null) { %>
+		<button type="button" class="btn btn-info" data-toggle="modal" data-target="#stockModal">
+		<i class="fa fa-star-o"></i>&nbsp;
+		<%= jspUtil.label("knowledge.view.fav") %>
+		</button>
+	<% } else { %>
+		<a href="<%= request.getContextPath() %>/protect.knowledge/view/<%= jspUtil.out("knowledgeId") %>"
+			class="btn btn-info" role="button">
+			<i class="fa fa-star-o"></i>&nbsp;
+			<%= jspUtil.label("knowledge.view.fav") %>(サインイン)
+		</a>
+	<% } %>
+	
+	<% if (request.getRemoteUser() != null) { 
+		if ((boolean) request.getAttribute("edit")) { %>
+		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
+		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
+		<%= jspUtil.label("label.edit") %>
+		</a>
+	<% } %>
+	<% } else { %>
+		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
+		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
+		<%= jspUtil.label("knowledge.view.edit.with.login") %>
+		</a>
+	<% } %>
+
+	<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
+	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
+	
+
 					
 <%-- 添付ファイル --%>
 					<c:forEach var="file" items="${files}" >
@@ -159,29 +197,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		</div>
 	</div>
 	
-<%-- 操作ボタン --%>
-	<button class="btn btn-warning" onclick="addlike(<%= jspUtil.out("knowledgeId") %>);">
-		<i class="fa fa-thumbs-o-up"></i>&nbsp;
-		<%= jspUtil.label("knowledge.view.like") %>
-	</button>
 
-	<% if (request.getRemoteUser() != null) { 
-		if ((boolean) request.getAttribute("edit")) { %>
-		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
-		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
-		<%= jspUtil.label("label.edit") %>
-		</a>
-	<%	} %>
-	<% } else { %>
-		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
-		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
-		<%= jspUtil.label("knowledge.view.edit.with.login") %>
-		</a>
-	<% } %>
-
-	<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
-	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
-	
 	
 <%-- コメント表示 --%>
 	<hr/>
@@ -361,6 +377,51 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 <p class="preview markdown" id="preview"></p>
 <span style="display: none;" id="comment_text">
 </span>
+
+
+
+
+
+
+<!-- Stock Modal -->
+<div class="modal fade" id="stockModal" tabindex="-1" role="dialog" aria-labelledby="stockModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="stockModalLabel"><%= jspUtil.label("knowledge.view.stock.modal.title") %></h4>
+			</div>
+			<div class="modal-body">
+				<%-- コンテンツ --%>
+				<nav>
+					<ul class="pager">
+						<li class="previous">
+							<a href="#" onclick="getStockInfoPrevious();">
+								<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
+							</a>
+						</li>
+						<li class="next">
+							<a href="#" onclick="getStockInfoNext();">
+								<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+				<div id="stockSelect"></div>
+			</div>
+			<div class="modal-footer">
+				<div class="form-group">
+					<!-- <label for="stockComment"><%= jspUtil.label("label.comment") %></label> -->
+					<input type="text" class="form-control" name="stockComment" id="stockComment" 
+						placeholder="<%= jspUtil.label("label.comment") %>" value="">
+				</div>
+				
+				<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i>&nbsp;<%= jspUtil.label("label.close") %></button>
+				<button type="button" class="btn btn-primary" onclick="saveStocks(<%= jspUtil.out("knowledgeId") %>);"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 <jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>

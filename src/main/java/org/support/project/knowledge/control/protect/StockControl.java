@@ -1,16 +1,21 @@
 package org.support.project.knowledge.control.protect;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.arnx.jsonic.JSONException;
 
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.PropertyUtil;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.entity.StocksEntity;
+import org.support.project.knowledge.vo.Stock;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
@@ -18,6 +23,9 @@ import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
 public class StockControl extends Control {
+	/** ログ */
+	private static Log LOG = LogFactory.getLog(StockControl.class);
+	
 	private static final int LIST_LIMIT = 20;
 	
 	/**
@@ -155,4 +163,27 @@ public class StockControl extends Control {
 		setResult(successMsg, null);
 		return mylist();
 	}
+	
+	
+	/**
+	 * ストックの選択肢を一覧取得（JSON）
+	 * @return
+	 * @throws InvalidParamException
+	 */
+	@Get
+	public Boundary chooselist() throws InvalidParamException {
+		Integer offset = super.getPathInteger(0);
+		StocksDao stocksDao = StocksDao.get();
+		List<StocksEntity> stocksEntities = stocksDao.selectMyStocksWithKnowledgeCount(super.getLoginedUser(), offset * LIST_LIMIT, LIST_LIMIT);
+		List<Stock> stocks = new ArrayList<>();
+		for (StocksEntity stocksEntity : stocksEntities) {
+			Stock stock = new Stock();
+			PropertyUtil.copyPropertyValue(stocksEntity, stock);
+			stocks.add(stock);
+		}
+		return send(stocks);
+	}
+	
+
+	
 }

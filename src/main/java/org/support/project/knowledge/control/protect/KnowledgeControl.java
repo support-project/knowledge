@@ -1,13 +1,19 @@
 package org.support.project.knowledge.control.protect;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import net.arnx.jsonic.JSON;
 
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -15,22 +21,26 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
+import org.support.project.knowledge.dao.StockKnowledgesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.StockKnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
+import org.support.project.knowledge.vo.Stock;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.HttpMethod;
+import org.support.project.web.config.MessageStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.exception.InvalidParamException;
@@ -614,6 +624,54 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	}	
 	
 	
+	
+	
+	/**
+	 * ナレッジをストックに保存
+	 * @return
+	 * @throws IOException 
+	 * @throws InvalidParamException 
+	 */
+	@Post
+	public Boundary stock() throws IOException, InvalidParamException {
+		Long knowledgeId = getPathLong();
+		LOG.info(knowledgeId);
+		
+		List<Stock> stocks = new ArrayList<>();
+		BufferedReader reader = getRequest().getReader();
+		try {
+			List<Map<String, String>> json = JSON.decode(reader);
+			for (Map<String, String> map : json) {
+				Stock stock = new Stock();
+				Iterator<String> keys = map.keySet().iterator();
+				while (keys.hasNext()) {
+					String key = (String) keys.next();
+					Object value = map.get(key);
+					LOG.info(key + " = " + value + "  (" + value.getClass().getName() + ")");
+					Object val = PropertyUtil.convValue(value.toString(), PropertyUtil.getPropertyType(stock, key));
+					PropertyUtil.setPropertyValue(stock, key, val);
+				}
+				stocks.add(stock);
+				LOG.info(PropertyUtil.reflectionToString(stock));
+			}
+		} finally {
+			reader.close();
+		}
+		
+		StockKnowledgesDao dao = StockKnowledgesDao.get();
+		for (Stock stock : stocks) {
+			StockKnowledgesEntity entity = new StockKnowledgesEntity();
+			entity.setStockId(stock.getStockId());
+			entity.setKnowledgeId(knowledgeId);
+			entity.setComment(stock.getDescription());
+			if (stock.getStocked()) {
+				dao.save(entity);
+			} else {
+				dao.physicalDelete(entity);
+			}
+		}
+		return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, "saved", "message.success.save");
+	};	
 	
 }
 
