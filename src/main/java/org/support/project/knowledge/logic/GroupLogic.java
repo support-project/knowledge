@@ -114,7 +114,7 @@ public class GroupLogic {
 		GroupsDao groupsDao = GroupsDao.get();
 		if (loginedUser.isAdmin()) {
 			if (StringUtils.isEmpty(keyword)) {
-				list = groupsDao.selectAll(offset, limit);
+				list = groupsDao.selectGroupsWithCount(offset, limit);
 			} else {
 				list = groupsDao.selectOnKeyword(keyword, loginedUser, offset, limit);
 			}
@@ -170,7 +170,7 @@ public class GroupLogic {
 
 		return list;
 	}
-	
+
 	/**
 	 * 自分が指定のグループの所属状態がどうなっているかセットする
 	 * @param groupsEntity
