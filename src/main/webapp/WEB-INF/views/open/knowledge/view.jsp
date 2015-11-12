@@ -407,17 +407,23 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 						</li>
 					</ul>
 				</nav>
-				<div id="stockSelect"></div>
+				Page: <span id="stockPage"></span>
+				
+				<div id="stockSelect">
+				</div>
+				<span id="stockLink" style="display: none;">
+					<%= jspUtil.label("knowledge.stock.empty") %><br/>
+					<a href="<%= request.getContextPath() %>/protect.stock/mylist" ><%= jspUtil.label("knowledge.stock.label.link") %></a>
+				</span>
 			</div>
 			<div class="modal-footer">
 				<div class="form-group">
-					<!-- <label for="stockComment"><%= jspUtil.label("label.comment") %></label> -->
 					<input type="text" class="form-control" name="stockComment" id="stockComment" 
 						placeholder="<%= jspUtil.label("label.comment") %>" value="">
 				</div>
 				
 				<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i>&nbsp;<%= jspUtil.label("label.close") %></button>
-				<button type="button" class="btn btn-primary" onclick="saveStocks(<%= jspUtil.out("knowledgeId") %>);"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
+				<button type="button" class="btn btn-primary" id="saveStockButton" onclick="saveStocks(<%= jspUtil.out("knowledgeId") %>);"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
 			</div>
 		</div>
 	</div>

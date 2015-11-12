@@ -18,6 +18,15 @@
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.navbar.account.mystock") %></h4>
 	
+<div class="alert alert-info alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<strong><%= jspUtil.label("knowledge.stock.info.title") %></strong><br/>
+	- <%= jspUtil.label("knowledge.stock.info.1") %><br/>
+	- <%= jspUtil.label("knowledge.stock.info.2") %>
+</div>
+	
+	
+	
 	<nav>
 		<ul class="pager">
 			<li class="previous">

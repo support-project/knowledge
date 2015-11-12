@@ -406,6 +406,7 @@ var getStockInfo = function() {
 		knowledgeId = $('#knowledgeId').val();
 	}
 	$('#stockSelect').html('');
+	$('#stockPage').text(stockPage + 1);
 	
 	$.ajax({
 		type : 'GET',
@@ -415,6 +416,14 @@ var getStockInfo = function() {
 			console.log(datas);
 			stocksInfo = datas;
 			var selectStocks = '';
+			if (!datas || datas.length == 0) {
+				$('#stockLink').show();
+				$('#saveStockButton').prop("disabled", true);
+				return;
+			}
+			
+			$('#stockLink').hide();
+			$('#saveStockButton').prop("disabled", false);
 			for (var i = 0; i < datas.length; i++) {
 				selectStocks += '<div class="checkbox">';
 				selectStocks += '<label><input type="checkbox" value="' + datas[i].stockId + '">';
