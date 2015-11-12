@@ -1,7 +1,6 @@
 package org.support.project.knowledge.control.protect;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import net.arnx.jsonic.JSONException;
@@ -9,7 +8,6 @@ import net.arnx.jsonic.JSONException;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
-import org.support.project.common.util.PropertyUtil;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
@@ -177,13 +175,9 @@ public class StockControl extends Control {
 	public Boundary chooselist() throws InvalidParamException {
 		Integer offset = super.getPathInteger(0);
 		StocksDao stocksDao = StocksDao.get();
-		List<StocksEntity> stocksEntities = stocksDao.selectMyStocksWithKnowledgeCount(super.getLoginedUser(), offset * LIST_LIMIT, LIST_LIMIT);
-		List<Stock> stocks = new ArrayList<>();
-		for (StocksEntity stocksEntity : stocksEntities) {
-			Stock stock = new Stock();
-			PropertyUtil.copyPropertyValue(stocksEntity, stock);
-			stocks.add(stock);
-		}
+		
+		Long knowledgeId = getParam("knowledge_id", Long.class);
+		List<Stock> stocks = stocksDao.selectMyStocksWithStocked(super.getLoginedUser(), knowledgeId, offset * LIST_LIMIT, LIST_LIMIT);
 		return send(stocks);
 	}
 	

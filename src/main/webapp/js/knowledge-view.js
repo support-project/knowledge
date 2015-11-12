@@ -426,7 +426,11 @@ var getStockInfo = function() {
 			$('#saveStockButton').prop("disabled", false);
 			for (var i = 0; i < datas.length; i++) {
 				selectStocks += '<div class="checkbox">';
-				selectStocks += '<label><input type="checkbox" value="' + datas[i].stockId + '">';
+				selectStocks += '<label><input type="checkbox" value="' + datas[i].stockId + '" ';
+				if (datas[i].stocked) {
+					selectStocks += 'checked="checked" ';
+				}
+				selectStocks += ' />';
 				selectStocks += datas[i].stockName + '</label>';
 				selectStocks += '</div>';
 			}
