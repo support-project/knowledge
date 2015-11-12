@@ -3,7 +3,7 @@
 	<title>[Knowledge] 評価の通知 {KnowledgeId} - {KnowledgeTitle}</title>
 	<contents xml:space="preserve">
 
-以下のナレッジに「参考になった！」が押されました！
+以下のナレッジに「いいね！」が押されました！
 
 {URL}
 
