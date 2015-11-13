@@ -143,7 +143,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		<a href="<%= request.getContextPath() %>/protect.knowledge/view/<%= jspUtil.out("knowledgeId") %>"
 			class="btn btn-info" role="button">
 			<i class="fa fa-star-o"></i>&nbsp;
-			<%= jspUtil.label("knowledge.view.fav") %>(サインイン)
+			<%= jspUtil.label("knowledge.view.fav") %>(<%= jspUtil.label("knowledge.navbar.signin") %>)
 		</a>
 	<% } %>
 	
