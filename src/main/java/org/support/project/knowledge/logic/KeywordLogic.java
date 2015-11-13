@@ -14,8 +14,8 @@ public class KeywordLogic {
 	public static final Map<String, String> regexList = new HashMap<String, String>();
 
 	static {
-		regexList.put("groups", "(?:groups:(?<groups>[^ ]+))");
-		regexList.put("tags", "(?:tags:(?<tags>[^ ]+))");
+		regexList.put("groups", "(?:groups: *\\((?<groups>[^)]+)\\))");
+		regexList.put("tags", "(?:tags: *\\((?<tags>[^)]+)\\))");
 	}
 
 	public static KeywordLogic get() {
@@ -36,7 +36,7 @@ public class KeywordLogic {
 		if (!matcher.find()) {
 			return null;
 		}
-		return  matcher.group(key);
+		return  matcher.group(key).replaceAll(", *", ",");
 	}
 
 	/**
