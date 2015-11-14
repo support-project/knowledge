@@ -193,6 +193,11 @@
 								<i class="fa fa-male"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.myknowledge") %>
 							</a>
 						</li>
+						<li>
+							<a href="<%= request.getContextPath() %>/protect.stock/mylist" >
+								<i class="fa fa-star-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.mystock") %>
+							</a>
+						</li>
 						
 						<li class="divider"></li>
 						<li id="tabLogout">

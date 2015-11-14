@@ -23,6 +23,11 @@ public class StockKnowledgesEntity extends GenStockKnowledgesEntity {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * ナレッジのタイトル
+	 */
+	private String title;
+	
+	/**
 	 * インスタンス取得
 	 * AOPに対応
 	 * @return インスタンス
@@ -46,6 +51,20 @@ public class StockKnowledgesEntity extends GenStockKnowledgesEntity {
 
 	public StockKnowledgesEntity(Long knowledgeId, Long stockId) {
 		super( knowledgeId,  stockId);
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }
