@@ -27,6 +27,7 @@ import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.DiffLogic;
+import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KeywordLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
@@ -294,19 +295,27 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			previous = 0;
 		}
 		
-		// タグの情報を取得
-		if (super.getLoginedUser() != null && super.getLoginedUser().isAdmin()) {
+		// タグとグループの情報を取得
+		if (loginedUser != null && loginedUser.isAdmin()) {
 			// 管理者であれば、ナレッジの件数は、参照権限を考慮していない
 	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, PAGE_LIMIT);
 			setAttribute("tags", tags);
+
+			List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, PAGE_LIMIT);
+			setAttribute("groups", groups);
 		} else {
 			TagLogic tagLogic = TagLogic.get();
 			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, PAGE_LIMIT);
 			setAttribute("tags", tags);
-		}
-		LOG.trace("タグ取得完了");
 
-		
+			if (loginedUser != null) {
+				GroupLogic groupLogic = GroupLogic.get();
+				List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, PAGE_LIMIT);
+				setAttribute("groups", groups);
+			}
+		}
+		LOG.trace("タグ、グループ取得完了");
+
 		// History表示
 		// TODO 履歴表示を毎回取得するのはイマイチ。いったんセッションに保存しておくのが良いかも
 		Cookie[] cookies = getRequest().getCookies();
