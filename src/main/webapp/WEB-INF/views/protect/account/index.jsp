@@ -65,13 +65,13 @@
 		<form action="<%= request.getContextPath()%>/protect.account/update" method="post" role="form">
 <% if(jspUtil.is(1, "authLdap")) { %>
 			<div class="form-group">
-				<label for="userKey">User ID</label>
-				<input type="text" class="form-control" name="userKey" id="userKey" placeholder="User ID"
+				<label for="userKey"><%= jspUtil.label("knowledge.auth.label.id") %></label>
+				<input type="text" class="form-control" name="userKey" id="userKey" placeholder="<%= jspUtil.label("knowledge.auth.label.id") %>"
 					value="<%= jspUtil.out("userKey") %>" readonly="readonly" />
 			</div>
 			<div class="form-group">
-				<label for="userKey">メールアドレス(ナレッジの更新通知などの送付先です)</label>
-				<input type="text" class="form-control" name="mailAddress" id="mailAddress" placeholder="Mail Address"
+				<label for="userKey"><%= jspUtil.label("knowledge.auth.label.mail") %><%= jspUtil.label("knowledge.account.info.mail") %></label>
+				<input type="text" class="form-control" name="mailAddress" id="mailAddress" placeholder="<%= jspUtil.label("knowledge.auth.label.mail") %>"
 					value="<%= jspUtil.out("mailAddress") %>" readonly="readonly" />
 			</div>
 			<div class="form-group">
