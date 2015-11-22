@@ -111,6 +111,7 @@ public class MarkdownLogic {
 
 		Options options = new Options();
 		options.setBreaks(true);
+		options.setLinkTargetBlank(true);
 
 		String html = Marked.marked(markdown, options);
 		result.setHtml(html);
