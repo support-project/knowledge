@@ -93,41 +93,39 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
 						</a>
 					</div>
-					
 <%-- 公開区分やイイネ件数など --%>
 					<p>
-						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag", 
-								jspUtil.label("label.public.view")) %>
-						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", 
-								jspUtil.label("label.private.view")) %>
-								
-						<% if(jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag")) { %>
-							<button class="btn btn-link" onclick="viewProtect(<%= jspUtil.out("knowledgeId") %>);">
-								<%= jspUtil.label("label.protect.view") %>
-							</button>
-							
-						<% } %>
-						
 						<a class="btn btn-link" href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
 							<i class="fa fa-thumbs-o-up"></i>&nbsp;
 							× <span id="like_count"><%= jspUtil.out("like_count") %></span>
 						</a>
-						
 						<a class="btn btn-link" href="#comments" id="commentsLink">
 							<i class="fa fa-comments-o"></i>&nbsp;
 							× <%= jspUtil.out("comments.size()") %>
 						</a>
-					</p>
-				
+						<span class="insert_info_text">
+						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag",
+								jspUtil.label("label.public.view")) %>
+						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag",
+								jspUtil.label("label.private.view")) %>
+						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag",
+								jspUtil.label("label.protect.view")) %>
+						</span>
+						&nbsp;
+						<c:if test="${targets.containsKey(knowledgeId)}">
+							<c:forEach var="target" items="${targets.get(knowledgeId)}">
+								<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
+							</c:forEach>
+							&nbsp;
+						</c:if>
 <%-- タグ --%>
-					<c:if test="${!empty tagNames}">
-					<p class="tags">
-					<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput"
-						value="<%= jspUtil.out("tagNames", JspUtil.ESCAPE_CLEAR) %>" disabled="disabled"/>
+						<c:if test="${!empty tagNames}">
+							<i class="fa fa-tags insert_info_text"></i>&nbsp;
+							<c:forEach var="tagName" items="${tagNames.split(',')}">
+							<span class="tag label label-info"><%= jspUtil.out("tagName") %></span>
+							</c:forEach>
+						</c:if>
 					</p>
-					</c:if>
-
-
 <%-- 操作ボタン --%>
 	<button class="btn btn-warning" onclick="addlike(<%= jspUtil.out("knowledgeId") %>);">
 		<i class="fa fa-thumbs-o-up"></i>&nbsp;

@@ -2,6 +2,7 @@ package org.support.project.knowledge.control.open;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
@@ -57,7 +58,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(KnowledgeControl.class);
 	
-	public static final int PAGE_LIMIT = 10;
+	public static final int PAGE_LIMIT = 50;
+	public static final int FAV_PAGE_LIMIT = 10;
 	public static final int COOKIE_AGE = 60 * 60 * 24 * 31;
 	
 	/**
@@ -160,6 +162,13 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		LoginedUser loginedUser = super.getLoginedUser();
 		boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
 		setAttribute("edit", edit);
+
+		ArrayList<Long> knowledgeIds = new ArrayList<Long>();
+		knowledgeIds.add(entity.getKnowledgeId());
+
+		TargetLogic targetLogic = TargetLogic.get();
+		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
+		setAttribute("targets", targets);
 		
 		return forward("view.jsp");
 	}
@@ -289,7 +298,16 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
 		setAttribute("knowledges", knowledges);
 		LOG.trace("検索終了");
-		
+
+		ArrayList<Long> knowledgeIds = new ArrayList<Long>();
+		for (KnowledgesEntity knowledgesEntity : knowledges) {
+			knowledgeIds.add(knowledgesEntity.getKnowledgeId());
+		}
+
+		TargetLogic targetLogic = TargetLogic.get();
+		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
+		setAttribute("targets", targets);
+
 		int previous = offset -1;
 		if (previous < 0) {
 			previous = 0;
@@ -298,19 +316,19 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		// タグとグループの情報を取得
 		if (loginedUser != null && loginedUser.isAdmin()) {
 			// 管理者であれば、ナレッジの件数は、参照権限を考慮していない
-	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, PAGE_LIMIT);
+	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
 			setAttribute("tags", tags);
 
-			List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, PAGE_LIMIT);
+			List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
 			setAttribute("groups", groups);
 		} else {
 			TagLogic tagLogic = TagLogic.get();
-			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, PAGE_LIMIT);
+			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
 			setAttribute("tags", tags);
 
 			if (loginedUser != null) {
 				GroupLogic groupLogic = GroupLogic.get();
-				List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, PAGE_LIMIT);
+				List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
 				setAttribute("groups", groups);
 			}
 		}

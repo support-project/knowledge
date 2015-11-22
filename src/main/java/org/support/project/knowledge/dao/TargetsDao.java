@@ -1,7 +1,9 @@
 package org.support.project.knowledge.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.support.project.common.util.StringJoinBuilder;
 import org.support.project.di.Container;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.dao.AbstractDao;
@@ -33,8 +35,6 @@ public class TargetsDao extends AbstractDao {
 		return executeQueryList(sql, LabelValue.class, keyword, keyword, limit, offset);
 	}
 
-	
-	
 	/**
 	 * ナレッジに指定されているアクセス可能なグループを取得
 	 * @param knowledgeId
@@ -43,6 +43,28 @@ public class TargetsDao extends AbstractDao {
 	public List<GroupsEntity> selectGroupsOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectGroupsOnKnowledgeId.sql");
 		return executeQueryList(sql, GroupsEntity.class, knowledgeId);
+	}
+
+	/**
+	 * ナレッジに指定されているアクセス可能なグループを取得
+	 * ナレッジ一覧に用いる
+	 *
+	 * @param knowledgeIds
+	 * @return
+	 */
+	public List<GroupsEntity> selectGroupsOnKnowledgeIds(ArrayList<Long> knowledgeIds) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectGroupsOnKnowledgeIds.sql");
+
+		StringJoinBuilder builder = new StringJoinBuilder();
+		List<Long> params = new ArrayList<>();
+
+		for (Long knowledgeId : knowledgeIds) {
+			builder.append("?");
+			params.add(knowledgeId);
+		}
+
+		sql = sql.replace("${knowledgeIds}", builder.join(", "));
+		return executeQueryList(sql, GroupsEntity.class, params.toArray(new Long[0]));
 	}
 
 	/**
@@ -55,6 +77,28 @@ public class TargetsDao extends AbstractDao {
 		return executeQueryList(sql, UsersEntity.class, knowledgeId);
 	}
 
+	/**
+	 * ナレッジに指定されているアクセス可能なユーザを取得
+	 * ナレッジ一覧に用いる
+	 *
+	 * @param knowledgeIds
+	 * @return
+	 */
+	public List<UsersEntity> selectUsersOnKnowledgeIds(ArrayList<Long> knowledgeIds) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectUsersOnKnowledgeIds.sql");
+
+		StringJoinBuilder builder = new StringJoinBuilder();
+		List<Long> params = new ArrayList<>();
+
+		for (Long knowledgeId : knowledgeIds) {
+			builder.append("?");
+			params.add(knowledgeId);
+		}
+
+		sql = sql.replace("${knowledgeIds}", builder.join(", "));
+		return executeQueryList(sql, UsersEntity.class, params.toArray(new Long[0]));
+	}
+
 	public List<GroupsEntity> selectEditorGroupsOnKnowledgeId(Long knowledgeId) {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectEditorGroupsOnKnowledgeId.sql");
 		return executeQueryList(sql, GroupsEntity.class, knowledgeId);
@@ -64,6 +108,4 @@ public class TargetsDao extends AbstractDao {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectEditorUsersOnKnowledgeId.sql");
 		return executeQueryList(sql, UsersEntity.class, knowledgeId);
 	}
-
-	
 }

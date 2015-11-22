@@ -1,7 +1,9 @@
 package org.support.project.knowledge.logic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -107,6 +109,50 @@ public class TargetLogic {
 		}
 		return results;
 	}
+
+	/**
+	 * ナレッジに指定されている公開先を取得
+	 * ナレッジ一覧に用いる
+	 *
+	 * @param knowledgeIds
+	 * @param loginedUser
+	 * @return
+	 */
+	public Map<Long, ArrayList<LabelValue>> selectTargetsOnKnowledgeIds(ArrayList<Long> knowledgeIds, LoginedUser loginedUser) {
+		Map<Long, ArrayList<LabelValue>> results = new HashMap<Long, ArrayList<LabelValue>>();
+		if (loginedUser == null || knowledgeIds.isEmpty()) {
+			return results;
+		}
+
+		TargetsDao targetsDao = TargetsDao.get();
+
+		for (Long knowledgeId : knowledgeIds) {
+			results.put(knowledgeId, new ArrayList<LabelValue>());
+		}
+
+		List<GroupsEntity> groups = targetsDao.selectGroupsOnKnowledgeIds(knowledgeIds);
+		for (GroupsEntity groupsEntity : groups) {
+			LabelValue labelValue = new LabelValue();
+			labelValue.setLabel(NAME_PREFIX_GROUP + groupsEntity.getGroupName());
+			labelValue.setValue(ID_PREFIX_GROUP + groupsEntity.getGroupId());
+			results.get(groupsEntity.getKnowledgeId()).add(labelValue);
+		}
+
+		List<UsersEntity> users = targetsDao.selectUsersOnKnowledgeIds(knowledgeIds);
+		for (UsersEntity usersEntity : users) {
+			// 自分の場合はスキップ
+			if (usersEntity.getUserId().intValue() == loginedUser.getUserId().intValue()) {
+				continue;
+			}
+			LabelValue labelValue = new LabelValue();
+			labelValue.setLabel(NAME_PREFIX_USER + usersEntity.getUserName());
+			labelValue.setValue(ID_PREFIX_USER + usersEntity.getUserId());
+			results.get(usersEntity.getKnowledgeId()).add(labelValue);
+		}
+
+		return results;
+	}
+
 	
 	/**
 	 * ナレッジに指定されている編集可能なグループを取得

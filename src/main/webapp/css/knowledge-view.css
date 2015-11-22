@@ -30,6 +30,10 @@
 	border-bottom: 1px solid #cccccc;
 }
 
+.insert_info_text {
+	color: #337ab7;
+}
+
 .downloadfile {
 	margin-top: 5px;
 }
