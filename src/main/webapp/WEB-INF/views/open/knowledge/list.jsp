@@ -130,18 +130,14 @@
 						--%>
 						
 						</h4>
-						<c:if test="${!empty knowledge.tagNames}">
-						<p class="tags">
-						<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput" value="<%= jspUtil.out("knowledge.tagNames") %>" disabled="disabled"/>
-						</p>
-						</c:if>
-						
 						<p class="insert_info">
 						<img src="<%= request.getContextPath()%>/images/loader.gif" 
 							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("knowledge.insertUser") %>" 
 							alt="icon" width="36" height="36" style="float:left"/>
 						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("knowledge.updateDatetime")%>
 						<br/>
+						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("knowledge.insertUserName") %>
+						&nbsp;&nbsp;&nbsp;
 						<i class="fa fa-thumbs-o-up" style="margin-left: 5px;"></i>&nbsp;× <span id="like_count"><%= jspUtil.out("knowledge.likeCount") %></span>
 						&nbsp;&nbsp;&nbsp;
 						<i class="fa fa-comments-o"></i>&nbsp;× <%= jspUtil.out("knowledge.commentCount") %>
@@ -152,15 +148,25 @@
 								jspUtil.label("label.private.view")) %>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "knowledge.publicFlag", 
 								jspUtil.label("label.protect.view")) %>
-						<br/>
-						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("knowledge.insertUserName") %>
+						<c:if test="${targets.containsKey(knowledge.knowledgeId)}">
+							<c:forEach var="target" items="${ targets.get(knowledge.knowledgeId) }">
+								<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
+							</c:forEach>
+						</c:if>
+						&nbsp;&nbsp;&nbsp;
+						<c:if test="${!empty knowledge.tagNames}">
+							<i class="fa fa-tags"></i>
+							<c:forEach var="tagName" items="${knowledge.tagNames.split(',')}">
+								<span class="tag label label-info"><%= jspUtil.out("tagName") %></span>
+							</c:forEach>
+						</c:if>
 						</p>
-						<p style="clear:left;">
-						
+						<c:if test="${!empty keyword}">
 						<p style="word-break:break-all" class="content">
 						<%-- <c:out value="${knowledge.content}"></c:out>--%>
 						<%= jspUtil.out("knowledge.content", JspUtil.ESCAPE_CLEAR, 300) %>
 						</p>
+						</c:if>
 					</div>
 				</div>
 			</c:forEach>
