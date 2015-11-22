@@ -59,6 +59,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	private static Log LOG = LogFactory.getLog(KnowledgeControl.class);
 	
 	public static final int PAGE_LIMIT = 50;
+	public static final int FAV_PAGE_LIMIT = 10;
 	public static final int COOKIE_AGE = 60 * 60 * 24 * 31;
 	
 	/**
@@ -315,19 +316,19 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		// タグとグループの情報を取得
 		if (loginedUser != null && loginedUser.isAdmin()) {
 			// 管理者であれば、ナレッジの件数は、参照権限を考慮していない
-	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, PAGE_LIMIT);
+	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
 			setAttribute("tags", tags);
 
-			List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, PAGE_LIMIT);
+			List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
 			setAttribute("groups", groups);
 		} else {
 			TagLogic tagLogic = TagLogic.get();
-			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, PAGE_LIMIT);
+			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
 			setAttribute("tags", tags);
 
 			if (loginedUser != null) {
 				GroupLogic groupLogic = GroupLogic.get();
-				List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, PAGE_LIMIT);
+				List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
 				setAttribute("groups", groups);
 			}
 		}
