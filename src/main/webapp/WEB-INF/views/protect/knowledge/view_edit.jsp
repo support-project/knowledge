@@ -95,6 +95,10 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		<input type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="<%= jspUtil.out("title") %>" />
 	</div>
 	
+	<!-- items -->
+	<div class="form-group" id="template_items">
+	</div>
+	
 	<!-- contents -->
 	<div class="form-group">
 		<label for="input_content"><%= jspUtil.label("knowledge.add.label.content") %>
@@ -109,12 +113,6 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
 		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
 	</div>
-	
-	
-	<!-- items -->
-	<div class="form-group" id="template_items">
-	</div>
-	
 	
 	<!-- upload files -->
 	<div class="form-group">
@@ -177,9 +175,9 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 	</div>
 	
 	<div class="form-group" id="grops_area" <%= jspUtil.isnot(KnowledgeLogic.PUBLIC_FLAG_PROTECT, "publicFlag", "style=\"display: none;\"") %>>
-		<label for="input_groups"><%= jspUtil.label("knowledge.add.label.groups") %></label>
+		<label for="input_groups"><%= jspUtil.label("knowledge.add.label.destination") %></label>
 		<a id="groupselect" class="btn btn-primary btn-xs" data-toggle="modal" href="#groupSelectModal">
-			<i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.groups.select") %>
+			<i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.destination.select") %>
 		</a>
 		<p>
 			<input type="hidden" name="groups" id="groups" value="">
@@ -302,7 +300,7 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
 				<span class="sr-only"><%= jspUtil.label("label.close") %></span></button>
 				<h4 class="modal-title" id="myModalLabel">
-					<%= jspUtil.label("knowledge.add.label.groups.select") %>
+					<%= jspUtil.label("knowledge.add.label.destination.select") %>
 					<span style="font-size: 14px;" id="groupPage"></span>
 				</h4>
 			</div>

@@ -114,7 +114,7 @@ public class GroupLogic {
 		GroupsDao groupsDao = GroupsDao.get();
 		if (loginedUser.isAdmin()) {
 			if (StringUtils.isEmpty(keyword)) {
-				list = groupsDao.selectAll(offset, limit);
+				list = groupsDao.selectGroupsWithCount(offset, limit);
 			} else {
 				list = groupsDao.selectOnKeyword(keyword, loginedUser, offset, limit);
 			}
@@ -150,7 +150,27 @@ public class GroupLogic {
 		
 		return list;
 	}
-	
+
+	/**
+	 * 所属グループをキーワードで検索する
+	 *
+	 * @param keyword
+	 * @param loginedUser
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	public List<GroupsEntity> selectMyGroupOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {
+		GroupsDao groupsDao = GroupsDao.get();
+		List<GroupsEntity> list = groupsDao.selectMyGroupOnKeyword(keyword, loginedUser, offset, limit);
+
+		for (GroupsEntity groupsEntity : list) {
+			setGroupStatus(groupsEntity, loginedUser);
+		}
+
+		return list;
+	}
+
 	/**
 	 * 自分が指定のグループの所属状態がどうなっているかセットする
 	 * @param groupsEntity
@@ -172,10 +192,15 @@ public class GroupLogic {
 	 */
 	public GroupsEntity getGroup(Integer groupId, LoginedUser loginedUser) {
 		GroupsDao groupsDao = GroupsDao.get();
+		GroupsEntity group;
 		if (loginedUser.isAdmin()) {
-			return groupsDao.selectOnKey(groupId);
+			group = groupsDao.selectOnKey(groupId);
+		} else {
+			group = groupsDao.selectAccessAbleGroup(groupId, loginedUser);
 		}
-		return groupsDao.selectAccessAbleGroup(groupId, loginedUser);
+
+		setGroupStatus(group, loginedUser);
+		return group;
 	}
 
 	/**

@@ -9,7 +9,7 @@
 これ通る&#xff1f;</p>
 <p></p><p>通らない</p>
 <ul><li>PegDownProcessorだけだと、そのまま出力する&#xff08;XSSでやばそう&#xff09;</li><li>サニタイジングする</li></ul>
-<pre><code class="lang-ruby:qiita.rb">puts &#39;The best way to log and share programmers knowledge.&#39;
+<pre><code>puts &#39;The best way to log and share programmers knowledge.&#39;
 </code></pre>
 <pre><code class="lang-html">&lt;button&gt;hogehoge&lt;/button&gt;
 </code></pre>

@@ -23,6 +23,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/tagselect.js") %>"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/groupselect.js") %>"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/search.js") %>"></script>
 
 <script>
@@ -31,6 +32,10 @@ var _TAGS = [];
 _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 </c:forEach>
 
+var _GROUPS = [];
+<c:forEach var="groupitem" items="${groupitems}" varStatus="status">
+_GROUPS.push('<%= jspUtil.out("groupitem.groupName") %>');
+</c:forEach>
 </script>
 
 </c:param>
@@ -47,7 +52,7 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 			<%= jspUtil.label("knowledge.search.keyword") %>
 			</label>
 			<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.search.placeholder") %>"
-				name="keyword" id="searchkeyword" value="<%=jspUtil.out("keyword")%>" />
+				name="keyword" id="searchkeyword" value="<%=jspUtil.out("searchKeyword")%>" />
 		</div>
 
 		<div class="form-group">
@@ -62,7 +67,20 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 				placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="<%= jspUtil.out("tagNames") %>" />
 			</p>
 		</div>
-
+		<% if (jspUtil.logined()) { %>
+		<div class="form-group">
+			<label for="input_group">
+			<%= jspUtil.label("knowledge.search.groups") %>
+			<span class="helpMarkdownLabel">
+			<a data-toggle="modal" data-target="#groupSelectModal"><%= jspUtil.label("label.search.groups") %></a>
+			</span>
+			</label>
+			<p class="groups">
+			<input type="text" class="form-control" name="groupNames" id="input_groups" data-role="groups input"
+				placeholder="<%= jspUtil.label("knowledge.add.label.groups") %>" value="<%= jspUtil.out("groupNames") %>" />
+			</p>
+		</div>
+		<% } %>
 		<button class="btn btn-primary" type="submit">
 			<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("label.search") %>
 		</button>
@@ -75,7 +93,7 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 
 
 	<jsp:include page="../tag/dialog.jsp"></jsp:include>
-
+	<jsp:include page="../../protect/group/dialog.jsp"></jsp:include>
 
 </c:param>
 

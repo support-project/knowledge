@@ -2,6 +2,7 @@ package org.support.project.knowledge.control.open;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
@@ -27,10 +28,13 @@ import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.DiffLogic;
+import org.support.project.knowledge.logic.GroupLogic;
+import org.support.project.knowledge.logic.KeywordLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.MarkDown;
@@ -41,7 +45,9 @@ import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.UsersDao;
+import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
@@ -52,7 +58,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(KnowledgeControl.class);
 	
-	public static final int PAGE_LIMIT = 10;
+	public static final int PAGE_LIMIT = 50;
+	public static final int FAV_PAGE_LIMIT = 10;
 	public static final int COOKIE_AGE = 60 * 60 * 24 * 31;
 	
 	/**
@@ -155,6 +162,13 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		LoginedUser loginedUser = super.getLoginedUser();
 		boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
 		setAttribute("edit", edit);
+
+		ArrayList<Long> knowledgeIds = new ArrayList<Long>();
+		knowledgeIds.add(entity.getKnowledgeId());
+
+		TargetLogic targetLogic = TargetLogic.get();
+		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
+		setAttribute("targets", targets);
 		
 		return forward("view.jsp");
 	}
@@ -169,17 +183,22 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		LOG.trace("Call list");
 		Integer offset = super.getPathInteger(0);
 		setAttribute("offset", offset);
+		String keyword = getParam("keyword");
+		setAttribute("searchKeyword", keyword);
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
-		
+
 		TagsDao tagsDao = TagsDao.get();
+		GroupsDao groupsDao = GroupsDao.get();
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+		KeywordLogic keywordLogic = KeywordLogic.get();
 		
 		LoginedUser loginedUser = super.getLoginedUser();
-		String keyword = getParam("keyword");
 		String tag = getParam("tag");
+		String group = getParam("group");
 		String user = getParam("user");
 		String tagNames = getParam("tagNames");
+		String groupNames = getParam("groupNames");
 		
 		List<KnowledgesEntity> knowledges = new ArrayList<>();
 		if (StringUtils.isInteger(tag)) {
@@ -188,6 +207,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
 			setAttribute("selectedTag", tagsEntity);
+		} else if (StringUtils.isInteger(group)) {
+			//グループを選択している
+			LOG.trace("show on Group");
+			knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+			GroupsEntity groupsEntity = groupsDao.selectOnKey(new Integer(group));
+			setAttribute("selectedGroup", groupsEntity);
 		} else if (StringUtils.isNotEmpty(user) && StringUtils.isInteger(user)) {
 			// ユーザを選択している
 			LOG.trace("show on User");
@@ -198,9 +223,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				usersEntity.setPassword("");
 				setAttribute("selectedUser", usersEntity);
 			}
-		} else if (StringUtils.isNotEmpty(tagNames)) {
+		} else if (StringUtils.isNotEmpty(tagNames) || StringUtils.isNotEmpty(groupNames)) {
 			// タグとキーワードで検索
-			LOG.trace("show on Tags and keyword");
+			LOG.trace("show on Tags and Groups and keyword");
 			String[] taglist = tagNames.split(",");
 			List<TagsEntity> tags = new ArrayList<>();
 			for (String string : taglist) {
@@ -213,34 +238,102 @@ public class KnowledgeControl extends KnowledgeControlBase {
 					tags.add(tagsEntity);
 				}
 			}
+
+			List<GroupsEntity> groups = new ArrayList<>();
+			if (loginedUser != null) {
+				String[] grouplist = groupNames.split(",");
+				for (String string : grouplist) {
+					String groupname = string.trim();
+					if (groupname.startsWith(" ") && groupname.length() > " ".length()) {
+						groupname = groupname.substring(" ".length());
+					}
+					GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupname);
+					if (groupsEntity != null) {
+						groups.add(groupsEntity);
+					}
+				}
+			}
+
 			setAttribute("searchTags", tags);
-			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+			setAttribute("searchGroups", groups);
+
+			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 		} else {
 			// その他(キーワード検索)
 			LOG.trace("search");
-			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+			List<GroupsEntity> groups = null;
+			List<TagsEntity> tags = null;
+
+			if (loginedUser != null) {
+				String groupKeyword = keywordLogic.parseQuery("groups", keyword);
+				if (groupKeyword != null) {
+					groups = new ArrayList<GroupsEntity>();
+					for (String groupName : groupKeyword.split(",")) {
+						GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupName);
+						if (groupsEntity != null) {
+							groups.add(groupsEntity);
+						}
+					}
+					setAttribute("searchGroups", groups);
+				}
+			}
+
+			String tagKeyword = keywordLogic.parseQuery("tags", keyword);
+			if (tagKeyword != null) {
+				tags = new ArrayList<TagsEntity>();
+				for (String tagName : tagKeyword.split(",")) {
+					TagsEntity tagsEntity = tagsDao.selectOnTagName(tagName);
+					if (tagsEntity != null) {
+						tags.add(tagsEntity);
+					}
+				}
+				setAttribute("searchTags", tags);
+			}
+
+			keyword = keywordLogic.parseKeyword(keyword);
+
+			setAttribute("keyword", keyword);
+			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 		}
+
 		setAttribute("knowledges", knowledges);
 		LOG.trace("検索終了");
-		
+
+		ArrayList<Long> knowledgeIds = new ArrayList<Long>();
+		for (KnowledgesEntity knowledgesEntity : knowledges) {
+			knowledgeIds.add(knowledgesEntity.getKnowledgeId());
+		}
+
+		TargetLogic targetLogic = TargetLogic.get();
+		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
+		setAttribute("targets", targets);
+
 		int previous = offset -1;
 		if (previous < 0) {
 			previous = 0;
 		}
 		
-		// タグの情報を取得
-		if (super.getLoginedUser() != null && super.getLoginedUser().isAdmin()) {
+		// タグとグループの情報を取得
+		if (loginedUser != null && loginedUser.isAdmin()) {
 			// 管理者であれば、ナレッジの件数は、参照権限を考慮していない
-	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, PAGE_LIMIT);
+	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
 			setAttribute("tags", tags);
+
+			List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
+			setAttribute("groups", groups);
 		} else {
 			TagLogic tagLogic = TagLogic.get();
-			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, PAGE_LIMIT);
+			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
 			setAttribute("tags", tags);
-		}
-		LOG.trace("タグ取得完了");
 
-		
+			if (loginedUser != null) {
+				GroupLogic groupLogic = GroupLogic.get();
+				List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
+				setAttribute("groups", groups);
+			}
+		}
+		LOG.trace("タグ、グループ取得完了");
+
 		// History表示
 		// TODO 履歴表示を毎回取得するのはイマイチ。いったんセッションに保存しておくのが良いかも
 		Cookie[] cookies = getRequest().getCookies();
@@ -334,11 +427,30 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	 */
 	@Get
 	public Boundary search() {
+		KeywordLogic keywordLogic = KeywordLogic.get();
+		LoginedUser loginedUser = super.getLoginedUser();
+		List<GroupsEntity> groupitems = new ArrayList<GroupsEntity>();
 		List<TagsEntity> tagitems = TagsDao.get().selectAll();
 		setAttribute("tagitems", tagitems);
-
+		if (loginedUser != null) {
+			if (loginedUser.isAdmin()) {
+				groupitems = GroupsDao.get().selectAll();
+			} else {
+				groupitems = loginedUser.getGroups();
+			}
+		}
+		setAttribute("groupitems", groupitems);
 		// 共通処理呼の表示条件の保持の呼び出し
 		setViewParam();
+
+		// groups:やtags:などの検索クエリを分解してフォームに表示するために分解したデータをセットする
+		String keyword = getParam("keyword");
+		setAttribute("searchKeyword", keywordLogic.parseKeyword(keyword));
+		setAttribute("tagNames", keywordLogic.parseQuery("tags", keyword));
+		if (loginedUser != null) {
+			setAttribute("groupNames", keywordLogic.parseQuery("groups", keyword));
+		}
+
 		return forward("search.jsp");
 	}
 	
@@ -467,6 +579,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	public Boundary template() throws InvalidParamException {
 		Integer typeId = super.getParam("type_id", Integer.class);
 		TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(typeId);
+		if (template == null) {
+			//そのテンプレートは既に削除済みの場合、通常のナレッジのテンプレートで表示する（ナレッジのテンプレートは削除できないようにする）
+			typeId = TemplateMastersDao.TYPE_ID_KNOWLEDGE;
+			template = TemplateMastersDao.get().selectWithItems(typeId);
+		}
 		
 		String knowledgeId = super.getParam("knowledge_id");
 		if (StringUtils.isNotEmpty(knowledgeId) && StringUtils.isLong(knowledgeId)) {

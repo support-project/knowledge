@@ -13,6 +13,8 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.dao.TagsDao;
+import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.web.bean.LabelValue;
@@ -452,6 +454,33 @@ public class GroupControl extends Control {
 			aHeads.add(aHead);
 		}
 		return send(aHeads);
+	}
+
+	/**
+	 * 自身が所属してるグループ選択のための候補をJSONで取得
+	 *
+	 * @return
+	 * @throws InvalidParamException
+	 */
+	@Get
+	public Boundary json() throws InvalidParamException {
+		int limit = 10;
+		String keyword = super.getParam("keyword");
+		Integer offset = super.getPathInteger(0);
+		LoginedUser loginedUser = super.getLoginedUser();
+
+		List<GroupsEntity> groups = new ArrayList<GroupsEntity>();
+		if (loginedUser == null) {
+			return send(groups);
+		}
+
+		if (loginedUser.isAdmin()) {
+			groups = GroupLogic.get().selectOnKeyword(keyword, loginedUser, offset * limit, limit);
+		} else {
+			groups = GroupLogic.get().selectMyGroupOnKeyword(keyword, loginedUser, offset * limit, limit);
+		}
+
+		return send(groups);
 	}
 	
 	/**

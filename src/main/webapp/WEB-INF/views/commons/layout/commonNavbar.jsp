@@ -193,6 +193,11 @@
 								<i class="fa fa-male"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.myknowledge") %>
 							</a>
 						</li>
+						<li>
+							<a href="<%= request.getContextPath() %>/protect.stock/mylist" >
+								<i class="fa fa-star-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.mystock") %>
+							</a>
+						</li>
 						
 						<li class="divider"></li>
 						<li id="tabLogout">
@@ -223,8 +228,8 @@
 			<form class="nav navbar-nav navbar-form navbar-right" role="search"
 				action="<%= request.getContextPath() %><%= top %>">
 				<div class="input-group">
-					<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
-						name="keyword" id="keyword" value="<%= jspUtil.out("keyword") %>" />
+					<input type="text" class="form-control" style="width: 350px;" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
+						name="keyword" id="keyword" value="<%= jspUtil.out("searchKeyword") %>" />
 					<div class="input-group-btn">
 						<button class="btn btn-default" type="submit">
 							<i class="glyphicon glyphicon-search"></i>

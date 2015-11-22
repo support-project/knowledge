@@ -108,11 +108,15 @@ public class MarkdownLogic {
 	 */
 	private void markdownToHtmlOnMarkedJ(String markdown, MarkDown result) {
 		Date start = new Date();
-		
-		result.setMarkdown(markdown);
-		String html = Marked.marked(markdown);
+
+		Options options = new Options();
+		options.setBreaks(true);
+		options.setLinkTargetBlank(true);
+
+		String html = Marked.marked(markdown, options);
 		result.setHtml(html);
 		result.setParsed(true);
+		result.setMarkdown(markdown);
 
 		if (LOG.isDebugEnabled()) {
 			Date end = new Date();

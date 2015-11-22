@@ -1,0 +1,19 @@
+SELECT
+        STOCKS.*
+        ,CASE WHEN STOCK_KNOWLEDGES.KNOWLEDGE_ID IS NULL
+            THEN NULL
+            ELSE TRUE 
+         END AS STOCKED
+    FROM
+        STOCKS
+            LEFT OUTER JOIN STOCK_KNOWLEDGES
+                ON (
+                    STOCKS.STOCK_ID = STOCK_KNOWLEDGES.STOCK_ID
+                    AND STOCK_KNOWLEDGES.KNOWLEDGE_ID = ?
+                )
+    WHERE
+        STOCKS.INSERT_USER = ?
+        AND STOCKS.DELETE_FLAG = 0
+    ORDER BY
+        STOCKS.STOCK_ID DESC LIMIT ? OFFSET ?
+

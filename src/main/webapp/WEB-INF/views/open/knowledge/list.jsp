@@ -24,7 +24,7 @@
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.list.title") %> <span style="font-size: 14px">page[<%= jspUtil.getValue("offset", Integer.class) + 1 %>]</span></h4>
 
-	<c:if test="${!empty selectedTag || !empty selectedUser || !empty searchTags || !empty keyword}">
+	<c:if test="${!empty selectedTag || !empty selectedGroup || !empty selectedUser || !empty searchTags || !empty searchGroups || !empty keyword}">
 		<div class="row">
 			<div class="col-sm-12 selected_tag">
 			
@@ -35,6 +35,13 @@
 			</a>
 			</c:if>
 			
+			<c:if test="${!empty selectedGroup}">
+			<a class="text-primary"
+				href="<%= request.getContextPath() %>/open.knowledge/list?group=<%=jspUtil.out("selectedGroup.groupId") %>" >
+					<i class="fa fa-group"></i>&nbsp;<%=jspUtil.out("selectedGroup.groupName") %>
+			</a>
+			</c:if>
+
 			<c:if test="${!empty selectedUser}">
 			<a class="text-primary" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.out("selectedUser.userId") %>" >
@@ -47,6 +54,15 @@
 			<a class="text-primary" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%=jspUtil.out("searchTag.tagId") %>" >
 					<i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("searchTag.tagName") %>
+			</a>
+			</c:forEach>
+			</c:if>
+
+			<c:if test="${!empty searchGroups}">
+			<c:forEach var="searchGroup" items="${searchGroups}" varStatus="status">
+			<a class="text-primary" 
+				href="<%= request.getContextPath() %>/open.knowledge/list?group=<%=jspUtil.out("searchGroup.groupId") %>" >
+					<i class="fa fa-group"></i>&nbsp;<%=jspUtil.out("searchGroup.groupName") %>
 			</a>
 			</c:forEach>
 			</c:if>
@@ -114,18 +130,14 @@
 						--%>
 						
 						</h4>
-						<c:if test="${!empty knowledge.tagNames}">
-						<p class="tags">
-						<input type="text" name="tags" id="input_tags" placeholder="" data-role="tagsinput" value="<%= jspUtil.out("knowledge.tagNames") %>" disabled="disabled"/>
-						</p>
-						</c:if>
-						
 						<p class="insert_info">
 						<img src="<%= request.getContextPath()%>/images/loader.gif" 
 							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("knowledge.insertUser") %>" 
 							alt="icon" width="36" height="36" style="float:left"/>
 						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("knowledge.updateDatetime")%>
 						<br/>
+						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("knowledge.insertUserName") %>
+						&nbsp;&nbsp;&nbsp;
 						<i class="fa fa-thumbs-o-up" style="margin-left: 5px;"></i>&nbsp;× <span id="like_count"><%= jspUtil.out("knowledge.likeCount") %></span>
 						&nbsp;&nbsp;&nbsp;
 						<i class="fa fa-comments-o"></i>&nbsp;× <%= jspUtil.out("knowledge.commentCount") %>
@@ -136,15 +148,25 @@
 								jspUtil.label("label.private.view")) %>
 						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "knowledge.publicFlag", 
 								jspUtil.label("label.protect.view")) %>
-						<br/>
-						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("knowledge.insertUserName") %>
+						<c:if test="${targets.containsKey(knowledge.knowledgeId)}">
+							<c:forEach var="target" items="${ targets.get(knowledge.knowledgeId) }">
+								<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
+							</c:forEach>
+						</c:if>
+						&nbsp;&nbsp;&nbsp;
+						<c:if test="${!empty knowledge.tagNames}">
+							<i class="fa fa-tags"></i>
+							<c:forEach var="tagName" items="${knowledge.tagNames.split(',')}">
+								<span class="tag label label-info"><%= jspUtil.out("tagName") %></span>
+							</c:forEach>
+						</c:if>
 						</p>
-						<p style="clear:left;">
-						
+						<c:if test="${!empty keyword}">
 						<p style="word-break:break-all" class="content">
 						<%-- <c:out value="${knowledge.content}"></c:out>--%>
 						<%= jspUtil.out("knowledge.content", JspUtil.ESCAPE_CLEAR, 300) %>
 						</p>
+						</c:if>
 					</div>
 				</div>
 			</c:forEach>
@@ -177,18 +199,37 @@
 			
 			
 			<h5>- <i class="fa fa-group"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.group") %> - </h5>
+			<c:choose>
+			<c:when test="${groups != null}">
 			<div class="list-group">
-				<a class="list-group-item " href="<%= request.getContextPath() %>/protect.group/mygroups" style="cursor: pointer;">
-					<i class="fa fa-users"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.group.list") %>
+				<c:forEach var="group_item" items="${groups}">
+				<a class="list-group-item"
+					href="<%= request.getContextPath() %>/open.knowledge/list?group=<%= jspUtil.out("group_item.groupId") %>" >
+					<span class="badge"><%= jspUtil.out("group_item.groupKnowledgeCount") %></span>
+					<i class="fa fa-group"></i>&nbsp;<%= jspUtil.out("group_item.groupName") %>
 				</a>
+				</c:forEach>
 			</div>
+			<div style="width: 100%;text-align: right;">
+				<a href="<%= request.getContextPath() %>/protect.group/mygroups">
+					<i class="fa fa-group"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.group.list") %>
+				</a>&nbsp;&nbsp;&nbsp;
+			</div>
+	        </c:when>
+	        <c:otherwise>
+			<div class="list-group">
+                <a class="list-group-item " href="<%= request.getContextPath() %>/protect.group/mygroups" style="cursor: pointer;">
+	                <i class="fa fa-users"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.group.list") %>
+	            </a>
+	        </div>
+			</c:otherwise>
+			</c:choose>
 			<br/>
 			
 			<h5>- <i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("knowledge.list.popular.tags") %> - </h5>
-			
 			<div class="list-group">
 			<c:forEach var="tag_item" items="${tags}">
-				<a class="list-group-item " 
+				<a class="list-group-item"
 					href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%= jspUtil.out("tag_item.tagId") %>" >
 					<span class="badge"><%= jspUtil.out("tag_item.knowledgeCount") %></span>
 					<i class="fa fa-tag"></i>&nbsp;<%= jspUtil.out("tag_item.tagName") %>

@@ -60,6 +60,8 @@ public class GenTemplateItemsEntity implements Serializable {
 	private String itemName;
 	/** 項目の種類 */
 	private Integer itemType;
+	/** 説明 */
+	private String description;
 	/** 登録ユーザ */
 	private Integer insertUser;
 	/** 登録日時 */
@@ -128,6 +130,21 @@ public class GenTemplateItemsEntity implements Serializable {
 	 */
 	public GenTemplateItemsEntity setItemType(Integer itemType) {
 		this.itemType = itemType;
+		return this;
+	}
+
+	/**
+	 * 説明 を取得する
+	 */
+	public String getDescription() {
+		return this.description;
+	}
+	/**
+	 * 説明 を設定する
+	 * @param description 説明
+	 */
+	public GenTemplateItemsEntity setDescription(String description) {
+		this.description = description;
 		return this;
 	}
 
@@ -257,6 +274,7 @@ public class GenTemplateItemsEntity implements Serializable {
 		builder.append("typeId = ").append(typeId).append("\n");
 		builder.append("itemName = ").append(itemName).append("\n");
 		builder.append("itemType = ").append(itemType).append("\n");
+		builder.append("description = ").append(description).append("\n");
 		builder.append("insertUser = ").append(insertUser).append("\n");
 		builder.append("insertDatetime = ").append(insertDatetime).append("\n");
 		builder.append("updateUser = ").append(updateUser).append("\n");
@@ -314,6 +332,11 @@ public class GenTemplateItemsEntity implements Serializable {
 		}
 		validator = ValidatorFactory.getInstance(Validator.INTEGER);
 		error = validator.validate(this.itemType, convLabelName("Item Type"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+		error = validator.validate(this.description, convLabelName("Description"), 1024);
 		if (error != null) {
 			errors.add(error);
 		}
@@ -378,6 +401,11 @@ public class GenTemplateItemsEntity implements Serializable {
 		}
 		validator = ValidatorFactory.getInstance(Validator.INTEGER);
 		error = validator.validate(values.get("itemType"), convLabelName("Item Type"));
+		if (error != null) {
+			errors.add(error);
+		}
+		validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+		error = validator.validate(values.get("description"), convLabelName("Description"), 1024);
 		if (error != null) {
 			errors.add(error);
 		}

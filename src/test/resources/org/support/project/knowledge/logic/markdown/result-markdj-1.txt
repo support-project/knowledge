@@ -4,12 +4,11 @@
 <h2 id="-">見出し&#xff12;</h2>
 <ul><li>Javascriptで簡単にパースしていたけど、Java側で実行した方が制御しやすいね</li><li>危険な</li></ul>
 <h3 id="script">Script</h3>
-<p>
-これ通る&#xff1f;</p>
+<p><br />これ通る&#xff1f;</p>
 <p>通らない</p>
 
 <ul><li>PegDownProcessorだけだと、そのまま出力する&#xff08;XSSでやばそう&#xff09;</li><li>サニタイジングする</li></ul>
-<pre><code class="lang-ruby:qiita.rb">puts &#39;The best way to log and share programmers knowledge.&#39;
+<pre><code>puts &#39;The best way to log and share programmers knowledge.&#39;
 </code></pre>
 <pre><code class="lang-html">&lt;button&gt;hogehoge&lt;/button&gt;
 </code></pre>

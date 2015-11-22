@@ -1,10 +1,5 @@
 package org.support.project.knowledge.entity;
 
-import java.util.List;
-import java.util.Map;
-import java.sql.Timestamp;
-
-import org.support.project.common.bean.ValidateError;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -16,10 +11,18 @@ import org.support.project.knowledge.entity.gen.GenStocksEntity;
  */
 @DI(instance=Instance.Prototype)
 public class StocksEntity extends GenStocksEntity {
-
+	
+	public static final int STOCKTYPE_PRIVATE = 0;
+	public static final int STOCKTYPE_PUBLIC = 1;
+	
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * ストックに登録されたナレッジの件数
+	 */
+	private Integer knowledgeCount;
+	
 	/**
 	 * インスタンス取得
 	 * AOPに対応
@@ -43,6 +46,20 @@ public class StocksEntity extends GenStocksEntity {
 
 	public StocksEntity(Long stockId) {
 		super(stockId);
+	}
+
+	/**
+	 * @return the knowledgeCount
+	 */
+	public Integer getKnowledgeCount() {
+		return knowledgeCount;
+	}
+
+	/**
+	 * @param knowledgeCount the knowledgeCount to set
+	 */
+	public void setKnowledgeCount(Integer knowledgeCount) {
+		this.knowledgeCount = knowledgeCount;
 	}
 
 }

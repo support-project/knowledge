@@ -306,24 +306,172 @@ var changeTemplate = function() {
 };
 
 var addTemplateItem = function(template) {
-	var templateTag = '<i class="fa ' + template.typeIcon + '"></i>&nbsp;' + template.typeName;
+	var templateTag = '<h5><i class="fa ' + template.typeIcon + '"></i>&nbsp;' + template.typeName + '</h5>';
 	$('#template').html(templateTag);
 	
 	if (template.items && template.items.length > 0) {
 		for (var i = 0; i < template.items.length; i++) {
 			var item = template.items[i];
 			console.log(item);
-			var tag = item.itemName + ': ';
-			var url = '';
-			if (item.itemValue) {
-				url = item.itemValue;
+			var tag = '';
+			if (i > 0) {
+				tag += '<br/>';
+			}
+			tag += item.itemName + ': ';
+			
+			// Bookmrkの場合は、項目はURLのみ
+			if (template.typeId == -99) {
+				var url = '';
+				if (item.itemValue) {
+					url = item.itemValue;
+				}
+				tag += '<a href="' + url + '" target="_blank" >' + url + '</a>';
+			} else {
+				if (item.itemType === 1) {
+					// textarea
+					tag += item.itemValue;
+				} else if (item.itemType === 10) {
+					// Radio
+					if (item.choices) {
+						tag += '<br/>';
+						for (var j = 0; j < item.choices.length; j++) {
+							var choice = item.choices[j];
+							tag += '<label class="radio-inline"><input type="radio" class="" name="item_' + item.itemNo;
+							tag += '" value="' + choice.choiceValue + '" ';
+							if (choice.choiceValue == item.itemValue) {
+								tag += 'checked="checked" ';
+							}
+							tag += ' disable="disable" /> &nbsp;' + choice.choiceLabel + '</label><br/>';
+						}
+					}
+				} else if (item.itemType === 11) {
+					// Checkbox
+					if (item.choices) {
+						tag += '<br/>';
+						for (var j = 0; j < item.choices.length; j++) {
+							var choice = item.choices[j];
+							tag += '<label class="checkbox-inline"><input type="checkbox" class="" name="item_' + item.itemNo;
+							tag += '" value="' + choice.choiceValue + '" ';
+							if (item.itemValue) {
+								var vals = item.itemValue.split(',');
+								for (var k = 0; k < vals.length; k++) {
+									if (choice.choiceValue == vals[k].trim()) {
+										tag += 'checked="checked" ';
+										break;
+									}
+								}
+							}
+							tag += ' disable="disable" /> &nbsp;' + choice.choiceLabel + '</label><br/>';
+						}
+					}
+				} else {
+					// text
+					tag += '<br/>';
+					tag += item.itemValue;
+				}
 			}
 			
-			tag += '<a href="' + url + '" target="_blank" >' + url + '</a>';
 			$('#template_items').append(tag);
 			$('#template_items_area').show();
 		}
 	}
+};
+
+/**
+ * ストックするダイアログを表示
+ */
+var stockPage = 0;
+$('#stockModal').on('show.bs.modal', function () {
+	return getStockInfo();
+});
+var getStockInfoPrevious = function() {
+	stockPage--;
+	if (stockPage < 0) {
+		stockPage = 0;
+	}
+	return getStockInfo();
+};
+var getStockInfoNext = function() {
+	stockPage++;
+	return getStockInfo();
+};
+/**
+ * 自分が登録しているストックを表示
+ */
+var stocksInfo;
+var getStockInfo = function() {
+	var url = _CONTEXT + '/protect.stock/chooselist/' + stockPage;
+	var knowledgeId = null;
+	if ($('#knowledgeId')) {
+		knowledgeId = $('#knowledgeId').val();
+	}
+	$('#stockSelect').html('');
+	$('#stockPage').text(stockPage + 1);
+	
+	$.ajax({
+		type : 'GET',
+		url : url,
+		data : 'knowledge_id=' + knowledgeId,
+		success : function(datas, dataType) {
+			console.log(datas);
+			stocksInfo = datas;
+			var selectStocks = '';
+			if (!datas || datas.length == 0) {
+				$('#stockLink').show();
+				$('#saveStockButton').prop("disabled", true);
+				return;
+			}
+			
+			$('#stockLink').hide();
+			$('#saveStockButton').prop("disabled", false);
+			for (var i = 0; i < datas.length; i++) {
+				selectStocks += '<div class="checkbox">';
+				selectStocks += '<label><input type="checkbox" value="' + datas[i].stockId + '" ';
+				if (datas[i].stocked) {
+					selectStocks += 'checked="checked" ';
+				}
+				selectStocks += ' />';
+				selectStocks += datas[i].stockName + '</label>';
+				selectStocks += '</div>';
+			}
+			$('#stockSelect').html(selectStocks);
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown){
+			$.notify('[fail] get stock info', 'warn');
+		}
+	});
+};
+var saveStocks = function(knowledgeId) {
+	var comment = $('#stockComment').val();
+	$('#stockSelect').find('input').each(function(){
+		for (var i = 0; i < stocksInfo.length; i++) {
+			if (stocksInfo[i].stockId == this.value) {
+				stocksInfo[i].stocked = this.checked;
+				stocksInfo[i].description = comment;
+				break;
+			}
+		}
+	});
+	var url = _CONTEXT + '/protect.knowledge/stock/' + knowledgeId;
+	console.log(stocksInfo);
+	$.ajax({
+		type : 'POST',
+		url : url,
+		dataType: 'json',
+		data : JSON.stringify(stocksInfo),
+		contentType: 'application/JSON',
+		dataType : 'JSON',
+		scriptCharset: 'utf-8',
+		success : function(datas, dataType) {
+			console.log(datas);
+			$.notify(datas.message, 'success');
+			$('#stockModal').modal('hide');
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown){
+			$.notify('[fail] save stock info', 'warn');
+			$('#stockModal').modal('hide');
+		}
+	});
 };
 
 
