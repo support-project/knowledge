@@ -469,6 +469,7 @@ public class NotifyMailBat extends AbstractBat {
 		String contents = config.getContents();
 		contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
 		contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
+		contents = contents.replace("{User}", knowledge.getUpdateUserName());
 		contents = contents.replace("{Contents}", knowledge.getContent());
 		contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
 
