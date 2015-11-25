@@ -23,7 +23,10 @@
 			<a class="navbar-brand"
 				href="<%= request.getContextPath() %><%= top %>"
 				style="cursor: pointer;"> <i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
+				<%--概要：versionを削除した
+					意図：タブレットでレイアウトを確認をしたところ、ヘッダに要素が入りすぎて、portrait時にレイアウトが崩れてしまったためです。ごめんなさい。
 				<span style="font-size: 8pt;"><%= jspUtil.label("label.version") %></span>
+				--%>
 			</a>
 		</div>
 
@@ -36,7 +39,7 @@
 					補遺：「追加」よりも「記事をかく」や「新規作成」など、”自分はこれから記事を書く”ということを伝える文言が望ましい--%>
 				<li class="">
 					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" style="cursor: pointer;">
-						<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("label.add") %>
+						<%= jspUtil.label("label.add") %>
 					</a>
 				</li>
 				
@@ -45,7 +48,7 @@
 					補遺：「全てのナレッジを表示」よりも「ナレッジ一覧」の方が文字数が短いので望ましいと思われる--%>
 				<li class="">
 					<a href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;">
-						<i class="fa fa-list-alt"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.all") %>
+						<%= jspUtil.label("knowledge.list.menu.all") %>
 					</a>
 				</li>
 
@@ -285,7 +288,10 @@
 			<form class="nav navbar-nav navbar-form navbar-right" role="search"
 				action="<%= request.getContextPath() %><%= top %>">
 				<div class="input-group">
-					<input type="text" class="form-control" style="width: 350px;" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
+					<%--概要：「検索」テキストボックスの幅を短くした
+						意図：タブレットでレイアウトを確認をしたところ、ヘッダに要素が入りすぎて、portrait時にレイアウトが崩れてしまったためです。ごめんなさい。
+					--%>
+					<input type="text" class="form-control" style="width: 200px;" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
 						name="keyword" id="keyword" value="<%= jspUtil.out("searchKeyword") %>" />
 					<div class="input-group-btn">
 						<button class="btn btn-default" type="submit">
