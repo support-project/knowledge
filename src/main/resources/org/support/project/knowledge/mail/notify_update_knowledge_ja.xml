@@ -8,7 +8,10 @@
 {URL}
 
 ------------------------------------------
-{KnowledgeTitle}
+User: {User}
+Title: {KnowledgeTitle}
+
+------------------------------------------
 
 {Contents}
 

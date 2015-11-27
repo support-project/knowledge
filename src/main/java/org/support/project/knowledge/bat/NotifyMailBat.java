@@ -321,7 +321,7 @@ public class NotifyMailBat extends AbstractBat {
 	private void notifyKnowledgeUpdate(NotifyQueuesEntity notifyQueuesEntity) {
 		// ナレッジが登録/更新された
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
-		KnowledgesEntity knowledge = knowledgesDao.selectOnKey(notifyQueuesEntity.getId());
+		KnowledgesEntity knowledge = knowledgesDao.selectOnKeyWithUserName(notifyQueuesEntity.getId());
 		if (null == knowledge) {
 			LOG.warn("Knowledge record not found. id: " + notifyQueuesEntity.getId());
 			return;
@@ -469,6 +469,7 @@ public class NotifyMailBat extends AbstractBat {
 		String contents = config.getContents();
 		contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
 		contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
+		contents = contents.replace("{User}", knowledge.getUpdateUserName());
 		contents = contents.replace("{Contents}", knowledge.getContent());
 		contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
 
