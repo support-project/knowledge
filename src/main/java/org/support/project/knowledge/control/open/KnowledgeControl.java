@@ -92,9 +92,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 					if (cookie.getName().equals("KNOWLEDGE_HISTORY")) {
 						String history = cookie.getValue();
 						if (history.indexOf(",") != -1) {
-							history = ""; // カンマ区切りにしていた場合、その値をクリア
+							history = history.replaceAll(",", "-"); // 旧閲覧履歴情報が存在すれば、変換する
+						} else {
+							history = URLDecoder.decode(history, "UTF-8");
 						}
-						history = URLDecoder.decode(history, "UTF-8");
 						if (history.indexOf(COOKIE_SEPARATOR) != -1) {
 							String[] historyIds = history.split(COOKIE_SEPARATOR);
 							for (int i = 0; i < historyIds.length; i++) {
@@ -357,9 +358,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
 					if (cookie.getName().equals("KNOWLEDGE_HISTORY")) {
 						String history = cookie.getValue();
 						if (history.indexOf(",") != -1) {
-							history = ""; // カンマ区切りにしていた場合、その値をクリア
+							history = history.replaceAll(",", "-");
+						} else {
+							history = URLDecoder.decode(history, "UTF-8");
 						}
-						history = URLDecoder.decode(history, "UTF-8");
 						LOG.debug("history: " + history);
 						if (history.indexOf(COOKIE_SEPARATOR) != -1) {
 							String[] splits = history.split(COOKIE_SEPARATOR);
