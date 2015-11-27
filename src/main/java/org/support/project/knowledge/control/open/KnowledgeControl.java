@@ -37,7 +37,6 @@ import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
-import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.MarkDown;
@@ -89,29 +88,29 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			Cookie[] cookies = getRequest().getCookies();
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
-					if (cookie.getName().equals("KNOWLEDGE_HISTORY")) {
-						String history = cookie.getValue();
-						if (history.indexOf(",") != -1) {
-							history = history.replaceAll(",", "-"); // 旧閲覧履歴情報が存在すれば、変換する
-						} else {
-							history = URLDecoder.decode(history, "UTF-8");
-						}
-						if (history.indexOf(COOKIE_SEPARATOR) != -1) {
-							String[] historyIds = history.split(COOKIE_SEPARATOR);
-							for (int i = 0; i < historyIds.length; i++) {
-								if (!ids.contains(historyIds[i]) && StringUtils.isLong(historyIds[i])) {
-									ids.add(historyIds[i]);
-								}
-								if (ids.size() >= COOKIE_COUNT) {
-									break;
-								}
+					if (!cookie.getName().equals("KNOWLEDGE_HISTORY")) {
+						continue;
+					}
+					String history = cookie.getValue();
+					if (history.indexOf(",") != -1) {
+						history = history.replaceAll(",", COOKIE_SEPARATOR); // 旧閲覧履歴情報が存在すれば、変換する
+					} else {
+						history = URLDecoder.decode(history, "UTF-8");
+					}
+					if (history.indexOf(COOKIE_SEPARATOR) != -1) {
+						String[] historyIds = history.split(COOKIE_SEPARATOR);
+						for (int i = 0; i < historyIds.length; i++) {
+							if (!ids.contains(historyIds[i]) && StringUtils.isLong(historyIds[i])) {
+								ids.add(historyIds[i]);
 							}
-						} else {
-							if (!ids.contains(history)) {
-								ids.add(history);
+							if (ids.size() >= COOKIE_COUNT) {
+								break;
 							}
 						}
-						break;
+					} else {
+						if (!ids.contains(history)) {
+							ids.add(history);
+						}
 					}
 				}
 				String cookieHistory = String.join(COOKIE_SEPARATOR, ids);
@@ -355,27 +354,27 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			List<String> historyIds = new ArrayList<>();
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
-					if (cookie.getName().equals("KNOWLEDGE_HISTORY")) {
-						String history = cookie.getValue();
-						if (history.indexOf(",") != -1) {
-							history = history.replaceAll(",", "-");
-						} else {
-							history = URLDecoder.decode(history, "UTF-8");
-						}
-						LOG.debug("history: " + history);
-						if (history.indexOf(COOKIE_SEPARATOR) != -1) {
-							String[] splits = history.split(COOKIE_SEPARATOR);
-							for (String string : splits) {
-								if (StringUtils.isLong(string)) {
-									historyIds.add(string);
-								}
-							}
-						} else {
-							if (StringUtils.isLong(history)) {
-								historyIds.add(history);
+					if (!cookie.getName().equals("KNOWLEDGE_HISTORY")) {
+						continue;
+					}
+					String history = cookie.getValue();
+					if (history.indexOf(",") != -1) {
+						history = history.replaceAll(",", COOKIE_SEPARATOR);
+					} else {
+						history = URLDecoder.decode(history, "UTF-8");
+					}
+					LOG.debug("history: " + history);
+					if (history.indexOf(COOKIE_SEPARATOR) != -1) {
+						String[] splits = history.split(COOKIE_SEPARATOR);
+						for (String string : splits) {
+							if (StringUtils.isLong(string)) {
+								historyIds.add(string);
 							}
 						}
-						break;
+					} else {
+						if (StringUtils.isLong(history)) {
+							historyIds.add(history);
+						}
 					}
 				}
 			}
