@@ -38,6 +38,8 @@ var _REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.delete.upload") %>';
 var _FAIL_REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.fail.delete.upload") %>';
 var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
 var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
+var _LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
+var _UPDATE_TITLE = '<%= jspUtil.label("knowledge.edit.title") %>';
 
 <c:forEach var="group" items="${groups}" varStatus="status">
 selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jspUtil.out("group.value") %>'});
@@ -59,7 +61,7 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 
 
 <c:param name="PARAM_CONTENT">
-<h4 class="title"><%= jspUtil.label("knowledge.edit.title") %></h4>
+<h4 class="title" id="title_msg"><%= jspUtil.label("knowledge.edit.title") %></h4>
 <form action="<%= request.getContextPath()%>/protect.knowledge/update" method="post" role="form" id="knowledgeForm" enctype="multipart/form-data">
 	<!-- info -->
 	<div class="form-group">
@@ -224,14 +226,17 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 	<!-- buttons -->
 	<hr/>
 	
-	<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
+	<button type="submit" class="btn btn-primary" id="savebutton"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
 	<button type="button" class="btn btn-info" onclick="preview();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
 	
-	<button type="button" class="btn btn-danger" onclick="deleteKnowledge();"><i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %></button>
-	
+	<button type="button" class="btn btn-danger" onclick="deleteKnowledge();" id="deleteButton">
+		<i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %>
+	</button>
 	<a href="<%= request.getContextPath() %>/open.knowledge/view/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>"
-		class="btn btn-warning" role="button"><i class="fa fa-undo"></i>&nbsp;<%= jspUtil.label("label.cancel") %>
+		class="btn btn-warning" role="button" id="cancelButton">
+		<i class="fa fa-undo"></i>&nbsp;<%= jspUtil.label("label.cancel") %>
 	</a>
+	
 	<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
 		class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %>
 	</a>
@@ -342,6 +347,10 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 <jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
 <jsp:include page="markdown.jsp"></jsp:include>
 <jsp:include page="../../open/tag/dialog.jsp"></jsp:include>
+
+<form action="<%= request.getContextPath()%>/protect.knowledge/delete" method="post" role="form" id="knowledgeDeleteForm">
+	<input type="hidden" name="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" id="knowledgeIdForDelete" />
+</form>
 
 </c:param>
 
