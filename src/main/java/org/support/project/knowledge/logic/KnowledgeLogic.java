@@ -1229,6 +1229,11 @@ public class KnowledgeLogic {
 		if (loginedUser.isAdmin()) {
 			return true;
 		} else {
+			if (entity != null) {
+				if (entity.getInsertUser().intValue() == loginedUser.getUserId().intValue()) {
+					return true;
+				}
+			}
 			for (LabelValue labelValue : editors) {
 				Integer id = TargetLogic.get().getGroupId(labelValue.getValue());
 				if (id != Integer.MIN_VALUE) {
