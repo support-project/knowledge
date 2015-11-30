@@ -23,7 +23,11 @@
 			<a class="navbar-brand"
 				href="<%= request.getContextPath() %><%= top %>"
 				style="cursor: pointer;"> <i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
+				<%-- test --%>
+				<%--概要：versionを削除した
+					意図：タブレットでレイアウトを確認をしたところ、ヘッダに要素が入りすぎて、portrait時にレイアウトが崩れてしまったためです。ごめんなさい。
 				<span style="font-size: 8pt;"><%= jspUtil.label("label.version") %></span>
+				--%>
 			</a>
 		</div>
 
@@ -31,13 +35,63 @@
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
 			
+				<%--概要：「追加」ボタンの移動 
+					意図：knowledgeにおいて、記事執筆は記事閲覧とともに、キーとなる特徴（コマンド）なので、目に付きやすく、選びやすいところに配置する。
+					補遺：「追加」よりも「記事をかく」や「新規作成」など、”自分はこれから記事を書く”ということを伝える文言が望ましい--%>
+				<li class="">
+					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" style="cursor: pointer;">
+						<%= jspUtil.label("label.add") %>
+					</a>
+				</li>
+				
+				<%--概要：「全てのナレッジを表示」ボタンの移動
+					意図：同上
+					補遺：「全てのナレッジを表示」よりも「ナレッジ一覧」の方が文字数が短いので望ましいと思われる--%>
+				<li class="">
+					<a href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;">
+						<%= jspUtil.label("knowledge.list.menu.all") %>
+					</a>
+				</li>
+
+				<%--
+					概要： 「メニュー」ドロップリンクを削除
+					意図：ヘッダは全てのページに渡ってユーザが見る部分なので、全てのページから重要と思われる項目を置くと良いと思います。
+						knowledgeにおいては、「記事の検索」「記事の執筆」「記事の閲覧」の3つの動作が最も重要な項目だと、私は考えます。
+						それら3つを全てヘッダに表示しなければならないという訳ではありませんが、それら3つがその他のコマンドとは一線を画して目立つべきだとは思います。どうかご検討ください。
+					補遺：「メニュー」ドロップダウンを削除するにあたって、以下の5点が背景にあります。
+						はじめは、それぞれコメントアウトしていたのですが、.jspファイル内でコメントアウトの中で該当部分を更にコメントアウトすることが出来なかったので、コメントのみ残しておきます。
+					
+					1. 「全てのナレッジを表示」リンクの削除
+					意図：上記にあるように、ヘッダに直に置いた場合、メニュー内と重複するので削除
+
+					2. 「自分で登録したものを表示」リンクの削除
+					意図：アカウントのドロップダウン内の「自分で登録したナレッジ」と同内容と思われるので、削除
+
+					3. 「ナレッジ登録」リンクの削除
+					意図：「追加」ボタンをcommonNavbar上で表示するように移動した場合、メニュー内の「ナレッジ登録」コマンドと重複するので削除
+
+					4. 「グループ一覧」「タグ一覧」リンクの削除
+					意図：「グループ一覧」「タグ一覧」ともに、俯瞰的/網羅的なコマンドで、具体的な情報(たとえば、「knowledge開発グループ」や「knowledge」や「github」などといったタグ)ではない。
+						ヘッダのメニューバーは、ユーザがどのページからも一番よく見られる情報なので、どのページからでもアクセスできることが望ましい情報（たとえば、「記事を書く」「記事一覧をみる」「アカウント情報をみる」）に情報を絞り、見せたいものをはっきりさせる。
+					補遺：記事リストにも同内容のリンクがあるので、メニューには必要ではないと判断。
+					
+					5. 言語切り替え機能のコメントアウト
+					意図：もし、使われている例が多くなければ、一時的にコメントアウトして良い機能では、と思いました。
+					補遺：言語切り替え、いわゆる「Language」ボタンは、下記リンクの東京大学のウェブサイトのように、サイトの右上にLanguageのドロップダウンなどを置くのが一般的だと思います。
+						http://www.u-tokyo.ac.jp/en/academics/graduate_schools.html
+						なぜなら、読めない言語のウェブサイトを訪れる場合、「メニュー」といった単語さえも知らない場合があるからです。
+						その場合、上記のように「Language」といった誰もが知っていると思われる言葉を目立つ位置に置くか、Appleのウェブサイトのように、国旗のアイコンを置くのが一般的です。（下記リンクのフッタを見てください）
+						http://www.apple.com/
+						言語切り替え機能が備わっているのはとても魅力的ですが、場所を変えるか、または、もし使っているユーザが日本人のみでしたら、ひとまずは日本語のみのサポートに絞っても良いのでは、提案します。
+
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" role="button" aria-expanded="false">
 						<i class="fa fa-bolt" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.menu") %>
 						<span class="caret"></span>
-				</a>
+					</a>
 					<ul class="dropdown-menu" role="menu">
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.menu.knowledge") %></li>
+
 						<li >
 							<a href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;">
 								<i class="fa fa-list-alt"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.all") %>
@@ -57,12 +111,13 @@
 								<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.list.menu.search") %>
 							</a>
 						</li>
+						
 						<li >
 							<a href="<%= request.getContextPath() %>/protect.knowledge/view_add" style="cursor: pointer;">
 								<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.menu.knowledge.add") %>
 							</a>
 						</li>
-							
+						
 						<% if (jspUtil.logined()) { %>
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.group") %></li>
 						<li >
@@ -96,6 +151,7 @@
 						%>
 					</ul>
 				</li>
+				--%>
 				
 				<% if (request.isUserInRole("admin")) { %>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
@@ -228,7 +284,10 @@
 			<form class="nav navbar-nav navbar-form navbar-right" role="search"
 				action="<%= request.getContextPath() %><%= top %>">
 				<div class="input-group">
-					<input type="text" class="form-control" style="width: 350px;" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
+					<%--概要：「検索」テキストボックスの幅を短くした
+						意図：タブレットでレイアウトを確認をしたところ、ヘッダに要素が入りすぎて、portrait時にレイアウトが崩れてしまったためです。ごめんなさい。
+					--%>
+					<input type="text" class="form-control" style="width: 200px;" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
 						name="keyword" id="keyword" value="<%= jspUtil.out("searchKeyword") %>" />
 					<div class="input-group-btn">
 						<button class="btn btn-default" type="submit">
