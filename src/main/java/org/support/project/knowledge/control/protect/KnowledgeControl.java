@@ -133,6 +133,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	
 	/**
 	 * 登録する
+	 * APIによる保存とし、画面遷移は行わない
 	 * @return
 	 * @throws Exception 
 	 * @throws ParseException 
@@ -157,19 +158,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttribute("tagitems", tagitems);
 		
 		List<Long> fileNos = new ArrayList<Long>();
-		Object obj = getParam("files", Object.class);
-		if (obj != null) {
-			if (obj instanceof String) {
-				String string = (String) obj;
+		String[] filesArray = getParam("files", String[].class);
+		if (filesArray != null) {
+			for (String string : filesArray) {
 				if (StringUtils.isLong(string)) {
 					fileNos.add(new Long(string));
-				}
-			} else if (obj instanceof List) {
-				List<String> strings = (List<String>) obj;
-				for (String string : strings) {
-					if (StringUtils.isLong(string)) {
-						fileNos.add(new Long(string));
-					}
 				}
 			}
 		}
@@ -191,20 +184,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
 		List<ValidateError> errors = entity.validate();
 		if (!errors.isEmpty()) {
-			setResult(null, errors);
-			// バリデーションエラーが発生した場合、設定されていた添付ファイルの情報は再取得
-			List<UploadFile> files = fileLogic.selectOnFileNos(fileNos, getRequest().getContextPath());
-			Iterator<UploadFile> iterator = files.iterator();
-			while (iterator.hasNext()) {
-				UploadFile uploadFile = (UploadFile) iterator.next();
-				if (uploadFile.getKnowlegeId() != null) {
-					// 新規登録なのに、添付ファイルが既にナレッジに紐づいている（おかしい）
-					iterator.remove();
-				}
-			}
-			setAttribute("files", files);
-
-			return forward("view_add.jsp");
+			//入力エラー
+			return sendValidateError(errors);
 		}
 		LOG.trace("save");
 		String tags = super.getParam("tagNames");
@@ -217,11 +198,13 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttribute("files", files);
 		
 		addMsgSuccess("message.success.insert");
-		return forward("view_edit.jsp");
+//		return forward("view_edit.jsp");
+		return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(entity.getKnowledgeId()), "message.success.insert");
 	}
 	
 	/**
 	 * 更新する
+	 * APIによる保存とし、画面遷移は行わない
 	 * @return
 	 * @throws Exception 
 	 */
@@ -244,19 +227,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttribute("tagitems", tagitems);
 		
 		List<Long> fileNos = new ArrayList<Long>();
-		Object obj = getParam("files", Object.class);
-		if (obj != null) {
-			if (obj instanceof String) {
-				String string = (String) obj;
+		String[] filesArray = getParam("files", String[].class);
+		if (filesArray != null) {
+			for (String string : filesArray) {
 				if (StringUtils.isLong(string)) {
 					fileNos.add(new Long(string));
-				}
-			} else if (obj instanceof List) {
-				List<String> strings = (List<String>) obj;
-				for (String string : strings) {
-					if (StringUtils.isLong(string)) {
-						fileNos.add(new Long(string));
-					}
 				}
 			}
 		}
@@ -279,22 +254,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		KnowledgesDao dao = Container.getComp(KnowledgesDao.class);
 		List<ValidateError> errors = entity.validate();
 		if (!errors.isEmpty()) {
-			setResult(null, errors);
-			
-			// バリデーションエラーが発生した場合、設定されていた添付ファイルの情報は再取得
-			List<UploadFile> files = fileLogic.selectOnFileNos(fileNos, getRequest().getContextPath());
-			Iterator<UploadFile> iterator = files.iterator();
-			while (iterator.hasNext()) {
-				UploadFile uploadFile = (UploadFile) iterator.next();
-				if (uploadFile.getKnowlegeId() != null 
-						&& uploadFile.getKnowlegeId().longValue() != entity.getKnowledgeId().longValue()) {
-					// ナレッジIDが空でなく、かつ、更新中のナレッジ以外に紐づいている添付ファイルはおかしいので削除
-					iterator.remove();
-				}
-			}
-			setAttribute("files", files);
-			
-			return forward("view_edit.jsp");
+			//入力エラー
+			return sendValidateError(errors);
 		}
 		
 		KnowledgesEntity check = dao.selectOnKey(entity.getKnowledgeId());
@@ -305,8 +266,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		if (!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors)) {
 			setAttribute("edit", false);
 			addMsgWarn("knowledge.edit.noaccess");
-			//return forward("/open/knowledge/view.jsp");
-			return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(entity.getKnowledgeId()));
+//			return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(entity.getKnowledgeId()));
+			
+			errors = new ArrayList<>();
+			errors.add(new ValidateError("knowledge.edit.noaccess"));
+			return sendValidateError(errors);
 		}
 		
 		LOG.trace("save");
@@ -320,7 +284,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(entity.getKnowledgeId(), getRequest().getContextPath());
 		setAttribute("files", files);
 		
-		return forward("view_edit.jsp");
+		// return forward("view_edit.jsp");
+		return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(entity.getKnowledgeId()), "message.success.update");
 	}
 	
 	/**
