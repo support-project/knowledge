@@ -23,6 +23,7 @@
 			<a class="navbar-brand"
 				href="<%= request.getContextPath() %><%= top %>"
 				style="cursor: pointer;"> <i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
+				<%-- test --%>
 				<%--概要：versionを削除した
 					意図：タブレットでレイアウトを確認をしたところ、ヘッダに要素が入りすぎて、portrait時にレイアウトが崩れてしまったためです。ごめんなさい。
 				<span style="font-size: 8pt;"><%= jspUtil.label("label.version") %></span>
