@@ -249,9 +249,11 @@
 				class="list-group-item">
 					<h5 class="list-group-item-heading"><i class="fa fa-history"></i>&nbsp;
 					[<%= jspUtil.out("history.knowledgeId") %>]&nbsp;<%= jspUtil.out("history.title") %></h5>
+					<%-- 一覧に本文を表示しないようにしたため、閲覧履歴もタイトルだけにする
 					<p class="list-group-item-text">
 					<%= jspUtil.out("history.content", 0, 40) %>
 					</p>
+					--%>
 				</a>
 			</c:forEach>
 			</div>
