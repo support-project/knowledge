@@ -1,3 +1,6 @@
+
+
+
 .bootstrap-tagsinput {
 	border: 0px solid #ccc;
 	box-shadow: none;
@@ -10,6 +13,15 @@
 	max-width: 100%;
 	line-height: 22px;
 	cursor: text;
+}
+
+.tag_list {
+	margin: 8px 0 8px 5px;
+}
+
+.thumbnail,
+.thumbnail .caption {
+	padding: 0;
 }
 
 .thumbnail {
@@ -26,33 +38,63 @@
 }
 
 .insert_info {
+	float: left;
 	margin-top: 5px;
+/* 	
 	border-bottom: 1px solid #cccccc;
+ */
 }
 
 .insert_info_text {
 	color: #337ab7;
 }
 
+.article_buttons {
+	margin-top: 12px;
+}
+.article_info {
+	margin-top: 6px;
+}
+
+.btn_edit,
+.btn_stock {
+/* 	float: right;
+ */
+ }
+
 .downloadfile {
 	margin-top: 5px;
 }
 
 #content {
-	margin-top: 20px;
+	margin-top: 24px;
+}
+
+#content p {
+	margin-top: 25.6px;
+	font-size: 16px;
+	line-height: 30px;
 }
 
 .viewarea {
+	width: 840px;
 /*	background: #EEE; */
+/* 
 	border: 1px solid #DDD;
 	border-radius: 8px;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
+ */	
 	color: #111;
 /*	width: 100px; */
+/* 
 	padding: 10px;
+ */
 }
 
+#template h5 {
+	margin-left: 5px;
+}
 
 /*============================================================
 Comments 

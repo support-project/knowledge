@@ -47,11 +47,14 @@ body {
 
 .title {
 	text-align: left;
-	padding: 10px;
-	margin-bottom: 20px;
-	font-size: 18px;
-	border-bottom: 3px dotted #7E7E7E;
-}
+
+/* 	padding: 10px;
+ */
+	margin-bottom: 16px;
+/* 	font-size: 18px;*/
+	font-size: 32px;
+/* 	border-bottom: 3px dotted #7E7E7E;*/
+ }
 
 
 .sub_title {
