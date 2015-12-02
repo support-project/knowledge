@@ -488,7 +488,6 @@ var collapse = function(comment_id, collapseFlag) {
 	}
 	// 保存
 	var url = _CONTEXT + '/protect.knowledge/collapse/';
-	console.log(stocksInfo);
 	$.ajax({
 		type : 'POST',
 		url : url,
