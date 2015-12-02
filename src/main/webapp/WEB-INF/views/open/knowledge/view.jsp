@@ -1,3 +1,4 @@
+<%@page import="javax.swing.JSplitPane"%>
 <%@page import="org.support.project.knowledge.entity.KnowledgesEntity"%>
 <%@page import="org.support.project.knowledge.entity.CommentsEntity"%>
 <%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
@@ -218,13 +219,23 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		<% if (jspUtil.isAdmin() || jspUtil.is(jspUtil.id(), "comment.insertUser") || (boolean) request.getAttribute("edit")) { %>
 			&nbsp;
 			<a class="btn btn-primary btn-xs" href="<%= request.getContextPath() %>/protect.knowledge/edit_comment/<%= comment.getCommentNo() %>">
-				<i class="fa fa-edit"></i> Edit
+				<i class="fa fa-edit"></i> <%= jspUtil.label("label.edit") %>
 			</a>
+			&nbsp;
+			<button class="btn btn-info btn-xs <% if (comment.getCommentStatus() == 1) { %>hide<% } %>" 
+				onclick="collapse('<%= comment.getCommentNo() %>', 1);" id="collapse_on_<%= comment.getCommentNo() %>">
+				<i class="fa fa-minus-square-o"></i> <%= jspUtil.label("knowledge.view.comment.collapse") %>
+			</button>
+			&nbsp;
+			<button class="btn btn-warning btn-xs <% if (comment.getCommentStatus() != 1) { %>hide<% } %>" 
+				onclick="collapse('<%= comment.getCommentNo() %>', 0);" id="collapse_off_<%= comment.getCommentNo() %>">
+				<i class="fa fa-plus-square-o"></i> <%= jspUtil.label("knowledge.view.comment.open") %>
+			</button>
 		<% } %>
 		
 		</div>
 	</div>
-	<div class="question_Box">
+	<div class="question_Box <% if (comment.getCommentStatus() == 1) { %>hide<% } %>" id="comment_<%= comment.getCommentNo() %>">
 	<div class="question_image">
 		<img src="<%= request.getContextPath()%>/images/loader.gif" 
 			data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("comment.insertUser") %>" 
@@ -244,9 +255,14 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 			</div>
 			</c:if>
 		</c:forEach>
-	
 	</div><!-- /.arrow_question -->
 	</div><!-- /.question_Box -->
+	
+	<div class="<% if (comment.getCommentStatus() != 1) { %>hide<% } %> text-left collapse_comment" id="comment_collapse_<%= comment.getCommentNo() %>">
+	<%= jspUtil.label("knowledge.view.comment.collapsed") %>
+	<br/>
+	</div>
+	
 	<% } else { %>
 	<div class="row">
 		<div class="col-sm-12" style="text-align: right;">
@@ -254,8 +270,18 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		<% if (jspUtil.isAdmin() || jspUtil.is(jspUtil.id(), "comment.insertUser") || (boolean) request.getAttribute("edit")) { %>
 			&nbsp;
 			<a class="btn btn-primary btn-xs" href="<%= request.getContextPath() %>/protect.knowledge/edit_comment/<%= comment.getCommentNo() %>">
-				<i class="fa fa-edit"></i> Edit
+				<i class="fa fa-edit"></i> <%= jspUtil.label("label.edit") %>
 			</a>
+			&nbsp;
+			<button class="btn btn-info btn-xs <% if (comment.getCommentStatus() == 1) { %>hide<% } %>" 
+				onclick="collapse('<%= comment.getCommentNo() %>', 1);" id="collapse_on_<%= comment.getCommentNo() %>">
+				<i class="fa fa-minus-square-o"></i> <%= jspUtil.label("knowledge.view.comment.collapse") %>
+			</button>
+			&nbsp;
+			<button class="btn btn-warning btn-xs <% if (comment.getCommentStatus() != 1) { %>hide<% } %>" 
+				onclick="collapse('<%= comment.getCommentNo() %>', 0);" id="collapse_off_<%= comment.getCommentNo() %>">
+				<i class="fa fa-plus-square-o"></i> <%= jspUtil.label("knowledge.view.comment.open") %>
+			</button>
 		<% } %>
 		
 		[<%= jspUtil.label("label.registration") %>]
@@ -267,7 +293,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		
 		</div>
 	</div>
-	<div class="question_Box">
+	<div class="question_Box <% if (comment.getCommentStatus() == 1) { %>hide<% } %>" id="comment_<%= comment.getCommentNo() %>">
 	<div class="answer_image">
 		<img src="<%= request.getContextPath()%>/images/loader.gif" 
 			data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("comment.insertUser") %>" 
@@ -275,7 +301,6 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 	</div>
 	<div class="arrow_answer">
 	<%= jspUtil.out("comment.comment", JspUtil.ESCAPE_NONE) %>
-	
 		<c:forEach var="file" items="${files}" >
 			<c:if test="${file.commentNo == comment.commentNo}">
 			<div class="downloadfile">
@@ -286,11 +311,14 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 			</div>
 			</c:if>
 		</c:forEach>
-	
 	</div><!-- /.arrow_answer -->
 	</div><!-- /.question_Box -->
-	<% } %>
 	
+	<div class="<% if (comment.getCommentStatus() != 1) { %>hide<% } %> text-right collapse_comment" id="comment_collapse_<%= comment.getCommentNo() %>">
+	<%= jspUtil.label("knowledge.view.comment.collapsed") %>
+	<br/>
+	</div>
+	<% } %>
 	</c:forEach>
 	
 	<br/>

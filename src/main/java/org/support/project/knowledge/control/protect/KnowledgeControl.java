@@ -642,7 +642,53 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			}
 		}
 		return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, "saved", "message.success.save");
-	};	
+	};
+	
+	
+	/**
+	 * コメントを折りたたみ
+	 * @return
+	 * @throws IOException 
+	 * @throws InvalidParamException 
+	 */
+	@Post
+	public Boundary collapse() throws IOException, InvalidParamException {
+		Long commentNo = getParam("commentNo", Long.class);
+		Integer collapse = getParam("collapse", Integer.class);
+		
+		CommentsDao commentsDao = CommentsDao.get();
+		CommentsEntity db = commentsDao.selectOnKey(commentNo);
+
+		// 権限チェック（コメントの編集は、システム管理者 or コメントの登録者 or ナレッジ編集者
+		LoginedUser loginedUser = super.getLoginedUser();
+		if (loginedUser == null) {
+			// ログインしていないユーザに編集権限は無し
+			return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+		}
+		if (!loginedUser.isAdmin() && 
+				loginedUser.getUserId().intValue() != db.getInsertUser().intValue()) {
+			KnowledgesEntity check = KnowledgesDao.get().selectOnKey(db.getKnowledgeId());
+			if (check == null) {
+				return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
+			}		
+			List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(db.getKnowledgeId());
+			if (!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors)) {
+				return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+			}
+		}
+		
+		// ステータス更新
+		db.setCommentStatus(collapse);
+		commentsDao.physicalUpdate(db); // 更新履歴は付けないで更新
+		
+		if (collapse == 1) {
+			return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(commentNo), "knowledge.view.comment.collapse.on");
+		} else {
+			return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(commentNo), "knowledge.view.comment.collapse.off");
+		}
+	}
+
+	
 	
 }
 

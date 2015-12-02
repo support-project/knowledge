@@ -133,3 +133,9 @@ Comments
     margin-bottom: 25px;
     overflow: hidden;
 }
+
+
+.collapse_comment {
+	padding-bottom: 10px;
+	color: gray;
+}
