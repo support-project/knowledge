@@ -61,7 +61,9 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 			<%-- <h4 class="title"><%= jspUtil.label("knowledge.view.title") %></h4> --%>
 			
 			<span class="insert_info_text">
-			<%-- 
+			<%--概要；記事のステータスが公開時に「公開」とは表示しないようにする
+				意図：記事は「公開」状態にあることが一般的であるので、自明なことは伝える必要はない。「保護」や「非公開」など例外的な状態のときは、その旨を伝えるようにする
+				補遺：
 			<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag",
 					jspUtil.label("label.public.view")) %>
 			 --%>
@@ -83,11 +85,13 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		<%-- 登録者情報 --%>
 		<%--概要：「登録者情報」のコメントアウト
 			意図：記事において、記事上部の情報は記事全体よりも先に読者の目に入るため、いかに記事の要約をわかりやすく伝えるかが重要になります。
-				”誰が”、”いつ”、書いたかはそれら重要な情報の一つですが、”誰がいつ登録したか”という情報と”誰が最後に更新したか”という情報は、「時間」という観点からみた場合重複した情報になるので、”誰が最後に更新したか”一つに絞ります
-			補遺：
+				”誰が”、”いつ”、書いたかはそれら重要な情報の一つですが、”誰がいつ登録したか”という情報と”誰が最後に更新したか”という情報は、「時間」という観点からみた場合重複した情報になるので、”誰がいつ登録したか”という情報一つに絞ります
+			補遺：java部も書き直さなくてはならないのですが、本来はQiitaのように、「記事執筆に参加しているのは誰か」「編集されたのはいつか」といった情報が文章量短く、的確に伝わるのが理想です。
 		 --%>
 			<div class="insert_info">
-		<%-- 					
+		<%--概要：「[登録]」見出しを排し、「が」「に」といった助詞を加える
+			意図：記事に登録するタグのように、”キーワードである”ことがわかりやすさに寄与する場合もあるが、多くの場合、文章にするのが最も伝わりやすい
+			補遺：
 				<div class="saveType">
 				[<%= jspUtil.label("label.registration") %>]
 				</div>
@@ -123,8 +127,8 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		<%-- 公開区分やイイネ件数など --%>
 		<%-- 操作ボタン --%>
 		<%--概要：「いいね」ボタンのコメントアウト
-			意図：「ストック」機能がある場合、「いいね」ボタンは好意を伝えるボタン以外の機能を果たさないため、ストックよりも機能性が弱いと判断してコメントアウト
-			補遺：	
+			意図：「ストック」機能がある場合、「いいね」ボタンは好意を伝えるボタン以外の機能を果たさないため、ストックよりも機能性が弱いと判断して一時的にコメントアウトしています
+			補遺：
 			<button class="btn btn-warning" onclick="addlike(<%= jspUtil.out("knowledgeId") %>);">
 				<i class="fa fa-thumbs-o-up"></i>&nbsp;
 				<%= jspUtil.label("knowledge.view.like") %>
@@ -221,7 +225,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 					</div>
 					
 <%--概要：「content」という文言のコメントアウト
-	意図：記事本体に対する見出しは必要ありません。記事を閲覧したときに、本体がそれとわかるように記事の外観をデザインすることが理想です。
+	意図：記事本体に対する見出しは必要ありません。記事を閲覧したときに、本文がそれとわかるように記事の外観をデザインすることが理想です。
 	補遺：
  					<h5>content</h5>
  --%>					<div style="word-break:break-all;" id="content" class="markdown viewarea">
