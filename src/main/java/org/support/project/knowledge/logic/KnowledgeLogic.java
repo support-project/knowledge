@@ -199,7 +199,6 @@ public class KnowledgeLogic {
 		editUsersDao.deleteOnKnowledgeId(entity.getKnowledgeId());
 		editGroupsDao.deleteOnKnowledgeId(entity.getKnowledgeId());
 		
-		
 		// アクセス権を登録
 		saveAccessUser(entity, loginedUser, targets);
 		// 編集権を登録
@@ -295,12 +294,6 @@ public class KnowledgeLogic {
 		KnowledgeEditUsersDao editUsersDao = KnowledgeEditUsersDao.get();
 		KnowledgeEditGroupsDao editGroupsDao = KnowledgeEditGroupsDao.get();
 		
-		// ナレッジにアクセス可能なユーザに、自分自身をセット
-		KnowledgeEditUsersEntity editUsersEntity = new KnowledgeEditUsersEntity();
-		editUsersEntity.setKnowledgeId(entity.getKnowledgeId());
-		editUsersEntity.setUserId(loginedUser.getLoginUser().getUserId());
-		editUsersDao.save(editUsersEntity);
-		
 		// 編集権限を設定
 		if (editors != null && !editors.isEmpty()) {
 			for (int i = 0; i < editors.size(); i++) {
@@ -318,7 +311,7 @@ public class KnowledgeLogic {
 							&& loginedUser.getUserId().intValue() != id.intValue()
 							&& ALL_USER != id.intValue()
 					) {
-						editUsersEntity = new KnowledgeEditUsersEntity();
+						KnowledgeEditUsersEntity editUsersEntity = new KnowledgeEditUsersEntity();
 						editUsersEntity.setKnowledgeId(entity.getKnowledgeId());
 						editUsersEntity.setUserId(id);
 						editUsersDao.save(editUsersEntity);
@@ -1229,6 +1222,11 @@ public class KnowledgeLogic {
 		if (loginedUser.isAdmin()) {
 			return true;
 		} else {
+			if (entity != null) {
+				if (entity.getInsertUser().intValue() == loginedUser.getUserId().intValue()) {
+					return true;
+				}
+			}
 			for (LabelValue labelValue : editors) {
 				Integer id = TargetLogic.get().getGroupId(labelValue.getValue());
 				if (id != Integer.MIN_VALUE) {

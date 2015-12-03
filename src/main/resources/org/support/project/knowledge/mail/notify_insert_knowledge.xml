@@ -8,7 +8,10 @@ Knowledge has been inserted：{KnowledgeId}
 {URL}
 
 ------------------------------------------
-{KnowledgeTitle}
+User: {User}
+Title: {KnowledgeTitle}
+
+------------------------------------------
 
 {Contents}
 
