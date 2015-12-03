@@ -19,7 +19,8 @@
     "notify.js": "1.2.5",
     "emoji-parser": "0.1.1",
     "bluebird": "2.10.2",
-    "jquery-oembed-all": "nfl/jquery-oembed-all"
+    "jquery-oembed-all": "nfl/jquery-oembed-all",
+    "flag-icon-css": "0.8.5"
   },
   "devDependencies": {}
 }

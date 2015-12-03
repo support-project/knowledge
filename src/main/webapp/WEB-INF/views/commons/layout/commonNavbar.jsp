@@ -23,33 +23,20 @@
 			<a class="navbar-brand"
 				href="<%= request.getContextPath() %><%= top %>"
 				style="cursor: pointer;"> <i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
-				<%-- test --%>
-				<%--概要：versionを削除した
-					意図：タブレットでレイアウトを確認をしたところ、ヘッダに要素が入りすぎて、portrait時にレイアウトが崩れてしまったためです。ごめんなさい。
-				<span style="font-size: 8pt;"><%= jspUtil.label("label.version") %></span>
-				--%>
 			</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
-			
-				<%--概要：「追加」ボタンの移動 
-					意図：knowledgeにおいて、記事執筆は記事閲覧とともに、キーとなる特徴（コマンド）なので、目に付きやすく、選びやすいところに配置する。
-					補遺：「追加」よりも「記事をかく」や「新規作成」など、”自分はこれから記事を書く”ということを伝える文言が望ましい--%>
-				<li class="">
+				<li>
 					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" style="cursor: pointer;">
-						<%= jspUtil.label("label.add") %>
+						<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.add.knowledge") %>
 					</a>
 				</li>
-				
-				<%--概要：「全てのナレッジを表示」ボタンの移動
-					意図：同上
-					補遺：「全てのナレッジを表示」よりも「ナレッジ一覧」の方が文字数が短いので望ましいと思われる--%>
-				<li class="">
+				<li>
 					<a href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;">
-						<%= jspUtil.label("knowledge.list.menu.all") %>
+						<i class="fa fa-list-alt"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.list.knowledge") %>
 					</a>
 				</li>
 

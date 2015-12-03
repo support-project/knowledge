@@ -29,19 +29,6 @@
 			</a>
 			<br/><br/>
 			<br/><br/>
-			
-			<%
-				AppConfig appConfig = AppConfig.get();
-				List<LabelValue> languages = appConfig.getLanguages();
-				for (LabelValue language : languages) {
-			%>
-				<a href="<%= request.getContextPath() %>/lang/select/<%= language.getValue() %>" style="cursor: pointer;color: red;font-size: 18px">
-					<%= language.getLabel() %>
-				</a>
-				&nbsp;&nbsp;
-			<%
-				}
-			%>
 		</div>
 	</div>
 
