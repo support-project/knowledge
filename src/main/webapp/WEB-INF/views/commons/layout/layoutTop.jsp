@@ -37,28 +37,7 @@
 ${param.PARAM_CONTENT}
 
 
-
-
-	<div id="footer">
-		<ul class="footer-menu list-inline">
-			<li class="first">
-				<a class="" href="<%= request.getContextPath() %>/index" style="cursor: pointer;"> About</a>
-			</li>
-			<li>
-				<a class="" href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;"> Show Knowledges</a>
-			</li>
-			<li>
-				<a class="" href="<%= request.getContextPath() %>/open.license" style="cursor: pointer;"> License</a>
-			</li>
-		</ul>
-		<!-- /nav -->
-		<div class="clearfix"></div>
-		<div class="copy">
-			<span>Copyright &#169; 2015 <a href="https://support-project.org/knowledge_info/index">support-project.org [Knowledge project]</a></span>
-		</div>
-		<!-- /copy -->
-	</div>
-	<!-- /footer -->
+<c:import url="/WEB-INF/views/commons/layout/commonFooter.jsp" />
 
 <c:import url="/WEB-INF/views/commons/layout/commonScripts.jsp" />
 
