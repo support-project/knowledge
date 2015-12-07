@@ -38,5 +38,11 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/font-awesome/css/font-awesome.min.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-oembed-all/jquery.oembed.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/flag-icon-css/css/flag-icon.min.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/notifyjs/dist/styles/metro/notify-metro.css" />
+
+<!--[if lt IE 9]>
+    <script src="<%= request.getContextPath() %>/bower/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="<%= request.getContextPath() %>/bower/respond/dest/respond.min.js"></script>
+<![endif]-->
 
 <!-- Knowledge - <%= jspUtil.label("label.version") %> -->
