@@ -29,16 +29,66 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
-				<li>
-					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" style="cursor: pointer;">
+				<li class="navAddButton">
+					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" style="cursor: pointer;" id="navAddButtonLink">
 						<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.add.knowledge") %>
 					</a>
 				</li>
-				<li>
+				<li class="navOtherButton">
 					<a href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;">
 						<i class="fa fa-list-alt"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.list.knowledge") %>
 					</a>
 				</li>
+				<li class="dropdown navOtherButton"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" role="button" aria-expanded="false">
+						<i class="fa fa-bars" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.menu") %>
+						<%-- <span class="caret"></span> --%>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+						<li >
+							<a href="<%= request.getContextPath() %>/open.knowledge/search" >
+								<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
+							</a>
+						</li>
+						
+						
+						<% if (request.isUserInRole("admin")) { %>
+						<li class="divider"></li>
+						<li >
+							<a href="<%= request.getContextPath() %>/open.menu/config" >
+								<i class="fa fa-cogs" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system") %>
+							</a>
+						</li>
+						<% } %>
+						<% if (jspUtil.logined()) { %>
+						<li class="divider"></li>
+						<li >
+							<a href="<%= request.getContextPath() %>/open.menu/config" >
+								<i class="fa fa-cog" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config") %>
+							</a>
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a id="menuSignout" href="<%= request.getContextPath() %>/signout" style="cursor: pointer;">
+								<i class="fa fa-sign-out"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signout") %>
+							</a>
+						</li>
+						<% } else { %>
+						<li>
+							<a id="menuSignin" href="<%= request.getContextPath() %>/signin?page=<%= top %>" style="cursor: pointer;">
+								<i class="fa fa-sign-in"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signin") %>
+							</a>
+						</li>
+						<% } %>
+					</ul>
+				</li>
+
+
+
+
+
+
+
 
 				<%--
 					概要： 「メニュー」ドロップリンクを削除
@@ -139,6 +189,8 @@
 					</ul>
 				</li>
 				--%>
+				
+				<%-- 
 				
 				<% if (request.isUserInRole("admin")) { %>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
@@ -270,6 +322,8 @@
 					</a>
 				</li>
 				<% } %>
+				--%>
+				
 				
 			</ul>
 			
@@ -279,8 +333,8 @@
 					<%--概要：「検索」テキストボックスの幅を短くした
 						意図：タブレットでレイアウトを確認をしたところ、ヘッダに要素が入りすぎて、portrait時にレイアウトが崩れてしまったためです。ごめんなさい。
 					--%>
-					<input type="text" class="form-control" style="width: 200px;" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
-						name="keyword" id="keyword" value="<%= jspUtil.out("searchKeyword") %>" />
+					<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
+						name="keyword" id="navSearch" value="<%= jspUtil.out("searchKeyword") %>" />
 					<div class="input-group-btn">
 						<button class="btn btn-default" type="submit">
 							<i class="glyphicon glyphicon-search"></i>
