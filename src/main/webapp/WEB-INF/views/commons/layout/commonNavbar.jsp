@@ -148,7 +148,12 @@
 								<i class="fa fa-globe"></i>&nbsp;<%= jspUtil.label("knowledge.proxy.title") %>
 							</a>
 						</li>
-						
+							<li >
+							<a href="<%= request.getContextPath() %>/admin.webhook/config" style="cursor: pointer;">
+								<i class="fa fa-link"></i>&nbsp;<%= jspUtil.label("knowledge.webhook.title") %>
+							</a>
+						</li>
+
 						<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.data") %></li>
 						<li >
 							<a href="<%= request.getContextPath() %>/admin.database/index" style="cursor: pointer;">
