@@ -62,5 +62,35 @@ body {
 	border-bottom: 1px dashed #7E7E7E;
 }
 
+/*  navbar
+/*--------------------------------- */ 
+.nav .navAddButton {
+	border: 1px solid #0080ff;
+	border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	background: #0080ff;
+	color: white;
+}
+.nav .navAddButton #navAddButtonLink {
+	color: white;
+}
+.nav .navOtherButton {
+	border: 1px solid #7E7E7E;
+	border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+	#navSearch {
+		width: 200px;
+	}
+}
+@media screen and (min-width: 992px) {
+	#navSearch {
+		width: 350px;
+	}
+}
 
 
