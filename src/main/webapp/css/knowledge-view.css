@@ -31,7 +31,9 @@
 }
 
 .insert_info_text {
-	color: #337ab7;
+	/* color: #337ab7; */
+	color: black;
+	
 }
 
 .downloadfile {

@@ -35,21 +35,21 @@
 			<div class="col-sm-12 selected_tag">
 			
 			<c:if test="${!empty selectedTag}">
-			<a class="text-primary" 
+			<a class="text-link" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%=jspUtil.out("selectedTag.tagId") %>" >
 					<i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("selectedTag.tagName") %>
 			</a>
 			</c:if>
 			
 			<c:if test="${!empty selectedGroup}">
-			<a class="text-primary"
+			<a class="text-link"
 				href="<%= request.getContextPath() %>/open.knowledge/list?group=<%=jspUtil.out("selectedGroup.groupId") %>" >
 					<i class="fa fa-group"></i>&nbsp;<%=jspUtil.out("selectedGroup.groupName") %>
 			</a>
 			</c:if>
 
 			<c:if test="${!empty selectedUser}">
-			<a class="text-primary" 
+			<a class="text-link" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.out("selectedUser.userId") %>" >
 					<i class="fa fa-user"></i>&nbsp;<%= jspUtil.out("selectedUser.userName") %>
 			</a>
@@ -57,7 +57,7 @@
 			
 			<c:if test="${!empty searchTags}">
 			<c:forEach var="searchTag" items="${searchTags}" varStatus="status">
-			<a class="text-primary" 
+			<a class="text-link" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%=jspUtil.out("searchTag.tagId") %>" >
 					<i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("searchTag.tagName") %>
 			</a>
@@ -66,7 +66,7 @@
 
 			<c:if test="${!empty searchGroups}">
 			<c:forEach var="searchGroup" items="${searchGroups}" varStatus="status">
-			<a class="text-primary" 
+			<a class="text-link" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?group=<%=jspUtil.out("searchGroup.groupId") %>" >
 					<i class="fa fa-group"></i>&nbsp;<%=jspUtil.out("searchGroup.groupName") %>
 			</a>
@@ -74,14 +74,14 @@
 			</c:if>
 			
 			<c:if test="${!empty keyword}">
-			<a class="text-primary" 
+			<a class="text-link" 
 				href="<%= request.getContextPath() %>/open.knowledge/list?keyword=<%=jspUtil.out("keyword") %>" >
 					<i class="fa fa-search"></i>&nbsp;<%=jspUtil.out("keyword") %>
 			</a>
 			</c:if>
 			
 			
-			<a class="text-primary" 
+			<a class="text-link" 
 				href="<%= request.getContextPath() %>/open.knowledge/list" >
 					<i class="fa fa-times-circle"></i>&nbsp;
 			</a>
