@@ -376,6 +376,21 @@ create table KNOWLEDGES (
   , constraint KNOWLEDGES_PKC primary key (KNOWLEDGE_ID)
 ) ;
 
+-- Webhook 設定
+drop table if exists WEBHOOK_CONFIGS cascade;
+
+create table WEBHOOK_CONFIGS (
+  HOOK_ID serial not null
+  , HOOK character varying(20) not null
+  , URL character varying(256) not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint WEBHOOK_CONFIGS_PKC primary key (HOOK_ID)
+) ;
+
 comment on table STOCKS is 'ストック';
 comment on column STOCKS.STOCK_ID is 'STOCK ID';
 comment on column STOCKS.STOCK_NAME is 'STOCK 名';
@@ -625,3 +640,11 @@ comment on column KNOWLEDGES.INSERT_DATETIME is '登録日時';
 comment on column KNOWLEDGES.UPDATE_USER is '更新ユーザ';
 comment on column KNOWLEDGES.UPDATE_DATETIME is '更新日時';
 comment on column KNOWLEDGES.DELETE_FLAG is '削除フラグ';
+
+comment on table WEBHOOK_CONFIGS is 'Webhooks 設定';
+comment on column WEBHOOK_CONFIGS.HOOK_ID is 'HOOK ID';
+comment on column WEBHOOK_CONFIGS.HOOK is 'HOOK';
+comment on column WEBHOOK_CONFIGS.URL is 'URL';
+comment on column WEBHOOK_CONFIGS.INSERT_USER is '登録ユーザ';
+comment on column WEBHOOK_CONFIGS.INSERT_DATETIME is '登録日時';
+comment on column WEBHOOK_CONFIGS.DELETE_FLAG is '削除フラグ';
