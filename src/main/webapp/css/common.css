@@ -100,7 +100,9 @@ body {
 		width: 350px;
 	}
 }
-
+.navbar .navbar-header .navbar-brand:hover{
+	color: white;
+}
 
 
 .menu_list li {
