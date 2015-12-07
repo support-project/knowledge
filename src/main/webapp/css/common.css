@@ -64,22 +64,30 @@ body {
 
 /*  navbar
 /*--------------------------------- */ 
+.nav .navButton {
+	margin: 5px;
+	height: 50px;
+	vertical-align: middle;
+	border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	color: white;
+}
 .nav .navAddButton {
 	border: 1px solid #0080ff;
-	border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
 	background: #0080ff;
-	color: white;
 }
-.nav .navAddButton #navAddButtonLink {
-	color: white;
+.nav .navListButton {
+	border: 1px solid #188d63;
+	background: #188d63;
 }
-.nav .navOtherButton {
-	border: 1px solid #7E7E7E;
-	border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
+.nav .navMenuButton {
+	border: 1px solid #666666;
+	background: #666666;
+}
+#navAddButtonLink,#navListButtonLink,#navMenuButtonLink {
+	padding-top: 14px;
+	color: white;
 }
 
 @media screen and (min-width: 768px) and (max-width: 991px) {

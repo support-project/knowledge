@@ -33,8 +33,12 @@
 
 <link rel="icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/vnd.microsoft.icon" /> 
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/highlightjs/styles/default.css" />
+<%--
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap/dist/css/bootstrap-theme.min.css" />
+--%>
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootswatch-dist/css/bootstrap.min.css" />
+
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/font-awesome/css/font-awesome.min.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-oembed-all/jquery.oembed.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/flag-icon-css/css/flag-icon.min.css" />
