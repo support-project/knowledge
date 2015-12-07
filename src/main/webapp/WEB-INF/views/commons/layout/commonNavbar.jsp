@@ -29,18 +29,21 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
-				<li class="navAddButton">
-					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" style="cursor: pointer;" id="navAddButtonLink">
+				<li class="navButton navAddButton">
+					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" style="cursor: pointer;"
+						id="navAddButtonLink">
 						<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.add.knowledge") %>
 					</a>
 				</li>
-				<li class="navOtherButton">
-					<a href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;">
+				<li class="navButton navListButton">
+					<a href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;"
+					id="navListButtonLink">
 						<i class="fa fa-list-alt"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.list.knowledge") %>
 					</a>
 				</li>
-				<li class="dropdown navOtherButton"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" role="button" aria-expanded="false">
+				<li class="dropdown navButton navMenuButton">
+					<a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" role="button" aria-expanded="false" id="navMenuButtonLink">
 						<i class="fa fa-bars" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.menu") %>
 						<%-- <span class="caret"></span> --%>
 					</a>

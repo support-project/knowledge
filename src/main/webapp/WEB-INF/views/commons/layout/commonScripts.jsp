@@ -9,7 +9,11 @@
 
 <!-- scripts -->
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery/dist/jquery.min.js"></script>
+<%--
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap/dist/js/bootstrap.min.js"></script>
+--%>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootswatch-dist/js/bootstrap.min.js"></script>
+
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bluebird/js/browser/bluebird.min.js"></script>
 

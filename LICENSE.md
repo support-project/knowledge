@@ -83,6 +83,10 @@
    - License: [MIT] https://github.com/twbs/bootstrap/blob/master/LICENSE
    - project-url: http://getbootstrap.com/
 
+- Bootswatch
+   - License: [MIT] https://github.com/dbtek/bootswatch-dist/blob/master/LICENSE
+   - project-url: https://bootswatch.com/
+
 - Font Awesome
    - License: [MIT] http://fortawesome.github.io/Font-Awesome/license/
    - project-url: http://fortawesome.github.io/Font-Awesome/
