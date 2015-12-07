@@ -14,6 +14,8 @@ import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.ItemChoicesEntity;
@@ -28,6 +30,7 @@ import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.exception.InvalidParamException;
 
+@DI(instance=Instance.Prototype)
 public class TemplateControl extends Control {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(TemplateControl.class);

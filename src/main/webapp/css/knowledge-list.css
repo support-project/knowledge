@@ -45,6 +45,8 @@
 
 .selected_tag {
 	border-bottom: 1px dotted #ccc;
+	margin-bottom: 5px;
+	height: 30px;
 }
 
 .score {
