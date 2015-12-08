@@ -1,3 +1,4 @@
+<%@page import="org.support.project.common.util.StringUtils"%>
 <%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
@@ -52,7 +53,11 @@
 				<h4 class="list-group-item-heading">
 					<i class="fa fa-book"></i>&nbsp;[<%= jspUtil.out("knowledge.knowledgeId") %>]&nbsp;<%= jspUtil.out("knowledge.title") %>
 				</h4>
-				<p class="list-group-item-text"><%= jspUtil.out("knowledge.comment") %></p>
+				<% if (StringUtils.isNotEmpty(jspUtil.out("knowledge.comment"))) { %>
+				<p class="list-group-item-text">
+					<i class="fa fa-comment-o"></i>&nbsp;<%= jspUtil.out("knowledge.comment") %>
+				</p>
+				<% } %>
 			</a>
 			
 		</c:forEach>

@@ -31,8 +31,6 @@
 
 <body>
 
-<c:import url="/WEB-INF/views/commons/layout/commonNavbar.jsp" />
-
 
 ${param.PARAM_CONTENT}
 

@@ -28,6 +28,21 @@
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+			<form class="nav navbar-nav navbar-form " role="search"
+				action="<%= request.getContextPath() %><%= top %>">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
+						name="keyword" id="navSearch" value="<%= jspUtil.out("searchKeyword") %>" />
+					<div class="input-group-btn">
+						<button class="btn btn-default" type="submit">
+							<i class="glyphicon glyphicon-search"></i>
+						</button>
+					</div>
+				</div>
+			</form>
+
+
 			<ul class="nav navbar-nav navbar-right">
 				<li class="navButton navAddButton">
 					<a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" style="cursor: pointer;"
@@ -87,18 +102,6 @@
 				</li>
 			</ul>
 			
-			<form class="nav navbar-nav navbar-form navbar-right" role="search"
-				action="<%= request.getContextPath() %><%= top %>">
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
-						name="keyword" id="navSearch" value="<%= jspUtil.out("searchKeyword") %>" />
-					<div class="input-group-btn">
-						<button class="btn btn-default" type="submit">
-							<i class="glyphicon glyphicon-search"></i>
-						</button>
-					</div>
-				</div>
-			</form>
 			
 		</div>
 		<!-- /.navbar-collapse -->

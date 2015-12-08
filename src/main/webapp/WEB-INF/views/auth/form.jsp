@@ -62,24 +62,21 @@
 			</div>
 			<input type="hidden" name="page" value="<%= jspUtil.out("page") %>" id="page">
 			
+			<a href="<%=request.getContextPath()%>/open.PasswordInitialization/view" class="text-primary">
+				<i class="fa fa-key"></i>&nbsp;<%= jspUtil.label("knowledge.auth.forgot.password") %>
+			</a>
+			<br/><br/>
+			
 			<div class="form-group">
 				<div class="">
 					<button class="btn btn-primary " type="submit">
 						<i class="fa fa-sign-in"></i>&nbsp;<%= jspUtil.label("knowledge.auth.signin") %>
 					</button>
-					<a href="<%= request.getContextPath() %>/open.knowledge/list"
-						class="btn btn-success " role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
-					
 <% if (SystemConfigLogic.get().isUserAddAble()) { %>
-					<br/><br/>
 					<a href="<%= request.getContextPath() %>/open.signup/view" class="btn btn-info">
 						<i class="fa fa-plus-square"></i>&nbsp;<%= jspUtil.label("knowledge.auth.signup") %>
 					</a>
 <% } %>
-					<br/><br/>
-					<a href="<%=request.getContextPath()%>/open.PasswordInitialization/view" class="btn btn-warning">
-						<i class="fa fa-key"></i>&nbsp;<%= jspUtil.label("knowledge.auth.forgot.password") %>
-					</a>
 
 				</div>
 			</div>

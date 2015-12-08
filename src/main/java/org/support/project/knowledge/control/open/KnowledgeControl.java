@@ -34,7 +34,6 @@ import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
-import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.MarkDown;
@@ -53,7 +52,7 @@ import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
 public class KnowledgeControl extends KnowledgeControlBase {
-	private static final int COOKIE_COUNT = 5;
+	private static final int COOKIE_COUNT = 20;
 
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(KnowledgeControl.class);
@@ -333,7 +332,21 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			}
 		}
 		LOG.trace("タグ、グループ取得完了");
-
+		
+		setAttribute("offset", offset);
+		setAttribute("previous", previous);
+		setAttribute("next", offset + 1);
+		return forward("list.jsp");
+	}
+	
+	
+	
+	@Get
+	public Boundary show_history() throws InvalidParamException {
+		LoginedUser loginedUser = super.getLoginedUser();
+		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+		TagsDao tagsDao = TagsDao.get();
+		GroupsDao groupsDao = GroupsDao.get();
 		// History表示
 		// TODO 履歴表示を毎回取得するのはイマイチ。いったんセッションに保存しておくのが良いかも
 		Cookie[] cookies = getRequest().getCookies();
@@ -356,23 +369,34 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		}
 		List<KnowledgesEntity> histories = knowledgeLogic.getKnowledges(historyIds, loginedUser);
 		LOG.trace("履歴取得完了");
-//		for (KnowledgesEntity knowledgesEntity : histories) {
-//			LOG.trace("   文字数チェック");
-//			knowledgesEntity.setContent(org.apache.commons.lang.StringUtils.abbreviate(
-//					knowledgesEntity.getContent(), 40));
-//			LOG.trace("   文字数チェック終了");
-//			LOG.trace("   Samy");
-//			knowledgesEntity.setContent(doSamy(knowledgesEntity.getContent()));
-//			LOG.trace("   Samy終了");
-//		}
 		setAttribute("histories", histories);
-		LOG.trace("履歴表示修正");
 		
-		setAttribute("offset", offset);
-		setAttribute("previous", previous);
-		setAttribute("next", offset + 1);
-		return forward("list.jsp");
+		// タグとグループの情報を取得
+		if (loginedUser != null && loginedUser.isAdmin()) {
+			// 管理者であれば、ナレッジの件数は、参照権限を考慮していない
+	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
+			setAttribute("tags", tags);
+
+			List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
+			setAttribute("groups", groups);
+		} else {
+			TagLogic tagLogic = TagLogic.get();
+			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
+			setAttribute("tags", tags);
+
+			if (loginedUser != null) {
+				GroupLogic groupLogic = GroupLogic.get();
+				List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
+				setAttribute("groups", groups);
+			}
+		}
+		LOG.trace("タグ、グループ取得完了");
+		
+		
+		return forward("show_history.jsp");
 	}
+	
+	
 	
 	/**
 	 * いいねを押下
