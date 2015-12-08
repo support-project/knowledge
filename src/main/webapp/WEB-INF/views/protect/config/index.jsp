@@ -28,18 +28,19 @@
 				<i class="fa fa-smile-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.myaccount") %>
 			</a>
 		</li>
+		
 		<%--
 		<li>
 			<a href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.id() %>" >
 				<i class="fa fa-male"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.myknowledge") %>
 			</a>
 		</li>
+		--%>
 		<li>
 			<a href="<%= request.getContextPath() %>/protect.stock/mylist" >
 				<i class="fa fa-star-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.mystock") %>
 			</a>
 		</li>
-		--%>
 		
 		<li id="tabLogout">
 			<a href="<%= request.getContextPath() %>/protect.notify" style="cursor: pointer;">
