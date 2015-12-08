@@ -23,8 +23,8 @@ public class WebhookConfigsEntity extends GenWebhookConfigsEntity {
 	private static final long serialVersionUID = 1L;
 
 	/** Hooks */
-	private static final String HOOK_KNOWLEDGES = "knowledges";
-	private static final String HOOK_COMMENTS = "comments";
+	public static final String HOOK_KNOWLEDGES = "knowledges";
+	public static final String HOOK_COMMENTS = "comments";
 
 	/**
 	 * インスタンス取得
@@ -58,5 +58,13 @@ public class WebhookConfigsEntity extends GenWebhookConfigsEntity {
 	public String eventName() {
 		String hook = getHook();
 		return Character.toUpperCase(hook.charAt(0)) + hook.substring(1) + " Events";
+	}
+
+	/**
+	 * リソースのパスを返す
+	 * @return
+	 */
+	public String resourcePath() {
+		return "/org/support/project/knowledge/webhook/" + getHook() + ".json";
 	}
 }
