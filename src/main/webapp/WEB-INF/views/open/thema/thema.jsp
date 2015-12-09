@@ -21,6 +21,7 @@
 <style>
 body {
 	padding-top: 70px;
+	overflow: hidden;
 }
 </style>
 
@@ -47,10 +48,11 @@ body {
 	<!-- /.container-fluid -->
 </nav>
 
-<div class="container">
-<h5>
+<div class="container text-center">
+
+<h3>
 <%= jspUtil.out("title") %>
-</h5>
+</h3>
 
 <button class="btn btn-default">
 default
@@ -73,6 +75,7 @@ danger
 
 
 </div>
+
 
 </body>
 </html>

@@ -15,3 +15,15 @@ create table USER_CONFIGS (
   , constraint USER_CONFIGS_PKC primary key (SYSTEM_NAME,USER_ID,CONFIG_NAME)
 ) ;
 
+comment on table USER_CONFIGS is 'ユーザ設定';
+comment on column USER_CONFIGS.SYSTEM_NAME is 'システム名';
+comment on column USER_CONFIGS.USER_ID is 'ユーザID';
+comment on column USER_CONFIGS.CONFIG_NAME is 'コンフィグ名';
+comment on column USER_CONFIGS.CONFIG_VALUE is 'コンフィグ値';
+comment on column USER_CONFIGS.ROW_ID is '行ID';
+comment on column USER_CONFIGS.INSERT_USER is '登録ユーザ';
+comment on column USER_CONFIGS.INSERT_DATETIME is '登録日時';
+comment on column USER_CONFIGS.UPDATE_USER is '更新ユーザ';
+comment on column USER_CONFIGS.UPDATE_DATETIME is '更新日時';
+comment on column USER_CONFIGS.DELETE_FLAG is '削除フラグ';
+
