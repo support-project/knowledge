@@ -1,10 +1,10 @@
 .markdown a {
 	/* color: #4183C4; */
-	color: #18bc9c;
+	/* color: #18bc9c; */
 }
 
 .markdown a.absent {
-	color: #cc0000;
+	/* color: #cc0000; */
 }
 
 .markdown a.anchor {

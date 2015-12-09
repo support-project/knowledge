@@ -31,9 +31,6 @@
 }
 
 .insert_info_text {
-	/* color: #337ab7; */
-	color: black;
-	
 }
 
 .downloadfile {
@@ -50,7 +47,7 @@
 	border-radius: 8px;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
-	color: #111;
+/*	color: #111; */
 /*	width: 100px; */
 	padding: 10px;
 }
@@ -68,6 +65,7 @@ Comments
     border-radius: 10px;
     width: 80%;
     font-size: 13px;
+    color:black;
 }
 .arrow_question {
     float: right;
