@@ -22,8 +22,8 @@
 <h4 class="title"><%= jspUtil.label("knowledge.navbar.config.system") %></h4>
 
 
+	<h4 class="sub_title"><%= jspUtil.label("knowledge.navbar.config.admin") %></h4>
 	<ul role="menu" class="menu_list">
-		<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin") %></li>
 		<li >
 			<a href="<%= request.getContextPath() %>/admin.users/list" style="cursor: pointer;">
 				<i class="fa fa-users"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.users") %>
@@ -39,8 +39,10 @@
 				<i class="fa fa-sticky-note"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.template") %> 
 			</a>
 		</li>
+	</ul>
 		
-		<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.config.system") %></li>
+	<h4 class="sub_title"><%= jspUtil.label("knowledge.navbar.config.system") %></h4>
+	<ul role="menu" class="menu_list">
 		<li >
 			<a href="<%= request.getContextPath() %>/admin.config/system" style="cursor: pointer;">
 				<i class="fa fa-cog"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system.params") %>
@@ -67,8 +69,17 @@
 				<i class="fa fa-globe"></i>&nbsp;<%= jspUtil.label("knowledge.proxy.title") %>
 			</a>
 		</li>
+		<li >
+			<a href="<%= request.getContextPath() %>/admin.webhook/config" style="cursor: pointer;">
+				<i class="fa fa-link"></i>&nbsp;<%= jspUtil.label("knowledge.webhook.title") %>
+			</a>
+		</li>
 		
-		<li class="dropdown-header">&nbsp;<%= jspUtil.label("knowledge.navbar.data") %></li>
+		
+	</ul>
+		
+	<h4 class="sub_title"><%= jspUtil.label("knowledge.navbar.data") %></h4>
+	<ul role="menu" class="menu_list">
 		<li >
 			<a href="<%= request.getContextPath() %>/admin.database/index" style="cursor: pointer;">
 				<i class="fa fa-recycle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.data.backup") %>
