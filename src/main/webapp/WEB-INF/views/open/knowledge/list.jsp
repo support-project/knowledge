@@ -120,7 +120,7 @@
 						alt="icon" width="36" height="36" style="float:left"/>
 					</div>
 					<div>
-					<%= jspUtil.label("knowledge.list.info.insert", jspUtil.out("knowledge.insertUserName"), jspUtil.date("knowledge.updateDatetime")) %>
+					<%= jspUtil.label("knowledge.list.info.insert", jspUtil.out("knowledge.updateUserName"), jspUtil.date("knowledge.updateDatetime")) %>
 					<br/>
 					<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "knowledge.publicFlag", 
 							jspUtil.label("label.public.view")) %>
