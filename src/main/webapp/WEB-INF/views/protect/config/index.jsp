@@ -54,6 +54,11 @@
 			</a>
 		</li>
 
+		<li id="tabLogout">
+			<a class="" href="<%= request.getContextPath() %>/open.language" style="cursor: pointer;">
+				<i class="fa fa-language"></i>&nbsp;<%= jspUtil.label("knowledge.language.title") %>
+			</a>
+		</li>
 		
 	</ul>
 

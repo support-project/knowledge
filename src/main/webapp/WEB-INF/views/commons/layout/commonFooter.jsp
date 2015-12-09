@@ -13,6 +13,9 @@
 				<a class="" href="<%= request.getContextPath() %>/index" style="cursor: pointer;"> About</a>
 			</li>
 			<li>
+				<a class="" href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;"> List</a>
+			</li>
+			<li>
 				<a class="" href="<%= request.getContextPath() %>/open.license" style="cursor: pointer;"> License</a>
 			</li>
 			<li>
