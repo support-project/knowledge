@@ -3,7 +3,7 @@
   "dependencies": {
     "jquery": "2.1.4",
     "bootstrap": "3.3.6",
-    "bootswatch-dist": "3.3.6-flatly",
+    "bootswatch": "3.3.6",
     "font-awesome": "4.5.0",
     "html5shiv": "3.7.2",
     "respond": "1.4.2",

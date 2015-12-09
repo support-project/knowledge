@@ -47,6 +47,13 @@
 				<i class="fa fa-bell-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.notify") %>
 			</a>
 		</li>
+
+		<li id="tabLogout">
+			<a href="<%= request.getContextPath() %>/open.thema/list" style="cursor: pointer;">
+				<i class="fa fa-television"></i>&nbsp;<%= jspUtil.label("knowledge.config.thema") %>
+			</a>
+		</li>
+
 		
 	</ul>
 

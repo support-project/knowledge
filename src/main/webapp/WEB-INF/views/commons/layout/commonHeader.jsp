@@ -37,7 +37,8 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap/dist/css/bootstrap-theme.min.css" />
 --%>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootswatch-dist/css/bootstrap.min.css" />
+
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootswatch/<%= jspUtil.cookie("KNOWLEDGE_THEMA", "flatly") %>/bootstrap.min.css" />
 
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/font-awesome/css/font-awesome.min.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-oembed-all/jquery.oembed.css" />
