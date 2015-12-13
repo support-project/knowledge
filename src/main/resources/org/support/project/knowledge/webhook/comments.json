@@ -1,7 +1,6 @@
 {
 	"comment_no": 1,
 	"comment": "記事へのコメント",
-	"status": "created",
 	"insert_user": "コメント投稿ユーザ名",
 	"insert_date": "コメント投稿日",
 	"update_user": "コメント更新ユーザ名",

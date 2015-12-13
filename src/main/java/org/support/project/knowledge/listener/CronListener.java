@@ -17,6 +17,7 @@ import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.bat.KnowledgeFileClearBat;
 import org.support.project.knowledge.bat.MailSendBat;
 import org.support.project.knowledge.bat.NotifyMailBat;
+import org.support.project.knowledge.bat.WebhookBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 
@@ -28,6 +29,7 @@ public class CronListener implements ServletContextListener {
 	private ScheduledFuture<?> fileClearfuture;
 	private ScheduledFuture<?> parsefuture;
 	private ScheduledFuture<?> mailfuture;
+	private ScheduledFuture<?> webhookfuture;
 	private ScheduledFuture<?> notifyfuture;
 	
 	@Override
@@ -118,6 +120,33 @@ public class CronListener implements ServletContextListener {
 				}
 			}
 		}, 180, 180, TimeUnit.SECONDS); // 180秒毎に実行
+
+		webhookfuture = service.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+				LOG.trace("called. [webhookfuture]");
+				// Java を別のVMで実行
+				JavaJob job = new JavaJob();
+				job.setCurrentDirectory(logDir);
+				job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
+				job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
+				job.setMainClass(WebhookBat.class.getName());
+				if (StringUtils.isNotEmpty(envValue)) {
+					job.addEnvironment(SystemConfig.KNOWLEDGE_ENV_KEY, envValue);
+				}
+				try {
+					JobResult result = job.execute();
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("finish WebhookBat [result]" + result.getResultCode());
+					}
+					if (LOG.isTraceEnabled()) {
+						LOG.trace(result.getStdout());
+					}
+				} catch (Exception e) {
+					LOG.error("Failed send webhooks.", e);
+				}
+			}
+		}, 180, 180, TimeUnit.SECONDS); // 180秒毎に実行
 		
 		notifyfuture = service.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -165,6 +194,12 @@ public class CronListener implements ServletContextListener {
 		try {
 			mailfuture.cancel(true);
 			mailfuture.get();
+		} catch (Exception e) {
+			LOG.debug("An error has occurred in the end processing of the batch", e); // 基本は無視でOK
+		}
+		try {
+			webhookfuture.cancel(true);
+			webhookfuture.get();
 		} catch (Exception e) {
 			LOG.debug("An error has occurred in the end processing of the batch", e); // 基本は無視でOK
 		}

@@ -1,10 +1,13 @@
 package org.support.project.knowledge.dao;
 
+import java.util.List;
+
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 
 import org.support.project.knowledge.dao.gen.GenWebhookConfigsDao;
+import org.support.project.knowledge.entity.WebhookConfigsEntity;
 
 /**
  * Webhooks 設定
@@ -22,7 +25,6 @@ public class WebhookConfigsDao extends GenWebhookConfigsDao {
 	public static WebhookConfigsDao get() {
 		return Container.getComp(WebhookConfigsDao.class);
 	}
-
 
 	/**
 	 * ID 
@@ -45,5 +47,13 @@ public class WebhookConfigsDao extends GenWebhookConfigsDao {
 		return currentId;
 	}
 
-
+	/**
+	 * HOOKで取得
+	 * @param hook
+	 * @return
+	 */
+	public List<WebhookConfigsEntity> selectOnHook(String hook) {
+		String sql = "SELECT * FROM WEBHOOK_CONFIGS WHERE HOOK = ? AND DELETE_FLAG = 0";
+		return executeQueryList(sql, WebhookConfigsEntity.class, hook);
+	}
 }
