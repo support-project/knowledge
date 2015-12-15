@@ -59,7 +59,7 @@ public class NotifyLogic {
 		if (!config.getConfigValue().endsWith("/")) {
 			builder.append("/");
 		}
-		builder.append("open.knowledge/view/");
+		builder.append("protect.knowledge/view/");
 		builder.append(knowledgeId);
 		return builder.toString();
 	}
