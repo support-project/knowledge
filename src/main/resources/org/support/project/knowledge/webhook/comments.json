@@ -19,6 +19,7 @@
 		"like_count": 2,
 		"comment_count": 3,
 		"type_id": -100,
+		"link": "http://example.jp/knowledge/protect.knowledge/view/1",
 		"insert_user": "記事投稿ユーザ名",
 		"insert_date": "記事投稿日",
 		"update_user": "記事更新ユーザ名",
