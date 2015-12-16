@@ -56,114 +56,151 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 
 
 <c:param name="PARAM_CONTENT">
-<%-- <h4 class="title"><%= jspUtil.label("knowledge.view.title") %></h4> --%>
-<h4 class="title">[<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil.ESCAPE_CLEAR) %></h4>
+	<div class="row">
+		<div class="col-sm-9">
+			<%-- <h4 class="title"><%= jspUtil.label("knowledge.view.title") %></h4> --%>
+			
+			<span class="insert_info_text">
+			<%--概要；記事のステータスが公開時に「公開」とは表示しないようにする
+				意図：記事は「公開」状態にあることが一般的であるので、自明なことは伝える必要はない。「保護」や「非公開」など例外的な状態のときは、その旨を伝えるようにする
+				補遺：
+			<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag",
+					jspUtil.label("label.public.view")) %>
+			 --%>
+			<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag",
+					jspUtil.label("label.private.view")) %>
+			<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag",
+					jspUtil.label("label.protect.view")) %>
+			</span>
+			<h4 class="title"><%= jspUtil.out("title", JspUtil.ESCAPE_CLEAR) %></h4>
+			<%-- タグ --%>
+			<div class="tag_list">
+				<c:if test="${!empty tagNames}">
+					<i class="fa fa-tags insert_info_text"></i>&nbsp;
+					<c:forEach var="tagName" items="${tagNames.split(',')}">
+					<span class="tag label label-info"><%= jspUtil.out("tagName") %></span>
+					</c:forEach>
+				</c:if>
+			</div>
+		<%-- 登録者情報 --%>
+		<%--概要：「登録者情報」のコメントアウト
+			意図：記事において、記事上部の情報は記事全体よりも先に読者の目に入るため、いかに記事の要約をわかりやすく伝えるかが重要になります。
+				”誰が”、”いつ”、書いたかはそれら重要な情報の一つですが、”誰がいつ登録したか”という情報と”誰が最後に更新したか”という情報は、「時間」という観点からみた場合重複した情報になるので、”誰がいつ登録したか”という情報一つに絞ります
+			補遺：java部も書き直さなくてはならないのですが、本来はQiitaのように、「記事執筆に参加しているのは誰か」「編集されたのはいつか」といった情報が文章量短く、的確に伝わるのが理想です。
+		 --%>
+			<div class="insert_info">
+		<%--概要：「[登録]」見出しを排し、「が」「に」といった助詞を加える
+			意図：記事に登録するタグのように、”キーワードである”ことがわかりやすさに寄与する場合もあるが、多くの場合、文章にするのが最も伝わりやすい
+			補遺：
+				<div class="saveType">
+				[<%= jspUtil.label("label.registration") %>]
+				</div>
+		 --%>						
+				<img src="<%= request.getContextPath()%>/images/loader.gif" 
+					data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("insertUser") %>" 
+					alt="icon" width="24" height="24" style="float:left" />
+				<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("insertUser") %>">
+				<%= jspUtil.out("insertUserName", JspUtil.ESCAPE_CLEAR) %>
+				</a>が
+				<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
+				<%= jspUtil.date("insertDatetime")%>
+				</a>に[<%= jspUtil.label("label.registration") %>]
+			</div>
+		
+		<%--
+			<div class="insert_info">
+				<div class="saveType">
+				[<%= jspUtil.label("label.update") %>]
+				</div>
+				<img src="<%= request.getContextPath()%>/images/loader.gif" 
+					data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("updateUser") %>" 
+					alt="icon" width="36" height="36" style="float:left" />
+				<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("updateUser") %>">
+				<%= jspUtil.out("updateUserName", JspUtil.ESCAPE_CLEAR) %>
+				</a>
+				<br/>
+				<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
+				<%= jspUtil.date("updateDatetime")%>
+				</a>
+			</div>
+		 --%>					
+		<%-- 公開区分やイイネ件数など --%>
+		<%-- 操作ボタン --%>
+		<%--概要：「いいね」ボタンのコメントアウト
+			意図：「ストック」機能がある場合、「いいね」ボタンは好意を伝えるボタン以外の機能を果たさないため、ストックよりも機能性が弱いと判断して一時的にコメントアウトしています
+			補遺：
+			<button class="btn btn-warning" onclick="addlike(<%= jspUtil.out("knowledgeId") %>);">
+				<i class="fa fa-thumbs-o-up"></i>&nbsp;
+				<%= jspUtil.label("knowledge.view.like") %>
+			</button>
+		 --%>	
+			
+		<%-- 
+			<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
+			class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
+		 --%>
+
+		</div>
+		<div class="col-sm-3">
+			<div class="article_buttons">
+				<%--概要：「投稿を」という目的格を添えた
+					意図：「何を」という意味が伝わるので、わかりやすくなります
+					補遺： --%>
+				<% if (request.getRemoteUser() != null) { 
+					if ((boolean) request.getAttribute("edit")) { %>
+					<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
+					class="btn btn-primary btn_edit" role="button"><i class="fa fa-edit"></i>&nbsp;
+					投稿を<%= jspUtil.label("label.edit") %>
+					</a>
+				<% } %>
+				<% } else { %>
+					<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
+					class="btn btn-primary btn_edit" role="button"><i class="fa fa-edit"></i>&nbsp;
+					<%= jspUtil.label("knowledge.view.edit.with.login") %>
+					</a>
+				<% } %>
+				<% if (request.getRemoteUser() != null) { %>
+					<button type="button" class="btn btn-info btn_stock" data-toggle="modal" data-target="#stockModal">
+					<i class="fa fa-star-o"></i>&nbsp;
+					<%= jspUtil.label("knowledge.view.fav") %>
+					</button>
+				<% } else { %>
+					<a href="<%= request.getContextPath() %>/protect.knowledge/view/<%= jspUtil.out("knowledgeId") %>"
+						class="btn btn-info" role="button">
+						<i class="fa fa-star-o"></i>&nbsp;
+						<%= jspUtil.label("knowledge.view.fav") %>(<%= jspUtil.label("knowledge.navbar.signin") %>)
+					</a>
+				<% } %>
+			</div>
+				
+			<div class="article_info">
+				<%--概要： 「いいね」「コメント」という文言をアイコンの隣に加える
+					意図：  情報を伝える際に、アイコンを使用するのはとても有効ですが、”その図が何を表すか”ということを読み取るのは誰にでも容易な作業ではありません。
+						可能な限り、アイコンは文字とセットにして使うのが効果的です。--%>
+				<p>
+					<a class="btn btn-link" href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
+						<i class="fa fa-thumbs-o-up"></i>&nbsp;いいね
+						× <span id="like_count"><%= jspUtil.out("like_count") %></span>
+					</a>
+					<a class="btn btn-link" href="#comments" id="commentsLink">
+						<i class="fa fa-comments-o"></i>&nbsp;コメント
+						× <%= jspUtil.out("comments.size()") %>
+					</a>
+					<c:if test="${targets.containsKey(knowledgeId)}">
+						<c:forEach var="target" items="${targets.get(knowledgeId)}">
+							<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
+						</c:forEach>
+						&nbsp;
+					</c:if>
+				</p>
+			</div>
+		</div>
+	</div>
+
 	<div class="row">
 		<div class="col-sm-12">
 			<div class="thumbnail">
 				<div class="caption">
-<%-- 登録者情報 --%>
-					<div class="insert_info">
-						<div class="saveType">
-						[<%= jspUtil.label("label.registration") %>]
-						</div>
-						<img src="<%= request.getContextPath()%>/images/loader.gif" 
-							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("insertUser") %>" 
-							alt="icon" width="36" height="36" style="float:left" />
-						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("insertUser") %>">
-						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("insertUserName", JspUtil.ESCAPE_CLEAR) %>
-						</a>
-						<br/>
-						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
-						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("insertDatetime")%>
-						</a>
-					</div>
-					
-					<div class="insert_info">
-						<div class="saveType">
-						[<%= jspUtil.label("label.update") %>]
-						</div>
-						<img src="<%= request.getContextPath()%>/images/loader.gif" 
-							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("updateUser") %>" 
-							alt="icon" width="36" height="36" style="float:left" />
-						<a href="<%= request.getContextPath() %>/open.knowledge/list/0?user=<%= jspUtil.out("updateUser") %>">
-						<i class="fa fa-user" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.out("updateUserName", JspUtil.ESCAPE_CLEAR) %>
-						</a>
-						<br/>
-						<a href="<%= request.getContextPath() %>/open.knowledge/histories/<%= jspUtil.out("knowledgeId") %>">
-						<i class="fa fa-calendar" style="margin-left: 5px;"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
-						</a>
-					</div>
-<%-- 公開区分やイイネ件数など --%>
-					<p>
-						<a class="btn btn-link" href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
-							<i class="fa fa-thumbs-o-up"></i>&nbsp;
-							× <span id="like_count"><%= jspUtil.out("like_count") %></span>
-						</a>
-						<a class="btn btn-link" href="#comments" id="commentsLink">
-							<i class="fa fa-comments-o"></i>&nbsp;
-							× <%= jspUtil.out("comments.size()") %>
-						</a>
-						<span class="insert_info_text">
-						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag",
-								jspUtil.label("label.public.view")) %>
-						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag",
-								jspUtil.label("label.private.view")) %>
-						<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag",
-								jspUtil.label("label.protect.view")) %>
-						</span>
-						&nbsp;
-						<c:if test="${targets.containsKey(knowledgeId)}">
-							<c:forEach var="target" items="${targets.get(knowledgeId)}">
-								<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
-							</c:forEach>
-							&nbsp;
-						</c:if>
-<%-- タグ --%>
-						<c:if test="${!empty tagNames}">
-							<i class="fa fa-tags insert_info_text"></i>&nbsp;
-							<c:forEach var="tagName" items="${tagNames.split(',')}">
-							<span class="tag label label-info"><%= jspUtil.out("tagName") %></span>
-							</c:forEach>
-						</c:if>
-					</p>
-<%-- 操作ボタン --%>
-	<button class="btn btn-warning" onclick="addlike(<%= jspUtil.out("knowledgeId") %>);">
-		<i class="fa fa-thumbs-o-up"></i>&nbsp;
-		<%= jspUtil.label("knowledge.view.like") %>
-	</button>
-	
-	<% if (request.getRemoteUser() != null) { %>
-		<button type="button" class="btn btn-info" data-toggle="modal" data-target="#stockModal">
-		<i class="fa fa-star-o"></i>&nbsp;
-		<%= jspUtil.label("knowledge.view.fav") %>
-		</button>
-	<% } else { %>
-		<a href="<%= request.getContextPath() %>/protect.knowledge/view/<%= jspUtil.out("knowledgeId") %>"
-			class="btn btn-info" role="button">
-			<i class="fa fa-star-o"></i>&nbsp;
-			<%= jspUtil.label("knowledge.view.fav") %>(<%= jspUtil.label("knowledge.navbar.signin") %>)
-		</a>
-	<% } %>
-	
-	<% if (request.getRemoteUser() != null) { 
-		if ((boolean) request.getAttribute("edit")) { %>
-		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
-		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
-		<%= jspUtil.label("label.edit") %>
-		</a>
-	<% } %>
-	<% } else { %>
-		<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
-		class="btn btn-primary" role="button"><i class="fa fa-edit"></i>&nbsp;
-		<%= jspUtil.label("knowledge.view.edit.with.login") %>
-		</a>
-	<% } %>
-
-	<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
-	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
-	
-
 					
 <%-- 添付ファイル --%>
 					<c:forEach var="file" items="${files}" >
@@ -187,8 +224,11 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 					<span id="template_items"></span>
 					</div>
 					
-					<h5>content</h5>
-					<div style="word-break:break-all;" id="content" class="markdown viewarea">
+<%--概要：「content」という文言のコメントアウト
+	意図：記事本体に対する見出しは必要ありません。記事を閲覧したときに、本文がそれとわかるように記事の外観をデザインすることが理想です。
+	補遺：
+ 					<h5>content</h5>
+ --%>					<div style="word-break:break-all;" id="content" class="markdown viewarea">
 					<%= jspUtil.out("content", JspUtil.ESCAPE_NONE) %>
 					</div>
 				</div>
