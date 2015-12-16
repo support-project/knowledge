@@ -131,7 +131,7 @@
    - License: [MIT] https://github.com/frissdiegurke/emoji-parser/blob/master/LICENSE.md
    - project-url: https://github.com/frissdiegurke/emoji-parser
    
--bluebird
+- bluebird
    - License: [MIT] https://github.com/petkaantonov/bluebird/blob/master/LICENSE
    - project-url: https://github.com/petkaantonov/bluebird
    
