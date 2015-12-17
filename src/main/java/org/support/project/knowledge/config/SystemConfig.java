@@ -36,5 +36,6 @@ public class SystemConfig {
 	/** 全ての機能は、ログインしないとアクセス出来ない */
 	public static final String SYSTEM_EXPOSE_TYPE_CLOSE = "CLOSE";
 	
-	
+	/** UIのテーマの設定のキー */
+	public static final String CONFIG_KEY_THEMA = "THEMA";
 }

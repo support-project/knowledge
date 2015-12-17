@@ -7,6 +7,7 @@ import java.util.TimeZone;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.knowledge.deploy.v001.Migrate001;
 import org.support.project.knowledge.deploy.v0_0_1.InitializeSystem;
 import org.support.project.knowledge.deploy.v0_4_4.Migrate_0_4_4;
 import org.support.project.knowledge.deploy.v0_5_0.Migrate_0_5_0;
@@ -29,7 +30,7 @@ public class InitDB {
 	private static final Map<String, Migrate> MAP = new LinkedHashMap<>();
 	
 	private static final Migrate INIT = InitializeSystem.get();
-	public static final String CURRENT = "0.8.0.pre1";
+	public static final String CURRENT = "001";
 	
 	public InitDB() {
 		super();
@@ -42,7 +43,8 @@ public class InitDB {
 		MAP.put("0.5.3.pre3", Migrate_0_5_3pre3.get()); // メールアドレス
 		MAP.put("0.6.0.pre2", Migrate_0_6_0pre2.get());
 		MAP.put("0.6.0.pre4", Migrate_0_6_0pre4.get());
-		MAP.put(CURRENT, Migrate_0_8_0pre1.get());
+		MAP.put("0.8.0.pre1", Migrate_0_8_0pre1.get());
+		MAP.put(CURRENT, Migrate001.get());
 	}
 
 	public static void main(String[] args) throws Exception {

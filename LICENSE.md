@@ -1,11 +1,11 @@
-### This Project License
+## This Project License
 - This project is provided under Apache License, Version 2.0
 - http://www.apache.org/licenses/LICENSE-2.0
 
 
-### Third-Party License
+## Third-Party License
 
-#### Server side Library
+### Server side Library
 
 - H2 Database Engine
    - License: [MPL 2.0] http://www.h2database.com/html/license.html
@@ -43,15 +43,38 @@
    - License: [Creative Commons Attribution-ShareAlike 3.0 license] http://creativecommons.org/licenses/by-sa/3.0/
    - project-url: https://www.owasp.org/index.php/Category:OWASP_AntiSamy_Project
 
+- OWASP/java-html-sanitizer
+   - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
+   - project-url: https://github.com/owasp/java-html-sanitizer
+
 - Apache Lucene
    - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
    - project-url: http://lucene.apache.org/
 
-- Apache Tika
+- Apache Directory
    - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
-   - project-url: http://tika.apache.org/
+   - project-url: https://directory.apache.org/
 
-#### Front end Library
+- PostgreSQL JDBC
+   - License: [BSD License] https://jdbc.postgresql.org/about/license.html
+   - project-url: http://www.postgresql.org/
+
+- java-diff-utils
+   - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
+   - project-url: https://code.google.com/p/java-diff-utils/
+
+- pegdown
+   - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
+   - project-url: https://github.com/sirthias/pegdown
+
+- Apache Httpcomponents
+   - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
+   - project-url: https://hc.apache.org/
+
+
+
+
+### Front end Library
 - jQuery
    - License: [MIT] https://jquery.org/license/
    - project-url: http://jquery.com/
@@ -59,6 +82,10 @@
 - Bootstrap
    - License: [MIT] https://github.com/twbs/bootstrap/blob/master/LICENSE
    - project-url: http://getbootstrap.com/
+
+- Bootswatch
+   - License: [MIT] https://github.com/dbtek/bootswatch-dist/blob/master/LICENSE
+   - project-url: https://bootswatch.com/
 
 - Font Awesome
    - License: [MIT] http://fortawesome.github.io/Font-Awesome/license/
@@ -92,4 +119,27 @@
    - License: [MIT] https://github.com/teambox/Free-file-icons/blob/master/LICENSE
    - project-url: https://github.com/teambox/Free-file-icons
 
+- echojs
+   - License: [MIT] http://opensource.org/licenses/mit-license.php
+   - project-url: https://github.com/toddmotto/echo
+
+- notify.js
+   - License: [MIT] https://github.com/alexgibson/notify.js/blob/master/LICENSE.md
+   - project-url: https://github.com/alexgibson/notify.js
+
+- emoji-parser
+   - License: [MIT] https://github.com/frissdiegurke/emoji-parser/blob/master/LICENSE.md
+   - project-url: https://github.com/frissdiegurke/emoji-parser
    
+- bluebird
+   - License: [MIT] https://github.com/petkaantonov/bluebird/blob/master/LICENSE
+   - project-url: https://github.com/petkaantonov/bluebird
+   
+- jquery-oembed-all
+   - License: [MIT] https://github.com/starfishmod/jquery-oembed-all/blob/master/jquery.oembed.js
+   - project-url: https://github.com/starfishmod/jquery-oembed-all
+   
+- flag-icon-css
+   - License: [MIT] https://github.com/lipis/flag-icon-css/blob/master/LICENSE
+   - project-url: https://github.com/lipis/flag-icon-css
+

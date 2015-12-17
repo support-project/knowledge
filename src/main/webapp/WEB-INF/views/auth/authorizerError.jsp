@@ -7,7 +7,7 @@
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
 
-<c:import url="/WEB-INF/views/commons/layout/layoutNoMenu.jsp">
+<c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 	
 	<c:param name="PARAM_CONTENT">
 		<%= jspUtil.label("message.authorize.error") %>

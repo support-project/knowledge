@@ -40,11 +40,12 @@
 
 .thumbnail .caption {
 	padding: 2px;
-	color: #333;
 }
 
 .selected_tag {
 	border-bottom: 1px dotted #ccc;
+	margin-bottom: 5px;
+	height: 30px;
 }
 
 .score {

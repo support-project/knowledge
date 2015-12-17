@@ -27,81 +27,24 @@
 	<!-- Title -->
 	<div class="row">
 		<ul class="nav nav-tabs">
-			<li role="presentation" class="active"><a href="<%= request.getContextPath() %>/open.knowledge/list"><%= jspUtil.label("knowledge.list.kind.list") %></a></li>
+			<li role="presentation"><a href="<%= request.getContextPath() %>/open.knowledge/list"><%= jspUtil.label("knowledge.list.kind.list") %></a></li>
 <%--		<li role="presentation"><a href="#"><%= jspUtil.label("knowledge.list.kind.popular") %></a></li> --%>
 <%--			<li role="presentation"><a href="#"><%= jspUtil.label("knowledge.list.kind.stock") %></a></li> --%>
-			<li role="presentation"><a href="<%= request.getContextPath() %>/open.knowledge/show_history"><%= jspUtil.label("knowledge.list.kind.history") %></a></li>
+			<li role="presentation" class="active"><a href="<%= request.getContextPath() %>/open.knowledge/show_history"><%= jspUtil.label("knowledge.list.kind.history") %></a></li>
 		</ul>
 	</div>
 	
-	<!-- Filter -->
-	<c:if test="${!empty selectedTag || !empty selectedGroup || !empty selectedUser || !empty searchTags || !empty searchGroups || !empty keyword}">
-		<div class="row">
-			<div class="col-sm-12 selected_tag">
-			
-			<c:if test="${!empty selectedTag}">
-			<a class="text-link" 
-				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%=jspUtil.out("selectedTag.tagId") %>" >
-					<i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("selectedTag.tagName") %>
-			</a>
-			</c:if>
-			
-			<c:if test="${!empty selectedGroup}">
-			<a class="text-link"
-				href="<%= request.getContextPath() %>/open.knowledge/list?group=<%=jspUtil.out("selectedGroup.groupId") %>" >
-					<i class="fa fa-group"></i>&nbsp;<%=jspUtil.out("selectedGroup.groupName") %>
-			</a>
-			</c:if>
-
-			<c:if test="${!empty selectedUser}">
-			<a class="text-link" 
-				href="<%= request.getContextPath() %>/open.knowledge/list?user=<%= jspUtil.out("selectedUser.userId") %>" >
-					<i class="fa fa-user"></i>&nbsp;<%= jspUtil.out("selectedUser.userName") %>
-			</a>
-			</c:if>
-			
-			<c:if test="${!empty searchTags}">
-			<c:forEach var="searchTag" items="${searchTags}" varStatus="status">
-			<a class="text-link" 
-				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%=jspUtil.out("searchTag.tagId") %>" >
-					<i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("searchTag.tagName") %>
-			</a>
-			</c:forEach>
-			</c:if>
-
-			<c:if test="${!empty searchGroups}">
-			<c:forEach var="searchGroup" items="${searchGroups}" varStatus="status">
-			<a class="text-link" 
-				href="<%= request.getContextPath() %>/open.knowledge/list?group=<%=jspUtil.out("searchGroup.groupId") %>" >
-					<i class="fa fa-group"></i>&nbsp;<%=jspUtil.out("searchGroup.groupName") %>
-			</a>
-			</c:forEach>
-			</c:if>
-			
-			<c:if test="${!empty keyword}">
-			<a class="text-link" 
-				href="<%= request.getContextPath() %>/open.knowledge/list?keyword=<%=jspUtil.out("keyword") %>" >
-					<i class="fa fa-search"></i>&nbsp;<%=jspUtil.out("keyword") %>
-			</a>
-			</c:if>
-			
-			<a class="text-link" 
-				href="<%= request.getContextPath() %>/open.knowledge/list" >
-					<i class="fa fa-times-circle"></i>&nbsp;
-			</a>
-			</div>
-		</div>
-	</c:if>
 	
-	<!-- List -->
+	
+	
 	<div class="row" id="knowledgeList">
 		<div class="col-sm-12 col-md-8">
 		
-		<c:if test="${empty knowledges}">
+		<c:if test="${empty histories}">
 		<%= jspUtil.label("knowledge.list.empty") %>
 		</c:if>
 		
-		<c:forEach var="knowledge" items="${knowledges}" varStatus="status">
+		<c:forEach var="knowledge" items="${histories}" varStatus="status">
 			<div class="thumbnail" 
 				onclick="showKnowledge('<%= jspUtil.out("knowledge.knowledgeId") %>',
 					'<%= jspUtil.out("offset") %>', '<%= jspUtil.out("keyword") %>',
@@ -120,7 +63,7 @@
 						alt="icon" width="36" height="36" style="float:left"/>
 					</div>
 					<div>
-					<%= jspUtil.label("knowledge.list.info.insert", jspUtil.out("knowledge.updateUserName"), jspUtil.date("knowledge.updateDatetime")) %>
+					<%= jspUtil.label("knowledge.list.info.insert", jspUtil.out("knowledge.insertUserName"), jspUtil.date("knowledge.updateDatetime")) %>
 					<br/>
 					<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "knowledge.publicFlag", 
 							jspUtil.label("label.public.view")) %>
@@ -149,7 +92,6 @@
 						<i class="fa fa-comments-o"></i>&nbsp;× <%= jspUtil.out("knowledge.commentCount") %>
 						&nbsp;&nbsp;&nbsp;
 					</div>
-
 					<c:if test="${!empty keyword}">
 					<p style="word-break:break-all" class="content">
 					<%= jspUtil.out("knowledge.content", JspUtil.ESCAPE_CLEAR, 300) %>
@@ -159,7 +101,10 @@
 			</div>
 		</c:forEach>
 		</div>
-		
+	
+	
+	
+	
 		<!-- Sub List -->
 		<div class="col-sm-12 col-md-4">
 		
@@ -211,23 +156,10 @@
 	
 	</div>
 	
-	<!-- Pager -->
-	<nav>
-		<ul class="pager">
-			<li class="previous">
-				<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("previous") %><%= jspUtil.out("params") %> %>">
-					<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
-				</a>
-			</li>
-			<li class="next">
-				<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("next") %><%= jspUtil.out("params") %>">
-					<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
-				</a>
-			</li>
-		</ul>
-	</nav>
-
+	
 </c:param>
 
 </c:import>
 
+	
+	
