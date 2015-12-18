@@ -19,13 +19,7 @@ $(document).ready(function() {
 		$(this).find('.discription').slideUp(250); // .fadeOut(205)
 	});
 	*/
-	/*
-	$('.thumbnail').hover(function() {
-		$(this).css('border', '1px solid gray');
-	}, function() {
-		$(this).css('border', '0px solid #ccc');
-	});
-	*/
+
 	$('#input_tags').on('beforeItemRemove', function(event) {
 		event.cancel = true;
 	});
