@@ -32,10 +32,15 @@
 }
 
 .thumbnail {
-	border: 0px solid #ccc;
+	border: 1px solid #FFF;
 	box-shadow: none;
 	cursor: pointer;
 	margin-bottom: 5px;
+}
+
+.thumbnail:hover {
+	border: 1px solid #ccc;
+	background-color: #fdeff2;
 }
 
 .thumbnail .caption {
