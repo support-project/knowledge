@@ -13,8 +13,9 @@
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bluebird/js/browser/bluebird.min.js"></script>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/notify.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/styles/metro/notify-metro.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/notify.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/notify-combined.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/notifyjs/dist/styles/bootstrap/notify-bootstrap.js"></script>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/marked/lib/marked.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/highlightjs/highlight.pack.js"></script>
