@@ -33,7 +33,6 @@
 <meta property="og:site_name" content="Knowledge"/>
 
 <link rel="icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/vnd.microsoft.icon" /> 
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/highlightjs/styles/default.css" />
 
 <% if (StringUtils.isNotEmpty(jspUtil.out("thema"))) { %>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootswatch/<%= jspUtil.out("thema") %>/bootstrap.min.css" />
@@ -45,6 +44,12 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-oembed-all/jquery.oembed.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/flag-icon-css/css/flag-icon.min.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/notifyjs/dist/styles/metro/notify-metro.css" />
+
+<% if (StringUtils.isNotEmpty(jspUtil.out("highlight"))) { %>
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/highlightjs/styles/<%= jspUtil.out("highlight") %>.css" />
+<% } else { %>
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/highlightjs/styles/<%= jspUtil.cookie("KNOWLEDGE_HIGHLIGHT", "darkula") %>.css" />
+<% } %>
 
 <!--[if lt IE 9]>
     <script src="<%= request.getContextPath() %>/bower/html5shiv/dist/html5shiv.min.js"></script>

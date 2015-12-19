@@ -56,6 +56,40 @@ public class ThemaControl extends Control {
 		return forward("list.jsp");
 	}
 	
+	@Get
+	public Boundary highlight() {
+		String thema = getPathInfo();
+		if (StringUtils.isEmpty(thema)) {
+			thema = "dark";
+		}
+		if (thema.startsWith("/")) {
+			thema = thema.substring(1);
+		}
+		setAttribute("highlight", thema);
+		
+		String title = thema.substring(0, 1).toUpperCase() + thema.substring(1);
+		setAttribute("title", title);
+		return forward("highlight.jsp");
+	}
+	
+	@Get
+	public Boundary style() {
+		String thema = getPathInfo();
+		if (StringUtils.isEmpty(thema)) {
+			thema = "dark";
+		}
+		if (thema.startsWith("/")) {
+			thema = thema.substring(1);
+		}
+		setAttribute("highlight", thema);
+		
+		Cookie cookie = new  Cookie("KNOWLEDGE_HIGHLIGHT", thema);
+		cookie.setPath(getRequest().getContextPath());
+		cookie.setMaxAge(KnowledgeControl.COOKIE_AGE);
+		getResponse().addCookie(cookie);
+		
+		return forward("list.jsp");
+	}	
 	
 	
 	

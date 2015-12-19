@@ -27,11 +27,34 @@
 	margin-bottom: 20px;
 	font-size:12pt;
 }
+.highlight_show {
+	border: none;
+	height: 250px;
+	width: 100%;
+	overflow: hidden;
+}
+.hr {
+	height: 100px;
+	border-bottom: 1px solid gray;
+}
+form {
+	margin-top: 30px;
+}
 </style>
 
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
+<script>
+function setThema() {
+	location.href = '<%= request.getContextPath() %>/open.thema/enable/' + $('#thema').val();
+}
+
+function setStyle() {
+	location.href = '<%= request.getContextPath() %>/open.thema/style/' + $('#style').val();
+}
+</script>
+
 </c:param>
 
 
@@ -96,6 +119,88 @@
 	<div class="col-xs-4 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/show/cerulean" class="thema_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/enable/cerulean" class="btn btn-primary"><%= jspUtil.label("knowledge.config.thema.enable") %></a>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<form class="form-inline" method="get" action="#">
+			Other: 
+			<div class="form-group">
+				<!-- <label class="sr-only" for="thema">Other thema</label> -->
+				<input type="text" class="form-control" id="thema" placeholder="Other thema">
+			</div>
+			<button type="submit" class="btn btn-default" onclick="setThema()">
+				<%= jspUtil.label("knowledge.config.thema.enable") %>
+			</button>
+			<a href="https://bootswatch.com/" target="_blank">thema list</a>
+		</form>
+	</div>
+</div>
+
+
+<div class="hr"></div>
+
+
+<h4 class="title">
+<%= jspUtil.label("knowledge.config.highlight") %>
+</h4>
+
+<div class="row">
+	<div class="col-xs-12 selected_thema">
+		[<%= jspUtil.label("knowledge.config.thema.now") %>]: 
+		<% if (StringUtils.isNotEmpty(jspUtil.out("highlight"))) { %>
+		<%= jspUtil.out("highlight") %>
+		<% } else { %>
+		<%= jspUtil.cookie("KNOWLEDGE_HIGHLIGHT", "darkula") %>
+		<% } %>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-xs-6 thema_box">
+		<iframe src="<%= request.getContextPath() %>/open.thema/highlight/darkula" class="highlight_show"></iframe>
+		<a href="<%= request.getContextPath() %>/open.thema/style/darkula" class="btn btn-primary">
+		<%= jspUtil.label("knowledge.config.thema.enable") %>
+		</a>
+	</div>
+	<div class="col-xs-6 thema_box">
+		<iframe src="<%= request.getContextPath() %>/open.thema/highlight/default" class="highlight_show"></iframe>
+		<a href="<%= request.getContextPath() %>/open.thema/style/default" class="btn btn-primary">
+		<%= jspUtil.label("knowledge.config.thema.enable") %>
+		</a>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-xs-6 thema_box">
+		<iframe src="<%= request.getContextPath() %>/open.thema/highlight/far" class="highlight_show"></iframe>
+		<a href="<%= request.getContextPath() %>/open.thema/style/far" class="btn btn-primary">
+		<%= jspUtil.label("knowledge.config.thema.enable") %>
+		</a>
+	</div>
+	<div class="col-xs-6 thema_box">
+		<iframe src="<%= request.getContextPath() %>/open.thema/highlight/kimbie.light" class="highlight_show"></iframe>
+		<a href="<%= request.getContextPath() %>/open.thema/style/kimbie.light" class="btn btn-primary">
+		<%= jspUtil.label("knowledge.config.thema.enable") %>
+		</a>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<form class="form-inline" method="get" action="#">
+			Other: 
+			<div class="form-group">
+				<input type="text" class="form-control" id="style" placeholder="Other code highlight style">
+			</div>
+			<button type="submit" class="btn btn-default" onclick="setStyle()">
+				<%= jspUtil.label("knowledge.config.thema.enable") %>
+			</button>
+			<a href="https://highlightjs.org/static/demo/" target="_blank">style list</a>
+		</form>
 	</div>
 </div>
 
