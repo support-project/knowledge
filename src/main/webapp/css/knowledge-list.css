@@ -36,11 +36,21 @@
 	box-shadow: none;
 	cursor: pointer;
 	margin-bottom: 5px;
+	text-decoration: none;
 }
-
+.thumbnail:link {
+	text-decoration: none;
+}
+.thumbnail:visited {
+	text-decoration: none;
+}
+.thumbnail:active {
+	text-decoration: none;
+}
 .thumbnail:hover {
 	border: 1px solid #ccc;
 	background-color: #fdeff2;
+	text-decoration: none;
 }
 
 .thumbnail .caption {
