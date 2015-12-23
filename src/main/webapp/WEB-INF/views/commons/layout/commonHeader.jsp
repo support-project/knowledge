@@ -43,7 +43,6 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/font-awesome/css/font-awesome.min.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-oembed-all/jquery.oembed.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/flag-icon-css/css/flag-icon.min.css" />
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/notifyjs/dist/styles/metro/notify-metro.css" />
 
 <% if (StringUtils.isNotEmpty(jspUtil.out("highlight"))) { %>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/highlightjs/styles/<%= jspUtil.out("highlight") %>.css" />
