@@ -10,24 +10,20 @@
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
 
-		<!-- List -->
-		<div class="col-sm-12 col-md-8">
-		
-		<c:if test="${empty list_data}">
-		<%= jspUtil.label("knowledge.list.empty") %>
-		</c:if>
-		
-		<c:forEach var="knowledge" items="${list_data}" varStatus="status">
-			<a class="thumbnail" 
-				href="<%= request.getContextPath()%>/open.knowledge/view/<%= jspUtil.out("knowledge.knowledgeId") %><%= jspUtil.out("params") %>">
-				<div class="discription" id="discription_<%= jspUtil.out("knowledge.knowledgeId") %>">
-					<i class="fa fa-check-square-o"></i>&nbsp;show!
-				</div>
-				<div class="caption">
-					<h4>
-						<%= jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR) %>
-					</h4>
-					<div class="insert_info">
+<!-- List -->
+<div class="col-sm-12 col-md-8 knowledge_list">
+
+	<c:if test="${empty list_data}">
+	<%= jspUtil.label("knowledge.list.empty") %>
+	</c:if>
+	
+	<c:forEach var="knowledge" items="${list_data}" varStatus="status">
+		<a href="<%= request.getContextPath()%>/open.knowledge/view/<%= jspUtil.out("knowledge.knowledgeId") %><%= jspUtil.out("params") %>">
+			<div class="knowledge_item">
+			
+				<h4><%= jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR) %></h4>
+				
+				<div class="insert_info">
 					<div style="float:left">
 					<img src="<%= request.getContextPath()%>/images/loader.gif" 
 						data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("knowledge.insertUser") %>" 
@@ -55,22 +51,28 @@
 						</c:forEach>
 					</c:if>
 					</div>
-					</div>
-					
-					<div class="item-info">
-						<i class="fa fa-thumbs-o-up" style="margin-left: 5px;"></i>&nbsp;× <span id="like_count"><%= jspUtil.out("knowledge.likeCount") %></span>
-						&nbsp;&nbsp;&nbsp;
-						<i class="fa fa-comments-o"></i>&nbsp;× <%= jspUtil.out("knowledge.commentCount") %>
-						&nbsp;&nbsp;&nbsp;
-					</div>
-
+				</div>
+				
+				<div class="item-info">
+					<i class="fa fa-thumbs-o-up" style="margin-left: 5px;"></i>&nbsp;× <span id="like_count"><%= jspUtil.out("knowledge.likeCount") %></span>
+					&nbsp;&nbsp;&nbsp;
+					<i class="fa fa-comments-o"></i>&nbsp;× <%= jspUtil.out("knowledge.commentCount") %>
+					&nbsp;&nbsp;&nbsp;
+				</div>
+				
+				<div class="ite_caption">
 					<c:if test="${!empty keyword}">
 					<p style="word-break:break-all" class="content">
 					<%= jspUtil.out("knowledge.content", JspUtil.ESCAPE_CLEAR, 300) %>
 					</p>
 					</c:if>
 				</div>
-			</a>
-		</c:forEach>
-		</div>
-		
+			</div>
+			
+		</a>
+	</c:forEach>
+	
+</div>
+
+
+	
