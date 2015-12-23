@@ -1,6 +1,8 @@
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@page import="org.support.project.common.util.StringUtils"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
+<%@page import="org.support.project.knowledge.config.SystemConfig"%>
+
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -70,7 +72,7 @@ function setStyle() {
 		<% if (StringUtils.isNotEmpty(jspUtil.out("thema"))) { %>
 		<%= jspUtil.out("thema") %>
 		<% } else { %>
-		<%= jspUtil.cookie("KNOWLEDGE_THEMA", "flatly") %>
+		<%= jspUtil.cookie(SystemConfig.COOKIE_KEY_THEMA, "flatly") %>
 		<% } %>
 	</div>
 </div>
@@ -152,7 +154,7 @@ function setStyle() {
 		<% if (StringUtils.isNotEmpty(jspUtil.out("highlight"))) { %>
 		<%= jspUtil.out("highlight") %>
 		<% } else { %>
-		<%= jspUtil.cookie("KNOWLEDGE_HIGHLIGHT", "darkula") %>
+		<%= jspUtil.cookie(SystemConfig.COOKIE_KEY_HIGHLIGHT, "darkula") %>
 		<% } %>
 	</div>
 </div>

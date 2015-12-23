@@ -1,6 +1,8 @@
+<%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
+
+<%@page import="org.support.project.web.config.AppConfig"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
 <%@page import="org.support.project.knowledge.control.Control"%>
-<%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -43,14 +45,6 @@ var getCookies = function() {
 }
 
 var setCookie = function(c_name, value, expiredays, path) {
-//	var path = location.pathname;
-//	var paths = new Array();
-//	paths = path.split("/");
-//	if (paths[paths.length - 1] != "") {
-//		paths[paths.length - 1] = "";
-//		path = paths.join("/");
-//	}
-	
 	var extime = new Date().getTime();
 	var cltime = new Date(extime + (60 * 60 * 24 * 1000 * expiredays));
 	var exdate = cltime.toUTCString();
@@ -62,12 +56,13 @@ var setCookie = function(c_name, value, expiredays, path) {
 	if (path) {
 		s += ' path=' + path + ';';
 	} else {
-		s += ' path=' + _CONTEXT + ';';
+		s += ' path=' + _CONTEXT + '/;';
+//		s += ' path=/;';
 	}
 	
 	document.cookie = s;
 }
-setCookie('<%= JspUtil.TIME_ZONE_OFFSET %>', (new Date()).getTimezoneOffset(), 60);
+setCookie('<%= AppConfig.get().getSystemName() %>_<%= JspUtil.TIME_ZONE_OFFSET %>', (new Date()).getTimezoneOffset(), 60);
 
 <% 
 

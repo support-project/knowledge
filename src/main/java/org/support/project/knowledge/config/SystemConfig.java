@@ -38,4 +38,11 @@ public class SystemConfig {
 	
 	/** UIのテーマの設定のキー */
 	public static final String CONFIG_KEY_THEMA = "THEMA";
+	/** Cookieにセットする際のキー：参照履歴 */
+	public static final String COOKIE_KEY_HISTORY = "HISTORY";
+	/** Cookieにセットする際のキー：表示テーマ */
+	public static final String COOKIE_KEY_THEMA = "THEMA";
+	/** Cookieにセットする際のキー：コードハイライトのスタイル */
+	public static final String COOKIE_KEY_HIGHLIGHT = "HIGHLIGHT";
+
 }

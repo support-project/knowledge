@@ -1,13 +1,8 @@
 package org.support.project.knowledge.control.open;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.Cookie;
 
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
@@ -15,6 +10,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
@@ -55,16 +51,14 @@ import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
 public class KnowledgeControl extends KnowledgeControlBase {
-	private static final int COOKIE_COUNT = 20;
-
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(KnowledgeControl.class);
 	
+	private static final int COOKIE_COUNT = 20;
+	private static final String COOKIE_SEPARATOR = "-";
+	
 	public static final int PAGE_LIMIT = 50;
 	public static final int FAV_PAGE_LIMIT = 10;
-	public static final int COOKIE_AGE = 60 * 60 * 24 * 31;
-	
-	private static final String COOKIE_SEPARATOR = "-";
 	
 	/**
 	 * ナレッジを表示
@@ -82,47 +76,27 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
 		
 		// 今見たナレッジの情報をCookieに保存
-		try {
-			List<String> ids = new ArrayList<String>();
-			ids.add(String.valueOf(knowledgeId));
-			Cookie[] cookies = getRequest().getCookies();
-			if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if (!cookie.getName().equals("KNOWLEDGE_HISTORY")) {
-						continue;
-					}
-					String history = cookie.getValue();
-					if (history.indexOf(",") != -1) {
-						history = history.replaceAll(",", COOKIE_SEPARATOR); // 旧閲覧履歴情報が存在すれば、変換する
-					} else {
-						history = URLDecoder.decode(history, "UTF-8");
-					}
-					if (history.indexOf(COOKIE_SEPARATOR) != -1) {
-						String[] historyIds = history.split(COOKIE_SEPARATOR);
-						for (int i = 0; i < historyIds.length; i++) {
-							if (!ids.contains(historyIds[i]) && StringUtils.isLong(historyIds[i])) {
-								ids.add(historyIds[i]);
-							}
-							if (ids.size() >= COOKIE_COUNT) {
-								break;
-							}
-						}
-					} else {
-						if (!ids.contains(history)) {
-							ids.add(history);
-						}
-					}
+		List<String> ids = new ArrayList<String>();
+		ids.add(String.valueOf(knowledgeId));
+		String history = getCookie(SystemConfig.COOKIE_KEY_HISTORY);
+		LOG.debug("history: " + history);
+		if (history.indexOf(COOKIE_SEPARATOR) != -1) {
+			String[] historyIds = history.split(COOKIE_SEPARATOR);
+			for (int i = 0; i < historyIds.length; i++) {
+				if (!ids.contains(historyIds[i]) && StringUtils.isLong(historyIds[i])) {
+					ids.add(historyIds[i]);
 				}
-				String cookieHistory = String.join(COOKIE_SEPARATOR, ids);
-				cookieHistory = URLEncoder.encode(cookieHistory, "UTF-8");
-				Cookie cookie = new  Cookie("KNOWLEDGE_HISTORY", cookieHistory);
-				cookie.setPath(getRequest().getContextPath());
-				cookie.setMaxAge(COOKIE_AGE);
-				getResponse().addCookie(cookie);
+				if (ids.size() >= COOKIE_COUNT) {
+					break;
+				}
 			}
-		} catch (UnsupportedEncodingException e) {
-			LOG.error("Cokkie error.", e);
+		} else {
+			if (!ids.contains(history)) {
+				ids.add(history);
+			}
 		}
+		String cookieHistory = String.join(COOKIE_SEPARATOR, ids);
+		setCookie(SystemConfig.COOKIE_KEY_HISTORY, cookieHistory);
 		
 		KnowledgesEntity entity = knowledgeLogic.selectWithTags(knowledgeId, getLoginedUser());
 		if (entity == null) {
@@ -361,43 +335,27 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
 		TagsDao tagsDao = TagsDao.get();
 		GroupsDao groupsDao = GroupsDao.get();
+		
 		// History表示
 		// TODO 履歴表示を毎回取得するのはイマイチ。いったんセッションに保存しておくのが良いかも
-		try {
-			Cookie[] cookies = getRequest().getCookies();
-			List<String> historyIds = new ArrayList<>();
-			if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if (!cookie.getName().equals("KNOWLEDGE_HISTORY")) {
-						continue;
-					}
-					String history = cookie.getValue();
-					if (history.indexOf(",") != -1) {
-						history = history.replaceAll(",", COOKIE_SEPARATOR);
-					} else {
-						history = URLDecoder.decode(history, "UTF-8");
-					}
-					LOG.debug("history: " + history);
-					if (history.indexOf(COOKIE_SEPARATOR) != -1) {
-						String[] splits = history.split(COOKIE_SEPARATOR);
-						for (String string : splits) {
-							if (StringUtils.isLong(string)) {
-								historyIds.add(string);
-							}
-						}
-					} else {
-						if (StringUtils.isLong(history)) {
-							historyIds.add(history);
-						}
-					}
+		String history = getCookie(SystemConfig.COOKIE_KEY_HISTORY);
+		List<String> historyIds = new ArrayList<>();
+		LOG.debug("history: " + history);
+		if (history.indexOf(COOKIE_SEPARATOR) != -1) {
+			String[] splits = history.split(COOKIE_SEPARATOR);
+			for (String string : splits) {
+				if (StringUtils.isLong(string)) {
+					historyIds.add(string);
 				}
 			}
-			List<KnowledgesEntity> histories = knowledgeLogic.getKnowledges(historyIds, loginedUser);
-			LOG.trace("履歴取得完了");
-			setAttribute("histories", histories);
-		} catch (UnsupportedEncodingException e) {
-			LOG.error("Cokkie error.", e);
+		} else {
+			if (StringUtils.isLong(history)) {
+				historyIds.add(history);
+			}
 		}
+		List<KnowledgesEntity> histories = knowledgeLogic.getKnowledges(historyIds, loginedUser);
+		LOG.trace("履歴取得完了");
+		setAttribute("histories", histories);
 		
 		// タグとグループの情報を取得
 		if (loginedUser != null && loginedUser.isAdmin()) {
