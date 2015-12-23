@@ -7,6 +7,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
@@ -47,12 +48,7 @@ public class ThemaControl extends Control {
 			thema = thema.substring(1);
 		}
 		setAttribute("thema", thema);
-		
-		Cookie cookie = new  Cookie("KNOWLEDGE_THEMA", thema);
-		cookie.setPath(getRequest().getContextPath());
-		cookie.setMaxAge(KnowledgeControl.COOKIE_AGE);
-		getResponse().addCookie(cookie);
-		
+		setCookie(SystemConfig.COOKIE_KEY_THEMA, thema);
 		return forward("list.jsp");
 	}
 	
@@ -82,12 +78,7 @@ public class ThemaControl extends Control {
 			thema = thema.substring(1);
 		}
 		setAttribute("highlight", thema);
-		
-		Cookie cookie = new  Cookie("KNOWLEDGE_HIGHLIGHT", thema);
-		cookie.setPath(getRequest().getContextPath());
-		cookie.setMaxAge(KnowledgeControl.COOKIE_AGE);
-		getResponse().addCookie(cookie);
-		
+		setCookie(SystemConfig.COOKIE_KEY_HIGHLIGHT, thema);
 		return forward("list.jsp");
 	}	
 	
