@@ -1,14 +1,22 @@
-.discription {
-	display: none;
-	position: absolute;
-	top: 30;
-	left: 30;
-	padding: 30px;
-	background: rgba(0, 0, 0, 0.4);
-	color: #FFF !important;
-	/* border:solid 5px #cc66ff; */
-	/* border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; */
-	border-radius: 50%;
+.knowledge_list > a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.knowledge_item {
+	width: 100%;
+	border: 1px solid transparent;
+	box-shadow: none;
+	cursor: pointer;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding: 5px;
+}
+.knowledge_item:hover {
+	border: 1px solid #ccc;
+	color:black;
+	background-color: #fdeff2;
+	text-decoration: none;
 }
 
 .insert_info {
@@ -31,38 +39,4 @@
 	cursor: text;
 }
 
-.thumbnail {
-	border: 1px solid #FFF;
-	box-shadow: none;
-	cursor: pointer;
-	margin-bottom: 5px;
-	text-decoration: none;
-}
-.thumbnail:link {
-	text-decoration: none;
-}
-.thumbnail:visited {
-	text-decoration: none;
-}
-.thumbnail:active {
-	text-decoration: none;
-}
-.thumbnail:hover {
-	border: 1px solid #ccc;
-	background-color: #fdeff2;
-	text-decoration: none;
-}
 
-.thumbnail .caption {
-	padding: 2px;
-}
-
-.selected_tag {
-	border-bottom: 1px dotted #ccc;
-	margin-bottom: 5px;
-	height: 30px;
-}
-
-.score {
-	font-size: 10px;
-}
