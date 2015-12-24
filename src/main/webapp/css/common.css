@@ -110,3 +110,6 @@ body {
 	margin-top: 10px;
 }
 
+a.target:hover {
+	text-decoration: none;
+}
