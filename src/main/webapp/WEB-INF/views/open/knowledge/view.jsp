@@ -242,8 +242,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		</div>
 		<div class="arrow_question">
 		<%= jspUtil.out("comment.comment", JspUtil.ESCAPE_NONE) %>
-		
-			<hr/>
+			<!-- コメントに付けた添付ファイルの表示 -->
 			<c:forEach var="file" items="${files}" >
 				<c:if test="${file.commentNo == comment.commentNo}">
 				<div class="downloadfile">
@@ -300,6 +299,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 		</div>
 		<div class="arrow_answer">
 		<%= jspUtil.out("comment.comment", JspUtil.ESCAPE_NONE) %>
+			<!-- コメントに付けた添付ファイルの表示 -->
 			<c:forEach var="file" items="${files}" >
 				<c:if test="${file.commentNo == comment.commentNo}">
 				<div class="downloadfile">
@@ -375,8 +375,6 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 			</div>
 		</c:forEach>
 		</div>
-		
-		
 		
 		<% if (jspUtil.out("insertUser").equals(request.getRemoteUser())) { %>
 			<button type="button" class="btn btn-info" onclick="previewans();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
