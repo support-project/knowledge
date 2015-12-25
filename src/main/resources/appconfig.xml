@@ -6,6 +6,7 @@
 	<indexPath>{base.path}/index/</indexPath>
 	<tmpPath>{base.path}/tmp/</tmpPath>
 	<databasePath>{base.path}/db/</databasePath>
+	<logsPath>{base.path}/logs/</logsPath>
 	<uploadMaxMBSize>500</uploadMaxMBSize>
 	<hashIterations>100</hashIterations>
 	<languages>
