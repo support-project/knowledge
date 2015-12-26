@@ -3,12 +3,8 @@ package org.support.project.knowledge.control.admin;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
@@ -17,6 +13,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.logic.LogManageLogic;
 import org.support.project.knowledge.vo.LogFile;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
@@ -35,27 +32,9 @@ public class LoggingControl extends Control {
 	@Get
 	@Auth(roles = "admin")
 	public Boundary index() {
-		String logsPath = AppConfig.get().getLogsPath();
-		File logDir = new File(logsPath);
-		File[] logs = logDir.listFiles(new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				return name.toLowerCase().endsWith(".log");
-			}
-		});
-		
-		List<LogFile> list = new ArrayList<>();
-		if (logs != null) {
-			for (File file : logs) {
-				LOG.info(file);
-				
-				LogFile logFile = new LogFile();
-				logFile.setFilename(FilenameUtils.getName(file.getName()));
-				logFile.setSize(file.length() + " [byte]");
-				logFile.setLastModified(new Date(file.lastModified()));
-				
-				list.add(logFile);
-			}
-		}
+		LOG.trace("index");
+		LogManageLogic logManageLogic = LogManageLogic.get();
+		List<LogFile> list = logManageLogic.getLogFiles();
 		setAttribute("logs", list);
 		
 		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.LOG_DELETE_TERM, AppConfig.get().getSystemName());
@@ -72,6 +51,7 @@ public class LoggingControl extends Control {
 	@Post
 	@Auth(roles = "admin")
 	public Boundary delete_config() {
+		LOG.trace("delete_config");
 		String control = getParameter("control");
 		String days = getParameter("days");
 		
@@ -101,6 +81,7 @@ public class LoggingControl extends Control {
 	@Get
 	@Auth(roles = "admin")
 	public Boundary download() throws FileNotFoundException, InvalidParamException {
+		LOG.trace("download");
 		String fileName = getPathString();
 		String logsPath = AppConfig.get().getLogsPath();
 		File logDir = new File(logsPath);
