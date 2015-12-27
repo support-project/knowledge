@@ -141,6 +141,7 @@ public class MailSendBat extends AbstractBat {
 			property.put("mail.smtp.port", port);
 			property.put("mail.smtp.socketFactory.port", port);
 			property.put("mail.smtp.debug", "true");
+			property.put("mail.debug", "true");
 
 			Session session;
 			if (1 == config.getAuthType()) {
