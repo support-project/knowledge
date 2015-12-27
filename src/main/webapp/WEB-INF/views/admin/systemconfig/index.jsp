@@ -39,6 +39,11 @@
 				<i class="fa fa-sticky-note"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.template") %> 
 			</a>
 		</li>
+		<li >
+			<a href="<%= request.getContextPath() %>/admin.logging/" style="cursor: pointer;">
+				<i class="fa fa-file-archive-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.admin.logging") %> 
+			</a>
+		</li>
 	</ul>
 		
 	<h4 class="sub_title"><%= jspUtil.label("knowledge.navbar.config.system") %></h4>

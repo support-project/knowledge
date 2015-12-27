@@ -34,8 +34,8 @@ public class CronListener implements ServletContextListener {
 	
 	@Override
 	public void contextInitialized(final ServletContextEvent sce) {
-		String rootPath = AppConfig.get().getBasePath();
-		File logDir = new File(rootPath + "/logs");
+		String logsPath = AppConfig.get().getLogsPath();
+		File logDir = new File(logsPath);
 		String envValue = System.getenv(SystemConfig.KNOWLEDGE_ENV_KEY);
 		
 		service = new ScheduledThreadPoolExecutor(1);
