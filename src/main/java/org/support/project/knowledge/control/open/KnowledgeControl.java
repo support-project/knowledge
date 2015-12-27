@@ -156,7 +156,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		TargetLogic targetLogic = TargetLogic.get();
 		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
 		setAttribute("targets", targets);
-		
+		setAttribute("targetLogic", targetLogic);
+
 		return forward("view.jsp");
 	}
 	
@@ -294,6 +295,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		TargetLogic targetLogic = TargetLogic.get();
 		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
 		setAttribute("targets", targets);
+		setAttribute("targetLogic", targetLogic);
 
 		int previous = offset -1;
 		if (previous < 0) {
@@ -340,17 +342,20 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		// TODO 履歴表示を毎回取得するのはイマイチ。いったんセッションに保存しておくのが良いかも
 		String history = getCookie(SystemConfig.COOKIE_KEY_HISTORY);
 		List<String> historyIds = new ArrayList<>();
+		ArrayList<Long> knowledgeIds = new ArrayList<>();
 		LOG.debug("history: " + history);
 		if (history.indexOf(COOKIE_SEPARATOR) != -1) {
 			String[] splits = history.split(COOKIE_SEPARATOR);
 			for (String string : splits) {
 				if (StringUtils.isLong(string)) {
 					historyIds.add(string);
+					knowledgeIds.add(new Long(string));
 				}
 			}
 		} else {
 			if (StringUtils.isLong(history)) {
 				historyIds.add(history);
+				knowledgeIds.add(new Long(history));
 			}
 		}
 		List<KnowledgesEntity> histories = knowledgeLogic.getKnowledges(historyIds, loginedUser);
@@ -377,7 +382,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			}
 		}
 		LOG.trace("タグ、グループ取得完了");
-		
+
+		TargetLogic targetLogic = TargetLogic.get();
+		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
+		setAttribute("targets", targets);
+		setAttribute("targetLogic", targetLogic);
 		
 		return forward("show_history.jsp");
 	}
