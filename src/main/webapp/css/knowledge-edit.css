@@ -84,3 +84,7 @@
 	cursor: pointer;
 	border-bottom: 1px solid gray;
 }
+
+.tag_list > a {
+	text-decoration: none;
+}

@@ -78,7 +78,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 				<c:if test="${!empty tagNames}">
 					<i class="fa fa-tags"></i>&nbsp;
 					<c:forEach var="tagName" items="${tagNames.split(',')}">
-						<a class="target" href="<%= request.getContextPath()%>/open.knowledge/list?tagNames=<%= jspUtil.out("tagName") %>">
+						<a href="<%= request.getContextPath()%>/open.knowledge/list?tagNames=<%= jspUtil.out("tagName") %>">
 							<span class="tag label label-info"><%= jspUtil.out("tagName") %></span>
 						</a>
 					</c:forEach>
@@ -99,18 +99,18 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 					<c:choose>
 						<c:when test="${targetLogic.isGroupLabel(target.value)}">
 							<c:set var="groupId" value="${targetLogic.getGroupId(target.value)}"/>
-							<a class="target" href="<%= request.getContextPath()%>/open.knowledge/list?group=<%= jspUtil.out("groupId") %>">
+							<a href="<%= request.getContextPath()%>/open.knowledge/list?group=<%= jspUtil.out("groupId") %>">
 								<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
 							</a>
 						</c:when>
 						<c:when test="${targetLogic.isUserLabel(target.value)}">
 							<c:set var="userId" value="${targetLogic.getUserId(target.value)}"/>
-							<a class="target" href="<%= request.getContextPath()%>/open.knowledge/list?user=<%= jspUtil.out("userId") %>">
+							<a href="<%= request.getContextPath()%>/open.knowledge/list?user=<%= jspUtil.out("userId") %>">
 								<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
 							</a>
 						</c:when>
 						<c:otherwise>
-							<a class="target" href="#">
+							<a href="#">
 								<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
 							</a>
 						</c:otherwise>
