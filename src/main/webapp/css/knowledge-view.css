@@ -144,8 +144,16 @@ Comments
     overflow: hidden;
 }
 
+.arrow_question img {
+	max-width: 100%;
+}
+.arrow_answer img {
+	max-width: 100%;
+}
 
 .collapse_comment {
 	padding-bottom: 10px;
 	color: gray;
 }
+
+
