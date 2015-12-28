@@ -35,7 +35,7 @@
 
 	<c:if test="${empty tags}">
 		<div class="col-sm-12">
-		一覧に表示するタグがありません
+		Empty
 		</div>
 	</c:if>
 	

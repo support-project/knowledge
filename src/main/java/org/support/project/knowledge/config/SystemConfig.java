@@ -36,5 +36,17 @@ public class SystemConfig {
 	/** 全ての機能は、ログインしないとアクセス出来ない */
 	public static final String SYSTEM_EXPOSE_TYPE_CLOSE = "CLOSE";
 	
+	/** UIのテーマの設定のキー */
+	public static final String CONFIG_KEY_THEMA = "THEMA";
+	/** Cookieにセットする際のキー：参照履歴 */
+	public static final String COOKIE_KEY_HISTORY = "HISTORY";
+	/** Cookieにセットする際のキー：表示テーマ */
+	public static final String COOKIE_KEY_THEMA = "THEMA";
+	/** Cookieにセットする際のキー：コードハイライトのスタイル */
+	public static final String COOKIE_KEY_HIGHLIGHT = "HIGHLIGHT";
 	
+	/** ログ・ファイルを定期的に削除する場合の、日数 */
+	public static final String LOG_DELETE_TERM = "LOG_DELETE_TERM";
+	
+
 }

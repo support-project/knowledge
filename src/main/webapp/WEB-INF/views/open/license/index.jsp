@@ -1,12 +1,16 @@
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false"
 	errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<% JspUtil jspUtil = new JspUtil(request, pageContext); %>
+
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
@@ -28,14 +32,18 @@ $(document).ready(function(){
 	<c:param name="PARAM_CONTENT">
 	
 <div id="content">
-### This Project License
+
+## Knowledge - <%= jspUtil.label("label.version") %>
+  
+  
+## This Project License
 - This project is provided under Apache License, Version 2.0
 - http://www.apache.org/licenses/LICENSE-2.0
 
 
-### Third-Party License
+## Third-Party License
 
-#### Server side Library
+### Server side Library
 
 - H2 Database Engine
    - License: [MPL 2.0] http://www.h2database.com/html/license.html
@@ -85,10 +93,6 @@ $(document).ready(function(){
    - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
    - project-url: https://directory.apache.org/
 
-- Apache Directory
-   - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
-   - project-url: https://directory.apache.org/
-
 - PostgreSQL JDBC
    - License: [BSD License] https://jdbc.postgresql.org/about/license.html
    - project-url: http://www.postgresql.org/
@@ -100,9 +104,15 @@ $(document).ready(function(){
 - pegdown
    - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
    - project-url: https://github.com/sirthias/pegdown
-   
 
-#### Front end Library
+- Apache Httpcomponents
+   - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
+   - project-url: https://hc.apache.org/
+
+
+
+
+### Front end Library
 - jQuery
    - License: [MIT] https://jquery.org/license/
    - project-url: http://jquery.com/
@@ -110,6 +120,10 @@ $(document).ready(function(){
 - Bootstrap
    - License: [MIT] https://github.com/twbs/bootstrap/blob/master/LICENSE
    - project-url: http://getbootstrap.com/
+
+- Bootswatch
+   - License: [MIT] https://github.com/dbtek/bootswatch-dist/blob/master/LICENSE
+   - project-url: https://bootswatch.com/
 
 - Font Awesome
    - License: [MIT] http://fortawesome.github.io/Font-Awesome/license/
@@ -154,6 +168,20 @@ $(document).ready(function(){
 - emoji-parser
    - License: [MIT] https://github.com/frissdiegurke/emoji-parser/blob/master/LICENSE.md
    - project-url: https://github.com/frissdiegurke/emoji-parser
+   
+- bluebird
+   - License: [MIT] https://github.com/petkaantonov/bluebird/blob/master/LICENSE
+   - project-url: https://github.com/petkaantonov/bluebird
+   
+- jquery-oembed-all
+   - License: [MIT] https://github.com/starfishmod/jquery-oembed-all/blob/master/jquery.oembed.js
+   - project-url: https://github.com/starfishmod/jquery-oembed-all
+   
+- flag-icon-css
+   - License: [MIT] https://github.com/lipis/flag-icon-css/blob/master/LICENSE
+   - project-url: https://github.com/lipis/flag-icon-css
+
+
 
 
    

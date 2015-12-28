@@ -97,7 +97,7 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 <% if(jspUtil.is(CommonWebParameter.GROUP_CLASS_PRIVATE, "groupClass") && jspUtil.is(Boolean.TRUE, "editAble")) { %>
 <%-- 非公開グループのメンバー選択 --%>
 		<a id="groupselect" class="btn btn-info" data-toggle="modal" href="#groupSelectModal">
-			<i class="fa fa-th-list"></i>&nbsp;メンバー選択
+			<i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.group.label.add.user") %>
 		</a>
 <% } %>
 <p>
@@ -179,18 +179,17 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 </nav>
 
 </div>
-
 	<a href="<%= request.getContextPath() %>/protect.group/mygroups"
-	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.mygroup") %></a>
-
+	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.backto.mygroup") %></a>
+	<%--
 	<a href="<%= request.getContextPath() %>/protect.group/list"
 	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.list") %></a>
-
+	--%>
 	<% if (jspUtil.is(CommonWebParameter.GROUP_ROLE_MEMBER, "status")
 			|| jspUtil.is(CommonWebParameter.GROUP_ROLE_ADMIN, "status")
 			|| jspUtil.user().isAdmin()) { %>
 	<a href="<%= request.getContextPath() %>/open.knowledge/list?group=<%= jspUtil.out("groupId") %>"
-	class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.group.knowledges") %></a>
+	class="btn btn-info" role="button"><i class="fa fa-book"></i>&nbsp;<%= jspUtil.label("knowledge.group.view.label.group.knowledges") %></a>
 	<% } %>
 
 <%-- Targets --%>
@@ -201,7 +200,7 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
 				<span class="sr-only"><%= jspUtil.label("label.close") %></span></button>
 				<h4 class="modal-title" id="myModalLabel">
-					メンバー選択
+					<%= jspUtil.label("knowledge.group.label.add.user") %>
 					<span style="font-size: 14px;" id="groupPage"></span>
 				</h4>
 			</div>

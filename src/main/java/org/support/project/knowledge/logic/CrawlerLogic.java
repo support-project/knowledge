@@ -10,20 +10,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.security.InvalidKeyException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTML.Tag;
@@ -32,34 +22,19 @@ import javax.swing.text.html.HTMLEditorKit;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
-import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.FileUtil;
@@ -69,7 +44,6 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
-import org.support.project.knowledge.config.AuthType;
 import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.parser.ParserFactory;
 import org.support.project.knowledge.vo.ParseResult;
@@ -77,7 +51,7 @@ import org.support.project.web.dao.ProxyConfigsDao;
 import org.support.project.web.entity.ProxyConfigsEntity;
 
 @DI(instance=Instance.Singleton)
-public class CrawlerLogic {
+public class CrawlerLogic extends HttpLogic {
 	/** ログ */
 	private static Log log = LogFactory.getLog(CrawlerLogic.class);
 
@@ -93,19 +67,14 @@ public class CrawlerLogic {
 					+ "|wav|avi|mov|mpeg|ram|m4v" 
 					//+ "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
 					+ "|rm|smil|wmv|swf|wma))$");
-	
-	
-	
+
 	public static void main(String[] args) throws Exception {
 		CrawlerLogic logic = new CrawlerLogic();
 		ProxyConfigsEntity proxyConfig = ProxyConfigsDao.get().selectOnKey(AppConfig.get().getSystemName());
 		proxyConfig.setProxyAuthPassword(PasswordUtil.decrypt(proxyConfig.getProxyAuthPassword(), proxyConfig.getProxyAuthSalt()));
 		logic.crawle(proxyConfig, "http://www.yahoo.co.jp");
 	}
-	
-	/** HttpClient */
-	private HttpClient httpclient = null;
-	
+
 	/**
 	 * URLにある情報を取得
 	 * @param proxyConfig
@@ -167,85 +136,7 @@ public class CrawlerLogic {
 			}
 		}
 	}
-	
-	/**
-	 * HttpClientの生成
-	 * @return
-	 * @throws KeyStoreException 
-	 * @throws IOException 
-	 * @throws CertificateException 
-	 * @throws NoSuchAlgorithmException 
-	 * @throws UnrecoverableKeyException 
-	 * @throws KeyManagementException 
-	 * @throws BadPaddingException 
-	 * @throws IllegalBlockSizeException 
-	 * @throws NoSuchPaddingException 
-	 * @throws InvalidKeyException 
-	 */
-	private HttpClient createHttpClient(ProxyConfigsEntity proxyConfig) throws KeyStoreException, NoSuchAlgorithmException,
-		CertificateException, IOException, KeyManagementException, UnrecoverableKeyException, InvalidKeyException, NoSuchPaddingException,
-		IllegalBlockSizeException, BadPaddingException {
-		if (httpclient != null) {
-			return httpclient;
-		}
-		
-		DefaultHttpClient httpclient = new DefaultHttpClient();
-		if (proxyConfig == null) {
-			this.httpclient = httpclient;
-			return httpclient;
-		}
-		
-		if (StringUtils.isNotEmpty(proxyConfig.getProxyHostName())) {
-			HttpHost proxy = new HttpHost(proxyConfig.getProxyHostName(), proxyConfig.getProxyPortNo());
-			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-			CredentialsProvider credsProvider = null; //認証プロバイダー
-			if (proxyConfig.getProxyAuthType() != null && proxyConfig.getProxyAuthType().intValue() > AuthType.None.getValue()) {
-				// Proxyに対する認証をセットする
-				String pass = PasswordUtil.decrypt(proxyConfig.getProxyAuthPassword(), proxyConfig.getProxyAuthSalt());
-				credsProvider = new BasicCredentialsProvider();
-				credsProvider.setCredentials(new AuthScope(proxyConfig.getProxyHostName(), proxyConfig.getProxyPortNo()),
-						getCredentials(proxyConfig.getProxyAuthType(), proxyConfig.getProxyAuthUserId(),
-								pass, proxyConfig.getProxyAuthPcName(), proxyConfig.getProxyAuthDomain()));
-				httpclient.setCredentialsProvider(credsProvider);
-			}
-		}
-		
-		if (proxyConfig.getThirdPartyCertificate() != null 
-				&& proxyConfig.getThirdPartyCertificate() == INT_FLAG.ON.getValue()) {
-			// オレオレ証明証でも全てOKにする
-			TrustStrategy trustStrategy = new TrustStrategy() {
-				@Override
-				public boolean isTrusted(X509Certificate[] chain, String authType)
-						throws CertificateException {
-					return true;
-				}
-			};
-			X509HostnameVerifier hostnameVerifier = new AllowAllHostnameVerifier();
-			SSLSocketFactory socketFactory = new SSLSocketFactory(
-					trustStrategy, hostnameVerifier);
-			
-			Scheme sch = new Scheme("https", 443, socketFactory);
-			httpclient.getConnectionManager().getSchemeRegistry().register(sch);
-		}
-		
-		this.httpclient = httpclient;
-		return httpclient;
-	}
-	
-	/**
-	 * 認証用のCredentialsを生成
-	 * @param authConfigEntity
-	 * @return
-	 */
-	private Credentials getCredentials(int authType, String user, String pass, String pcName, String domain) {
-		if (authType == AuthType.NTLM.getValue()) {
-			return new org.apache.http.auth.NTCredentials(user, pass, pcName, domain);
-		}
-		return new UsernamePasswordCredentials(user, pass);
 
-	}
-	
-	
 	/**
 	 * ResponseHandlerが返すレスポンスを解析した結果のオブジェクト
 	 * 
@@ -258,8 +149,7 @@ public class CrawlerLogic {
 		public File cashFile;
 		public String mime;
 	}
-	
-	
+
 	/**
 	 * HTTPのレスポンスを処理するResponseHandler
 	 * 
@@ -412,7 +302,7 @@ public class CrawlerLogic {
 			return responseData;
 		}
 	}
-	
+
 	/**
 	 * Responceのデバッグ
 	 * @param res
@@ -428,7 +318,6 @@ public class CrawlerLogic {
 		}
 	}
 
-	
 	/**
 	 * HTMLをパースして、子のリンク情報をchildLinksのリストに格納する
 	 * 
@@ -492,7 +381,7 @@ public class CrawlerLogic {
 			super.handleStartTag(tag, attr, pos);
 		}
 	}
-	
+
 	/**
 	 * 子のリンクを訪れるかどうかのチェック
 	 * @param url
@@ -510,7 +399,7 @@ public class CrawlerLogic {
 		boolean visit = !FILTERS_PATTERN.matcher(href).matches() ;
 		return visit;
 	}
-	
+
 	/**
 	 * パスの取得
 	 * パスが無い場合、ホスト名とする
@@ -534,7 +423,4 @@ public class CrawlerLogic {
 		}
 		return builder.toString();
 	}
-
-	
-	
 }

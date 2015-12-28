@@ -10,6 +10,7 @@ import org.support.project.common.util.NumberUtils;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
+import org.support.project.knowledge.logic.LogManageLogic;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.entity.MailsEntity;
 
@@ -52,6 +53,9 @@ public class KnowledgeFileClearBat extends AbstractBat {
 				MailsDao.get().physicalDelete(mailsEntity);
 			}
 		}
+		
+		// ログファイルの定期削除
+		LogManageLogic.get().clearLogFiles();
 	}
 
 }

@@ -1,9 +1,10 @@
 .markdown a {
-	color: #4183C4;
+	/* color: #4183C4; */
+	/* color: #18bc9c; */
 }
 
 .markdown a.absent {
-	color: #cc0000;
+	/* color: #cc0000; */
 }
 
 .markdown a.anchor {
@@ -106,8 +107,7 @@
 .markdown ol,
 .markdown dl,
 .markdown li,
-.markdown table,
-.markdown pre {
+.markdown table{
 	margin: 15px 0;
 }
 
@@ -369,24 +369,18 @@
 .markdown tt {
 	margin: 0 2px;
 	padding: 0 5px;
-	border: 1px solid #eaeaea;
-	background-color: #f8f8f8;
 	border-radius: 3px;
-	/* white-space: nowrap; */
 	word-wrap: break-word;
 }
 
 .markdown pre code {
 	margin: 0;
-	padding: 0;
+	padding: 10px;
 	white-space: pre;
 	border: none;
-	background: transparent;
 }
 
 .markdown .highlight pre {
-	background-color: #f8f8f8;
-	border: 1px solid #cccccc;
 	font-size: 13px;
 	line-height: 19px;
 	overflow: auto;
@@ -395,8 +389,8 @@
 }
 
 .markdown pre {
-	background-color: #f8f8f8;
-	border: 1px solid #cccccc;
+	background-color: transparent;
+	border: none;
 	font-size: 13px;
 	line-height: 19px;
 	overflow: auto;
@@ -406,9 +400,10 @@
 
 .markdown pre code,
 .markdown pre tt {
-	background-color: transparent;
 	border: none;
 }
+
+.markdown p > code.hljs { display: inline; }
 
 .emoji-img {
 	height: 20px;

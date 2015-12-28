@@ -238,7 +238,6 @@ $(document).ready(function() {
 			success: function(result, textStatus, xhr) {
 				// 入力値を初期化
 				console.log(result);
-				$.notify(result.message, 'info');
 				
 				$form.attr('action', _CONTEXT + '/protect.knowledge/update');
 				
@@ -250,6 +249,8 @@ $(document).ready(function() {
 				$('#deleteButton').removeClass('hide');
 				$('#cancelButton').removeClass('hide');
 				$('#cancelButton').attr('href', _CONTEXT + '/open.knowledge/view/' + knowledgeId);
+				
+				$.notify(result.message, 'info');
 			},
 			// 通信失敗時の処理
 			error: function(xhr, textStatus, error) {

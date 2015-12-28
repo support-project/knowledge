@@ -41,6 +41,9 @@
 	<category name="org.support.project.web">
 		<level value="INFO" />
 	</category>
+	<category name="org.support.project.web.filter.LoggingFilter">
+		<level value="INFO" />
+	</category>
 	
 	<category name="org.support.project.knowledge.bat">
 		<level value="INFO" />

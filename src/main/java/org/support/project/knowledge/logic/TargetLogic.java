@@ -179,7 +179,6 @@ public class TargetLogic {
 		return results;
 	}
 	
-	
 	/**
 	 * ターゲットからグループのIDを取得
 	 * 対象外（ユーザがターゲット）の場合、MIN_VALUEを返す
@@ -195,6 +194,19 @@ public class TargetLogic {
 			}
 		}
 		return Integer.MIN_VALUE;
+	}
+
+	/**
+	 * グループラベルか
+	 *
+	 * @param str
+	 * @return
+	 */
+	public boolean isGroupLabel(String str) {
+		if (str.startsWith(ID_PREFIX_GROUP)) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -212,6 +224,19 @@ public class TargetLogic {
 			}
 		}
 		return Integer.MIN_VALUE;
+	}
+
+	/**
+	 * ユーザラベルか
+	 *
+	 * @param str
+	 * @return
+	 */
+	public boolean isUserLabel(String str) {
+		if (str.startsWith(ID_PREFIX_USER)) {
+			return true;
+		}
+		return false;
 	}
 
 	public List<LabelValue> selectUsersOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {

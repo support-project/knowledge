@@ -6,15 +6,16 @@
 	<indexPath>{base.path}/index/</indexPath>
 	<tmpPath>{base.path}/tmp/</tmpPath>
 	<databasePath>{base.path}/db/</databasePath>
+	<logsPath>{base.path}/logs/</logsPath>
 	<uploadMaxMBSize>500</uploadMaxMBSize>
 	<hashIterations>100</hashIterations>
 	<languages>
 		<language>
-			<label>Japanese</label>
+			<label>jp</label>
 			<value>ja</value>
 		</language>
 		<language>
-			<label>English</label>
+			<label>us</label>
 			<value>en</value>
 		</language>
 	</languages>

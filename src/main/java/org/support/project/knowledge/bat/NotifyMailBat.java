@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.ClassUtils;
@@ -24,13 +25,18 @@ import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.dao.TargetsDao;
+import org.support.project.knowledge.dao.WebhookConfigsDao;
+import org.support.project.knowledge.dao.WebhooksDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
+import org.support.project.knowledge.entity.WebhookConfigsEntity;
+import org.support.project.knowledge.entity.WebhooksEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
+import org.support.project.knowledge.logic.WebhookLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.Notify;
 import org.support.project.web.dao.MailConfigsDao;
@@ -40,6 +46,8 @@ import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.MailsEntity;
 import org.support.project.web.entity.UsersEntity;
+
+import net.arnx.jsonic.JSON;
 
 public class NotifyMailBat extends AbstractBat {
 	/** ログ */
@@ -204,6 +212,8 @@ public class NotifyMailBat extends AbstractBat {
 			sendedCommentKnowledgeIds.add(knowledge.getKnowledgeId());
 		}
 		
+		sendCommentWebhook(comment, knowledge);
+
 		UsersDao usersDao = UsersDao.get();
 		UsersEntity commentUser = usersDao.selectOnKey(comment.getInsertUser());
 		
@@ -260,7 +270,32 @@ public class NotifyMailBat extends AbstractBat {
 			sendCommentMail(comment, knowledge, commentUser, target, config);
 		}
 	}
-	
+
+	/**
+	 * コメント追加のWebhookの登録を行う
+	 * @param comment
+	 * @param knowledge
+	 */
+	private void sendCommentWebhook(CommentsEntity comment, KnowledgesEntity knowledge) {
+		WebhookConfigsDao webhookConfigsDao = WebhookConfigsDao.get();
+		List<WebhookConfigsEntity> webhookConfigsEntities = webhookConfigsDao.selectOnHook(WebhookConfigsEntity.HOOK_COMMENTS);
+
+		if (0 == webhookConfigsEntities.size()) {
+			return;
+		}
+
+		WebhookLogic webhookLogic = WebhookLogic.get();
+		Map<String, Object> commentData = webhookLogic.getCommentData(comment, knowledge);
+
+		WebhooksEntity webhooksEntity = new WebhooksEntity();
+		String webhookId = idGenu("Notify");
+		webhooksEntity.setWebhookId(webhookId);
+		webhooksEntity.setStatus(WebhookBat.WEBHOOK_STATUS_UNSENT);
+		webhooksEntity.setHook(WebhookConfigsEntity.HOOK_COMMENTS);
+		webhooksEntity.setContent(JSON.encode(commentData));
+
+		WebhooksDao.get().insert(webhooksEntity);
+	}
 	
 	/**
 	 * コメントが追加されたメールを通知する
@@ -326,6 +361,8 @@ public class NotifyMailBat extends AbstractBat {
 			LOG.warn("Knowledge record not found. id: " + notifyQueuesEntity.getId());
 			return;
 		}
+
+		sendKnowledgeWebhook(knowledge, notifyQueuesEntity.getType());
 
 		if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
 			notifyPublicKnowledgeUpdate(notifyQueuesEntity, knowledge);
@@ -434,7 +471,32 @@ public class NotifyMailBat extends AbstractBat {
 			insertNotifyKnowledgeUpdateMailQue(knowledge, usersEntity, config);
 		}
 	}
-	
+
+	/**
+	 * 記事の追加・更新のWebhookの登録を行う
+	 * @param comment
+	 * @param knowledge
+	 */
+	private void sendKnowledgeWebhook(KnowledgesEntity knowledge, int type) {
+		WebhookConfigsDao webhookConfigsDao = WebhookConfigsDao.get();
+		List<WebhookConfigsEntity> webhookConfigsEntities = webhookConfigsDao.selectOnHook(WebhookConfigsEntity.HOOK_KNOWLEDGES);
+
+		if (0 == webhookConfigsEntities.size()) {
+			return;
+		}
+
+		WebhookLogic webhookLogic = WebhookLogic.get();
+		Map<String, Object> knowledgeData = webhookLogic.getKnowledgeData(knowledge, type);
+
+		WebhooksEntity webhooksEntity = new WebhooksEntity();
+		String webhookId = idGenu("Notify");
+		webhooksEntity.setWebhookId(webhookId);
+		webhooksEntity.setStatus(WebhookBat.WEBHOOK_STATUS_UNSENT);
+		webhooksEntity.setHook(WebhookConfigsEntity.HOOK_KNOWLEDGES);
+		webhooksEntity.setContent(JSON.encode(knowledgeData));
+
+		WebhooksDao.get().insert(webhooksEntity);
+	}
 	
 	/**
 	 * メール送信のキュー情報を登録する

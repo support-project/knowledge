@@ -16,7 +16,7 @@
 <c:param name="PARAM_SCRIPTS">
 <script>
 function deleteUser() {
-	bootbox.confirm("本当に削除しますか?", function(result) {
+	bootbox.confirm('<%= jspUtil.label("message.confirm.delete")%>', function(result) {
 		if (result) {
 			$('#userForm').attr('action', '<%= request.getContextPath()%>/admin.users/delete');
 			$('#userForm').submit();
@@ -34,7 +34,7 @@ function deleteUser() {
 <div class="alert alert-warning alert-dismissible" role="alert">
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	<strong>Warning</strong><br/>
-	- Ldapのユーザです。権限のみ更新が可能です。
+	- <%= jspUtil.label("knowledge.account.info.ldap") %>
 </div>
 <% } %>
 
