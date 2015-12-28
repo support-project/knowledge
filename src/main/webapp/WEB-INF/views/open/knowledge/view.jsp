@@ -56,16 +56,17 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 
 
 <c:param name="PARAM_CONTENT">
-	<div class="row">
+	<div class="row" id="content_head">
 		<div class="col-sm-8">
 			<h4 class="title"><%= jspUtil.out("title", JspUtil.ESCAPE_CLEAR) %></h4>
-			
-		<%-- 更新者情報 --%>
+			<div style="margin-top: 10px;">
+				<span id="template"></span>
+			</div>
+			<%-- 更新者情報 --%>
 			<div class="insert_info">
 				<img src="<%= request.getContextPath()%>/images/loader.gif" 
 					data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("insertUser") %>" 
 					alt="icon" width="24" height="24" style="float:left" />
-				
 				<% String userLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/list/0?user=" + jspUtil.out("insertUser") +"\">"
 					+ jspUtil.out("updateUserName", JspUtil.ESCAPE_CLEAR) + "</a>"; %>
 				<% String historyLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/histories/" + jspUtil.out("knowledgeId") +"\">"
@@ -74,30 +75,31 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 			</div>
 			
 			<%-- タグ --%>
-			<div class="tag_list">
-				<c:if test="${!empty tagNames}">
+			<c:if test="${!empty tagNames}">
+				<div class="tag_list">
 					<i class="fa fa-tags"></i>&nbsp;
 					<c:forEach var="tagName" items="${tagNames.split(',')}">
 						<a href="<%= request.getContextPath()%>/open.knowledge/list?tagNames=<%= jspUtil.out("tagName") %>">
 							<span class="tag label label-info"><%= jspUtil.out("tagName") %></span>
 						</a>
 					</c:forEach>
-				</c:if>
-			</div>
+				</div>
+			</c:if>
 			
 			<%--概要；記事のステータスが公開時に「公開」とは表示しないようにする
 			<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag",
 					jspUtil.label("label.public.view")) %>
 			--%>
-			<div class="tag_list">
-			<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag",
-					jspUtil.label("label.private.view")) %>
-			<%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag",
-					jspUtil.label("label.protect.view")) %>
+			<% if (jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag")) { %>
+				<div class="tag_list"><%= jspUtil.label("label.private.view") %></div>
+			<% } %>
+			<% if (jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag")) { %>
+				<div class="tag_list"><%= jspUtil.label("label.protect.view") %>
 			<c:if test="${targets.containsKey(knowledgeId)}">
 				<c:forEach var="target" items="${targets.get(knowledgeId)}">
 					<c:choose>
 						<c:when test="${targetLogic.isGroupLabel(target.value)}">
+						
 							<c:set var="groupId" value="${targetLogic.getGroupId(target.value)}"/>
 							<a href="<%= request.getContextPath()%>/open.knowledge/list?group=<%= jspUtil.out("groupId") %>">
 								<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
@@ -118,9 +120,10 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 				</c:forEach>
 				&nbsp;
 			</c:if>
-			</div>
+			<% } %>
+
 			
-		<%-- 添付ファイル --%>
+			<%-- 添付ファイル --%>
 			<c:forEach var="file" items="${files}" >
 				<c:if test="${file.commentNo == 0}">
 				<div class="downloadfile">
@@ -172,40 +175,31 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 					<%= jspUtil.label("knowledge.view.like") %>
 				</button>
 				</div>
-		<%-- 
-			<a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
-			class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.view.back.list") %></a>
-		 --%>
 			</div>
 				
 			<div class="article_info">
-				<p>
-					<a class="btn btn-link" href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
-						<i class="fa fa-thumbs-o-up"></i>&nbsp;<%= jspUtil.label("knowledge.view.like") %>
-						× <span id="like_count"><%= jspUtil.out("like_count") %></span>
-					</a>
-					<a class="btn btn-link" href="#comments" id="commentsLink">
-						<i class="fa fa-comments-o"></i>&nbsp;<%= jspUtil.label("knowledge.view.comment.label") %>
-						× <%= jspUtil.out("comments.size()") %>
-					</a>
-				</p>
+				<a href="<%= request.getContextPath() %>/open.knowledge/likes/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>" >
+					<i class="fa fa-thumbs-o-up"></i>&nbsp;<%= jspUtil.label("knowledge.view.like") %>
+					× <span id="like_count"><%= jspUtil.out("like_count") %></span>
+				</a>
+				<a href="#comments" id="commentsLink">
+					<i class="fa fa-comments-o"></i>&nbsp;<%= jspUtil.label("knowledge.view.comment.label") %>
+					× <%= jspUtil.out("comments.size()") %>
+				</a>
 			</div>
 		</div>
 	</div>
 
-	<hr/>
-	<div class="row">
+	<%-- ナレッジ表示 --%>
+	<div class="row" id="content_main">
 		<div class="col-sm-12">
-<%-- ナレッジ表示 --%>
-			<div style="margin-top: 10px;">
 			<input type="hidden" id="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" />
 			<input type="hidden" id="typeId" value="<%= jspUtil.out("typeId") %>" />
-			<span id="template"></span>
-			</div>
+			<%-- テンプレートの項目 --%>
 			<div style="word-break:break-all;display: none;" id="template_items_area" class="markdown">
-			<span id="template_items"></span>
+				<span id="template_items"></span>
 			</div>
-					
+			<%-- ナレッジコンテンツ --%>
 			<div style="word-break:break-all;" id="content" class="markdown viewarea">
 			<%= jspUtil.out("content", JspUtil.ESCAPE_NONE) %>
 			</div>
