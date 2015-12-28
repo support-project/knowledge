@@ -77,10 +77,12 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 			<%-- タグ --%>
 			<c:if test="${!empty tagNames}">
 				<div class="tag_list">
-						<i class="fa fa-tags"></i>&nbsp;
-						<c:forEach var="tagName" items="${tagNames.split(',')}">
-						<span class="tag label label-info"><%= jspUtil.out("tagName") %></span>
-						</c:forEach>
+					<i class="fa fa-tags"></i>&nbsp;
+					<c:forEach var="tagName" items="${tagNames.split(',')}">
+						<a href="<%= request.getContextPath()%>/open.knowledge/list?tagNames=<%= jspUtil.out("tagName") %>">
+							<span class="tag label label-info"><%= jspUtil.out("tagName") %></span>
+						</a>
+					</c:forEach>
 				</div>
 			</c:if>
 			
@@ -93,13 +95,31 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 			<% } %>
 			<% if (jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag")) { %>
 				<div class="tag_list"><%= jspUtil.label("label.protect.view") %>
-					<c:if test="${targets.containsKey(knowledgeId)}">
-						<c:forEach var="target" items="${targets.get(knowledgeId)}">
-							<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
-						</c:forEach>
-						&nbsp;
-					</c:if>
-				</div>
+			<c:if test="${targets.containsKey(knowledgeId)}">
+				<c:forEach var="target" items="${targets.get(knowledgeId)}">
+					<c:choose>
+						<c:when test="${targetLogic.isGroupLabel(target.value)}">
+						
+							<c:set var="groupId" value="${targetLogic.getGroupId(target.value)}"/>
+							<a href="<%= request.getContextPath()%>/open.knowledge/list?group=<%= jspUtil.out("groupId") %>">
+								<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
+							</a>
+						</c:when>
+						<c:when test="${targetLogic.isUserLabel(target.value)}">
+							<c:set var="userId" value="${targetLogic.getUserId(target.value)}"/>
+							<a href="<%= request.getContextPath()%>/open.knowledge/list?user=<%= jspUtil.out("userId") %>">
+								<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
+							</a>
+						</c:when>
+						<c:otherwise>
+							<a href="#">
+								<span class="tag label label-info"><%= jspUtil.out("target.label") %></span>
+							</a>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+				&nbsp;
+			</c:if>
 			<% } %>
 
 			
