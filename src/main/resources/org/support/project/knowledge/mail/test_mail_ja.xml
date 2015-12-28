@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail>
+	<title>[Knowledge] テストメール</title>
+	<contents xml:space="preserve">
+
+これはテストで送信したメールです
+
+------------------------------------------
+※本メールはシステムより自動で送信されています。
+ このメールに対する返信は出来ませんので御了承ください。
+
+	</contents>
+	
+</mail>
+
+

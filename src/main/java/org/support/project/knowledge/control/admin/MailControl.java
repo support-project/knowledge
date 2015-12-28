@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control.admin;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -8,24 +9,33 @@ import java.util.List;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.mail.MessagingException;
 
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.config.INT_FLAG;
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.PasswordUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.MailConfig;
 import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.entity.MailConfigsEntity;
+import org.support.project.web.entity.MailsEntity;
 
 @DI(instance=Instance.Prototype)
 public class MailControl extends Control {
+	/** ログ */
+	private static Log LOG = LogFactory.getLog(MailControl.class);
+	
 	private static final String NO_CHANGE_PASSWORD = "NO_CHANGE_PASSWORD-fXLSJ_V-ZJ2E-GBAghu_usb-gtaG"; //パスワードを更新しなかったことを表すパスワード
 
 	/**
@@ -127,5 +137,47 @@ public class MailControl extends Control {
 		return forward("config.jsp");
 	}
 
+	/**
+	 * テストメール送信
+	 * @return
+	 */
+	@Post
+	@Auth(roles="admin")
+	public Boundary test_send() {
+		MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+		MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
+		if (mailConfigsEntity == null) {
+			// メールの設定が登録されていなければ、送信処理は終了
+			addMsgInfo(getResource("knowledge.mail.config.empty"));
+			return config();
+		}
+		
+		String toAddress = getParam("to_address");
+		if (!StringUtils.isEmailAddress(toAddress)) {
+			addMsgWarn(getResource("knowledge.mail.error.to.address"));
+			return config();
+		}
+		MailConfig config = MailLogic.get().load("test_mail", getLoginedUser().getLocale());
+		MailsEntity entity = new MailsEntity();
+		entity.setFromAddress(mailConfigsEntity.getFromAddress());
+		entity.setFromName(mailConfigsEntity.getFromName());
+		entity.setTitle(getResource(config.getTitle()));
+		entity.setToAddress(toAddress);
+		entity.setToName(toAddress);
+		entity.setContent(config.getContents());
+		
+		try {
+			MailLogic.get().mailSend(mailConfigsEntity, entity);
+			addMsgInfo(getResource("knowledge.mail.test.success"));
+		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
+				| UnsupportedEncodingException | MessagingException e) {
+			LOG.error("mail send error", e);
+			addMsgWarn(getResource("knowledge.mail.test.fail"));
+			setAttribute("mail_send_error_class", e.getClass());
+			setAttribute("mail_send_error", e.getMessage());
+		}
+		return config();
+	}
+	
 	
 }
