@@ -41,28 +41,28 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-6 col-md-6 col-lg-3">
+				<div class="col-sm-6 col-md-3 col-lg-3">
 					<div class="about-icon">
 						<i class="fa fa-github icon-img"></i>
 					</div>
 					<div class="about-title"><%=jspUtil.label("knowledge.top.about.title.1")%></div>
 					<div class="about-description"><%=jspUtil.label("knowledge.top.about.description.1")%></div>
 				</div>
-				<div class="col-sm-6 col-md-6 col-lg-3">
+				<div class="col-sm-6 col-md-3 col-lg-3">
 					<div class="about-icon">
 						<i class="fa fa-download icon-img"></i>
 					</div>
 					<div class="about-title"><%=jspUtil.label("knowledge.top.about.title.2")%></div>
 					<div class="about-description"><%=jspUtil.label("knowledge.top.about.description.2")%></div>
 				</div>
-				<div class="col-sm-6 col-md-6 col-lg-3">
+				<div class="col-sm-6 col-md-3 col-lg-3">
 					<div class="about-icon">
 						<i class="fa fa-mobile-phone icon-img"></i>
 					</div>
 					<div class="about-title"><%=jspUtil.label("knowledge.top.about.title.3")%></div>
 					<div class="about-description"><%=jspUtil.label("knowledge.top.about.description.3")%></div>
 				</div>
-				<div class="col-sm-6 col-md-6 col-lg-3">
+				<div class="col-sm-6 col-md-3 col-lg-3">
 					<div class="about-icon">
 						<i class="fa fa-pencil icon-img"></i>
 					</div>
@@ -71,28 +71,28 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-6 col-md-6 col-lg-3">
+				<div class="col-sm-6 col-md-3 col-lg-3">
 					<div class="about-icon">
 						<i class="fa fa-search icon-img"></i>
 					</div>
 					<div class="about-title"><%=jspUtil.label("knowledge.top.about.title.5")%></div>
 					<div class="about-description"><%=jspUtil.label("knowledge.top.about.description.5")%></div>
 				</div>
-				<div class="col-sm-6 col-md-6 col-lg-3">
+				<div class="col-sm-6 col-md-3 col-lg-3">
 					<div class="about-icon">
 						<i class="fa fa-bell-o icon-img"></i>
 					</div>
 					<div class="about-title"><%=jspUtil.label("knowledge.top.about.title.6")%></div>
 					<div class="about-description"><%=jspUtil.label("knowledge.top.about.description.6")%></div>
 				</div>
-				<div class="col-sm-6 col-md-6 col-lg-3">
+				<div class="col-sm-6 col-md-3 col-lg-3">
 					<div class="about-icon">
 						<i class="fa fa-paperclip icon-img"></i>
 					</div>
 					<div class="about-title"><%=jspUtil.label("knowledge.top.about.title.7")%></div>
 					<div class="about-description"><%=jspUtil.label("knowledge.top.about.description.7")%></div>
 				</div>
-				<div class="col-sm-6 col-md-6 col-lg-3">
+				<div class="col-sm-6 col-md-3 col-lg-3">
 					<div class="about-icon">
 						<i class="fa fa-comments icon-img"></i>
 					</div>
