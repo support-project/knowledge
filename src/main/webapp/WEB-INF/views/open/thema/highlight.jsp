@@ -33,12 +33,10 @@ hljs.initHighlightingOnLoad();
 
 <body>
 
-<h3>
-<%= jspUtil.out("title") %>
-</h3>
-
 <pre>
 <code class="javascript">
+/** Style Name: <%= jspUtil.out("title") %> */
+
 /** Do not right click */
 function no_rclick() {
 	var msg = 'Do not right click'; // Change
