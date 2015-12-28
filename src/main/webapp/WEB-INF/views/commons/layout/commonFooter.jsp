@@ -10,13 +10,15 @@
 	<div id="footer">
 		<ul class="footer-menu list-inline">
 			<li class="first">
-				<a class="" href="<%= request.getContextPath() %>/index" style="cursor: pointer;"> About</a>
+				<a class="" href="<%= request.getContextPath() %>/index" style="cursor: pointer;"> <%= jspUtil.label("knowledge.footer.about") %></a>
 			</li>
+			<%--
 			<li>
-				<a class="" href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;"> List</a>
+				<a class="" href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;"> <%= jspUtil.label("knowledge.footer.list") %></a>
 			</li>
+			--%>
 			<li>
-				<a class="" href="<%= request.getContextPath() %>/open.license" style="cursor: pointer;"> License</a>
+				<a class="" href="<%= request.getContextPath() %>/open.license" style="cursor: pointer;"> <%= jspUtil.label("knowledge.footer.license") %></a>
 			</li>
 			<li>
 				<a class="" href="<%= request.getContextPath() %>/open.language" style="cursor: pointer;">
