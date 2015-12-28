@@ -19,7 +19,7 @@
 
 <c:param name="PARAM_CONTENT">
 	<div id="headerimg">
-		<div id="headerwrap">
+		<div id="headerwrap" onclick="location.href='<%= request.getContextPath()%>/open.knowledge/list';" style="cursor: pointer;">
 			<h1><span><i class="fa fa-book"></i>&nbsp;Knowledge</span></h1>
 			<h2><span>Free Knowledge Base System</span></h2>
 			<br/>
