@@ -27,7 +27,6 @@
 <i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("knowledge.group.mylist.label.list") %>
 </a>
 
-
 <nav>
 	<ul class="pager">
 		<li class="previous">

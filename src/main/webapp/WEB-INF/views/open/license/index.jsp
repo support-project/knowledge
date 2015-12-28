@@ -33,7 +33,9 @@ $(document).ready(function(){
 	
 <div id="content">
 
-
+## Knowledge - <%= jspUtil.label("label.version") %>
+  
+  
 ## This Project License
 - This project is provided under Apache License, Version 2.0
 - http://www.apache.org/licenses/LICENSE-2.0

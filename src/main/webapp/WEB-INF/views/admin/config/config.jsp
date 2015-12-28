@@ -32,22 +32,22 @@
 <div class="alert alert-info alert-dismissible" role="alert">
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	<strong>Information</strong><br/>
-	- DBに登録されているユーザでサインインします。下記のユーザの追加方法の設定は有効です。
+	- <%= jspUtil.label("knowledge.config.msg.user.db") %>
 </div>
 <% } %>
 <% if(jspUtil.is(1, "authType")) { %>
 <div class="alert alert-warning alert-dismissible" role="alert">
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	<strong>Warning</strong><br/>
-	- Ldap認証のみでサインインします。下記のユーザの追加方法の設定は無効です。（ユーザの追加はLdapで行ってください）
+	- <%= jspUtil.label("knowledge.config.msg.user.ldap") %>
 </div>
 <% } %>
 <% if(jspUtil.is(2, "authType")) { %>
 <div class="alert alert-success alert-dismissible" role="alert">
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	<strong>Information</strong><br/>
-	- Ldap認証、もしくはDBに登録されているユーザでサインインします。Ldapに登録されていれば、Ldapの情報でサインインし、なければDBに登録されているかチェックします。<br/>
-	- 下記のユーザの追加方法の設定は有効です。追加したユーザはDBに登録します。（Ldapの情報には登録しません）
+	- <%= jspUtil.label("knowledge.config.msg.user.both1") %><br/>
+	- <%= jspUtil.label("knowledge.config.msg.user.both2") %>
 </div>
 <% } %>
 

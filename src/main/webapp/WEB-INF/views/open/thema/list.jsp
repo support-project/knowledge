@@ -79,46 +79,39 @@ function setStyle() {
 
 
 <div class="row">
-	<div class="col-xs-4 thema_box">
+	<div class="col-sm-6 col-md-6 col-lg-4 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/show/flatly" class="thema_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/enable/flatly" class="btn btn-primary"><%= jspUtil.label("knowledge.config.thema.enable") %></a>
 	</div>
-	<div class="col-xs-4 thema_box">
+	<div class="col-sm-6 col-md-6 col-lg-4 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/show/darkly" class="thema_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/enable/darkly" class="btn btn-primary"><%= jspUtil.label("knowledge.config.thema.enable") %></a>
 	</div>
-	<div class="col-xs-4 thema_box">
+	<div class="col-sm-6 col-md-6 col-lg-4 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/show/sandstone" class="thema_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/enable/sandstone" class="btn btn-primary"><%= jspUtil.label("knowledge.config.thema.enable") %></a>
 	</div>
-</div>
-
-<div class="row">
-	<div class="col-xs-4 thema_box">
+	<div class="col-sm-6 col-md-6 col-lg-4 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/show/cosmo" class="thema_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/enable/cosmo" class="btn btn-primary"><%= jspUtil.label("knowledge.config.thema.enable") %></a>
 	</div>
-	<div class="col-xs-4 thema_box">
+	<div class="col-sm-6 col-md-6 col-lg-4 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/show/slate" class="thema_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/enable/slate" class="btn btn-primary"><%= jspUtil.label("knowledge.config.thema.enable") %></a>
 	</div>
-	<div class="col-xs-4 thema_box">
+	<div class="col-sm-6 col-md-6 col-lg-4 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/show/spacelab" class="thema_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/enable/spacelab" class="btn btn-primary"><%= jspUtil.label("knowledge.config.thema.enable") %></a>
 	</div>
-</div>
-
-
-<div class="row">
-	<div class="col-xs-4 thema_box">
+	<div class="col-sm-6 col-md-6 col-lg-4 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/show/united" class="thema_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/enable/united" class="btn btn-primary"><%= jspUtil.label("knowledge.config.thema.enable") %></a>
 	</div>
-	<div class="col-xs-4 thema_box">
+	<div class="col-sm-6 col-md-6 col-lg-4 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/show/superhero" class="thema_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/enable/superhero" class="btn btn-primary"><%= jspUtil.label("knowledge.config.thema.enable") %></a>
 	</div>
-	<div class="col-xs-4 thema_box">
+	<div class="col-sm-6 col-md-6 col-lg-4 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/show/cerulean" class="thema_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/enable/cerulean" class="btn btn-primary"><%= jspUtil.label("knowledge.config.thema.enable") %></a>
 	</div>
@@ -127,7 +120,7 @@ function setStyle() {
 <div class="row">
 	<div class="col-xs-12">
 		<form class="form-inline" method="get" action="#">
-			Other: 
+			(Advanced option) Other: 
 			<div class="form-group">
 				<!-- <label class="sr-only" for="thema">Other thema</label> -->
 				<input type="text" class="form-control" id="thema" placeholder="Other thema">
@@ -161,29 +154,25 @@ function setStyle() {
 
 
 <div class="row">
-	<div class="col-xs-6 thema_box">
+	<div class="col-sm-6 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/highlight/darkula" class="highlight_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/style/darkula" class="btn btn-primary">
 		<%= jspUtil.label("knowledge.config.thema.enable") %>
 		</a>
 	</div>
-	<div class="col-xs-6 thema_box">
+	<div class="col-sm-6 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/highlight/default" class="highlight_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/style/default" class="btn btn-primary">
 		<%= jspUtil.label("knowledge.config.thema.enable") %>
 		</a>
 	</div>
-</div>
-
-
-<div class="row">
-	<div class="col-xs-6 thema_box">
+	<div class="col-sm-6 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/highlight/far" class="highlight_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/style/far" class="btn btn-primary">
 		<%= jspUtil.label("knowledge.config.thema.enable") %>
 		</a>
 	</div>
-	<div class="col-xs-6 thema_box">
+	<div class="col-sm-6 thema_box">
 		<iframe src="<%= request.getContextPath() %>/open.thema/highlight/kimbie.light" class="highlight_show"></iframe>
 		<a href="<%= request.getContextPath() %>/open.thema/style/kimbie.light" class="btn btn-primary">
 		<%= jspUtil.label("knowledge.config.thema.enable") %>
@@ -194,7 +183,7 @@ function setStyle() {
 <div class="row">
 	<div class="col-xs-12">
 		<form class="form-inline" method="get" action="#">
-			Other: 
+			(Advanced option) Other: 
 			<div class="form-group">
 				<input type="text" class="form-control" id="style" placeholder="Other code highlight style">
 			</div>
