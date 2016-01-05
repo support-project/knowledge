@@ -120,6 +120,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 				</c:forEach>
 				&nbsp;
 			</c:if>
+			</div>
 			<% } %>
 
 			
