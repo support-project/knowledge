@@ -70,7 +70,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 				<% String userLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/list/0?user=" + jspUtil.out("insertUser") +"\">"
 					+ jspUtil.out("updateUserName", JspUtil.ESCAPE_CLEAR) + "</a>"; %>
 				<% String historyLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/histories/" + jspUtil.out("knowledgeId") +"\">"
-					+ jspUtil.out("insertDatetime") + "</a>"; %>
+					+ jspUtil.date("insertDatetime") + "</a>"; %>
 				<%= jspUtil.label("knowledge.list.info.insert", userLink, historyLink) %>
 			</div>
 			
