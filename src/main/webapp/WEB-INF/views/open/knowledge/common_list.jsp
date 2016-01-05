@@ -24,9 +24,9 @@
 					<h4><%= jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR) %></h4>
 					<div>
 						<img src="<%= request.getContextPath()%>/images/loader.gif"
-							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("knowledge.insertUser") %>"
+							data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("knowledge.updateUser") %>"
 							alt="icon" width="36" height="36"/>
-						<%= jspUtil.label("knowledge.list.info.insert", jspUtil.out("knowledge.updateUserName"), jspUtil.date("knowledge.updateDatetime")) %>
+						<%= jspUtil.label("knowledge.view.info.update", jspUtil.out("knowledge.updateUserName"), jspUtil.date("knowledge.updateDatetime")) %>
 					</div>
 				</div>
 			</a>

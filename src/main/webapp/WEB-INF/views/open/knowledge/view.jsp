@@ -68,10 +68,10 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 					data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("insertUser") %>" 
 					alt="icon" width="24" height="24" style="float:left" />
 				<% String userLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/list/0?user=" + jspUtil.out("insertUser") +"\">"
-					+ jspUtil.out("updateUserName", JspUtil.ESCAPE_CLEAR) + "</a>"; %>
+					+ jspUtil.out("insertUserName", JspUtil.ESCAPE_CLEAR) + "</a>"; %>
 				<% String historyLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/histories/" + jspUtil.out("knowledgeId") +"\">"
 					+ jspUtil.date("insertDatetime") + "</a>"; %>
-				<%= jspUtil.label("knowledge.list.info.insert", userLink, historyLink) %>
+				<%= jspUtil.label("knowledge.view.info.insert", userLink, historyLink) %>
 			</div>
 			
 			<%-- タグ --%>
