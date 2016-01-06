@@ -42,21 +42,33 @@
 			</a>
 		</li>
 		
-		<li id="tabLogout">
+		<li>
 			<a href="<%= request.getContextPath() %>/protect.notify" style="cursor: pointer;">
 				<i class="fa fa-bell-o"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.account.notify") %>
 			</a>
 		</li>
 
-		<li id="tabLogout">
+		<li>
 			<a href="<%= request.getContextPath() %>/open.thema/list" style="cursor: pointer;">
 				<i class="fa fa-television"></i>&nbsp;<%= jspUtil.label("knowledge.config.thema") %>
 			</a>
 		</li>
 
-		<li id="tabLogout">
+		<li>
 			<a class="" href="<%= request.getContextPath() %>/open.language" style="cursor: pointer;">
 				<i class="fa fa-language"></i>&nbsp;<%= jspUtil.label("knowledge.language.title") %>
+			</a>
+		</li>
+		
+		<li>
+			<a href="<%= request.getContextPath() %>/protect.group/mygroups">
+				<i class="fa fa-group"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.group.list") %>
+			</a>
+		</li>
+		
+		<li>
+			<a href="<%= request.getContextPath() %>/open.tag/list">
+				<i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("knowledge.list.tags.list") %>
 			</a>
 		</li>
 		
