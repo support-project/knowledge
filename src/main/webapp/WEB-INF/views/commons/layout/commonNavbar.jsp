@@ -56,11 +56,13 @@
 						<i class="fa fa-list-alt"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.list.knowledge") %>
 					</a>
 				</li>
+				
+				<% if (!jspUtil.logined()) { %>
 				<li class="dropdown navButton navMenuButton">
 					<a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" role="button" aria-expanded="false" id="navMenuButtonLink">
-						<i class="fa fa-bars" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.menu") %>
-						<%-- <span class="caret"></span> --%>
+						<i class="fa fa-list" ></i>&nbsp;
+						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
 						<li >
@@ -68,8 +70,35 @@
 								<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
 							</a>
 						</li>
-						
-						
+						<li class="divider"></li>
+						<li>
+							<a id="menuSignin" href="<%= request.getContextPath() %>/signin?page=<%= top %>" style="cursor: pointer;">
+								<i class="fa fa-sign-in"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signin") %>
+							</a>
+						</li>
+					</ul>
+				</li>
+				<% } else { %>
+				<li class="dropdown navButton navLoginedMenuButton">
+					<a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" role="button" aria-expanded="false" id="navMenuButtonLink">
+						<i class="fa fa-power-off" ></i>&nbsp;<!-- <%= jspUtil.name() %> -->
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+						<li style="vertical-align: center;">
+							<a href="<%= request.getContextPath() %>/protect.account" style="cursor: pointer;">
+							<img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>"
+							alt="icon" width="36" height="36"/>
+							<%= jspUtil.name() %>
+							</a>
+						</li>
+						<li class="divider"></li>
+						<li >
+							<a href="<%= request.getContextPath() %>/open.knowledge/search" >
+								<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
+							</a>
+						</li>
 						<% if (request.isUserInRole("admin")) { %>
 						<li class="divider"></li>
 						<li >
@@ -85,21 +114,16 @@
 								<i class="fa fa-cog" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config") %>
 							</a>
 						</li>
+						<% } %>
 						<li class="divider"></li>
-						<li>
+						<li >
 							<a id="menuSignout" href="<%= request.getContextPath() %>/signout" style="cursor: pointer;">
 								<i class="fa fa-sign-out"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signout") %>
 							</a>
 						</li>
-						<% } else { %>
-						<li>
-							<a id="menuSignin" href="<%= request.getContextPath() %>/signin?page=<%= top %>" style="cursor: pointer;">
-								<i class="fa fa-sign-in"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signin") %>
-							</a>
-						</li>
-						<% } %>
 					</ul>
 				</li>
+				<% } %>
 			</ul>
 			
 			

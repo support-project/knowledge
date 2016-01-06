@@ -75,16 +75,20 @@ body {
 	color: white;
 }
 .nav .navAddButton {
-	border: 1px solid #0080ff;
-	background: #0080ff;
+	border: 1px solid #009900;
+	background: #009900;
 }
 .nav .navListButton {
-	border: 1px solid #188d63;
-	background: #188d63;
+	border: 1px solid #999900;
+	background: #999900;
 }
 .nav .navMenuButton {
 	border: 1px solid #666666;
 	background: #666666;
+}
+.nav .navLoginedMenuButton {
+	border: 1px solid #0099cc;
+	background: #0099cc;
 }
 #navAddButtonLink,#navListButtonLink,#navMenuButtonLink {
 	padding-top: 14px;
