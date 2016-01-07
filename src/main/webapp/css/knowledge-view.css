@@ -12,6 +12,9 @@
 	cursor: text;
 }
 
+#content {
+	margin-top: 16px;
+}
 #content_head {}
 #content_main {}
 #template_items_area {
