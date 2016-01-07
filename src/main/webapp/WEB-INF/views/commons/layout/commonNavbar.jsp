@@ -61,7 +61,8 @@
 				<li class="dropdown navButton navMenuButton">
 					<a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" role="button" aria-expanded="false" id="navMenuButtonLink">
-						<i class="fa fa-list" ></i>&nbsp;
+						<img src="<%= request.getContextPath()%>/open.account/icon/"
+							alt="icon" width="24" height="24"/>
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
@@ -82,18 +83,11 @@
 				<li class="dropdown navButton navLoginedMenuButton">
 					<a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" role="button" aria-expanded="false" id="navMenuButtonLink">
-						<i class="fa fa-power-off" ></i>&nbsp;<!-- <%= jspUtil.name() %> -->
+						<img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>"
+							alt="icon" width="24" height="24"/>
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
-						<li style="vertical-align: center;">
-							<a href="<%= request.getContextPath() %>/protect.account" style="cursor: pointer;">
-							<img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>"
-							alt="icon" width="36" height="36"/>
-							<%= jspUtil.name() %>
-							</a>
-						</li>
-						<li class="divider"></li>
 						<li >
 							<a href="<%= request.getContextPath() %>/open.knowledge/search" >
 								<i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
