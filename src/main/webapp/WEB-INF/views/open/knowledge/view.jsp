@@ -125,6 +125,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 
 			
 			<%-- 添付ファイル --%>
+			<!-- Issue 123 に同意。添付ファイルは編集時に確認できれば良いと思います。
 			<c:forEach var="file" items="${files}" >
 				<c:if test="${file.commentNo == 0}">
 				<div class="downloadfile">
@@ -135,6 +136,10 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 				</div>
 				</c:if>
 			</c:forEach>
+			 -->
+
+
+
 			
 		</div>
 		
