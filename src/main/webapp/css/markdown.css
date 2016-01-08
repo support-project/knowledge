@@ -26,6 +26,7 @@
 .markdown h6 {
 	margin: 20px 0 10px;
 	padding: 0;
+	padding-bottom: 8px;
 	font-weight: bold;
 	-webkit-font-smoothing: antialiased;
 	cursor: text;
@@ -80,7 +81,8 @@
 
 .markdown h2 {
 	font-size: 24px;
-	border-bottom: 1px solid #cccccc;
+	margin-top: 40px;
+	border-bottom: 1px solid #dddddd;
 	color: black;
 }
 
@@ -103,12 +105,21 @@
 
 .markdown p,
 .markdown blockquote,
-.markdown ul,
-.markdown ol,
 .markdown dl,
-.markdown li,
 .markdown table{
 	margin: 15px 0;
+}
+
+.markdown ul,
+.markdown ol,
+.markdown li {}
+
+.markdown p,
+.markdown blockquote,
+.markdown li,
+.markdown dt,
+.markdown table{
+	line-height: 2.0em;
 }
 
 .markdown hr {
