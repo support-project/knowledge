@@ -65,13 +65,13 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 			<%-- 更新者情報 --%>
 			<div class="insert_info">
 				<img src="<%= request.getContextPath()%>/images/loader.gif" 
-					data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("insertUser") %>" 
+					data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("updateUser") %>" 
 					alt="icon" width="24" height="24" style="float:left" />
-				<% String userLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/list/0?user=" + jspUtil.out("insertUser") +"\">"
+				<% String userLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/list/0?user=" + jspUtil.out("updateUser") +"\">"
 					+ jspUtil.out("updateUserName", JspUtil.ESCAPE_CLEAR) + "</a>"; %>
 				<% String historyLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/histories/" + jspUtil.out("knowledgeId") +"\">"
-					+ jspUtil.out("insertDatetime") + "</a>"; %>
-				<%= jspUtil.label("knowledge.list.info.insert", userLink, historyLink) %>
+					+ jspUtil.date("updateDatetime") + "</a>"; %>
+				<%= jspUtil.label("knowledge.view.info.update", userLink, historyLink) %>
 			</div>
 			
 			<%-- タグ --%>
@@ -120,6 +120,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 				</c:forEach>
 				&nbsp;
 			</c:if>
+			</div>
 			<% } %>
 
 			
