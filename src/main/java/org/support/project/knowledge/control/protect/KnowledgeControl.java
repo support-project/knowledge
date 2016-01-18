@@ -30,6 +30,7 @@ import org.support.project.knowledge.entity.StockKnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
+import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
@@ -43,6 +44,7 @@ import org.support.project.web.config.HttpMethod;
 import org.support.project.web.config.MessageStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
@@ -75,6 +77,21 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttribute("templates", templates);
 		
 		setAttribute("typeId", KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE);
+
+		// グループが指定されてる場合はデフォルトで公開範囲と共同編集者を選択済みにする
+		String groupId = super.getParam("group", String.class);
+		if (StringUtils.isNotEmpty(groupId)) {
+			GroupsEntity group = GroupLogic.get().getGroup(new Integer(groupId), getLoginedUser());
+			if (group == null) {
+				return sendError(HttpStatus.SC_403_FORBIDDEN, "");
+			}
+
+			String[] groupIds = { TargetLogic.ID_PREFIX_GROUP + groupId };
+			List<LabelValue> targets = TargetLogic.get().selectTargets(groupIds);
+			setAttribute("publicFlag", KnowledgeLogic.PUBLIC_FLAG_PROTECT);
+			setAttribute("groups", targets);
+			setAttribute("editors", targets);
+		}
 		
 		return forward("view_add.jsp");
 	}

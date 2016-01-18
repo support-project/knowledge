@@ -199,7 +199,9 @@ public class GroupLogic {
 			group = groupsDao.selectAccessAbleGroup(groupId, loginedUser);
 		}
 
-		setGroupStatus(group, loginedUser);
+		if (group != null) {
+			setGroupStatus(group, loginedUser);
+		}
 		return group;
 	}
 
