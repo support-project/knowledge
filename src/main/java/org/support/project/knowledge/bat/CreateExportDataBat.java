@@ -48,7 +48,6 @@ public class CreateExportDataBat extends AbstractBat {
 	
 	
 	private void start() throws Exception {
-		super.dbInit();
 		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.get().getSystemName());
 		if (entity == null) {
 			send("[Fail] create fail. please try again.");

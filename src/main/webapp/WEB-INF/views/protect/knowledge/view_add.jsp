@@ -40,11 +40,11 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 var _LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
 var _UPDATE_TITLE = '<%= jspUtil.label("knowledge.edit.title") %>';
 
-<c:forEach var="group" items="${groups}" varStatus="status">
-selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jspUtil.out("group.value") %>'});
+<c:forEach var="selectedGroup" items="${groups}" varStatus="status">
+selectedGroups.push({label: '<%= jspUtil.out("selectedGroup.label") %>', value: '<%= jspUtil.out("selectedGroup.value") %>'});
 </c:forEach>
-<c:forEach var="editor" items="${editors}" varStatus="status">
-selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= jspUtil.out("editor.value") %>'});
+<c:forEach var="selectedEditor" items="${editors}" varStatus="status">
+selectedEditors.push({label: '<%= jspUtil.out("selectedEditor.label") %>', value: '<%= jspUtil.out("selectedEditor.value") %>'});
 </c:forEach>
 
 var _TAGS = [];
