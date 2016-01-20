@@ -255,7 +255,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 				data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("comment.insertUser") %>" 
 				alt="icon" width="64" height="64"/>
 		</div>
-		<div class="arrow_question">
+		<div class="arrow_question markdown">
 		<%= jspUtil.out("comment.comment", JspUtil.ESCAPE_NONE) %>
 			<!-- コメントに付けた添付ファイルの表示 -->
 			<c:forEach var="file" items="${files}" >
@@ -312,7 +312,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 				data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("comment.insertUser") %>" 
 				alt="icon" width="64" height="64"/>
 		</div>
-		<div class="arrow_answer">
+		<div class="arrow_answer markdown">
 		<%= jspUtil.out("comment.comment", JspUtil.ESCAPE_NONE) %>
 			<!-- コメントに付けた添付ファイルの表示 -->
 			<c:forEach var="file" items="${files}" >
