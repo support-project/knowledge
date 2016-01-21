@@ -194,15 +194,17 @@ var preview = function() {
 		html += '</div>';
 		html += '<div class="arrow_question">';
 		
-		html += '<p style="word-break:break-all" id="content">';
+		html += '<div style="word-break:break-all" id="content">';
 		var content = data.content;
 		html += content;
+		html += '</div>';
 		
 		html += '</div><!-- /.arrow_question -->';
 		html += '</div><!-- /.question_Box -->';
 		
 		var jqObj = $('#preview');
 		jqObj.html(html);
+		jqObj.find('code').addClass('hljs');
 		codeHighlight(jqObj)
 		.then(function() {
 			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
@@ -226,16 +228,16 @@ var previewans = function() {
 		html += 'alt="icon" width="64" height="64"/>';
 		html += '</div>';
 		html += '<div class="arrow_answer">';
-		
-		html += '<p style="word-break:break-all" id="content">';
+		html += '<div style="word-break:break-all" id="content">';
 		var content = data.content;
 		html += content;
-		
+		html += '</div>';
 		html += '</div>';
 		html += '</div>';
 		
 		var jqObj = $('#preview');
 		jqObj.html(html);
+		jqObj.find('code').addClass('hljs');
 		codeHighlight(jqObj)
 		.then(function() {
 			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});

@@ -108,10 +108,10 @@ var preview = function() {
 		html += '<h3>';
 		html += data.title;
 		html += '</h3><hr/>';
-		html += '<p style="word-break:break-all" id="content">';
+		html += '<div style="word-break:break-all" id="content">';
 		var content = data.content;
 		html += content;
-		html += '</p>';
+		html += '</div>';
 		html += '</div>';
 		html += '</div>';
 		html += '</div>';
@@ -119,6 +119,7 @@ var preview = function() {
 		
 		var jqObj = $('#preview');
 		jqObj.html(html);
+		jqObj.find('code').addClass('hljs');
 		codeHighlight(jqObj)
 		.then(function() {
 			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
