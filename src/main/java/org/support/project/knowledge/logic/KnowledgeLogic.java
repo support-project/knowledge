@@ -20,6 +20,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeEditGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeEditUsersDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
@@ -53,7 +54,6 @@ import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
-import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.entity.GroupsEntity;
 
 @DI(instance=Instance.Singleton)
@@ -568,7 +568,7 @@ public class KnowledgeLogic {
 		searchingValue.setOffset(offset);
 		searchingValue.setLimit(limit);
 
-		GroupsEntity targetGroup = GroupsDao.get().selectOnKey(new Integer(group));
+		GroupsEntity targetGroup = ExGroupsDao.get().selectOnKey(new Integer(group));
 		
 		if (loginedUser.isAdmin()) {
 			searchingValue.addGroup(targetGroup.getGroupId());
