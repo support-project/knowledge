@@ -1,5 +1,6 @@
-<%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
+<%@page import="org.support.project.knowledge.config.AnalyticsConfig"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -56,6 +57,8 @@ ${param.PARAM_CONTENT}
 <c:if test="${param.PARAM_SCRIPTS != null}">
 ${param.PARAM_SCRIPTS}
 </c:if>
+
+<%= AnalyticsConfig.get().getAnalyticsScript() %>
 
 </body>
 </html>
