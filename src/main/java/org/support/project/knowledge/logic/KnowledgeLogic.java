@@ -680,6 +680,10 @@ public class KnowledgeLogic {
 				KnowledgeFilesEntity filesEntity = filesDao.selectOnKeyWithoutBinary(fileNo);
 				if (filesEntity != null && filesEntity.getKnowledgeId() != null) {
 					KnowledgesEntity entity = knowledgesDao.selectOnKeyWithUserName(filesEntity.getKnowledgeId());
+					if (entity == null) {
+						// 添付ファイルの情報が検索エンジン内にあり、検索にHitしたが、それに紐づくナレッジデータは削除されていた
+						break;
+					}
 					entity.setTitle(entity.getTitle());
 					
 					StringBuilder builder = new StringBuilder();
@@ -705,6 +709,10 @@ public class KnowledgeLogic {
 				CommentsEntity commentsEntity = CommentsDao.get().selectOnKey(commentNo);
 				if (commentsEntity != null && commentsEntity.getKnowledgeId() != null) {
 					KnowledgesEntity entity = knowledgesDao.selectOnKeyWithUserName(commentsEntity.getKnowledgeId());
+					if (entity == null) {
+						// コメントの情報が検索エンジン内にあり、検索にHitしたが、それに紐づくナレッジデータは削除されていた
+						break;
+					}
 					entity.setTitle(entity.getTitle());
 					
 					StringBuilder builder = new StringBuilder();
