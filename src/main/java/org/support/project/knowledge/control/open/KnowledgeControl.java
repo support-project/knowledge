@@ -13,6 +13,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.LikesDao;
@@ -177,7 +178,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setViewParam();
 
 		TagsDao tagsDao = TagsDao.get();
-		GroupsDao groupsDao = GroupsDao.get();
+		ExGroupsDao groupsDao = ExGroupsDao.get();
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
 		KeywordLogic keywordLogic = KeywordLogic.get();
 		
@@ -336,7 +337,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		LoginedUser loginedUser = super.getLoginedUser();
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
 		TagsDao tagsDao = TagsDao.get();
-		GroupsDao groupsDao = GroupsDao.get();
+		ExGroupsDao groupsDao = ExGroupsDao.get();
 		
 		// History表示
 		// TODO 履歴表示を毎回取得するのはイマイチ。いったんセッションに保存しておくのが良いかも
@@ -453,7 +454,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttribute("tagitems", tagitems);
 		if (loginedUser != null) {
 			if (loginedUser.isAdmin()) {
-				groupitems = GroupsDao.get().selectAll();
+				groupitems = ExGroupsDao.get().selectAll();
 			} else {
 				groupitems = loginedUser.getGroups();
 			}

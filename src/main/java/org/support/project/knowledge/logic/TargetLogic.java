@@ -11,10 +11,10 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
-import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
@@ -50,7 +50,7 @@ public class TargetLogic {
 
 	public List<LabelValue> selectTargets(String[] targets) {
 		List<LabelValue> results = new ArrayList<>();
-		GroupsDao groupsDao = GroupsDao.get();
+		ExGroupsDao groupsDao = ExGroupsDao.get();
 		UsersDao usersDao = UsersDao.get();
 		List<Integer> groupids = new ArrayList<>();
 		List<Integer> userids = new ArrayList<>();
