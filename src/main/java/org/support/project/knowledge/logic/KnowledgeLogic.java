@@ -952,15 +952,22 @@ public class KnowledgeLogic {
 		//全文検索エンジンから削除
 		IndexLogic indexLogic = IndexLogic.get();
 		indexLogic.delete(knowledgeId);
+		indexLogic.delete("WEB-" + knowledgeId);
 	}
 	
 	/**
 	 * ナレッジに紐づくコメントを削除
 	 * @param knowledgeId
+	 * @throws Exception 
 	 */
-	private void deleteCommentsOnKnowledgeId(Long knowledgeId) {
-		// TODO Auto-generated method stub
-		
+	private void deleteCommentsOnKnowledgeId(Long knowledgeId) throws Exception {
+		CommentsDao commentsDao = CommentsDao.get();
+		List<CommentsEntity> comments = commentsDao.selectOnKnowledgeId(knowledgeId);
+		if (comments != null) {
+			for (CommentsEntity commentsEntity : comments) {
+				deleteComment(commentsEntity);
+			}
+		}
 	}
 
 	/**
@@ -1115,6 +1122,22 @@ public class KnowledgeLogic {
 		fileLogic.setKnowledgeFiles(commentsEntity.getKnowledgeId(), fileNos, loginedUser, commentsEntity.getCommentNo());
 	}
 	
+
+	/**
+	 * コメント削除
+	 * @param commentsEntity
+	 * @param loginedUser
+	 * @throws Exception 
+	 */
+	public void deleteComment(CommentsEntity commentsEntity) throws Exception {
+		CommentsDao commentsDao = CommentsDao.get();
+		commentsDao.delete(commentsEntity);
+		// 検索エンジンから削除
+		IndexLogic indexLogic = IndexLogic.get();
+		indexLogic.delete(COMMENT_ID_PREFIX + String.valueOf(commentsEntity.getCommentNo()));
+	}
+	
+	
 	/**
 	 * コメント削除
 	 * @param commentsEntity
@@ -1122,15 +1145,9 @@ public class KnowledgeLogic {
 	 * @throws Exception 
 	 */
 	public void deleteComment(CommentsEntity commentsEntity, LoginedUser loginedUser) throws Exception {
-		CommentsDao commentsDao = CommentsDao.get();
-		commentsDao.delete(commentsEntity);
+		deleteComment(commentsEntity);
 		// 一覧表示用の情報を更新
 		KnowledgeLogic.get().updateKnowledgeExInfo(commentsEntity.getKnowledgeId());
-		
-		// 検索エンジンから削除
-		IndexLogic indexLogic = IndexLogic.get();
-		indexLogic.delete(COMMENT_ID_PREFIX + String.valueOf(commentsEntity.getCommentNo()));
-		
 		// 添付ファイルを更新（紐付けをセット）
 		fileLogic.setKnowledgeFiles(commentsEntity.getKnowledgeId(), new ArrayList(), loginedUser, commentsEntity.getCommentNo());
 	}
