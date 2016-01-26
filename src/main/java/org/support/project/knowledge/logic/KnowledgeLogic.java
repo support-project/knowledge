@@ -923,8 +923,9 @@ public class KnowledgeLogic {
 	 * @throws Exception 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Long knowledgeId, LoginedUser loginedUser) throws Exception {
-		//ナレッジ削除(通常のdeleteは、論理削除になる → 管理者は見える)
+	public void delete(Long knowledgeId) throws Exception {
+		LOG.info("delete Knowledge: " + knowledgeId);
+		//ナレッジ削除(通常のdeleteは、論理削除になる)
 		knowledgesDao.delete(knowledgeId);
 		
 		// アクセス権削除
@@ -935,6 +936,9 @@ public class KnowledgeLogic {
 		
 		// 添付ファイルを削除
 		fileLogic.deleteOnKnowledgeId(knowledgeId);
+		
+		// コメント削除
+		this.deleteCommentsOnKnowledgeId(knowledgeId);
 		
 		// ナレッジにアクセス可能なグループ削除
 		GroupLogic.get().removeKnowledgeGroup(knowledgeId);
@@ -951,6 +955,15 @@ public class KnowledgeLogic {
 	}
 	
 	/**
+	 * ナレッジに紐づくコメントを削除
+	 * @param knowledgeId
+	 */
+	private void deleteCommentsOnKnowledgeId(Long knowledgeId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
 	 * ユーザのナレッジを削除
 	 * TODO ものすごく多くのナレッジを登録したユーザの場合、それを全て削除するのは時間がかかるかも？
 	 * ただ、非同期で実施して、「そのうち消えます」と表示するのも気持ち悪いと感じられるので、
@@ -962,19 +975,8 @@ public class KnowledgeLogic {
 		// ユーザのナレッジを取得
 		List<Long> knowledgeIds = knowledgesDao.selectOnUser(loginUserId);
 		for (Long knowledgeId : knowledgeIds) {
-			LOG.warn(knowledgeId);
-			// アクセス権削除
-			knowledgeUsersDao.deleteOnKnowledgeId(knowledgeId);
-			// タグを削除
-			knowledgeTagsDao.deleteOnKnowledgeId(knowledgeId);
+			delete(knowledgeId);
 		}
-		// ユーザが登録したナレッジを削除
-		knowledgesDao.deleteOnUser(loginUserId);
-		
-		//全文検索エンジンから削除
-		IndexLogic indexLogic = IndexLogic.get();
-		indexLogic.deleteOnUser(loginUserId);
-
 	}
 	
 	/**

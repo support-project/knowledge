@@ -345,7 +345,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
 		}
 		LOG.trace("save");
-		knowledgeLogic.delete(knowledgeId, getLoginedUser());
+		knowledgeLogic.delete(knowledgeId);
 		
 		addMsgSuccess("message.success.delete");
 		return super.devolution(HttpMethod.get, "open.Knowledge/list");
