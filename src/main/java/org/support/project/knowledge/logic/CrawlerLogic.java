@@ -98,7 +98,7 @@ public class CrawlerLogic extends HttpLogic {
 				response = httpclient.execute(httpGet);
 			} catch (IllegalStateException e) {
 				//HttpGetが何らかのエラーを返したので、このアイテムの取得終了
-				log.error("http get error.   -->" + e.getMessage());
+				log.error("http get error.   -->" + url + "  : " + e.getMessage());
 				// HttpClientをクリア
 				httpGet.abort();
 				httpGet.releaseConnection();
