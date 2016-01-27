@@ -7,6 +7,7 @@ import org.support.project.common.bean.ValidateError;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.AnalyticsConfig;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
@@ -18,9 +19,11 @@ import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.LdapConfigsDao;
 import org.support.project.web.dao.MailConfigsDao;
+import org.support.project.web.dao.SystemAttributesDao;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.LdapConfigsEntity;
 import org.support.project.web.entity.MailConfigsEntity;
+import org.support.project.web.entity.SystemAttributesEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
 
 @DI(instance=Instance.Prototype)
@@ -170,7 +173,50 @@ public class ConfigControl extends Control {
 		setResult(successMsg, errors);
 
 		return forward("system.jsp");
-	}	
+	}
+	
+	/**
+	 * Analytics設定画面を表示
+	 * 
+	 * @return
+	 */
+	@Get
+	@Auth(roles = "admin")
+	public Boundary analytics() {
+		SystemAttributesDao dao = SystemAttributesDao.get();
+		SystemAttributesEntity config = dao.selectOnKey(SystemConfig.ANALYTICS, AppConfig.get().getSystemName());
+		if (config != null) {
+			setAttribute("analytics_script", config.getConfigValue());
+			// 設定を毎回DBから取得するのはパフォーマンス面で良くないので、メモリに保持する
+			AnalyticsConfig.get().setAnalyticsScript(config.getConfigValue());
+		}
+		return forward("analytics.jsp");
+	}
+	
+	/**
+	 * Analytics設定を保存
+	 * 
+	 * @return
+	 */
+	@Post
+	@Auth(roles = "admin")
+	public Boundary analytics_save() {
+		String analytics_script = getParam("analytics_script");
+		SystemAttributesDao dao = SystemAttributesDao.get();
+		SystemAttributesEntity config = dao.selectOnKey(SystemConfig.ANALYTICS, AppConfig.get().getSystemName());
+		if (config == null) {
+			config = new SystemAttributesEntity(SystemConfig.ANALYTICS, AppConfig.get().getSystemName());
+		}
+		config.setConfigValue(analytics_script);
+		dao.save(config);
+		
+		// 設定を毎回DBから取得するのはパフォーマンス面で良くないので、メモリに保持する
+		AnalyticsConfig.get().setAnalyticsScript(analytics_script);
+		
+		addMsgSuccess("message.success.save");
+		
+		return analytics();
+	}
 	
 	
 }

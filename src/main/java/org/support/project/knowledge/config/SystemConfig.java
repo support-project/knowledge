@@ -16,6 +16,8 @@ public class SystemConfig {
 	
 	/** システムへアクセスするためのURLのシステム設定のラベル */
 	public static final String SYSTEM_URL = "SYSTEM_URL";
+	/** アナリティクス設定を保持するキー */
+	public static final String ANALYTICS = "ANALYTICS";
 	
 	/** ユーザ登録を実施した後、通知するか(ON/OFF) */
 	public static final String USER_ADD_NOTIFY = "USER_ADD_NOTIFY";

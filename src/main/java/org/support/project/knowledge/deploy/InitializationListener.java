@@ -7,8 +7,12 @@ import javax.servlet.ServletContextListener;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.knowledge.config.AnalyticsConfig;
 import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.ormapping.connection.ConnectionManager;
+import org.support.project.web.dao.SystemAttributesDao;
+import org.support.project.web.entity.SystemAttributesEntity;
 
 public class InitializationListener implements ServletContextListener {
 	/** ログ */
@@ -46,6 +50,13 @@ public class InitializationListener implements ServletContextListener {
 		LOG.info("knowledge install path: '" + path + "'");
 		LOG.info("knowledge home path: '" + appConfig.getBasePath() + "'");
 		appConfig.setWebRealPath(path);
+		
+		SystemAttributesDao dao = SystemAttributesDao.get();
+		SystemAttributesEntity config = dao.selectOnKey(SystemConfig.ANALYTICS, AppConfig.get().getSystemName());
+		if (config != null) {
+			// 設定を毎回DBから取得するのはパフォーマンス面で良くないので、メモリに保持する
+			AnalyticsConfig.get().setAnalyticsScript(config.getConfigValue());
+		}
 	}
 
 }
