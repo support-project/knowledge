@@ -16,6 +16,7 @@ import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
+import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
@@ -73,9 +74,25 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setViewParam();
 		
 		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		
 		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-		
+		LoginedUser loginedUser = getLoginedUser();
+
+		if (loginedUser == null) {
+			KnowledgesEntity entity = KnowledgesDao.get().selectOnKey(knowledgeId);
+			if (entity == null) {
+				return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+			}
+
+			if (!entity.getPublicFlag().equals(KnowledgeLogic.PUBLIC_FLAG_PUBLIC)) {
+				return super.redirect(getRequest().getContextPath() + "/protect.knowledge/view/" + knowledgeId);
+			}
+		}
+
+		KnowledgesEntity entity = knowledgeLogic.selectWithTags(knowledgeId, getLoginedUser());
+		if (entity == null) {
+			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+		}
+
 		// 今見たナレッジの情報をCookieに保存
 		List<String> ids = new ArrayList<String>();
 		ids.add(String.valueOf(knowledgeId));
@@ -99,10 +116,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String cookieHistory = String.join(COOKIE_SEPARATOR, ids);
 		setCookie(SystemConfig.COOKIE_KEY_HISTORY, cookieHistory);
 		
-		KnowledgesEntity entity = knowledgeLogic.selectWithTags(knowledgeId, getLoginedUser());
-		if (entity == null) {
-			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
-		}
 		//Markdownを処理
 		entity.setTitle(sanitize(entity.getTitle()));
 		MarkDown markDown = MarkdownLogic.get().markdownToHtml(entity.getContent());
@@ -147,7 +160,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		// 編集権限
 		List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
 		setAttribute("editors", editors);
-		LoginedUser loginedUser = super.getLoginedUser();
 		boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
 		setAttribute("edit", edit);
 
