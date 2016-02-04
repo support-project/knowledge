@@ -14,12 +14,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.RandomUtil;
+import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.entity.AccountImagesEntity;
 
 public class AccountImagesDaoTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		TestCommon.testConnection();
 	}
 
 	@AfterClass
