@@ -2,9 +2,7 @@ package org.support.project.knowledge.dao;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.junit.After;
@@ -12,7 +10,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.entity.AccountImagesEntity;
@@ -51,8 +48,8 @@ public class AccountImagesDaoTest {
 			
 			entity = dao.selectOnUserId(entity.getUserId());
 			
-			FileUtil.copy(entity.getFileBinary(), new FileOutputStream(new File("/data/test")));
-			FileUtil.delete(new File("/data/test"));
+//			FileUtil.copy(entity.getFileBinary(), new FileOutputStream(new File("data/test")));
+//			FileUtil.delete(new File("data/test"));
 			
 			assertNotNull(entity.getImageId());
 		} catch (Exception e) {
