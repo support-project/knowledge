@@ -1,4 +1,4 @@
-## knowledge
+## knowledge [![Build Status](https://travis-ci.org/support-project/knowledge.svg?branch=master)](https://travis-ci.org/support-project/knowledge)
 
 ===============
 
