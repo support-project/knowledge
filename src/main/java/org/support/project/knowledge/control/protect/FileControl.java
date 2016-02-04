@@ -69,7 +69,7 @@ public class FileControl extends Control {
 	
 	
 	@Get
-	public JsonBoundary delete() {
+	public JsonBoundary delete() throws Exception {
 		LOG.trace("delete()");
 		
 		Long fileNo = getParam("fileNo", Long.class);

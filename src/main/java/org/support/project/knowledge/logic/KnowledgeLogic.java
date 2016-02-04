@@ -20,6 +20,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeEditGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeEditUsersDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
@@ -53,7 +54,6 @@ import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
-import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.entity.GroupsEntity;
 
 @DI(instance=Instance.Singleton)
@@ -568,7 +568,7 @@ public class KnowledgeLogic {
 		searchingValue.setOffset(offset);
 		searchingValue.setLimit(limit);
 
-		GroupsEntity targetGroup = GroupsDao.get().selectOnKey(new Integer(group));
+		GroupsEntity targetGroup = ExGroupsDao.get().selectOnKey(new Integer(group));
 		
 		if (loginedUser.isAdmin()) {
 			searchingValue.addGroup(targetGroup.getGroupId());
@@ -680,6 +680,10 @@ public class KnowledgeLogic {
 				KnowledgeFilesEntity filesEntity = filesDao.selectOnKeyWithoutBinary(fileNo);
 				if (filesEntity != null && filesEntity.getKnowledgeId() != null) {
 					KnowledgesEntity entity = knowledgesDao.selectOnKeyWithUserName(filesEntity.getKnowledgeId());
+					if (entity == null) {
+						// 添付ファイルの情報が検索エンジン内にあり、検索にHitしたが、それに紐づくナレッジデータは削除されていた
+						break;
+					}
 					entity.setTitle(entity.getTitle());
 					
 					StringBuilder builder = new StringBuilder();
@@ -705,6 +709,10 @@ public class KnowledgeLogic {
 				CommentsEntity commentsEntity = CommentsDao.get().selectOnKey(commentNo);
 				if (commentsEntity != null && commentsEntity.getKnowledgeId() != null) {
 					KnowledgesEntity entity = knowledgesDao.selectOnKeyWithUserName(commentsEntity.getKnowledgeId());
+					if (entity == null) {
+						// コメントの情報が検索エンジン内にあり、検索にHitしたが、それに紐づくナレッジデータは削除されていた
+						break;
+					}
 					entity.setTitle(entity.getTitle());
 					
 					StringBuilder builder = new StringBuilder();
@@ -915,8 +923,9 @@ public class KnowledgeLogic {
 	 * @throws Exception 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Long knowledgeId, LoginedUser loginedUser) throws Exception {
-		//ナレッジ削除(通常のdeleteは、論理削除になる → 管理者は見える)
+	public void delete(Long knowledgeId) throws Exception {
+		LOG.info("delete Knowledge: " + knowledgeId);
+		//ナレッジ削除(通常のdeleteは、論理削除になる)
 		knowledgesDao.delete(knowledgeId);
 		
 		// アクセス権削除
@@ -927,6 +936,9 @@ public class KnowledgeLogic {
 		
 		// 添付ファイルを削除
 		fileLogic.deleteOnKnowledgeId(knowledgeId);
+		
+		// コメント削除
+		this.deleteCommentsOnKnowledgeId(knowledgeId);
 		
 		// ナレッジにアクセス可能なグループ削除
 		GroupLogic.get().removeKnowledgeGroup(knowledgeId);
@@ -940,8 +952,24 @@ public class KnowledgeLogic {
 		//全文検索エンジンから削除
 		IndexLogic indexLogic = IndexLogic.get();
 		indexLogic.delete(knowledgeId);
+		indexLogic.delete("WEB-" + knowledgeId);
 	}
 	
+	/**
+	 * ナレッジに紐づくコメントを削除
+	 * @param knowledgeId
+	 * @throws Exception 
+	 */
+	private void deleteCommentsOnKnowledgeId(Long knowledgeId) throws Exception {
+		CommentsDao commentsDao = CommentsDao.get();
+		List<CommentsEntity> comments = commentsDao.selectOnKnowledgeId(knowledgeId);
+		if (comments != null) {
+			for (CommentsEntity commentsEntity : comments) {
+				deleteComment(commentsEntity);
+			}
+		}
+	}
+
 	/**
 	 * ユーザのナレッジを削除
 	 * TODO ものすごく多くのナレッジを登録したユーザの場合、それを全て削除するのは時間がかかるかも？
@@ -954,19 +982,8 @@ public class KnowledgeLogic {
 		// ユーザのナレッジを取得
 		List<Long> knowledgeIds = knowledgesDao.selectOnUser(loginUserId);
 		for (Long knowledgeId : knowledgeIds) {
-			LOG.warn(knowledgeId);
-			// アクセス権削除
-			knowledgeUsersDao.deleteOnKnowledgeId(knowledgeId);
-			// タグを削除
-			knowledgeTagsDao.deleteOnKnowledgeId(knowledgeId);
+			delete(knowledgeId);
 		}
-		// ユーザが登録したナレッジを削除
-		knowledgesDao.deleteOnUser(loginUserId);
-		
-		//全文検索エンジンから削除
-		IndexLogic indexLogic = IndexLogic.get();
-		indexLogic.deleteOnUser(loginUserId);
-
 	}
 	
 	/**
@@ -1105,6 +1122,22 @@ public class KnowledgeLogic {
 		fileLogic.setKnowledgeFiles(commentsEntity.getKnowledgeId(), fileNos, loginedUser, commentsEntity.getCommentNo());
 	}
 	
+
+	/**
+	 * コメント削除
+	 * @param commentsEntity
+	 * @param loginedUser
+	 * @throws Exception 
+	 */
+	public void deleteComment(CommentsEntity commentsEntity) throws Exception {
+		CommentsDao commentsDao = CommentsDao.get();
+		commentsDao.delete(commentsEntity);
+		// 検索エンジンから削除
+		IndexLogic indexLogic = IndexLogic.get();
+		indexLogic.delete(COMMENT_ID_PREFIX + String.valueOf(commentsEntity.getCommentNo()));
+	}
+	
+	
 	/**
 	 * コメント削除
 	 * @param commentsEntity
@@ -1112,15 +1145,9 @@ public class KnowledgeLogic {
 	 * @throws Exception 
 	 */
 	public void deleteComment(CommentsEntity commentsEntity, LoginedUser loginedUser) throws Exception {
-		CommentsDao commentsDao = CommentsDao.get();
-		commentsDao.delete(commentsEntity);
+		deleteComment(commentsEntity);
 		// 一覧表示用の情報を更新
 		KnowledgeLogic.get().updateKnowledgeExInfo(commentsEntity.getKnowledgeId());
-		
-		// 検索エンジンから削除
-		IndexLogic indexLogic = IndexLogic.get();
-		indexLogic.delete(COMMENT_ID_PREFIX + String.valueOf(commentsEntity.getCommentNo()));
-		
 		// 添付ファイルを更新（紐付けをセット）
 		fileLogic.setKnowledgeFiles(commentsEntity.getKnowledgeId(), new ArrayList(), loginedUser, commentsEntity.getCommentNo());
 	}

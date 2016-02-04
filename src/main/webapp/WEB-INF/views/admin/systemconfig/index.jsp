@@ -79,6 +79,11 @@
 				<i class="fa fa-link"></i>&nbsp;<%= jspUtil.label("knowledge.webhook.title") %>
 			</a>
 		</li>
+		<li >
+			<a href="<%= request.getContextPath() %>/admin.config/analytics" style="cursor: pointer;">
+				<i class="fa fa-area-chart"></i>&nbsp;<%= jspUtil.label("knowledge.analytics.title") %>
+			</a>
+		</li>
 		
 		
 	</ul>

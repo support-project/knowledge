@@ -16,7 +16,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
-import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.indexer.IndexingValue;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LoginedUser;
 
@@ -93,9 +93,10 @@ public class UploadedFileLogic {
 	 * @param fileNos
 	 * @param loginedUser
 	 * @param commentNo 
+	 * @throws Exception 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void setKnowledgeFiles(Long knowledgeId, List<Long> fileNos, LoginedUser loginedUser) {
+	public void setKnowledgeFiles(Long knowledgeId, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
 		// 現在、すでに紐づいている添付ファイルを取得
 		List<KnowledgeFilesEntity> filesEntities = filesDao.selectOnKnowledgeId(knowledgeId);
 		Map<Long, KnowledgeFilesEntity> filemap = new HashMap<>();
@@ -122,7 +123,9 @@ public class UploadedFileLogic {
 			Long fileNo = (Long) iterator.next();
 			//filesDao.delete(fileNo);
 			filesDao.physicalDelete(fileNo); // バイナリは大きいので、物理削除する
-			// TODO 全文検索エンジンから情報を削除
+			// 全文検索エンジンから情報を削除
+			IndexLogic indexLogic = IndexLogic.get();
+			indexLogic.delete("FILE-" + fileNo);
 		}
 	}
 	
@@ -139,9 +142,10 @@ public class UploadedFileLogic {
 	 * @param fileNos
 	 * @param loginedUser
 	 * @param commentNo 
+	 * @throws Exception 
 	 */
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void setKnowledgeFiles(Long knowledgeId, List<Long> fileNos, LoginedUser loginedUser, Long commentNo) {
+	public void setKnowledgeFiles(Long knowledgeId, List<Long> fileNos, LoginedUser loginedUser, Long commentNo) throws Exception {
 		// 現在、すでに紐づいている添付ファイルを取得
 		List<KnowledgeFilesEntity> filesEntities = filesDao.selectOnKnowledgeId(knowledgeId);
 		Map<Long, KnowledgeFilesEntity> filemap = new HashMap<>();
@@ -167,7 +171,10 @@ public class UploadedFileLogic {
 			Long fileNo = (Long) iterator.next();
 			//filesDao.delete(fileNo);
 			filesDao.physicalDelete(fileNo); // バイナリは大きいので、物理削除する
-			// TODO 全文検索エンジンから情報を削除
+			
+			// 全文検索エンジンから情報を削除
+			IndexLogic indexLogic = IndexLogic.get();
+			indexLogic.delete("FILE-" + fileNo);
 		}
 	}	
 	
@@ -176,12 +183,15 @@ public class UploadedFileLogic {
 	 * ファイルを削除する
 	 * @param fileNo
 	 * @param loginedUser 
+	 * @throws Exception 
 	 */
-	public void removeFile(Long fileNo, LoginedUser loginedUser) {
+	public void removeFile(Long fileNo, LoginedUser loginedUser) throws Exception {
 		// DBのデータを削除
 		filesDao.physicalDelete(fileNo); // バイナリは大きいので、物理削除する
 		
-		// TODO 全文検索エンジンから情報を削除
+		// 全文検索エンジンから情報を削除
+		IndexLogic indexLogic = IndexLogic.get();
+		indexLogic.delete("FILE-" + fileNo);
 	}
 
 	/**
@@ -235,13 +245,15 @@ public class UploadedFileLogic {
 	/**
 	 * ナレッジを削除する際に、添付ファイルを削除
 	 * @param knowledgeId
+	 * @throws Exception 
 	 */
-	public void deleteOnKnowledgeId(Long knowledgeId) {
+	public void deleteOnKnowledgeId(Long knowledgeId) throws Exception {
 		List<KnowledgeFilesEntity> filesEntities = filesDao.selectOnKnowledgeId(knowledgeId);
 		for (KnowledgeFilesEntity entity : filesEntities) {
 			filesDao.physicalDelete(entity.getFileNo());
-			//TODO 全文検索エンジンからも情報を削除
-			
+			// 全文検索エンジンから情報を削除
+			IndexLogic indexLogic = IndexLogic.get();
+			indexLogic.delete("FILE-" + entity.getFileNo());
 		}
 	}
 	

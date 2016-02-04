@@ -22,6 +22,7 @@ public class KnowledgesDaoTest extends TestCommon {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		TestCommon.testConnection();
 		initData();
 	}
 

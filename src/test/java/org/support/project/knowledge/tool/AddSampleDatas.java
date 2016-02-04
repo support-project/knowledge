@@ -15,12 +15,12 @@ import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.RandomUtil;
+import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.web.config.AppConfig;
 import org.support.project.web.config.GroupRoleType;
-import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.UserGroupsDao;
 import org.support.project.web.dao.UserRolesDao;
 import org.support.project.web.dao.UsersDao;
@@ -162,7 +162,7 @@ public class AddSampleDatas {
 		}
 
 		// グループ登録
-		GroupsDao groupsDao = GroupsDao.get();
+		ExGroupsDao groupsDao = ExGroupsDao.get();
 		UserGroupsDao userGroupsDao = UserGroupsDao.get();
 		BufferedReader br = null;
 		try {
