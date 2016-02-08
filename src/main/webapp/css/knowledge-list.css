@@ -45,4 +45,6 @@
 	cursor: text;
 }
 
-
+.list-group-item-current {
+	background-color: #ecf0f1;
+}
