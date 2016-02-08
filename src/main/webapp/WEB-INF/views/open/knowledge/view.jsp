@@ -51,7 +51,7 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 </c:param>
 
 <c:param name="PARAM_PAGE_TITLE">
-Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil.ESCAPE_CLEAR) %>
+<%= jspUtil.out("title", JspUtil.ESCAPE_CLEAR) %> - Knowledge
 </c:param>
 
 
