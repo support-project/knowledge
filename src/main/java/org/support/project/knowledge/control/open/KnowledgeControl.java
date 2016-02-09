@@ -229,6 +229,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		} else if (StringUtils.isNotEmpty(tagNames) || StringUtils.isNotEmpty(groupNames)) {
 			// タグとキーワードで検索
 			LOG.trace("show on Tags and Groups and keyword");
+			String searchKeyword = "";
 			String[] taglist = tagNames.split(",");
 			List<TagsEntity> tags = new ArrayList<>();
 			for (String string : taglist) {
@@ -240,6 +241,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				if (tagsEntity != null) {
 					tags.add(tagsEntity);
 				}
+			}
+			if (0 < tags.size()) {
+				searchKeyword += keywordLogic.toTagsQuery(tagNames.replaceAll("[\\xc2\\xa0]", ""));
 			}
 
 			List<GroupsEntity> groups = new ArrayList<>();
@@ -255,10 +259,14 @@ public class KnowledgeControl extends KnowledgeControlBase {
 						groups.add(groupsEntity);
 					}
 				}
+				if (0 < groups.size()) {
+					searchKeyword += keywordLogic.toGroupsQuery(groupNames.replaceAll("[\\xc2\\xa0]", ""));
+				}
 			}
 
 			setAttribute("searchTags", tags);
 			setAttribute("searchGroups", groups);
+			setAttribute("searchKeyword", searchKeyword);
 
 			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 		} else {
