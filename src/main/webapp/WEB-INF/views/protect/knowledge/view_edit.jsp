@@ -57,8 +57,9 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 
 </c:param>
 
-
-
+<c:param name="PARAM_PAGE_TITLE">
+<%= jspUtil.label("label.update") %> - <%= jspUtil.out("title", JspUtil.ESCAPE_CLEAR) %> - Knowledge
+</c:param>
 
 <c:param name="PARAM_CONTENT">
 <h4 class="title" id="title_msg"><%= jspUtil.label("knowledge.edit.title") %></h4>
