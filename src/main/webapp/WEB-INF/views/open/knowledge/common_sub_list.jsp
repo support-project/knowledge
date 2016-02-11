@@ -18,7 +18,7 @@
 		<c:when test="${groups != null}">
 		<div class="list-group">
 			<c:forEach var="group_item" items="${groups}">
-			<a class="list-group-item<% if (jspUtil.out("group_item.groupId").equals(jspUtil.out("selectedGroup.groupId"))) { %> list-group-item-current<% } %>"
+			<a class="list-group-item<c:if test="${selectedGroupIds.contains(group_item.getGroupId())}"> list-group-item-current</c:if>"
 				href="<%= request.getContextPath() %>/open.knowledge/list?group=<%= jspUtil.out("group_item.groupId") %>" >
 				<span class="badge"><%= jspUtil.out("group_item.groupKnowledgeCount") %></span>
 				<i class="fa fa-group"></i>&nbsp;<%= jspUtil.out("group_item.groupName") %>
@@ -45,7 +45,7 @@
 		<h5>- <i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("knowledge.list.popular.tags") %> - </h5>
 		<div class="list-group">
 		<c:forEach var="tag_item" items="${tags}">
-			<a class="list-group-item<% if (jspUtil.out("tag_item.tagId").equals(jspUtil.out("selectedTag.tagId"))) { %> list-group-item-current<% } %>"
+			<a class="list-group-item<c:if test="${selectedTagIds.contains(tag_item.getTagId())}"> list-group-item-current</c:if>"
 				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%= jspUtil.out("tag_item.tagId") %>" >
 				<span class="badge"><%= jspUtil.out("tag_item.knowledgeCount") %></span>
 				<i class="fa fa-tag"></i>&nbsp;<%= jspUtil.out("tag_item.tagName") %>
