@@ -208,14 +208,14 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
 			setAttribute("selectedTag", tagsEntity);
-			setAttribute("searchKeyword", keywordLogic.toTagsQuery(tagsEntity.getTagName()));
+			setAttribute("searchKeyword", keywordLogic.toTagsQuery(tagsEntity.getTagName()) + keyword);
 		} else if (StringUtils.isInteger(group)) {
 			//グループを選択している
 			LOG.trace("show on Group");
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			GroupsEntity groupsEntity = groupsDao.selectOnKey(new Integer(group));
 			setAttribute("selectedGroup", groupsEntity);
-			setAttribute("searchKeyword", keywordLogic.toGroupsQuery(groupsEntity.getGroupName()));
+			setAttribute("searchKeyword", keywordLogic.toGroupsQuery(groupsEntity.getGroupName()) + keyword);
 		} else if (StringUtils.isNotEmpty(user) && StringUtils.isInteger(user)) {
 			// ユーザを選択している
 			LOG.trace("show on User");
@@ -266,7 +266,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
 			setAttribute("searchTags", tags);
 			setAttribute("searchGroups", groups);
-			setAttribute("searchKeyword", searchKeyword);
+			setAttribute("searchKeyword", searchKeyword + keyword);
 
 			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 		} else {
