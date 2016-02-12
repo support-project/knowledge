@@ -51,4 +51,24 @@ public class KeywordLogic {
 		text = text.trim();
 		return text;
 	}
+
+	/**
+	 * グループのクエリにして返す
+	 *
+	 * @param groupName
+	 * @return
+	 */
+	public String toGroupsQuery(String groupName) {
+		return String.format("groups: (%s) ", groupName);
+	}
+
+	/**
+	 * タグのクエリにして返す
+	 *
+	 * @param tagName
+	 * @return
+	 */
+	public String toTagsQuery(String tagName) {
+		return String.format("tags: (%s) ", tagName);
+	}
 }
