@@ -36,7 +36,7 @@
 	</div>
 	
 	<!-- Filter -->
-	<c:if test="${!empty selectedTag || !empty selectedGroup || !empty selectedUser || !empty searchTags || !empty searchGroups || !empty keyword}">
+	<c:if test="${!empty selectedTag || !empty selectedGroup || !empty selectedUser || !empty selectedTags || !empty selectedGroups || !empty keyword}">
 		<div class="row">
 			<div class="col-sm-12 selected_tag">
 			
@@ -61,20 +61,20 @@
 			</a>
 			</c:if>
 			
-			<c:if test="${!empty searchTags}">
-			<c:forEach var="searchTag" items="${searchTags}" varStatus="status">
+			<c:if test="${!empty selectedTags}">
+			<c:forEach var="tag" items="${selectedTags}" varStatus="status">
 			<a class="text-link" 
-				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%=jspUtil.out("searchTag.tagId") %>" >
-					<i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("searchTag.tagName") %>
+				href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%=jspUtil.out("tag.tagId") %>" >
+					<i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("tag.tagName") %>
 			</a>
 			</c:forEach>
 			</c:if>
 
-			<c:if test="${!empty searchGroups}">
-			<c:forEach var="searchGroup" items="${searchGroups}" varStatus="status">
+			<c:if test="${!empty selectedGroups}">
+			<c:forEach var="group" items="${selectedGroups}" varStatus="status">
 			<a class="text-link" 
-				href="<%= request.getContextPath() %>/open.knowledge/list?group=<%=jspUtil.out("searchGroup.groupId") %>" >
-					<i class="fa fa-group"></i>&nbsp;<%=jspUtil.out("searchGroup.groupName") %>
+				href="<%= request.getContextPath() %>/open.knowledge/list?group=<%=jspUtil.out("group.groupId") %>" >
+					<i class="fa fa-group"></i>&nbsp;<%=jspUtil.out("group.groupName") %>
 			</a>
 			</c:forEach>
 			</c:if>
