@@ -208,12 +208,14 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
 			setAttribute("selectedTag", tagsEntity);
+			setAttribute("searchKeyword", keywordLogic.toTagsQuery(tagsEntity.getTagName()) + keyword);
 		} else if (StringUtils.isInteger(group)) {
 			//グループを選択している
 			LOG.trace("show on Group");
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			GroupsEntity groupsEntity = groupsDao.selectOnKey(new Integer(group));
 			setAttribute("selectedGroup", groupsEntity);
+			setAttribute("searchKeyword", keywordLogic.toGroupsQuery(groupsEntity.getGroupName()) + keyword);
 		} else if (StringUtils.isNotEmpty(user) && StringUtils.isInteger(user)) {
 			// ユーザを選択している
 			LOG.trace("show on User");
@@ -227,6 +229,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		} else if (StringUtils.isNotEmpty(tagNames) || StringUtils.isNotEmpty(groupNames)) {
 			// タグとキーワードで検索
 			LOG.trace("show on Tags and Groups and keyword");
+			String searchKeyword = "";
 			String[] taglist = tagNames.split(",");
 			List<TagsEntity> tags = new ArrayList<>();
 			for (String string : taglist) {
@@ -238,6 +241,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				if (tagsEntity != null) {
 					tags.add(tagsEntity);
 				}
+			}
+			if (0 < tags.size()) {
+				searchKeyword += keywordLogic.toTagsQuery(tagNames.replaceAll("[\\xc2\\xa0]", ""));
 			}
 
 			List<GroupsEntity> groups = new ArrayList<>();
@@ -253,10 +259,14 @@ public class KnowledgeControl extends KnowledgeControlBase {
 						groups.add(groupsEntity);
 					}
 				}
+				if (0 < groups.size()) {
+					searchKeyword += keywordLogic.toGroupsQuery(groupNames.replaceAll("[\\xc2\\xa0]", ""));
+				}
 			}
 
 			setAttribute("searchTags", tags);
 			setAttribute("searchGroups", groups);
+			setAttribute("searchKeyword", searchKeyword + keyword);
 
 			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 		} else {
