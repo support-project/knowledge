@@ -208,34 +208,36 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
 			List<Integer> tagIds = new ArrayList<Integer>();
+			String name = "";
 			if (tagsEntity != null) {
 				tagIds.add(tagsEntity.getTagId());
+				name = tagsEntity.getTagName();
 			}
 			setAttribute("selectedTag", tagsEntity);
 			setAttribute("selectedTagIds", tagIds);
-			setAttribute("searchKeyword", keywordLogic.toTagsQuery(tagsEntity.getTagName()) + keyword);
+			setAttribute("searchKeyword", keywordLogic.toTagsQuery(name) + keyword);
 		} else if (StringUtils.isInteger(group)) {
 			//グループを選択している
 			LOG.trace("show on Group");
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			GroupsEntity groupsEntity = groupsDao.selectOnKey(new Integer(group));
 			List<Integer> groupIds = new ArrayList<Integer>();
+			String name = "";
 			if (groupsEntity != null) {
 				groupIds.add(groupsEntity.getGroupId());
+				name = groupsEntity.getGroupName();
 			}
 			setAttribute("selectedGroup", groupsEntity);
 			setAttribute("selectedGroupIds", groupIds);
-			setAttribute("searchKeyword", keywordLogic.toGroupsQuery(groupsEntity.getGroupName()) + keyword);
+			setAttribute("searchKeyword", keywordLogic.toGroupsQuery(name) + keyword);
 		} else if (StringUtils.isNotEmpty(user) && StringUtils.isInteger(user)) {
 			// ユーザを選択している
 			LOG.trace("show on User");
 			int userId = Integer.parseInt(user);
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnUser(userId, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			UsersEntity usersEntity = UsersDao.get().selectOnKey(userId);
-			if (user != null) {
-				usersEntity.setPassword("");
-				setAttribute("selectedUser", usersEntity);
-			}
+			usersEntity.setPassword("");
+			setAttribute("selectedUser", usersEntity);
 		} else if (StringUtils.isNotEmpty(tagNames) || StringUtils.isNotEmpty(groupNames)) {
 			// タグとキーワードで検索
 			LOG.trace("show on Tags and Groups and keyword");

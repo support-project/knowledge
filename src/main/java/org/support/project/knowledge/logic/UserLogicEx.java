@@ -7,10 +7,10 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 
 @DI(instance=Instance.Singleton)
-public class UserLogic extends org.support.project.web.logic.UserLogic {
+public class UserLogicEx extends org.support.project.web.logic.UserLogic {
 
-	public static UserLogic get() {
-		return Container.getComp(UserLogic.class);
+	public static UserLogicEx get() {
+		return Container.getComp(UserLogicEx.class);
 	}
 
 	/**

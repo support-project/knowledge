@@ -19,7 +19,7 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.AccountLogic;
-import org.support.project.knowledge.logic.UserLogic;
+import org.support.project.knowledge.logic.UserLogicEx;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.knowledge.vo.UploadResults;
 import org.support.project.web.bean.LoginedUser;
@@ -171,7 +171,7 @@ public class AccountControl extends Control {
 		if ("2".equals(getParam("knowledge_remove"))) {
 			knowledgeRemove = false;
 		}
-		UserLogic.get().withdrawal(getLoginUserId(), knowledgeRemove, HttpUtil.getLocale(getRequest()));
+		UserLogicEx.get().withdrawal(getLoginUserId(), knowledgeRemove, HttpUtil.getLocale(getRequest()));
 		
 		// セッションを破棄
 		AuthenticationLogic<LoginedUser> authenticationLogic = Container.getComp(DefaultAuthenticationLogicImpl.class);

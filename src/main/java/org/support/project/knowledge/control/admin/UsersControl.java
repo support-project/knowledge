@@ -12,7 +12,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.MailLogic;
-import org.support.project.knowledge.logic.UserLogic;
+import org.support.project.knowledge.logic.UserLogicEx;
 import org.support.project.knowledge.vo.Roles;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
@@ -204,13 +204,13 @@ public class UsersControl extends Control {
 		// エラーが無い場合のみ登録
 		user = super.getParams(UsersEntity.class);
 		String[] roles = getRequest().getParameterValues("roles");
-		user = UserLogic.get().insert(user, roles);
+		user = UserLogicEx.get().insert(user, roles);
 		setAttributeOnProperty(user);
 		
 		// 登録されているロールをセット
 		setSystemRoles(user);
 		
-		UserLogic.get().insertDefaultGroup(user);
+		UserLogicEx.get().insertDefaultGroup(user);
 		
 		String successMsg = "message.success.insert";
 		setResult(successMsg, errors);
@@ -272,7 +272,7 @@ public class UsersControl extends Control {
 		}
 		// エラーが無い場合のみ登録
 		String[] roles = getRequest().getParameterValues("roles");
-		user = UserLogic.get().update(user, roles, getLoginedUser());
+		user = UserLogicEx.get().update(user, roles, getLoginedUser());
 		setAttributeOnProperty(user);
 		
 		// 登録されているロールをセット
@@ -301,7 +301,7 @@ public class UsersControl extends Control {
 		UsersEntity user = dao.selectOnKey(getParam("userId", Integer.class));
 		if (user != null) {
 			//dao.delete(user.getUserId());
-			UserLogic.get().withdrawal(user.getUserId(), true, HttpUtil.getLocale(getRequest()));
+			UserLogicEx.get().withdrawal(user.getUserId(), true, HttpUtil.getLocale(getRequest()));
 		}
 		String successMsg = "message.success.delete";
 		setResult(successMsg, null);
@@ -345,7 +345,7 @@ public class UsersControl extends Control {
 			return accept_list();
 		}
 		
-		UsersEntity user = UserLogic.get().activate(entity);
+		UsersEntity user = UserLogicEx.get().activate(entity);
 		if (user != null) {
 			addMsgSuccess("message.success.accept");
 			

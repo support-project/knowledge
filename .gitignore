@@ -3,4 +3,5 @@ target
 .classpath
 .project
 .settings
-
+.eclipse-pmd
+.checkstyle

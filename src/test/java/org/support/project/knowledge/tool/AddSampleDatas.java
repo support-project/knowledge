@@ -151,7 +151,7 @@ public class AddSampleDatas {
 			usersEntity.setDeleteFlag(INT_FLAG.ON.getValue());
 			usersDao.save(usersEntity);
 
-			if (i >= 900) {
+			if (i % 10 == 0) {
 				usersDao.delete(usersEntity.getUserId());
 			}
 
