@@ -61,24 +61,23 @@ public class WebhookControl extends Control {
 				setResult(null, errors);
 				return config();
 			}
-		}
+		} else {
+			for (String hook : hooks) {
+				WebhookConfigsEntity entity = WebhookConfigsEntity.get();
+				entityParam.put("hook", hook);
+				entityParam.put("url", url);
 
-		for (String hook : hooks) {
-			WebhookConfigsEntity entity = WebhookConfigsEntity.get();
-			entityParam.put("hook", hook);
-			entityParam.put("url", url);
+				errors.addAll(entity.validate(entityParam));
+				if (!errors.isEmpty()) {
+					setResult(null, errors);
+					return config();
+				}
 
-			errors.addAll(entity.validate(entityParam));
-			if (!errors.isEmpty()) {
-				setResult(null, errors);
-				return config();
+				entity.setUrl(url);
+				entity.setHook(hook);
+				dao.save(entity);
 			}
-
-			entity.setUrl(url);
-			entity.setHook(hook);
-			dao.save(entity);
 		}
-
 		String successMsg = "message.success.save";
 		setResult(successMsg, errors);
 		return config();

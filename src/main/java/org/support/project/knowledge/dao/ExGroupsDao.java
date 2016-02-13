@@ -74,7 +74,11 @@ public class ExGroupsDao extends GroupsDao {
 			return executeQueryList(sql, GroupsEntity.class, keyword, limit, offset);
 		} else {
 			String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExGroupsDao/ExGroupsDao_selectOnKeyword.sql");
-			return executeQueryList(sql, GroupsEntity.class, keyword, loginedUser.getUserId(), limit, offset);
+			int userId = Integer.MIN_VALUE;
+			if (loginedUser != null) {
+				userId = loginedUser.getUserId();
+			}
+			return executeQueryList(sql, GroupsEntity.class, keyword, userId, limit, offset);
 		}
 	}
 	

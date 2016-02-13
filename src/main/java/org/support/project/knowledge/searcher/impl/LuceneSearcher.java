@@ -74,7 +74,11 @@ public class LuceneSearcher implements Searcher {
 		List<SearchResultValue> resultValues = new ArrayList<>();
 		
 		File indexDir = new File(getIndexPath());
-		if (!indexDir.exists() || indexDir.listFiles().length == 0) {
+		if (!indexDir.exists()) {
+			return resultValues;
+		}
+		File[] children = indexDir.listFiles();
+		if (children == null || children.length == 0) {
 			return resultValues;
 		}
 		

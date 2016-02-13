@@ -153,7 +153,7 @@ public class AccountLogic {
 		StringBuilder builder = new StringBuilder();
 		builder.append(label);
 		builder.append("-");
-		builder.append(DateUtils.TRANSFER_DATETIME.format(new Date()));
+		builder.append(DateUtils.getTransferDateFormat().format(new Date()));
 		builder.append("-");
 		builder.append(UUID.randomUUID().toString());
 		builder.append("-");
@@ -176,6 +176,7 @@ public class AccountLogic {
 		if (mailChangesEntity == null) {
 			ValidateError error = new ValidateError("errors.invalid", "path");
 			errors.add(error);
+			return errors;
 		}
 		if (mailChangesEntity.getUserId().intValue() != loginedUser.getUserId().intValue()) {
 			ValidateError error = new ValidateError("errors.invalid", "path");

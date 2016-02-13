@@ -50,8 +50,10 @@ public class CompressLogic {
 			
 			os.closeArchiveEntry();
 			File[] files = file.listFiles();
-			for (File f : files) {
-				addZip(os, f, builder.toString());
+			if (files != null) {
+				for (File f : files) {
+					addZip(os, f, builder.toString());
+				}
 			}
 		} else if (file.isFile()) {
 			ZipArchiveEntry zae = new ZipArchiveEntry(builder.toString());

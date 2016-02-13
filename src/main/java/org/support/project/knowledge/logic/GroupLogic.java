@@ -111,9 +111,10 @@ public class GroupLogic {
 		List<GroupsEntity> list;
 		if (loginedUser == null) {
 			list = new ArrayList<>();
+			return list;
 		}
 		ExGroupsDao groupsDao = ExGroupsDao.get();
-		if (loginedUser.isAdmin()) {
+		if (loginedUser != null && loginedUser.isAdmin()) {
 			if (StringUtils.isEmpty(keyword)) {
 				list = groupsDao.selectGroupsWithCount(offset, limit);
 			} else {

@@ -63,7 +63,11 @@ public class TikaParser implements Parser {
 		AutoDetectParser parser = new AutoDetectParser();
 		ParseContext context = new ParseContext();
 		Metadata metadata = new Metadata();
-		metadata.set(Metadata.RESOURCE_NAME_KEY, path.getFileName().toString());
+		Path filename = path.getFileName();
+		if (filename != null) {
+			metadata.set(Metadata.RESOURCE_NAME_KEY, filename.toString());
+		}
+		
 		InputStream inputStream = Files.newInputStream(path);
 		BufferedReader reader = null;
 			reader = new BufferedReader(
