@@ -70,9 +70,10 @@
 				</c:if>
 				&nbsp;&nbsp;&nbsp;
 				<c:if test="${!empty knowledge.tagNames}">
+					<c:set var="tagIds" value="${knowledge.tagIds.split(',')}"/>
 					<i class="fa fa-tags"></i>
-					<c:forEach var="tagName" items="${knowledge.tagNames.split(',')}">
-						<a href="<%= request.getContextPath()%>/open.knowledge/list?tagNames=<%= jspUtil.out("tagName") %>">
+					<c:forEach var="tagName" items="${knowledge.tagNames.split(',')}" varStatus="status">
+						<a href="<%= request.getContextPath()%>/open.knowledge/list?tag=<c:out value="${tagIds[status.index]}"/>">
 							<span class="tag label label-info"><%= jspUtil.out("tagName") %></span>
 						</a>
 					</c:forEach>

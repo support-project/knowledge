@@ -51,7 +51,7 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 </c:param>
 
 <c:param name="PARAM_PAGE_TITLE">
-Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil.ESCAPE_CLEAR) %>
+<%= jspUtil.out("title", JspUtil.ESCAPE_CLEAR) %> - Knowledge
 </c:param>
 
 
@@ -67,7 +67,7 @@ Knowledge - [<%= jspUtil.out("knowledgeId") %>] <%= jspUtil.out("title", JspUtil
 				<img src="<%= request.getContextPath()%>/images/loader.gif" 
 					data-echo="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.out("updateUser") %>" 
 					alt="icon" width="24" height="24" style="float:left" />
-				<% String userLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/list/0?user=" + jspUtil.out("updateUser") +"\">"
+				<% String userLink = "<a href=\"" + request.getContextPath() + "/open.account/info/" + jspUtil.out("updateUser") +"\">"
 					+ jspUtil.out("updateUserName", JspUtil.ESCAPE_CLEAR) + "</a>"; %>
 				<% String historyLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/histories/" + jspUtil.out("knowledgeId") +"\">"
 					+ jspUtil.date("updateDatetime") + "</a>"; %>

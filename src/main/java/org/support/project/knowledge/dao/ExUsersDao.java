@@ -3,6 +3,7 @@ package org.support.project.knowledge.dao;
 import java.util.List;
 
 import org.support.project.di.Container;
+import org.support.project.knowledge.vo.AccountInfo;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.web.dao.UsersDao;
@@ -38,6 +39,22 @@ public class ExUsersDao extends UsersDao {
 	public List<UsersEntity> selectNotifyPublicUsers() {
 		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExUsersDao/selectNotifyPublicUsers.sql");
 		return executeQueryList(sql, UsersEntity.class);
+	}
+	
+	/**
+	 * アカウント情報ページに表示するデータを取得
+	 * 
+	 * アカウント名
+	 * ナレッジ登録件数
+	 * イイネをおされた件数
+	 * ストックされた件数
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public AccountInfo selectAccountInfoOnKey(Integer userId) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExUsersDao/selectAccountInfoOnKey.sql");
+		return executeQuerySingle(sql, AccountInfo.class, userId);
 	}
 
 }

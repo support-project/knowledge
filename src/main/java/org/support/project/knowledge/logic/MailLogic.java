@@ -150,7 +150,7 @@ public class MailLogic {
 		StringBuilder builder = new StringBuilder();
 		builder.append(label);
 		builder.append("-");
-		builder.append(DateUtils.SECOND_FORMAT.format(new Date()));
+		builder.append(DateUtils.getSimpleFormat().format(new Date()));
 		builder.append("-");
 		builder.append(UUID.randomUUID().toString());
 		return builder.toString();

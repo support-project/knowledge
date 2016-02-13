@@ -54,7 +54,8 @@ public class LuceneIndexer implements Indexer {
 		if (!indexDir.exists()) {
 			indexDir.mkdirs();
 		} else {
-			if (indexDir.list().length > 0) {
+			String[] children = indexDir.list();
+			if (children != null && children.length > 0) {
 				create = false;
 			}
 		}
@@ -123,7 +124,8 @@ public class LuceneIndexer implements Indexer {
 		if (!indexDir.exists()) {
 			indexDir.mkdirs();
 		} else {
-			if (indexDir.list().length > 0) {
+			String[] children = indexDir.list();
+			if (children != null && children.length > 0) {
 				create = false;
 			}
 		}
@@ -154,7 +156,8 @@ public class LuceneIndexer implements Indexer {
 		if (!indexDir.exists()) {
 			indexDir.mkdirs();
 		} else {
-			if (indexDir.list().length > 0) {
+			String[] children = indexDir.list();
+			if (children != null && children.length > 0) {
 				create = false;
 			}
 		}

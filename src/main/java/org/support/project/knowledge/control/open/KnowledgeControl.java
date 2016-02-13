@@ -207,28 +207,44 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			LOG.trace("show on Tag");
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
+			List<Integer> tagIds = new ArrayList<Integer>();
+			String name = "";
+			if (tagsEntity != null) {
+				tagIds.add(tagsEntity.getTagId());
+				name = tagsEntity.getTagName();
+			}
 			setAttribute("selectedTag", tagsEntity);
+			setAttribute("selectedTagIds", tagIds);
+			setAttribute("searchKeyword", keywordLogic.toTagsQuery(name) + keyword);
 		} else if (StringUtils.isInteger(group)) {
 			//グループを選択している
 			LOG.trace("show on Group");
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			GroupsEntity groupsEntity = groupsDao.selectOnKey(new Integer(group));
+			List<Integer> groupIds = new ArrayList<Integer>();
+			String name = "";
+			if (groupsEntity != null) {
+				groupIds.add(groupsEntity.getGroupId());
+				name = groupsEntity.getGroupName();
+			}
 			setAttribute("selectedGroup", groupsEntity);
+			setAttribute("selectedGroupIds", groupIds);
+			setAttribute("searchKeyword", keywordLogic.toGroupsQuery(name) + keyword);
 		} else if (StringUtils.isNotEmpty(user) && StringUtils.isInteger(user)) {
 			// ユーザを選択している
 			LOG.trace("show on User");
 			int userId = Integer.parseInt(user);
 			knowledges.addAll(knowledgeLogic.showKnowledgeOnUser(userId, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 			UsersEntity usersEntity = UsersDao.get().selectOnKey(userId);
-			if (user != null) {
-				usersEntity.setPassword("");
-				setAttribute("selectedUser", usersEntity);
-			}
+			usersEntity.setPassword("");
+			setAttribute("selectedUser", usersEntity);
 		} else if (StringUtils.isNotEmpty(tagNames) || StringUtils.isNotEmpty(groupNames)) {
 			// タグとキーワードで検索
 			LOG.trace("show on Tags and Groups and keyword");
+			String searchKeyword = "";
 			String[] taglist = tagNames.split(",");
-			List<TagsEntity> tags = new ArrayList<>();
+			List<TagsEntity> tags = new ArrayList<TagsEntity>();
+			List<Integer> tagIds = new ArrayList<Integer>();
 			for (String string : taglist) {
 				String tagname = string.trim();
 				if (tagname.startsWith(" ") && tagname.length() > " ".length()) {
@@ -237,10 +253,15 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				TagsEntity tagsEntity = tagsDao.selectOnTagName(tagname);
 				if (tagsEntity != null) {
 					tags.add(tagsEntity);
+					tagIds.add(tagsEntity.getTagId());
 				}
 			}
+			if (0 < tags.size()) {
+				searchKeyword += keywordLogic.toTagsQuery(tagNames.replaceAll("[\\xc2\\xa0]", ""));
+			}
 
-			List<GroupsEntity> groups = new ArrayList<>();
+			List<GroupsEntity> groups = new ArrayList<GroupsEntity>();
+			List<Integer> groupIds = new ArrayList<Integer>();
 			if (loginedUser != null) {
 				String[] grouplist = groupNames.split(",");
 				for (String string : grouplist) {
@@ -251,12 +272,19 @@ public class KnowledgeControl extends KnowledgeControlBase {
 					GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupname);
 					if (groupsEntity != null) {
 						groups.add(groupsEntity);
+						groupIds.add(groupsEntity.getGroupId());
 					}
+				}
+				if (0 < groups.size()) {
+					searchKeyword += keywordLogic.toGroupsQuery(groupNames.replaceAll("[\\xc2\\xa0]", ""));
 				}
 			}
 
-			setAttribute("searchTags", tags);
-			setAttribute("searchGroups", groups);
+			setAttribute("selectedTags", tags);
+			setAttribute("selectedGroups", groups);
+			setAttribute("selectedTagIds", tagIds);
+			setAttribute("selectedGroupIds", groupIds);
+			setAttribute("searchKeyword", searchKeyword + keyword);
 
 			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
 		} else {
@@ -264,6 +292,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			LOG.trace("search");
 			List<GroupsEntity> groups = null;
 			List<TagsEntity> tags = null;
+			List<Integer> groupIds = new ArrayList<Integer>();
+			List<Integer> tagIds = new ArrayList<Integer>();
 
 			if (loginedUser != null) {
 				String groupKeyword = keywordLogic.parseQuery("groups", keyword);
@@ -273,9 +303,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 						GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupName);
 						if (groupsEntity != null) {
 							groups.add(groupsEntity);
+							groupIds.add(groupsEntity.getGroupId());
 						}
 					}
-					setAttribute("searchGroups", groups);
+					setAttribute("selectedGroups", groups);
+					setAttribute("selectedGroupIds", groupIds);
 				}
 			}
 
@@ -286,9 +318,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 					TagsEntity tagsEntity = tagsDao.selectOnTagName(tagName);
 					if (tagsEntity != null) {
 						tags.add(tagsEntity);
+						tagIds.add(tagsEntity.getTagId());
 					}
 				}
-				setAttribute("searchTags", tags);
+				setAttribute("selectedTags", tags);
+				setAttribute("selectedTagIds", tagIds);
 			}
 
 			keyword = keywordLogic.parseKeyword(keyword);

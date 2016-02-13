@@ -54,7 +54,9 @@ public class NotifyMailBat extends AbstractBat {
 	private static Log LOG = LogFactory.getLog(NotifyMailBat.class);
 	
 	private static final String MAIL_CONFIG_DIR = "/org/support/project/knowledge/mail/";
-	private static final DateFormat DAY_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
+	private static final DateFormat getDayFormat() {
+		return new SimpleDateFormat("yyyyMMddHHmmss");
+	}
 	
 	private List<Long> sendedCommentKnowledgeIds = new ArrayList<>();
 	private List<Long> sendedLikeKnowledgeIds = new ArrayList<>();
@@ -554,7 +556,7 @@ public class NotifyMailBat extends AbstractBat {
 		StringBuilder builder = new StringBuilder();
 		builder.append(label);
 		builder.append("-");
-		builder.append(DAY_FORMAT.format(new Date()));
+		builder.append(getDayFormat().format(new Date()));
 		builder.append("-");
 		builder.append(UUID.randomUUID().toString());
 		return builder.toString();

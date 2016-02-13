@@ -98,7 +98,7 @@ public class DatabaseLogic {
 		
 		// 解凍した中身の検証
 		File[] children = tmp.listFiles();
-		if (children.length != 2) {
+		if (children != null && children.length != 2) {
 			errors.add(new ValidateError("knowledge.data.label.msg.invalid.file"));
 			return errors;
 		}
@@ -107,11 +107,13 @@ public class DatabaseLogic {
 		File dbDir = new File(config.getDatabasePath());
 		File indexDir = new File(config.getIndexPath());
 		
-		for (File file : children) {
-			if (file.getName().equals(dbDir.getName())) {
-				dbexists = true;
-			} else if (file.getName().equals(indexDir.getName())) {
-				indexexists = true;
+		if (children != null) {
+			for (File file : children) {
+				if (file.getName().equals(dbDir.getName())) {
+					dbexists = true;
+				} else if (file.getName().equals(indexDir.getName())) {
+					indexexists = true;
+				}
 			}
 		}
 		if (!dbexists || !indexexists) {
