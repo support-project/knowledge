@@ -45,21 +45,26 @@ import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
-import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
-@DI(instance=Instance.Prototype)
+/**
+ * ナレッジ操作のコントロール
+ * @author Koda
+ */
+@DI(instance = Instance.Prototype)
 public class KnowledgeControl extends KnowledgeControlBase {
 	/** ログ */
-	private static Log LOG = LogFactory.getLog(KnowledgeControl.class);
-	
+	private static final Log LOG = LogFactory.getLog(KnowledgeControl.class);
+	/** Cookieに保持する閲覧履歴の件数 */
 	private static final int COOKIE_COUNT = 20;
+	/** Cookieに保持する閲覧履歴の区切り文字 */
 	private static final String COOKIE_SEPARATOR = "-";
-	
+	/** ナレッジ一覧に表示する件数 */
 	public static final int PAGE_LIMIT = 50;
+	/** お気に入りに表示する件数 */
 	public static final int FAV_PAGE_LIMIT = 10;
 	
 	/**
@@ -344,7 +349,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttribute("targets", targets);
 		setAttribute("targetLogic", targetLogic);
 
-		int previous = offset -1;
+		int previous = offset - 1;
 		if (previous < 0) {
 			previous = 0;
 		}
@@ -377,7 +382,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	}
 	
 	
-	
+	/**
+	 * 閲覧履歴の表示
+	 * @return
+	 * @throws InvalidParamException
+	 */
 	@Get
 	public Boundary show_history() throws InvalidParamException {
 		LoginedUser loginedUser = super.getLoginedUser();
@@ -550,7 +559,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		setAttribute("likes", likes);
 		
 		
-		int previous = page -1;
+		int previous = page - 1;
 		if (previous < 0) {
 			previous = 0;
 		}
@@ -561,6 +570,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		return forward("likes.jsp");
 	}
 	
+	/**
+	 * 編集履歴の表示
+	 * @return
+	 * @throws InvalidParamException
+	 */
 	@Get
 	public Boundary histories() throws InvalidParamException {
 		// 共通処理呼の表示条件の保持の呼び出し
@@ -580,7 +594,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		if (StringUtils.isInteger(p)) {
 			page = Integer.parseInt(p);
 		}
-		int previous = page -1;
+		int previous = page - 1;
 		if (previous < 0) {
 			previous = 0;
 		}
@@ -596,7 +610,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		return forward("histories.jsp");
 	}
 	
-	
+	/**
+	 * 編集履歴の更新内容表示
+	 * @return
+	 * @throws InvalidParamException
+	 */
 	@Get
 	public Boundary history() throws InvalidParamException {
 		// 共通処理呼の表示条件の保持の呼び出し
