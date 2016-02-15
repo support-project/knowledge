@@ -6,15 +6,11 @@ import java.util.Map;
 
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.exception.ParseException;
-import org.support.project.common.log.Log;
-import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
-import org.support.project.knowledge.dao.TagsDao;
-import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.web.bean.LabelValue;
@@ -31,11 +27,15 @@ import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UserGroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
-@DI(instance=Instance.Prototype)
+/**
+ * グループ操作のコントロール
+ * @author Koda
+ */
+@DI(instance = Instance.Prototype)
 public class GroupControl extends Control {
 	/** ログ */
-	private static Log LOG = LogFactory.getLog(GroupControl.class);
-	
+	// private static final Log LOG = LogFactory.getLog(GroupControl.class);
+	/** 一覧の表示件数 */
 	public static final int PAGE_LIMIT = 10;
 	
 	/**
@@ -51,7 +51,7 @@ public class GroupControl extends Control {
 		List<GroupsEntity> groups = groupLogic.selectMyGroup(super.getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
 		setAttribute("groups", groups);
 		
-		int previous = offset -1;
+		int previous = offset - 1;
 		if (previous < 0) {
 			previous = 0;
 		}
@@ -77,7 +77,7 @@ public class GroupControl extends Control {
 		List<GroupsEntity> groups = groupLogic.selectOnKeyword(keyword, super.getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
 		setAttribute("groups", groups);
 		
-		int previous = offset -1;
+		int previous = offset - 1;
 		if (previous < 0) {
 			previous = 0;
 		}
@@ -164,7 +164,7 @@ public class GroupControl extends Control {
 			}
 		}
 		
-		int previous = offset -1;
+		int previous = offset - 1;
 		if (previous < 0) {
 			previous = 0;
 		}
