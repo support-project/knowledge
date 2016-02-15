@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.logic.H2DBServerLogic;
 import org.support.project.common.test.Order;
 import org.support.project.common.test.OrderedRunner;
 import org.support.project.common.util.RandomUtil;
@@ -33,12 +34,12 @@ public class KnowledgeLogicTest extends TestCommon {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		TestCommon.testConnection();
+		H2DBServerLogic.get().start();
 		initData();
 	}
-
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		H2DBServerLogic.get().stop();
 	}
 
 	@Before

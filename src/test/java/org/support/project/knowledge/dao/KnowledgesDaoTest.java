@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.logic.H2DBServerLogic;
 import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
@@ -22,12 +23,12 @@ public class KnowledgesDaoTest extends TestCommon {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		TestCommon.testConnection();
+		H2DBServerLogic.get().start();
 		initData();
 	}
-
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		H2DBServerLogic.get().stop();
 	}
 
 	@Before
