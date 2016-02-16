@@ -46,7 +46,7 @@ public class DataTransferBat extends AbstractBat implements Runnable {
 		} catch (Exception e) {
 			LOG.error(e);
 		}
-		System.out.println("Database stop.");
+		LOG.info("Database stop.");
 	}
 
 	/**
