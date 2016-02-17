@@ -37,14 +37,10 @@ public class TextParser implements Parser {
 		BufferedReader reader = null;
 		List<Sentence> sentenceInFileVos = new ArrayList<Sentence>();
 		try {
-			if (StringUtils.isEmpty(encode)) {
-				// 文字コードの判定
-				encode = this.getEncoding(file);
-			}
 			
 			reader = new BufferedReader(
 					new InputStreamReader(
-							new FileInputStream(file), encode));
+							new FileInputStream(file), StringUtils.isEmpty(encode) ? this.getEncoding(file) : encode));
 			String line;
 			int count = 1;
 			// 読み込みデータがなくなるまで、読み込み

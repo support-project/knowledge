@@ -43,16 +43,16 @@ public class GroupLogic {
 	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
 	public GroupsEntity addGroup(GroupsEntity groupsEntity, LoginedUser loginedUser) {
 		ExGroupsDao groupsDao = ExGroupsDao.get();
-		groupsEntity = groupsDao.insert(groupsEntity);
+		GroupsEntity insertedEntity = groupsDao.insert(groupsEntity);
 		
 		UserGroupsDao userGroupsDao = UserGroupsDao.get();
 		UserGroupsEntity userGroupsEntity = new UserGroupsEntity(
-				groupsEntity.getGroupId(), 
+				insertedEntity.getGroupId(), 
 				loginedUser.getUserId());
 		userGroupsEntity.setGroupRole(CommonWebParameter.GROUP_ROLE_ADMIN);
 		userGroupsDao.insert(userGroupsEntity);
 		
-		return groupsEntity;
+		return insertedEntity;
 	}
 	
 	/**
@@ -69,8 +69,7 @@ public class GroupLogic {
 				return null; // アクセス権がないユーザ
 			}
 		}
-		groupsEntity = groupsDao.save(groupsEntity);
-		return groupsEntity;
+		return groupsDao.save(groupsEntity);
 	}
 	
 	/**
