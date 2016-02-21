@@ -255,7 +255,6 @@ public class TemplateControl extends Control {
 	@Post
 	@Auth(roles="admin")
 	public Boundary delete() throws Exception {
-		TemplateMastersDao dao = TemplateMastersDao.get();
 		Integer typeId = getParam("typeId", Integer.class);
 		if (KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE == typeId || KnowledgeLogic.TEMPLATE_TYPE_BOOKMARK == typeId) {
 			addMsgWarn("knowledge.template.msg.not.delete");

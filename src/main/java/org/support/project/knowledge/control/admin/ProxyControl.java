@@ -96,7 +96,7 @@ public class ProxyControl extends Control {
 	@Auth(roles="admin")
 	public Boundary test() throws Exception {
 		try {
-			ProxyConfigsEntity entity = null;
+			ProxyConfigsEntity entity;
 			String testUrl = getParam("testUrl");
 			Integer testType = getParam("testType", Integer.class);
 			if (INT_FLAG.OFF.getValue() == testType.intValue()) {

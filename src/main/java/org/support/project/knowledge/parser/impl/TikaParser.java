@@ -69,8 +69,7 @@ public class TikaParser implements Parser {
 		}
 		
 		InputStream inputStream = Files.newInputStream(path);
-		BufferedReader reader = null;
-			reader = new BufferedReader(
+		BufferedReader reader = new BufferedReader(
 					new ParsingReader(
 							parser,
 							inputStream,

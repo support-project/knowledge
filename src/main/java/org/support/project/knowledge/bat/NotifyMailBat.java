@@ -463,7 +463,7 @@ public class NotifyMailBat extends AbstractBat {
 				LOG.trace("[Notify] " + usersEntity.getMailAddress());
 			}
 			Locale locale = usersEntity.getLocale();
-			MailConfig config = null;
+			MailConfig config;
 			if (notifyQueuesEntity.getType() == Notify.TYPE_KNOWLEDGE_INSERT) {
 				config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_knowledge", locale, MailConfig.class);
 			} else {

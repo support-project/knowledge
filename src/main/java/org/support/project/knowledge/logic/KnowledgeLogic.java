@@ -527,9 +527,8 @@ public class KnowledgeLogic {
 			
 		} else {
 			searchingValue.addUser(ALL_USER);
-			Integer userId = null;
 			if (loginedUser != null) {
-				userId = loginedUser.getLoginUser().getUserId();
+				Integer userId = loginedUser.getLoginUser().getUserId();
 				searchingValue.addUser(userId);
 				
 				List<GroupsEntity> groups = loginedUser.getGroups();
@@ -605,9 +604,8 @@ public class KnowledgeLogic {
 			
 		} else {
 			searchingValue.addUser(ALL_USER);
-			Integer userId = null;
 			if (loginedUser != null) {
-				userId = loginedUser.getLoginUser().getUserId();
+				Integer userId = loginedUser.getLoginUser().getUserId();
 				searchingValue.addUser(userId);
 				
 				List<GroupsEntity> groups = loginedUser.getGroups();
