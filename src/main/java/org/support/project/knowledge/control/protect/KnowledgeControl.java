@@ -208,15 +208,15 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String tags = super.getParam("tagNames");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
 		
-		entity = knowledgeLogic.insert(entity, tagList, fileNos, groups, editors, template, super.getLoginedUser());
-		setAttributeOnProperty(entity);
+		KnowledgesEntity insertedEntity = knowledgeLogic.insert(entity, tagList, fileNos, groups, editors, template, super.getLoginedUser());
+		setAttributeOnProperty(insertedEntity);
 		
-		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(entity.getKnowledgeId(), getRequest().getContextPath());
+		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(insertedEntity.getKnowledgeId(), getRequest().getContextPath());
 		setAttribute("files", files);
 		
 		addMsgSuccess("message.success.insert");
 //		return forward("view_edit.jsp");
-		return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(entity.getKnowledgeId()), "message.success.insert");
+		return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(insertedEntity.getKnowledgeId()), "message.success.insert");
 	}
 	
 	/**
@@ -294,15 +294,15 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		String tags = super.getParam("tagNames");
 		List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
 		
-		entity = knowledgeLogic.update(entity, tagList, fileNos, groups, editors, template, super.getLoginedUser());
-		setAttributeOnProperty(entity);
+		KnowledgesEntity updatedEntity = knowledgeLogic.update(entity, tagList, fileNos, groups, editors, template, super.getLoginedUser());
+		setAttributeOnProperty(updatedEntity);
 		addMsgSuccess("message.success.update");
 		
-		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(entity.getKnowledgeId(), getRequest().getContextPath());
+		List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(updatedEntity.getKnowledgeId(), getRequest().getContextPath());
 		setAttribute("files", files);
 		
 		// return forward("view_edit.jsp");
-		return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(entity.getKnowledgeId()), "message.success.update");
+		return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(updatedEntity.getKnowledgeId()), "message.success.update");
 	}
 	
 	/**

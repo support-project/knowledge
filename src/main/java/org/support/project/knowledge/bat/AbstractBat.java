@@ -47,7 +47,7 @@ public abstract class AbstractBat {
 	}
 	
 	protected void send(String msg) {
-		System.out.println("[SEND]" + msg);
+		LOG.info("[SEND]" + msg);
 	}
 
 }

@@ -165,7 +165,7 @@ public class MarkdownLogic {
 		ScriptEngineManager manager = new ScriptEngineManager();
 		engine = manager.getEngineByName("js");
 		if (engine == null) {
-			System.out.println("JavaScriptはサポート外");
+			LOG.info("JavaScriptはサポート外");
 			initEngine = true;
 			return null;
 		}

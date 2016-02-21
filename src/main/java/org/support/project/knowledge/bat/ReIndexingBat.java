@@ -3,6 +3,8 @@ package org.support.project.knowledge.bat;
 import java.util.List;
 
 import org.apache.commons.lang.ClassUtils;
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -13,6 +15,8 @@ import org.support.project.web.entity.SystemConfigsEntity;
 
 
 public class ReIndexingBat extends AbstractBat {
+	
+	private static Log LOG = LogFactory.getLog(ReIndexingBat.class);
 	
 	public static void main(String[] args) throws Exception {
 		initLogName("ReIndexingBat.log");
@@ -49,7 +53,7 @@ public class ReIndexingBat extends AbstractBat {
 	 * @param str
 	 */
 	private void out(String str) {
-		System.out.println("[SEND]" + str);
+		LOG.info("[SEND]" + str);
 	}
 	
 }

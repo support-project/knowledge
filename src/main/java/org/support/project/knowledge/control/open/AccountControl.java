@@ -36,7 +36,7 @@ public class AccountControl extends Control {
 		
 		String fileName = "icon.png";
 		String contentType = "image/png";
-		InputStream inputStream = null;
+		InputStream inputStream;
 		long size = 12140;
 		if (entity != null) {
 			fileName = entity.getFileName();

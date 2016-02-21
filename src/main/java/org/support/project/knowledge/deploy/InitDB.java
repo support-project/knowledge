@@ -61,9 +61,9 @@ public class InitDB {
 	public void start() throws Exception {
 		String version = "";
 		
-		Migrate migrate = null;
+		Migrate migrate;
 		SystemsDao dao = SystemsDao.get();
-		SystemsEntity entity = null;
+		SystemsEntity entity;
 		do {
 			boolean verup = false;
 			migrate = null;

@@ -66,7 +66,7 @@ abstract public class HttpLogic {
 		if (StringUtils.isNotEmpty(proxyConfig.getProxyHostName())) {
 			HttpHost proxy = new HttpHost(proxyConfig.getProxyHostName(), proxyConfig.getProxyPortNo());
 			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-			CredentialsProvider credsProvider = null; //認証プロバイダー
+			CredentialsProvider credsProvider; //認証プロバイダー
 			if (proxyConfig.getProxyAuthType() != null && proxyConfig.getProxyAuthType().intValue() > AuthType.None.getValue()) {
 				// Proxyに対する認証をセットする
 				String pass = PasswordUtil.decrypt(proxyConfig.getProxyAuthPassword(), proxyConfig.getProxyAuthSalt());
