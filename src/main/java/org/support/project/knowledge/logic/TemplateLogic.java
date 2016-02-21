@@ -88,11 +88,11 @@ public class TemplateLogic {
 	public TemplateMastersEntity addTemplate(TemplateMastersEntity template, LoginedUser loginedUser) {
 		TemplateMastersDao templateDao = TemplateMastersDao.get();
 		// テンプレート保存
-		template = templateDao.insert(template);
-		Integer typeId = template.getTypeId();
+		TemplateMastersEntity insertedTemplate = templateDao.insert(template);
+		Integer typeId = insertedTemplate.getTypeId();
 		// テンプレートの入力項目を保存
-		insertItems(template, typeId);
-		return template;
+		insertItems(insertedTemplate, typeId);
+		return insertedTemplate;
 	}
 	
 	/**

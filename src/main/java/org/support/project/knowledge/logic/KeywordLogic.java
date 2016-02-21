@@ -46,10 +46,9 @@ public class KeywordLogic {
 	 * @return String
 	 */
 	public String parseKeyword(String text) {
-		text = text.replaceAll(KeywordLogic.regexList.get("groups"), "");
-		text = text.replaceAll(KeywordLogic.regexList.get("tags"), "");
-		text = text.trim();
-		return text;
+		String parsedText = text.replaceAll(KeywordLogic.regexList.get("groups"), "");
+		parsedText = parsedText.replaceAll(KeywordLogic.regexList.get("tags"), "");
+		return parsedText.trim();
 	}
 
 	/**

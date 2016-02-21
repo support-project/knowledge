@@ -145,28 +145,28 @@ public class KnowledgeLogic {
 			List<LabelValue> targets, List<LabelValue> editors, TemplateMastersEntity template,
 			LoginedUser loginedUser) throws Exception {
 		// ナレッジを登録
-		entity = knowledgesDao.insert(entity);
+		KnowledgesEntity insertedEntity = knowledgesDao.insert(entity);
 		// アクセス権を登録
-		saveAccessUser(entity, loginedUser, targets);
+		saveAccessUser(insertedEntity, loginedUser, targets);
 		// 編集権を登録
-		saveEditorsUser(entity, loginedUser, editors);
+		saveEditorsUser(insertedEntity, loginedUser, editors);
 		// タグを登録
-		setTags(entity, tags);
+		setTags(insertedEntity, tags);
 		// 添付ファイルを更新（紐付けをセット）
-		fileLogic.setKnowledgeFiles(entity.getKnowledgeId(), fileNos, loginedUser);
+		fileLogic.setKnowledgeFiles(insertedEntity.getKnowledgeId(), fileNos, loginedUser);
 		// 拡張項目の保存
-		saveTemplateItemValue(entity.getKnowledgeId(), template, loginedUser);
+		saveTemplateItemValue(insertedEntity.getKnowledgeId(), template, loginedUser);
 		
 		// 全文検索エンジンへ登録
-		saveIndex(entity, tags, targets, template, loginedUser.getUserId());
+		saveIndex(insertedEntity, tags, targets, template, loginedUser.getUserId());
 		// 一覧表示用の情報を更新
-		updateKnowledgeExInfo(entity);
+		updateKnowledgeExInfo(insertedEntity);
 		// 履歴登録
-		insertHistory(entity);
+		insertHistory(insertedEntity);
 		// 通知（TODO 別スレッド化を検討）
-		NotifyLogic.get().notifyOnKnowledgeInsert(entity);
+		NotifyLogic.get().notifyOnKnowledgeInsert(insertedEntity);
 		
-		return entity;
+		return insertedEntity;
 	}
 
 	
@@ -187,46 +187,46 @@ public class KnowledgeLogic {
 			List<LabelValue> targets, List<LabelValue> editors, TemplateMastersEntity template,
 			LoginedUser loginedUser) throws Exception {
 		// ナレッッジを更新
-		entity = knowledgesDao.update(entity);
+		KnowledgesEntity updatedEntity = knowledgesDao.update(entity);
 		// ユーザのアクセス権を解除
-		knowledgeUsersDao.deleteOnKnowledgeId(entity.getKnowledgeId());
+		knowledgeUsersDao.deleteOnKnowledgeId(updatedEntity.getKnowledgeId());
 		// グループとナレッジのヒモ付を解除
 		GroupLogic groupLogic = GroupLogic.get();
-		groupLogic.removeKnowledgeGroup(entity.getKnowledgeId());
+		groupLogic.removeKnowledgeGroup(updatedEntity.getKnowledgeId());
 		// 編集権限を削除
 		KnowledgeEditUsersDao editUsersDao = KnowledgeEditUsersDao.get();
 		KnowledgeEditGroupsDao editGroupsDao = KnowledgeEditGroupsDao.get();
-		editUsersDao.deleteOnKnowledgeId(entity.getKnowledgeId());
-		editGroupsDao.deleteOnKnowledgeId(entity.getKnowledgeId());
+		editUsersDao.deleteOnKnowledgeId(updatedEntity.getKnowledgeId());
+		editGroupsDao.deleteOnKnowledgeId(updatedEntity.getKnowledgeId());
 		
 		// アクセス権を登録
-		saveAccessUser(entity, loginedUser, targets);
+		saveAccessUser(updatedEntity, loginedUser, targets);
 		// 編集権を登録
-		saveEditorsUser(entity, loginedUser, editors);
+		saveEditorsUser(updatedEntity, loginedUser, editors);
 		
 		// タグを登録
-		knowledgeTagsDao.deleteOnKnowledgeId(entity.getKnowledgeId());
-		setTags(entity, tags);
+		knowledgeTagsDao.deleteOnKnowledgeId(updatedEntity.getKnowledgeId());
+		setTags(updatedEntity, tags);
 		
 		// 拡張項目の保存
-		saveTemplateItemValue(entity.getKnowledgeId(), template, loginedUser);
+		saveTemplateItemValue(updatedEntity.getKnowledgeId(), template, loginedUser);
 		
 		// 添付ファイルを更新（紐付けをセット）
-		fileLogic.setKnowledgeFiles(entity.getKnowledgeId(), fileNos, loginedUser);
+		fileLogic.setKnowledgeFiles(updatedEntity.getKnowledgeId(), fileNos, loginedUser);
 		
 		// 全文検索エンジンへ登録
-		saveIndex(entity, tags, targets, template, entity.getInsertUser());
+		saveIndex(updatedEntity, tags, targets, template, updatedEntity.getInsertUser());
 		
 		// 一覧表示用の情報を更新
-		updateKnowledgeExInfo(entity);
+		updateKnowledgeExInfo(updatedEntity);
 		
 		// 履歴登録
-		insertHistory(entity);
+		insertHistory(updatedEntity);
 
 		// 通知（TODO 別スレッド化を検討）
-		NotifyLogic.get().notifyOnKnowledgeUpdate(entity);
+		NotifyLogic.get().notifyOnKnowledgeUpdate(updatedEntity);
 		
-		return entity;
+		return updatedEntity;
 	}
 	
 	/**
@@ -1109,15 +1109,15 @@ public class KnowledgeLogic {
 	 */
 	public void updateComment(CommentsEntity commentsEntity, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
 		CommentsDao commentsDao = CommentsDao.get();
-		commentsEntity = commentsDao.update(commentsEntity);
+		CommentsEntity updatedCommentsEntity = commentsDao.update(commentsEntity);
 		// 一覧表示用の情報を更新
-		KnowledgeLogic.get().updateKnowledgeExInfo(commentsEntity.getKnowledgeId());
+		KnowledgeLogic.get().updateKnowledgeExInfo(updatedCommentsEntity.getKnowledgeId());
 
 		// 検索エンジンに追加
-		addIndexOnComment(commentsEntity);
+		addIndexOnComment(updatedCommentsEntity);
 		
 		// 添付ファイルを更新（紐付けをセット）
-		fileLogic.setKnowledgeFiles(commentsEntity.getKnowledgeId(), fileNos, loginedUser, commentsEntity.getCommentNo());
+		fileLogic.setKnowledgeFiles(updatedCommentsEntity.getKnowledgeId(), fileNos, loginedUser, updatedCommentsEntity.getCommentNo());
 	}
 	
 
