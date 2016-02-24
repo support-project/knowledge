@@ -42,10 +42,8 @@ public class KnowledgesDao extends GenKnowledgesDao {
 	public Integer getNextId() {
 		String sql = "SELECT MAX(KNOWLEDGE_ID) FROM KNOWLEDGES;";
 		Integer integer = executeQuerySingle(sql, Integer.class);
-		if (integer != null) {
-			if (currentId < integer) {
-				currentId = integer;
-			}
+		if (integer != null && currentId < integer) {
+			currentId = integer;
 		}
 		currentId++;
 		return currentId;

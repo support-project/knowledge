@@ -36,10 +36,8 @@ public class NotifyConfigsDao extends GenNotifyConfigsDao {
 	public Integer getNextId() {
 		String sql = "SELECT MAX(USER_ID) FROM NOTIFY_CONFIGS;";
 		Integer integer = executeQuerySingle(sql, Integer.class);
-		if (integer != null) {
-			if (currentId < integer) {
-				currentId = integer;
-			}
+		if (integer != null && currentId < integer) {
+			currentId = integer;
 		}
 		currentId++;
 		return currentId;
