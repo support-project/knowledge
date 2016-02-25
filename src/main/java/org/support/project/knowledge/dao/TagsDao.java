@@ -20,6 +20,12 @@ public class TagsDao extends GenTagsDao {
 
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * ID 
+	 */
+	private int currentId = 0;
+
 	/**
 	 * インスタンス取得
 	 * AOPに対応
@@ -28,12 +34,6 @@ public class TagsDao extends GenTagsDao {
 	public static TagsDao get() {
 		return Container.getComp(TagsDao.class);
 	}
-
-
-	/**
-	 * ID 
-	 */
-	private int currentId = 0;
 
 	/**
 	 * IDを採番 

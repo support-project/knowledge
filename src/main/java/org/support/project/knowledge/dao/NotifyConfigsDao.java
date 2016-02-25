@@ -14,6 +14,12 @@ public class NotifyConfigsDao extends GenNotifyConfigsDao {
 
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * ID 
+	 */
+	private int currentId = 0;
+
 	/**
 	 * インスタンス取得
 	 * AOPに対応
@@ -22,12 +28,6 @@ public class NotifyConfigsDao extends GenNotifyConfigsDao {
 	public static NotifyConfigsDao get() {
 		return Container.getComp(NotifyConfigsDao.class);
 	}
-
-
-	/**
-	 * ID 
-	 */
-	private int currentId = 0;
 
 	/**
 	 * IDを採番 

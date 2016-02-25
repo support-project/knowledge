@@ -20,6 +20,12 @@ public class KnowledgesDao extends GenKnowledgesDao {
 
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * ID 
+	 */
+	private int currentId = 0;
+
 	/**
 	 * インスタンス取得
 	 * AOPに対応
@@ -28,12 +34,6 @@ public class KnowledgesDao extends GenKnowledgesDao {
 	public static KnowledgesDao get() {
 		return Container.getComp(KnowledgesDao.class);
 	}
-
-
-	/**
-	 * ID 
-	 */
-	private int currentId = 0;
 
 	/**
 	 * IDを採番 
