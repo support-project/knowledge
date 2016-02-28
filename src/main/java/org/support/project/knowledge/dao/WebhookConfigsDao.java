@@ -17,6 +17,12 @@ public class WebhookConfigsDao extends GenWebhookConfigsDao {
 
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * ID 
+	 */
+	private int currentId = 0;
+
 	/**
 	 * インスタンス取得
 	 * AOPに対応
@@ -25,11 +31,6 @@ public class WebhookConfigsDao extends GenWebhookConfigsDao {
 	public static WebhookConfigsDao get() {
 		return Container.getComp(WebhookConfigsDao.class);
 	}
-
-	/**
-	 * ID 
-	 */
-	private int currentId = 0;
 
 	/**
 	 * IDを採番 

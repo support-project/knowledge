@@ -21,6 +21,11 @@ public class TemplateMastersDao extends GenTemplateMastersDao {
 	public static final int TYPE_ID_KNOWLEDGE = -100;
 	public static final int TYPE_ID_BOOKMARK = -99;
 
+	/**
+	 * ID 
+	 */
+	private int currentId = 0;
+
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
 	/**
@@ -31,11 +36,6 @@ public class TemplateMastersDao extends GenTemplateMastersDao {
 	public static TemplateMastersDao get() {
 		return Container.getComp(TemplateMastersDao.class);
 	}
-
-	/**
-	 * ID 
-	 */
-	private int currentId = 0;
 
 	/**
 	 * IDを採番 
