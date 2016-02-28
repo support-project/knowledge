@@ -17,6 +17,12 @@ public class WebhookConfigsDao extends GenWebhookConfigsDao {
 
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * ID 
+	 */
+	private int currentId = 0;
+
 	/**
 	 * インスタンス取得
 	 * AOPに対応
@@ -27,21 +33,14 @@ public class WebhookConfigsDao extends GenWebhookConfigsDao {
 	}
 
 	/**
-	 * ID 
-	 */
-	private int currentId = 0;
-
-	/**
 	 * IDを採番 
 	 * ※コミットしなくても次のIDを採番する為、保存しなければ欠番になる 
 	 */
 	public Integer getNextId() {
 		String sql = "SELECT MAX(HOOK_ID) FROM WEBHOOK_CONFIGS;";
 		Integer integer = executeQuerySingle(sql, Integer.class);
-		if (integer != null) {
-			if (currentId < integer) {
-				currentId = integer;
-			}
+		if (integer != null && currentId < integer) {
+			currentId = integer;
 		}
 		currentId++;
 		return currentId;

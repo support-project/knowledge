@@ -21,6 +21,11 @@ public class TemplateMastersDao extends GenTemplateMastersDao {
 	public static final int TYPE_ID_KNOWLEDGE = -100;
 	public static final int TYPE_ID_BOOKMARK = -99;
 
+	/**
+	 * ID 
+	 */
+	private int currentId = 0;
+
 	/** SerialVersion */
 	private static final long serialVersionUID = 1L;
 	/**
@@ -33,21 +38,14 @@ public class TemplateMastersDao extends GenTemplateMastersDao {
 	}
 
 	/**
-	 * ID 
-	 */
-	private int currentId = 0;
-
-	/**
 	 * IDを採番 
 	 * ※コミットしなくても次のIDを採番する為、保存しなければ欠番になる 
 	 */
 	public Integer getNextId() {
 		String sql = "SELECT MAX(TYPE_ID) FROM TEMPLATE_MASTERS;";
 		Integer integer = executeQuerySingle(sql, Integer.class);
-		if (integer != null) {
-			if (currentId < integer) {
-				currentId = integer;
-			}
+		if (integer != null && currentId < integer) {
+			currentId = integer;
 		}
 		currentId++;
 		return currentId;

@@ -69,14 +69,11 @@ public class TemplateMastersEntity extends GenTemplateMastersEntity {
 	protected String convLabelName(String label) {
 		Resources resources = ThreadResources.get().getResources();
 		if ("Type Name".equals(label)) {
-			String resource = resources.getResource("knowledge.template.label.name");
-			return resource;
+			return resources.getResource("knowledge.template.label.name");
 		} else if ("Type Icon".equals(label)) {
-			String resource = resources.getResource("knowledge.template.label.icon");
-			return resource;
+			return resources.getResource("knowledge.template.label.icon");
 		} else if ("Description".equals(label)) {
-			String resource = resources.getResource("knowledge.template.label.description");
-			return resource;
+			return resources.getResource("knowledge.template.label.description");
 		}
 		return label;
 	}

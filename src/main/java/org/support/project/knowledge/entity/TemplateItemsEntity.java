@@ -89,11 +89,9 @@ public class TemplateItemsEntity extends GenTemplateItemsEntity {
 	protected String convLabelName(String label) {
 		Resources resources = ThreadResources.get().getResources();
 		if ("Item Name".equals(label)) {
-			String resource = resources.getResource("knowledge.template.label.item.title");
-			return resource;
+			return resources.getResource("knowledge.template.label.item.title");
 		} else if ("Description".equals(label)) {
-			String resource = resources.getResource("knowledge.template.label.item.description");
-			return resource;
+			return resources.getResource("knowledge.template.label.item.description");
 		}
 		return label;
 	}
