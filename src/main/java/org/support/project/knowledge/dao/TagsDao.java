@@ -42,10 +42,8 @@ public class TagsDao extends GenTagsDao {
 	public Integer getNextId() {
 		String sql = "SELECT MAX(TAG_ID) FROM TAGS;";
 		Integer integer = executeQuerySingle(sql, Integer.class);
-		if (integer != null) {
-			if (currentId < integer) {
-				currentId = integer;
-			}
+		if (integer != null && currentId < integer) {
+			currentId = integer;
 		}
 		currentId++;
 		return currentId;

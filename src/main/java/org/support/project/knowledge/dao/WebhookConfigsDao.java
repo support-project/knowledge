@@ -39,10 +39,8 @@ public class WebhookConfigsDao extends GenWebhookConfigsDao {
 	public Integer getNextId() {
 		String sql = "SELECT MAX(HOOK_ID) FROM WEBHOOK_CONFIGS;";
 		Integer integer = executeQuerySingle(sql, Integer.class);
-		if (integer != null) {
-			if (currentId < integer) {
-				currentId = integer;
-			}
+		if (integer != null && currentId < integer) {
+			currentId = integer;
 		}
 		currentId++;
 		return currentId;

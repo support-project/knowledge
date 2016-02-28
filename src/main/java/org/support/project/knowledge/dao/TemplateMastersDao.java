@@ -44,10 +44,8 @@ public class TemplateMastersDao extends GenTemplateMastersDao {
 	public Integer getNextId() {
 		String sql = "SELECT MAX(TYPE_ID) FROM TEMPLATE_MASTERS;";
 		Integer integer = executeQuerySingle(sql, Integer.class);
-		if (integer != null) {
-			if (currentId < integer) {
-				currentId = integer;
-			}
+		if (integer != null && currentId < integer) {
+			currentId = integer;
 		}
 		currentId++;
 		return currentId;
