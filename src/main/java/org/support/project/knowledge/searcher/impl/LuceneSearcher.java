@@ -45,31 +45,52 @@ import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.Searcher;
 import org.support.project.knowledge.searcher.SearchingValue;
 
+/**
+ * Luceneを使った検索
+ * @author Koda
+ *
+ */
 public class LuceneSearcher implements Searcher {
 	/** ログ */
 	private static Log log = LogFactory.getLog(LuceneSearcher.class);
-
+	/** 検索のリミット */
 	public static final int CONTENTS_LIMIT_LENGTH = 200;
-
+	
+	/** ラベル：種類 */
 	public static final String FIELD_LABEL_TYPE = LuceneIndexer.FIELD_LABEL_TYPE;
+	/** ラベル：ID */
 	public static final String FIELD_LABEL_ID = LuceneIndexer.FIELD_LABEL_ID;
+	/** ラベル：タイトル */
 	public static final String FIELD_LABEL_TITLE = LuceneIndexer.FIELD_LABEL_TITLE;
+	/** ラベル：コンテンツ */
 	public static final String FIELD_LABEL_CONTENTS = LuceneIndexer.FIELD_LABEL_CONTENTS;
+	/** ラベル：タグ */
 	public static final String FIELD_LABEL_TAGS = LuceneIndexer.FIELD_LABEL_TAGS;
+	/** ラベル：アクセス可能なユーザ */
 	public static final String FIELD_LABEL_USERS = LuceneIndexer.FIELD_LABEL_USERS;
+	/** ラベル：アクセス可能なグループ */
 	public static final String FIELD_LABEL_GROUPS = LuceneIndexer.FIELD_LABEL_GROUPS;
+	/** ラベル：作成者 */
 	public static final String FIELD_LABEL_CREATE_USER = LuceneIndexer.FIELD_LABEL_CREATE_USER;
+	/** ラベル：日時 */
 	public static final String FIELD_LABEL_TIME = LuceneIndexer.FIELD_LABEL_TIME;
-
+	
+	/** 検索キーワードを抽出するアナライザー N-gramではなく形態素解析を利用 */
 //	private Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_4_10_2);
 	private Analyzer analyzer = new JapaneseAnalyzer();
-
+	
+	/**
+	 * Indexが格納されているディレクトリのパスを取得
+	 * @return
+	 */
 	private String getIndexPath() {
 		AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
 		log.debug("lucene index: " + appConfig.getIndexPath());
 		return appConfig.getIndexPath();
 	}
-	
+	/**
+	 * 検索
+	 */
 	public List<SearchResultValue> search(final SearchingValue value) throws IOException, ParseException, InvalidTokenOffsetsException {
 		List<SearchResultValue> resultValues = new ArrayList<>();
 		
@@ -150,7 +171,13 @@ public class LuceneSearcher implements Searcher {
 		return resultValues;
 		
 	}
-
+	
+	/**
+	 * クエリの組み立て
+	 * @param value
+	 * @return
+	 * @throws ParseException
+	 */
 	private Query structQuery(final SearchingValue value) throws ParseException {
 		
 		// クエリー組み立て
@@ -158,6 +185,12 @@ public class LuceneSearcher implements Searcher {
 		BooleanQuery container = new BooleanQuery();
 		
 		if (StringUtils.isNotEmpty(value.getKeyword())) {
+			if (value.getKeyword().startsWith("*") || value.getKeyword().startsWith("?")) {
+				log.info("Cannot parse '?': '*' or '?' not allowed as first character in WildcardQuery");
+				value.setKeyword(value.getKeyword().substring(1)); // 初めの1文字を削除
+				return structQuery(value); // 削除したキーワードで再度クエリ組み立て
+			}
+			
 			//キーワード検索(内容かパス名にキーワードがあるか)
 			BooleanQuery miniContainer = new BooleanQuery();
 			
@@ -182,7 +215,8 @@ public class LuceneSearcher implements Searcher {
 			
 			container.add(miniContainer, BooleanClause.Occur.MUST);
 		} else {
-			Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TYPE, 1, IndexType.knowledge.getValue(), IndexType.knowledge.getValue(), true, true);
+			Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TYPE, 1, IndexType.knowledge.getValue(), 
+					IndexType.knowledge.getValue(), true, true);
 			container.add(query, BooleanClause.Occur.MUST);
 		}
 		
@@ -223,6 +257,16 @@ public class LuceneSearcher implements Searcher {
 		return container;
 	}
 
+	/**
+	 * 検索キーワードのハイライト
+	 * @param query
+	 * @param analyzer
+	 * @param fieldName
+	 * @param fieldValue
+	 * @return
+	 * @throws IOException
+	 * @throws InvalidTokenOffsetsException
+	 */
 	private String getHighlightedField(Query query, Analyzer analyzer, String fieldName, String fieldValue) throws IOException,
 			InvalidTokenOffsetsException {
 		Formatter formatter = new SimpleHTMLFormatter("<span class=\"mark\">", "</span>");
