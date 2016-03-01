@@ -454,6 +454,56 @@ public class KnowledgeControl extends KnowledgeControlBase {
 	}
 	
 	
+	/**
+	 * 閲覧履歴の表示
+	 * @return
+	 * @throws InvalidParamException
+	 */
+	@Get
+	public Boundary show_popularity() throws InvalidParamException {
+		LoginedUser loginedUser = super.getLoginedUser();
+		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+		TagsDao tagsDao = TagsDao.get();
+		ExGroupsDao groupsDao = ExGroupsDao.get();
+		
+		List<KnowledgesEntity> popularities = knowledgeLogic.getPopularityKnowledges(loginedUser, 0, 20);
+		LOG.trace("取得完了");
+		setAttribute("popularities", popularities);
+		
+		ArrayList<Long> knowledgeIds = new ArrayList<>();
+		for (KnowledgesEntity knowledgesEntity : popularities) {
+			knowledgeIds.add(knowledgesEntity.getKnowledgeId());
+		}
+		
+		// タグとグループの情報を取得
+		if (loginedUser != null && loginedUser.isAdmin()) {
+			// 管理者であれば、ナレッジの件数は、参照権限を考慮していない
+	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
+			setAttribute("tags", tags);
+
+			List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
+			setAttribute("groups", groups);
+		} else {
+			TagLogic tagLogic = TagLogic.get();
+			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
+			setAttribute("tags", tags);
+
+			if (loginedUser != null) {
+				GroupLogic groupLogic = GroupLogic.get();
+				List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
+				setAttribute("groups", groups);
+			}
+		}
+		LOG.trace("タグ、グループ取得完了");
+
+		TargetLogic targetLogic = TargetLogic.get();
+		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
+		setAttribute("targets", targets);
+		setAttribute("targetLogic", targetLogic);
+		
+		return forward("popularity.jsp");
+	}	
+	
 	
 	/**
 	 * いいねを押下

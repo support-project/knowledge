@@ -36,6 +36,8 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 	
 	/** スコア(検索した際のスコア) */
 	private Float score;
+	/** 指定期間内のイイネ件数 */
+	private Integer likeCountOnTerm;
 	
 	/**
 	 * コンストラクタ
@@ -125,6 +127,20 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
 	 */
 	public void setScore(Float score) {
 		this.score = score;
+	}
+
+	/**
+	 * @return the likeCountOnTerm
+	 */
+	public Integer getLikeCountOnTerm() {
+		return likeCountOnTerm;
+	}
+
+	/**
+	 * @param likeCountOnTerm the likeCountOnTerm to set
+	 */
+	public void setLikeCountOnTerm(Integer likeCountOnTerm) {
+		this.likeCountOnTerm = likeCountOnTerm;
 	}
 	
 	
