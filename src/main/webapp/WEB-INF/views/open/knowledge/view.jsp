@@ -144,7 +144,7 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 			<div class="article_buttons">
 				<div>
 				<% if (request.getRemoteUser() != null) { 
-					if ((boolean) request.getAttribute("edit")) { %>
+					if ((Boolean) request.getAttribute("edit")) { %>
 						<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
 						class="btn btn-primary btn_edit" role="button"><i class="fa fa-edit"></i>&nbsp;
 						<%= jspUtil.label("knowledge.view.edit") %>
@@ -230,7 +230,7 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 				<%= jspUtil.date("comment.updateDatetime")%> [<%= jspUtil.out("comment.updateUserName") %>]
 			<% } %>
 			
-			<% if (jspUtil.isAdmin() || jspUtil.is(jspUtil.id(), "comment.insertUser") || (boolean) request.getAttribute("edit")) { %>
+			<% if (jspUtil.isAdmin() || jspUtil.is(jspUtil.id(), "comment.insertUser") || (Boolean) request.getAttribute("edit")) { %>
 				&nbsp;
 				<a class="btn btn-primary btn-xs" href="<%= request.getContextPath() %>/protect.knowledge/edit_comment/<%= comment.getCommentNo() %>">
 					<i class="fa fa-edit"></i> <%= jspUtil.label("label.edit") %>
@@ -280,7 +280,7 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 		<div class="row">
 			<div class="col-sm-12" style="text-align: right;">
 			
-			<% if (jspUtil.isAdmin() || jspUtil.is(jspUtil.id(), "comment.insertUser") || (boolean) request.getAttribute("edit")) { %>
+			<% if (jspUtil.isAdmin() || jspUtil.is(jspUtil.id(), "comment.insertUser") || (Boolean) request.getAttribute("edit")) { %>
 				&nbsp;
 				<a class="btn btn-primary btn-xs" href="<%= request.getContextPath() %>/protect.knowledge/edit_comment/<%= comment.getCommentNo() %>">
 					<i class="fa fa-edit"></i> <%= jspUtil.label("label.edit") %>
