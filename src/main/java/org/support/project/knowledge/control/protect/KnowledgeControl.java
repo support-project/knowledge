@@ -405,7 +405,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 			List<UploadFile> files = fileLogic.selectOnFileNos(fileNos, getRequest().getContextPath());
 			Iterator<UploadFile> iterator = files.iterator();
 			while (iterator.hasNext()) {
-				UploadFile uploadFile = (UploadFile) iterator.next();
+				UploadFile uploadFile = iterator.next();
 				if (uploadFile.getKnowlegeId() != null) {
 					// 新規登録なのに、添付ファイルが既にナレッジに紐づいている（おかしい）
 					iterator.remove();
@@ -517,7 +517,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 		List<UploadFile> files = fileLogic.selectOnFileNos(fileNos, getRequest().getContextPath());
 		Iterator<UploadFile> iterator = files.iterator();
 		while (iterator.hasNext()) {
-			UploadFile uploadFile = (UploadFile) iterator.next();
+			UploadFile uploadFile = iterator.next();
 			if (uploadFile.getKnowlegeId() != null) {
 				// 新規登録なのに、添付ファイルが既にナレッジに紐づいている（おかしい）
 				iterator.remove();
@@ -629,7 +629,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 				Stock stock = new Stock();
 				Iterator<String> keys = map.keySet().iterator();
 				while (keys.hasNext()) {
-					String key = (String) keys.next();
+					String key = keys.next();
 					Object value = map.get(key);
 					if (LOG.isTraceEnabled()) {
 						LOG.trace(key + " = " + value + "  (" + value.getClass().getName() + ")");

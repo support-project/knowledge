@@ -6,8 +6,6 @@ import java.util.List;
 import net.arnx.jsonic.JSONException;
 
 import org.support.project.common.bean.ValidateError;
-import org.support.project.common.log.Log;
-import org.support.project.common.log.LogFactory;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
@@ -24,8 +22,6 @@ import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
 public class StockControl extends Control {
-	/** ログ */
-	private static Log LOG = LogFactory.getLog(StockControl.class);
 	
 	private static final int LIST_LIMIT = 20;
 	

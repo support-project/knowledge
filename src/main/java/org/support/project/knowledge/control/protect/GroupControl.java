@@ -6,15 +6,11 @@ import java.util.Map;
 
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.exception.ParseException;
-import org.support.project.common.log.Log;
-import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
-import org.support.project.knowledge.dao.TagsDao;
-import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.web.bean.LabelValue;
@@ -33,8 +29,6 @@ import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance=Instance.Prototype)
 public class GroupControl extends Control {
-	/** ログ */
-	private static Log LOG = LogFactory.getLog(GroupControl.class);
 	
 	public static final int PAGE_LIMIT = 10;
 	
