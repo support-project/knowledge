@@ -11,11 +11,13 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenKnowledgesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.ormapping.common.SQLManager;
+import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.entity.GroupsEntity;
 
 /**
  * ナレッジ
  */
-@DI(instance=Instance.Singleton)
+@DI(instance = Instance.Singleton)
 public class KnowledgesDao extends GenKnowledgesDao {
 
 	/** SerialVersion */
@@ -136,6 +138,69 @@ public class KnowledgesDao extends GenKnowledgesDao {
 	public List<KnowledgesEntity> selectBetween(Long start, Long end) {
 		String sql = "SELECT * FROM knowledges WHERE knowledge_id BETWEEN ? AND ? AND DELETE_FLAG = 0 ORDER BY knowledge_id";
 		return executeQueryList(sql, KnowledgesEntity.class, start, end);
+	}
+
+
+	/**
+	 * 指定期間でイイネの登録件数が大きいもから先頭に取得
+	 * アクセス権限を考慮しないので、管理者用
+	 * @param start
+	 * @param end
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	public List<KnowledgesEntity> selectPopularity(Timestamp start, Timestamp end, int offset, int limit) {
+		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectPopularity.sql");
+		return executeQueryList(sql, KnowledgesEntity.class, start, end, limit, offset);
+	}
+	/**
+	 * 指定期間でイイネの登録件数が大きいものから取得
+	 * アクセス権限を考慮する
+	 * @param loginedUser
+	 * @param start
+	 * @param end
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	public List<KnowledgesEntity> selectPopularityWithAccessControl(LoginedUser loginedUser, Timestamp start, Timestamp end,
+			int offset, int limit) {
+		String sql = SQLManager.getInstance()
+				.getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectPopularityWithAccessControl.sql");
+		List<Object> params = new ArrayList<>();
+		params.add(start);
+		params.add(end);
+		Integer loginuserId = Integer.MIN_VALUE;
+		if (loginedUser != null) {
+			loginuserId = loginedUser.getUserId();
+		}
+		params.add(loginuserId);
+		params.add(loginuserId);
+		
+		List<Integer> groups = new ArrayList<>();
+		groups.add(0); // ALL Groups
+		if (loginedUser != null && loginedUser.getGroups() != null) {
+			List<GroupsEntity> userGroups = loginedUser.getGroups();
+			for (GroupsEntity groupsEntity : userGroups) {
+				groups.add(groupsEntity.getGroupId());
+			}
+		}
+		StringBuilder groupParams = new StringBuilder();
+		int cnt = 0;
+		for (Integer integer : groups) {
+			if (cnt > 0) {
+				groupParams.append(", ");
+			}
+			cnt++;
+			params.add(integer);
+			groupParams.append("?");
+		}
+		sql = sql.replace("%GROUPS%", groupParams.toString());
+		params.add(limit);
+		params.add(offset);
+		
+		return executeQueryList(sql, KnowledgesEntity.class, params.toArray(new Object[0]));
 	}
 
 
