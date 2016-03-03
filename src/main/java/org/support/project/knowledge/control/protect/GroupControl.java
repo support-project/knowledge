@@ -33,8 +33,6 @@ import org.support.project.web.exception.InvalidParamException;
  */
 @DI(instance = Instance.Prototype)
 public class GroupControl extends Control {
-	/** ログ */
-	// private static final Log LOG = LogFactory.getLog(GroupControl.class);
 	/** 一覧の表示件数 */
 	public static final int PAGE_LIMIT = 10;
 	
