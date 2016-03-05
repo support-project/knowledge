@@ -1071,7 +1071,7 @@ public class KnowledgeLogic {
 		
 		// 更新
 		KnowledgesDao knowledgesDao = KnowledgesDao.get();
-		knowledgesDao.update(entity.getUpdateUser(), entity);
+		knowledgesDao.physicalUpdate(entity);
 	}
 	
 	
