@@ -59,13 +59,14 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 
 
 <c:param name="PARAM_CONTENT">
-<h4 class="title" id="title_msg"><%= jspUtil.label("knowledge.add.title") %></h4>
-
 <form action="<%= request.getContextPath()%>/protect.knowledge/add" method="post" role="form" enctype="multipart/form-data" id="knowledgeForm">
-	
+	<div class="form-inline">
+		<div class="form-group title" id="title_msg"><%= jspUtil.label("knowledge.add.title") %></div>
+	</div>
+
 	<!-- template -->
-	<div class="form-group">
-		<label for="input_title"><%= jspUtil.label("knowledge.add.label.type") %></label><br/>
+	<div class="form-group" style="margin-top: 3px;">
+		<label for="input_title"><%= jspUtil.label("knowledge.add.label.type") %></label>
 		<c:forEach var="template" items="${templates}" >
 			<label class="radio-inline">
 				<input type="radio" value="<%= jspUtil.out("template.typeId") %>" name="typeId" 
@@ -79,9 +80,8 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 			</label>
 		</c:forEach>
 	</div>
-	
+
 	<div class="alert alert-info hide" role="alert" id="template_info">
-		<strong id="template_name"></strong><br/>
 		<span id="template_msg"></span>
 	</div>
 	
@@ -94,20 +94,43 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 	<!-- items -->
 	<div class="form-group" id="template_items">
 	</div>
+
+	<!-- tags -->
+	<div class="form-group">
+		<label for="input_tag">
+		<%= jspUtil.label("knowledge.add.label.tags") %>
+		<a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#tagSelectModal"><i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("label.search.tags") %></a>
+		</label>
+		<p class="tags">
+		<input type="text" class="form-control" name="tagNames" id="input_tags" data-role="tags input"
+			placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="<%= jspUtil.out("tagNames") %>" />
+		</p>
+	</div>
 	
 	<!-- contents -->
 	<div class="form-group">
-		<label for="input_content"><%= jspUtil.label("knowledge.add.label.content") %>
-		<span class="helpMarkdownLabel">
-		<a data-toggle="modal" data-target="#helpMarkdownModal">Markdown supported</a>
-		</span>
-		</label>
-		<textarea class="form-control" name="content" rows="8" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
-		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
-		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>
-		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/objects" data-target="#emojiObjectsModal">objects</a>
-		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
-		<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#writeable" data-toggle="tab"><%= jspUtil.label("knowledge.add.label.content") %></a></li>
+			<li><a href="#preview" data-toggle="tab" onclick="preview();"><%= jspUtil.label("label.preview") %></a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="writeable">
+				<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
+				<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>
+				<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/objects" data-target="#emojiObjectsModal">objects</a>
+				<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
+				<a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
+				<span class="helpMarkdownLabel pull-right">
+					<a data-toggle="modal" data-target="#helpMarkdownModal">Markdown supported</a>
+				</span>
+				<textarea class="form-control" name="content" rows="20" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
+			</div>
+
+			<div class="tab-pane preview markdown" id="preview">
+				<span style="display: none;" id="content_text">
+				</span>
+			</div>
+		</div>
 	</div>
 	
 	<!-- upload files -->
@@ -180,20 +203,7 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		</p>
 	</div>
 
-	<!-- tags -->
-	<div class="form-group">
-		<label for="input_tag">
-		<%= jspUtil.label("knowledge.add.label.tags") %>
-		<span class="helpMarkdownLabel">
-		<a data-toggle="modal" data-target="#tagSelectModal"><%= jspUtil.label("label.search.tags") %></a>
-		</span>
-		</label>
-		<p class="tags">
-		<input type="text" name="tagNames" id="input_tags" data-role="tags input"
-			placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="<%= jspUtil.out("tagNames") %>" />
-		</p>
-	</div>	
-	
+
 	<!-- editors -->
 	<div class="form-group" id="editor_area">
 		<label for="input_groups"><%= jspUtil.label("knowledge.add.label.editors") %></label>
@@ -216,8 +226,6 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 	<!-- buttons -->
 	<hr/>
 	<button type="submit" class="btn btn-primary" id="savebutton"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
-	<button type="button" class="btn btn-info" onclick="preview();"><i class="fa fa-play-circle"></i>&nbsp;<%= jspUtil.label("label.preview") %></button>
-	
 	<button type="button" class="btn btn-danger hide" onclick="deleteKnowledge();" id="deleteButton">
 		<i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %>
 	</button>
@@ -234,11 +242,6 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 
 
 
-
-
-<p class="preview markdown" id="preview"></p>
-<span style="display: none;" id="content_text">
-</span>
 
 
 <%-- Editors --%>

@@ -293,7 +293,7 @@ var getGroups = function(keyword, offset, listId, pageId, selectFunc) {
 		} else {
 			html+= '<div class="list-group">';
 			for (var int = 0; int < result.length; int++) {
-				html += '<a href="#" class="list-group-item" onclick="' + selectFunc + '(' + int + ')">';
+				html += '<a href="javascript:void(0);" class="list-group-item" onclick="' + selectFunc + '(' + int + ')">';
 				html += result[int].label;
 				html += '</a>';
 			}
@@ -416,21 +416,9 @@ var preview = function() {
 		title : $('#input_title').val(),
 		content : $('#content').val()
 	}, function(data) {
-		var html = '<div class="row">';
-		html += '<div class="col-sm-12">';
-		html += '<div class="thumbnail">';
-		html += '<div class="caption">';
-		html += '[preview]';
-		html += '<h3>';
-		html += data.title;
-		html += '</h3><hr/>';
-		html += '<div style="word-break:break-all" id="content">';
+		var html = '<div style="word-break:break-all" id="content">';
 		var content = data.content;
 		html += content;
-		html += '</div>';
-		html += '</div>';
-		html += '</div>';
-		html += '</div>';
 		html += '</div>';
 		
 		var jqObj = $('#preview');
@@ -440,11 +428,6 @@ var preview = function() {
 		.then(function() {
 			var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
 			jqObj.html(content);
-			
-			var speed = 500;
-			var target = $('#preview');
-			var position = target.offset().top;
-			$("html, body").animate({scrollTop:position}, speed, "swing");
 		}).then(function () {
 			jqObj.find('a.oembed').oembed();
 		});
@@ -496,7 +479,6 @@ var changeTemplate = function() {
 };
 
 var addTemplateItem = function(template) {
-	$('#template_name').text(template.typeName);
 	$('#template_msg').text(template.description);
 	$('#template_info').removeClass('hide');
 	$('#template_info').addClass('show');
