@@ -248,4 +248,25 @@ public class MarkdownLogicTest extends TestCommon {
 	}
 	
 	
+	
+    @Test
+    @Order(order= 8)
+    public void testMarkdJDel() throws ParseException, UnsupportedEncodingException, IOException, TransformerFactoryConfigurationError, TransformerException {
+        String markdown = FileUtil.read(getClass().getResourceAsStream("markdown/markdj-del.md"));
+        String html = FileUtil.read(getClass().getResourceAsStream("markdown/result-markdj-del.txt"));
+        String result = MarkdownLogic.get().markdownToHtml(markdown, MarkdownLogic.ENGINE_MARKEDJ).getHtml();
+        try {
+            org.junit.Assert.assertArrayEquals(read(html), read(result));
+        } catch (AssertionError e) {
+            LOG.info("testMarkdJDel");
+            LOG.info("[Markdown] : " + markdown);
+            LOG.info("[Html]     : " + html);
+            LOG.info("[Parsed]   : " + result);
+            LOG.info("[Indent]   : " + SanitizingLogic.get().indent(result));
+            throw e;
+        }
+    }	
+	
+	
+	
 }
