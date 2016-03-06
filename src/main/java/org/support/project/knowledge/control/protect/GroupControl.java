@@ -27,9 +27,13 @@ import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UserGroupsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
-@DI(instance=Instance.Prototype)
+/**
+ * グループ操作のコントロール
+ * @author Koda
+ */
+@DI(instance = Instance.Prototype)
 public class GroupControl extends Control {
-	
+	/** 一覧の表示件数 */
 	public static final int PAGE_LIMIT = 10;
 	
 	/**
@@ -45,7 +49,7 @@ public class GroupControl extends Control {
 		List<GroupsEntity> groups = groupLogic.selectMyGroup(super.getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
 		setAttribute("groups", groups);
 		
-		int previous = offset -1;
+		int previous = offset - 1;
 		if (previous < 0) {
 			previous = 0;
 		}
@@ -71,7 +75,7 @@ public class GroupControl extends Control {
 		List<GroupsEntity> groups = groupLogic.selectOnKeyword(keyword, super.getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
 		setAttribute("groups", groups);
 		
-		int previous = offset -1;
+		int previous = offset - 1;
 		if (previous < 0) {
 			previous = 0;
 		}
@@ -158,7 +162,7 @@ public class GroupControl extends Control {
 			}
 		}
 		
-		int previous = offset -1;
+		int previous = offset - 1;
 		if (previous < 0) {
 			previous = 0;
 		}

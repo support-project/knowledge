@@ -70,6 +70,7 @@
 }
 .helpMarkdownLabel {
 	font-size: small;
+	cursor: pointer;
 }
 .sampleMarkdownText {
 	word-wrap: break-word;
