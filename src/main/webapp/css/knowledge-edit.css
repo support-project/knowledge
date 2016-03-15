@@ -89,3 +89,10 @@
 .tag_list > a {
 	text-decoration: none;
 }
+
+.markdown_sample{
+    border: 2px solid silver;
+    padding: 5px;
+    height: 300px;
+    overflow: auto;
+}
