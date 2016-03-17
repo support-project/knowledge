@@ -149,6 +149,10 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 						class="btn btn-primary btn_edit" role="button"><i class="fa fa-edit"></i>&nbsp;
 						<%= jspUtil.label("knowledge.view.edit") %>
 						</a>
+					<% } else { %>
+                        <button class="btn btn-primary btn_edit disabled" disabled="disabled">
+                        <i class="fa fa-info-circle"></i>&nbsp;<%= jspUtil.label("knowledge.view.edit.disable") %>
+                        </button>
 					<% } %>
 				<% } else { %>
 					<a href="<%= request.getContextPath() %>/protect.knowledge/view_edit/<%= jspUtil.out("knowledgeId") %>"
