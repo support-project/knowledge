@@ -25,25 +25,7 @@ import org.support.project.ormapping.common.DBUserPool;
 public class KnowledgesDaoTest extends TestCommon {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(KnowledgesDaoTest.class);
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		H2DBServerLogic.get().start();
-		initData();
-	}
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		H2DBServerLogic.get().stop();
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
+	
 	@Test
 	public void testSelectKnowledges() throws Exception {
 		java.util.List<Long> knowledgeIds = new ArrayList<Long>();

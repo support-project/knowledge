@@ -3,7 +3,7 @@
 	<connectionConfig>
 		<name>connection</name>
 		<driverClass>org.h2.Driver</driverClass>
-		<URL>jdbc:h2:~/.knowledge/knowledgeTestDB</URL>
+		<URL>jdbc:h2:tcp://localhost/./knowledgeTestDB</URL>
 		<user>sa</user>
 		<password></password>
 		<schema>public</schema>

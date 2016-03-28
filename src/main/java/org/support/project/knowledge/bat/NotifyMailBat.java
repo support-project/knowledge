@@ -18,6 +18,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
+import org.support.project.knowledge.config.NotifyType;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -35,6 +36,7 @@ import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
 import org.support.project.knowledge.entity.WebhooksEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.NotifyCommentLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
 import org.support.project.knowledge.logic.WebhookLogic;
 import org.support.project.knowledge.vo.GroupUser;
@@ -49,18 +51,30 @@ import org.support.project.web.entity.UsersEntity;
 
 import net.arnx.jsonic.JSON;
 
+/**
+ * メッセージ処理を処理する定期的なバッチプログラム
+ * @author Koda
+ */
 public class NotifyMailBat extends AbstractBat {
     /** ログ */
-    private static Log LOG = LogFactory.getLog(NotifyMailBat.class);
-    
+    private static final Log LOG = LogFactory.getLog(NotifyMailBat.class);
+    /** config dir for mail */
     private static final String MAIL_CONFIG_DIR = "/org/support/project/knowledge/mail/";
-    private static final DateFormat getDayFormat() {
+    /** date format */
+    private static DateFormat getDayFormat() {
         return new SimpleDateFormat("yyyyMMddHHmmss");
     }
     
+    /** knowledge id what is sended */
     private List<Long> sendedCommentKnowledgeIds = new ArrayList<>();
+    /** like id what is sended */
     private List<Long> sendedLikeKnowledgeIds = new ArrayList<>();
     
+    /**
+     * バッチ処理の開始
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         initLogName("NotifyMailBat.log");
         configInit(ClassUtils.getShortClassName(NotifyMailBat.class));
@@ -136,12 +150,20 @@ public class NotifyMailBat extends AbstractBat {
             if (notifyConfigsEntity != null && INT_FLAG.flagCheck(notifyConfigsEntity.getMyItemLike())) {
                 // 登録者でかつイイネが登録した場合に通知が欲しい
                 Locale locale = user.getLocale();
-                MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_like_myitem", locale, MailConfig.class);;
+                MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_like_myitem", locale, MailConfig.class);
                 sendLikeMail(like, knowledge, likeUser, user, config);
             }
         }
     }
-
+    
+    /**
+     * イイネが押されたメールを送る
+     * @param like
+     * @param knowledge
+     * @param likeUser
+     * @param user
+     * @param config
+     */
     private void sendLikeMail(LikesEntity like, KnowledgesEntity knowledge, UsersEntity likeUser, UsersEntity user, MailConfig config) {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
@@ -220,55 +242,18 @@ public class NotifyMailBat extends AbstractBat {
         UsersEntity commentUser = usersDao.selectOnKey(comment.getInsertUser());
         
         // 登録者に通知
-        UsersEntity user = usersDao.selectOnKey(knowledge.getInsertUser());
+        UsersEntity user = NotifyCommentLogic.get().getInsertUserOnComment(NotifyType.Mail, comment, knowledge);
         if (user != null) {
-            NotifyConfigsDao notifyConfigsDao = NotifyConfigsDao.get();
-            NotifyConfigsEntity notifyConfigsEntity = notifyConfigsDao.selectOnKey(user.getUserId());
-            if (notifyConfigsEntity != null && INT_FLAG.flagCheck(notifyConfigsEntity.getMyItemComment())) {
-                // 登録者でかつコメントが登録した場合に通知が欲しい
-                Locale locale = user.getLocale();
-                MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_comment_myitem", locale, MailConfig.class);;
-                sendCommentMail(comment, knowledge, commentUser, user, config);
-            }
+            Locale locale = user.getLocale();
+            MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_comment_myitem", locale, MailConfig.class);
+            sendCommentMail(comment, knowledge, commentUser, user, config);
         }
-
         // 宛先のナレッジにコメント追加で通知が欲しいユーザに通知
-        List<UsersEntity> users = new ArrayList<>();
-        // 宛先の一覧取得
-        TargetsDao targetsDao = TargetsDao.get();
-        List<UsersEntity> targetUsers = targetsDao.selectUsersOnKnowledgeId(knowledge.getKnowledgeId());
-        users.addAll(targetUsers);
-        
-        //グループの一覧
-        List<GroupsEntity> targetGroups = targetsDao.selectGroupsOnKnowledgeId(knowledge.getKnowledgeId());
-        for (GroupsEntity groupsEntity : targetGroups) {
-            List<GroupUser> groupUsers = ExUsersDao.get().selectGroupUser(groupsEntity.getGroupId(), 0, Integer.MAX_VALUE);
-            for (GroupUser groupUser : groupUsers) {
-                if (!contains(users, groupUser)) {
-                    users.add(groupUser);
-                }
-            }
-        }
-        Iterator<UsersEntity> iterator = users.iterator();
-        while (iterator.hasNext()) {
-            UsersEntity usersEntity = (UsersEntity) iterator.next();
-            // 自分宛てのナレッジ登録／更新で通知するかどうかの判定
-            NotifyConfigsDao notifyConfigsDao = NotifyConfigsDao.get();
-            NotifyConfigsEntity notifyConfigsEntity = notifyConfigsDao.selectOnKey(usersEntity.getUserId());
-            if (notifyConfigsEntity == null) {
-                iterator.remove();
-            } else if (!INT_FLAG.flagCheck(notifyConfigsEntity.getToItemComment())) {
-                iterator.remove();
-            } else if (user.getUserId().intValue() == knowledge.getInsertUser().intValue()) {
-                // 登録者には通知しない（登録者に通知する／しないは、上のロジックで処理済)
-                iterator.remove();
-            }
-        }
-
+        List<UsersEntity> users = NotifyCommentLogic.get().getTargetUsersOnComment(NotifyType.Mail, comment, knowledge);
         for (UsersEntity target : users) {
             // 宛先にメール送信
             Locale locale = target.getLocale();
-            MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_comment", locale, MailConfig.class);;
+            MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_comment", locale, MailConfig.class);
             sendCommentMail(comment, knowledge, commentUser, target, config);
         }
     }
@@ -418,7 +403,7 @@ public class NotifyMailBat extends AbstractBat {
      * @param groupUser
      * @return
      */
-    private boolean contains(List<UsersEntity> users, GroupUser groupUser) {
+    private boolean contains(List<UsersEntity> users, UsersEntity groupUser) {
         for (UsersEntity usersEntity : users) {
             if (usersEntity.equalsOnKey(groupUser)) {
                 return true;

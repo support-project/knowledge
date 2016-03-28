@@ -29,23 +29,6 @@ import org.support.project.web.logic.SanitizingLogic;
 public class MarkdownLogicTest extends TestCommon {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(MarkdownLogicTest.class);
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-	
 	
 	/**
 	 * 改行コードは無視して値比較をするために、文字列（Line）の配列で取得
