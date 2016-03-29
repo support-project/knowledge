@@ -7,8 +7,6 @@ import java.util.Observer;
 
 import javax.websocket.Session;
 
-import net.arnx.jsonic.JSON;
-
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.vo.Notify;
@@ -16,62 +14,73 @@ import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.websocket.EndpointConfigurator;
 
+import net.arnx.jsonic.JSON;
+
+/**
+ * Websocketのセッションに通知を行うObserverクラス
+ * @author Koda
+ */
 public class SessionObserver implements Observer {
-	/** ログ */
-	private static Log LOG = LogFactory.getLog(SessionObserver.class);
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(SessionObserver.class);
+    
+    /**
+     * セッション
+     */
+    private Session session;
+    /**
+     * コンストラクタ
+     * @param session
+     */
+    public SessionObserver(Session session) {
+        super();
+        this.session = session;
+    }
 
-	private Session session;
-	
-	public SessionObserver(Session session) {
-		super();
-		this.session = session;
-	}
+    @Override
+    public void update(Observable o, Object message) {
+        try {
+            if (!session.isOpen()) {
+                return;
+            }
 
-	@Override
-	public void update(Observable o, Object message) {
-		try {
-			if (!session.isOpen()) {
-				return;
-			}
-			
-			Locale locale = Locale.getDefault();
-			Map<String, Object> prop = session.getUserProperties();
-			LoginedUser loginuser = null;
-			if (prop != null) {
-				if (prop.containsKey(EndpointConfigurator.LOCALE_KEY)) {
-					locale = (Locale) prop.get(EndpointConfigurator.LOCALE_KEY);
-				}
-				if (prop.containsKey(EndpointConfigurator.LOCALE_KEY)) {
-					loginuser = (LoginedUser) prop.get(EndpointConfigurator.LOGIN_USER_KEY);
-				}
-			}
-			
-			if (message instanceof Notify && loginuser != null) {
-				Notify notify = (Notify) message;
-				MessageResult result = notify.getMessage(loginuser, locale);
-				if (result != null) {
-					if (LOG.isInfoEnabled()) {
-						LOG.info("[Notify] ");
-						LOG.info("Session id: " + session.getId());
-						LOG.info("User id:    " + session.getUserPrincipal().getName());
-						//LOG.info("User key:   " + loginuser.getLoginUser().getUserKey());
-						//LOG.info("Locale:     " + locale.toString());
-						LOG.info(result.getMessage());
-					}
-					session.getBasicRemote().sendText(JSON.encode(result));
-				}
-			}
-		} catch (Exception e) {
-			LOG.error("error", e);
-		}
-	}
-	
-	/**
-	 * Sessionが開いているかチェック
-	 * @return
-	 */
-	public boolean isOpen() {
-		return session.isOpen();
-	}
+            Locale locale = Locale.getDefault();
+            Map<String, Object> prop = session.getUserProperties();
+            LoginedUser loginuser = null;
+            if (prop != null) {
+                if (prop.containsKey(EndpointConfigurator.LOCALE_KEY)) {
+                    locale = (Locale) prop.get(EndpointConfigurator.LOCALE_KEY);
+                }
+                if (prop.containsKey(EndpointConfigurator.LOCALE_KEY)) {
+                    loginuser = (LoginedUser) prop.get(EndpointConfigurator.LOGIN_USER_KEY);
+                }
+            }
+
+            if (message instanceof Notify && loginuser != null) {
+                Notify notify = (Notify) message;
+                MessageResult result = notify.getMessage(loginuser, locale);
+                if (result != null) {
+                    if (LOG.isInfoEnabled()) {
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("[Notify] ").append("User id:    ").append(session.getUserPrincipal().getName()).append("  ");
+                        builder.append("Session id: ").append(session.getId()).append("  ").append(result.getMessage());
+                        LOG.info(builder.toString());
+                    }
+                    session.getBasicRemote().sendText(JSON.encode(result));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("error", e);
+        }
+    }
+
+    /**
+     * Sessionが開いているかチェック
+     * 
+     * @return
+     */
+    public boolean isOpen() {
+        return session.isOpen();
+    }
 
 }
