@@ -54,6 +54,11 @@ window.onload = function() {
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.navbar.data.connect") %></h4>
 
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Information</strong> <%= jspUtil.label("knowledge.connection.msg.recommend.postgres") %>
+    </div>
+
 <% if(jspUtil.is(Boolean.TRUE, "custom")) { %>
 	<div class="alert alert-success alert-dismissible" role="alert">
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -92,7 +97,8 @@ window.onload = function() {
 	</div>
 	<div class="form-group">
 		<label for="uRL"><%= jspUtil.label("knowledge.connection.label.URL") %></label>
-		<input type="text" class="form-control" name="uRL" id="uRL" placeholder="URL" value="<%= jspUtil.out("uRL") %>" />
+		<input type="text" class="form-control" name="uRL" id="uRL" placeholder="<%= jspUtil.label("knowledge.connection.msg.info.url") %>"
+        value="<%= jspUtil.out("uRL") %>" />
 	</div>
 	<div class="form-group">
 		<label for="user"><%= jspUtil.label("knowledge.connection.label.user") %></label>
