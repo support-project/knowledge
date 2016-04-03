@@ -28,28 +28,9 @@ import org.support.project.ormapping.common.DBUserPool;
 public class KnowledgeLogicTest extends TestCommon {
 	/** ログ */
 	private static Log LOG = LogFactory.getLog(KnowledgeLogicTest.class);
-
 	
 	private static List<KnowledgesEntity> list = new ArrayList<>();
 	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		H2DBServerLogic.get().start();
-		initData();
-	}
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		H2DBServerLogic.get().stop();
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
 	@Test
 	@Order(order= 1)
 	public void testInsert() throws Exception {

@@ -184,15 +184,27 @@ $(document).ready(function() {
 	$('#emojiSymbolsModal').on('loaded.bs.modal', function (event) {
 		emojiSelect('#emojiSymbolsModal');
 	});
-	
-	$('#sampleMarkdownCheck').click(function() {
-		var text = $('#sampleMarkdownText').val();
-		var textarea = $('#content');
-		textarea.val(text);
-		preview();
-		$('#helpMarkdownModal').modal('hide');
-		var p = $("#preview").offset().top - 60;
-		$('html,body').animate({ scrollTop: p }, 'fast');
+	$('#helpMarkdownModal').on('shown.bs.modal', function (event) {
+		$.post(_CONTEXT + '/open.knowledge/marked', {
+			title : 'Markdown Sample',
+			content : $('#sampleMarkdownText').val()
+		}, function(data) {
+			var html = '<div style="word-break:break-all" id="content">';
+			var content = data.content;
+			html += content;
+			html += '</div>';
+			
+			var jqObj = $('#markdownSamplePreview');
+			jqObj.html(html);
+			jqObj.find('code').addClass('hljs');
+			codeHighlight(jqObj)
+			.then(function() {
+				var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+				jqObj.html(content);
+			}).then(function () {
+				jqObj.find('a.oembed').oembed();
+			});
+		});
 	});
 	
 	setUpTagSelect();

@@ -4,9 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.exception.SerializeException;
+import org.support.project.common.logic.H2DBServerLogic;
 import org.support.project.common.serialize.SerializeUtils;
+import org.support.project.common.test.OrderedRunner;
 import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.knowledge.config.AppConfig;
@@ -15,58 +22,155 @@ import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.ormapping.tool.config.ORmappingToolConfig;
 import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.RolesDao;
+import org.support.project.web.dao.UserGroupsDao;
+import org.support.project.web.dao.UserRolesDao;
 import org.support.project.web.dao.UsersDao;
+import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.RolesEntity;
+import org.support.project.web.entity.UserGroupsEntity;
+import org.support.project.web.entity.UserRolesEntity;
 import org.support.project.web.entity.UsersEntity;
 
-public class TestCommon {
-	public static LoginedUser loginedUser = null;
-	public static LoginedUser loginedUser2 = null;
-	
-	public static void testConnection() throws SerializeException, IOException {
-		// コネクション設定
-		String configFileName = "/ormappingtool.xml";
-		ORmappingToolConfig config = SerializeUtils.bytesToObject(
-				TestCommon.class.getResourceAsStream(configFileName), 
-				ORmappingToolConfig.class);
-		config.getConnectionConfig().convURL();
-		ConnectionManager.getInstance().addConnectionConfig(config.getConnectionConfig());
-	}
-	
-	public static void initData() throws Exception {
-		loginedUser = new LoginedUser();
-		loginedUser2 = new LoginedUser();
-		
-		//DBを完全初期化
-		InitializeDao initializeDao = InitializeDao.get();
-		initializeDao.dropAllTable();
-		InitDB.main(null);
-		// 全文検索エンジンのインデックスの消去
-		AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
-		File indexDir = new File(appConfig.getIndexPath());
-		FileUtil.delete(indexDir);
-		
-		// テスト用のユーザを登録
-		UsersEntity entity = new UsersEntity();
-		entity.setUserKey(RandomUtil.randamGen(64));
-		entity.setUserName("テストユーザ");
-		entity.setPassword(RandomUtil.randamGen(64));
-		entity = UsersDao.get().insert(entity);
-		loginedUser.setLoginUser(entity);
-		
-		RolesDao rolesDao = RolesDao.get();
-		List<RolesEntity> rolesEntities = rolesDao.selectOnUserKey(entity.getUserKey());
-		loginedUser.setRoles(rolesEntities);
-		
-		UsersEntity entity2 = new UsersEntity();
-		entity2.setUserKey(RandomUtil.randamGen(64));
-		entity2.setUserName("テストユーザ2");
-		entity2.setPassword(RandomUtil.randamGen(64));
-		entity2 = UsersDao.get().insert(entity2);
-		loginedUser2.setLoginUser(entity2);
-		loginedUser.setRoles(rolesEntities);
-	}
-	
-	
+/**
+ * Abstract class for test.
+ * @author Koda
+ *
+ */
+@RunWith(OrderedRunner.class)
+public abstract class TestCommon {
+    /** login user for test */
+    public static LoginedUser loginedUser = null;
+    /** login user for test */
+    public static LoginedUser loginedUser2 = null;
+    /** login user for test */
+    public static LoginedUser loginedUser3 = null;
+    
+    /** group for test */
+    public static GroupsEntity group = null;
+    /** login user for test */
+    public static LoginedUser groupuser1 = null;
+    /** login user for test */
+    public static LoginedUser groupuser2 = null;
+    
+    
+    /**
+     * @BeforeClass
+     * @throws Exception
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        H2DBServerLogic.get().start();
+        testConnection();
+        initData();
+    }
+    /**
+     * @AfterClass
+     * @throws Exception
+     */
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+        H2DBServerLogic.get().stop();
+    }
+    /**
+     * @Before
+     * @throws Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+    }
+    /**
+     * @After
+     * @throws Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
+    
+    /**
+     * connection change for test
+     * @throws SerializeException
+     * @throws IOException
+     */
+    public static void testConnection() throws SerializeException, IOException {
+        // コネクション設定
+        String configFileName = "/ormappingtool.xml";
+        ORmappingToolConfig config = SerializeUtils.bytesToObject(TestCommon.class.getResourceAsStream(configFileName), ORmappingToolConfig.class);
+        config.getConnectionConfig().convURL();
+        ConnectionManager.getInstance().addConnectionConfig(config.getConnectionConfig());
+    }
+    
+    /**
+     * Insert common data for test.
+     * @throws Exception
+     */
+    public static void initData() throws Exception {
+        loginedUser = new LoginedUser();
+        loginedUser2 = new LoginedUser();
+        loginedUser3 = new LoginedUser();
+        groupuser1 = new LoginedUser();
+        groupuser2 = new LoginedUser();
+
+        // DBを完全初期化
+        InitializeDao initializeDao = InitializeDao.get();
+        initializeDao.dropAllTable();
+        InitDB.main(null);
+        // 全文検索エンジンのインデックスの消去
+        AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
+        File indexDir = new File(appConfig.getIndexPath());
+        FileUtil.delete(indexDir);
+        
+        Integer[] roles = {2}; // 2はユーザ、1はAdmin
+        addUser(loginedUser, "テストユーザ1", roles);
+        addUser(loginedUser2, "テストユーザ2", roles);
+        addUser(loginedUser3, "テストユーザ3", roles);
+        
+        addUser(groupuser1, "GroupUser1", roles);
+        addUser(groupuser2, "GroupUser2", roles);
+        
+        GroupsEntity groupsEntity = new GroupsEntity();
+        groupsEntity.setGroupName("テストグループ");
+        groupsEntity.setGroupKey("TestGroup");
+        group = GroupsDao.get().save(groupsEntity);
+        
+        UserGroupsEntity usergroup = new UserGroupsEntity();
+        usergroup.setGroupId(group.getGroupId());
+        usergroup.setUserId(groupuser1.getUserId());
+        UserGroupsDao.get().save(usergroup);
+        
+        usergroup = new UserGroupsEntity();
+        usergroup.setGroupId(group.getGroupId());
+        usergroup.setUserId(groupuser2.getUserId());
+        UserGroupsDao.get().save(usergroup);
+    }
+    
+    /**
+     * テストユーザの情報を生成
+     * @param user
+     * @param userName
+     * @param roleIds
+     * @return
+     */
+    protected static List<RolesEntity> addUser(LoginedUser user, String userName, Integer[] roleIds) {
+        // テスト用のユーザを登録
+        UsersEntity entity = new UsersEntity();
+        entity.setUserKey(RandomUtil.randamGen(64));
+        entity.setUserName(userName);
+        entity.setPassword(RandomUtil.randamGen(64));
+        entity = UsersDao.get().insert(entity);
+        user.setLoginUser(entity);
+
+        RolesDao rolesDao = RolesDao.get();
+        for (Integer roleId : roleIds) {
+            UserRolesEntity role = new UserRolesEntity();
+            role.setRoleId(roleId);
+            role.setUserId(entity.getUserId());
+            UserRolesDao.get().save(role);
+        }
+        List<RolesEntity> rolesEntities = rolesDao.selectOnUserKey(entity.getUserKey());
+        user.setRoles(rolesEntities);
+        return rolesEntities;
+    }
+
 }
