@@ -107,10 +107,10 @@ public class NotifyLogic {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                LOG.info("start notify");
+                LOG.debug("start notify");
                 NotifyAction notifyAction = Container.getComp(NotifyAction.class);
                 notifyAction.notifyObservers(notify);
-                LOG.info("end notify");
+                LOG.debug("end notify");
             }
         });
         t.setDaemon(true);
