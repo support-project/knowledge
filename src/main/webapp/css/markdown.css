@@ -234,6 +234,7 @@
 	border-left: 4px solid #dddddd;
 	padding: 0 15px;
 	color: #777777;
+	font-size: 15px;
 }
 
 .markdown blockquote>:first-child {
