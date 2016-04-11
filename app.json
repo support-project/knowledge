@@ -1,0 +1,11 @@
+{
+  "name": "knowledge",
+  "description": "Free Knowledge Management System",
+  "keywords": [
+    "knowledge",
+    "java"
+  ],
+  "website": "https://github.com/support-project/knowledge",
+  "repository": "git://github.com/support-project/knowledge.git",
+  "success_url": "/index"
+}
