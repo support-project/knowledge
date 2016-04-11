@@ -12,6 +12,9 @@
    - [id/password] user2 / user2
    - [id/password] user3 / user3
 
+### Deploy to Heroku
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/support-project/knowledge)
 
 #### Project website (more info)
 - https://support-project.org/knowledge_info/index
