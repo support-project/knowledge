@@ -24,6 +24,9 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <label>
+                    <input type="checkbox" id="showagain"><%=jspUtil.label("knowledge.notice.label.showagain")%>
+                </label>
                 <button type="button" class="btn btn-success" disabled="disabled" id="notice_prev_button">
                     <li class="fa fa-chevron-circle-left"></li>&nbsp;Prev
                 </button>
