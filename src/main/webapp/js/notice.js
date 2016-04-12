@@ -33,7 +33,7 @@ $(document).ready(function() {
         $('#notices').html('<i class="fa fa-refresh fa-spin fa-3x fa-fw margin-bottom"></i>');
         $.ajax({
             type : 'get',
-            url : _CONTEXT + '/api/notices?limit=' + limit + '&offset=' + offset
+            url : _CONTEXT + '/admin.api/notices?limit=' + limit + '&offset=' + offset
         }).then(function(notices) {
             $('#notices').html('');
             console.log(notices);
@@ -113,7 +113,7 @@ $(document).ready(function() {
         }
         console.log(data);
         var type = 'post';
-        var url = _CONTEXT + '/api/notices';
+        var url = _CONTEXT + '/admin.api/notices';
         if (notice_no > 0) {
             type = 'put';
             url = url + '/' + notice_no;
@@ -138,7 +138,7 @@ $(document).ready(function() {
     $('#deleteButton').click(function() {
         $.ajax({
             type : 'delete',
-            url : _CONTEXT + '/api/notices' + '/' + notice_no,
+            url : _CONTEXT + '/admin.api/notices' + '/' + notice_no,
             dataType: "json"
         }).then(function(success) {
             console.log(success);

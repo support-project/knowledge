@@ -49,9 +49,13 @@ var codeHighlight = function(block) {
 };
 
 var doPreview = function(titleId, contentId, previewAreaId) {
+    parseMarkdown($(titleId).val(), $(contentId).val(), previewAreaId);
+};
+
+var parseMarkdown = function(title, content, previewAreaId) {
     $.post(_CONTEXT + '/open.knowledge/marked', {
-        title : $(titleId).val(),
-        content : $(contentId).val()
+        title : title,
+        content : content
     }, function(data) {
         var html = '<div style="word-break:break-all" id="content">';
         var content = data.content;
@@ -69,5 +73,7 @@ var doPreview = function(titleId, contentId, previewAreaId) {
             jqObj.find('a.oembed').oembed();
         });
     });
-
 };
+
+
+
