@@ -32,6 +32,8 @@
 var _CONTEXT = '<%= request.getContextPath() %>';
 <% if (jspUtil.logined()) { %>
 var _LOGIN_USER_ID = <%= jspUtil.id() %>;
+<% } else { %>
+var _LOGIN_USER_ID = null;
 <% } %>
 
 var getCookies = function() {

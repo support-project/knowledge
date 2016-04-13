@@ -1,8 +1,9 @@
-<%@page import="java.util.List"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
+<%@page import="java.util.List"%>
 <%@page import="org.support.project.common.util.NumberUtils"%>
-<%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
+<%@page import="org.support.project.web.control.NoticesControl"%>
+<%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -27,7 +28,14 @@
         <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
         <script type="text/javascript" src="<%=jspUtil.mustReloadFile("/js/knowledge-common.js")%>"></script>
+        
+        <%
+            HttpSession session = request.getSession();
+            Boolean read = (Boolean) session.getAttribute(NoticesControl.READ_NOTICES);
+            if (read == null || !read) {
+        %>
         <script type="text/javascript" src="<%=jspUtil.mustReloadFile("/js/mynotice.js")%>"></script>
+        <% } %>
     </c:param>
 
     <c:param name="PARAM_CONTENT">
@@ -37,7 +45,7 @@
             <ul class="nav nav-tabs">
                 <li role="presentation" class="active"><a href="<%=request.getContextPath()%>/open.knowledge/list"><%=jspUtil.label("knowledge.list.kind.list")%></a></li>
                 <li role="presentation"><a href="<%=request.getContextPath()%>/open.knowledge/show_popularity"><%=jspUtil.label("knowledge.list.kind.popular")%></a></li>
-                <%--			<li role="presentation"><a href="#"><%= jspUtil.label("knowledge.list.kind.stock") %></a></li> --%>
+                <%-- <li role="presentation"><a href="#"><%= jspUtil.label("knowledge.list.kind.stock") %></a></li> --%>
                 <li role="presentation"><a href="<%=request.getContextPath()%>/open.knowledge/show_history"><%=jspUtil.label("knowledge.list.kind.history")%></a></li>
             </ul>
         </div>
