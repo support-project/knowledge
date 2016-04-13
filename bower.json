@@ -25,5 +25,8 @@
     "flag-icon-css": "0.8.5",
     "moment": "2.12.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "resolutions": {
+    "jquery": "2.2.3"
+  }
 }
