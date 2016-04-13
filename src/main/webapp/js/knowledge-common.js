@@ -48,15 +48,18 @@ var codeHighlight = function(block) {
     return Promise.all(highlightPromises);
 };
 
-var doPreview = function(titleId, contentId, previewAreaId) {
-    parseMarkdown($(titleId).val(), $(contentId).val(), previewAreaId);
+var doPreview = function(titleId, contentId, previewAreaId, titleAreaId) {
+    parseMarkdown($(titleId).val(), $(contentId).val(), previewAreaId, titleAreaId);
 };
 
-var parseMarkdown = function(title, content, previewAreaId) {
+var parseMarkdown = function(title, content, previewAreaId, titleAreaId) {
     $.post(_CONTEXT + '/open.knowledge/marked', {
         title : title,
         content : content
     }, function(data) {
+        if (titleAreaId) {
+            $(titleAreaId).html(data.title);
+        }
         var html = '<div style="word-break:break-all" id="content">';
         var content = data.content;
         html += content;

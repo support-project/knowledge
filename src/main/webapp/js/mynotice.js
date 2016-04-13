@@ -6,7 +6,7 @@ $(document).ready(function() {
     var notices = [];
     
     var showNotice = function(notice) {
-        parseMarkdown(notice.title, notice.message, '#notice_content_area');
+        parseMarkdown(notice.title, notice.message, '#notice_content_area', '#notice_title_area');
         if (notice.showNextTime) {
             $('#showagain').prop('checked', true);
         } else {
@@ -18,6 +18,11 @@ $(document).ready(function() {
     
     var readMark = function(no, showNextTime) {
         if (_LOGIN_USER_ID) {
+            if (!showNextTime) {
+                showNextTime = 0;
+            } else {
+                showNextTime = 1;
+            }
             var url = _CONTEXT + '/open.api/readmark/' + no + '?showNextTime=' + showNextTime;
             $.ajax({
                 type : 'put',
