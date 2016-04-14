@@ -1,61 +1,54 @@
 package org.support.project.knowledge.entity;
 
-import org.support.project.knowledge.entity.gen.GenKnowledgeHistoriesEntity;
-
-import java.util.List;
-import java.util.Map;
-
-import org.support.project.common.bean.ValidateError;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-
-import java.sql.Timestamp;
-
+import org.support.project.knowledge.entity.gen.GenKnowledgeHistoriesEntity;
 
 /**
  * ナレッジ更新履歴
  */
-@DI(instance=Instance.Prototype)
+@DI(instance = Instance.Prototype)
 public class KnowledgeHistoriesEntity extends GenKnowledgeHistoriesEntity {
 
-	/** SerialVersion */
-	private static final long serialVersionUID = 1L;
-	
-	private String userName;
-	
-	/**
-	 * インスタンス取得
-	 * AOPに対応
-	 * @return インスタンス
-	 */
-	public static KnowledgeHistoriesEntity get() {
-		return Container.getComp(KnowledgeHistoriesEntity.class);
-	}
+    /** SerialVersion */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * コンストラクタ
-	 */
-	public KnowledgeHistoriesEntity() {
-		super();
-	}
+    private String userName;
 
-	/**
-	 * コンストラクタ
-	 * @param historyNo 履歴番号
-	 * @param knowledgeId ナレッジID
-	 */
+    /**
+     * インスタンス取得 AOPに対応
+     * 
+     * @return インスタンス
+     */
+    public static KnowledgeHistoriesEntity get() {
+        return Container.getComp(KnowledgeHistoriesEntity.class);
+    }
 
-	public KnowledgeHistoriesEntity(Integer historyNo, Long knowledgeId) {
-		super( historyNo,  knowledgeId);
-	}
+    /**
+     * コンストラクタ
+     */
+    public KnowledgeHistoriesEntity() {
+        super();
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    /**
+     * コンストラクタ
+     * 
+     * @param historyNo 履歴番号
+     * @param knowledgeId ナレッジID
+     */
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public KnowledgeHistoriesEntity(Integer historyNo, Long knowledgeId) {
+        super(historyNo, knowledgeId);
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
 }

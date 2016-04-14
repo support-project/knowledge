@@ -24,75 +24,74 @@ import org.support.project.web.filter.AuthenticationFilter;
 
 public class CloseAbleAuthenticationFilter extends AuthenticationFilter {
 
-	private Pattern pattern = null;
-	
-	/* (non-Javadoc)
-	 * @see org.support.project.web.filter.AuthenticationFilter#init(javax.servlet.FilterConfig)
-	 */
-	@Override
-	public void init(FilterConfig filterconfig) throws ServletException {
-		SystemConfigsDao dao = SystemConfigsDao.get();
-		SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_EXPOSE_TYPE, AppConfig.get().getSystemName());
-		if (config != null) {
-			if (SystemConfig.SYSTEM_EXPOSE_TYPE_CLOSE.equals(config.getConfigValue())) {
-				SystemConfigLogic.get().setClose(true);
-			}
-		}
-		String ignoreRegularExpression = filterconfig.getInitParameter("close-ignore-regular-expression");
-		if (StringUtils.isNotEmpty(ignoreRegularExpression)) {
-			this.pattern = Pattern.compile(ignoreRegularExpression);
-		}
-		super.init(filterconfig);
-	}
-	
-	
-	
-	/* (non-Javadoc)
-	 * @see org.support.project.web.filter.AuthenticationFilter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
-	 */
-	@Override
-	public void doFilter(ServletRequest servletrequest, ServletResponse servletresponse, FilterChain filterchain) throws IOException,
-			ServletException {
-		if (SystemConfigLogic.get().isClose()) {
-			HttpServletRequest req = (HttpServletRequest) servletrequest;
-			HttpServletResponse res = (HttpServletResponse) servletresponse;
-			try {
-				if (!isLogin(req)) {
-					cookieLogin(req, res);
-				}
-				
-				if (!isLogin(req)) {
-					// ログインしていない
-					if (pattern != null) {
-						StringBuilder pathBuilder = new StringBuilder();
-						pathBuilder.append(req.getServletPath());
-						if (req.getPathInfo() != null && req.getPathInfo().length() > 0) {
-							pathBuilder.append(req.getPathInfo());
-						}
-						String path = pathBuilder.toString();
-						Matcher matcher = pattern.matcher(path);
-						if (!matcher.find() && !path.equals(getLoginProcess())) {
-							// 対象外でないし、ログインページへの遷移でない
-							String page = req.getParameter("page");
-							req.setAttribute("page", page);
-							
-							res.setStatus(HttpStatus.SC_401_UNAUTHORIZED);
-							StringBuilder builder = new StringBuilder();
-							builder.append(getLoginPage());
-							HttpUtil.forward(res, req, builder.toString());
-							return;
-						}
-					}
-				}
-			} catch (Exception e) {
-				throw new ServletException(e);
-			}
-		}
-		super.doFilter(servletrequest, servletresponse, filterchain);
-	}
+    private Pattern pattern = null;
 
-	
-	
-	
-	
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.support.project.web.filter.AuthenticationFilter#init(javax.servlet.FilterConfig)
+     */
+    @Override
+    public void init(FilterConfig filterconfig) throws ServletException {
+        SystemConfigsDao dao = SystemConfigsDao.get();
+        SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_EXPOSE_TYPE, AppConfig.get().getSystemName());
+        if (config != null) {
+            if (SystemConfig.SYSTEM_EXPOSE_TYPE_CLOSE.equals(config.getConfigValue())) {
+                SystemConfigLogic.get().setClose(true);
+            }
+        }
+        String ignoreRegularExpression = filterconfig.getInitParameter("close-ignore-regular-expression");
+        if (StringUtils.isNotEmpty(ignoreRegularExpression)) {
+            this.pattern = Pattern.compile(ignoreRegularExpression);
+        }
+        super.init(filterconfig);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.support.project.web.filter.AuthenticationFilter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
+     * javax.servlet.FilterChain)
+     */
+    @Override
+    public void doFilter(ServletRequest servletrequest, ServletResponse servletresponse, FilterChain filterchain)
+            throws IOException, ServletException {
+        if (SystemConfigLogic.get().isClose()) {
+            HttpServletRequest req = (HttpServletRequest) servletrequest;
+            HttpServletResponse res = (HttpServletResponse) servletresponse;
+            try {
+                if (!isLogin(req)) {
+                    cookieLogin(req, res);
+                }
+
+                if (!isLogin(req)) {
+                    // ログインしていない
+                    if (pattern != null) {
+                        StringBuilder pathBuilder = new StringBuilder();
+                        pathBuilder.append(req.getServletPath());
+                        if (req.getPathInfo() != null && req.getPathInfo().length() > 0) {
+                            pathBuilder.append(req.getPathInfo());
+                        }
+                        String path = pathBuilder.toString();
+                        Matcher matcher = pattern.matcher(path);
+                        if (!matcher.find() && !path.equals(getLoginProcess())) {
+                            // 対象外でないし、ログインページへの遷移でない
+                            String page = req.getParameter("page");
+                            req.setAttribute("page", page);
+
+                            res.setStatus(HttpStatus.SC_401_UNAUTHORIZED);
+                            StringBuilder builder = new StringBuilder();
+                            builder.append(getLoginPage());
+                            HttpUtil.forward(res, req, builder.toString());
+                            return;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                throw new ServletException(e);
+            }
+        }
+        super.doFilter(servletrequest, servletresponse, filterchain);
+    }
+
 }

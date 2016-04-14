@@ -1,65 +1,62 @@
 package org.support.project.knowledge.entity;
 
-import java.sql.Timestamp;
-
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.gen.GenTagsEntity;
 
-
 /**
  * タグ
  */
-@DI(instance=Instance.Prototype)
+@DI(instance = Instance.Prototype)
 public class TagsEntity extends GenTagsEntity {
 
-	/** SerialVersion */
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * タグに紐づくナレッジの件数
-	 */
-	private Integer knowledgeCount;
-	
-	
-	/**
-	 * インスタンス取得
-	 * AOPに対応
-	 * @return インスタンス
-	 */
-	public static TagsEntity get() {
-		return Container.getComp(TagsEntity.class);
-	}
+    /** SerialVersion */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * コンストラクタ
-	 */
-	public TagsEntity() {
-		super();
-	}
+    /**
+     * タグに紐づくナレッジの件数
+     */
+    private Integer knowledgeCount;
 
-	/**
-	 * コンストラクタ
-	 * @param tagId タグ_ID
-	 */
+    /**
+     * インスタンス取得 AOPに対応
+     * 
+     * @return インスタンス
+     */
+    public static TagsEntity get() {
+        return Container.getComp(TagsEntity.class);
+    }
 
-	public TagsEntity(Integer tagId) {
-		super( tagId);
-	}
+    /**
+     * コンストラクタ
+     */
+    public TagsEntity() {
+        super();
+    }
 
-	/**
-	 * @return the knowledgeCount
-	 */
-	public Integer getKnowledgeCount() {
-		return knowledgeCount;
-	}
+    /**
+     * コンストラクタ
+     * 
+     * @param tagId タグ_ID
+     */
 
-	/**
-	 * @param knowledgeCount the knowledgeCount to set
-	 */
-	public void setKnowledgeCount(Integer knowledgeCount) {
-		this.knowledgeCount = knowledgeCount;
-	}
+    public TagsEntity(Integer tagId) {
+        super(tagId);
+    }
+
+    /**
+     * @return the knowledgeCount
+     */
+    public Integer getKnowledgeCount() {
+        return knowledgeCount;
+    }
+
+    /**
+     * @param knowledgeCount the knowledgeCount to set
+     */
+    public void setKnowledgeCount(Integer knowledgeCount) {
+        this.knowledgeCount = knowledgeCount;
+    }
 
 }

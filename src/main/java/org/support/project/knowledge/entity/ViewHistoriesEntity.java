@@ -1,48 +1,43 @@
 package org.support.project.knowledge.entity;
 
-import java.util.List;
-import java.util.Map;
-import java.sql.Timestamp;
-
-import org.support.project.common.bean.ValidateError;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.gen.GenViewHistoriesEntity;
 
-
 /**
  * ナレッジの参照履歴
  */
-@DI(instance=Instance.Prototype)
+@DI(instance = Instance.Prototype)
 public class ViewHistoriesEntity extends GenViewHistoriesEntity {
 
-	/** SerialVersion */
-	private static final long serialVersionUID = 1L;
+    /** SerialVersion */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * インスタンス取得
-	 * AOPに対応
-	 * @return インスタンス
-	 */
-	public static ViewHistoriesEntity get() {
-		return Container.getComp(ViewHistoriesEntity.class);
-	}
+    /**
+     * インスタンス取得 AOPに対応
+     * 
+     * @return インスタンス
+     */
+    public static ViewHistoriesEntity get() {
+        return Container.getComp(ViewHistoriesEntity.class);
+    }
 
-	/**
-	 * コンストラクタ
-	 */
-	public ViewHistoriesEntity() {
-		super();
-	}
+    /**
+     * コンストラクタ
+     */
+    public ViewHistoriesEntity() {
+        super();
+    }
 
-	/**
-	 * コンストラクタ
-	 * @param historyNo HISTORY_NO
-	 */
+    /**
+     * コンストラクタ
+     * 
+     * @param historyNo HISTORY_NO
+     */
 
-	public ViewHistoriesEntity(Long historyNo) {
-		super( historyNo);
-	}
+    public ViewHistoriesEntity(Long historyNo) {
+        super(historyNo);
+    }
 
 }

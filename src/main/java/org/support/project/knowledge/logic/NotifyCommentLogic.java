@@ -165,7 +165,7 @@ public class NotifyCommentLogic extends NotifyLogic {
      */
     public UsersEntity getInsertUserOnComment(NotifyType notifyType, CommentsEntity comment, KnowledgesEntity knowledge) {
         if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PRIVATE) {
-            if (knowledge.getInsertUser() == comment.getInsertUser()) {
+            if (knowledge.getInsertUser().equals(comment.getInsertUser())) {
                 // ナレッジが非公開で、コメント登録したユーザがナレッジ登録ユーザであれば通知する必要は無い
                 return null;
             }

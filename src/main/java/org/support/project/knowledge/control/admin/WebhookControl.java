@@ -24,111 +24,112 @@ import org.support.project.web.dao.ProxyConfigsDao;
 import org.support.project.web.entity.ProxyConfigsEntity;
 
 public class WebhookControl extends Control {
-	/** ログ */
-	private static Log LOG = LogFactory.getLog(WebhookControl.class);
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(WebhookControl.class);
 
-	/**
-	 * 設定画面を表示
-	 * @return
-	 */
-	@Get
-	@Auth(roles="admin")
-	public Boundary config() {
-		WebhookConfigsDao dao = WebhookConfigsDao.get();
-		List<WebhookConfigsEntity> webhookConfigsEntities = dao.selectAll();
-		setAttribute("webhookConfigsEntities", webhookConfigsEntities);
-		setAttribute("webhookConfigsEntitiesCount", webhookConfigsEntities.size());
-		return forward("config.jsp");
-	}
+    /**
+     * 設定画面を表示
+     * 
+     * @return
+     */
+    @Get
+    @Auth(roles = "admin")
+    public Boundary config() {
+        WebhookConfigsDao dao = WebhookConfigsDao.get();
+        List<WebhookConfigsEntity> webhookConfigsEntities = dao.selectAll();
+        setAttribute("webhookConfigsEntities", webhookConfigsEntities);
+        setAttribute("webhookConfigsEntitiesCount", webhookConfigsEntities.size());
+        return forward("config.jsp");
+    }
 
-	@Post
-	@Auth(roles="admin")
-	public Boundary save() throws Exception {
-		WebhookConfigsDao dao = WebhookConfigsDao.get();
+    @Post
+    @Auth(roles = "admin")
+    public Boundary save() throws Exception {
+        WebhookConfigsDao dao = WebhookConfigsDao.get();
 
-		String[] hooks = getParam("hooks[]", String[].class);
-		String url = getParam("url");
+        String[] hooks = getParam("hooks[]", String[].class);
+        String url = getParam("url");
 
-		Map<String, String> entityParam = new HashMap<String, String>();
-		List<ValidateError> errors = new ArrayList<>();
+        Map<String, String> entityParam = new HashMap<String, String>();
+        List<ValidateError> errors = new ArrayList<>();
 
-		if (hooks == null) {
-			WebhookConfigsEntity entity = WebhookConfigsEntity.get();
-			entityParam.put("url", url);
+        if (hooks == null) {
+            WebhookConfigsEntity entity = WebhookConfigsEntity.get();
+            entityParam.put("url", url);
 
-			errors.addAll(entity.validate(entityParam));
-			if (!errors.isEmpty()) {
-				setResult(null, errors);
-				return config();
-			}
-		} else {
-			for (String hook : hooks) {
-				WebhookConfigsEntity entity = WebhookConfigsEntity.get();
-				entityParam.put("hook", hook);
-				entityParam.put("url", url);
+            errors.addAll(entity.validate(entityParam));
+            if (!errors.isEmpty()) {
+                setResult(null, errors);
+                return config();
+            }
+        } else {
+            for (String hook : hooks) {
+                WebhookConfigsEntity entity = WebhookConfigsEntity.get();
+                entityParam.put("hook", hook);
+                entityParam.put("url", url);
 
-				errors.addAll(entity.validate(entityParam));
-				if (!errors.isEmpty()) {
-					setResult(null, errors);
-					return config();
-				}
+                errors.addAll(entity.validate(entityParam));
+                if (!errors.isEmpty()) {
+                    setResult(null, errors);
+                    return config();
+                }
 
-				entity.setUrl(url);
-				entity.setHook(hook);
-				dao.save(entity);
-			}
-		}
-		String successMsg = "message.success.save";
-		setResult(successMsg, errors);
-		return config();
-	}
+                entity.setUrl(url);
+                entity.setHook(hook);
+                dao.save(entity);
+            }
+        }
+        String successMsg = "message.success.save";
+        setResult(successMsg, errors);
+        return config();
+    }
 
-	@Post
-	@Auth(roles="admin")
-	public Boundary test() throws Exception {
-		ProxyConfigsDao proxyConfigDao = ProxyConfigsDao.get();
-		ProxyConfigsEntity proxyConfig = proxyConfigDao.selectOnKey(AppConfig.get().getSystemName());
+    @Post
+    @Auth(roles = "admin")
+    public Boundary test() throws Exception {
+        ProxyConfigsDao proxyConfigDao = ProxyConfigsDao.get();
+        ProxyConfigsEntity proxyConfig = proxyConfigDao.selectOnKey(AppConfig.get().getSystemName());
 
-		WebhookConfigsDao webhookConfigDao = WebhookConfigsDao.get();
-		WebhookConfigsEntity webhookConfig = webhookConfigDao.selectOnKey(new Integer(getParam("hook_id")));
+        WebhookConfigsDao webhookConfigDao = WebhookConfigsDao.get();
+        WebhookConfigsEntity webhookConfig = webhookConfigDao.selectOnKey(new Integer(getParam("hook_id")));
 
-		if (null == webhookConfig) {
-			addMsgError("knowledge.webhook.test.error");
-			return config();
-		}
+        if (null == webhookConfig) {
+            addMsgError("knowledge.webhook.test.error");
+            return config();
+        }
 
-		try {
-			InputStream is = getClass().getResourceAsStream(webhookConfig.resourcePath());
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			String str;
-			String json = "";
-			while((str = br.readLine()) != null){
-				json += str;
-			}
+        try {
+            InputStream is = getClass().getResourceAsStream(webhookConfig.resourcePath());
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String str;
+            String json = "";
+            while ((str = br.readLine()) != null) {
+                json += str;
+            }
 
-			WebhookLogic.get().notify(proxyConfig, webhookConfig, json);
-			addMsgInfo("knowledge.webhook.test.success");
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			addMsgError("knowledge.webhook.test.error");
-		}
+            WebhookLogic.get().notify(proxyConfig, webhookConfig, json);
+            addMsgInfo("knowledge.webhook.test.success");
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            addMsgError("knowledge.webhook.test.error");
+        }
 
-		return config();
-	}
+        return config();
+    }
 
-	@Post
-	@Auth(roles="admin")
-	public Boundary delete() throws Exception {
-		WebhookConfigsDao dao = WebhookConfigsDao.get();
-		try {
-			dao.delete(new Integer(getParam("hook_id")));
+    @Post
+    @Auth(roles = "admin")
+    public Boundary delete() throws Exception {
+        WebhookConfigsDao dao = WebhookConfigsDao.get();
+        try {
+            dao.delete(new Integer(getParam("hook_id")));
 
-			addMsgInfo("knowledge.webhook.delete.success");
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			addMsgError("knowledge.webhook.delete.error");
-		}
+            addMsgInfo("knowledge.webhook.delete.success");
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            addMsgError("knowledge.webhook.delete.error");
+        }
 
-		return config();
-	}
+        return config();
+    }
 }

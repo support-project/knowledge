@@ -14,15 +14,25 @@ Slightly modified version of Sun Checks that better matches the default code for
   <module name="TreeWalker">
     <property name="tabWidth" value="4"/>
     <module name="JavadocMethod">
+      <property name="severity" value="ignore"/>
       <property name="allowMissingParamTags" value="true"/>
       <property name="allowMissingThrowsTags" value="true"/>
       <property name="allowMissingReturnTag" value="true"/>
       <property name="suppressLoadErrors" value="true"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
-    <module name="JavadocType"/>
-    <module name="JavadocVariable"/>
+    <module name="JavadocType">
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    <module name="JavadocVariable">
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
     <module name="JavadocStyle">
       <property name="severity" value="ignore"/>
+      <property name="checkEmptyJavadoc" value="true"/>
+      <property name="checkFirstSentence" value="false"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="ConstantName"/>
@@ -37,7 +47,10 @@ Slightly modified version of Sun Checks that better matches the default code for
     <module name="ParameterName"/>
     <module name="StaticVariableName"/>
     <module name="TypeName"/>
-    <module name="AvoidStarImport"/>
+    <module name="AvoidStarImport">
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
     <module name="IllegalImport"/>
     <module name="RedundantImport"/>
     <module name="UnusedImports"/>
@@ -77,7 +90,9 @@ Slightly modified version of Sun Checks that better matches the default code for
     <module name="AvoidNestedBlocks"/>
     <module name="EmptyBlock"/>
     <module name="LeftCurly"/>
-    <module name="NeedBraces"/>
+    <module name="NeedBraces">
+      <property name="tokens" value="LITERAL_DO,LITERAL_FOR,LITERAL_WHILE"/>
+    </module>
     <module name="RightCurly"/>
     <module name="AvoidInlineConditionals"/>
     <module name="EmptyStatement"/>
@@ -131,6 +146,7 @@ Slightly modified version of Sun Checks that better matches the default code for
     <module name="OperatorWrap">
       <property name="tokens" value="BAND,BOR,BSR,BXOR,COLON,DIV,EQUAL,GE,GT,LAND,LE,LITERAL_INSTANCEOF,LOR,LT,MINUS,MOD,NOT_EQUAL,PLUS,SL,SR,STAR"/>
     </module>
+    <module name="Indentation"/>
   </module>
   <module name="JavadocPackage">
     <property name="severity" value="ignore"/>

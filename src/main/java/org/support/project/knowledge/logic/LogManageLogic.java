@@ -18,61 +18,61 @@ import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.SystemConfigsEntity;
 
 public class LogManageLogic {
-	/** ログ */
-	private static Log LOG = LogFactory.getLog(LogManageLogic.class);
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(LogManageLogic.class);
 
-	public static LogManageLogic get() {
-		return Container.getComp(LogManageLogic.class);
-	}
+    public static LogManageLogic get() {
+        return Container.getComp(LogManageLogic.class);
+    }
 
-	private File[] logFiles() {
-		String logsPath = AppConfig.get().getLogsPath();
-		File logDir = new File(logsPath);
-		File[] logs = logDir.listFiles(new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				return name.toLowerCase().indexOf(".log") != -1;
-			}
-		});
-		return logs;
-	}
+    private File[] logFiles() {
+        String logsPath = AppConfig.get().getLogsPath();
+        File logDir = new File(logsPath);
+        File[] logs = logDir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().indexOf(".log") != -1;
+            }
+        });
+        return logs;
+    }
 
-	public List<LogFile> getLogFiles() {
-		File[] logs = logFiles();
-		List<LogFile> list = new ArrayList<>();
-		if (logs != null) {
-			for (File file : logs) {
-				LOG.trace(file);
-				LogFile logFile = new LogFile();
-				logFile.setFilename(FilenameUtils.getName(file.getName()));
-				logFile.setSize(file.length() + " [byte]");
-				logFile.setLastModified(new Date(file.lastModified()));
-				
-				list.add(logFile);
-			}
-		}
-		return list;
-	}
+    public List<LogFile> getLogFiles() {
+        File[] logs = logFiles();
+        List<LogFile> list = new ArrayList<>();
+        if (logs != null) {
+            for (File file : logs) {
+                LOG.trace(file);
+                LogFile logFile = new LogFile();
+                logFile.setFilename(FilenameUtils.getName(file.getName()));
+                logFile.setSize(file.length() + " [byte]");
+                logFile.setLastModified(new Date(file.lastModified()));
 
-	public void clearLogFiles() {
-		SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.LOG_DELETE_TERM, AppConfig.get().getSystemName());
-		if (entity != null && StringUtils.isLong(entity.getConfigValue())) {
-			long days = Long.parseLong(entity.getConfigValue());
-			long term = 1000 * 60 * 60 * 24 * days;
-			File[] logs = logFiles();
-			
-			Date now = new Date();
-			if (logs != null) {
-				for (File file : logs) {
-					if (now.getTime() - file.lastModified() > term) {
-						if (file.delete()) {
-							LOG.info("[File delete] " + FilenameUtils.getName(file.getName()));
-						} else {
-							LOG.warn("[File delete] Failed." + FilenameUtils.getName(file.getName()));
-						}
-					}
-				}
-			}
-		}
-	}
+                list.add(logFile);
+            }
+        }
+        return list;
+    }
+
+    public void clearLogFiles() {
+        SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.LOG_DELETE_TERM, AppConfig.get().getSystemName());
+        if (entity != null && StringUtils.isLong(entity.getConfigValue())) {
+            long days = Long.parseLong(entity.getConfigValue());
+            long term = 1000 * 60 * 60 * 24 * days;
+            File[] logs = logFiles();
+
+            Date now = new Date();
+            if (logs != null) {
+                for (File file : logs) {
+                    if (now.getTime() - file.lastModified() > term) {
+                        if (file.delete()) {
+                            LOG.info("[File delete] " + FilenameUtils.getName(file.getName()));
+                        } else {
+                            LOG.warn("[File delete] Failed." + FilenameUtils.getName(file.getName()));
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 }
