@@ -21,154 +21,152 @@ import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.common.HttpUtil;
 import org.support.project.web.logic.SanitizingLogic;
 
-@DI(instance=Instance.Prototype)
+@DI(instance = Instance.Prototype)
 public abstract class Control extends org.support.project.web.control.Control {
-	/** ログ */
-	private static Log LOG = LogFactory.getLog(Control.class);
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(Control.class);
 
-	public static final String MSG_INFO = "NOTIFY_MSG_INFO";
-	public static final String MSG_SUCCESS = "NOTIFY_MSG_SUCCESS";
-	public static final String MSG_WARN = "NOTIFY_MSG_WARN";
-	public static final String MSG_ERROR = "NOTIFY_MSG_ERROR";
+    public static final String MSG_INFO = "NOTIFY_MSG_INFO";
+    public static final String MSG_SUCCESS = "NOTIFY_MSG_SUCCESS";
+    public static final String MSG_WARN = "NOTIFY_MSG_WARN";
+    public static final String MSG_ERROR = "NOTIFY_MSG_ERROR";
 
-	private List<String> infos = null;
-	private List<String> successes = null;
-	private List<String> warns = null;
-	private List<String> errors = null;
+    private List<String> infos = null;
+    private List<String> successes = null;
+    private List<String> warns = null;
+    private List<String> errors = null;
 
-	@Override
-	public void setRequest(HttpServletRequest request) {
-		super.setRequest(request);
-		infos = new ArrayList<String>();
-		successes = new ArrayList<String>();
-		warns = new ArrayList<String>();
-		errors = new ArrayList<String>();
+    @Override
+    public void setRequest(HttpServletRequest request) {
+        super.setRequest(request);
+        infos = new ArrayList<String>();
+        successes = new ArrayList<String>();
+        warns = new ArrayList<String>();
+        errors = new ArrayList<String>();
 
-		request.setAttribute(MSG_INFO, infos);
-		request.setAttribute(MSG_SUCCESS, successes);
-		request.setAttribute(MSG_WARN, warns);
-		request.setAttribute(MSG_ERROR, errors);
-	}
-	
-	protected String getResource(String key) {
-		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
-		return resources.getResource(key);
-	}
-	protected String getResource(String key, String... params) {
-		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
-		return resources.getResource(key, params);
-	}
+        request.setAttribute(MSG_INFO, infos);
+        request.setAttribute(MSG_SUCCESS, successes);
+        request.setAttribute(MSG_WARN, warns);
+        request.setAttribute(MSG_ERROR, errors);
+    }
 
-	protected void addMsgInfo(String key, String... params) {
-		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
-		String msg = resources.getResource(key, params);
-		infos.add(HtmlUtils.escapeHTML(msg));
-	}
+    protected String getResource(String key) {
+        Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+        return resources.getResource(key);
+    }
 
-	protected void addMsgSuccess(String key, String... params) {
-		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
-		String msg = resources.getResource(key, params);
-		successes.add(HtmlUtils.escapeHTML(msg));
-	}
+    protected String getResource(String key, String... params) {
+        Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+        return resources.getResource(key, params);
+    }
 
-	protected void addMsgWarn(String key, String... params) {
-		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
-		String msg = resources.getResource(key, params);
-		warns.add(HtmlUtils.escapeHTML(msg));
-	}
+    protected void addMsgInfo(String key, String... params) {
+        Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+        String msg = resources.getResource(key, params);
+        infos.add(HtmlUtils.escapeHTML(msg));
+    }
 
-	protected void addMsgError(String key, String... params) {
-		Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
-		String msg = resources.getResource(key, params);
-		errors.add(HtmlUtils.escapeHTML(msg));
-	}
+    protected void addMsgSuccess(String key, String... params) {
+        Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+        String msg = resources.getResource(key, params);
+        successes.add(HtmlUtils.escapeHTML(msg));
+    }
 
-	protected void setResult(String successMsg, List<ValidateError> errors, String... params) {
-		if (errors == null || errors.isEmpty()) {
-			addMsgSuccess(successMsg, params);
-		} else {
-			for (ValidateError validateError : errors) {
-				if (validateError.getLevel().intValue() == LogLevel.ERROR.getValue()) {
-					addMsgError(validateError.getMsg(HttpUtil.getLocale(getRequest())));
-				} else {
-					addMsgWarn(validateError.getMsg(HttpUtil.getLocale(getRequest())));
-				}
-			}
-		}
-	}
+    protected void addMsgWarn(String key, String... params) {
+        Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+        String msg = resources.getResource(key, params);
+        warns.add(HtmlUtils.escapeHTML(msg));
+    }
 
-	public static String sanitize(String str) throws ParseException {
-		return SanitizingLogic.get().sanitize(str);
-	}
+    protected void addMsgError(String key, String... params) {
+        Resources resources = Resources.getInstance(HttpUtil.getLocale(getRequest()));
+        String msg = resources.getResource(key, params);
+        errors.add(HtmlUtils.escapeHTML(msg));
+    }
 
-	/* (non-Javadoc)
-	 * @see org.support.project.web.control.Control#copy(org.support.project.web.control.Control)
-	 */
-	@Override
-	protected void copy(org.support.project.web.control.Control control) {
-		super.copy(control);
-		if (control instanceof Control) {
-			Control c = (Control) control;
-			for (String string : infos) {
-				c.addMsgInfo(string);
-			}
-			for (String string : successes) {
-				c.addMsgSuccess(string);
-			}
-			for (String string : warns) {
-				c.addMsgWarn(string);
-			}
-			for (String string : errors) {
-				c.addMsgError(string);
-			}
-		}
-	}
+    protected void setResult(String successMsg, List<ValidateError> errors, String... params) {
+        if (errors == null || errors.isEmpty()) {
+            addMsgSuccess(successMsg, params);
+        } else {
+            for (ValidateError validateError : errors) {
+                if (validateError.getLevel().intValue() == LogLevel.ERROR.getValue()) {
+                    addMsgError(validateError.getMsg(HttpUtil.getLocale(getRequest())));
+                } else {
+                    addMsgWarn(validateError.getMsg(HttpUtil.getLocale(getRequest())));
+                }
+            }
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.support.project.web.control.Control#forward(java.lang.String)
-	 */
-	@Override
-	protected ForwardBoundary forward(String path) {
-		// 画面表示を行う前に、全ての画面の共通処理を追記
-		
-		// デスクトップ通知するかどうか(ログインしているユーザのみ）
-		if (getLoginUserId() > 0) {
-			NotifyConfigsDao notifyConfigsDao = NotifyConfigsDao.get();
-			NotifyConfigsEntity notifyConfigsEntity = notifyConfigsDao.selectOnKey(getLoginUserId());
-			if (notifyConfigsEntity != null) {
-				if (flagCheck(notifyConfigsEntity.getNotifyDesktop())) {
-					// デスクトップ通知がON
-					
-					if (flagCheck(notifyConfigsEntity.getMyItemComment())
-							|| flagCheck(notifyConfigsEntity.getMyItemLike())
-							|| flagCheck(notifyConfigsEntity.getMyItemStock())
-							|| flagCheck(notifyConfigsEntity.getStockItemSave())
-							|| flagCheck(notifyConfigsEntity.getStokeItemComment())
-							|| flagCheck(notifyConfigsEntity.getToItemComment())
-							|| flagCheck(notifyConfigsEntity.getToItemSave())
-					) {
-						if (LOG.isTraceEnabled()) {
-							LOG.info("Notify On to [" + getLoginUserId() + "]");
-						}
-						setAttribute("desktopNotify", true);
-					}
-				}
-			}
-		}
-		return super.forward(path);
-	}
+    public static String sanitize(String str) throws ParseException {
+        return SanitizingLogic.get().sanitize(str);
+    }
 
-	private boolean flagCheck(Integer check) {
-		if (check == null) {
-			return false;
-		}
-		if (check.intValue() == INT_FLAG.ON.getValue()) {
-			return true;
-		}
-		return false;
-	}
-	
-	
-	
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.support.project.web.control.Control#copy(org.support.project.web.control.Control)
+     */
+    @Override
+    protected void copy(org.support.project.web.control.Control control) {
+        super.copy(control);
+        if (control instanceof Control) {
+            Control c = (Control) control;
+            for (String string : infos) {
+                c.addMsgInfo(string);
+            }
+            for (String string : successes) {
+                c.addMsgSuccess(string);
+            }
+            for (String string : warns) {
+                c.addMsgWarn(string);
+            }
+            for (String string : errors) {
+                c.addMsgError(string);
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.support.project.web.control.Control#forward(java.lang.String)
+     */
+    @Override
+    protected ForwardBoundary forward(String path) {
+        // 画面表示を行う前に、全ての画面の共通処理を追記
+
+        // デスクトップ通知するかどうか(ログインしているユーザのみ）
+        if (getLoginUserId() > 0) {
+            NotifyConfigsDao notifyConfigsDao = NotifyConfigsDao.get();
+            NotifyConfigsEntity notifyConfigsEntity = notifyConfigsDao.selectOnKey(getLoginUserId());
+            if (notifyConfigsEntity != null) {
+                if (flagCheck(notifyConfigsEntity.getNotifyDesktop())) {
+                    // デスクトップ通知がON
+
+                    if (flagCheck(notifyConfigsEntity.getMyItemComment()) || flagCheck(notifyConfigsEntity.getMyItemLike())
+                            || flagCheck(notifyConfigsEntity.getMyItemStock()) || flagCheck(notifyConfigsEntity.getStockItemSave())
+                            || flagCheck(notifyConfigsEntity.getStokeItemComment()) || flagCheck(notifyConfigsEntity.getToItemComment())
+                            || flagCheck(notifyConfigsEntity.getToItemSave())) {
+                        if (LOG.isTraceEnabled()) {
+                            LOG.info("Notify On to [" + getLoginUserId() + "]");
+                        }
+                        setAttribute("desktopNotify", true);
+                    }
+                }
+            }
+        }
+        return super.forward(path);
+    }
+
+    private boolean flagCheck(Integer check) {
+        if (check == null) {
+            return false;
+        }
+        if (check.intValue() == INT_FLAG.ON.getValue()) {
+            return true;
+        }
+        return false;
+    }
 
 }

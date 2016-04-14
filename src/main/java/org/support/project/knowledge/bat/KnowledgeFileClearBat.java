@@ -17,7 +17,7 @@ import org.support.project.web.entity.MailsEntity;
 public class KnowledgeFileClearBat extends AbstractBat {
     
     /** ログ */
-    private static Log LOG = LogFactory.getLog(KnowledgeFileClearBat.class);
+    private static final Log LOG = LogFactory.getLog(KnowledgeFileClearBat.class);
     
     public static void main(String[] args) {
         initLogName("KnowledgeFileClearBat.log");

@@ -16,45 +16,48 @@ import org.support.project.web.test.stub.ControlContainer;
 import org.support.project.web.test.stub.StubCookie;
 
 public class KnowledgeControlTest extends TestCase {
-	private ControlContainer container;
-	@Before
-	public void setUp() throws Exception {
-		container = new ControlContainer();
-		container.setContextPath("/knowledge");
-		List<Cookie> cookies = new ArrayList<>();
-		cookies.add(new StubCookie("KNOWLEDGE_HISTORY", "1,2,3,4,5,6,7,8"));
-		container.setCookies(cookies);
-	}
-	@After
-	public void tearDown() throws Exception {
-	}
-	@Test
-	@Order(order= 1)
-	public void testView() throws InvalidParamException, ParseException {
-		KnowledgeControl control = container.getComp(KnowledgeControl.class);
-		control.view();
-	}
+    private ControlContainer container;
 
-	@Test
-	@Order(order= 2)
-	public void testList() throws Exception {
-		KnowledgeControl control = container.getComp(KnowledgeControl.class);
-		control.list();
-	}
+    @Before
+    public void setUp() throws Exception {
+        container = new ControlContainer();
+        container.setContextPath("/knowledge");
+        List<Cookie> cookies = new ArrayList<>();
+        cookies.add(new StubCookie("KNOWLEDGE_HISTORY", "1,2,3,4,5,6,7,8"));
+        container.setCookies(cookies);
+    }
 
-	// @Test
-	// public void testLike() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testEscape() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testSearch() {
-	// fail("Not yet implemented");
-	// }
+    @After
+    public void tearDown() throws Exception {
+    }
+
+    @Test
+    @Order(order = 1)
+    public void testView() throws InvalidParamException, ParseException {
+        KnowledgeControl control = container.getComp(KnowledgeControl.class);
+        control.view();
+    }
+
+    @Test
+    @Order(order = 2)
+    public void testList() throws Exception {
+        KnowledgeControl control = container.getComp(KnowledgeControl.class);
+        control.list();
+    }
+
+    // @Test
+    // public void testLike() {
+    // fail("Not yet implemented");
+    // }
+    //
+    // @Test
+    // public void testEscape() {
+    // fail("Not yet implemented");
+    // }
+    //
+    // @Test
+    // public void testSearch() {
+    // fail("Not yet implemented");
+    // }
 
 }

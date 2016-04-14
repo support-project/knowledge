@@ -22,283 +22,387 @@ import org.support.project.aop.Aspect;
 
 /**
  * ナレッジが持つタグ
+ * this class is auto generate and not edit.
+ * if modify dao method, you can edit KnowledgeTagsDao.
  */
-@DI(instance=Instance.Singleton)
+@DI(instance = Instance.Singleton)
 public class GenKnowledgeTagsDao extends AbstractDao {
 
-	/** SerialVersion */
-	private static final long serialVersionUID = 1L;
+    /** SerialVersion */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * インスタンス取得
-	 * AOPに対応
-	 * @return インスタンス
-	 */
-	public static GenKnowledgeTagsDao get() {
-		return Container.getComp(GenKnowledgeTagsDao.class);
-	}
+    /**
+     * Get instance from DI container.
+     * @return instance
+     */
+    public static GenKnowledgeTagsDao get() {
+        return Container.getComp(GenKnowledgeTagsDao.class);
+    }
 
-	/**
-	 * 全て取得(削除フラグを無視して取得) 
-	 */
-	public List<KnowledgeTagsEntity> physicalSelectAll() { 
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_all.sql");
-		return executeQueryList(sql, KnowledgeTagsEntity.class);
-	}
-	/**
-	 * キーで1件取得(削除フラグを無視して取得) 
-	 */
-	public KnowledgeTagsEntity physicalSelectOnKey(Long knowledgeId, Integer tagId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_on_key.sql");
-		return executeQuerySingle(sql, KnowledgeTagsEntity.class, knowledgeId, tagId);
-	}
-	/**
-	 * 全て取得 
-	 */
-	public List<KnowledgeTagsEntity> selectAll() { 
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_all.sql");
-		return executeQueryList(sql, KnowledgeTagsEntity.class);
-	}
-	/**
-	 * キーで1件取得 
-	 */
-	public KnowledgeTagsEntity selectOnKey(Long knowledgeId, Integer tagId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_on_key.sql");
-		return executeQuerySingle(sql, KnowledgeTagsEntity.class, knowledgeId, tagId);
-	}
-	/**
-	 * KNOWLEDGE_ID でリストを取得
-	 */
-	public List<KnowledgeTagsEntity> selectOnKnowledgeId(Long knowledgeId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_on_knowledge_id.sql");
-		return executeQueryList(sql, KnowledgeTagsEntity.class, knowledgeId);
-	}
-	/**
-	 * TAG_ID でリストを取得
-	 */
-	public List<KnowledgeTagsEntity> selectOnTagId(Integer tagId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_on_tag_id.sql");
-		return executeQueryList(sql, KnowledgeTagsEntity.class, tagId);
-	}
-	/**
-	 * KNOWLEDGE_ID でリストを取得
-	 */
-	public List<KnowledgeTagsEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_on_knowledge_id.sql");
-		return executeQueryList(sql, KnowledgeTagsEntity.class, knowledgeId);
-	}
-	/**
-	 * TAG_ID でリストを取得
-	 */
-	public List<KnowledgeTagsEntity> physicalSelectOnTagId(Integer tagId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_on_tag_id.sql");
-		return executeQueryList(sql, KnowledgeTagsEntity.class, tagId);
-	}
-	/**
-	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgeTagsEntity rawPhysicalInsert(KnowledgeTagsEntity entity) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_raw_insert.sql");
-		executeUpdate(sql, 
-			entity.getKnowledgeId()
-			, entity.getTagId()
-			, entity.getInsertUser()
-			, entity.getInsertDatetime()
-			, entity.getUpdateUser()
-			, entity.getUpdateDatetime()
-			, entity.getDeleteFlag()
-		);
-		return entity;
-	}
-	/**
-	 * 登録(データを生で操作) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgeTagsEntity physicalInsert(KnowledgeTagsEntity entity) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_insert.sql");
-		executeUpdate(sql, 
-			entity.getKnowledgeId()
-			, entity.getTagId()
-			, entity.getInsertUser()
-			, entity.getInsertDatetime()
-			, entity.getUpdateUser()
-			, entity.getUpdateDatetime()
-			, entity.getDeleteFlag()
-		);
-		return entity;
-	}
-	/**
-	 * 登録(登録ユーザを指定) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgeTagsEntity insert(Integer user, KnowledgeTagsEntity entity) {
-		entity.setInsertUser(user);
-		entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
-		entity.setUpdateUser(user);
-		entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		entity.setDeleteFlag(0);
-		return physicalInsert(entity);
-	}
-	/**
-	 * 登録
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgeTagsEntity insert(KnowledgeTagsEntity entity) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer userId = (Integer) pool.getUser();
-		return insert(userId, entity);
-	}
-	/**
-	 * 更新(データを生で操作) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgeTagsEntity physicalUpdate(KnowledgeTagsEntity entity) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_update.sql");
-		executeUpdate(sql, 
-			entity.getInsertUser()
-			, entity.getInsertDatetime()
-			, entity.getUpdateUser()
-			, entity.getUpdateDatetime()
-			, entity.getDeleteFlag()
-			, entity.getKnowledgeId()
-			, entity.getTagId()
-		);
-		return entity;
-	}
-	/**
-	 * 更新(更新ユーザを指定) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgeTagsEntity update(Integer user, KnowledgeTagsEntity entity) {
-		KnowledgeTagsEntity db = selectOnKey(entity.getKnowledgeId(), entity.getTagId());
-		entity.setInsertUser(db.getInsertUser());
-		entity.setInsertDatetime(db.getInsertDatetime());
-		entity.setDeleteFlag(db.getDeleteFlag());
-		entity.setUpdateUser(user);
-		entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		return physicalUpdate(entity);
-	}
-	/**
-	 * 更新
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgeTagsEntity update(KnowledgeTagsEntity entity) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer userId = (Integer) pool.getUser();
-		return update(userId, entity);
-	}
-	/**
-	 * 保存(ユーザを指定) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgeTagsEntity save(Integer user, KnowledgeTagsEntity entity) {
-		KnowledgeTagsEntity db = selectOnKey(entity.getKnowledgeId(), entity.getTagId());
-		if (db == null) {
-			return insert(user, entity);
-		} else {
-			return update(user, entity);
-		}
-	}
-	/**
-	 * 保存(存在しなければ登録、存在すれば更新) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public KnowledgeTagsEntity save(KnowledgeTagsEntity entity) {
-		KnowledgeTagsEntity db = selectOnKey(entity.getKnowledgeId(), entity.getTagId());
-		if (db == null) {
-			return insert(entity);
-		} else {
-			return update(entity);
-		}
-	}
-	/**
-	 * 削除(データを生で操作/物理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void physicalDelete(Long knowledgeId, Integer tagId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_delete.sql");
-		executeUpdate(sql, knowledgeId, tagId);
-	}
-	/**
-	 * 削除(データを生で操作/物理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void physicalDelete(KnowledgeTagsEntity entity) {
-		physicalDelete(entity.getKnowledgeId(), entity.getTagId());
+    /**
+     * Select all data.
+     * @return all data
+     */
+    public List<KnowledgeTagsEntity> physicalSelectAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_all.sql");
+        return executeQueryList(sql, KnowledgeTagsEntity.class);
+    }
+    /**
+     * Select all data with pager.
+     * @param limit limit
+     * @param offset offset
+     * @return all data on limit and offset
+     */
+    public List<KnowledgeTagsEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_all_with_pager.sql");
+        return executeQueryList(sql, KnowledgeTagsEntity.class, limit, offset);
+    }
+    /**
+     * Select data on key.
+     * @param  knowledgeId knowledgeId
+     * @param  tagId tagId
+     * @return data
+     */
+    public KnowledgeTagsEntity physicalSelectOnKey(Long knowledgeId, Integer tagId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_on_key.sql");
+        return executeQuerySingle(sql, KnowledgeTagsEntity.class, knowledgeId, tagId);
+    }
+    /**
+     * Select all data that not deleted.
+     * @return all data
+     */
+    public List<KnowledgeTagsEntity> selectAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_all.sql");
+        return executeQueryList(sql, KnowledgeTagsEntity.class);
+    }
+    /**
+     * Select all data that not deleted with pager.
+     * @param limit limit
+     * @param offset offset
+     * @return all data
+     */
+    public List<KnowledgeTagsEntity> selectAllWidthPager(int limit, int offset) { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_all_with_pager.sql");
+        return executeQueryList(sql, KnowledgeTagsEntity.class, limit, offset);
+    }
+    /**
+     * Select count that not deleted.
+     * @return count
+     */
+    public Integer selectCountAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_count_all.sql");
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
+     * Select data that not deleted on key.
+     * @param  knowledgeId knowledgeId
+     * @param  tagId tagId
+     * @return data
+     */
+    public KnowledgeTagsEntity selectOnKey(Long knowledgeId, Integer tagId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_on_key.sql");
+        return executeQuerySingle(sql, KnowledgeTagsEntity.class, knowledgeId, tagId);
+    }
+    /**
+     * Select data that not deleted on KNOWLEDGE_ID column.
+     * @param knowledgeId knowledgeId
+     * @return list
+     */
+    public List<KnowledgeTagsEntity> selectOnKnowledgeId(Long knowledgeId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_on_knowledge_id.sql");
+        return executeQueryList(sql, KnowledgeTagsEntity.class, knowledgeId);
+    }
+    /**
+     * Select data that not deleted on TAG_ID column.
+     * @param tagId tagId
+     * @return list
+     */
+    public List<KnowledgeTagsEntity> selectOnTagId(Integer tagId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_select_on_tag_id.sql");
+        return executeQueryList(sql, KnowledgeTagsEntity.class, tagId);
+    }
+    /**
+     * Select data on KNOWLEDGE_ID column.
+     * @param knowledgeId knowledgeId
+     * @return list
+     */
+    public List<KnowledgeTagsEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_on_knowledge_id.sql");
+        return executeQueryList(sql, KnowledgeTagsEntity.class, knowledgeId);
+    }
+    /**
+     * Select data on TAG_ID column.
+     * @param tagId tagId
+     * @return list
+     */
+    public List<KnowledgeTagsEntity> physicalSelectOnTagId(Integer tagId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_physical_select_on_tag_id.sql");
+        return executeQueryList(sql, KnowledgeTagsEntity.class, tagId);
+    }
+    /**
+     * Physical Insert.
+     * it is not create key on database sequence.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public KnowledgeTagsEntity rawPhysicalInsert(KnowledgeTagsEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_raw_insert.sql");
+        executeUpdate(sql, 
+            entity.getKnowledgeId(), 
+            entity.getTagId(), 
+            entity.getInsertUser(), 
+            entity.getInsertDatetime(), 
+            entity.getUpdateUser(), 
+            entity.getUpdateDatetime(), 
+            entity.getDeleteFlag());
+        return entity;
+    }
+    /**
+     * Physical Insert.
+     * if key column have sequence, key value create by database.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public KnowledgeTagsEntity physicalInsert(KnowledgeTagsEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_insert.sql");
+        executeUpdate(sql, 
+            entity.getKnowledgeId(), 
+            entity.getTagId(), 
+            entity.getInsertUser(), 
+            entity.getInsertDatetime(), 
+            entity.getUpdateUser(), 
+            entity.getUpdateDatetime(), 
+            entity.getDeleteFlag());
+        return entity;
+    }
+    /**
+     * Insert.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public KnowledgeTagsEntity insert(Integer user, KnowledgeTagsEntity entity) {
+        entity.setInsertUser(user);
+        entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateUser(user);
+        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setDeleteFlag(0);
+        return physicalInsert(entity);
+    }
+    /**
+     * Insert.
+     * saved user id is auto set.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public KnowledgeTagsEntity insert(KnowledgeTagsEntity entity) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer userId = (Integer) pool.getUser();
+        return insert(userId, entity);
+    }
+    /**
+     * Physical Update.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public KnowledgeTagsEntity physicalUpdate(KnowledgeTagsEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_update.sql");
+        executeUpdate(sql, 
+            entity.getInsertUser(), 
+            entity.getInsertDatetime(), 
+            entity.getUpdateUser(), 
+            entity.getUpdateDatetime(), 
+            entity.getDeleteFlag(), 
+            entity.getKnowledgeId(), 
+            entity.getTagId());
+        return entity;
+    }
+    /**
+     * Update.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public KnowledgeTagsEntity update(Integer user, KnowledgeTagsEntity entity) {
+        KnowledgeTagsEntity db = selectOnKey(entity.getKnowledgeId(), entity.getTagId());
+        entity.setInsertUser(db.getInsertUser());
+        entity.setInsertDatetime(db.getInsertDatetime());
+        entity.setDeleteFlag(db.getDeleteFlag());
+        entity.setUpdateUser(user);
+        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        return physicalUpdate(entity);
+    }
+    /**
+     * Update.
+     * saved user id is auto set.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public KnowledgeTagsEntity update(KnowledgeTagsEntity entity) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer userId = (Integer) pool.getUser();
+        return update(userId, entity);
+    }
+    /**
+     * Save. 
+     * if same key data is exists, the data is update. otherwise the data is insert.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public KnowledgeTagsEntity save(Integer user, KnowledgeTagsEntity entity) {
+        KnowledgeTagsEntity db = selectOnKey(entity.getKnowledgeId(), entity.getTagId());
+        if (db == null) {
+            return insert(user, entity);
+        } else {
+            return update(user, entity);
+        }
+    }
+    /**
+     * Save. 
+     * if same key data is exists, the data is update. otherwise the data is insert.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public KnowledgeTagsEntity save(KnowledgeTagsEntity entity) {
+        KnowledgeTagsEntity db = selectOnKey(entity.getKnowledgeId(), entity.getTagId());
+        if (db == null) {
+            return insert(entity);
+        } else {
+            return update(entity);
+        }
+    }
+    /**
+     * Physical Delete.
+     * @param  knowledgeId knowledgeId
+     * @param  tagId tagId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void physicalDelete(Long knowledgeId, Integer tagId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeTagsDao/KnowledgeTagsDao_delete.sql");
+        executeUpdate(sql, knowledgeId, tagId);
+    }
+    /**
+     * Physical Delete.
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void physicalDelete(KnowledgeTagsEntity entity) {
+        physicalDelete(entity.getKnowledgeId(), entity.getTagId());
 
-	}
-	/**
-	 * 削除(削除ユーザを指定／論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Integer user, Long knowledgeId, Integer tagId) {
-		KnowledgeTagsEntity db = selectOnKey(knowledgeId, tagId);
-		db.setDeleteFlag(1);
-		db.setUpdateUser(user);
-		db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		physicalUpdate(db);
-	}
-	/**
-	 * 削除(論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Long knowledgeId, Integer tagId) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer user = (Integer) pool.getUser();
-		delete(user, knowledgeId, tagId);
-	}
-	/**
-	 * 削除(削除ユーザを指定／論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Integer user, KnowledgeTagsEntity entity) {
-		delete(user, entity.getKnowledgeId(), entity.getTagId());
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * set saved user id.
+     * @param user saved userid
+     * @param  knowledgeId knowledgeId
+     * @param  tagId tagId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(Integer user, Long knowledgeId, Integer tagId) {
+        KnowledgeTagsEntity db = selectOnKey(knowledgeId, tagId);
+        db.setDeleteFlag(1);
+        db.setUpdateUser(user);
+        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        physicalUpdate(db);
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * @param  knowledgeId knowledgeId
+     * @param  tagId tagId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(Long knowledgeId, Integer tagId) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer user = (Integer) pool.getUser();
+        delete(user, knowledgeId, tagId);
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(Integer user, KnowledgeTagsEntity entity) {
+        delete(user, entity.getKnowledgeId(), entity.getTagId());
 
-	}
-	/**
-	 * 削除(論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(KnowledgeTagsEntity entity) {
-		delete(entity.getKnowledgeId(), entity.getTagId());
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * set saved user id.
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(KnowledgeTagsEntity entity) {
+        delete(entity.getKnowledgeId(), entity.getTagId());
 
-	}
-	/**
-	 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(Integer user, Long knowledgeId, Integer tagId) {
-		KnowledgeTagsEntity db = physicalSelectOnKey(knowledgeId, tagId);
-		db.setDeleteFlag(0);
-		db.setUpdateUser(user);
-		db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		physicalUpdate(db);
-	}
-	/**
-	 * 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(Long knowledgeId, Integer tagId) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer user = (Integer) pool.getUser();
-		activation(user, knowledgeId, tagId);
-	}
-	/**
-	 * 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(Integer user, KnowledgeTagsEntity entity) {
-		activation(user, entity.getKnowledgeId(), entity.getTagId());
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * set saved user id.
+     * @param user saved userid
+     * @param  knowledgeId knowledgeId
+     * @param  tagId tagId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(Integer user, Long knowledgeId, Integer tagId) {
+        KnowledgeTagsEntity db = physicalSelectOnKey(knowledgeId, tagId);
+        db.setDeleteFlag(0);
+        db.setUpdateUser(user);
+        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        physicalUpdate(db);
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * @param  knowledgeId knowledgeId
+     * @param  tagId tagId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(Long knowledgeId, Integer tagId) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer user = (Integer) pool.getUser();
+        activation(user, knowledgeId, tagId);
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(Integer user, KnowledgeTagsEntity entity) {
+        activation(user, entity.getKnowledgeId(), entity.getTagId());
 
-	}
-	/**
-	 * 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(KnowledgeTagsEntity entity) {
-		activation(entity.getKnowledgeId(), entity.getTagId());
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(KnowledgeTagsEntity entity) {
+        activation(entity.getKnowledgeId(), entity.getTagId());
 
-	}
+    }
 
 }

@@ -8,18 +8,18 @@ import org.support.project.ormapping.tool.EntityMaker;
 
 public class KnowledgeDBGen {
 
-	public static void main(String[] args) throws IOException, Exception {
-		if (args.length == 0) {
-			args = new String[1];
-			args[0] = "/ormappingtool.xml";
-		}
-		
-		DatabaseInitializer initializer = new DatabaseInitializer(args[0]);
-		initializer.dropAllTable();
-		
-		DatabaseInitializer.main(args);
-		EntityMaker.main(args);
-		DaoMaker.main(args);
-	}
+    public static void main(String[] args) throws IOException, Exception {
+        if (args.length == 0) {
+            args = new String[1];
+            args[0] = "/ormappingtool.xml";
+        }
+
+        DatabaseInitializer initializer = new DatabaseInitializer(args[0]);
+        initializer.dropAllTable();
+
+        DatabaseInitializer.main(args);
+        EntityMaker.main(args);
+        DaoMaker.main(args);
+    }
 
 }

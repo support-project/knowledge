@@ -16,7 +16,7 @@ import org.support.project.web.entity.SystemConfigsEntity;
 
 public class ReIndexingBat extends AbstractBat {
 
-    private static Log LOG = LogFactory.getLog(ReIndexingBat.class);
+    private static final Log LOG = LogFactory.getLog(ReIndexingBat.class);
     
     public static void main(String[] args) throws Exception {
         initLogName("ReIndexingBat.log");

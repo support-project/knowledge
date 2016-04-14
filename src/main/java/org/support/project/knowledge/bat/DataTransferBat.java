@@ -12,15 +12,15 @@ import org.support.project.web.logic.DBConnenctionLogic;
 
 public class DataTransferBat extends AbstractBat implements Runnable {
     /** ログ */
-    private static Log LOG = LogFactory.getLog(DataTransferBat.class);
-    
+    private static final Log LOG = LogFactory.getLog(DataTransferBat.class);
+
     private boolean runing = false;
     private boolean serverStarted = false;
-    
+
     public static void main(String[] args) throws Exception {
         initLogName("DataTransferBat.log");
         configInit(ClassUtils.getShortClassName(DataTransferBat.class));
-        
+
         DataTransferBat bat = new DataTransferBat();
         bat.dbInit();
         bat.start();
@@ -36,8 +36,8 @@ public class DataTransferBat extends AbstractBat implements Runnable {
 
             Server server = Server.createTcpServer(parms);
             server.start();
-            
-            //System.out.println("Database start...");
+
+            // System.out.println("Database start...");
             serverStarted = true;
             while (runing) {
                 Thread.sleep(1000);
@@ -51,7 +51,7 @@ public class DataTransferBat extends AbstractBat implements Runnable {
 
     /**
      * 
-     * @throws Exception 
+     * @throws Exception
      */
     private void start() throws Exception {
         if (DataTransferLogic.get().isTransferRequested() || DataTransferLogic.get().isTransferBackRequested()) {
@@ -60,13 +60,13 @@ public class DataTransferBat extends AbstractBat implements Runnable {
                 LOG.info("ALL Ready started.");
                 return;
             }
-            
+
             // DBを起動
             Thread thread = new Thread(this);
             thread.start();
             try {
                 // サーバーが起動するまで待機
-                while(!serverStarted) {
+                while (!serverStarted) {
                     Thread.sleep(1000);
                 }
                 // コネクションの設定を読み込み
@@ -89,6 +89,5 @@ public class DataTransferBat extends AbstractBat implements Runnable {
             }
         }
     }
-    
 
 }

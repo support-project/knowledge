@@ -2,6 +2,7 @@ package org.support.project.knowledge.config;
 
 /**
  * Type of Notify
+ * 
  * @author Koda
  *
  */

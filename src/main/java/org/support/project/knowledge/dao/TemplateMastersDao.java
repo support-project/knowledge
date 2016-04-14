@@ -15,77 +15,80 @@ import org.support.project.ormapping.common.SQLManager;
 /**
  * テンプレートのマスタ
  */
-@DI(instance=Instance.Singleton)
+@DI(instance = Instance.Singleton)
 public class TemplateMastersDao extends GenTemplateMastersDao {
 
-	public static final int TYPE_ID_KNOWLEDGE = -100;
-	public static final int TYPE_ID_BOOKMARK = -99;
+    public static final int TYPE_ID_KNOWLEDGE = -100;
+    public static final int TYPE_ID_BOOKMARK = -99;
 
-	/**
-	 * ID 
-	 */
-	private int currentId = 0;
+    /**
+     * ID
+     */
+    private int currentId = 0;
 
-	/** SerialVersion */
-	private static final long serialVersionUID = 1L;
-	/**
-	 * インスタンス取得
-	 * AOPに対応
-	 * @return インスタンス
-	 */
-	public static TemplateMastersDao get() {
-		return Container.getComp(TemplateMastersDao.class);
-	}
+    /** SerialVersion */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * IDを採番 
-	 * ※コミットしなくても次のIDを採番する為、保存しなければ欠番になる 
-	 */
-	public Integer getNextId() {
-		String sql = "SELECT MAX(TYPE_ID) FROM TEMPLATE_MASTERS;";
-		Integer integer = executeQuerySingle(sql, Integer.class);
-		if (integer != null && currentId < integer) {
-			currentId = integer;
-		}
-		currentId++;
-		return currentId;
-	}
+    /**
+     * インスタンス取得 AOPに対応
+     * 
+     * @return インスタンス
+     */
+    public static TemplateMastersDao get() {
+        return Container.getComp(TemplateMastersDao.class);
+    }
 
-	/**
-	 * 登録されているテンプレートを全て取得
-	 * @return
-	 */
-	public TemplateMastersEntity selectWithItems(Integer typeId) {
-		TemplateMastersEntity template = selectOnKey(typeId);
-		List<TemplateItemsEntity> items = TemplateItemsDao.get().selectOnTypeId(typeId);
-		for (TemplateItemsEntity item : items) {
-			template.getItems().add(item);
-			List<ItemChoicesEntity> choices = ItemChoicesDao.get().selectOnItem(typeId, item.getItemNo());
-			for (ItemChoicesEntity choice : choices) {
-				item.getChoices().add(choice);
-			}
-		}
-		return template;
-	}
+    /**
+     * IDを採番 ※コミットしなくても次のIDを採番する為、保存しなければ欠番になる
+     */
+    public Integer getNextId() {
+        String sql = "SELECT MAX(TYPE_ID) FROM TEMPLATE_MASTERS;";
+        Integer integer = executeQuerySingle(sql, Integer.class);
+        if (integer != null && currentId < integer) {
+            currentId = integer;
+        }
+        currentId++;
+        return currentId;
+    }
 
-	/**
-	 * データをtruncateする
-	 * 
-	 * @return void
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void truncate() {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateMastersDao/TemplateMastersDao_truncate.sql");
-		executeUpdate(sql);
-	}
-	/**
-	 * sequenceをリセットする
-	 * 
-	 * @return void
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void resetSequence() {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateMastersDao/TemplateMastersDao_alter_sequence.sql");
-		executeUpdate(sql);
-	}
+    /**
+     * 登録されているテンプレートを全て取得
+     * 
+     * @return
+     */
+    public TemplateMastersEntity selectWithItems(Integer typeId) {
+        TemplateMastersEntity template = selectOnKey(typeId);
+        List<TemplateItemsEntity> items = TemplateItemsDao.get().selectOnTypeId(typeId);
+        for (TemplateItemsEntity item : items) {
+            template.getItems().add(item);
+            List<ItemChoicesEntity> choices = ItemChoicesDao.get().selectOnItem(typeId, item.getItemNo());
+            for (ItemChoicesEntity choice : choices) {
+                item.getChoices().add(choice);
+            }
+        }
+        return template;
+    }
+
+    /**
+     * データをtruncateする
+     * 
+     * @return void
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void truncate() {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateMastersDao/TemplateMastersDao_truncate.sql");
+        executeUpdate(sql);
+    }
+
+    /**
+     * sequenceをリセットする
+     * 
+     * @return void
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void resetSequence() {
+        String sql = SQLManager.getInstance()
+                .getSql("/org/support/project/knowledge/dao/sql/TemplateMastersDao/TemplateMastersDao_alter_sequence.sql");
+        executeUpdate(sql);
+    }
 }

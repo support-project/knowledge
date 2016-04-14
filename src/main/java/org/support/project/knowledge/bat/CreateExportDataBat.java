@@ -9,8 +9,6 @@ import java.util.List;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.lang.ClassUtils;
-import org.support.project.common.log.Log;
-import org.support.project.common.log.LogFactory;
 import org.support.project.common.serialize.SerializeUtils;
 import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.PropertyUtil;
@@ -32,20 +30,17 @@ import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
 public class CreateExportDataBat extends AbstractBat {
-    /** ログ */
-    private static Log LOG = LogFactory.getLog(CreateExportDataBat.class);
 
     public static final String DATA_DIR = "DataExport";
-    
+
     public static void main(String[] args) throws Exception {
         initLogName("CreateExportDataBat.log");
         configInit(ClassUtils.getShortClassName(CreateExportDataBat.class));
-        
+
         CreateExportDataBat bat = new CreateExportDataBat();
         bat.dbInit();
         bat.start();
     }
-
 
     private void start() throws Exception {
         SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.get().getSystemName());
@@ -65,9 +60,11 @@ public class CreateExportDataBat extends AbstractBat {
         attach.mkdirs();
         File userdir = new File(dir, "user");
         userdir.mkdirs();
-        
-        //ナレッジデータを取得
+
+        // ナレッジデータを取得
         LoginedUser loginedUser = new LoginedUser() {
+            private static final long serialVersionUID = 1L;
+
             @Override
             public boolean isAdmin() {
                 return true;
@@ -76,13 +73,13 @@ public class CreateExportDataBat extends AbstractBat {
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
         CommentsDao commentsDao = CommentsDao.get();
         KnowledgeFilesDao knowledgeFilesDao = KnowledgeFilesDao.get();
-        
+
         List<KnowledgesEntity> knowledges = knowledgeLogic.searchKnowledge("", loginedUser, 0, 100);
         for (KnowledgesEntity knowledgesEntity : knowledges) {
             File f = new File(dir, "knowledge-" + StringUtils.zeroPadding(knowledgesEntity.getKnowledgeId(), 6) + ".xml");
             String xml = SerializeUtils.objectToXml(knowledgesEntity);
             FileUtil.write(f, xml);
-            
+
             // ナレッジのコメントを取得
             List<CommentsEntity> comments = commentsDao.selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
             for (CommentsEntity commentsEntity : comments) {
@@ -95,8 +92,7 @@ public class CreateExportDataBat extends AbstractBat {
             for (KnowledgeFilesEntity knowledgeFilesEntity : files) {
                 KnowledgeFilesEntity file = knowledgeFilesDao.selectOnKey(knowledgeFilesEntity.getFileNo());
                 File a = new File(attach, "attach-" + StringUtils.zeroPadding(knowledgesEntity.getKnowledgeId(), 6) + "-"
-                        + StringUtils.zeroPadding(knowledgeFilesEntity.getFileNo(), 6)
-                        + knowledgeFilesEntity.getFileName());
+                        + StringUtils.zeroPadding(knowledgeFilesEntity.getFileNo(), 6) + knowledgeFilesEntity.getFileName());
                 OutputStream outputStream = new FileOutputStream(a);
                 InputStream inputStream = file.getFileBinary();
                 try {
@@ -120,12 +116,12 @@ public class CreateExportDataBat extends AbstractBat {
             FileUtil.write(f, xml);
             send("[Export] user-" + user.getUserId());
         }
-        
+
         // zip圧縮
         send("[Export] during the compression");
         String name = DATA_DIR + ".zip";
         File comp = new File(base, name);
-        
+
         BufferedOutputStream output = null;
         ZipArchiveOutputStream os = null;
         try {
@@ -145,6 +141,5 @@ public class CreateExportDataBat extends AbstractBat {
         // 圧縮の予約を削除
         SystemConfigsDao.get().physicalDelete(entity);
     }
-
 
 }

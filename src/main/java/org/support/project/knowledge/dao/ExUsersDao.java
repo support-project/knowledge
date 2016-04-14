@@ -11,6 +11,7 @@ import org.support.project.web.entity.UsersEntity;
 
 /**
  * ユーザ情報を取得するDaoのKnowledgeでの拡張
+ * 
  * @author Koda
  */
 public class ExUsersDao extends UsersDao {

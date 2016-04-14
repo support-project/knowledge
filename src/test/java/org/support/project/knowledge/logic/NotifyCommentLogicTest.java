@@ -27,7 +27,7 @@ import org.support.project.web.entity.UsersEntity;
  */
 public class NotifyCommentLogicTest extends TestCommon {
     /** ログ */
-    private static Log LOG = LogFactory.getLog(NotifyCommentLogicTest.class);
+    private static final Log LOG = LogFactory.getLog(NotifyCommentLogicTest.class);
     
     /** テスト用ナレッジ1 */
     private static KnowledgesEntity knowledge1;

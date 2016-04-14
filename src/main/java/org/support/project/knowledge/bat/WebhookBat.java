@@ -24,7 +24,7 @@ import org.support.project.web.entity.ProxyConfigsEntity;
  */
 public class WebhookBat extends AbstractBat {
     /** ログ */
-    private static Log LOG = LogFactory.getLog(WebhookBat.class);
+    private static final Log LOG = LogFactory.getLog(WebhookBat.class);
 
     /** webhookの状態：未送信（送信待ち） */
     public static final int WEBHOOK_STATUS_UNSENT = 0;
