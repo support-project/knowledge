@@ -10,7 +10,7 @@
 - Demo users
    - [id/password] user1 / user1
    - [id/password] user2 / user2
-   - [id/password] user3 / user3
+   - [id/password] user3 / user3 
 
 
 #### Project website (more info)
