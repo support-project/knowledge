@@ -58,9 +58,9 @@ public class ReindexingEndpoint {
                 public void write(String message) {
                     LOG.info(message);
                     try {
-                        if (message.startsWith("[SEND]")) {
+                        if (message.indexOf("[SEND]") != -1) {
                             MessageResult result = new MessageResult();
-                            result.setMessage(message.substring("[SEND]".length()));
+                            result.setMessage(message.substring(message.indexOf("[SEND]") + "[SEND]".length()));
                             session.getBasicRemote().sendText(JSON.encode(result));
                         }
                     } catch (JSONException | IOException e) {
@@ -76,7 +76,7 @@ public class ReindexingEndpoint {
                     message.setMessage("Reindexing is ended. [status]" + result.getResultCode());
                     try {
                         session.getBasicRemote().sendText(JSON.encode(message));
-                        session.close();
+                        //session.close();
                     } catch (JSONException | IOException e) {
                         LOG.warn("websocket message send error", e);
                     }

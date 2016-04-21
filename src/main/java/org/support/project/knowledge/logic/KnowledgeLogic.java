@@ -1225,12 +1225,14 @@ public class KnowledgeLogic {
 
         // 拡張値を取得
         TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(knowledgesEntity.getTypeId());
-        List<TemplateItemsEntity> items = template.getItems();
-        List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
-        for (TemplateItemsEntity item : items) {
-            for (KnowledgeItemValuesEntity val : values) {
-                if (item.getItemNo().equals(val.getItemNo())) {
-                    item.setItemValue(val.getItemValue());
+        if (template != null) {
+            List<TemplateItemsEntity> items = template.getItems();
+            List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
+            for (TemplateItemsEntity item : items) {
+                for (KnowledgeItemValuesEntity val : values) {
+                    if (item.getItemNo().equals(val.getItemNo())) {
+                        item.setItemValue(val.getItemValue());
+                    }
                 }
             }
         }
