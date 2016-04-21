@@ -85,7 +85,7 @@ public class DataTransferEndpoint {
                     message.setMessage("Processing has been completed. [status]" + result.getResultCode());
                     try {
                         session.getBasicRemote().sendText(JSON.encode(message));
-                        session.close();
+                        //session.close();
                     } catch (JSONException | IOException e) {
                         LOG.warn("websocket message send error", e);
                     }
@@ -108,8 +108,8 @@ public class DataTransferEndpoint {
     @OnError
     public void onError(Throwable t) {
         LOG.warn("websocket on error." + t.getClass().getName() + " : " + t.getMessage());
-        if (LOG.isDebugEnabled()) {
-            LOG.warn("websocket error -> ", t);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("websocket error -> ", t);
         }
     }
 }
