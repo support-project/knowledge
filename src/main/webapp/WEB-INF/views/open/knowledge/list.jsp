@@ -30,12 +30,21 @@
         <script type="text/javascript" src="<%=jspUtil.mustReloadFile("/js/knowledge-common.js")%>"></script>
         
         <%
-            HttpSession session = request.getSession();
-            Boolean read = (Boolean) session.getAttribute(NoticesControl.READ_NOTICES);
-            if (read == null || !read) {
+            if (jspUtil.logined()) {
         %>
+        <%-- ログインしているユーザは、常に通知を取得する（既読はユーザ毎に管理） --%>
         <script type="text/javascript" src="<%=jspUtil.mustReloadFile("/js/mynotice.js")%>"></script>
-        <% } %>
+        <%
+            } else {
+                HttpSession session = request.getSession();
+                Boolean read = (Boolean) session.getAttribute(NoticesControl.READ_NOTICES);
+                if (read == null || !read) {
+        %>
+        <%-- ログインしていないユーザは全て表示されてしまうので、セッション単位に1回表示する --%>
+        <script type="text/javascript" src="<%=jspUtil.mustReloadFile("/js/mynotice.js")%>"></script>
+        <%      }
+            }
+        %>
     </c:param>
 
     <c:param name="PARAM_CONTENT">
