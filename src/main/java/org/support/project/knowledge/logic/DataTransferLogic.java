@@ -75,7 +75,6 @@ public class DataTransferLogic {
         // コピー先のDBの初期化(テーブルを全て消し、マイグレーション実行）
         LOG.info("migrate to db");
         ConnectionManager.getInstance().setDefaultConnectionName(to.getName());
-        initDB = new InitDB();
         InitializeDao initializeDao = InitializeDao.get();
         initializeDao.setConnectionName(to.getName());
         initializeDao.dropAllTable();
