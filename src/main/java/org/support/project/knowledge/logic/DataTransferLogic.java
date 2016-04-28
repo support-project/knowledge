@@ -53,8 +53,12 @@ public class DataTransferLogic {
     }
 
     public void transferData(ConnectionConfig from, ConnectionConfig to) throws Exception {
-        // FromのDBのDBのバージョンチェック
+        // FROM と TO のコネクションを確立
+        ConnectionManager.getInstance().addConnectionConfig(to);
         ConnectionManager.getInstance().addConnectionConfig(from);
+        
+        // FromのDBのDBのバージョンチェック
+        ConnectionManager.getInstance().setDefaultConnectionName(from.getName());
         SystemsDao systemsDao = SystemsDao.get();
         SystemsEntity systemEntity = systemsDao.selectOnKey(AppConfig.get().getSystemName());
         if (systemEntity == null) {
@@ -62,31 +66,23 @@ public class DataTransferLogic {
             LOG.info("Data transfer is failed.");
             return;
         }
-        String version = systemEntity.getVersion();
-        if (!InitDB.CURRENT.equals(version)) {
-            // コピー元のDBのバージョンが古い（なんかおかしい）
-            LOG.info("Data transfer is failed.");
-            return;
-        }
-
-        // コピー先のDBの初期化
+        // 念のためコピー元のDBのマイグレーション実行
+        LOG.info("migrate from db");
+        ConnectionManager.getInstance().setDefaultConnectionName(from.getName());
         InitDB initDB = new InitDB();
-        ConnectionManager.getInstance().addConnectionConfig(to);
+        initDB.start();
+        
+        // コピー先のDBの初期化(テーブルを全て消し、マイグレーション実行）
+        LOG.info("migrate to db");
+        ConnectionManager.getInstance().setDefaultConnectionName(to.getName());
         InitializeDao initializeDao = InitializeDao.get();
         initializeDao.setConnectionName(to.getName());
         initializeDao.dropAllTable();
         initDB.start();
 
-        ConnectionManager.getInstance().addConnectionConfig(from);
-
-        List<Class<?>> targets = new ArrayList<>();
-        ClassSearch classSearch = Container.getComp(ClassSearch.class);
-        Class<?>[] classes = classSearch.classSearch("org.support.project.knowledge.dao.gen", false);
-        targets.addAll(Arrays.asList(classes));
-        classes = classSearch.classSearch("org.support.project.web.dao.gen", false);
-        targets.addAll(Arrays.asList(classes));
-
-        // 組み込みDBからカスタムDBへの移行の時のみ初期データを削除
+        // データコピー先のDBに入っている、初期データを削除
+        LOG.info("clear init data from to db.");
+        ConnectionManager.getInstance().setDefaultConnectionName(to.getName());
         List<AbstractDao> truncateTargets = new ArrayList<AbstractDao>();
         truncateTargets.add(GroupsDao.get());
         truncateTargets.add(RolesDao.get());
@@ -95,20 +91,25 @@ public class DataTransferLogic {
         truncateTargets.add(SystemsDao.get());
         truncateTargets.add(TemplateItemsDao.get());
         truncateTargets.add(TemplateMastersDao.get());
-
         for (AbstractDao targetDao : truncateTargets) {
             targetDao.setConnectionName(to.getName());
             Method truncateMethods = targetDao.getClass().getMethod("truncate");
             truncateMethods.invoke(targetDao);
-
-            if (isTransferRequested()) {
-                try {
-                    Method resetSequenceMethods = targetDao.getClass().getMethod("resetSequence");
-                    resetSequenceMethods.invoke(targetDao);
-                } catch (Exception e) {
-                }
+            try {
+                Method resetSequenceMethods = targetDao.getClass().getMethod("resetSequence");
+                resetSequenceMethods.invoke(targetDao);
+            } catch (Exception e) {
+                LOG.info(e.getMessage());
             }
         }
+
+        // データを取得しコピー開始
+        List<Class<?>> targets = new ArrayList<>();
+        ClassSearch classSearch = Container.getComp(ClassSearch.class);
+        Class<?>[] classes = classSearch.classSearch("org.support.project.knowledge.dao.gen", false);
+        targets.addAll(Arrays.asList(classes));
+        classes = classSearch.classSearch("org.support.project.web.dao.gen", false);
+        targets.addAll(Arrays.asList(classes));
 
         // データコピー
         for (Class<?> class1 : targets) {
@@ -116,6 +117,8 @@ public class DataTransferLogic {
                 LOG.info("Data transfer : " + class1.getName());
                 Object dao = Container.getComp(class1);
                 // From からデータ取得
+                LOG.info("   -> load data from " + from.getName());
+                ConnectionManager.getInstance().setDefaultConnectionName(from.getName());
                 Method setConnectionNameMethods = class1.getMethod("setConnectionName", String.class);
                 setConnectionNameMethods.invoke(dao, from.getName());
 
@@ -123,6 +126,8 @@ public class DataTransferLogic {
                 List<?> list = (List<?>) selectAllMethods.invoke(dao);
 
                 // Toへデータ登録
+                LOG.info("   -> insert data to " + to.getName());
+                ConnectionManager.getInstance().setDefaultConnectionName(to.getName());
                 setConnectionNameMethods.invoke(dao, to.getName());
                 TransactionManager transactionManager = Container.getComp(TransactionManager.class);
                 transactionManager.start(to.getName());

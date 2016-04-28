@@ -37,17 +37,17 @@
             webSocket.onclose = function() {
                 console.log('onclose');
                 $("#transfer_msg").alert('close');
-            }
+            };
             webSocket.onmessage = function(message) {
                 //console.log('[RECEIVE] ');
                 var result = JSON.parse(message.data);
                 console.log(result);
-                if (result.message.lastIndexOf('Data Transfer is ended', 0) === 0) {
+                if (result.message.lastIndexOf('Processing has been completed', 0) === 0) {
                     $.notify(result.message, 'info');
                 }
-            }
+            };
             webSocket.onerror = function(message) {
-            }
+            };
         }
         </script>
         <%
