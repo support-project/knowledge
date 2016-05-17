@@ -1,4 +1,4 @@
 DELETE FROM PINS
 WHERE 
-no = ?
+NO = ?
 ;

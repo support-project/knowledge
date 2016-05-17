@@ -1,5 +1,5 @@
 SELECT * FROM PINS
  WHERE 
-no = ?
+NO = ?
  AND DELETE_FLAG = 0;
 ;
