@@ -198,4 +198,64 @@ public class KnowledgesDao extends GenKnowledgesDao {
         return executeQueryList(sql, KnowledgesEntity.class, params.toArray(new Object[0]));
     }
 
+    public List<KnowledgesEntity> selectStocks(LoginedUser loginedUser, int offset, int limit, Long stockid) {
+        if (loginedUser == null) {
+            // ログインしていないのであれば、ストックは無し
+            return new ArrayList<>();
+        }
+        if (loginedUser != null && loginedUser.isAdmin()) {
+            if (stockid != null) {
+                String sql = SQLManager.getInstance()
+                        .getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectStocksFilterOnStockID.sql");
+                return executeQueryList(sql, KnowledgesEntity.class, loginedUser.getUserId(), stockid, limit, offset);
+            } else {
+                String sql = SQLManager.getInstance()
+                        .getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectStocks.sql");
+                return executeQueryList(sql, KnowledgesEntity.class, loginedUser.getUserId(), limit, offset);
+            }
+        } else {
+            String sql;
+            List<Object> params = new ArrayList<>();
+            Integer loginuserId = Integer.MIN_VALUE;
+            if (loginedUser != null) {
+                loginuserId = loginedUser.getUserId();
+            }
+            params.add(loginuserId); // Stock検索値
+            if (stockid != null) {
+                sql = SQLManager.getInstance()
+                        .getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectStocksWithAccessControlFilterOnStockID.sql");
+                params.add(stockid);
+            } else {
+                sql = SQLManager.getInstance()
+                        .getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectStocksWithAccessControl.sql");
+                
+            }
+            params.add(loginuserId); // 権限制御用
+            params.add(loginuserId); // 権限制御用
+
+            List<Integer> groups = new ArrayList<>();
+            groups.add(0); // ALL Groups
+            if (loginedUser != null && loginedUser.getGroups() != null) {
+                List<GroupsEntity> userGroups = loginedUser.getGroups();
+                for (GroupsEntity groupsEntity : userGroups) {
+                    groups.add(groupsEntity.getGroupId());
+                }
+            }
+            StringBuilder groupParams = new StringBuilder();
+            int cnt = 0;
+            for (Integer integer : groups) {
+                if (cnt > 0) {
+                    groupParams.append(", ");
+                }
+                cnt++;
+                params.add(integer);
+                groupParams.append("?");
+            }
+            sql = sql.replace("%GROUPS%", groupParams.toString());
+            params.add(limit);
+            params.add(offset);
+            return executeQueryList(sql, KnowledgesEntity.class, params.toArray(new Object[0]));
+        }
+    }
+
 }

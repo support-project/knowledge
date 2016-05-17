@@ -118,8 +118,8 @@ public class TargetLogic {
      * @param loginedUser
      * @return
      */
-    public Map<Long, ArrayList<LabelValue>> selectTargetsOnKnowledgeIds(ArrayList<Long> knowledgeIds, LoginedUser loginedUser) {
-        Map<Long, ArrayList<LabelValue>> results = new HashMap<Long, ArrayList<LabelValue>>();
+    public Map<Long, List<LabelValue>> selectTargetsOnKnowledgeIds(List<Long> knowledgeIds, LoginedUser loginedUser) {
+        Map<Long, List<LabelValue>> results = new HashMap<Long, List<LabelValue>>();
         if (loginedUser == null || knowledgeIds.isEmpty()) {
             return results;
         }

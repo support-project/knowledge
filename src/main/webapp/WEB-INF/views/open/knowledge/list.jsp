@@ -54,7 +54,9 @@
             <ul class="nav nav-tabs">
                 <li role="presentation" class="active"><a href="<%=request.getContextPath()%>/open.knowledge/list"><%=jspUtil.label("knowledge.list.kind.list")%></a></li>
                 <li role="presentation"><a href="<%=request.getContextPath()%>/open.knowledge/show_popularity"><%=jspUtil.label("knowledge.list.kind.popular")%></a></li>
-                <%-- <li role="presentation"><a href="#"><%= jspUtil.label("knowledge.list.kind.stock") %></a></li> --%>
+                <% if (jspUtil.logined()) { %>
+                <li role="presentation"><a href="<%=request.getContextPath()%>/open.knowledge/stocks"><%= jspUtil.label("knowledge.list.kind.stock") %></a></li>
+                <% } %>
                 <li role="presentation"><a href="<%=request.getContextPath()%>/open.knowledge/show_history"><%=jspUtil.label("knowledge.list.kind.history")%></a></li>
             </ul>
         </div>
