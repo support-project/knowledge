@@ -18,6 +18,7 @@ import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
+import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.CommentsEntity;
@@ -25,6 +26,7 @@ import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
+import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
@@ -38,6 +40,7 @@ import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.MarkDown;
+import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
@@ -172,15 +175,90 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
         ArrayList<Long> knowledgeIds = new ArrayList<Long>();
         knowledgeIds.add(entity.getKnowledgeId());
+        
+        // ナレッジの公開先の情報を取得（共通処理）
+        setKnowledgeTargets(loginedUser, knowledgeIds);
 
-        TargetLogic targetLogic = TargetLogic.get();
-        Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
-        setAttribute("targets", targets);
-        setAttribute("targetLogic", targetLogic);
-
+        //ストック情報を取得
+        List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(entity, loginedUser);
+        setAttribute("stocks", stocks);
+        
         return forward("view.jsp");
     }
+    
+    /**
+     * ナレッジの公開先の情報を取得
+     * @param loginedUser
+     * @param knowledgeIds
+     */
+    private void setKnowledgeTargetsWithConv(LoginedUser loginedUser, List<KnowledgesEntity> knowledges) {
+        ArrayList<Long> knowledgeIds = new ArrayList<>();
+        for (KnowledgesEntity knowledgesEntity : knowledges) {
+            knowledgeIds.add(knowledgesEntity.getKnowledgeId());
+        }
+        setKnowledgeTargets(loginedUser, knowledgeIds);
+    }
+    /**
+     * ナレッジの公開先の情報を取得
+     * @param loginedUser
+     * @param knowledgeIds
+     */
+    private void setKnowledgeTargets(LoginedUser loginedUser, List<Long> knowledgeIds) {
+        TargetLogic targetLogic = TargetLogic.get();
+        Map<Long, List<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
+        setAttribute("targets", targets);
+        setAttribute("targetLogic", targetLogic);
+    }
+    
+    /**
+     * タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+     * @param loginedUser
+     */
+    private void setSublistInformations(LoginedUser loginedUser) {
+        TagsDao tagsDao = TagsDao.get();
+        ExGroupsDao groupsDao = ExGroupsDao.get();
 
+        // タグとグループの情報を取得（画面右側のサブリスト部分に表示する）
+        if (loginedUser != null && loginedUser.isAdmin()) {
+            // 管理者であれば、ナレッジの件数は、参照権限を考慮していない
+            List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
+            setAttribute("tags", tags);
+
+            List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
+            setAttribute("groups", groups);
+        } else {
+            TagLogic tagLogic = TagLogic.get();
+            List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
+            setAttribute("tags", tags);
+
+            if (loginedUser != null) {
+                GroupLogic groupLogic = GroupLogic.get();
+                List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
+                setAttribute("groups", groups);
+            }
+        }
+        LOG.trace("タグ、グループ取得完了");
+    }
+    
+    /**
+     * 一覧に表示するオフセット（ページ番号）を取得する
+     * @return
+     * @throws InvalidParamException
+     */
+    private Integer getOffsetParameter() throws InvalidParamException {
+        Integer offset = super.getPathInteger(0);
+        int previous = offset - 1;
+        if (previous < 0) {
+            previous = 0;
+        }
+        setAttribute("offset", offset);
+        setAttribute("previous", previous);
+        setAttribute("next", offset + 1);
+        return offset;
+    }
+    
+    
+    
     /**
      * リストを表示
      * 
@@ -190,8 +268,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
     @Get
     public Boundary list() throws Exception {
         LOG.trace("Call list");
-        Integer offset = super.getPathInteger(0);
-        setAttribute("offset", offset);
+        Integer offset = getOffsetParameter();
+        
         String keyword = getParam("keyword");
         setAttribute("searchKeyword", keyword);
 
@@ -345,48 +423,15 @@ public class KnowledgeControl extends KnowledgeControlBase {
             knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
         }
 
-        setAttribute("knowledges", knowledges);
+        List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);
+        setAttribute("knowledges", stocks);
         LOG.trace("検索終了");
+        
+        // ナレッジの公開先の情報を取得
+        setKnowledgeTargetsWithConv(loginedUser, knowledges);
+        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+        setSublistInformations(loginedUser);
 
-        ArrayList<Long> knowledgeIds = new ArrayList<Long>();
-        for (KnowledgesEntity knowledgesEntity : knowledges) {
-            knowledgeIds.add(knowledgesEntity.getKnowledgeId());
-        }
-
-        TargetLogic targetLogic = TargetLogic.get();
-        Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
-        setAttribute("targets", targets);
-        setAttribute("targetLogic", targetLogic);
-
-        int previous = offset - 1;
-        if (previous < 0) {
-            previous = 0;
-        }
-
-        // タグとグループの情報を取得
-        if (loginedUser != null && loginedUser.isAdmin()) {
-            // 管理者であれば、ナレッジの件数は、参照権限を考慮していない
-            List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
-            setAttribute("tags", tags);
-
-            List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
-            setAttribute("groups", groups);
-        } else {
-            TagLogic tagLogic = TagLogic.get();
-            List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
-            setAttribute("tags", tags);
-
-            if (loginedUser != null) {
-                GroupLogic groupLogic = GroupLogic.get();
-                List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
-                setAttribute("groups", groups);
-            }
-        }
-        LOG.trace("タグ、グループ取得完了");
-
-        setAttribute("offset", offset);
-        setAttribute("previous", previous);
-        setAttribute("next", offset + 1);
         return forward("list.jsp");
     }
 
@@ -400,11 +445,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
     public Boundary show_history() throws InvalidParamException {
         LoginedUser loginedUser = super.getLoginedUser();
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-        TagsDao tagsDao = TagsDao.get();
-        ExGroupsDao groupsDao = ExGroupsDao.get();
 
         // History表示
-        // TODO 履歴表示を毎回取得するのはイマイチ。いったんセッションに保存しておくのが良いかも
         String history = getCookie(SystemConfig.COOKIE_KEY_HISTORY);
         List<String> historyIds = new ArrayList<>();
         ArrayList<Long> knowledgeIds = new ArrayList<>();
@@ -424,40 +466,20 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
         }
         List<KnowledgesEntity> histories = knowledgeLogic.getKnowledges(historyIds, loginedUser);
+        List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(histories, loginedUser);
+        setAttribute("histories", stocks);
         LOG.trace("履歴取得完了");
-        setAttribute("histories", histories);
 
-        // タグとグループの情報を取得
-        if (loginedUser != null && loginedUser.isAdmin()) {
-            // 管理者であれば、ナレッジの件数は、参照権限を考慮していない
-            List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
-            setAttribute("tags", tags);
-
-            List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
-            setAttribute("groups", groups);
-        } else {
-            TagLogic tagLogic = TagLogic.get();
-            List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
-            setAttribute("tags", tags);
-
-            if (loginedUser != null) {
-                GroupLogic groupLogic = GroupLogic.get();
-                List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
-                setAttribute("groups", groups);
-            }
-        }
-        LOG.trace("タグ、グループ取得完了");
-
-        TargetLogic targetLogic = TargetLogic.get();
-        Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
-        setAttribute("targets", targets);
-        setAttribute("targetLogic", targetLogic);
+        // ナレッジの公開先の情報を取得
+        setKnowledgeTargets(loginedUser, knowledgeIds);
+        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+        setSublistInformations(loginedUser);
 
         return forward("show_history.jsp");
     }
 
     /**
-     * 閲覧履歴の表示
+     * 人気のKnowledgeを表示
      * 
      * @return
      * @throws InvalidParamException
@@ -466,46 +488,65 @@ public class KnowledgeControl extends KnowledgeControlBase {
     public Boundary show_popularity() throws InvalidParamException {
         LoginedUser loginedUser = super.getLoginedUser();
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-        TagsDao tagsDao = TagsDao.get();
-        ExGroupsDao groupsDao = ExGroupsDao.get();
 
-        List<KnowledgesEntity> popularities = knowledgeLogic.getPopularityKnowledges(loginedUser, 0, 20);
+        List<KnowledgesEntity> list = knowledgeLogic.getPopularityKnowledges(loginedUser, 0, 20);
+        List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(list, loginedUser);
+        setAttribute("popularities", stocks);
         LOG.trace("取得完了");
-        setAttribute("popularities", popularities);
-
-        ArrayList<Long> knowledgeIds = new ArrayList<>();
-        for (KnowledgesEntity knowledgesEntity : popularities) {
-            knowledgeIds.add(knowledgesEntity.getKnowledgeId());
-        }
-
-        // タグとグループの情報を取得
-        if (loginedUser != null && loginedUser.isAdmin()) {
-            // 管理者であれば、ナレッジの件数は、参照権限を考慮していない
-            List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
-            setAttribute("tags", tags);
-
-            List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
-            setAttribute("groups", groups);
-        } else {
-            TagLogic tagLogic = TagLogic.get();
-            List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
-            setAttribute("tags", tags);
-
-            if (loginedUser != null) {
-                GroupLogic groupLogic = GroupLogic.get();
-                List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
-                setAttribute("groups", groups);
-            }
-        }
-        LOG.trace("タグ、グループ取得完了");
-
-        TargetLogic targetLogic = TargetLogic.get();
-        Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
-        setAttribute("targets", targets);
-        setAttribute("targetLogic", targetLogic);
+        // ナレッジの公開先の情報を取得
+        setKnowledgeTargetsWithConv(loginedUser, list);
+        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+        setSublistInformations(loginedUser);
 
         return forward("popularity.jsp");
     }
+
+    /**
+     * ストックしたナレッジを表示
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary stocks() throws InvalidParamException {
+        Integer offset = getOffsetParameter();
+        String stockidstr = getParam("stockid");
+        LoginedUser loginedUser = super.getLoginedUser();
+        Long stockid = null;
+        if (StringUtils.isLong(stockidstr)) {
+            stockid = Long.parseLong(stockidstr);
+            StocksEntity stocksEntity = StocksDao.get().selectOnKey(stockid);
+            if (stocksEntity == null || stocksEntity.getInsertUser().intValue() != getLoginUserId().intValue()) {
+                // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+                setSublistInformations(loginedUser);
+                // Stockにアクセスできない
+                return forward("stocks.jsp");
+            } else {
+                setAttribute("stock", stocksEntity);
+            }
+        }
+        
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+        List<KnowledgesEntity> list = knowledgeLogic.getStocks(loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT, stockid);
+        List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(list, loginedUser);
+//        setAttribute("stocks", list);
+        setAttribute("popularities", stocks);
+        LOG.trace("取得完了");
+
+        
+        
+        // ナレッジの公開先の情報を取得
+        setKnowledgeTargetsWithConv(loginedUser, list);
+        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+        setSublistInformations(loginedUser);
+
+        return forward("stocks.jsp");
+    }    
+    
+    
+    
+    
+    
 
     /**
      * いいねを押下

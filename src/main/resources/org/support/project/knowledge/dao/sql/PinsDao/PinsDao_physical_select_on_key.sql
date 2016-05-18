@@ -1,4 +1,4 @@
 SELECT * FROM PINS
  WHERE 
-no = ?
+NO = ?
 ;

@@ -54,7 +54,7 @@ public class TargetsDao extends AbstractDao {
      * @param knowledgeIds
      * @return
      */
-    public List<GroupsEntity> selectGroupsOnKnowledgeIds(ArrayList<Long> knowledgeIds) {
+    public List<GroupsEntity> selectGroupsOnKnowledgeIds(List<Long> knowledgeIds) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectGroupsOnKnowledgeIds.sql");
 
         StringJoinBuilder builder = new StringJoinBuilder();
@@ -86,7 +86,7 @@ public class TargetsDao extends AbstractDao {
      * @param knowledgeIds
      * @return
      */
-    public List<UsersEntity> selectUsersOnKnowledgeIds(ArrayList<Long> knowledgeIds) {
+    public List<UsersEntity> selectUsersOnKnowledgeIds(List<Long> knowledgeIds) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectUsersOnKnowledgeIds.sql");
 
         StringJoinBuilder builder = new StringJoinBuilder();

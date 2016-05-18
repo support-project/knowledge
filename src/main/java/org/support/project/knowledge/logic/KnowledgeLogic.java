@@ -32,6 +32,7 @@ import org.support.project.knowledge.dao.KnowledgeTagsDao;
 import org.support.project.knowledge.dao.KnowledgeUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
+import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
@@ -46,6 +47,8 @@ import org.support.project.knowledge.entity.KnowledgeTagsEntity;
 import org.support.project.knowledge.entity.KnowledgeUsersEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
+import org.support.project.knowledge.entity.StockKnowledgesEntity;
+import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
@@ -53,6 +56,7 @@ import org.support.project.knowledge.entity.ViewHistoriesEntity;
 import org.support.project.knowledge.indexer.IndexingValue;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
+import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.entity.GroupsEntity;
@@ -1330,5 +1334,37 @@ public class KnowledgeLogic {
 
         return KnowledgesDao.get().selectPopularityWithAccessControl(loginedUser, start, end, offset, limit);
     }
+
+    /**
+     * ユーザがストックしたナレッジを取得
+     * @param loginedUser
+     * @param offset
+     * @param limit
+     * @param stockid
+     * @return
+     */
+    public List<KnowledgesEntity> getStocks(LoginedUser loginedUser, int offset, int limit, Long stockid) {
+        return KnowledgesDao.get().selectStocks(loginedUser, offset, limit, stockid);
+    }
+    /**
+     * ナレッジ一覧に格納しているストックの情報を付与する
+     * @param knowledges
+     * @param loginedUser
+     * @return
+     */
+    public List<StockKnowledge> setStockInfo(List<KnowledgesEntity> knowledges, LoginedUser loginedUser) {
+        List<StockKnowledge> list = new ArrayList<>();
+        //N+1問題になるので、もっと良い方法は無いか検討
+        for (KnowledgesEntity knowledgesEntity : knowledges) {
+            StockKnowledge stock = new StockKnowledge();
+            PropertyUtil.copyPropertyValue(knowledgesEntity, stock);
+            list.add(stock);
+            //ストック情報を取得
+            List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(knowledgesEntity, loginedUser);
+            stock.setStocks(stocks);
+        }
+        return list;
+    }
+    
 
 }
