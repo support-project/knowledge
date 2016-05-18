@@ -60,6 +60,9 @@
     <c:param name="PARAM_CONTENT">
         <h4 class="title"><%=jspUtil.label("knowledge.navbar.data.connect")%></h4>
 
+        <%
+            if (!jspUtil.is(Boolean.TRUE, "postgres")) {
+        %>
         <div class="alert alert-info alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -67,7 +70,8 @@
             <strong>Information</strong>
             <%=jspUtil.label("knowledge.connection.msg.recommend.postgres")%>
         </div>
-
+        <% } %>
+        
         <%
             if (jspUtil.is(Boolean.TRUE, "custom")) {
         %>

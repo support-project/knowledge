@@ -183,8 +183,17 @@ public class DatabaseControl extends Control {
                 ConnectionManager.getInstance().addConnectionConfig(connectionConfig); // 新しいコネクション設定をセット
             }
         }
-
         setAttributeOnProperty(connectionConfig);
+        
+        Boolean postgres = Boolean.FALSE;
+        if (DBConnenctionLogic.get().getCustomConnectionConfig() != null) {
+            ConnectionConfig config = DBConnenctionLogic.get().getCustomConnectionConfig();
+            if (config.getDriverClass().indexOf("postgres") != -1) {
+                postgres = Boolean.TRUE;
+            }
+        }
+        setAttribute("postgres", postgres);
+
         return forward("connection.jsp");
     }
 

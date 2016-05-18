@@ -21,6 +21,21 @@
     <c:param name="PARAM_CONTENT">
         <h4 class="title"><%=jspUtil.label("knowledge.navbar.config.system")%></h4>
 
+        <%
+            if (!jspUtil.is(Boolean.TRUE, "postgres")) {
+        %>
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Information</strong>
+            <%=jspUtil.label("knowledge.connection.msg.recommend.postgres")%>
+            <br/>
+            <%=jspUtil.label("knowledge.sysconfig.msg.recommend.postgres")%>
+        </div>
+        <% } %>
+
+
 
         <h4 class="sub_title"><%=jspUtil.label("knowledge.navbar.config.admin")%></h4>
         <ul role="menu" class="menu_list">
