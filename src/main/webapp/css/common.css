@@ -133,3 +133,33 @@ body {
 .menu_list li {
 	margin-top: 10px;
 }
+
+
+.pagetop {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+}
+.pagetop a {
+    display: block;
+    background-color: #ccc;
+    text-align: center;
+    color: #222;
+    font-size: 12px;
+    text-decoration: none;
+    padding: 20px 10px;
+}
+ 
+.pagetop a:hover {
+    display: block;
+    background-color: #222;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    text-decoration: none;
+    padding:20px 10px;
+}
+
+
+
