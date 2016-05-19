@@ -45,7 +45,7 @@ var _REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.delete.upload") %>';
 var _FAIL_REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.fail.delete.upload") %>';
 var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
 var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
-
+var _MSG_TOC_EMPTY = '<%= jspUtil.label("knowledge.view.msg.toc.empty") %>';
 </script>
 
 </c:param>
@@ -166,7 +166,7 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
                 <div>
                     <%
                         if (request.getRemoteUser() != null) {
-                                    if ((Boolean) request.getAttribute("edit")) {
+                            if ((Boolean) request.getAttribute("edit")) {
                     %>
                     <a href="<%=request.getContextPath()%>/protect.knowledge/view_edit/<%=jspUtil.out("knowledgeId")%>"
                         class="btn btn-primary btn_edit" role="button"><i class="fa fa-edit"></i>&nbsp; <%=jspUtil.label("knowledge.view.edit")%>
@@ -213,6 +213,18 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
                         <%=jspUtil.label("knowledge.view.like")%>
                     </button>
                 </div>
+                
+                <div>
+                    <button class="btn btn-success btn_agenda" onclick="showAgenda();">
+                        <i class="fa fa-list"></i>&nbsp;
+                        <%=jspUtil.label("knowledge.view.label.show.toc")%>
+                    </button>
+                    <button class="btn btn-default btn_copy_url" onclick="copyUrl();">
+                        <i class="fa fa-copy"></i>&nbsp;
+                        <%=jspUtil.label("knowledge.view.label.copy.url")%>
+                    </button>
+                </div>
+                
             </div>
 
             <div class="article_info">
@@ -222,6 +234,9 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
                     × <%=jspUtil.out("comments.size()")%>
                 </a>
             </div>
+            
+            <div id="panel_target"></div>
+            
         </div>
     </div>
 
@@ -539,6 +554,16 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 
     <jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
 
+    <div class="panel panel-success" id="ipop">
+      <div class="panel-heading" style="cursor: move;" id="ipop_title">
+        <button type="button" class="close" data-dismiss="window" aria-hidden="true" id="ipop_close">x</button>
+        <h4 class="panel-title">
+        <i class="fa fa-list"></i>&nbsp;
+        <%= jspUtil.label("knowledge.view.label.toc") %>
+        </h4>
+      </div>
+      <div class="panel-body" id="toc"></div>
+    </div>
 
 </c:param>
 
