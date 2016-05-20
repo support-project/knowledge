@@ -31,6 +31,8 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/clipboard/dist/clipboard.min.js"></script>
+
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view.js") %>"></script>
 
@@ -46,6 +48,7 @@ var _FAIL_REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.fail.delete.upl
 var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
 var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 var _MSG_TOC_EMPTY = '<%= jspUtil.label("knowledge.view.msg.toc.empty") %>';
+var _MSG_COPIED = '<%= jspUtil.label("knowledge.view.msg.url.copy") %>';
 </script>
 
 </c:param>
@@ -219,7 +222,7 @@ var _MSG_TOC_EMPTY = '<%= jspUtil.label("knowledge.view.msg.toc.empty") %>';
                         <i class="fa fa-list"></i>&nbsp;
                         <%=jspUtil.label("knowledge.view.label.show.toc")%>
                     </button>
-                    <button class="btn btn-default btn_copy_url" onclick="copyUrl();">
+                    <button class="btn btn-default btn_copy_url" data-clipboard-text="<%= jspUtil.out("url") %>" id="urlBtn">
                         <i class="fa fa-copy"></i>&nbsp;
                         <%=jspUtil.label("knowledge.view.label.copy.url")%>
                     </button>

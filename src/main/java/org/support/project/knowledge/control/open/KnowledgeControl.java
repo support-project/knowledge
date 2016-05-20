@@ -10,6 +10,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
@@ -46,10 +47,13 @@ import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
+import org.support.project.web.common.HttpUtil;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
@@ -82,8 +86,20 @@ public class KnowledgeControl extends KnowledgeControlBase {
     public Boundary view() throws InvalidParamException, ParseException {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
-
+        
         Long knowledgeId = super.getPathLong(Long.valueOf(-1));
+        
+        SystemConfigsDao dao = SystemConfigsDao.get();
+        SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
+        StringBuilder url = new StringBuilder();
+        if (config == null) {
+            url.append(HttpUtil.getContextUrl(getRequest()));
+        } else {
+            url.append(config.getConfigValue());
+        }
+        url.append("/knowledge/").append(knowledgeId);
+        setAttribute("url", url.toString());
+
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
         LoginedUser loginedUser = getLoginedUser();
 
