@@ -115,6 +115,8 @@ public class MarkdownLogic {
         Options options = new Options();
         options.setBreaks(true);
         options.setLinkTargetBlank(true);
+        options.setHeaderPrefix("markdown-agenda-");
+        options.setHeaderIdSequential(true);
 
         String html = Marked.marked(markdown, options);
         result.setHtml(html);
