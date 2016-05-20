@@ -37,4 +37,4 @@
 		<!-- /copy -->
 	</div>
 	<!-- /footer -->
-    <p class="pagetop" style="display: none;"><a href="#content_top">トップ</a></p>
+    <p class="pagetop" style="display: none;"><a href="#content_top"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></p>

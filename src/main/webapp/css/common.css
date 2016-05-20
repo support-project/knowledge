@@ -142,23 +142,31 @@ body {
     right: 30px;
 }
 .pagetop a {
+    border-radius: 30px;
+    width: 60px;
+    height: 60px;
     display: block;
-    background-color: #ccc;
     text-align: center;
-    color: #222;
-    font-size: 12px;
+    vertical-align: middle;
+    background-color: #666699;
+    color: white;
+    font-size: 20px;
     text-decoration: none;
-    padding: 20px 10px;
+    padding:15px 10px;
 }
  
 .pagetop a:hover {
+    border-radius: 30px;
+    width: 60px;
+    height: 60px;
     display: block;
-    background-color: #222;
     text-align: center;
+    vertical-align: middle;
+    background-color: #333366;
     color: #fff;
-    font-size: 12px;
+    font-size: 20px;
     text-decoration: none;
-    padding:20px 10px;
+    padding:15px 10px;
 }
 
 
