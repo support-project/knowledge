@@ -23,7 +23,8 @@
     "bluebird": "3.0.6",
     "jquery-oembed-all": "nfl/jquery-oembed-all",
     "flag-icon-css": "0.8.5",
-    "moment": "2.12.0"
+    "moment": "2.12.0",
+    "clipboard": "1.5.10"
   },
   "devDependencies": {},
   "resolutions": {

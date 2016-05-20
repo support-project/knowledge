@@ -135,6 +135,11 @@ $(document).ready(function(){
 		}
 	}).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');	
 	
+	var clipboard = new Clipboard('#urlBtn');
+	clipboard.on('success', function(e) {
+		$.notify(_MSG_COPIED, 'success');
+	});
+	
 	changeTemplate();
 });
 
