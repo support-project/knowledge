@@ -46,7 +46,7 @@
 		</div>
 	</div>
 
-<div class="container">
+<div class="container" id="content_top">
 ${param.PARAM_CONTENT}
 </div>
 

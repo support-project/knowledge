@@ -27,6 +27,8 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notify.js/notify.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-oembed-all/jquery.oembed.js"></script>
 
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/common.js") %>"></script>
+
 
 <script type="text/javascript">
 var _CONTEXT = '<%= request.getContextPath() %>';

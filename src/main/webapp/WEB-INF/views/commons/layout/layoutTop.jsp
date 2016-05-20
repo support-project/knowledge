@@ -32,8 +32,9 @@
 
 <body>
 
-
+<div id="content_top" style="margin: 0;padding: 0;">
 ${param.PARAM_CONTENT}
+</div>
 
 
 <c:import url="/WEB-INF/views/commons/layout/commonFooter.jsp" />
