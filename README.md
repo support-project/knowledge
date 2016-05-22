@@ -15,9 +15,19 @@
    - [id/password] user3 / user3
 
 
-## Deploy to Heroku
+## Deploy Knowledge
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/support-project/knowledge)
+### Deploy Button
+
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/support-project/knowledge)
+
+[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
+
+### Deploy on Docker
+
+```
+docker pull koda/docker-knowledge
+```
 
 
 ## How to initial set up
