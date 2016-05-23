@@ -18,77 +18,63 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.vo.ParseResult;
 
-@DI(instance=Instance.Prototype)
+@DI(instance = Instance.Prototype)
 public class TikaParser implements Parser {
-	/** ログ */
-	private static Log log = LogFactory.getLog(TikaParser.class);
-	
-	public static TikaParser get() {
-		return Container.getComp(TikaParser.class);
-	}
-	
-	
-	public String read(File file) throws Exception {
-		StringBuilder builder = new StringBuilder();
-		BufferedReader reader = null;
-		try {
-			reader = getReader(file.toPath());
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.trim().length() > 0) {
-					builder.append(line).append("\n");
-				}
-			}
-		} catch (Exception e) {
-//			//読み込めない場合は、catchして読み込み終了(エラーにしない)
-			StringBuilder msg = new StringBuilder();
-			msg.append("read error. skip read.\n");
-			msg.append("\t[Path]      ").append(file.getAbsolutePath()).append("\n");
-			msg.append("\t[Exception] ").append(e.getClass().getName()).append("\n");
-			msg.append("\t[Message]   ").append(e.getMessage()).append("\n");
-			log.warn (msg.toString());
-			throw e;
-		} finally {
-			if (reader != null) {
-				reader.close();
-			}
-		}
-		return builder.toString();
-	}
+    /** ログ */
+    private static Log log = LogFactory.getLog(TikaParser.class);
 
-	
-	
-	
-	public BufferedReader getReader(Path path) throws Exception {
-		AutoDetectParser parser = new AutoDetectParser();
-		ParseContext context = new ParseContext();
-		Metadata metadata = new Metadata();
-		Path filename = path.getFileName();
-		if (filename != null) {
-			metadata.set(Metadata.RESOURCE_NAME_KEY, filename.toString());
-		}
-		
-		InputStream inputStream = Files.newInputStream(path);
-		BufferedReader reader = new BufferedReader(
-					new ParsingReader(
-							parser,
-							inputStream,
-							metadata, 
-							context
-							));
-		return reader;
-	}
+    public static TikaParser get() {
+        return Container.getComp(TikaParser.class);
+    }
 
+    public String read(File file) throws Exception {
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = null;
+        try {
+            reader = getReader(file.toPath());
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().length() > 0) {
+                    builder.append(line).append("\n");
+                }
+            }
+        } catch (Exception e) {
+            // //読み込めない場合は、catchして読み込み終了(エラーにしない)
+            StringBuilder msg = new StringBuilder();
+            msg.append("read error. skip read.\n");
+            msg.append("\t[Path]      ").append(file.getAbsolutePath()).append("\n");
+            msg.append("\t[Exception] ").append(e.getClass().getName()).append("\n");
+            msg.append("\t[Message]   ").append(e.getMessage()).append("\n");
+            log.warn(msg.toString());
+            throw e;
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+        return builder.toString();
+    }
 
+    public BufferedReader getReader(Path path) throws Exception {
+        AutoDetectParser parser = new AutoDetectParser();
+        ParseContext context = new ParseContext();
+        Metadata metadata = new Metadata();
+        Path filename = path.getFileName();
+        if (filename != null) {
+            metadata.set(Metadata.RESOURCE_NAME_KEY, filename.toString());
+        }
 
+        InputStream inputStream = Files.newInputStream(path);
+        BufferedReader reader = new BufferedReader(new ParsingReader(parser, inputStream, metadata, context));
+        return reader;
+    }
 
-	@Override
-	public ParseResult parse(File file)
-			throws Exception {
-		String text = read(file);
-		ParseResult parseResult = new ParseResult();
-		parseResult.setText(text);
-		return parseResult;
-	}
+    @Override
+    public ParseResult parse(File file) throws Exception {
+        String text = read(file);
+        ParseResult parseResult = new ParseResult();
+        parseResult.setText(text);
+        return parseResult;
+    }
 
 }

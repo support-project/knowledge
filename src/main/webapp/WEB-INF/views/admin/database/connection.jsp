@@ -37,17 +37,17 @@
             webSocket.onclose = function() {
                 console.log('onclose');
                 $("#transfer_msg").alert('close');
-            }
+            };
             webSocket.onmessage = function(message) {
                 //console.log('[RECEIVE] ');
                 var result = JSON.parse(message.data);
                 console.log(result);
-                if (result.message.lastIndexOf('Data Transfer is ended', 0) === 0) {
+                if (result.message.lastIndexOf('Processing has been completed', 0) === 0) {
                     $.notify(result.message, 'info');
                 }
-            }
+            };
             webSocket.onerror = function(message) {
-            }
+            };
         }
         </script>
         <%
@@ -60,6 +60,9 @@
     <c:param name="PARAM_CONTENT">
         <h4 class="title"><%=jspUtil.label("knowledge.navbar.data.connect")%></h4>
 
+        <%
+            if (!jspUtil.is(Boolean.TRUE, "postgres")) {
+        %>
         <div class="alert alert-info alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -67,7 +70,8 @@
             <strong>Information</strong>
             <%=jspUtil.label("knowledge.connection.msg.recommend.postgres")%>
         </div>
-
+        <% } %>
+        
         <%
             if (jspUtil.is(Boolean.TRUE, "custom")) {
         %>

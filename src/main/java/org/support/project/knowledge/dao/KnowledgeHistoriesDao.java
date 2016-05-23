@@ -12,40 +12,42 @@ import org.support.project.ormapping.common.SQLManager;
 /**
  * ナレッジ更新履歴
  */
-@DI(instance=Instance.Singleton)
+@DI(instance = Instance.Singleton)
 public class KnowledgeHistoriesDao extends GenKnowledgeHistoriesDao {
 
-	/** SerialVersion */
-	private static final long serialVersionUID = 1L;
-	/**
-	 * インスタンス取得
-	 * AOPに対応
-	 * @return インスタンス
-	 */
-	public static KnowledgeHistoriesDao get() {
-		return Container.getComp(KnowledgeHistoriesDao.class);
-	}
-	
-	/**
-	 * 指定ナレッジの最大の履歴番号を取得
-	 * @param knowledgeId
-	 * @return
-	 */
-	public int selectMaxHistoryNo(Long knowledgeId) {
-		String sql = "SELECT MAX(HISTORY_NO) FROM KNOWLEDGE_HISTORIES WHERE KNOWLEDGE_ID = ? ";
-		return executeQuerySingle(sql, Integer.class, knowledgeId);
-	}
+    /** SerialVersion */
+    private static final long serialVersionUID = 1L;
 
-	public List<KnowledgeHistoriesEntity> selectOnKnowledge(Long knowledgeId, int offset, int limit) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_selectOnKnowledge.sql");
-		return executeQueryList(sql, KnowledgeHistoriesEntity.class, knowledgeId, limit, offset);
-	}
+    /**
+     * インスタンス取得 AOPに対応
+     * 
+     * @return インスタンス
+     */
+    public static KnowledgeHistoriesDao get() {
+        return Container.getComp(KnowledgeHistoriesDao.class);
+    }
 
-	public KnowledgeHistoriesEntity selectOnKeyWithName(Integer historyNo, Long knowledgeId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_selectOnKeyWithName.sql");
-		return executeQuerySingle(sql, KnowledgeHistoriesEntity.class, knowledgeId, historyNo);
-	}
+    /**
+     * 指定ナレッジの最大の履歴番号を取得
+     * 
+     * @param knowledgeId
+     * @return
+     */
+    public int selectMaxHistoryNo(Long knowledgeId) {
+        String sql = "SELECT MAX(HISTORY_NO) FROM KNOWLEDGE_HISTORIES WHERE KNOWLEDGE_ID = ? ";
+        return executeQuerySingle(sql, Integer.class, knowledgeId);
+    }
 
+    public List<KnowledgeHistoriesEntity> selectOnKnowledge(Long knowledgeId, int offset, int limit) {
+        String sql = SQLManager.getInstance()
+                .getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_selectOnKnowledge.sql");
+        return executeQueryList(sql, KnowledgeHistoriesEntity.class, knowledgeId, limit, offset);
+    }
 
+    public KnowledgeHistoriesEntity selectOnKeyWithName(Integer historyNo, Long knowledgeId) {
+        String sql = SQLManager.getInstance()
+                .getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_selectOnKeyWithName.sql");
+        return executeQuerySingle(sql, KnowledgeHistoriesEntity.class, knowledgeId, historyNo);
+    }
 
 }

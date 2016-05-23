@@ -5,56 +5,55 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.gen.GenLikesEntity;
 
-
 /**
  * いいね
  */
-@DI(instance=Instance.Prototype)
+@DI(instance = Instance.Prototype)
 public class LikesEntity extends GenLikesEntity {
 
-	/** SerialVersion */
-	private static final long serialVersionUID = 1L;
-	
-	
-	private String userName;
+    /** SerialVersion */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * インスタンス取得
-	 * AOPに対応
-	 * @return インスタンス
-	 */
-	public static LikesEntity get() {
-		return Container.getComp(LikesEntity.class);
-	}
+    private String userName;
 
-	/**
-	 * コンストラクタ
-	 */
-	public LikesEntity() {
-		super();
-	}
+    /**
+     * インスタンス取得 AOPに対応
+     * 
+     * @return インスタンス
+     */
+    public static LikesEntity get() {
+        return Container.getComp(LikesEntity.class);
+    }
 
-	/**
-	 * コンストラクタ
-	 * @param no NO
-	 */
+    /**
+     * コンストラクタ
+     */
+    public LikesEntity() {
+        super();
+    }
 
-	public LikesEntity(Long no) {
-		super(no);
-	}
+    /**
+     * コンストラクタ
+     * 
+     * @param no NO
+     */
 
-	/**
-	 * @return the userName
-	 */
-	public String getUserName() {
-		return userName;
-	}
+    public LikesEntity(Long no) {
+        super(no);
+    }
 
-	/**
-	 * @param userName the userName to set
-	 */
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    /**
+     * @return the userName
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * @param userName the userName to set
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
 }

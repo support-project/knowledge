@@ -10,6 +10,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
@@ -18,6 +19,7 @@ import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
+import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.CommentsEntity;
@@ -25,6 +27,7 @@ import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
+import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
@@ -38,717 +41,774 @@ import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.MarkDown;
+import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
+import org.support.project.web.common.HttpUtil;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 /**
  * ナレッジ操作のコントロール
+ * 
  * @author Koda
  */
 @DI(instance = Instance.Prototype)
 public class KnowledgeControl extends KnowledgeControlBase {
-	/** ログ */
-	private static final Log LOG = LogFactory.getLog(KnowledgeControl.class);
-	/** Cookieに保持する閲覧履歴の件数 */
-	private static final int COOKIE_COUNT = 20;
-	/** Cookieに保持する閲覧履歴の区切り文字 */
-	private static final String COOKIE_SEPARATOR = "-";
-	/** ナレッジ一覧に表示する件数 */
-	public static final int PAGE_LIMIT = 50;
-	/** お気に入りに表示する件数 */
-	public static final int FAV_PAGE_LIMIT = 10;
-	
-	/**
-	 * ナレッジを表示
-	 * @return
-	 * @throws InvalidParamException 
-	 * @throws ParseException 
-	 */
-	@Get
-	public Boundary view() throws InvalidParamException, ParseException {
-		// 共通処理呼の表示条件の保持の呼び出し
-		setViewParam();
-		
-		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-		LoginedUser loginedUser = getLoginedUser();
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(KnowledgeControl.class);
+    /** Cookieに保持する閲覧履歴の件数 */
+    private static final int COOKIE_COUNT = 20;
+    /** Cookieに保持する閲覧履歴の区切り文字 */
+    private static final String COOKIE_SEPARATOR = "-";
+    /** ナレッジ一覧に表示する件数 */
+    public static final int PAGE_LIMIT = 50;
+    /** お気に入りに表示する件数 */
+    public static final int FAV_PAGE_LIMIT = 10;
 
-		if (loginedUser == null) {
-			KnowledgesEntity entity = KnowledgesDao.get().selectOnKey(knowledgeId);
-			if (entity == null) {
-				return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
-			}
+    /**
+     * ナレッジを表示
+     * 
+     * @return
+     * @throws InvalidParamException
+     * @throws ParseException
+     */
+    @Get
+    public Boundary view() throws InvalidParamException, ParseException {
+        // 共通処理呼の表示条件の保持の呼び出し
+        setViewParam();
+        
+        Long knowledgeId = super.getPathLong(Long.valueOf(-1));
+        
+        SystemConfigsDao dao = SystemConfigsDao.get();
+        SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
+        StringBuilder url = new StringBuilder();
+        if (config == null) {
+            url.append(HttpUtil.getContextUrl(getRequest()));
+        } else {
+            url.append(config.getConfigValue());
+        }
+        url.append("/knowledge/").append(knowledgeId);
+        setAttribute("url", url.toString());
 
-			if (!entity.getPublicFlag().equals(KnowledgeLogic.PUBLIC_FLAG_PUBLIC)) {
-				return super.redirect(getRequest().getContextPath() + "/protect.knowledge/view/" + knowledgeId);
-			}
-		}
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+        LoginedUser loginedUser = getLoginedUser();
 
-		KnowledgesEntity entity = knowledgeLogic.selectWithTags(knowledgeId, getLoginedUser());
-		if (entity == null) {
-			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
-		}
+        if (loginedUser == null) {
+            KnowledgesEntity entity = KnowledgesDao.get().selectOnKey(knowledgeId);
+            if (entity == null) {
+                return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+            }
 
-		// 今見たナレッジの情報をCookieに保存
-		List<String> ids = new ArrayList<String>();
-		ids.add(String.valueOf(knowledgeId));
-		String history = getCookie(SystemConfig.COOKIE_KEY_HISTORY);
-		LOG.debug("history: " + history);
-		if (history.indexOf(COOKIE_SEPARATOR) != -1) {
-			String[] historyIds = history.split(COOKIE_SEPARATOR);
-			for (int i = 0; i < historyIds.length; i++) {
-				if (!ids.contains(historyIds[i]) && StringUtils.isLong(historyIds[i])) {
-					ids.add(historyIds[i]);
-				}
-				if (ids.size() >= COOKIE_COUNT) {
-					break;
-				}
-			}
-		} else {
-			if (!ids.contains(history)) {
-				ids.add(history);
-			}
-		}
-		String cookieHistory = String.join(COOKIE_SEPARATOR, ids);
-		setCookie(SystemConfig.COOKIE_KEY_HISTORY, cookieHistory);
-		
-		//Markdownを処理
-		entity.setTitle(sanitize(entity.getTitle()));
-		MarkDown markDown = MarkdownLogic.get().markdownToHtml(entity.getContent());
-		entity.setContent(markDown.getHtml());
-		
-		setAttributeOnProperty(entity);
-		
-		String offset = super.getParam("offset", String.class);
-		if (StringUtils.isEmpty(offset)) {
-			offset = "0";
-		}
-		setAttribute("offset", offset);
-		
-		// ナレッジに紐づく添付ファイルを取得
-		UploadedFileLogic fileLogic = UploadedFileLogic.get();
-		List<UploadFile> files = fileLogic.selectOnKnowledgeId(knowledgeId, getRequest().getContextPath());
-		setAttribute("files", files);
-		
-		// 閲覧履歴を追加
-		knowledgeLogic.addViewHistory(knowledgeId, getLoginedUser());
-		
-		// いいね！の件数取得
-		LikesDao likesDao = LikesDao.get();
-		Long count = likesDao.countOnKnowledgeId(knowledgeId);
-		setAttribute("like_count", count);
-		
-		// コメント取得
-		CommentsDao commentsDao = CommentsDao.get();
-		List<CommentsEntity> comments = commentsDao.selectOnKnowledgeId(knowledgeId);
-		// Markdown を処理
-		for (CommentsEntity commentsEntity : comments) {
-			MarkDown markDown2 = MarkdownLogic.get().markdownToHtml(commentsEntity.getComment());
-			commentsEntity.setComment(markDown2.getHtml());
-		}
-		setAttribute("comments", comments);
-		
-		// 表示するグループを取得
-		//List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
-		List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
-		setAttribute("groups", groups);
-		
-		// 編集権限
-		List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
-		setAttribute("editors", editors);
-		boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
-		setAttribute("edit", edit);
+            if (!entity.getPublicFlag().equals(KnowledgeLogic.PUBLIC_FLAG_PUBLIC)) {
+                return super.redirect(getRequest().getContextPath() + "/protect.knowledge/view/" + knowledgeId);
+            }
+        }
 
-		ArrayList<Long> knowledgeIds = new ArrayList<Long>();
-		knowledgeIds.add(entity.getKnowledgeId());
+        KnowledgesEntity entity = knowledgeLogic.selectWithTags(knowledgeId, getLoginedUser());
+        if (entity == null) {
+            return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+        }
 
-		TargetLogic targetLogic = TargetLogic.get();
-		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
-		setAttribute("targets", targets);
-		setAttribute("targetLogic", targetLogic);
+        // 今見たナレッジの情報をCookieに保存
+        List<String> ids = new ArrayList<String>();
+        ids.add(String.valueOf(knowledgeId));
+        String history = getCookie(SystemConfig.COOKIE_KEY_HISTORY);
+        LOG.debug("history: " + history);
+        if (history.indexOf(COOKIE_SEPARATOR) != -1) {
+            String[] historyIds = history.split(COOKIE_SEPARATOR);
+            for (int i = 0; i < historyIds.length; i++) {
+                if (!ids.contains(historyIds[i]) && StringUtils.isLong(historyIds[i])) {
+                    ids.add(historyIds[i]);
+                }
+                if (ids.size() >= COOKIE_COUNT) {
+                    break;
+                }
+            }
+        } else {
+            if (!ids.contains(history)) {
+                ids.add(history);
+            }
+        }
+        String cookieHistory = String.join(COOKIE_SEPARATOR, ids);
+        setCookie(SystemConfig.COOKIE_KEY_HISTORY, cookieHistory);
 
-		return forward("view.jsp");
-	}
-	
-	/**
-	 * リストを表示
-	 * @return
-	 * @throws Exception 
-	 */
-	@Get
-	public Boundary list() throws Exception {
-		LOG.trace("Call list");
-		Integer offset = super.getPathInteger(0);
-		setAttribute("offset", offset);
-		String keyword = getParam("keyword");
-		setAttribute("searchKeyword", keyword);
-		
-		// ログインユーザ情報を最新化
-		// TODO 毎回最新化するのは、パフォーマンスが悪い？グループ情報が更新になった場合に、影響があるユーザの一覧を保持しておき、
-		//      そのユーザのみを更新した方が良いかも。いったんは、ナレッジの一覧を表示する際に、毎回更新してみる（それほど負荷が高くなさそうなので）
-		super.updateLoginInfo();
-		
-		// 共通処理呼の表示条件の保持の呼び出し
-		setViewParam();
+        // Markdownを処理
+        entity.setTitle(sanitize(entity.getTitle()));
+        MarkDown markDown = MarkdownLogic.get().markdownToHtml(entity.getContent());
+        entity.setContent(markDown.getHtml());
 
-		TagsDao tagsDao = TagsDao.get();
-		ExGroupsDao groupsDao = ExGroupsDao.get();
-		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-		KeywordLogic keywordLogic = KeywordLogic.get();
-		
-		LoginedUser loginedUser = super.getLoginedUser();
-		String tag = getParam("tag");
-		String group = getParam("group");
-		String user = getParam("user");
-		String tagNames = getParam("tagNames");
-		String groupNames = getParam("groupNames");
-		
-		List<KnowledgesEntity> knowledges = new ArrayList<>();
-		if (StringUtils.isInteger(tag)) {
-			//タグを選択している
-			LOG.trace("show on Tag");
-			knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
-			TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
-			List<Integer> tagIds = new ArrayList<Integer>();
-			String name = "";
-			if (tagsEntity != null) {
-				tagIds.add(tagsEntity.getTagId());
-				name = tagsEntity.getTagName();
-			}
-			setAttribute("selectedTag", tagsEntity);
-			setAttribute("selectedTagIds", tagIds);
-			setAttribute("searchKeyword", keywordLogic.toTagsQuery(name) + keyword);
-		} else if (StringUtils.isInteger(group)) {
-			//グループを選択している
-			LOG.trace("show on Group");
-			knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
-			GroupsEntity groupsEntity = groupsDao.selectOnKey(new Integer(group));
-			List<Integer> groupIds = new ArrayList<Integer>();
-			String name = "";
-			if (groupsEntity != null) {
-				groupIds.add(groupsEntity.getGroupId());
-				name = groupsEntity.getGroupName();
-			}
-			setAttribute("selectedGroup", groupsEntity);
-			setAttribute("selectedGroupIds", groupIds);
-			setAttribute("searchKeyword", keywordLogic.toGroupsQuery(name) + keyword);
-		} else if (StringUtils.isNotEmpty(user) && StringUtils.isInteger(user)) {
-			// ユーザを選択している
-			LOG.trace("show on User");
-			int userId = Integer.parseInt(user);
-			knowledges.addAll(knowledgeLogic.showKnowledgeOnUser(userId, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
-			UsersEntity usersEntity = UsersDao.get().selectOnKey(userId);
-			usersEntity.setPassword("");
-			setAttribute("selectedUser", usersEntity);
-		} else if (StringUtils.isNotEmpty(tagNames) || StringUtils.isNotEmpty(groupNames)) {
-			// タグとキーワードで検索
-			LOG.trace("show on Tags and Groups and keyword");
-			String searchKeyword = "";
-			String[] taglist = tagNames.split(",");
-			List<TagsEntity> tags = new ArrayList<TagsEntity>();
-			List<Integer> tagIds = new ArrayList<Integer>();
-			for (String string : taglist) {
-				String tagname = string.trim();
-				if (tagname.startsWith(" ") && tagname.length() > " ".length()) {
-					tagname = tagname.substring(" ".length());
-				}
-				TagsEntity tagsEntity = tagsDao.selectOnTagName(tagname);
-				if (tagsEntity != null) {
-					tags.add(tagsEntity);
-					tagIds.add(tagsEntity.getTagId());
-				}
-			}
-			if (0 < tags.size()) {
-				searchKeyword += keywordLogic.toTagsQuery(tagNames.replaceAll("[\\xc2\\xa0]", ""));
-			}
+        setAttributeOnProperty(entity);
 
-			List<GroupsEntity> groups = new ArrayList<GroupsEntity>();
-			List<Integer> groupIds = new ArrayList<Integer>();
-			if (loginedUser != null) {
-				String[] grouplist = groupNames.split(",");
-				for (String string : grouplist) {
-					String groupname = string.trim();
-					if (groupname.startsWith(" ") && groupname.length() > " ".length()) {
-						groupname = groupname.substring(" ".length());
-					}
-					GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupname);
-					if (groupsEntity != null) {
-						groups.add(groupsEntity);
-						groupIds.add(groupsEntity.getGroupId());
-					}
-				}
-				if (0 < groups.size()) {
-					searchKeyword += keywordLogic.toGroupsQuery(groupNames.replaceAll("[\\xc2\\xa0]", ""));
-				}
-			}
+        String offset = super.getParam("offset", String.class);
+        if (StringUtils.isEmpty(offset)) {
+            offset = "0";
+        }
+        setAttribute("offset", offset);
 
-			setAttribute("selectedTags", tags);
-			setAttribute("selectedGroups", groups);
-			setAttribute("selectedTagIds", tagIds);
-			setAttribute("selectedGroupIds", groupIds);
-			setAttribute("searchKeyword", searchKeyword + keyword);
+        // ナレッジに紐づく添付ファイルを取得
+        UploadedFileLogic fileLogic = UploadedFileLogic.get();
+        List<UploadFile> files = fileLogic.selectOnKnowledgeId(knowledgeId, getRequest().getContextPath());
+        setAttribute("files", files);
 
-			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
-		} else {
-			// その他(キーワード検索)
-			LOG.trace("search");
-			List<GroupsEntity> groups = null;
-			List<TagsEntity> tags = null;
-			List<Integer> groupIds = new ArrayList<Integer>();
-			List<Integer> tagIds = new ArrayList<Integer>();
+        // 閲覧履歴を追加
+        knowledgeLogic.addViewHistory(knowledgeId, getLoginedUser());
 
-			if (loginedUser != null) {
-				String groupKeyword = keywordLogic.parseQuery("groups", keyword);
-				if (groupKeyword != null) {
-					groups = new ArrayList<GroupsEntity>();
-					for (String groupName : groupKeyword.split(",")) {
-						GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupName);
-						if (groupsEntity != null) {
-							groups.add(groupsEntity);
-							groupIds.add(groupsEntity.getGroupId());
-						}
-					}
-					setAttribute("selectedGroups", groups);
-					setAttribute("selectedGroupIds", groupIds);
-				}
-			}
+        // いいね！の件数取得
+        LikesDao likesDao = LikesDao.get();
+        Long count = likesDao.countOnKnowledgeId(knowledgeId);
+        setAttribute("like_count", count);
 
-			String tagKeyword = keywordLogic.parseQuery("tags", keyword);
-			if (tagKeyword != null) {
-				tags = new ArrayList<TagsEntity>();
-				for (String tagName : tagKeyword.split(",")) {
-					TagsEntity tagsEntity = tagsDao.selectOnTagName(tagName);
-					if (tagsEntity != null) {
-						tags.add(tagsEntity);
-						tagIds.add(tagsEntity.getTagId());
-					}
-				}
-				setAttribute("selectedTags", tags);
-				setAttribute("selectedTagIds", tagIds);
-			}
+        // コメント取得
+        CommentsDao commentsDao = CommentsDao.get();
+        List<CommentsEntity> comments = commentsDao.selectOnKnowledgeId(knowledgeId);
+        // Markdown を処理
+        for (CommentsEntity commentsEntity : comments) {
+            MarkDown markDown2 = MarkdownLogic.get().markdownToHtml(commentsEntity.getComment());
+            commentsEntity.setComment(markDown2.getHtml());
+        }
+        setAttribute("comments", comments);
 
-			keyword = keywordLogic.parseKeyword(keyword);
+        // 表示するグループを取得
+        // List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
+        List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
+        setAttribute("groups", groups);
 
-			setAttribute("keyword", keyword);
-			knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
-		}
+        // 編集権限
+        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+        setAttribute("editors", editors);
+        boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
+        setAttribute("edit", edit);
 
-		setAttribute("knowledges", knowledges);
-		LOG.trace("検索終了");
+        ArrayList<Long> knowledgeIds = new ArrayList<Long>();
+        knowledgeIds.add(entity.getKnowledgeId());
+        
+        // ナレッジの公開先の情報を取得（共通処理）
+        setKnowledgeTargets(loginedUser, knowledgeIds);
 
-		ArrayList<Long> knowledgeIds = new ArrayList<Long>();
-		for (KnowledgesEntity knowledgesEntity : knowledges) {
-			knowledgeIds.add(knowledgesEntity.getKnowledgeId());
-		}
+        //ストック情報を取得
+        List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(entity, loginedUser);
+        setAttribute("stocks", stocks);
+        
+        return forward("view.jsp");
+    }
+    
+    /**
+     * ナレッジの公開先の情報を取得
+     * @param loginedUser
+     * @param knowledgeIds
+     */
+    private void setKnowledgeTargetsWithConv(LoginedUser loginedUser, List<KnowledgesEntity> knowledges) {
+        ArrayList<Long> knowledgeIds = new ArrayList<>();
+        for (KnowledgesEntity knowledgesEntity : knowledges) {
+            knowledgeIds.add(knowledgesEntity.getKnowledgeId());
+        }
+        setKnowledgeTargets(loginedUser, knowledgeIds);
+    }
+    /**
+     * ナレッジの公開先の情報を取得
+     * @param loginedUser
+     * @param knowledgeIds
+     */
+    private void setKnowledgeTargets(LoginedUser loginedUser, List<Long> knowledgeIds) {
+        TargetLogic targetLogic = TargetLogic.get();
+        Map<Long, List<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
+        setAttribute("targets", targets);
+        setAttribute("targetLogic", targetLogic);
+    }
+    
+    /**
+     * タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+     * @param loginedUser
+     */
+    private void setSublistInformations(LoginedUser loginedUser) {
+        TagsDao tagsDao = TagsDao.get();
+        ExGroupsDao groupsDao = ExGroupsDao.get();
 
-		TargetLogic targetLogic = TargetLogic.get();
-		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
-		setAttribute("targets", targets);
-		setAttribute("targetLogic", targetLogic);
+        // タグとグループの情報を取得（画面右側のサブリスト部分に表示する）
+        if (loginedUser != null && loginedUser.isAdmin()) {
+            // 管理者であれば、ナレッジの件数は、参照権限を考慮していない
+            List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
+            setAttribute("tags", tags);
 
-		int previous = offset - 1;
-		if (previous < 0) {
-			previous = 0;
-		}
-		
-		// タグとグループの情報を取得
-		if (loginedUser != null && loginedUser.isAdmin()) {
-			// 管理者であれば、ナレッジの件数は、参照権限を考慮していない
-	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
-			setAttribute("tags", tags);
+            List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
+            setAttribute("groups", groups);
+        } else {
+            TagLogic tagLogic = TagLogic.get();
+            List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
+            setAttribute("tags", tags);
 
-			List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
-			setAttribute("groups", groups);
-		} else {
-			TagLogic tagLogic = TagLogic.get();
-			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
-			setAttribute("tags", tags);
+            if (loginedUser != null) {
+                GroupLogic groupLogic = GroupLogic.get();
+                List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
+                setAttribute("groups", groups);
+            }
+        }
+        LOG.trace("タグ、グループ取得完了");
+    }
+    
+    /**
+     * 一覧に表示するオフセット（ページ番号）を取得する
+     * @return
+     * @throws InvalidParamException
+     */
+    private Integer getOffsetParameter() throws InvalidParamException {
+        Integer offset = super.getPathInteger(0);
+        int previous = offset - 1;
+        if (previous < 0) {
+            previous = 0;
+        }
+        setAttribute("offset", offset);
+        setAttribute("previous", previous);
+        setAttribute("next", offset + 1);
+        return offset;
+    }
+    
+    
+    
+    /**
+     * リストを表示
+     * 
+     * @return
+     * @throws Exception
+     */
+    @Get
+    public Boundary list() throws Exception {
+        LOG.trace("Call list");
+        Integer offset = getOffsetParameter();
+        
+        String keyword = getParam("keyword");
+        setAttribute("searchKeyword", keyword);
 
-			if (loginedUser != null) {
-				GroupLogic groupLogic = GroupLogic.get();
-				List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
-				setAttribute("groups", groups);
-			}
-		}
-		LOG.trace("タグ、グループ取得完了");
-		
-		setAttribute("offset", offset);
-		setAttribute("previous", previous);
-		setAttribute("next", offset + 1);
-		return forward("list.jsp");
-	}
-	
-	
-	/**
-	 * 閲覧履歴の表示
-	 * @return
-	 * @throws InvalidParamException
-	 */
-	@Get
-	public Boundary show_history() throws InvalidParamException {
-		LoginedUser loginedUser = super.getLoginedUser();
-		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-		TagsDao tagsDao = TagsDao.get();
-		ExGroupsDao groupsDao = ExGroupsDao.get();
-		
-		// History表示
-		// TODO 履歴表示を毎回取得するのはイマイチ。いったんセッションに保存しておくのが良いかも
-		String history = getCookie(SystemConfig.COOKIE_KEY_HISTORY);
-		List<String> historyIds = new ArrayList<>();
-		ArrayList<Long> knowledgeIds = new ArrayList<>();
-		LOG.debug("history: " + history);
-		if (history.indexOf(COOKIE_SEPARATOR) != -1) {
-			String[] splits = history.split(COOKIE_SEPARATOR);
-			for (String string : splits) {
-				if (StringUtils.isLong(string)) {
-					historyIds.add(string);
-					knowledgeIds.add(new Long(string));
-				}
-			}
-		} else {
-			if (StringUtils.isLong(history)) {
-				historyIds.add(history);
-				knowledgeIds.add(new Long(history));
-			}
-		}
-		List<KnowledgesEntity> histories = knowledgeLogic.getKnowledges(historyIds, loginedUser);
-		LOG.trace("履歴取得完了");
-		setAttribute("histories", histories);
-		
-		// タグとグループの情報を取得
-		if (loginedUser != null && loginedUser.isAdmin()) {
-			// 管理者であれば、ナレッジの件数は、参照権限を考慮していない
-	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
-			setAttribute("tags", tags);
+        // ログインユーザ情報を最新化
+        // TODO 毎回最新化するのは、パフォーマンスが悪い？グループ情報が更新になった場合に、影響があるユーザの一覧を保持しておき、
+        // そのユーザのみを更新した方が良いかも。いったんは、ナレッジの一覧を表示する際に、毎回更新してみる（それほど負荷が高くなさそうなので）
+        super.updateLoginInfo();
 
-			List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
-			setAttribute("groups", groups);
-		} else {
-			TagLogic tagLogic = TagLogic.get();
-			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
-			setAttribute("tags", tags);
+        // 共通処理呼の表示条件の保持の呼び出し
+        setViewParam();
 
-			if (loginedUser != null) {
-				GroupLogic groupLogic = GroupLogic.get();
-				List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
-				setAttribute("groups", groups);
-			}
-		}
-		LOG.trace("タグ、グループ取得完了");
+        TagsDao tagsDao = TagsDao.get();
+        ExGroupsDao groupsDao = ExGroupsDao.get();
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+        KeywordLogic keywordLogic = KeywordLogic.get();
 
-		TargetLogic targetLogic = TargetLogic.get();
-		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
-		setAttribute("targets", targets);
-		setAttribute("targetLogic", targetLogic);
-		
-		return forward("show_history.jsp");
-	}
-	
-	
-	/**
-	 * 閲覧履歴の表示
-	 * @return
-	 * @throws InvalidParamException
-	 */
-	@Get
-	public Boundary show_popularity() throws InvalidParamException {
-		LoginedUser loginedUser = super.getLoginedUser();
-		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-		TagsDao tagsDao = TagsDao.get();
-		ExGroupsDao groupsDao = ExGroupsDao.get();
-		
-		List<KnowledgesEntity> popularities = knowledgeLogic.getPopularityKnowledges(loginedUser, 0, 20);
-		LOG.trace("取得完了");
-		setAttribute("popularities", popularities);
-		
-		ArrayList<Long> knowledgeIds = new ArrayList<>();
-		for (KnowledgesEntity knowledgesEntity : popularities) {
-			knowledgeIds.add(knowledgesEntity.getKnowledgeId());
-		}
-		
-		// タグとグループの情報を取得
-		if (loginedUser != null && loginedUser.isAdmin()) {
-			// 管理者であれば、ナレッジの件数は、参照権限を考慮していない
-	 		List<TagsEntity> tags = tagsDao.selectTagsWithCount(0, FAV_PAGE_LIMIT);
-			setAttribute("tags", tags);
+        LoginedUser loginedUser = super.getLoginedUser();
+        String tag = getParam("tag");
+        String group = getParam("group");
+        String user = getParam("user");
+        String tagNames = getParam("tagNames");
+        String groupNames = getParam("groupNames");
 
-			List<GroupsEntity> groups = groupsDao.selectGroupsWithCount(0, FAV_PAGE_LIMIT);
-			setAttribute("groups", groups);
-		} else {
-			TagLogic tagLogic = TagLogic.get();
-			List<TagsEntity> tags = tagLogic.selectTagsWithCount(loginedUser, 0, FAV_PAGE_LIMIT);
-			setAttribute("tags", tags);
+        List<KnowledgesEntity> knowledges = new ArrayList<>();
+        if (StringUtils.isInteger(tag)) {
+            // タグを選択している
+            LOG.trace("show on Tag");
+            knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+            TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
+            List<Integer> tagIds = new ArrayList<Integer>();
+            String name = "";
+            if (tagsEntity != null) {
+                tagIds.add(tagsEntity.getTagId());
+                name = tagsEntity.getTagName();
+            }
+            setAttribute("selectedTag", tagsEntity);
+            setAttribute("selectedTagIds", tagIds);
+            setAttribute("searchKeyword", keywordLogic.toTagsQuery(name) + keyword);
+        } else if (StringUtils.isInteger(group)) {
+            // グループを選択している
+            LOG.trace("show on Group");
+            knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+            GroupsEntity groupsEntity = groupsDao.selectOnKey(new Integer(group));
+            List<Integer> groupIds = new ArrayList<Integer>();
+            String name = "";
+            if (groupsEntity != null) {
+                groupIds.add(groupsEntity.getGroupId());
+                name = groupsEntity.getGroupName();
+            }
+            setAttribute("selectedGroup", groupsEntity);
+            setAttribute("selectedGroupIds", groupIds);
+            setAttribute("searchKeyword", keywordLogic.toGroupsQuery(name) + keyword);
+        } else if (StringUtils.isNotEmpty(user) && StringUtils.isInteger(user)) {
+            // ユーザを選択している
+            LOG.trace("show on User");
+            int userId = Integer.parseInt(user);
+            knowledges.addAll(knowledgeLogic.showKnowledgeOnUser(userId, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+            UsersEntity usersEntity = UsersDao.get().selectOnKey(userId);
+            usersEntity.setPassword("");
+            setAttribute("selectedUser", usersEntity);
+        } else if (StringUtils.isNotEmpty(tagNames) || StringUtils.isNotEmpty(groupNames)) {
+            // タグとキーワードで検索
+            LOG.trace("show on Tags and Groups and keyword");
+            String searchKeyword = "";
+            String[] taglist = tagNames.split(",");
+            List<TagsEntity> tags = new ArrayList<TagsEntity>();
+            List<Integer> tagIds = new ArrayList<Integer>();
+            for (String string : taglist) {
+                String tagname = string.trim();
+                if (tagname.startsWith(" ") && tagname.length() > " ".length()) {
+                    tagname = tagname.substring(" ".length());
+                }
+                TagsEntity tagsEntity = tagsDao.selectOnTagName(tagname);
+                if (tagsEntity != null) {
+                    tags.add(tagsEntity);
+                    tagIds.add(tagsEntity.getTagId());
+                }
+            }
+            if (0 < tags.size()) {
+                searchKeyword += keywordLogic.toTagsQuery(tagNames.replaceAll("[\\xc2\\xa0]", ""));
+            }
 
-			if (loginedUser != null) {
-				GroupLogic groupLogic = GroupLogic.get();
-				List<GroupsEntity> groups = groupLogic.selectMyGroup(loginedUser, 0, FAV_PAGE_LIMIT);
-				setAttribute("groups", groups);
-			}
-		}
-		LOG.trace("タグ、グループ取得完了");
+            List<GroupsEntity> groups = new ArrayList<GroupsEntity>();
+            List<Integer> groupIds = new ArrayList<Integer>();
+            if (loginedUser != null) {
+                String[] grouplist = groupNames.split(",");
+                for (String string : grouplist) {
+                    String groupname = string.trim();
+                    if (groupname.startsWith(" ") && groupname.length() > " ".length()) {
+                        groupname = groupname.substring(" ".length());
+                    }
+                    GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupname);
+                    if (groupsEntity != null) {
+                        groups.add(groupsEntity);
+                        groupIds.add(groupsEntity.getGroupId());
+                    }
+                }
+                if (0 < groups.size()) {
+                    searchKeyword += keywordLogic.toGroupsQuery(groupNames.replaceAll("[\\xc2\\xa0]", ""));
+                }
+            }
 
-		TargetLogic targetLogic = TargetLogic.get();
-		Map<Long, ArrayList<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
-		setAttribute("targets", targets);
-		setAttribute("targetLogic", targetLogic);
-		
-		return forward("popularity.jsp");
-	}	
-	
-	
-	/**
-	 * いいねを押下
-	 * @return
-	 * @throws InvalidParamException 
-	 */
-	@Get
-	public Boundary like() throws InvalidParamException {
-		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-		Long count = knowledgeLogic.addLike(knowledgeId, getLoginedUser());
-		LikeCount likeCount = new LikeCount();
-		likeCount.setKnowledgeId(knowledgeId);
-		likeCount.setCount(count);
-		return send(likeCount);
-	}
-	
-	
-	
-	/**
-	 * タイトルとコンテンツの危険なタグをエスケープした結果を返す
-	 * @param entity
-	 * @return
-	 * @throws ParseException 
-	 */
-	@Post
-	public Boundary escape(KnowledgesEntity entity) throws ParseException {
-		super.setSendEscapeHtml(false);
-		entity.setTitle(sanitize(entity.getTitle()));
-		entity.setContent(sanitize(entity.getContent()));
-		return super.send(entity);
-	}
-	
-	/**
-	 * タイトルの危険なタグをサニタイズし、コンテンツのmarkdownをHTMLへ変換する
-	 * @param entity
-	 * @return
-	 * @throws ParseException 
-	 */
-	@Post
-	public Boundary marked(KnowledgesEntity entity) throws ParseException {
-		super.setSendEscapeHtml(false);
-		entity.setTitle(sanitize(entity.getTitle()));
-		MarkDown markDown = MarkdownLogic.get().markdownToHtml(entity.getContent());
-		entity.setContent(markDown.getHtml());
-		return super.send(entity);
-	}	
-	
-	/**
-	 * 検索画面を表示
-	 * @return
-	 */
-	@Get
-	public Boundary search() {
-		KeywordLogic keywordLogic = KeywordLogic.get();
-		LoginedUser loginedUser = super.getLoginedUser();
-		List<GroupsEntity> groupitems = new ArrayList<GroupsEntity>();
-		List<TagsEntity> tagitems = TagsDao.get().selectAll();
-		setAttribute("tagitems", tagitems);
-		if (loginedUser != null) {
-			if (loginedUser.isAdmin()) {
-				groupitems = ExGroupsDao.get().selectAll();
-			} else {
-				groupitems = loginedUser.getGroups();
-			}
-		}
-		setAttribute("groupitems", groupitems);
-		// 共通処理呼の表示条件の保持の呼び出し
-		setViewParam();
+            setAttribute("selectedTags", tags);
+            setAttribute("selectedGroups", groups);
+            setAttribute("selectedTagIds", tagIds);
+            setAttribute("selectedGroupIds", groupIds);
+            setAttribute("searchKeyword", searchKeyword + keyword);
 
-		// groups:やtags:などの検索クエリを分解してフォームに表示するために分解したデータをセットする
-		String keyword = getParam("keyword");
-		setAttribute("searchKeyword", keywordLogic.parseKeyword(keyword));
-		setAttribute("tagNames", keywordLogic.parseQuery("tags", keyword));
-		if (loginedUser != null) {
-			setAttribute("groupNames", keywordLogic.parseQuery("groups", keyword));
-		}
+            knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+        } else {
+            // その他(キーワード検索)
+            LOG.trace("search");
+            List<GroupsEntity> groups = null;
+            List<TagsEntity> tags = null;
+            List<Integer> groupIds = new ArrayList<Integer>();
+            List<Integer> tagIds = new ArrayList<Integer>();
 
-		return forward("search.jsp");
-	}
-	
-	/**
-	 * いいねを押したユーザを一覧表示
-	 * @return
-	 * @throws InvalidParamException 
-	 */
-	@Get
-	public Boundary likes() throws InvalidParamException {
-		// 共通処理呼の表示条件の保持の呼び出し
-		setViewParam();
-		
-		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		setAttribute("knowledgeId", knowledgeId);
-		// 権限チェック(いったんアクセスできるユーザは全て表示) TODO 登録者のみにする？
-		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-		KnowledgesEntity entity = knowledgeLogic.select(knowledgeId, getLoginedUser());
-		if (entity == null) {
-			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
-		}
-		
-		Integer page = 0;
-		String p = getParamWithDefault("page", "");
-		if (StringUtils.isInteger(p)) {
-			page = Integer.parseInt(p);
-		}
-		
-		LikesDao likesDao = LikesDao.get();
-		List<LikesEntity> likes = likesDao.selectOnKnowledge(knowledgeId, page * PAGE_LIMIT, PAGE_LIMIT);
-		setAttribute("likes", likes);
-		
-		
-		int previous = page - 1;
-		if (previous < 0) {
-			previous = 0;
-		}
-		setAttribute("page", page);
-		setAttribute("previous", previous);
-		setAttribute("next", page + 1);
-		
-		return forward("likes.jsp");
-	}
-	
-	/**
-	 * 編集履歴の表示
-	 * @return
-	 * @throws InvalidParamException
-	 */
-	@Get
-	public Boundary histories() throws InvalidParamException {
-		// 共通処理呼の表示条件の保持の呼び出し
-		setViewParam();
-		
-		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		setAttribute("knowledgeId", knowledgeId);
-		// 権限チェック(いったんアクセスできるユーザは全て表示)
-		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-		KnowledgesEntity entity = knowledgeLogic.select(knowledgeId, getLoginedUser());
-		if (entity == null) {
-			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
-		}
-		
-		Integer page = 0;
-		String p = getParamWithDefault("page", "");
-		if (StringUtils.isInteger(p)) {
-			page = Integer.parseInt(p);
-		}
-		int previous = page - 1;
-		if (previous < 0) {
-			previous = 0;
-		}
-		setAttribute("page", page);
-		setAttribute("previous", previous);
-		setAttribute("next", page + 1);
-		
-		// 履歴を取得
-		KnowledgeHistoriesDao historiesDao = KnowledgeHistoriesDao.get();
-		List<KnowledgeHistoriesEntity> histories = historiesDao.selectOnKnowledge(knowledgeId, page * PAGE_LIMIT, PAGE_LIMIT);
-		setAttribute("histories", histories);
+            if (loginedUser != null) {
+                String groupKeyword = keywordLogic.parseQuery("groups", keyword);
+                if (groupKeyword != null) {
+                    groups = new ArrayList<GroupsEntity>();
+                    for (String groupName : groupKeyword.split(",")) {
+                        GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupName);
+                        if (groupsEntity != null) {
+                            groups.add(groupsEntity);
+                            groupIds.add(groupsEntity.getGroupId());
+                        }
+                    }
+                    setAttribute("selectedGroups", groups);
+                    setAttribute("selectedGroupIds", groupIds);
+                }
+            }
 
-		return forward("histories.jsp");
-	}
-	
-	/**
-	 * 編集履歴の更新内容表示
-	 * @return
-	 * @throws InvalidParamException
-	 */
-	@Get
-	public Boundary history() throws InvalidParamException {
-		// 共通処理呼の表示条件の保持の呼び出し
-		setViewParam();
-		
-		Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-		setAttribute("knowledgeId", knowledgeId);
-		// 権限チェック(いったんアクセスできるユーザは全て表示)
-		KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-		KnowledgesEntity entity = knowledgeLogic.select(knowledgeId, getLoginedUser());
-		if (entity == null) {
-			return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
-		}
-		
-		Integer page = 0;
-		String p = getParamWithDefault("page", "");
-		if (StringUtils.isInteger(p)) {
-			page = Integer.parseInt(p);
-		}
-		setAttribute("page", page);
-		
-		Integer historyNo = 0;
-		String h = getParamWithDefault("history_no", "");
-		if (StringUtils.isInteger(h)) {
-			historyNo = Integer.parseInt(h);
-		}
-		
-		KnowledgeHistoriesDao historiesDao = KnowledgeHistoriesDao.get();
-		KnowledgeHistoriesEntity history = historiesDao.selectOnKeyWithName(historyNo, knowledgeId);
-		setAttribute("history", history);
-		setAttribute("now", entity);
-		
-		List<String> changes = DiffLogic.get().diff(history.getContent(), entity.getContent());
-		setAttribute("changes", changes);
-		
-		return forward("history.jsp");
-	}
-	
-	
-	/**
-	 * ナレッジのテンプレート情報を取得
-	 * @return
-	 * @throws InvalidParamException
-	 */
-	@Get
-	public Boundary template() throws InvalidParamException {
-		Integer typeId = super.getParam("type_id", Integer.class);
-		TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(typeId);
-		if (template == null) {
-			//そのテンプレートは既に削除済みの場合、通常のナレッジのテンプレートで表示する（ナレッジのテンプレートは削除できないようにする）
-			typeId = TemplateMastersDao.TYPE_ID_KNOWLEDGE;
-			template = TemplateMastersDao.get().selectWithItems(typeId);
-		}
-		
-		String knowledgeId = super.getParam("knowledge_id");
-		if (StringUtils.isNotEmpty(knowledgeId) && StringUtils.isLong(knowledgeId)) {
-			KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-			KnowledgesEntity entity = knowledgeLogic.select(new Long(knowledgeId), getLoginedUser());
-			if (entity == null) {
-				return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
-			}
-			
-			// 保存している値も返す
-			List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(entity.getKnowledgeId());
-			List<TemplateItemsEntity> items = template.getItems();
-			for (KnowledgeItemValuesEntity val : values) {
-				for (TemplateItemsEntity item : items) {
-					if (val.getItemNo().equals(item.getItemNo())) {
-						item.setItemValue(val.getItemValue());
-						break;
-					}
-				}
-			}
-		}
-		return send(template);
-	}
-	
-	
+            String tagKeyword = keywordLogic.parseQuery("tags", keyword);
+            if (tagKeyword != null) {
+                tags = new ArrayList<TagsEntity>();
+                for (String tagName : tagKeyword.split(",")) {
+                    TagsEntity tagsEntity = tagsDao.selectOnTagName(tagName);
+                    if (tagsEntity != null) {
+                        tags.add(tagsEntity);
+                        tagIds.add(tagsEntity.getTagId());
+                    }
+                }
+                setAttribute("selectedTags", tags);
+                setAttribute("selectedTagIds", tagIds);
+            }
+
+            keyword = keywordLogic.parseKeyword(keyword);
+
+            setAttribute("keyword", keyword);
+            knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+        }
+
+        List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);
+        setAttribute("knowledges", stocks);
+        LOG.trace("検索終了");
+        
+        // ナレッジの公開先の情報を取得
+        setKnowledgeTargetsWithConv(loginedUser, knowledges);
+        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+        setSublistInformations(loginedUser);
+
+        return forward("list.jsp");
+    }
+
+    /**
+     * 閲覧履歴の表示
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary show_history() throws InvalidParamException {
+        LoginedUser loginedUser = super.getLoginedUser();
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+
+        // History表示
+        String history = getCookie(SystemConfig.COOKIE_KEY_HISTORY);
+        List<String> historyIds = new ArrayList<>();
+        ArrayList<Long> knowledgeIds = new ArrayList<>();
+        LOG.debug("history: " + history);
+        if (history.indexOf(COOKIE_SEPARATOR) != -1) {
+            String[] splits = history.split(COOKIE_SEPARATOR);
+            for (String string : splits) {
+                if (StringUtils.isLong(string)) {
+                    historyIds.add(string);
+                    knowledgeIds.add(new Long(string));
+                }
+            }
+        } else {
+            if (StringUtils.isLong(history)) {
+                historyIds.add(history);
+                knowledgeIds.add(new Long(history));
+            }
+        }
+        List<KnowledgesEntity> histories = knowledgeLogic.getKnowledges(historyIds, loginedUser);
+        List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(histories, loginedUser);
+        setAttribute("histories", stocks);
+        LOG.trace("履歴取得完了");
+
+        // ナレッジの公開先の情報を取得
+        setKnowledgeTargets(loginedUser, knowledgeIds);
+        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+        setSublistInformations(loginedUser);
+
+        return forward("show_history.jsp");
+    }
+
+    /**
+     * 人気のKnowledgeを表示
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary show_popularity() throws InvalidParamException {
+        LoginedUser loginedUser = super.getLoginedUser();
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+
+        List<KnowledgesEntity> list = knowledgeLogic.getPopularityKnowledges(loginedUser, 0, 20);
+        List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(list, loginedUser);
+        setAttribute("popularities", stocks);
+        LOG.trace("取得完了");
+        // ナレッジの公開先の情報を取得
+        setKnowledgeTargetsWithConv(loginedUser, list);
+        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+        setSublistInformations(loginedUser);
+
+        return forward("popularity.jsp");
+    }
+
+    /**
+     * ストックしたナレッジを表示
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary stocks() throws InvalidParamException {
+        Integer offset = getOffsetParameter();
+        String stockidstr = getParam("stockid");
+        LoginedUser loginedUser = super.getLoginedUser();
+        Long stockid = null;
+        if (StringUtils.isLong(stockidstr)) {
+            stockid = Long.parseLong(stockidstr);
+            StocksEntity stocksEntity = StocksDao.get().selectOnKey(stockid);
+            if (stocksEntity == null || stocksEntity.getInsertUser().intValue() != getLoginUserId().intValue()) {
+                // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+                setSublistInformations(loginedUser);
+                // Stockにアクセスできない
+                return forward("stocks.jsp");
+            } else {
+                setAttribute("stock", stocksEntity);
+            }
+        }
+        
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+        List<KnowledgesEntity> list = knowledgeLogic.getStocks(loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT, stockid);
+        List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(list, loginedUser);
+//        setAttribute("stocks", list);
+        setAttribute("popularities", stocks);
+        LOG.trace("取得完了");
+
+        
+        
+        // ナレッジの公開先の情報を取得
+        setKnowledgeTargetsWithConv(loginedUser, list);
+        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+        setSublistInformations(loginedUser);
+
+        return forward("stocks.jsp");
+    }    
+    
+    
+    
+    
+    
+
+    /**
+     * いいねを押下
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary like() throws InvalidParamException {
+        Long knowledgeId = super.getPathLong(Long.valueOf(-1));
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+        Long count = knowledgeLogic.addLike(knowledgeId, getLoginedUser());
+        LikeCount likeCount = new LikeCount();
+        likeCount.setKnowledgeId(knowledgeId);
+        likeCount.setCount(count);
+        return send(likeCount);
+    }
+
+    /**
+     * タイトルとコンテンツの危険なタグをエスケープした結果を返す
+     * 
+     * @param entity
+     * @return
+     * @throws ParseException
+     */
+    @Post
+    public Boundary escape(KnowledgesEntity entity) throws ParseException {
+        super.setSendEscapeHtml(false);
+        entity.setTitle(sanitize(entity.getTitle()));
+        entity.setContent(sanitize(entity.getContent()));
+        return super.send(entity);
+    }
+
+    /**
+     * タイトルの危険なタグをサニタイズし、コンテンツのmarkdownをHTMLへ変換する
+     * 
+     * @param entity
+     * @return
+     * @throws ParseException
+     */
+    @Post
+    public Boundary marked(KnowledgesEntity entity) throws ParseException {
+        super.setSendEscapeHtml(false);
+        entity.setTitle(sanitize(entity.getTitle()));
+        MarkDown markDown = MarkdownLogic.get().markdownToHtml(entity.getContent());
+        entity.setContent(markDown.getHtml());
+        return super.send(entity);
+    }
+
+    /**
+     * 検索画面を表示
+     * 
+     * @return
+     */
+    @Get
+    public Boundary search() {
+        KeywordLogic keywordLogic = KeywordLogic.get();
+        LoginedUser loginedUser = super.getLoginedUser();
+        List<GroupsEntity> groupitems = new ArrayList<GroupsEntity>();
+        List<TagsEntity> tagitems = TagsDao.get().selectAll();
+        setAttribute("tagitems", tagitems);
+        if (loginedUser != null) {
+            if (loginedUser.isAdmin()) {
+                groupitems = ExGroupsDao.get().selectAll();
+            } else {
+                groupitems = loginedUser.getGroups();
+            }
+        }
+        setAttribute("groupitems", groupitems);
+        // 共通処理呼の表示条件の保持の呼び出し
+        setViewParam();
+
+        // groups:やtags:などの検索クエリを分解してフォームに表示するために分解したデータをセットする
+        String keyword = getParam("keyword");
+        setAttribute("searchKeyword", keywordLogic.parseKeyword(keyword));
+        setAttribute("tagNames", keywordLogic.parseQuery("tags", keyword));
+        if (loginedUser != null) {
+            setAttribute("groupNames", keywordLogic.parseQuery("groups", keyword));
+        }
+
+        return forward("search.jsp");
+    }
+
+    /**
+     * いいねを押したユーザを一覧表示
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary likes() throws InvalidParamException {
+        // 共通処理呼の表示条件の保持の呼び出し
+        setViewParam();
+
+        Long knowledgeId = super.getPathLong(Long.valueOf(-1));
+        setAttribute("knowledgeId", knowledgeId);
+        // 権限チェック(いったんアクセスできるユーザは全て表示) TODO 登録者のみにする？
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+        KnowledgesEntity entity = knowledgeLogic.select(knowledgeId, getLoginedUser());
+        if (entity == null) {
+            return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+        }
+
+        Integer page = 0;
+        String p = getParamWithDefault("page", "");
+        if (StringUtils.isInteger(p)) {
+            page = Integer.parseInt(p);
+        }
+
+        LikesDao likesDao = LikesDao.get();
+        List<LikesEntity> likes = likesDao.selectOnKnowledge(knowledgeId, page * PAGE_LIMIT, PAGE_LIMIT);
+        setAttribute("likes", likes);
+
+        int previous = page - 1;
+        if (previous < 0) {
+            previous = 0;
+        }
+        setAttribute("page", page);
+        setAttribute("previous", previous);
+        setAttribute("next", page + 1);
+
+        return forward("likes.jsp");
+    }
+
+    /**
+     * 編集履歴の表示
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary histories() throws InvalidParamException {
+        // 共通処理呼の表示条件の保持の呼び出し
+        setViewParam();
+
+        Long knowledgeId = super.getPathLong(Long.valueOf(-1));
+        setAttribute("knowledgeId", knowledgeId);
+        // 権限チェック(いったんアクセスできるユーザは全て表示)
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+        KnowledgesEntity entity = knowledgeLogic.select(knowledgeId, getLoginedUser());
+        if (entity == null) {
+            return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+        }
+
+        Integer page = 0;
+        String p = getParamWithDefault("page", "");
+        if (StringUtils.isInteger(p)) {
+            page = Integer.parseInt(p);
+        }
+        int previous = page - 1;
+        if (previous < 0) {
+            previous = 0;
+        }
+        setAttribute("page", page);
+        setAttribute("previous", previous);
+        setAttribute("next", page + 1);
+
+        // 履歴を取得
+        KnowledgeHistoriesDao historiesDao = KnowledgeHistoriesDao.get();
+        List<KnowledgeHistoriesEntity> histories = historiesDao.selectOnKnowledge(knowledgeId, page * PAGE_LIMIT, PAGE_LIMIT);
+        setAttribute("histories", histories);
+
+        return forward("histories.jsp");
+    }
+
+    /**
+     * 編集履歴の更新内容表示
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary history() throws InvalidParamException {
+        // 共通処理呼の表示条件の保持の呼び出し
+        setViewParam();
+
+        Long knowledgeId = super.getPathLong(Long.valueOf(-1));
+        setAttribute("knowledgeId", knowledgeId);
+        // 権限チェック(いったんアクセスできるユーザは全て表示)
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+        KnowledgesEntity entity = knowledgeLogic.select(knowledgeId, getLoginedUser());
+        if (entity == null) {
+            return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+        }
+
+        Integer page = 0;
+        String p = getParamWithDefault("page", "");
+        if (StringUtils.isInteger(p)) {
+            page = Integer.parseInt(p);
+        }
+        setAttribute("page", page);
+
+        Integer historyNo = 0;
+        String h = getParamWithDefault("history_no", "");
+        if (StringUtils.isInteger(h)) {
+            historyNo = Integer.parseInt(h);
+        }
+
+        KnowledgeHistoriesDao historiesDao = KnowledgeHistoriesDao.get();
+        KnowledgeHistoriesEntity history = historiesDao.selectOnKeyWithName(historyNo, knowledgeId);
+        setAttribute("history", history);
+        setAttribute("now", entity);
+
+        List<String> changes = DiffLogic.get().diff(history.getContent(), entity.getContent());
+        setAttribute("changes", changes);
+
+        return forward("history.jsp");
+    }
+
+    /**
+     * ナレッジのテンプレート情報を取得
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary template() throws InvalidParamException {
+        Integer typeId = super.getParam("type_id", Integer.class);
+        TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(typeId);
+        if (template == null) {
+            // そのテンプレートは既に削除済みの場合、通常のナレッジのテンプレートで表示する（ナレッジのテンプレートは削除できないようにする）
+            typeId = TemplateMastersDao.TYPE_ID_KNOWLEDGE;
+            template = TemplateMastersDao.get().selectWithItems(typeId);
+        }
+
+        String knowledgeId = super.getParam("knowledge_id");
+        if (StringUtils.isNotEmpty(knowledgeId) && StringUtils.isLong(knowledgeId)) {
+            KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+            KnowledgesEntity entity = knowledgeLogic.select(new Long(knowledgeId), getLoginedUser());
+            if (entity == null) {
+                return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+            }
+
+            // 保存している値も返す
+            List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(entity.getKnowledgeId());
+            List<TemplateItemsEntity> items = template.getItems();
+            for (KnowledgeItemValuesEntity val : values) {
+                for (TemplateItemsEntity item : items) {
+                    if (val.getItemNo().equals(item.getItemNo())) {
+                        item.setItemValue(val.getItemValue());
+                        break;
+                    }
+                }
+            }
+        }
+        return send(template);
+    }
+
 }
-
-

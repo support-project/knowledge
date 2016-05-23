@@ -22,261 +22,350 @@ import org.support.project.aop.Aspect;
 
 /**
  * タグ
+ * this class is auto generate and not edit.
+ * if modify dao method, you can edit TagsDao.
  */
-@DI(instance=Instance.Singleton)
+@DI(instance = Instance.Singleton)
 public class GenTagsDao extends AbstractDao {
 
-	/** SerialVersion */
-	private static final long serialVersionUID = 1L;
+    /** SerialVersion */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * インスタンス取得
-	 * AOPに対応
-	 * @return インスタンス
-	 */
-	public static GenTagsDao get() {
-		return Container.getComp(GenTagsDao.class);
-	}
+    /**
+     * Get instance from DI container.
+     * @return instance
+     */
+    public static GenTagsDao get() {
+        return Container.getComp(GenTagsDao.class);
+    }
 
-	/**
-	 * 全て取得(削除フラグを無視して取得) 
-	 */
-	public List<TagsEntity> physicalSelectAll() { 
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_physical_select_all.sql");
-		return executeQueryList(sql, TagsEntity.class);
-	}
-	/**
-	 * キーで1件取得(削除フラグを無視して取得) 
-	 */
-	public TagsEntity physicalSelectOnKey(Integer tagId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_physical_select_on_key.sql");
-		return executeQuerySingle(sql, TagsEntity.class, tagId);
-	}
-	/**
-	 * 全て取得 
-	 */
-	public List<TagsEntity> selectAll() { 
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_select_all.sql");
-		return executeQueryList(sql, TagsEntity.class);
-	}
-	/**
-	 * キーで1件取得 
-	 */
-	public TagsEntity selectOnKey(Integer tagId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_select_on_key.sql");
-		return executeQuerySingle(sql, TagsEntity.class, tagId);
-	}
-	/**
-	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public TagsEntity rawPhysicalInsert(TagsEntity entity) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_raw_insert.sql");
-		executeUpdate(sql, 
-			entity.getTagId()
-			, entity.getTagName()
-			, entity.getInsertUser()
-			, entity.getInsertDatetime()
-			, entity.getUpdateUser()
-			, entity.getUpdateDatetime()
-			, entity.getDeleteFlag()
-		);
-		String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
-		if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-			String setValSql = "select setval('TAGS_TAG_ID_seq', (select max(TAG_ID) from TAGS));";
-			executeQuerySingle(setValSql, Long.class);
-		}
-		return entity;
-	}
-	/**
-	 * 登録(データを生で操作) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public TagsEntity physicalInsert(TagsEntity entity) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_insert.sql");
-		Class<?> type = PropertyUtil.getPropertyType(entity, "tagId");
-		Object key = executeInsert(sql, type, 
-			entity.getTagName()
-			, entity.getInsertUser()
-			, entity.getInsertDatetime()
-			, entity.getUpdateUser()
-			, entity.getUpdateDatetime()
-			, entity.getDeleteFlag()
-		);
-		PropertyUtil.setPropertyValue(entity, "tagId", key);
-		return entity;
-	}
-	/**
-	 * 登録(登録ユーザを指定) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public TagsEntity insert(Integer user, TagsEntity entity) {
-		entity.setInsertUser(user);
-		entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
-		entity.setUpdateUser(user);
-		entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		entity.setDeleteFlag(0);
-		return physicalInsert(entity);
-	}
-	/**
-	 * 登録
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public TagsEntity insert(TagsEntity entity) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer userId = (Integer) pool.getUser();
-		return insert(userId, entity);
-	}
-	/**
-	 * 更新(データを生で操作) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public TagsEntity physicalUpdate(TagsEntity entity) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_update.sql");
-		executeUpdate(sql, 
-			entity.getTagName()
-			, entity.getInsertUser()
-			, entity.getInsertDatetime()
-			, entity.getUpdateUser()
-			, entity.getUpdateDatetime()
-			, entity.getDeleteFlag()
-			, entity.getTagId()
-		);
-		return entity;
-	}
-	/**
-	 * 更新(更新ユーザを指定) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public TagsEntity update(Integer user, TagsEntity entity) {
-		TagsEntity db = selectOnKey(entity.getTagId());
-		entity.setInsertUser(db.getInsertUser());
-		entity.setInsertDatetime(db.getInsertDatetime());
-		entity.setDeleteFlag(db.getDeleteFlag());
-		entity.setUpdateUser(user);
-		entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		return physicalUpdate(entity);
-	}
-	/**
-	 * 更新
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public TagsEntity update(TagsEntity entity) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer userId = (Integer) pool.getUser();
-		return update(userId, entity);
-	}
-	/**
-	 * 保存(ユーザを指定) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public TagsEntity save(Integer user, TagsEntity entity) {
-		TagsEntity db = selectOnKey(entity.getTagId());
-		if (db == null) {
-			return insert(user, entity);
-		} else {
-			return update(user, entity);
-		}
-	}
-	/**
-	 * 保存(存在しなければ登録、存在すれば更新) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public TagsEntity save(TagsEntity entity) {
-		TagsEntity db = selectOnKey(entity.getTagId());
-		if (db == null) {
-			return insert(entity);
-		} else {
-			return update(entity);
-		}
-	}
-	/**
-	 * 削除(データを生で操作/物理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void physicalDelete(Integer tagId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_delete.sql");
-		executeUpdate(sql, tagId);
-	}
-	/**
-	 * 削除(データを生で操作/物理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void physicalDelete(TagsEntity entity) {
-		physicalDelete(entity.getTagId());
+    /**
+     * Select all data.
+     * @return all data
+     */
+    public List<TagsEntity> physicalSelectAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_physical_select_all.sql");
+        return executeQueryList(sql, TagsEntity.class);
+    }
+    /**
+     * Select all data with pager.
+     * @param limit limit
+     * @param offset offset
+     * @return all data on limit and offset
+     */
+    public List<TagsEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_physical_select_all_with_pager.sql");
+        return executeQueryList(sql, TagsEntity.class, limit, offset);
+    }
+    /**
+     * Select data on key.
+     * @param  tagId tagId
+     * @return data
+     */
+    public TagsEntity physicalSelectOnKey(Integer tagId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_physical_select_on_key.sql");
+        return executeQuerySingle(sql, TagsEntity.class, tagId);
+    }
+    /**
+     * Select all data that not deleted.
+     * @return all data
+     */
+    public List<TagsEntity> selectAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_select_all.sql");
+        return executeQueryList(sql, TagsEntity.class);
+    }
+    /**
+     * Select all data that not deleted with pager.
+     * @param limit limit
+     * @param offset offset
+     * @return all data
+     */
+    public List<TagsEntity> selectAllWidthPager(int limit, int offset) { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_select_all_with_pager.sql");
+        return executeQueryList(sql, TagsEntity.class, limit, offset);
+    }
+    /**
+     * Select count that not deleted.
+     * @return count
+     */
+    public Integer selectCountAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_select_count_all.sql");
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
+     * Select data that not deleted on key.
+     * @param  tagId tagId
+     * @return data
+     */
+    public TagsEntity selectOnKey(Integer tagId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_select_on_key.sql");
+        return executeQuerySingle(sql, TagsEntity.class, tagId);
+    }
+    /**
+     * Physical Insert.
+     * it is not create key on database sequence.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public TagsEntity rawPhysicalInsert(TagsEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_raw_insert.sql");
+        executeUpdate(sql, 
+            entity.getTagId(), 
+            entity.getTagName(), 
+            entity.getInsertUser(), 
+            entity.getInsertDatetime(), 
+            entity.getUpdateUser(), 
+            entity.getUpdateDatetime(), 
+            entity.getDeleteFlag());
+        String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
+        if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
+            String setValSql = "select setval('TAGS_TAG_ID_seq', (select max(TAG_ID) from TAGS));";
+            executeQuerySingle(setValSql, Long.class);
+        }
+        return entity;
+    }
+    /**
+     * Physical Insert.
+     * if key column have sequence, key value create by database.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public TagsEntity physicalInsert(TagsEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_insert.sql");
+        Class<?> type = PropertyUtil.getPropertyType(entity, "tagId");
+        Object key = executeInsert(sql, type, 
+            entity.getTagName(), 
+            entity.getInsertUser(), 
+            entity.getInsertDatetime(), 
+            entity.getUpdateUser(), 
+            entity.getUpdateDatetime(), 
+            entity.getDeleteFlag());
+        PropertyUtil.setPropertyValue(entity, "tagId", key);
+        return entity;
+    }
+    /**
+     * Insert.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public TagsEntity insert(Integer user, TagsEntity entity) {
+        entity.setInsertUser(user);
+        entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateUser(user);
+        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setDeleteFlag(0);
+        return physicalInsert(entity);
+    }
+    /**
+     * Insert.
+     * saved user id is auto set.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public TagsEntity insert(TagsEntity entity) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer userId = (Integer) pool.getUser();
+        return insert(userId, entity);
+    }
+    /**
+     * Physical Update.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public TagsEntity physicalUpdate(TagsEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_update.sql");
+        executeUpdate(sql, 
+            entity.getTagName(), 
+            entity.getInsertUser(), 
+            entity.getInsertDatetime(), 
+            entity.getUpdateUser(), 
+            entity.getUpdateDatetime(), 
+            entity.getDeleteFlag(), 
+            entity.getTagId());
+        return entity;
+    }
+    /**
+     * Update.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public TagsEntity update(Integer user, TagsEntity entity) {
+        TagsEntity db = selectOnKey(entity.getTagId());
+        entity.setInsertUser(db.getInsertUser());
+        entity.setInsertDatetime(db.getInsertDatetime());
+        entity.setDeleteFlag(db.getDeleteFlag());
+        entity.setUpdateUser(user);
+        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        return physicalUpdate(entity);
+    }
+    /**
+     * Update.
+     * saved user id is auto set.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public TagsEntity update(TagsEntity entity) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer userId = (Integer) pool.getUser();
+        return update(userId, entity);
+    }
+    /**
+     * Save. 
+     * if same key data is exists, the data is update. otherwise the data is insert.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public TagsEntity save(Integer user, TagsEntity entity) {
+        TagsEntity db = selectOnKey(entity.getTagId());
+        if (db == null) {
+            return insert(user, entity);
+        } else {
+            return update(user, entity);
+        }
+    }
+    /**
+     * Save. 
+     * if same key data is exists, the data is update. otherwise the data is insert.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public TagsEntity save(TagsEntity entity) {
+        TagsEntity db = selectOnKey(entity.getTagId());
+        if (db == null) {
+            return insert(entity);
+        } else {
+            return update(entity);
+        }
+    }
+    /**
+     * Physical Delete.
+     * @param  tagId tagId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void physicalDelete(Integer tagId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_delete.sql");
+        executeUpdate(sql, tagId);
+    }
+    /**
+     * Physical Delete.
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void physicalDelete(TagsEntity entity) {
+        physicalDelete(entity.getTagId());
 
-	}
-	/**
-	 * 削除(削除ユーザを指定／論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Integer user, Integer tagId) {
-		TagsEntity db = selectOnKey(tagId);
-		db.setDeleteFlag(1);
-		db.setUpdateUser(user);
-		db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		physicalUpdate(db);
-	}
-	/**
-	 * 削除(論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Integer tagId) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer user = (Integer) pool.getUser();
-		delete(user, tagId);
-	}
-	/**
-	 * 削除(削除ユーザを指定／論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Integer user, TagsEntity entity) {
-		delete(user, entity.getTagId());
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * set saved user id.
+     * @param user saved userid
+     * @param  tagId tagId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(Integer user, Integer tagId) {
+        TagsEntity db = selectOnKey(tagId);
+        db.setDeleteFlag(1);
+        db.setUpdateUser(user);
+        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        physicalUpdate(db);
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * @param  tagId tagId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(Integer tagId) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer user = (Integer) pool.getUser();
+        delete(user, tagId);
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(Integer user, TagsEntity entity) {
+        delete(user, entity.getTagId());
 
-	}
-	/**
-	 * 削除(論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(TagsEntity entity) {
-		delete(entity.getTagId());
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * set saved user id.
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(TagsEntity entity) {
+        delete(entity.getTagId());
 
-	}
-	/**
-	 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(Integer user, Integer tagId) {
-		TagsEntity db = physicalSelectOnKey(tagId);
-		db.setDeleteFlag(0);
-		db.setUpdateUser(user);
-		db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		physicalUpdate(db);
-	}
-	/**
-	 * 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(Integer tagId) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer user = (Integer) pool.getUser();
-		activation(user, tagId);
-	}
-	/**
-	 * 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(Integer user, TagsEntity entity) {
-		activation(user, entity.getTagId());
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * set saved user id.
+     * @param user saved userid
+     * @param  tagId tagId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(Integer user, Integer tagId) {
+        TagsEntity db = physicalSelectOnKey(tagId);
+        db.setDeleteFlag(0);
+        db.setUpdateUser(user);
+        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        physicalUpdate(db);
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * @param  tagId tagId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(Integer tagId) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer user = (Integer) pool.getUser();
+        activation(user, tagId);
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(Integer user, TagsEntity entity) {
+        activation(user, entity.getTagId());
 
-	}
-	/**
-	 * 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(TagsEntity entity) {
-		activation(entity.getTagId());
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(TagsEntity entity) {
+        activation(entity.getTagId());
 
-	}
+    }
 
 }

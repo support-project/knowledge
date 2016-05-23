@@ -28,7 +28,7 @@ import org.support.project.web.entity.MailsEntity;
  */
 public class MailSendBat extends AbstractBat {
     /** ログ */
-    private static Log LOG = LogFactory.getLog(MailSendBat.class);
+    private static final Log LOG = LogFactory.getLog(MailSendBat.class);
 
     /** メールの状態：未送信（送信待ち） */
     public static final int MAIL_STATUS_UNSENT = 0;

@@ -22,286 +22,390 @@ import org.support.project.aop.Aspect;
 
 /**
  * ストックしたナレッジ
+ * this class is auto generate and not edit.
+ * if modify dao method, you can edit StockKnowledgesDao.
  */
-@DI(instance=Instance.Singleton)
+@DI(instance = Instance.Singleton)
 public class GenStockKnowledgesDao extends AbstractDao {
 
-	/** SerialVersion */
-	private static final long serialVersionUID = 1L;
+    /** SerialVersion */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * インスタンス取得
-	 * AOPに対応
-	 * @return インスタンス
-	 */
-	public static GenStockKnowledgesDao get() {
-		return Container.getComp(GenStockKnowledgesDao.class);
-	}
+    /**
+     * Get instance from DI container.
+     * @return instance
+     */
+    public static GenStockKnowledgesDao get() {
+        return Container.getComp(GenStockKnowledgesDao.class);
+    }
 
-	/**
-	 * 全て取得(削除フラグを無視して取得) 
-	 */
-	public List<StockKnowledgesEntity> physicalSelectAll() { 
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_physical_select_all.sql");
-		return executeQueryList(sql, StockKnowledgesEntity.class);
-	}
-	/**
-	 * キーで1件取得(削除フラグを無視して取得) 
-	 */
-	public StockKnowledgesEntity physicalSelectOnKey(Long knowledgeId, Long stockId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_physical_select_on_key.sql");
-		return executeQuerySingle(sql, StockKnowledgesEntity.class, knowledgeId, stockId);
-	}
-	/**
-	 * 全て取得 
-	 */
-	public List<StockKnowledgesEntity> selectAll() { 
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_select_all.sql");
-		return executeQueryList(sql, StockKnowledgesEntity.class);
-	}
-	/**
-	 * キーで1件取得 
-	 */
-	public StockKnowledgesEntity selectOnKey(Long knowledgeId, Long stockId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_select_on_key.sql");
-		return executeQuerySingle(sql, StockKnowledgesEntity.class, knowledgeId, stockId);
-	}
-	/**
-	 * KNOWLEDGE_ID でリストを取得
-	 */
-	public List<StockKnowledgesEntity> selectOnKnowledgeId(Long knowledgeId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_select_on_knowledge_id.sql");
-		return executeQueryList(sql, StockKnowledgesEntity.class, knowledgeId);
-	}
-	/**
-	 * STOCK_ID でリストを取得
-	 */
-	public List<StockKnowledgesEntity> selectOnStockId(Long stockId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_select_on_stock_id.sql");
-		return executeQueryList(sql, StockKnowledgesEntity.class, stockId);
-	}
-	/**
-	 * KNOWLEDGE_ID でリストを取得
-	 */
-	public List<StockKnowledgesEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_physical_select_on_knowledge_id.sql");
-		return executeQueryList(sql, StockKnowledgesEntity.class, knowledgeId);
-	}
-	/**
-	 * STOCK_ID でリストを取得
-	 */
-	public List<StockKnowledgesEntity> physicalSelectOnStockId(Long stockId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_physical_select_on_stock_id.sql");
-		return executeQueryList(sql, StockKnowledgesEntity.class, stockId);
-	}
-	/**
-	 * 登録(データを生で操作/DBの採番機能のカラムも自分でセット) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public StockKnowledgesEntity rawPhysicalInsert(StockKnowledgesEntity entity) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_raw_insert.sql");
-		executeUpdate(sql, 
-			entity.getKnowledgeId()
-			, entity.getStockId()
-			, entity.getComment()
-			, entity.getInsertUser()
-			, entity.getInsertDatetime()
-			, entity.getUpdateUser()
-			, entity.getUpdateDatetime()
-			, entity.getDeleteFlag()
-		);
-		return entity;
-	}
-	/**
-	 * 登録(データを生で操作) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public StockKnowledgesEntity physicalInsert(StockKnowledgesEntity entity) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_insert.sql");
-		executeUpdate(sql, 
-			entity.getKnowledgeId()
-			, entity.getStockId()
-			, entity.getComment()
-			, entity.getInsertUser()
-			, entity.getInsertDatetime()
-			, entity.getUpdateUser()
-			, entity.getUpdateDatetime()
-			, entity.getDeleteFlag()
-		);
-		return entity;
-	}
-	/**
-	 * 登録(登録ユーザを指定) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public StockKnowledgesEntity insert(Integer user, StockKnowledgesEntity entity) {
-		entity.setInsertUser(user);
-		entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
-		entity.setUpdateUser(user);
-		entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		entity.setDeleteFlag(0);
-		return physicalInsert(entity);
-	}
-	/**
-	 * 登録
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public StockKnowledgesEntity insert(StockKnowledgesEntity entity) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer userId = (Integer) pool.getUser();
-		return insert(userId, entity);
-	}
-	/**
-	 * 更新(データを生で操作) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public StockKnowledgesEntity physicalUpdate(StockKnowledgesEntity entity) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_update.sql");
-		executeUpdate(sql, 
-			entity.getComment()
-			, entity.getInsertUser()
-			, entity.getInsertDatetime()
-			, entity.getUpdateUser()
-			, entity.getUpdateDatetime()
-			, entity.getDeleteFlag()
-			, entity.getKnowledgeId()
-			, entity.getStockId()
-		);
-		return entity;
-	}
-	/**
-	 * 更新(更新ユーザを指定) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public StockKnowledgesEntity update(Integer user, StockKnowledgesEntity entity) {
-		StockKnowledgesEntity db = selectOnKey(entity.getKnowledgeId(), entity.getStockId());
-		entity.setInsertUser(db.getInsertUser());
-		entity.setInsertDatetime(db.getInsertDatetime());
-		entity.setDeleteFlag(db.getDeleteFlag());
-		entity.setUpdateUser(user);
-		entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		return physicalUpdate(entity);
-	}
-	/**
-	 * 更新
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public StockKnowledgesEntity update(StockKnowledgesEntity entity) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer userId = (Integer) pool.getUser();
-		return update(userId, entity);
-	}
-	/**
-	 * 保存(ユーザを指定) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public StockKnowledgesEntity save(Integer user, StockKnowledgesEntity entity) {
-		StockKnowledgesEntity db = selectOnKey(entity.getKnowledgeId(), entity.getStockId());
-		if (db == null) {
-			return insert(user, entity);
-		} else {
-			return update(user, entity);
-		}
-	}
-	/**
-	 * 保存(存在しなければ登録、存在すれば更新) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public StockKnowledgesEntity save(StockKnowledgesEntity entity) {
-		StockKnowledgesEntity db = selectOnKey(entity.getKnowledgeId(), entity.getStockId());
-		if (db == null) {
-			return insert(entity);
-		} else {
-			return update(entity);
-		}
-	}
-	/**
-	 * 削除(データを生で操作/物理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void physicalDelete(Long knowledgeId, Long stockId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_delete.sql");
-		executeUpdate(sql, knowledgeId, stockId);
-	}
-	/**
-	 * 削除(データを生で操作/物理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void physicalDelete(StockKnowledgesEntity entity) {
-		physicalDelete(entity.getKnowledgeId(), entity.getStockId());
+    /**
+     * Select all data.
+     * @return all data
+     */
+    public List<StockKnowledgesEntity> physicalSelectAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_physical_select_all.sql");
+        return executeQueryList(sql, StockKnowledgesEntity.class);
+    }
+    /**
+     * Select all data with pager.
+     * @param limit limit
+     * @param offset offset
+     * @return all data on limit and offset
+     */
+    public List<StockKnowledgesEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_physical_select_all_with_pager.sql");
+        return executeQueryList(sql, StockKnowledgesEntity.class, limit, offset);
+    }
+    /**
+     * Select data on key.
+     * @param  knowledgeId knowledgeId
+     * @param  stockId stockId
+     * @return data
+     */
+    public StockKnowledgesEntity physicalSelectOnKey(Long knowledgeId, Long stockId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_physical_select_on_key.sql");
+        return executeQuerySingle(sql, StockKnowledgesEntity.class, knowledgeId, stockId);
+    }
+    /**
+     * Select all data that not deleted.
+     * @return all data
+     */
+    public List<StockKnowledgesEntity> selectAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_select_all.sql");
+        return executeQueryList(sql, StockKnowledgesEntity.class);
+    }
+    /**
+     * Select all data that not deleted with pager.
+     * @param limit limit
+     * @param offset offset
+     * @return all data
+     */
+    public List<StockKnowledgesEntity> selectAllWidthPager(int limit, int offset) { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_select_all_with_pager.sql");
+        return executeQueryList(sql, StockKnowledgesEntity.class, limit, offset);
+    }
+    /**
+     * Select count that not deleted.
+     * @return count
+     */
+    public Integer selectCountAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_select_count_all.sql");
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
+     * Select data that not deleted on key.
+     * @param  knowledgeId knowledgeId
+     * @param  stockId stockId
+     * @return data
+     */
+    public StockKnowledgesEntity selectOnKey(Long knowledgeId, Long stockId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_select_on_key.sql");
+        return executeQuerySingle(sql, StockKnowledgesEntity.class, knowledgeId, stockId);
+    }
+    /**
+     * Select data that not deleted on KNOWLEDGE_ID column.
+     * @param knowledgeId knowledgeId
+     * @return list
+     */
+    public List<StockKnowledgesEntity> selectOnKnowledgeId(Long knowledgeId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_select_on_knowledge_id.sql");
+        return executeQueryList(sql, StockKnowledgesEntity.class, knowledgeId);
+    }
+    /**
+     * Select data that not deleted on STOCK_ID column.
+     * @param stockId stockId
+     * @return list
+     */
+    public List<StockKnowledgesEntity> selectOnStockId(Long stockId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_select_on_stock_id.sql");
+        return executeQueryList(sql, StockKnowledgesEntity.class, stockId);
+    }
+    /**
+     * Select data on KNOWLEDGE_ID column.
+     * @param knowledgeId knowledgeId
+     * @return list
+     */
+    public List<StockKnowledgesEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_physical_select_on_knowledge_id.sql");
+        return executeQueryList(sql, StockKnowledgesEntity.class, knowledgeId);
+    }
+    /**
+     * Select data on STOCK_ID column.
+     * @param stockId stockId
+     * @return list
+     */
+    public List<StockKnowledgesEntity> physicalSelectOnStockId(Long stockId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_physical_select_on_stock_id.sql");
+        return executeQueryList(sql, StockKnowledgesEntity.class, stockId);
+    }
+    /**
+     * Physical Insert.
+     * it is not create key on database sequence.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public StockKnowledgesEntity rawPhysicalInsert(StockKnowledgesEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_raw_insert.sql");
+        executeUpdate(sql, 
+            entity.getKnowledgeId(), 
+            entity.getStockId(), 
+            entity.getComment(), 
+            entity.getInsertUser(), 
+            entity.getInsertDatetime(), 
+            entity.getUpdateUser(), 
+            entity.getUpdateDatetime(), 
+            entity.getDeleteFlag());
+        return entity;
+    }
+    /**
+     * Physical Insert.
+     * if key column have sequence, key value create by database.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public StockKnowledgesEntity physicalInsert(StockKnowledgesEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_insert.sql");
+        executeUpdate(sql, 
+            entity.getKnowledgeId(), 
+            entity.getStockId(), 
+            entity.getComment(), 
+            entity.getInsertUser(), 
+            entity.getInsertDatetime(), 
+            entity.getUpdateUser(), 
+            entity.getUpdateDatetime(), 
+            entity.getDeleteFlag());
+        return entity;
+    }
+    /**
+     * Insert.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public StockKnowledgesEntity insert(Integer user, StockKnowledgesEntity entity) {
+        entity.setInsertUser(user);
+        entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateUser(user);
+        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setDeleteFlag(0);
+        return physicalInsert(entity);
+    }
+    /**
+     * Insert.
+     * saved user id is auto set.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public StockKnowledgesEntity insert(StockKnowledgesEntity entity) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer userId = (Integer) pool.getUser();
+        return insert(userId, entity);
+    }
+    /**
+     * Physical Update.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public StockKnowledgesEntity physicalUpdate(StockKnowledgesEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_update.sql");
+        executeUpdate(sql, 
+            entity.getComment(), 
+            entity.getInsertUser(), 
+            entity.getInsertDatetime(), 
+            entity.getUpdateUser(), 
+            entity.getUpdateDatetime(), 
+            entity.getDeleteFlag(), 
+            entity.getKnowledgeId(), 
+            entity.getStockId());
+        return entity;
+    }
+    /**
+     * Update.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public StockKnowledgesEntity update(Integer user, StockKnowledgesEntity entity) {
+        StockKnowledgesEntity db = selectOnKey(entity.getKnowledgeId(), entity.getStockId());
+        entity.setInsertUser(db.getInsertUser());
+        entity.setInsertDatetime(db.getInsertDatetime());
+        entity.setDeleteFlag(db.getDeleteFlag());
+        entity.setUpdateUser(user);
+        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        return physicalUpdate(entity);
+    }
+    /**
+     * Update.
+     * saved user id is auto set.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public StockKnowledgesEntity update(StockKnowledgesEntity entity) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer userId = (Integer) pool.getUser();
+        return update(userId, entity);
+    }
+    /**
+     * Save. 
+     * if same key data is exists, the data is update. otherwise the data is insert.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public StockKnowledgesEntity save(Integer user, StockKnowledgesEntity entity) {
+        StockKnowledgesEntity db = selectOnKey(entity.getKnowledgeId(), entity.getStockId());
+        if (db == null) {
+            return insert(user, entity);
+        } else {
+            return update(user, entity);
+        }
+    }
+    /**
+     * Save. 
+     * if same key data is exists, the data is update. otherwise the data is insert.
+     * @param entity entity
+     * @return saved entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public StockKnowledgesEntity save(StockKnowledgesEntity entity) {
+        StockKnowledgesEntity db = selectOnKey(entity.getKnowledgeId(), entity.getStockId());
+        if (db == null) {
+            return insert(entity);
+        } else {
+            return update(entity);
+        }
+    }
+    /**
+     * Physical Delete.
+     * @param  knowledgeId knowledgeId
+     * @param  stockId stockId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void physicalDelete(Long knowledgeId, Long stockId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_delete.sql");
+        executeUpdate(sql, knowledgeId, stockId);
+    }
+    /**
+     * Physical Delete.
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void physicalDelete(StockKnowledgesEntity entity) {
+        physicalDelete(entity.getKnowledgeId(), entity.getStockId());
 
-	}
-	/**
-	 * 削除(削除ユーザを指定／論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Integer user, Long knowledgeId, Long stockId) {
-		StockKnowledgesEntity db = selectOnKey(knowledgeId, stockId);
-		db.setDeleteFlag(1);
-		db.setUpdateUser(user);
-		db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		physicalUpdate(db);
-	}
-	/**
-	 * 削除(論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Long knowledgeId, Long stockId) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer user = (Integer) pool.getUser();
-		delete(user, knowledgeId, stockId);
-	}
-	/**
-	 * 削除(削除ユーザを指定／論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(Integer user, StockKnowledgesEntity entity) {
-		delete(user, entity.getKnowledgeId(), entity.getStockId());
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * set saved user id.
+     * @param user saved userid
+     * @param  knowledgeId knowledgeId
+     * @param  stockId stockId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(Integer user, Long knowledgeId, Long stockId) {
+        StockKnowledgesEntity db = selectOnKey(knowledgeId, stockId);
+        db.setDeleteFlag(1);
+        db.setUpdateUser(user);
+        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        physicalUpdate(db);
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * @param  knowledgeId knowledgeId
+     * @param  stockId stockId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(Long knowledgeId, Long stockId) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer user = (Integer) pool.getUser();
+        delete(user, knowledgeId, stockId);
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(Integer user, StockKnowledgesEntity entity) {
+        delete(user, entity.getKnowledgeId(), entity.getStockId());
 
-	}
-	/**
-	 * 削除(論理削除があれば論理削除) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void delete(StockKnowledgesEntity entity) {
-		delete(entity.getKnowledgeId(), entity.getStockId());
+    }
+    /**
+     * Delete.
+     * if delete flag is exists, the data is logical delete.
+     * set saved user id.
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void delete(StockKnowledgesEntity entity) {
+        delete(entity.getKnowledgeId(), entity.getStockId());
 
-	}
-	/**
-	 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(Integer user, Long knowledgeId, Long stockId) {
-		StockKnowledgesEntity db = physicalSelectOnKey(knowledgeId, stockId);
-		db.setDeleteFlag(0);
-		db.setUpdateUser(user);
-		db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
-		physicalUpdate(db);
-	}
-	/**
-	 * 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(Long knowledgeId, Long stockId) {
-		DBUserPool pool = Container.getComp(DBUserPool.class);
-		Integer user = (Integer) pool.getUser();
-		activation(user, knowledgeId, stockId);
-	}
-	/**
-	 * 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(Integer user, StockKnowledgesEntity entity) {
-		activation(user, entity.getKnowledgeId(), entity.getStockId());
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * set saved user id.
+     * @param user saved userid
+     * @param  knowledgeId knowledgeId
+     * @param  stockId stockId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(Integer user, Long knowledgeId, Long stockId) {
+        StockKnowledgesEntity db = physicalSelectOnKey(knowledgeId, stockId);
+        db.setDeleteFlag(0);
+        db.setUpdateUser(user);
+        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        physicalUpdate(db);
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * @param  knowledgeId knowledgeId
+     * @param  stockId stockId
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(Long knowledgeId, Long stockId) {
+        DBUserPool pool = Container.getComp(DBUserPool.class);
+        Integer user = (Integer) pool.getUser();
+        activation(user, knowledgeId, stockId);
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * set saved user id.
+     * @param user saved userid
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(Integer user, StockKnowledgesEntity entity) {
+        activation(user, entity.getKnowledgeId(), entity.getStockId());
 
-	}
-	/**
-	 * 復元(論理削除されていたものを有効化) 
-	 */
-	@Aspect(advice=org.support.project.ormapping.transaction.Transaction.class)
-	public void activation(StockKnowledgesEntity entity) {
-		activation(entity.getKnowledgeId(), entity.getStockId());
+    }
+    /**
+     * Ativation.
+     * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * @param entity entity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void activation(StockKnowledgesEntity entity) {
+        activation(entity.getKnowledgeId(), entity.getStockId());
 
-	}
+    }
 
 }

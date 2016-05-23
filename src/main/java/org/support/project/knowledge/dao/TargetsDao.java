@@ -12,100 +12,102 @@ import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
 
 public class TargetsDao extends AbstractDao {
-	/** SerialVersion */
-	private static final long serialVersionUID = 1L;
+    /** SerialVersion */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * インスタンス取得
-	 * @return インスタンス
-	 */
-	public static TargetsDao get() {
-		return Container.getComp(TargetsDao.class);
-	}
-	
-	/**
-	 * キーワードで対象を検索（グループとアカウント）
-	 * @param keyword
-	 * @param offset
-	 * @param limit
-	 * @return
-	 */
-	public List<LabelValue> selectOnKeyword(String keyword, int offset, int limit) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectOnKeyword.sql");
-		return executeQueryList(sql, LabelValue.class, keyword, keyword, limit, offset);
-	}
+    /**
+     * インスタンス取得
+     * 
+     * @return インスタンス
+     */
+    public static TargetsDao get() {
+        return Container.getComp(TargetsDao.class);
+    }
 
-	/**
-	 * ナレッジに指定されているアクセス可能なグループを取得
-	 * @param knowledgeId
-	 * @return
-	 */
-	public List<GroupsEntity> selectGroupsOnKnowledgeId(Long knowledgeId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectGroupsOnKnowledgeId.sql");
-		return executeQueryList(sql, GroupsEntity.class, knowledgeId);
-	}
+    /**
+     * キーワードで対象を検索（グループとアカウント）
+     * 
+     * @param keyword
+     * @param offset
+     * @param limit
+     * @return
+     */
+    public List<LabelValue> selectOnKeyword(String keyword, int offset, int limit) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectOnKeyword.sql");
+        return executeQueryList(sql, LabelValue.class, keyword, keyword, limit, offset);
+    }
 
-	/**
-	 * ナレッジに指定されているアクセス可能なグループを取得
-	 * ナレッジ一覧に用いる
-	 *
-	 * @param knowledgeIds
-	 * @return
-	 */
-	public List<GroupsEntity> selectGroupsOnKnowledgeIds(ArrayList<Long> knowledgeIds) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectGroupsOnKnowledgeIds.sql");
+    /**
+     * ナレッジに指定されているアクセス可能なグループを取得
+     * 
+     * @param knowledgeId
+     * @return
+     */
+    public List<GroupsEntity> selectGroupsOnKnowledgeId(Long knowledgeId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectGroupsOnKnowledgeId.sql");
+        return executeQueryList(sql, GroupsEntity.class, knowledgeId);
+    }
 
-		StringJoinBuilder builder = new StringJoinBuilder();
-		List<Long> params = new ArrayList<>();
+    /**
+     * ナレッジに指定されているアクセス可能なグループを取得 ナレッジ一覧に用いる
+     *
+     * @param knowledgeIds
+     * @return
+     */
+    public List<GroupsEntity> selectGroupsOnKnowledgeIds(List<Long> knowledgeIds) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectGroupsOnKnowledgeIds.sql");
 
-		for (Long knowledgeId : knowledgeIds) {
-			builder.append("?");
-			params.add(knowledgeId);
-		}
+        StringJoinBuilder builder = new StringJoinBuilder();
+        List<Long> params = new ArrayList<>();
 
-		sql = sql.replace("${knowledgeIds}", builder.join(", "));
-		return executeQueryList(sql, GroupsEntity.class, params.toArray(new Long[0]));
-	}
+        for (Long knowledgeId : knowledgeIds) {
+            builder.append("?");
+            params.add(knowledgeId);
+        }
 
-	/**
-	 * ナレッジに指定されているアクセス可能なユーザを取得
-	 * @param knowledgeId
-	 * @return
-	 */
-	public List<UsersEntity> selectUsersOnKnowledgeId(Long knowledgeId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectUsersOnKnowledgeId.sql");
-		return executeQueryList(sql, UsersEntity.class, knowledgeId);
-	}
+        sql = sql.replace("${knowledgeIds}", builder.join(", "));
+        return executeQueryList(sql, GroupsEntity.class, params.toArray(new Long[0]));
+    }
 
-	/**
-	 * ナレッジに指定されているアクセス可能なユーザを取得
-	 * ナレッジ一覧に用いる
-	 *
-	 * @param knowledgeIds
-	 * @return
-	 */
-	public List<UsersEntity> selectUsersOnKnowledgeIds(ArrayList<Long> knowledgeIds) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectUsersOnKnowledgeIds.sql");
+    /**
+     * ナレッジに指定されているアクセス可能なユーザを取得
+     * 
+     * @param knowledgeId
+     * @return
+     */
+    public List<UsersEntity> selectUsersOnKnowledgeId(Long knowledgeId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectUsersOnKnowledgeId.sql");
+        return executeQueryList(sql, UsersEntity.class, knowledgeId);
+    }
 
-		StringJoinBuilder builder = new StringJoinBuilder();
-		List<Long> params = new ArrayList<>();
+    /**
+     * ナレッジに指定されているアクセス可能なユーザを取得 ナレッジ一覧に用いる
+     *
+     * @param knowledgeIds
+     * @return
+     */
+    public List<UsersEntity> selectUsersOnKnowledgeIds(List<Long> knowledgeIds) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectUsersOnKnowledgeIds.sql");
 
-		for (Long knowledgeId : knowledgeIds) {
-			builder.append("?");
-			params.add(knowledgeId);
-		}
+        StringJoinBuilder builder = new StringJoinBuilder();
+        List<Long> params = new ArrayList<>();
 
-		sql = sql.replace("${knowledgeIds}", builder.join(", "));
-		return executeQueryList(sql, UsersEntity.class, params.toArray(new Long[0]));
-	}
+        for (Long knowledgeId : knowledgeIds) {
+            builder.append("?");
+            params.add(knowledgeId);
+        }
 
-	public List<GroupsEntity> selectEditorGroupsOnKnowledgeId(Long knowledgeId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectEditorGroupsOnKnowledgeId.sql");
-		return executeQueryList(sql, GroupsEntity.class, knowledgeId);
-	}
+        sql = sql.replace("${knowledgeIds}", builder.join(", "));
+        return executeQueryList(sql, UsersEntity.class, params.toArray(new Long[0]));
+    }
 
-	public List<UsersEntity> selectEditorUsersOnKnowledgeId(Long knowledgeId) {
-		String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectEditorUsersOnKnowledgeId.sql");
-		return executeQueryList(sql, UsersEntity.class, knowledgeId);
-	}
+    public List<GroupsEntity> selectEditorGroupsOnKnowledgeId(Long knowledgeId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectEditorGroupsOnKnowledgeId.sql");
+        return executeQueryList(sql, GroupsEntity.class, knowledgeId);
+    }
+
+    public List<UsersEntity> selectEditorUsersOnKnowledgeId(Long knowledgeId) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TargetsDao/selectEditorUsersOnKnowledgeId.sql");
+        return executeQueryList(sql, UsersEntity.class, knowledgeId);
+    }
 }

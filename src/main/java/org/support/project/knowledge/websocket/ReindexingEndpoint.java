@@ -10,9 +10,6 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import net.arnx.jsonic.JSON;
-import net.arnx.jsonic.JSONException;
-
 import org.support.project.common.bat.AsyncJavaJob;
 import org.support.project.common.bat.BatListener;
 import org.support.project.common.bat.ConsoleListener;
@@ -25,82 +22,85 @@ import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.websocket.EndpointConfigurator;
 
-@ServerEndpoint(value = "/reindexing", configurator=EndpointConfigurator.class)
+import net.arnx.jsonic.JSON;
+import net.arnx.jsonic.JSONException;
+
+@ServerEndpoint(value = "/reindexing", configurator = EndpointConfigurator.class)
 public class ReindexingEndpoint {
-	/** ログ */
-	private static Log LOG = LogFactory.getLog(ReindexingEndpoint.class);
-	
-	private Thread thread;
-	
-	@OnOpen
-	public void onOpen(Session session) throws IOException {
-		 if (session.getUserProperties().containsKey(EndpointConfigurator.LOCALE_KEY)) {
-			LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
-			if (!loginuser.isAdmin()) {
-				// 管理者以外はアクセス出来ない
-				session.close();
-				return;
-			}
-			// インデックス再作成
-			LOG.info("websocket open: " + session.getId() + " : " + loginuser.getUserId());
-			
-			// バッチプログラム実行
-			AppConfig appConfig = AppConfig.get();
-			
-			LOG.info(appConfig.getWebRealPath());
-			
-			AsyncJavaJob job = new AsyncJavaJob();
-			job.addjarDir(new File(appConfig.getWebRealPath().concat("/WEB-INF/lib/")));
-			job.addClassPathDir(new File(appConfig.getWebRealPath().concat("/WEB-INF/classes/")));
-			job.setMainClass(ReIndexingBat.class.getName());
-			job.setConsoleListener(new ConsoleListener() {
-				@Override
-				public void write(String message) {
-					LOG.info(message);
-					try {
-						if (message.startsWith("[SEND]")) {
-							MessageResult result = new MessageResult();
-							result.setMessage(message.substring("[SEND]".length()));
-							session.getBasicRemote().sendText(JSON.encode(result));
-						}
-					} catch (JSONException | IOException e) {
-						LOG.warn("websocket message send error", e);
-					}
-				}
-			});
-			
-			job.addListener(new BatListener() {
-				@Override
-				public void finish(JobResult result) {
-					MessageResult message = new MessageResult();
-					message.setMessage("Reindexing is ended. [status]" + result.getResultCode());
-					try {
-						session.getBasicRemote().sendText(JSON.encode(message));
-						session.close();
-					} catch (JSONException | IOException e) {
-						LOG.warn("websocket message send error", e);
-					}
-				}
-			});
-			
-			thread = new Thread(job);
-			thread.start();
-		}
-	}
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(ReindexingEndpoint.class);
 
-	@OnClose
-	public void onClose(Session session) {
-	}
+    private Thread thread;
 
-	@OnMessage
-	public void onMessage(String text) throws JSONException, IOException {
-	}
-	
-	@OnError
-	public void onError(Throwable t) {
-		LOG.warn("websocket on error." + t.getClass().getName() + " : " + t.getMessage());
-		if (LOG.isDebugEnabled()) {
-			LOG.warn("websocket error -> ", t);
-		}
-	}
+    @OnOpen
+    public void onOpen(Session session) throws IOException {
+        if (session.getUserProperties().containsKey(EndpointConfigurator.LOCALE_KEY)) {
+            LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
+            if (!loginuser.isAdmin()) {
+                // 管理者以外はアクセス出来ない
+                session.close();
+                return;
+            }
+            // インデックス再作成
+            LOG.info("websocket open: " + session.getId() + " : " + loginuser.getUserId());
+
+            // バッチプログラム実行
+            AppConfig appConfig = AppConfig.get();
+
+            LOG.info(appConfig.getWebRealPath());
+
+            AsyncJavaJob job = new AsyncJavaJob();
+            job.addjarDir(new File(appConfig.getWebRealPath().concat("/WEB-INF/lib/")));
+            job.addClassPathDir(new File(appConfig.getWebRealPath().concat("/WEB-INF/classes/")));
+            job.setMainClass(ReIndexingBat.class.getName());
+            job.setConsoleListener(new ConsoleListener() {
+                @Override
+                public void write(String message) {
+                    LOG.info(message);
+                    try {
+                        if (message.indexOf("[SEND]") != -1) {
+                            MessageResult result = new MessageResult();
+                            result.setMessage(message.substring(message.indexOf("[SEND]") + "[SEND]".length()));
+                            session.getBasicRemote().sendText(JSON.encode(result));
+                        }
+                    } catch (JSONException | IOException e) {
+                        LOG.warn("websocket message send error", e);
+                    }
+                }
+            });
+
+            job.addListener(new BatListener() {
+                @Override
+                public void finish(JobResult result) {
+                    MessageResult message = new MessageResult();
+                    message.setMessage("Reindexing is ended. [status]" + result.getResultCode());
+                    try {
+                        session.getBasicRemote().sendText(JSON.encode(message));
+                        //session.close();
+                    } catch (JSONException | IOException e) {
+                        LOG.warn("websocket message send error", e);
+                    }
+                }
+            });
+
+            thread = new Thread(job);
+            thread.start();
+        }
+    }
+
+    @OnClose
+    public void onClose(Session session) {
+    }
+
+    @OnMessage
+    public void onMessage(String text) throws JSONException, IOException {
+    }
+
+    @OnError
+    public void onError(Throwable t) {
+        LOG.warn("websocket on error." + t.getClass().getName() + " : " + t.getMessage());
+        if (LOG.isDebugEnabled()) {
+            LOG.warn("websocket error -> ", t);
+        }
+    }
 }

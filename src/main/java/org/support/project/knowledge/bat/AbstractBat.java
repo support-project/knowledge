@@ -11,13 +11,13 @@ import org.support.project.web.logic.DBConnenctionLogic;
 
 public abstract class AbstractBat {
     /** ログ */
-    private static Log LOG = LogFactory.getLog(AbstractBat.class);
+    private static final Log LOG = LogFactory.getLog(AbstractBat.class);
 
     public static void initLogName(String logname) {
         Logger log = Logger.getRootLogger();
-        FileAppender appendar= (FileAppender) log.getAppender("APP_FILEOUT");
+        FileAppender appendar = (FileAppender) log.getAppender("APP_FILEOUT");
         appendar.setFile(logname);
-        appendar.activateOptions();//変更の反映
+        appendar.activateOptions(); // 変更の反映
     }
 
     protected static void configInit(String batName) {
@@ -38,14 +38,13 @@ public abstract class AbstractBat {
         LOG.info("Finished");
     }
 
-
     /**
      * コネクションの接続先がカスタマイズされていたら、バッチでもカスタマイズ先を参照する
      */
     public void dbInit() {
         DBConnenctionLogic.get().connectCustomConnection();
     }
-    
+
     protected void send(String msg) {
         LOG.info("[SEND]" + msg);
     }

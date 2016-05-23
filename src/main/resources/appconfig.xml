@@ -20,6 +20,7 @@
             <value>en</value>
         </language>
     </languages>
+    <addUserProcess>org.support.project.knowledge.logic.AddUserProcessLogic</addUserProcess>
 </app>
 
 

@@ -44,30 +44,30 @@ public class NotifyConfigsDao extends GenNotifyConfigsDao {
         currentId++;
         return currentId;
     }
-    
+
     /**
      * 「公開」のナレッジにコメントが追加された際に、「デスクトップ通知」が欲しいユーザの一覧を取得
+     * 
      * @param limit
      * @param offset
      * @return
      */
     public List<UsersEntity> getNotifyDesktopUsersOnPublicComment(int limit, int offset) {
-        String sql = SQLManager.getInstance().getSql(
-                "/org/support/project/knowledge/dao/sql/NotifyConfigsDao/GetNotifyDesktopUsersOnPublicComment.sql");
+        String sql = SQLManager.getInstance()
+                .getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/GetNotifyDesktopUsersOnPublicComment.sql");
         return executeQueryList(sql, UsersEntity.class, limit, offset);
     }
 
     /**
      * 「公開」のナレッジにコメントが追加された際に、「メール通知」が欲しいユーザの一覧を取得
+     * 
      * @param limit
      * @param offset
      * @return
      */
     public List<UsersEntity> getNotifyMailUsersOnPublicComment(int limit, int offset) {
-        String sql = SQLManager.getInstance().getSql(
-                "/org/support/project/knowledge/dao/sql/NotifyConfigsDao/GetNotifyMailUsersOnPublicComment.sql");
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/GetNotifyMailUsersOnPublicComment.sql");
         return executeQueryList(sql, UsersEntity.class, limit, offset);
     }
-    
-    
+
 }

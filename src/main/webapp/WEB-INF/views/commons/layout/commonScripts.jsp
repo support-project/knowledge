@@ -27,9 +27,16 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/notify.js/notify.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-oembed-all/jquery.oembed.js"></script>
 
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/common.js") %>"></script>
+
 
 <script type="text/javascript">
 var _CONTEXT = '<%= request.getContextPath() %>';
+<% if (jspUtil.logined()) { %>
+var _LOGIN_USER_ID = <%= jspUtil.id() %>;
+<% } else { %>
+var _LOGIN_USER_ID = null;
+<% } %>
 
 var getCookies = function() {
     var result = new Array();
