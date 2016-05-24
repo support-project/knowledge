@@ -97,7 +97,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         } else {
             url.append(config.getConfigValue());
         }
-        url.append("/knowledge/").append(knowledgeId);
+        url.append("/open.knowledge/view/").append(knowledgeId);
         setAttribute("url", url.toString());
 
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
