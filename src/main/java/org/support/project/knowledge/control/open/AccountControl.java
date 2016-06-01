@@ -14,6 +14,7 @@ import org.support.project.knowledge.entity.AccountImagesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.vo.AccountInfo;
+import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.exception.InvalidParamException;
@@ -68,7 +69,8 @@ public class AccountControl extends Control {
             offset = getParam("offset", Integer.class);
         }
         List<KnowledgesEntity> knowledges = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
-        setAttribute("knowledges", knowledges);
+        List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, getLoginedUser());
+        setAttribute("knowledges", stocks);
 
         int previous = offset - 1;
         if (previous < 0) {
