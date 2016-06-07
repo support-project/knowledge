@@ -26,10 +26,19 @@
                     <h4><%=jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR)%></h4>
                     <div>
                         <img src="<%=request.getContextPath()%>/images/loader.gif"
+                            data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("knowledge.insertUser")%>" alt="icon" width="36"
+                            height="36" />
+                        <%=jspUtil.label("knowledge.view.info.insert", jspUtil.out("knowledge.insertUserName"),
+                        jspUtil.date("knowledge.insertDatetime"))%>
+                        <% if (!jspUtil.date("knowledge.insertDatetime").equals(jspUtil.date("knowledge.updateDatetime"))) { %>
+                        (
+                        <img src="<%=request.getContextPath()%>/images/loader.gif"
                             data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("knowledge.updateUser")%>" alt="icon" width="36"
                             height="36" />
                         <%=jspUtil.label("knowledge.view.info.update", jspUtil.out("knowledge.updateUserName"),
                         jspUtil.date("knowledge.updateDatetime"))%>
+                        )
+                        <% } %>
                     </div>
                 </div>
             </a>
