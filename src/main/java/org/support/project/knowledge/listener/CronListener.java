@@ -15,6 +15,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.bat.KnowledgeFileClearBat;
+import org.support.project.knowledge.bat.MailReadBat;
 import org.support.project.knowledge.bat.MailSendBat;
 import org.support.project.knowledge.bat.NotifyMailBat;
 import org.support.project.knowledge.bat.WebhookBat;
@@ -31,7 +32,9 @@ public class CronListener implements ServletContextListener {
     private ScheduledFuture<?> mailfuture;
     private ScheduledFuture<?> webhookfuture;
     private ScheduledFuture<?> notifyfuture;
+    private ScheduledFuture<?> mailHookfuture;
 
+    
     @Override
     public void contextInitialized(final ServletContextEvent sce) {
         String logsPath = AppConfig.get().getLogsPath();
@@ -119,7 +122,7 @@ public class CronListener implements ServletContextListener {
                     LOG.error("Failed send mail.", e);
                 }
             }
-        }, 180, 180, TimeUnit.SECONDS); // 180秒毎に実行
+        }, 150, 180, TimeUnit.SECONDS); // 180秒毎に実行
 
         webhookfuture = service.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -147,6 +150,33 @@ public class CronListener implements ServletContextListener {
                 }
             }
         }, 180, 180, TimeUnit.SECONDS); // 180秒毎に実行
+
+        mailHookfuture = service.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                LOG.trace("called. [mailHookfuture]");
+                // Java を別のVMで実行（添付ファイルの中身を抽出し検索可能にする）
+                JavaJob job = new JavaJob();
+                job.setCurrentDirectory(logDir);
+                job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
+                job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
+                job.setMainClass(MailReadBat.class.getName());
+                if (StringUtils.isNotEmpty(envValue)) {
+                    job.addEnvironment(SystemConfig.KNOWLEDGE_ENV_KEY, envValue);
+                }
+                try {
+                    JobResult result = job.execute();
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("finish MailReadBat [result]" + result.getResultCode());
+                    }
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace(result.getStdout());
+                    }
+                } catch (Exception e) {
+                    LOG.error("Failed to MailHook", e);
+                }
+            }
+        }, 110, 180, TimeUnit.SECONDS); // 180秒毎に実行
 
         notifyfuture = service.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -200,6 +230,12 @@ public class CronListener implements ServletContextListener {
         try {
             webhookfuture.cancel(true);
             webhookfuture.get();
+        } catch (Exception e) {
+            LOG.debug("An error has occurred in the end processing of the batch", e); // 基本は無視でOK
+        }
+        try {
+            mailHookfuture.cancel(true);
+            mailHookfuture.get();
         } catch (Exception e) {
             LOG.debug("An error has occurred in the end processing of the batch", e); // 基本は無視でOK
         }

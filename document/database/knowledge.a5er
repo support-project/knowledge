@@ -1,4 +1,4 @@
-﻿# A5:ER FORMAT:09
+﻿# A5:ER FORMAT:10
 # A5:ER ENCODING:UTF8
 # A5:ER Mk-1 Copyright (C)2007 m.matsubara
 # A5:SQL Mk-2 Copyright (C)1997 m.matsubara
@@ -46,6 +46,91 @@ SqlSeparator=0
 ShowTag=1
 ShowCommonAttributes=0
 
+[Entity]
+PName=MAIL_POSTS
+LName=メールから投稿
+Comment=
+TableOption=
+Page=MAIN
+Left=2300
+Top=1200
+Field="Message-ID","MESSAGE_ID","@VARCHAR(128)","NOT NULL",0,"","",$FFFFFFFF,""
+Field="投稿区分","POST_KIND","@INT","NOT NULL",,"","1: Knowledge 2:Comment",$FFFFFFFF,""
+Field="ID","ID","BIGINT","NOT NULL",,"","",$FFFFFFFF,""
+Field="SENDER","SENDER","text",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20160611082117
+Position="MAIN",2300,1200
+
+[Relation]
+Entity1=MAIL_HOOKS
+Entity2=MAIL_HOOK_CONDITIONS
+RelationType1=2
+RelationType2=3
+Fields1=HOOK_ID
+Fields2=HOOK_ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,4081,5073,4018,R,R
+Dependence=1
+Caption=
+PName=
+ModifiedDateTime=20160603134957
+LineMode=0
+Bar1=408
+Bar2=507
+Bar3=402
+TermPos1=R
+TermPos2=R
+
+[Entity]
+PName=MAIL_HOOK_CONDITIONS
+LName=メールから投稿する条件
+Comment=
+TableOption=
+Page=MAIN
+Left=2300
+Top=900
+Field="HOOK_ID","HOOK_ID","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
+Field="CONDITION_NO","CONDITION_NO","@INT","NOT NULL",1,"","",$FFFFFFFF,""
+Field="条件の種類","CONDITION_KIND","@INT","NOT NULL",,"","1:宛先が「条件文字」であった場合",$FFFFFFFF,""
+Field="条件の文字","CONDITION","@VARCHAR(256)",,,"","",$FFFFFFFF,""
+Field="投稿者","PROCESS_USER","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="投稿者の指定","PROCESS_USER_KIND","@INT","NOT NULL",,"","1:送信者のメールアドレスから、2:常に固定",$FFFFFFFF,""
+Field="公開区分","PUBLIC_FLAG","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="タグ","TAGS","text",,,"","",$FFFFFFFF,""
+Field="公開先","VIEWERS","text",,,"","",$FFFFFFFF,""
+Field="共同編集者","EDITORS","text",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20160610183347
+Position="MAIN",2300,900
+
+[Entity]
+PName=MAIL_HOOKS
+LName=受信したメールからの処理
+Comment=
+TableOption=
+Page=MAIN
+Left=2300
+Top=570
+Field="HOOK_ID","HOOK_ID","SERIAL","NOT NULL",0,"","",$FFFFFFFF,""
+Field="MAIL_PROTOCOL","MAIL_PROTOCOL","@VARCHAR(10)","NOT NULL",,"","",$FFFFFFFF,""
+Field="MAIL_HOST","MAIL_HOST","@VARCHAR(256)","NOT NULL",,"","",$FFFFFFFF,""
+Field="MAIL_PORT","MAIL_PORT","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="MAIL_USER","MAIL_USER","@VARCHAR(256)",,,"","",$FFFFFFFF,""
+Field="MAIL_PASS","MAIL_PASS","@VARCHAR(1024)",,,"","",$FFFFFFFF,""
+Field="MAIL_PASS_SALT","MAIL_PASS_SALT","@VARCHAR(1024)",,,"","",$FFFFFFFF,""
+Field="MAIL_FOLDER","MAIL_FOLDER","@VARCHAR(64)",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20160603171116
+Position="MAIN",2300,570
+
 [Relation]
 Entity1=STOCKS
 Entity2=STOCK_KNOWLEDGES
@@ -55,15 +140,15 @@ Fields1=STOCK_ID
 Fields2=STOCK_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4273,5090,4224,R,R
+Position="MAIN",0,4450,5090,4398,R,R
 Dependence=1
 Caption=
 PName=
 ModifiedDateTime=20150910042933
 LineMode=0
-Bar1=427
+Bar1=445
 Bar2=509
-Bar3=422
+Bar3=440
 TermPos1=R
 TermPos2=R
 
@@ -73,8 +158,8 @@ LName=ストック
 Comment=
 TableOption=
 Page=MAIN
-Left=2000
-Top=1330
+Left=1800
+Top=1300
 Field="STOCK ID","STOCK_ID","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="STOCK 名","STOCK_NAME","@VARCHAR(256)","NOT NULL",,"","",$FFFFFFFF,""
 Field="区分","STOCK_TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
@@ -83,7 +168,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150910042830
-Position="MAIN",2000,1330
+Position="MAIN",1800,1300
 
 [Relation]
 Entity1=TEMPLATE_ITEMS
@@ -94,13 +179,13 @@ Fields1=TYPE_ID,ITEM_NO
 Fields2=TYPE_ID,ITEM_NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,3751,4599,3188,R,R
+Position="MAIN",0,6291,5004,3188,R,R
 Dependence=1
 Caption=
 PName=
 LineMode=0
-Bar1=375
-Bar2=460
+Bar1=629
+Bar2=500
 Bar3=319
 TermPos1=R
 TermPos2=R
@@ -193,7 +278,7 @@ Fields1=TYPE_ID
 Fields2=TYPE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4347,6903,3260,R,R
+Position="MAIN",0,4347,6903,3478,R,R
 Dependence=1
 Caption=
 PName=
@@ -201,7 +286,7 @@ ModifiedDateTime=20150910034230
 LineMode=0
 Bar1=435
 Bar2=690
-Bar3=326
+Bar3=348
 TermPos1=R
 TermPos2=R
 
@@ -289,15 +374,15 @@ LName=編集可能なグループ
 Comment=
 TableOption=
 Page=MAIN
-Left=2000
-Top=810
+Left=1800
+Top=800
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="GROUP_ID","GROUP_ID","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150517064451
-Position="MAIN",2000,810
+Position="MAIN",1800,800
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -325,15 +410,15 @@ LName=編集可能なユーザ
 Comment=
 TableOption=
 Page=MAIN
-Left=2000
-Top=720
+Left=1800
+Top=700
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="USER_ID","USER_ID","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150517063424
-Position="MAIN",2000,720
+Position="MAIN",1800,700
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -430,14 +515,14 @@ Fields1=COMMENT_NO
 Fields2=COMMENT_NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,5422,4072,4786,R,R
+Position="MAIN",0,5422,4072,4842,R,R
 Dependence=0
 Caption=
 PName=
 LineMode=0
 Bar1=542
 Bar2=407
-Bar3=479
+Bar3=484
 TermPos1=R
 TermPos2=R
 
@@ -509,14 +594,14 @@ Fields1=KNOWLEDGE_ID
 Fields2=KNOWLEDGE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,1398,5745,3878,R,R
+Position="MAIN",0,1398,7735,3878,R,R
 Dependence=1
 Caption=
 PName=
 ModifiedDateTime=20141222155941
 LineMode=0
 Bar1=140
-Bar2=574
+Bar2=774
 Bar3=388
 TermPos1=R
 TermPos2=R
@@ -527,8 +612,8 @@ LName=コメント
 Comment=
 TableOption=
 Page=MAIN
-Left=840
-Top=1330
+Left=650
+Top=1300
 Field="コメント番号","COMMENT_NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="コメント","COMMENT","text",,,"","",$FFFFFFFF,""
@@ -538,7 +623,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150910035117
-Position="MAIN",840,1330
+Position="MAIN",650,1300
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -566,8 +651,8 @@ LName=投票
 Comment=
 TableOption=
 Page=MAIN
-Left=1350
-Top=1340
+Left=1150
+Top=1300
 Field="VOTE_NO","VOTE_NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="投票区分","VOTE_KIND","@INT","NOT NULL",,"","",$FFFFFFFF,""
@@ -576,7 +661,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150416233659
-Position="MAIN",1350,1340,435,89
+Position="MAIN",1150,1300,435,89
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -644,8 +729,8 @@ LName=ストックしたナレッジ
 Comment=
 TableOption=
 Page=MAIN
-Left=2000
-Top=1110
+Left=1800
+Top=1100
 Field="STOCK ID","STOCK_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",1,"","",$FFFFFFFF,""
 Field="コメント","COMMENT","@VARCHAR(1024)",,,"","",$FFFFFFFF,""
@@ -653,7 +738,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150910042912
-Position="MAIN",2000,1110
+Position="MAIN",1800,1100
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -681,15 +766,15 @@ LName=アクセス可能なグループ
 Comment=
 TableOption=
 Page=MAIN
-Left=2010
-Top=990
+Left=1800
+Top=1000
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="GROUP_ID","GROUP_ID","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20141222154841
-Position="MAIN",2010,990
+Position="MAIN",1800,1000
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -718,7 +803,7 @@ LName=アクセス可能なユーザ
 Comment=
 TableOption=
 Page=MAIN
-Left=2000
+Left=1800
 Top=900
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="USER_ID","USER_ID","@INT","NOT NULL",1,"","",$FFFFFFFF,""
@@ -726,7 +811,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150517063359
-Position="MAIN",2000,900
+Position="MAIN",1800,900
 
 [Relation]
 Entity1=TAGS
@@ -809,14 +894,14 @@ Fields1=KNOWLEDGE_ID
 Fields2=KNOWLEDGE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",1,756,8060,7728,R,R
+Position="MAIN",1,756,6760,7728,R,R
 Dependence=1
 Caption=
 PName=
 ModifiedDateTime=20150517063131
 LineMode=1
 Bar1=76
-Bar2=806
+Bar2=676
 Bar3=773
 TermPos1=R
 TermPos2=R
@@ -849,8 +934,8 @@ LName=ナレッジ
 Comment=
 TableOption=
 Page=MAIN
-Left=930
-Top=820
+Left=900
+Top=850
 Field="ナレッジID","KNOWLEDGE_ID","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="タイトル","TITLE","@VARCHAR(1024)","NOT NULL",,"","",$FFFFFFFF,""
 Field="内容","CONTENT","text",,,"","",$FFFFFFFF,""
@@ -864,7 +949,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150910053608
-Position="MAIN",930,820
+Position="MAIN",900,850
 
 [Comment]
 Comment=knowledge

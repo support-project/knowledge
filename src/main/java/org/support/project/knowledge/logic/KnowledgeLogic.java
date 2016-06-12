@@ -47,7 +47,6 @@ import org.support.project.knowledge.entity.KnowledgeTagsEntity;
 import org.support.project.knowledge.entity.KnowledgeUsersEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
-import org.support.project.knowledge.entity.StockKnowledgesEntity;
 import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
@@ -1099,7 +1098,7 @@ public class KnowledgeLogic {
      * @param fileNos
      * @throws Exception
      */
-    public void saveComment(Long knowledgeId, String comment, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
+    public CommentsEntity saveComment(Long knowledgeId, String comment, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
         CommentsDao commentsDao = CommentsDao.get();
         CommentsEntity commentsEntity = new CommentsEntity();
         commentsEntity.setKnowledgeId(knowledgeId);
@@ -1116,6 +1115,8 @@ public class KnowledgeLogic {
 
         // 通知
         NotifyLogic.get().notifyOnKnowledgeComment(knowledgeId, commentsEntity);
+        
+        return commentsEntity;
     }
 
     /**

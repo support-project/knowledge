@@ -39,6 +39,13 @@ public class NotifyControl extends Control {
     public Boundary save() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
         NotifyConfigsEntity entity = super.getParamOnProperty(NotifyConfigsEntity.class);
         NotifyConfigsDao notifyConfigsDao = NotifyConfigsDao.get();
+        if (entity.getNotifyMail() == null) {
+            entity.setNotifyMail(INT_FLAG.OFF.getValue());
+        }
+        if (entity.getNotifyDesktop() == null) {
+            entity.setNotifyDesktop(INT_FLAG.OFF.getValue());
+        }
+        
         if (entity.getNotifyMail() == INT_FLAG.ON.getValue() || entity.getNotifyDesktop() == INT_FLAG.ON.getValue()) {
             // 通知はONにしたけどメールが届かないという問い合わせがある
             // 通知をONにしても、通知する種類を選択していないとメールが届かないので、通知ONの場合、
@@ -59,6 +66,7 @@ public class NotifyControl extends Control {
                 entity.setToItemSave(INT_FLAG.ON.getValue());
             }
         }
+        
         entity.setUserId(getLoginUserId());
         notifyConfigsDao.save(entity);
         addMsgSuccess("message.success.save");

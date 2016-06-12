@@ -1,0 +1,30 @@
+INSERT INTO MAIL_HOOKS
+( 
+HOOK_ID
+ , MAIL_PROTOCOL
+ , MAIL_HOST
+ , MAIL_PORT
+ , MAIL_USER
+ , MAIL_PASS
+ , MAIL_PASS_SALT
+ , MAIL_FOLDER
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+DEFAULT
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);
