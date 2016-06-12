@@ -35,7 +35,6 @@ public class GlobalInitializationListener implements ServletContextListener {
         appendar.setFile(logDir + "/app.log");
         appendar.activateOptions(); // 変更の反映
         LOG.info("[APP LOG] " + logDir.getAbsolutePath() + "/app.log");
-        LOG.info(logDir.getAbsolutePath());
     }
 
     @Override
