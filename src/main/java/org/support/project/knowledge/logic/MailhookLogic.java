@@ -178,10 +178,10 @@ public class MailhookLogic {
             if (address instanceof InternetAddress) {
                 InternetAddress a = (InternetAddress) address;
                 String from = a.getAddress();
-                user = UsersDao.get().selectOnUserKey(from);
+                user = UsersDao.get().selectOnMail(from);
             } else {
                 String from = address.toString();
-                user = UsersDao.get().selectOnUserKey(from);
+                user = UsersDao.get().selectOnMail(from);
             }
             if (user != null) {
                 break;
