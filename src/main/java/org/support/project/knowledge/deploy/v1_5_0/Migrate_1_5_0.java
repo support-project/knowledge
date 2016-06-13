@@ -1,5 +1,6 @@
 package org.support.project.knowledge.deploy.v1_5_0;
 
+import java.io.File;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.MessageDigest;
@@ -15,6 +16,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.support.project.common.util.Base64Utils;
 import org.support.project.common.util.PasswordUtil;
 import org.support.project.common.util.StringUtils;
+import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.deploy.Migrate;
 import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.web.dao.LdapConfigsDao;
@@ -36,7 +38,7 @@ public class Migrate_1_5_0 implements Migrate {
             IllegalBlockSizeException, BadPaddingException {
         MessageDigest digest = MessageDigest.getInstance("MD5");
         byte[] hash = digest.digest(key.getBytes());
-        Key secretKey = new SecretKeySpec(hash, CIPHER_ALGORITHM);;
+        Key secretKey = new SecretKeySpec(hash, CIPHER_ALGORITHM);
 
         Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
@@ -55,40 +57,42 @@ public class Migrate_1_5_0 implements Migrate {
         };
         initializeDao.initializeDatabase(sqlpaths);
         
-        // 既存のDBの中で暗号化されている情報（ハッシュでは無い）を再度暗号化し直す
-        List<LdapConfigsEntity> ldaps = LdapConfigsDao.get().selectAll();
-        for (LdapConfigsEntity entity : ldaps) {
-            if (StringUtils.isNotEmpty(entity.getBindPassword())) {
-                String pass = decrypt(entity.getBindPassword(), entity.getSalt());
-                String salt = PasswordUtil.getSalt();
-                entity.setBindPassword(PasswordUtil.encrypt(pass, salt));
-                entity.setSalt(salt);
-                LdapConfigsDao.get().save(entity);
+        // 暗号化の仕組みを変更したため、旧暗号化の仕組みを使っていた場合、それを復元して、再度暗号化し直す
+        File keyTxt = new File(AppConfig.get().getBasePath(), "key.txt");
+        if (!keyTxt.exists()) {
+            List<LdapConfigsEntity> ldaps = LdapConfigsDao.get().selectAll();
+            for (LdapConfigsEntity entity : ldaps) {
+                if (StringUtils.isNotEmpty(entity.getBindPassword())) {
+                    String pass = decrypt(entity.getBindPassword(), entity.getSalt());
+                    String salt = PasswordUtil.getSalt();
+                    entity.setBindPassword(PasswordUtil.encrypt(pass, salt));
+                    entity.setSalt(salt);
+                    LdapConfigsDao.get().save(entity);
+                }
+            }
+            
+            List<MailConfigsEntity> mails = MailConfigsDao.get().selectAll();
+            for (MailConfigsEntity entity : mails) {
+                if (StringUtils.isNotEmpty(entity.getSmtpPassword())) {
+                    String pass = decrypt(entity.getSmtpPassword(), entity.getSalt());
+                    String salt = PasswordUtil.getSalt();
+                    entity.setSmtpPassword(PasswordUtil.encrypt(pass, salt));
+                    entity.setSalt(salt);
+                    MailConfigsDao.get().save(entity);
+                }
+            }
+            
+            List<ProxyConfigsEntity> proxies = ProxyConfigsDao.get().selectAll();
+            for (ProxyConfigsEntity entity : proxies) {
+                if (StringUtils.isNotEmpty(entity.getProxyAuthPassword())) {
+                    String pass = decrypt(entity.getProxyAuthPassword(), entity.getProxyAuthSalt());
+                    String salt = PasswordUtil.getSalt();
+                    entity.setProxyAuthPassword(PasswordUtil.encrypt(pass, salt));
+                    entity.setProxyAuthSalt(salt);
+                    ProxyConfigsDao.get().save(entity);
+                }
             }
         }
-        
-        List<MailConfigsEntity> mails = MailConfigsDao.get().selectAll();
-        for (MailConfigsEntity entity : mails) {
-            if (StringUtils.isNotEmpty(entity.getSmtpPassword())) {
-                String pass = decrypt(entity.getSmtpPassword(), entity.getSalt());
-                String salt = PasswordUtil.getSalt();
-                entity.setSmtpPassword(PasswordUtil.encrypt(pass, salt));
-                entity.setSalt(salt);
-                MailConfigsDao.get().save(entity);
-            }
-        }
-        
-        List<ProxyConfigsEntity> proxies = ProxyConfigsDao.get().selectAll();
-        for (ProxyConfigsEntity entity : proxies) {
-            if (StringUtils.isNotEmpty(entity.getProxyAuthPassword())) {
-                String pass = decrypt(entity.getProxyAuthPassword(), entity.getProxyAuthSalt());
-                String salt = PasswordUtil.getSalt();
-                entity.setProxyAuthPassword(PasswordUtil.encrypt(pass, salt));
-                entity.setProxyAuthSalt(salt);
-                ProxyConfigsDao.get().save(entity);
-            }
-        }
-        
         return true;
     }
 }
