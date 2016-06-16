@@ -157,11 +157,13 @@ public class GroupControl extends Control {
             offset = Integer.parseInt(userOffset);
         }
         List<GroupUser> users = groupLogic.getGroupUsers(groupId, offset * PAGE_LIMIT, PAGE_LIMIT);
-        // 所属済かどうか
-        boolean belong = false;
+        boolean belong = false; // 所属済かどうか
         for (GroupUser groupUser : users) {
             if (groupUser.getUserId().intValue() == getLoginUserId().intValue()) {
                 belong = true;
+            }
+            if (groupUser.getGroupRole() == 0) {
+                groupUser.setGroupRole(CommonWebParameter.GROUP_ROLE_MEMBER);
             }
         }
 
