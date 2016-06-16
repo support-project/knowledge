@@ -26,7 +26,7 @@
 			</c:forEach>
 		</div>
 		<div style="width: 100%;text-align: right;">
-			<a href="<%= request.getContextPath() %>/protect.group/mygroups">
+			<a href="<%= request.getContextPath() %>/protect.group/list">
 				<i class="fa fa-group"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.group.list") %>
 			</a>&nbsp;&nbsp;&nbsp;
 		</div>
