@@ -35,7 +35,7 @@ import org.support.project.web.exception.InvalidParamException;
 @DI(instance = Instance.Prototype)
 public class GroupControl extends Control {
     /** 一覧の表示件数 */
-    public static final int PAGE_LIMIT = 10;
+    public static final int PAGE_LIMIT = 20;
 
     /**
      * 自分が所属しているグループの一覧を取得
