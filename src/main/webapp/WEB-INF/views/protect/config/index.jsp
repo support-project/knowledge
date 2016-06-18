@@ -46,7 +46,7 @@
                 <i class="fa fa-language"></i>&nbsp;<%=jspUtil.label("knowledge.language.title")%>
             </a></li>
 
-            <li><a href="<%=request.getContextPath()%>/protect.group/mygroups">
+            <li><a href="<%=request.getContextPath()%>/protect.group/list">
                 <i class="fa fa-group"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.config.group.list")%>
             </a></li>
 
