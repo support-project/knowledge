@@ -1,10 +1,14 @@
 package org.support.project.knowledge.dao;
 
+import java.sql.Timestamp;
+
+import org.support.project.common.config.INT_FLAG;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-
 import org.support.project.knowledge.dao.gen.GenMailHooksDao;
+import org.support.project.knowledge.entity.MailHooksEntity;
+import org.support.project.ormapping.common.DBUserPool;
 
 /**
  * 受信したメールからの処理
@@ -44,5 +48,26 @@ public class MailHooksDao extends GenMailHooksDao {
         return currentId;
     }
 
+    /* (non-Javadoc)
+     * @see org.support.project.knowledge.dao.gen.GenMailHooksDao#save(org.support.project.knowledge.entity.MailHooksEntity)
+     */
+    @Override
+    public MailHooksEntity save(MailHooksEntity entity) {
+        if (entity.getHookId() != null) {
+            MailHooksEntity db = physicalSelectOnKey(entity.getHookId());
+            if (db != null) {
+                physicalDelete(entity.getHookId());
+            }
+            entity.setDeleteFlag(INT_FLAG.OFF.getValue());
+            entity.setInsertUser((Integer) DBUserPool.get().getUser());
+            entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
+            return rawPhysicalInsert(entity);
+        } else {
+            return super.save(entity);
+        }
+    }
+    
+    
+    
 
 }

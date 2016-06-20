@@ -35,6 +35,7 @@ import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.MailHookConditionsDao;
 import org.support.project.knowledge.dao.MailHooksDao;
 import org.support.project.knowledge.dao.MailPostsDao;
+import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.MailHookConditionsEntity;
@@ -151,6 +152,7 @@ public class MailhookLogic {
         if (LOG.isDebugEnabled()) {
             LOG.debug("SUBJECT:" + msg.getSubject());
             LOG.debug("CONTENT:" + getContent(msg));
+            @SuppressWarnings("unchecked")
             Enumeration<Header> headers = msg.getAllHeaders();
             while (headers.hasMoreElements()) {
                 Header header = (Header) headers.nextElement();
@@ -164,13 +166,7 @@ public class MailhookLogic {
             LOG.debug("[References] " + references);
         }
         
-        // 現在操作しているMessage-IDが既に登録されている？
-        MailPostsEntity exists = MailPostsDao.get().selectOnKey(msgId);
-        if (exists != null) {
-            LOG.info("[Message-ID] " + msgId + " exists. skip add data.");
-            return;
-        }
-        
+        // 登録者の取得
         LoginedUser loginedUser = new LoginedUser();
         UsersEntity user = null;
         Address[] in = msg.getFrom();
@@ -204,6 +200,25 @@ public class MailhookLogic {
             loginedUser.setRoles(RolesDao.get().selectOnUserKey(user.getUserKey()));
         }
         
+        
+        // 現在操作しているMessage-IDが既に登録されている？
+        MailPostsEntity exists = MailPostsDao.get().selectOnKey(msgId);
+        if (exists != null) {
+            if (exists.getPostKind() == 1) {
+                // Knowledge本体
+                KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(exists.getId());
+                if (knowledge != null) {
+                    LOG.info("[Message-ID] " + msgId + " exists. so, update tagets.");
+                    updateTargetsAndTags(knowledge, condition, loginedUser);
+                }
+            } else {
+                LOG.info("[Message-ID] " + msgId + " exists. skip add data.");
+            }
+            // それ以降の処理は実施しないで終了
+            return;
+        }
+        
+        // 新規登録するナレッジ？それともコメント？
         if (StringUtils.isNotEmpty(references)) {
             String[] checks = references.split(" ");
             for (String string : checks) {
@@ -238,6 +253,92 @@ public class MailhookLogic {
         }
     }
     
+    /**
+     * 既に登録されているKnowledgeに対し、別のメールから投稿の条件にヒットした場合、
+     * その条件に書かれている、参照範囲／共同編集者、タグの設定を追加する
+     * 
+     * TODO メールから投稿の条件に2件ヒットした場合に、片方の公開範囲が「公開」でもう片方が「保護」の場合、
+     * 公開範囲の設定は、先勝ちになっている。それで良いかな？
+     * 
+     * @param knowledge
+     * @param condition
+     * @param loginedUser 
+     * @throws Exception 
+     */
+    private void updateTargetsAndTags(KnowledgesEntity knowledge, MailHookConditionsEntity condition, LoginedUser loginedUser) throws Exception {
+        // タグ
+        List<TagsEntity> tagList = null;
+        if (StringUtils.isNotEmpty(condition.getTags())) {
+            List<TagsEntity> addTagList = KnowledgeLogic.get().manegeTags(condition.getTags());
+            List<TagsEntity> existsTagList = TagsDao.get().selectOnKnowledgeId(knowledge.getKnowledgeId());
+            List<TagsEntity> temp = new ArrayList<>();
+            if (addTagList != null) {
+                for (TagsEntity tag : addTagList) {
+                    boolean exixts = false;
+                    for (TagsEntity ext : existsTagList) {
+                        if (tag.getTagId() == ext.getTagId()) {
+                            exixts = true;
+                        }
+                    }
+                    if (!exixts) {
+                        temp.add(tag);
+                    }
+                }
+            }
+            existsTagList.addAll(temp);
+            tagList = existsTagList;
+        }
+        
+        // 閲覧者
+        List<LabelValue> viewers = null;
+        if (StringUtils.isNotEmpty(condition.getViewers())) {
+            List<LabelValue> addViewers = TargetLogic.get().selectTargets(condition.getViewers().split(","));
+            List<LabelValue> existsViewers = TargetLogic.get().selectTargetsOnKnowledgeId(knowledge.getKnowledgeId());
+            List<LabelValue> temp = new ArrayList<>();
+            if (addViewers != null) {
+                for (LabelValue target : addViewers) {
+                    boolean exixts = false;
+                    for (LabelValue ext : existsViewers) {
+                        if (target.getValue().equals(ext.getValue())) {
+                            exixts = true;
+                        }
+                    }
+                    if (!exixts) {
+                        temp.add(target);
+                    }
+                }
+            }
+            existsViewers.addAll(temp);
+            viewers = existsViewers;
+        }
+        
+        // 編集者
+        List<LabelValue> editors = null;
+        if (StringUtils.isNotEmpty(condition.getEditors())) {
+            List<LabelValue> addEditors = TargetLogic.get().selectTargets(condition.getEditors().split(","));
+            List<LabelValue> existsEditors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledge.getKnowledgeId());
+            List<LabelValue> temp = new ArrayList<>();
+            if (addEditors != null) {
+                for (LabelValue target : addEditors) {
+                    boolean exixts = false;
+                    for (LabelValue ext : existsEditors) {
+                        if (target.getValue().equals(ext.getValue())) {
+                            exixts = true;
+                        }
+                    }
+                    if (!exixts) {
+                        temp.add(target);
+                    }
+                }
+            }
+            existsEditors.addAll(temp);
+            editors = existsEditors;
+        }
+        
+        KnowledgesEntity entity = KnowledgeLogic.get().update(knowledge, tagList, null, viewers, editors, null, loginedUser);
+        LOG.info("Knowledge[" + entity.getKnowledgeId() + "] " + entity.getTitle() + " was updated.");
+    }
+
     /**
      * メールからコメントを登録
      * @param msg
@@ -447,7 +548,7 @@ public class MailhookLogic {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void deleteHookCondition(Integer conditionNo) {
-        MailHookConditionsDao.get().delete(conditionNo, MAIL_HOOK_ID);
+        MailHookConditionsDao.get().physicalDelete(conditionNo, MAIL_HOOK_ID);
     }
     
     /**
@@ -460,7 +561,7 @@ public class MailhookLogic {
         for (MailHookConditionsEntity mailHookConditionsEntity : conditions) {
             MailHookConditionsDao.get().physicalDelete(mailHookConditionsEntity);
         }
-        MailHooksDao.get().delete(mailHookId);
+        MailHooksDao.get().physicalDelete(mailHookId);
     }
 
 }
