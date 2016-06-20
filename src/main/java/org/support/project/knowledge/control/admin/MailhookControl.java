@@ -104,6 +104,7 @@ public class MailhookControl extends Control {
             entity.setMailPass(PasswordUtil.encrypt(entity.getMailPass(), salt));
             entity.setMailPassSalt(salt);
         }
+        entity.setHookId(MailhookLogic.MAIL_HOOK_ID);
         MailHooksDao.get().save(entity);
         setAttributeOnProperty(entity);
         

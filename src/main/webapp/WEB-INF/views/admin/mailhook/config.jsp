@@ -30,6 +30,17 @@ function deleteMail() {
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.admin.post.from.mail") %></h4>
 
+<div class="alert alert-info alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Information</strong><br/>
+    <%=jspUtil.label("knowledge.admin.mailhook.info.1")%>
+    <%=jspUtil.label("knowledge.admin.mailhook.info.2")%><br/>
+    <strong><%=jspUtil.label("knowledge.admin.mailhook.info.3")%><br/></strong>
+</div>
+
+
 <form action="<%= request.getContextPath()%>/admin.mailhook/save" method="post" role="form" id="mailForm">
     
     <h5 class="sub_title"><%= jspUtil.label("knowledge.mail.subtitle.param") %></h5>
