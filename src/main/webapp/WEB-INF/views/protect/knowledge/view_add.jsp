@@ -84,6 +84,39 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 	<div class="alert alert-info hide" role="alert" id="template_info">
 		<span id="template_msg"></span>
 	</div>
+    
+    <!-- view targets -->
+    <div class="form-group">
+        <label for="input_content"><%= jspUtil.label("knowledge.add.label.public.class") %></label><br/>
+        <label class="radio-inline">
+            <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PRIVATE %>" name="publicFlag" 
+                id="publicFlag_private" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", true) %>/>
+            <i class="fa fa-lock"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.private") %>
+        </label>
+        <label class="radio-inline">
+            <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PUBLIC %>" name="publicFlag" 
+                id="publicFlag_piblic" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag") %>/>
+            <i class="fa fa-globe"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.public") %>
+        </label>
+        <label class="radio-inline">
+            <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PROTECT %>" name="publicFlag" 
+                id="publicFlag_protect" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag") %>/>
+            <i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.protect") %>
+        </label>
+    </div>
+    
+    <div class="form-group" id="grops_area" <%= jspUtil.isnot(KnowledgeLogic.PUBLIC_FLAG_PROTECT, "publicFlag", "style=\"display: none;\"") %>>
+        <label for="input_groups"><%= jspUtil.label("knowledge.add.label.destination") %></label>
+        <a id="groupselect" class="btn btn-primary btn-xs" data-toggle="modal" href="#groupSelectModal">
+            <i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.destination.select") %>
+        </a>
+        <p>
+            <input type="hidden" name="groups" id="groups">
+            <span id="groupsLabel"></span>
+        </p>
+    </div>
+        
+    
 	
 	<!-- title -->
 	<div class="form-group">
@@ -170,39 +203,6 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 		</div>
 	</c:forEach>
 	</div>
-	
-
-	<!-- view targets -->
-	<div class="form-group">
-		<label for="input_content"><%= jspUtil.label("knowledge.add.label.public.class") %></label><br/>
-		<label class="radio-inline">
-			<input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PUBLIC %>" name="publicFlag" 
-				id="publicFlag_piblic" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag", true) %>/>
-			<i class="fa fa-globe"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.public") %>
-		</label>
-		<label class="radio-inline">
-			<input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PRIVATE %>" name="publicFlag" 
-				id="publicFlag_private" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag") %>/>
-			<i class="fa fa-lock"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.private") %>
-		</label>
-		<label class="radio-inline">
-			<input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PROTECT %>" name="publicFlag" 
-				id="publicFlag_protect" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag") %>/>
-			<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.protect") %>
-		</label>
-	</div>
-	
-	<div class="form-group" id="grops_area" <%= jspUtil.isnot(KnowledgeLogic.PUBLIC_FLAG_PROTECT, "publicFlag", "style=\"display: none;\"") %>>
-		<label for="input_groups"><%= jspUtil.label("knowledge.add.label.destination") %></label>
-		<a id="groupselect" class="btn btn-primary btn-xs" data-toggle="modal" href="#groupSelectModal">
-			<i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.destination.select") %>
-		</a>
-		<p>
-			<input type="hidden" name="groups" id="groups">
-			<span id="groupsLabel"></span>
-		</p>
-	</div>
-
 
 	<!-- editors -->
 	<div class="form-group" id="editor_area">

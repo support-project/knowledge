@@ -93,6 +93,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
             setAttribute("groups", targets);
             setAttribute("editors", targets);
         }
+        
+        if (getAttribute("publicFlag") == null) {
+            setAttribute("publicFlag", KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
+        }
 
         return forward("view_add.jsp");
     }
