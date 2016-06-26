@@ -1,42 +1,52 @@
 package org.support.project.knowledge.logic;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.mail.Address;
-import javax.mail.BodyPart;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeUtility;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.PasswordUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
+import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailHookCondition;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.MailHookConditionsDao;
 import org.support.project.knowledge.dao.MailHooksDao;
 import org.support.project.knowledge.dao.MailPostsDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.CommentsEntity;
+import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.MailHookConditionsEntity;
 import org.support.project.knowledge.entity.MailHooksEntity;
@@ -352,9 +362,10 @@ public class MailhookLogic {
     private void addCommnet(Message msg, MailHookConditionsEntity condition, LoginedUser loginedUser, String msgId, KnowledgesEntity parent)
             throws MessagingException, Exception {
         LOG.debug("Add Comment");
-        
+        String content = getContent(msg);
+        List<Long> fileNos = addAtachFiles(msg);
         CommentsEntity entity = 
-                KnowledgeLogic.get().saveComment(parent.getKnowledgeId(), getContent(msg), new ArrayList<>(), loginedUser);
+                KnowledgeLogic.get().saveComment(parent.getKnowledgeId(), content, fileNos, loginedUser);
         
         MailPostsEntity post = new MailPostsEntity();
         post.setMessageId(msgId);
@@ -394,7 +405,9 @@ public class MailhookLogic {
         if (StringUtils.isNotEmpty(condition.getEditors())) {
             editors = TargetLogic.get().selectTargets(condition.getEditors().split(","));
         }
-        entity = KnowledgeLogic.get().insert(entity, tagList, null, viewers, editors, null, loginedUser);
+        List<Long> fileNos = addAtachFiles(msg);
+        
+        entity = KnowledgeLogic.get().insert(entity, tagList, fileNos, viewers, editors, null, loginedUser);
         
         MailPostsEntity post = new MailPostsEntity();
         post.setMessageId(msgId);
@@ -406,6 +419,80 @@ public class MailhookLogic {
         LOG.info("Knowledge[" + entity.getKnowledgeId() + "] " + entity.getTitle() + " was added.");
     }
     
+    /**
+     * メッセージの中の添付ファイルを取得し保存する
+     * @param msg
+     * @return
+     * @throws IOException 
+     * @throws MessagingException 
+     */
+    private List<Long> addAtachFiles(Message msg) throws IOException, MessagingException {
+        List<Long> fileNos = new ArrayList<>();
+        if (msg.getContent() instanceof Multipart) {
+            final Multipart multiPart = (Multipart) msg.getContent();
+            for (int indexPart = 0; indexPart < multiPart.getCount(); indexPart++) {
+                final Part part = multiPart.getBodyPart(indexPart);
+                final String disposition = part.getDisposition();
+                if (Part.ATTACHMENT.equals(disposition) || Part.INLINE.equals(disposition)) {
+                    String fileName = part.getFileName();
+                    if (fileName != null) {
+                        fileName = MimeUtility.decodeText(fileName);
+                        InputStream is = part.getInputStream();
+                        // ファイル保存
+                        Long fileNo = addAttach(part, fileName, is);
+                        LOG.debug("[" + indexPart + "]" + fileName);
+                        if (fileNo != null) {
+                            fileNos.add(fileNo);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return fileNos;
+    }
+    
+    /**
+     * 添付ファイル保存
+     * @param part
+     * @param fileName
+     * @param is
+     * @return 
+     * @throws MessagingException
+     * @throws IOException
+     */
+    private Long addAttach(final Part part, String fileName, InputStream is) throws MessagingException, IOException {
+        if (is == null) {
+            return null;
+        }
+        
+        File temp = new File(AppConfig.get().getTmpPath());
+        if (!temp.exists()) {
+            temp.mkdirs();
+        }
+        String uuid = UUID.randomUUID().toString();
+        File copy = new File(temp, uuid);
+        FileUtil.copy(is, new FileOutputStream(copy));
+        is.close();
+        
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(copy);
+            KnowledgeFilesEntity entity = new KnowledgeFilesEntity();
+            entity.setFileName(fileName);
+            entity.setFileSize(new Double(copy.length()));
+            entity.setFileBinary(in);
+            entity.setParseStatus(0);
+            entity = KnowledgeFilesDao.get().insert(entity);
+            return entity.getFileNo();
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+            FileUtil.delete(copy);
+        }
+    }
+
     /**
      * 送信者のアドレスを取得
      * @param msg
@@ -457,12 +544,36 @@ public class MailhookLogic {
      */
     private String getContent(Message msg) throws IOException, MessagingException {
         if (msg.getContent() instanceof Multipart) {
-            Multipart mp = (Multipart) msg.getContent();
-            BodyPart bp = mp.getBodyPart(0);
-            return bp.getContent().toString();
+            Multipart multiPart = (Multipart) msg.getContent();
+            return readContent(multiPart);
         } else {
             return msg.getContent().toString();
         }
+    }
+    
+    /**
+     * Multipart から本文のテキストを読み込む
+     * @param multiPart
+     * @return
+     * @throws MessagingException
+     * @throws IOException
+     */
+    private String readContent(Multipart multiPart) throws MessagingException, IOException {
+        final StringBuilder builder = new StringBuilder();
+        for (int indexPart = 0; indexPart < multiPart.getCount(); indexPart++) {
+            final Part part = multiPart.getBodyPart(indexPart);
+            final String disposition = part.getDisposition();
+            if (!Part.ATTACHMENT.equals(disposition) && !Part.INLINE.equals(disposition)) {
+                Object content = part.getContent();
+                if (content instanceof String) {
+                    builder.append(part.getContent().toString());
+                } else if (content instanceof Multipart) {
+                    return readContent((Multipart) content);
+                }
+                break; // メッセージは初めの1つだけで良いっぽい
+            }
+        }
+        return builder.toString();
     }
 
     /**
