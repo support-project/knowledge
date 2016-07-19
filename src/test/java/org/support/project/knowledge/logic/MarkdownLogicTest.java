@@ -243,4 +243,27 @@ public class MarkdownLogicTest extends TestCommon {
         }
     }
 
+    
+
+    @Test
+    @Order(order = 9)
+    public void testUNC()
+            throws ParseException, UnsupportedEncodingException, IOException, TransformerFactoryConfigurationError, TransformerException {
+        String markdown = "[UNCPathLink](\\\\hoge\\data, \"UNCPathLink\")";
+        String html = "<p><a href=\"\\\\hoge\\data,\" title=\"UNCPathLink\" rel=\"nofollow\">UNCPathLink</a></p>\n";
+        String result = MarkdownLogic.get().markdownToHtml(markdown, MarkdownLogic.ENGINE_MARKEDJ).getHtml();
+        try {
+            org.junit.Assert.assertEquals(html, result);
+        } catch (AssertionError e) {
+            LOG.info("testMarkdJDel");
+            LOG.info("[Markdown] : " + markdown);
+            LOG.info("[Html]     : " + html);
+            LOG.info("[Parsed]   : " + result);
+            LOG.info("[Indent]   : " + SanitizingLogic.get().indent(result));
+            throw e;
+        }
+    }
+    
+    
+    
 }
