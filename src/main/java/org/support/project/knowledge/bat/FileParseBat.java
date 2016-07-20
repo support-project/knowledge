@@ -34,9 +34,11 @@ import org.support.project.knowledge.indexer.IndexingValue;
 import org.support.project.knowledge.logic.CrawlerLogic;
 import org.support.project.knowledge.logic.IndexLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.parser.ParserFactory;
 import org.support.project.knowledge.vo.ParseResult;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.dao.ProxyConfigsDao;
 import org.support.project.web.entity.ProxyConfigsEntity;
 
@@ -114,7 +116,23 @@ public class FileParseBat extends AbstractBat {
                     value.addUser(knowledgesEntity.getInsertUser());
                     if (knowledgesEntity.getPublicFlag() == null || KnowledgeLogic.PUBLIC_FLAG_PUBLIC == knowledgesEntity.getPublicFlag()) {
                         value.addUser(KnowledgeLogic.ALL_USER);
+                    } else if (knowledgesEntity.getPublicFlag() != null 
+                            && knowledgesEntity.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
+                        List<LabelValue> targets = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgesEntity.getKnowledgeId());
+                        if (targets != null) {
+                            for (LabelValue target : targets) {
+                                Integer id = TargetLogic.get().getGroupId(target.getValue());
+                                if (id != Integer.MIN_VALUE) {
+                                    value.addGroup(id);
+                                }
+                                id = TargetLogic.get().getUserId(target.getValue());
+                                if (id != Integer.MIN_VALUE) {
+                                    value.addUser(id);
+                                }
+                            }
+                        }
                     }
+                    
                     for (TagsEntity tagsEntity : tagsEntities) {
                         value.addTag(tagsEntity.getTagId());
                     }
@@ -203,6 +221,21 @@ public class FileParseBat extends AbstractBat {
                 value.addUser(entity.getInsertUser());
                 if (knowledgesEntity.getPublicFlag() == null || KnowledgeLogic.PUBLIC_FLAG_PUBLIC == knowledgesEntity.getPublicFlag()) {
                     value.addUser(KnowledgeLogic.ALL_USER);
+                } else if (knowledgesEntity.getPublicFlag() != null 
+                        && knowledgesEntity.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
+                    List<LabelValue> targets = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgesEntity.getKnowledgeId());
+                    if (targets != null) {
+                        for (LabelValue target : targets) {
+                            Integer id = TargetLogic.get().getGroupId(target.getValue());
+                            if (id != Integer.MIN_VALUE) {
+                                value.addGroup(id);
+                            }
+                            id = TargetLogic.get().getUserId(target.getValue());
+                            if (id != Integer.MIN_VALUE) {
+                                value.addUser(id);
+                            }
+                        }
+                    }
                 }
                 for (TagsEntity tagsEntity : tagsEntities) {
                     value.addTag(tagsEntity.getTagId());
