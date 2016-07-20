@@ -71,6 +71,10 @@ public class GenMailHookConditionsEntity implements Serializable {
     private String viewers;
     /** 共同編集者 */
     private String editors;
+    /** 投稿者の制限 */
+    private Integer postLimit;
+    /** 制限のパラメータ */
+    private String limitParam;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -243,6 +247,38 @@ public class GenMailHookConditionsEntity implements Serializable {
     }
 
     /**
+     * Get 投稿者の制限.
+     * @return 投稿者の制限
+     */
+    public Integer getPostLimit() {
+        return this.postLimit;
+    }
+    /**
+     * Set 投稿者の制限.
+     * @param postLimit 投稿者の制限
+     * @return this object     */
+    public GenMailHookConditionsEntity setPostLimit(Integer postLimit) {
+        this.postLimit = postLimit;
+        return this;
+    }
+
+    /**
+     * Get 制限のパラメータ.
+     * @return 制限のパラメータ
+     */
+    public String getLimitParam() {
+        return this.limitParam;
+    }
+    /**
+     * Set 制限のパラメータ.
+     * @param limitParam 制限のパラメータ
+     * @return this object     */
+    public GenMailHookConditionsEntity setLimitParam(String limitParam) {
+        this.limitParam = limitParam;
+        return this;
+    }
+
+    /**
      * Get 登録ユーザ.
      * @return 登録ユーザ
      */
@@ -383,6 +419,8 @@ public class GenMailHookConditionsEntity implements Serializable {
         builder.append("tags = ").append(tags).append("\n");
         builder.append("viewers = ").append(viewers).append("\n");
         builder.append("editors = ").append(editors).append("\n");
+        builder.append("postLimit = ").append(postLimit).append("\n");
+        builder.append("limitParam = ").append(limitParam).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -468,6 +506,16 @@ public class GenMailHookConditionsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(this.publicFlag, convLabelName("Public Flag"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(this.postLimit, convLabelName("Post Limit"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.limitParam, convLabelName("Limit Param"), 256);
         if (error != null) {
             errors.add(error);
         }
@@ -559,6 +607,16 @@ public class GenMailHookConditionsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(values.get("publicFlag"), convLabelName("Public Flag"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(values.get("postLimit"), convLabelName("Post Limit"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("limitParam"), convLabelName("Limit Param"), 256);
         if (error != null) {
             errors.add(error);
         }
