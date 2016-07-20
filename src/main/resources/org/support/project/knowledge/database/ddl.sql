@@ -28,6 +28,8 @@ create table MAIL_HOOK_CONDITIONS (
   , TAGS text
   , VIEWERS text
   , EDITORS text
+  , POST_LIMIT integer
+  , LIMIT_PARAM character varying(256)
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -508,6 +510,8 @@ comment on column MAIL_HOOK_CONDITIONS.PUBLIC_FLAG is '公開区分';
 comment on column MAIL_HOOK_CONDITIONS.TAGS is 'タグ';
 comment on column MAIL_HOOK_CONDITIONS.VIEWERS is '公開先';
 comment on column MAIL_HOOK_CONDITIONS.EDITORS is '共同編集者';
+comment on column MAIL_HOOK_CONDITIONS.POST_LIMIT is '投稿者の制限';
+comment on column MAIL_HOOK_CONDITIONS.LIMIT_PARAM is '制限のパラメータ';
 comment on column MAIL_HOOK_CONDITIONS.INSERT_USER is '登録ユーザ';
 comment on column MAIL_HOOK_CONDITIONS.INSERT_DATETIME is '登録日時';
 comment on column MAIL_HOOK_CONDITIONS.UPDATE_USER is '更新ユーザ';

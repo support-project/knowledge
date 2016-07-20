@@ -53,7 +53,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=2300
-Top=1200
+Top=1250
 Field="Message-ID","MESSAGE_ID","@VARCHAR(128)","NOT NULL",0,"","",$FFFFFFFF,""
 Field="投稿区分","POST_KIND","@INT","NOT NULL",,"","1: Knowledge 2:Comment",$FFFFFFFF,""
 Field="ID","ID","BIGINT","NOT NULL",,"","",$FFFFFFFF,""
@@ -62,7 +62,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20160611082117
-Position="MAIN",2300,1200
+Position="MAIN",2300,1250
 
 [Relation]
 Entity1=MAIL_HOOKS
@@ -73,7 +73,7 @@ Fields1=HOOK_ID
 Fields2=HOOK_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4081,5073,4018,R,R
+Position="MAIN",0,4081,5073,3934,R,R
 Dependence=1
 Caption=
 PName=
@@ -81,7 +81,7 @@ ModifiedDateTime=20160603134957
 LineMode=0
 Bar1=408
 Bar2=507
-Bar3=402
+Bar3=393
 TermPos1=R
 TermPos2=R
 
@@ -103,10 +103,12 @@ Field="公開区分","PUBLIC_FLAG","@INT","NOT NULL",,"","",$FFFFFFFF,""
 Field="タグ","TAGS","text",,,"","",$FFFFFFFF,""
 Field="公開先","VIEWERS","text",,,"","",$FFFFFFFF,""
 Field="共同編集者","EDITORS","text",,,"","",$FFFFFFFF,""
+Field="投稿者の制限","POST_LIMIT","@INT",,,"","",$FFFFFFFF,""
+Field="制限のパラメータ","LIMIT_PARAM","@VARCHAR(256)",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20160610183347
+ModifiedDateTime=20160720194529
 Position="MAIN",2300,900
 
 [Entity]

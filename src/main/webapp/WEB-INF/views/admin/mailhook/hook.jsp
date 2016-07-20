@@ -146,6 +146,36 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
         </p>
     </div>
     
+    
+    <div class="form-group">
+        <label for="input_content"><%= jspUtil.label("knowledge.admin.mailhook.condition.limit.post") %></label><br/>
+        <label class="radio-inline">
+            <input type="radio" value="0" name="postLimit" 
+                id="postLimit0" <%= jspUtil.checked("0", "postLimit", true) %>/>
+            <i class="fa fa-xxx"></i>&nbsp;<%= jspUtil.label("knowledge.admin.mailhook.condition.limit.post.0") %>
+        </label>
+        <br/>
+        <label class="radio-inline">
+            <input type="radio" value="1" name="postLimit" 
+                id="postLimit1" <%= jspUtil.checked("1", "postLimit") %>/>
+            <i class="fa fa-xxx"></i>&nbsp;<%= jspUtil.label("knowledge.admin.mailhook.condition.limit.post.1") %>
+        </label>
+        <br/>
+        <label class="radio-inline">
+            <input type="radio" value="2" name="postLimit" 
+                id="postLimit2" <%= jspUtil.checked("2", "postLimit") %>/>
+            <i class="fa fa-xxx"></i>&nbsp;<%= jspUtil.label("knowledge.admin.mailhook.condition.limit.post.2") %>
+        </label>
+    </div>
+    
+    <div class="form-group">
+        <label for="limitParam"><%= jspUtil.label("knowledge.admin.mailhook.condition.limit.param") %></label>
+        <input type="text" class="form-control" name="limitParam" id="limitParam"
+            placeholder="<%= jspUtil.label("knowledge.admin.mailhook.condition.limit.param") %>" value="<%= jspUtil.out("limitParam") %>" />
+    </div>
+    
+    
+    
     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
     <% if (!jspUtil.is(-1, "conditionNo")) { %>
     <button type="button" class="btn btn-danger" onclick="deleteMail();"><i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %></button>

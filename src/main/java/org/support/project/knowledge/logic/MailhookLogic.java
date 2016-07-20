@@ -613,6 +613,63 @@ public class MailhookLogic {
      * @throws MessagingException
      */
     private boolean checkCondition(Message msg, MailHookConditionsEntity condition) throws MessagingException {
+        // 投稿者制限がある場合、投稿可能なメールアドレスかチェック
+        if (condition.getPostLimit() != null && condition.getPostLimit().intValue() != 0) {
+            Address[] in = msg.getFrom();
+            boolean target = false;
+            for (Address address : in) {
+                String from;
+                if (address instanceof InternetAddress) {
+                    InternetAddress a = (InternetAddress) address;
+                    from = a.getAddress();
+                } else {
+                    from = address.toString();
+                }
+                if (condition.getPostLimit().intValue() == 1) {
+                    // Knowledge登録ユーザのみ投稿可能
+                    UsersEntity user = UsersDao.get().selectOnMail(from);
+                    if (user != null) {
+                        target = true;
+                        break;
+                    }
+                } else if (condition.getPostLimit().intValue() == 2) {
+                    // 特定ドメインのメールアドレスならばOK
+                    if (StringUtils.isEmpty(condition.getLimitParam())) {
+                        // 許可するドメインが登録されていないので投稿できない
+                        return false;
+                    }
+                    String[] domains = condition.getLimitParam().split(",");
+                    for (String domain : domains) {
+                        // メールアドレスの中にドメインに一致する文字があればOKにしとく（サブドメインなどもOKになる）
+                        if (from.indexOf(domain) != -1) {
+                            target = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!target) {
+                StringBuilder f = new StringBuilder();
+                for (Address address : in) {
+                    if (f.length() > 0) {
+                        f.append(", ");
+                    }
+                    String from;
+                    if (address instanceof InternetAddress) {
+                        InternetAddress a = (InternetAddress) address;
+                        from = a.getAddress();
+                    } else {
+                        from = address.toString();
+                    }
+                    f.append(from);
+                }
+                LOG.info("Email was destroyed because it is not email posting of target.  -> " + f.toString());
+                // 投稿できない
+                return false;
+            }
+        }
+        
+        // 受信したメールの内容が、投稿する条件に合致するかチェック
         if (condition.getConditionKind().intValue() == MailHookCondition.Recipient.getValue()) {
             Address[] to = msg.getAllRecipients();
             for (Address address : to) {

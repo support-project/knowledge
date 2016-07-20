@@ -8,6 +8,8 @@ SET
  , TAGS = ?
  , VIEWERS = ?
  , EDITORS = ?
+ , POST_LIMIT = ?
+ , LIMIT_PARAM = ?
  , INSERT_USER = ?
  , INSERT_DATETIME = ?
  , UPDATE_USER = ?
