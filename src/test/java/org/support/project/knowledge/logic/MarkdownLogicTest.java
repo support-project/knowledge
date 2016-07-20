@@ -264,6 +264,27 @@ public class MarkdownLogicTest extends TestCommon {
         }
     }
     
+
+    
+    @Test
+    @Order(order = 10)
+    public void testAmp()
+            throws ParseException, UnsupportedEncodingException, IOException, TransformerFactoryConfigurationError, TransformerException {
+        String markdown = "```\n&read_data\n```";
+        String html = "<pre><code>&amp;read_data\n</code></pre>\n";
+        String result = MarkdownLogic.get().markdownToHtml(markdown, MarkdownLogic.ENGINE_MARKEDJ).getHtml();
+        try {
+            org.junit.Assert.assertEquals(html, result);
+        } catch (AssertionError e) {
+            LOG.info("testMarkdJDel");
+            LOG.info("[Markdown] : " + markdown);
+            LOG.info("[Html]     : " + html);
+            LOG.info("[Parsed]   : " + result);
+            LOG.info("[Indent]   : " + SanitizingLogic.get().indent(result));
+            throw e;
+        }
+    }
+    
     
     
 }
