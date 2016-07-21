@@ -331,7 +331,7 @@ public class KnowledgeLogic {
                     editGroupsDao.save(editGroupsEntity);
                 } else {
                     id = TargetLogic.get().getUserId(labelValue.getValue());
-                    if (id != Integer.MIN_VALUE && loginedUser.getUserId().intValue() != id.intValue() && ALL_USER != id.intValue()) {
+                    if (id != Integer.MIN_VALUE && ALL_USER != id.intValue()) {
                         KnowledgeEditUsersEntity editUsersEntity = new KnowledgeEditUsersEntity();
                         editUsersEntity.setKnowledgeId(entity.getKnowledgeId());
                         editUsersEntity.setUserId(id);
