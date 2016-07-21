@@ -1,5 +1,7 @@
 package org.support.project.knowledge.logic;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -25,7 +27,9 @@ import org.support.project.common.config.LocaleConfigLoader;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.DateUtils;
+import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.PasswordUtil;
+import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -34,6 +38,9 @@ import org.support.project.knowledge.bat.MailSendBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
 import org.support.project.knowledge.config.SystemConfig;
+import org.support.project.knowledge.parser.Parser;
+import org.support.project.knowledge.parser.ParserFactory;
+import org.support.project.knowledge.vo.ParseResult;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.config.WebConfig;
 import org.support.project.web.dao.MailConfigsDao;
@@ -433,6 +440,44 @@ public class MailLogic {
 
         mailsEntity.setContent(contents);
         MailsDao.get().insert(mailsEntity);
+    }
+    
+    
+    /**
+     * メールにセットする文字列を取得する
+     * Knowledgeから送るメールは、HTMLメールに対応していないので、
+     * HTML形式で会った場合は、文字列を抽出する
+     * 
+     * @param content
+     * @return
+     * @throws Exception 
+     */
+    public String getMailContent(String content) throws Exception {
+        if (StringUtils.isEmpty(content)) {
+            return "";
+        }
+        if (content.indexOf("<html") != -1 || content.indexOf("<HTML") != -1) {
+            // HTML
+            if (content.indexOf("charset=iso-2022-jp") != -1) {
+                content = content.replace("charset=iso-2022-jp", "UTF-8");
+            }
+            AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
+            File tmpDir = new File(appConfig.getTmpPath());
+            String name = RandomUtil.randamGen(16) + ".html";
+            File tmp = new File(tmpDir, name);
+            FileOutputStream outputStream = new FileOutputStream(tmp);
+            try {
+                FileUtil.write(outputStream, content);
+            } finally {
+                outputStream.close();
+            }
+            Parser parser = ParserFactory.getParser(tmp.getAbsolutePath());
+            ParseResult result = parser.parse(tmp);
+            LOG.debug("content text(length): " + result.getText().length());
+            LOG.debug("content text        : " + StringUtils.abbreviate(result.getText(), 300));
+            return result.getText();
+        }
+        return content;
     }
 
 }
