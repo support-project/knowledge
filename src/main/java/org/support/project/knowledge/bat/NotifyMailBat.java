@@ -192,7 +192,7 @@ public class NotifyMailBat extends AbstractBat {
         String contents = config.getContents();
         contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
         contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
-        contents = contents.replace("{Contents}", knowledge.getContent());
+        contents = contents.replace("{Contents}", getContent(knowledge.getContent()));
         if (likeUser != null) {
             contents = contents.replace("{LikeInsertUser}", likeUser.getUserName());
         } else {
@@ -319,13 +319,13 @@ public class NotifyMailBat extends AbstractBat {
         String contents = config.getContents();
         contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
         contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
-        contents = contents.replace("{Contents}", knowledge.getContent());
+        contents = contents.replace("{Contents}", getContent(knowledge.getContent()));
         if (commentUser != null) {
             contents = contents.replace("{CommentInsertUser}", commentUser.getUserName());
         } else {
             contents = contents.replace("{CommentInsertUser}", "");
         }
-        contents = contents.replace("{CommentContents}", comment.getComment());
+        contents = contents.replace("{CommentContents}", getContent(comment.getComment()));
         contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
 
         mailsEntity.setContent(contents);
@@ -519,7 +519,9 @@ public class NotifyMailBat extends AbstractBat {
         contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
         contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
         contents = contents.replace("{User}", knowledge.getUpdateUserName());
-        contents = contents.replace("{Contents}", knowledge.getContent());
+        
+        // コンテンツがHTMLであった場合、テキストを取得する
+        contents = contents.replace("{Contents}", getContent(knowledge.getContent()));
         contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
 
         mailsEntity.setContent(contents);
@@ -531,7 +533,15 @@ public class NotifyMailBat extends AbstractBat {
         MailsDao.get().insert(mailsEntity);
     }
     
-    
+    /**
+     * メールにセットする本文の取得
+     * @param content
+     * @return
+     */
+    private String getContent(String content) {
+        return null;
+    }
+
     /**
      * メール送信のIDを生成
      * @param string

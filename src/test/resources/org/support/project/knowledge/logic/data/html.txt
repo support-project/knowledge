@@ -1,0 +1,59 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/12/omml" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-2022-jp">
+<meta name="Generator" content="Microsoft Word 15 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"ＭＳ ゴシック";
+	panose-1:2 11 6 9 7 2 5 8 2 4;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:"\@ＭＳ ゴシック";
+	panose-1:2 11 6 9 7 2 5 8 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0mm;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	font-size:10.5pt;
+	font-family:"Arial",sans-serif;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:#954F72;
+	text-decoration:underline;}
+span.17
+	{mso-style-type:personal-compose;
+	font-family:"Arial",sans-serif;
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+/* Page Definitions */
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:99.25pt 30.0mm 30.0mm 30.0mm;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext="edit" spidmax="1026">
+<v:textbox inset="5.85pt,.7pt,5.85pt,.7pt" />
+</o:shapedefaults></xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext="edit">
+<o:idmap v:ext="edit" data="1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang="JA" link="#0563C1" vlink="#954F72" style="text-justify-trim:punctuation">
+<div class="WordSection1">
+<p class="MsoNormal"><span style="font-size:10.0pt;font-family:&quot;ＭＳ ゴシック&quot;">こんな情報を入手しました</span><span lang="EN-US" style="font-size:10.0pt"><o:p></o:p></span></p>
+<p class="MsoNormal"><span style="font-size:10.0pt;font-family:&quot;ＭＳ ゴシック&quot;">興味がある人は声をかけてください。</span><span lang="EN-US" style="font-size:10.0pt"><o:p></o:p></span></p>
+<p class="MsoNormal"><span lang="EN-US" style="font-size:10.0pt"><o:p>&nbsp;</o:p></span></p>
+</div>
+</body>
+</html>
