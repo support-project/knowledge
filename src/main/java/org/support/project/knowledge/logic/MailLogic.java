@@ -463,6 +463,9 @@ public class MailLogic {
             }
             AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
             File tmpDir = new File(appConfig.getTmpPath());
+            if (!tmpDir.exists()) {
+                tmpDir.mkdirs();
+            }
             String name = RandomUtil.randamGen(16) + ".html";
             File tmp = new File(tmpDir, name);
             FileOutputStream outputStream = new FileOutputStream(tmp);
