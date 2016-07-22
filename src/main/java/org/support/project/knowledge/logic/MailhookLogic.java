@@ -286,7 +286,7 @@ public class MailhookLogic {
                 for (TagsEntity tag : addTagList) {
                     boolean exixts = false;
                     for (TagsEntity ext : existsTagList) {
-                        if (tag.getTagId() == ext.getTagId()) {
+                        if (tag.getTagId().intValue() == ext.getTagId().intValue()) {
                             exixts = true;
                         }
                     }
@@ -539,16 +539,18 @@ public class MailhookLogic {
      * メールの本文の取得
      * @param msg
      * @return
-     * @throws IOException
-     * @throws MessagingException
+     * @throws Exception 
      */
-    private String getContent(Message msg) throws IOException, MessagingException {
+    private String getContent(Message msg) throws Exception {
+        String content;
         if (msg.getContent() instanceof Multipart) {
             Multipart multiPart = (Multipart) msg.getContent();
-            return readContent(multiPart);
+            content = readContent(multiPart);
         } else {
-            return msg.getContent().toString();
+            content = msg.getContent().toString();
         }
+        // HTMLメールの場合、タグを消して本文のみ抽出
+        return MailLogic.get().getMailContent(content);
     }
     
     /**
