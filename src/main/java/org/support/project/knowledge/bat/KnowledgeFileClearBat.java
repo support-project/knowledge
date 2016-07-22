@@ -20,14 +20,19 @@ public class KnowledgeFileClearBat extends AbstractBat {
     private static final Log LOG = LogFactory.getLog(KnowledgeFileClearBat.class);
     
     public static void main(String[] args) {
-        initLogName("KnowledgeFileClearBat.log");
-        configInit(ClassUtils.getShortClassName(KnowledgeFileClearBat.class));
-        
-        KnowledgeFileClearBat bat = new KnowledgeFileClearBat();
-        bat.dbInit();
-        bat.start();
-        
-        finishInfo();
+        try {
+            initLogName("KnowledgeFileClearBat.log");
+            configInit(ClassUtils.getShortClassName(KnowledgeFileClearBat.class));
+            
+            KnowledgeFileClearBat bat = new KnowledgeFileClearBat();
+            bat.dbInit();
+            bat.start();
+            
+            finishInfo();
+        } catch (Exception e) {
+            LOG.error("any error", e);
+            throw e;
+        }
     }
 
     private void start() {

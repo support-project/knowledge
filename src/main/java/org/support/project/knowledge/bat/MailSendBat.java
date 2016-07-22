@@ -43,14 +43,19 @@ public class MailSendBat extends AbstractBat {
             + "@" + "[a-zA-Z0-9][a-zA-Z0-9\\-]*(\\.[a-zA-Z0-9\\-]+)*$";
 
     public static void main(String[] args) throws Exception {
-        initLogName("MailSendBat.log");
-        configInit(ClassUtils.getShortClassName(MailSendBat.class));
-        
-        MailSendBat bat = new MailSendBat();
-        bat.dbInit();
-        bat.start();
-        
-        finishInfo();
+        try {
+            initLogName("MailSendBat.log");
+            configInit(ClassUtils.getShortClassName(MailSendBat.class));
+            
+            MailSendBat bat = new MailSendBat();
+            bat.dbInit();
+            bat.start();
+            
+            finishInfo();
+        } catch (Exception e) {
+            LOG.error("any error", e);
+            throw e;
+        }
     }
 
     /**

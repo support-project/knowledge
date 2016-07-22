@@ -18,12 +18,17 @@ public class DataTransferBat extends AbstractBat implements Runnable {
     private boolean serverStarted = false;
 
     public static void main(String[] args) throws Exception {
-        initLogName("DataTransferBat.log");
-        configInit(ClassUtils.getShortClassName(DataTransferBat.class));
-
-        DataTransferBat bat = new DataTransferBat();
-        bat.dbInit();
-        bat.start();
+        try {
+            initLogName("DataTransferBat.log");
+            configInit(ClassUtils.getShortClassName(DataTransferBat.class));
+    
+            DataTransferBat bat = new DataTransferBat();
+            bat.dbInit();
+            bat.start();
+        } catch (Exception e) {
+            LOG.error("any error", e);
+            throw e;
+        }
     }
 
     @Override

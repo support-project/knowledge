@@ -32,14 +32,19 @@ public class WebhookBat extends AbstractBat {
     public static final int WEBHOOK_STATUS_ERROR = -1;
 
     public static void main(String[] args) throws Exception {
-        initLogName("WebhookBat.log");
-        configInit(ClassUtils.getShortClassName(WebhookBat.class));
-
-        WebhookBat bat = new WebhookBat();
-        bat.dbInit();
-        bat.start();
-
-        finishInfo();
+        try {
+            initLogName("WebhookBat.log");
+            configInit(ClassUtils.getShortClassName(WebhookBat.class));
+    
+            WebhookBat bat = new WebhookBat();
+            bat.dbInit();
+            bat.start();
+    
+            finishInfo();
+        } catch (Exception e) {
+            LOG.error("any error", e);
+            throw e;
+        }
     }
 
     /**

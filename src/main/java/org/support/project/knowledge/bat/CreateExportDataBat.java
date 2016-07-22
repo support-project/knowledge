@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.lang.ClassUtils;
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
 import org.support.project.common.serialize.SerializeUtils;
 import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.PropertyUtil;
@@ -30,16 +32,22 @@ import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
 public class CreateExportDataBat extends AbstractBat {
+    private static final Log LOG = LogFactory.getLog(CreateExportDataBat.class);
 
     public static final String DATA_DIR = "DataExport";
 
     public static void main(String[] args) throws Exception {
-        initLogName("CreateExportDataBat.log");
-        configInit(ClassUtils.getShortClassName(CreateExportDataBat.class));
-
-        CreateExportDataBat bat = new CreateExportDataBat();
-        bat.dbInit();
-        bat.start();
+        try {
+            initLogName("CreateExportDataBat.log");
+            configInit(ClassUtils.getShortClassName(CreateExportDataBat.class));
+    
+            CreateExportDataBat bat = new CreateExportDataBat();
+            bat.dbInit();
+            bat.start();
+        } catch (Exception e) {
+            LOG.error("any error", e);
+            throw e;
+        }
     }
 
     private void start() throws Exception {

@@ -60,14 +60,19 @@ public class FileParseBat extends AbstractBat {
     public static final String WEB_ID_PREFIX = "WEB-";
 
     public static void main(String[] args) throws Exception {
-        initLogName("FileParseBat.log");
-        configInit(ClassUtils.getShortClassName(FileParseBat.class));
-
-        FileParseBat bat = new FileParseBat();
-        bat.dbInit();
-        bat.start();
-
-        finishInfo();
+        try {
+            initLogName("FileParseBat.log");
+            configInit(ClassUtils.getShortClassName(FileParseBat.class));
+    
+            FileParseBat bat = new FileParseBat();
+            bat.dbInit();
+            bat.start();
+    
+            finishInfo();
+        } catch (Exception e) {
+            LOG.error("any error", e);
+            throw e;
+        }
     }
 
     private void start() throws Exception {

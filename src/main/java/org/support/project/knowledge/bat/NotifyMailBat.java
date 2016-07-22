@@ -36,6 +36,7 @@ import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
 import org.support.project.knowledge.entity.WebhooksEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.NotifyCommentLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
 import org.support.project.knowledge.logic.WebhookLogic;
@@ -76,20 +77,26 @@ public class NotifyMailBat extends AbstractBat {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        initLogName("NotifyMailBat.log");
-        configInit(ClassUtils.getShortClassName(NotifyMailBat.class));
-        
-        NotifyMailBat bat = new NotifyMailBat();
-        bat.dbInit();
-        bat.start();
-        
-        finishInfo();
+        try {
+            initLogName("NotifyMailBat.log");
+            configInit(ClassUtils.getShortClassName(NotifyMailBat.class));
+            
+            NotifyMailBat bat = new NotifyMailBat();
+            bat.dbInit();
+            bat.start();
+            
+            finishInfo();
+        } catch (Exception e) {
+            LOG.error("any error", e);
+            throw e;
+        }
     }
 
     /**
      * 通知キューを処理して、メール送信テーブルにメール通知を登録する
+     * @throws Exception 
      */
-    private void start() {
+    private void start() throws Exception {
         LOG.info("Notify process started.");
         NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
         List<NotifyQueuesEntity> notifyQueuesEntities = notifyQueuesDao.selectAll();
@@ -114,8 +121,9 @@ public class NotifyMailBat extends AbstractBat {
     /**
      * イイネが押された
      * @param notifyQueuesEntity
+     * @throws Exception 
      */
-    private void notifyLikeInsert(NotifyQueuesEntity notifyQueuesEntity) {
+    private void notifyLikeInsert(NotifyQueuesEntity notifyQueuesEntity) throws Exception {
         LikesDao likesDao = LikesDao.get();
         LikesEntity like = likesDao.selectOnKey(notifyQueuesEntity.getId());
         if (null == like) {
@@ -163,8 +171,10 @@ public class NotifyMailBat extends AbstractBat {
      * @param likeUser
      * @param user
      * @param config
+     * @throws Exception 
      */
-    private void sendLikeMail(LikesEntity like, KnowledgesEntity knowledge, UsersEntity likeUser, UsersEntity user, MailConfig config) {
+    private void sendLikeMail(LikesEntity like, KnowledgesEntity knowledge, UsersEntity likeUser, UsersEntity user, MailConfig config)
+            throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
         if (mailConfigsEntity == null) {
@@ -211,8 +221,9 @@ public class NotifyMailBat extends AbstractBat {
     /**
      * ナレッジにコメントが登録された場合の通知
      * @param notifyQueuesEntity
+     * @throws Exception 
      */
-    private void notifyCommentInsert(NotifyQueuesEntity notifyQueuesEntity) {
+    private void notifyCommentInsert(NotifyQueuesEntity notifyQueuesEntity) throws Exception {
         CommentsDao commentsDao = CommentsDao.get();
         CommentsEntity comment = commentsDao.selectOnKey(notifyQueuesEntity.getId());
         if (null == comment) {
@@ -290,8 +301,10 @@ public class NotifyMailBat extends AbstractBat {
      * @param knowledge ナレッジの情報
      * @param commentUser コメントを登録したユーザの情報
      * @param user メールの送信先
+     * @throws Exception 
      */
-    private void sendCommentMail(CommentsEntity comment, KnowledgesEntity knowledge, UsersEntity commentUser, UsersEntity user, MailConfig config) {
+    private void sendCommentMail(CommentsEntity comment, KnowledgesEntity knowledge, UsersEntity commentUser, UsersEntity user, MailConfig config)
+            throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
         if (mailConfigsEntity == null) {
@@ -339,8 +352,9 @@ public class NotifyMailBat extends AbstractBat {
     /**
      * ナレッジを登録・更新した際にメール通知を送信する
      * @param notifyQueuesEntity
+     * @throws Exception 
      */
-    private void notifyKnowledgeUpdate(NotifyQueuesEntity notifyQueuesEntity) {
+    private void notifyKnowledgeUpdate(NotifyQueuesEntity notifyQueuesEntity) throws Exception {
         // ナレッジが登録/更新された
         KnowledgesDao knowledgesDao = KnowledgesDao.get();
         KnowledgesEntity knowledge = knowledgesDao.selectOnKeyWithUserName(notifyQueuesEntity.getId());
@@ -363,8 +377,9 @@ public class NotifyMailBat extends AbstractBat {
      * 「保護」のナレッジを登録・更新した際にメール通知を送信する
      * @param notifyQueuesEntity
      * @param knowledge
+     * @throws Exception 
      */
-    private void notifyProtectKnowledgeUpdate(NotifyQueuesEntity notifyQueuesEntity, KnowledgesEntity knowledge) {
+    private void notifyProtectKnowledgeUpdate(NotifyQueuesEntity notifyQueuesEntity, KnowledgesEntity knowledge) throws Exception {
         List<UsersEntity> users = new ArrayList<>();
         // 宛先の一覧取得
         TargetsDao targetsDao = TargetsDao.get();
@@ -416,8 +431,9 @@ public class NotifyMailBat extends AbstractBat {
      * 「公開」のナレッジを登録・更新した際にメール通知を送信する
      * @param notifyQueuesEntity
      * @param knowledge
+     * @throws Exception 
      */
-    private void notifyPublicKnowledgeUpdate(NotifyQueuesEntity notifyQueuesEntity, KnowledgesEntity knowledge) {
+    private void notifyPublicKnowledgeUpdate(NotifyQueuesEntity notifyQueuesEntity, KnowledgesEntity knowledge) throws Exception {
         //ナレッジ登録ONでかつ、公開区分「公開」を除外しないユーザに通知
         List<UsersEntity> users = ExUsersDao.get().selectNotifyPublicUsers();
         notifyKnowledgeUpdateToUsers(notifyQueuesEntity, knowledge, users);
@@ -428,8 +444,10 @@ public class NotifyMailBat extends AbstractBat {
      * @param notifyQueuesEntity
      * @param knowledge
      * @param users
+     * @throws Exception 
      */
-    private void notifyKnowledgeUpdateToUsers(NotifyQueuesEntity notifyQueuesEntity, KnowledgesEntity knowledge, List<UsersEntity> users) {
+    private void notifyKnowledgeUpdateToUsers(NotifyQueuesEntity notifyQueuesEntity, KnowledgesEntity knowledge, List<UsersEntity> users)
+            throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
         if (mailConfigsEntity == null) {
@@ -490,8 +508,9 @@ public class NotifyMailBat extends AbstractBat {
      * @param knowledge
      * @param usersEntity
      * @param config
+     * @throws Exception 
      */
-    private void insertNotifyKnowledgeUpdateMailQue(KnowledgesEntity knowledge, UsersEntity usersEntity, MailConfig config) {
+    private void insertNotifyKnowledgeUpdateMailQue(KnowledgesEntity knowledge, UsersEntity usersEntity, MailConfig config) throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
         if (mailConfigsEntity == null) {
@@ -537,9 +556,10 @@ public class NotifyMailBat extends AbstractBat {
      * メールにセットする本文の取得
      * @param content
      * @return
+     * @throws Exception 
      */
-    private String getContent(String content) {
-        return null;
+    private String getContent(String content) throws Exception {
+        return MailLogic.get().getMailContent(content);
     }
 
     /**
