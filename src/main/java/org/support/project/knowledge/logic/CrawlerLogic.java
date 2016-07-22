@@ -240,7 +240,13 @@ public class CrawlerLogic extends HttpLogic {
                         }
                     }
                 }
-
+                
+                // 日本語が入っていたらエンコード
+                try {
+                    tempfilename = new URI(tempfilename).toASCIIString();
+                } catch (URISyntaxException e) {
+                    log.warn("URISyntaxException", e);
+                }
                 File tempFile = new File(tempDir, tempfilename);
 
                 log.debug("cash to " + tempFile.getPath());
