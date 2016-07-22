@@ -478,6 +478,7 @@ public class MailLogic {
             ParseResult result = parser.parse(tmp);
             LOG.debug("content text(length): " + result.getText().length());
             LOG.debug("content text        : " + StringUtils.abbreviate(result.getText(), 300));
+            FileUtil.delete(tmp);
             return result.getText();
         }
         return content;
