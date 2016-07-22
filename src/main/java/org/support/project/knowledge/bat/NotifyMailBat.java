@@ -76,14 +76,19 @@ public class NotifyMailBat extends AbstractBat {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        initLogName("NotifyMailBat.log");
-        configInit(ClassUtils.getShortClassName(NotifyMailBat.class));
-        
-        NotifyMailBat bat = new NotifyMailBat();
-        bat.dbInit();
-        bat.start();
-        
-        finishInfo();
+        try {
+            initLogName("NotifyMailBat.log");
+            configInit(ClassUtils.getShortClassName(NotifyMailBat.class));
+            
+            NotifyMailBat bat = new NotifyMailBat();
+            bat.dbInit();
+            bat.start();
+            
+            finishInfo();
+        } catch (Exception e) {
+            LOG.error("any error", e);
+            throw e;
+        }
     }
 
     /**

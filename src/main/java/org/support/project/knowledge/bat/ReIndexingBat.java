@@ -19,12 +19,17 @@ public class ReIndexingBat extends AbstractBat {
     private static final Log LOG = LogFactory.getLog(ReIndexingBat.class);
     
     public static void main(String[] args) throws Exception {
-        initLogName("ReIndexingBat.log");
-        configInit(ClassUtils.getShortClassName(ReIndexingBat.class));
-        
-        ReIndexingBat bat = new ReIndexingBat();
-        bat.dbInit(); //カスタマイズDBが設定されていてばそれを参照
-        bat.start();
+        try {
+            initLogName("ReIndexingBat.log");
+            configInit(ClassUtils.getShortClassName(ReIndexingBat.class));
+            
+            ReIndexingBat bat = new ReIndexingBat();
+            bat.dbInit(); //カスタマイズDBが設定されていてばそれを参照
+            bat.start();
+        } catch (Exception e) {
+            LOG.error("any error", e);
+            throw e;
+        }
     }
 
     private void start() throws Exception {
