@@ -38,6 +38,10 @@
                 <i class="fa fa-bell-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.notify")%>
             </a></li>
 
+            <li><a href="<%=request.getContextPath()%>/protect.account/targets" style="cursor: pointer;">
+                <i class="fa fa-paper-plane-o"></i>&nbsp;<%=jspUtil.label("knowledge.account.targets")%>
+            </a></li>
+
             <li><a href="<%=request.getContextPath()%>/open.thema/list" style="cursor: pointer;">
                 <i class="fa fa-television"></i>&nbsp;<%=jspUtil.label("knowledge.config.thema")%>
             </a></li>
