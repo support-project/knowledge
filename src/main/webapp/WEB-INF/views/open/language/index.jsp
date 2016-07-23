@@ -19,25 +19,30 @@
 </c:param>
 
 <c:param name="PARAM_CONTENT">
-	<h4 class="title"><%= jspUtil.label("knowledge.language.title") %></h4>
+    <h4 class="title"><%= jspUtil.label("knowledge.language.title") %></h4>
 
-	<ul>
-	<%
-		AppConfig appConfig = AppConfig.get();
-		List<LabelValue> languages = appConfig.getLanguages();
-		for (LabelValue language : languages) {
-	%>
-	<li >
-		<a href="<%= request.getContextPath() %>/lang/select/<%= language.getValue() %>" style="cursor: pointer;">
-			<i class="flag-icon flag-icon-<%= language.getLabel() %>"></i>&nbsp;
-			<%= jspUtil.locale(language.getValue()).getDisplayName(jspUtil.locale(language.getValue())) %>
-		</a>
-	</li>
-	<%
-		}
-	%>
-	</ul>
-	
+    <ul>
+    <%
+        AppConfig appConfig = AppConfig.get();
+        List<LabelValue> languages = appConfig.getLanguages();
+        for (LabelValue language : languages) {
+    %>
+    <li >
+        <a href="<%= request.getContextPath() %>/lang/select/<%= language.getValue() %>" style="cursor: pointer;">
+            <i class="flag-icon flag-icon-<%= language.getLabel() %>"></i>&nbsp;
+            <%= jspUtil.locale(language.getValue()).getDisplayName(jspUtil.locale(language.getValue())) %>
+        </a>
+    </li>
+    <%
+        }
+    %>
+    </ul>
+
+    
+<a href="<%=request.getContextPath()%>/protect.config/index/" class="btn btn-info">
+    <i class="fa fa-undo"></i>&nbsp;<%= jspUtil.label("label.back") %>
+</a>
+    
 </c:param>
 
 </c:import>
