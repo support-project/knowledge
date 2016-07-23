@@ -21,9 +21,11 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.AccountLogic;
+import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UserLogicEx;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.knowledge.vo.UploadResults;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.Boundary;
@@ -33,8 +35,10 @@ import org.support.project.web.config.HttpMethod;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.SystemConfigsDao;
+import org.support.project.web.dao.UserConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.SystemConfigsEntity;
+import org.support.project.web.entity.UserConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.logic.AuthenticationLogic;
@@ -328,5 +332,52 @@ public class AccountControl extends Control {
         // return forward("complete.jsp");
         return index(); // エラーの無い場合でもアカウントの画面へ遷移（新しいメールアドレスになったことを確認）
     }
-
+    
+    /**
+     * デフォルトの公開範囲を表示
+     * @return
+     */
+    @Get
+    public Boundary targets() {
+        UserConfigsEntity publicFlag = UserConfigsDao.get().physicalSelectOnKey(
+                "DEFAULT_PUBLIC_FLAG", AppConfig.get().getSystemName(), getLoginUserId());
+        if (publicFlag != null) {
+            setAttribute("publicFlag", publicFlag.getConfigValue());
+            UserConfigsEntity targets = UserConfigsDao.get().physicalSelectOnKey(
+                    "DEFAULT_TARGET", AppConfig.get().getSystemName(), getLoginUserId());
+            if (targets != null) {
+                if (StringUtils.isNotEmpty(targets.getConfigValue())) {
+                    String[] targetKeys = targets.getConfigValue().split(",");
+                    List<LabelValue> viewers = TargetLogic.get().selectTargets(targetKeys);
+                    setAttribute("viewers", viewers);
+                }
+            }
+        }
+        return forward("targets.jsp");
+    }
+    
+    
+    @Post
+    public Boundary savetargets() {
+        String publicFlag = getParam("publicFlag");
+        String viewers = getParam("viewers");
+        UserConfigsEntity publicFlagEntiry = new UserConfigsEntity("DEFAULT_PUBLIC_FLAG", AppConfig.get().getSystemName(), getLoginUserId());
+        publicFlagEntiry.setConfigValue(publicFlag);
+        UserConfigsDao.get().save(publicFlagEntiry);
+        
+        UserConfigsEntity targetsEntity = new UserConfigsEntity("DEFAULT_TARGET", AppConfig.get().getSystemName(), getLoginUserId());
+        targetsEntity.setConfigValue(viewers);
+        
+        List<ValidateError> results = targetsEntity.validate();
+        if (results != null && !results.isEmpty()) {
+            setResult("message.success.save", results);
+            return targets();
+        }
+        UserConfigsDao.get().save(targetsEntity);
+        
+        addMsgSuccess("message.success.save");
+        return targets();
+    }
+    
+    
 }

@@ -16,6 +16,7 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -42,7 +43,9 @@ import org.support.project.web.config.HttpMethod;
 import org.support.project.web.config.MessageStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.dao.UserConfigsDao;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.entity.UserConfigsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 import net.arnx.jsonic.JSON;
@@ -95,9 +98,23 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
         
         if (getAttribute("publicFlag") == null) {
-            setAttribute("publicFlag", KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
+            UserConfigsEntity publicFlag = UserConfigsDao.get().physicalSelectOnKey(
+                    "DEFAULT_PUBLIC_FLAG", AppConfig.get().getSystemName(), getLoginUserId());
+            if (publicFlag != null) {
+                setAttribute("publicFlag", publicFlag.getConfigValue());
+                UserConfigsEntity targets = UserConfigsDao.get().physicalSelectOnKey(
+                        "DEFAULT_TARGET", AppConfig.get().getSystemName(), getLoginUserId());
+                if (targets != null) {
+                    if (StringUtils.isNotEmpty(targets.getConfigValue())) {
+                        String[] targetKeys = targets.getConfigValue().split(",");
+                        List<LabelValue> viewers = TargetLogic.get().selectTargets(targetKeys);
+                        setAttribute("groups", viewers);
+                    }
+                }
+            } else {
+                setAttribute("publicFlag", KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
+            }
         }
-
         return forward("view_add.jsp");
     }
 
