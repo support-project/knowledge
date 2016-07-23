@@ -343,14 +343,14 @@ public class AccountControl extends Control {
                 "DEFAULT_PUBLIC_FLAG", AppConfig.get().getSystemName(), getLoginUserId());
         if (publicFlag != null) {
             setAttribute("publicFlag", publicFlag.getConfigValue());
-        }
-        UserConfigsEntity targets = UserConfigsDao.get().physicalSelectOnKey(
-                "DEFAULT_TARGET", AppConfig.get().getSystemName(), getLoginUserId());
-        if (targets != null) {
-            if (StringUtils.isNotEmpty(targets.getConfigValue())) {
-                String[] targetKeys = targets.getConfigValue().split(",");
-                List<LabelValue> viewers = TargetLogic.get().selectTargets(targetKeys);
-                setAttribute("viewers", viewers);
+            UserConfigsEntity targets = UserConfigsDao.get().physicalSelectOnKey(
+                    "DEFAULT_TARGET", AppConfig.get().getSystemName(), getLoginUserId());
+            if (targets != null) {
+                if (StringUtils.isNotEmpty(targets.getConfigValue())) {
+                    String[] targetKeys = targets.getConfigValue().split(",");
+                    List<LabelValue> viewers = TargetLogic.get().selectTargets(targetKeys);
+                    setAttribute("viewers", viewers);
+                }
             }
         }
         return forward("targets.jsp");
