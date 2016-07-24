@@ -1313,21 +1313,21 @@ public class KnowledgeLogic {
      */
     public List<KnowledgesEntity> getPopularityKnowledges(LoginedUser loginedUser, int offset, int limit) {
         long now = new Date().getTime();
-        LOG.info(now);
+        LOG.trace(now);
 
         long term = 1000L * 60L * 60L * 24L * 30L;
-        LOG.info(term);
+        LOG.trace(term);
         long s = now - term;
-        LOG.info(s);
+        LOG.trace(s);
         Timestamp start = new Timestamp(s);
-        LOG.info(start.getTime());
-        LOG.info(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(start));
+        LOG.trace(start.getTime());
+        LOG.trace(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(start));
 
         long e = now + (1000L * 60L * 60L * 24L * 1L);
-        LOG.info(e);
+        LOG.trace(e);
         Timestamp end = new Timestamp(e);
-        LOG.info(end.getTime());
-        LOG.info(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(end));
+        LOG.trace(end.getTime());
+        LOG.trace(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(end));
 
         if (loginedUser != null && loginedUser.isAdmin()) {
             return KnowledgesDao.get().selectPopularity(start, end, offset, limit);
