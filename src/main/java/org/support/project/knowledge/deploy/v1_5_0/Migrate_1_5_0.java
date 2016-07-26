@@ -13,11 +13,14 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.Base64Utils;
 import org.support.project.common.util.PasswordUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.deploy.Migrate;
+import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.web.dao.LdapConfigsDao;
 import org.support.project.web.dao.MailConfigsDao;
@@ -27,6 +30,9 @@ import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.ProxyConfigsEntity;
 
 public class Migrate_1_5_0 implements Migrate {
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(Migrate_1_5_0.class);
+
     private static final String CIPHER_ALGORITHM = "AES";
 
     public static Migrate_1_5_0 get() {
@@ -60,6 +66,8 @@ public class Migrate_1_5_0 implements Migrate {
         // 暗号化の仕組みを変更したため、旧暗号化の仕組みを使っていた場合、それを復元して、再度暗号化し直す
         File keyTxt = new File(AppConfig.get().getBasePath(), "key.txt");
         if (!keyTxt.exists()) {
+            LOG.info("start data convert.");
+            AppConfig.get().getKey();
             List<LdapConfigsEntity> ldaps = LdapConfigsDao.get().selectAll();
             for (LdapConfigsEntity entity : ldaps) {
                 if (StringUtils.isNotEmpty(entity.getBindPassword())) {
