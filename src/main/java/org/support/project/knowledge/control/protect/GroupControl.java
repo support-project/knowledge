@@ -3,6 +3,8 @@ package org.support.project.knowledge.control.protect;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.exception.ParseException;
@@ -13,6 +15,8 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.vo.GroupUser;
+import org.support.project.knowledge.vo.StringList;
+import org.support.project.web.annotation.Auth;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
@@ -20,11 +24,14 @@ import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.CommonWebParameter;
 import org.support.project.web.config.HttpMethod;
+import org.support.project.web.config.MessageStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.UserGroupsDao;
+import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UserGroupsEntity;
+import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 /**
@@ -504,5 +511,70 @@ public class GroupControl extends Control {
         MessageResult result = groupLogic.addUsers(super.getLoginedUser(), groupId, users);
         return send(result);
     }
-
+    
+    /**
+     * メールアドレス抽出
+     * 
+     * @return
+     */
+    @Post
+    public Boundary extractEmail() {
+        String str = getParam("str");
+        Matcher m = Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+").matcher(str);
+        List<String> list = new ArrayList<>();
+        while (m.find()) {
+            if (!list.contains(m.group())) {
+                list.add(m.group());
+            }
+        }
+        StringList stringList = new StringList();
+        stringList.setList(list);
+        return send(stringList);
+    }
+    
+    /**
+     * メールアドレスの一覧から、グループのユーザを一括登録
+     * （メールアドレスの存在チェックができてしまうので、いったん管理者だけの機能にする）
+     * @return
+     */
+    @Post
+    @Auth(roles = "admin")
+    public Boundary addUsersOnEmail() {
+        Integer groupId = getParam("group", Integer.class);
+        String emails = getParam("emails");
+        String[] mails = emails.split("\n");
+        MessageResult result = new MessageResult(MessageStatus.Success, HttpStatus.SC_200_OK, "", "");
+        StringBuilder msg = new StringBuilder();
+        int count = 0;
+        for (String string : mails) {
+            if (count > 0) {
+                msg.append("\n");
+            }
+            count++;
+            UsersEntity users = UsersDao.get().selectOnMail(string);
+            if (users != null) {
+                if (UserGroupsDao.get().selectOnKey(groupId, users.getUserId()) == null) {
+                    UserGroupsEntity userGroupsEntity = new UserGroupsEntity();
+                    userGroupsEntity.setGroupId(groupId);
+                    userGroupsEntity.setUserId(users.getUserId());
+                    userGroupsEntity.setGroupRole(CommonWebParameter.GROUP_ROLE_MEMBER);
+                    UserGroupsDao.get().insert(userGroupsEntity);
+                    msg.append(super.getResource("message.success.insert.target", string));
+                } else {
+                    msg.append(super.getResource("errors.exist", string));
+                }
+            } else {
+                msg.append(super.getResource("errors.noexist", string));
+            }
+        }
+        result.setMessage(msg.toString());
+        return send(result);
+    }
+    
+    
+    
+    
+    
+    
+    
 }
