@@ -47,7 +47,6 @@ import org.support.project.knowledge.entity.KnowledgeTagsEntity;
 import org.support.project.knowledge.entity.KnowledgeUsersEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
-import org.support.project.knowledge.entity.StockKnowledgesEntity;
 import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
@@ -332,7 +331,7 @@ public class KnowledgeLogic {
                     editGroupsDao.save(editGroupsEntity);
                 } else {
                     id = TargetLogic.get().getUserId(labelValue.getValue());
-                    if (id != Integer.MIN_VALUE && loginedUser.getUserId().intValue() != id.intValue() && ALL_USER != id.intValue()) {
+                    if (id != Integer.MIN_VALUE && ALL_USER != id.intValue()) {
                         KnowledgeEditUsersEntity editUsersEntity = new KnowledgeEditUsersEntity();
                         editUsersEntity.setKnowledgeId(entity.getKnowledgeId());
                         editUsersEntity.setUserId(id);
@@ -1099,7 +1098,7 @@ public class KnowledgeLogic {
      * @param fileNos
      * @throws Exception
      */
-    public void saveComment(Long knowledgeId, String comment, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
+    public CommentsEntity saveComment(Long knowledgeId, String comment, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
         CommentsDao commentsDao = CommentsDao.get();
         CommentsEntity commentsEntity = new CommentsEntity();
         commentsEntity.setKnowledgeId(knowledgeId);
@@ -1116,6 +1115,8 @@ public class KnowledgeLogic {
 
         // 通知
         NotifyLogic.get().notifyOnKnowledgeComment(knowledgeId, commentsEntity);
+        
+        return commentsEntity;
     }
 
     /**
@@ -1312,21 +1313,21 @@ public class KnowledgeLogic {
      */
     public List<KnowledgesEntity> getPopularityKnowledges(LoginedUser loginedUser, int offset, int limit) {
         long now = new Date().getTime();
-        LOG.info(now);
+        LOG.trace(now);
 
         long term = 1000L * 60L * 60L * 24L * 30L;
-        LOG.info(term);
+        LOG.trace(term);
         long s = now - term;
-        LOG.info(s);
+        LOG.trace(s);
         Timestamp start = new Timestamp(s);
-        LOG.info(start.getTime());
-        LOG.info(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(start));
+        LOG.trace(start.getTime());
+        LOG.trace(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(start));
 
         long e = now + (1000L * 60L * 60L * 24L * 1L);
-        LOG.info(e);
+        LOG.trace(e);
         Timestamp end = new Timestamp(e);
-        LOG.info(end.getTime());
-        LOG.info(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(end));
+        LOG.trace(end.getTime());
+        LOG.trace(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(end));
 
         if (loginedUser != null && loginedUser.isAdmin()) {
             return KnowledgesDao.get().selectPopularity(start, end, offset, limit);

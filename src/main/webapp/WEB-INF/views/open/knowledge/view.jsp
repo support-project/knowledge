@@ -68,17 +68,31 @@ var _MSG_COPIED = '<%= jspUtil.label("knowledge.view.msg.url.copy") %>';
             <%-- 更新者情報 --%>
             <div class="insert_info">
                 <img src="<%=request.getContextPath()%>/images/loader.gif"
-                    data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("updateUser")%>" alt="icon" width="24"
+                    data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("insertUser")%>" alt="icon" width="24"
                     height="24" style="float: left" />
                 <%
-                    String userLink = "<a href=\"" + request.getContextPath() + "/open.account/info/" + jspUtil.out("updateUser") + "\">"
+                    String insertLink = "<a href=\"" + request.getContextPath() + "/open.account/info/" + jspUtil.out("insertUser") + "\">"
+                                    + jspUtil.out("insertUserName", JspUtil.ESCAPE_CLEAR) + "</a>";
+                %>
+                <%=jspUtil.label("knowledge.view.info.insert", insertLink, jspUtil.date("insertDatetime"))%>
+            
+            <% if (!jspUtil.date("insertDatetime").equals(jspUtil.date("updateDatetime"))) { %>
+            (
+                <img src="<%=request.getContextPath()%>/images/loader.gif"
+                    data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("updateUser")%>" alt="icon" width="24"
+                    height="24" />
+                <%
+                    String updateLink = "<a href=\"" + request.getContextPath() + "/open.account/info/" + jspUtil.out("updateUser") + "\">"
                                     + jspUtil.out("updateUserName", JspUtil.ESCAPE_CLEAR) + "</a>";
                 %>
+                <%=jspUtil.label("knowledge.view.info.update", updateLink, jspUtil.date("updateDatetime"))%>
                 <%
-                    String historyLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/histories/" + jspUtil.out("knowledgeId") + "\">"
-                                    + jspUtil.date("updateDatetime") + "</a>";
+                    String historyLink = "<a href=\"" + request.getContextPath() + "/open.knowledge/histories/" + jspUtil.out("knowledgeId") + "\">&lt;"
+                                    + jspUtil.label("knowledge.view.info.history") + "&gt;</a>";
                 %>
-                <%=jspUtil.label("knowledge.view.info.update", userLink, historyLink)%>
+                <%= historyLink %>
+            )
+            <% } %>
             </div>
 
             <%-- タグ --%>

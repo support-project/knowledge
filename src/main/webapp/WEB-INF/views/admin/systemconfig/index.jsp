@@ -49,6 +49,9 @@
             </a></li>
             <li><a href="<%=request.getContextPath()%>/admin.logging/" style="cursor: pointer;"> <i class="fa fa-file-archive-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.config.admin.logging")%>
             </a></li>
+            <li><a href="<%=request.getContextPath()%>/admin.mailhook/" style="cursor: pointer;"> <i class="fa fa-inbox"></i>&nbsp;
+                <%=jspUtil.label("knowledge.admin.post.from.mail")%>
+            </a></li>
         </ul>
 
         <h4 class="sub_title"><%=jspUtil.label("knowledge.navbar.config.system")%></h4>
@@ -58,7 +61,7 @@
 
             <li><a href="<%=request.getContextPath()%>/admin.config/config" style="cursor: pointer;"> <i class="fa fa-cogs"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.config.system.general")%>
             </a></li>
-            <li><a href="<%=request.getContextPath()%>/admin.mail/config" style="cursor: pointer;"> <i class="fa fa-inbox"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.config.system.mail")%>
+            <li><a href="<%=request.getContextPath()%>/admin.mail/config" style="cursor: pointer;"> <i class="fa fa-envelope-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.config.system.mail")%>
             </a></li>
             <li><a href="<%=request.getContextPath()%>/admin.ldap/config" style="cursor: pointer;"> <i class="fa fa-user-plus"></i>&nbsp;<%=jspUtil.label("knowledge.ldap.title")%>
             </a></li>

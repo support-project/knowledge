@@ -129,6 +129,15 @@ $(document).ready(function(){
    - License: [MIT] http://fortawesome.github.io/Font-Awesome/license/
    - project-url: http://fortawesome.github.io/Font-Awesome/
 
+
+- html5shiv
+   - License: [MIT] https://github.com/aFarkas/html5shiv/blob/master/MIT%20and%20GPL2%20licenses.md
+   - project-url: https://github.com/aFarkas/html5shiv
+
+- respond
+   - License: [MIT]https://github.com/scottjehl/Respond/blob/master/LICENSE-MIT
+   - project-url: https://github.com/scottjehl/Respond
+
 - notifyjs
    - License: [MIT] https://github.com/jpillora/notifyjs
    - project-url: http://notifyjs.com/
@@ -181,6 +190,13 @@ $(document).ready(function(){
    - License: [MIT] https://github.com/lipis/flag-icon-css/blob/master/LICENSE
    - project-url: https://github.com/lipis/flag-icon-css
 
+- moment
+   - License: [MIT] https://github.com/moment/moment/blob/develop/LICENSE
+   - project-url: http://momentjs.com/
+
+- clipboard
+   - License: [MIT] https://zenorocha.mit-license.org/
+   - project-url: https://github.com/zenorocha/clipboard.js
 
 
 
