@@ -310,145 +310,149 @@ public class KnowledgeControl extends KnowledgeControlBase {
         String groupNames = getParam("groupNames");
 
         List<KnowledgesEntity> knowledges = new ArrayList<>();
-        if (StringUtils.isInteger(tag)) {
-            // タグを選択している
-            LOG.trace("show on Tag");
-            knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
-            TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
-            List<Integer> tagIds = new ArrayList<Integer>();
-            String name = "";
-            if (tagsEntity != null) {
-                tagIds.add(tagsEntity.getTagId());
-                name = tagsEntity.getTagName();
-            }
-            setAttribute("selectedTag", tagsEntity);
-            setAttribute("selectedTagIds", tagIds);
-            setAttribute("searchKeyword", keywordLogic.toTagsQuery(name) + keyword);
-        } else if (StringUtils.isInteger(group)) {
-            // グループを選択している
-            LOG.trace("show on Group");
-            knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
-            GroupsEntity groupsEntity = groupsDao.selectOnKey(new Integer(group));
-            List<Integer> groupIds = new ArrayList<Integer>();
-            String name = "";
-            if (groupsEntity != null) {
-                groupIds.add(groupsEntity.getGroupId());
-                name = groupsEntity.getGroupName();
-            }
-            setAttribute("selectedGroup", groupsEntity);
-            setAttribute("selectedGroupIds", groupIds);
-            setAttribute("searchKeyword", keywordLogic.toGroupsQuery(name) + keyword);
-        } else if (StringUtils.isNotEmpty(user) && StringUtils.isInteger(user)) {
-            // ユーザを選択している
-            LOG.trace("show on User");
-            int userId = Integer.parseInt(user);
-            knowledges.addAll(knowledgeLogic.showKnowledgeOnUser(userId, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
-            UsersEntity usersEntity = UsersDao.get().selectOnKey(userId);
-            usersEntity.setPassword("");
-            setAttribute("selectedUser", usersEntity);
-        } else if (StringUtils.isNotEmpty(tagNames) || StringUtils.isNotEmpty(groupNames)) {
-            // タグとキーワードで検索
-            LOG.trace("show on Tags and Groups and keyword");
-            String searchKeyword = "";
-            String[] taglist = tagNames.split(",");
-            List<TagsEntity> tags = new ArrayList<TagsEntity>();
-            List<Integer> tagIds = new ArrayList<Integer>();
-            for (String string : taglist) {
-                String tagname = string.trim();
-                if (tagname.startsWith(" ") && tagname.length() > " ".length()) {
-                    tagname = tagname.substring(" ".length());
-                }
-                TagsEntity tagsEntity = tagsDao.selectOnTagName(tagname);
+        try {
+            if (StringUtils.isInteger(tag)) {
+                // タグを選択している
+                LOG.trace("show on Tag");
+                knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
+                List<Integer> tagIds = new ArrayList<Integer>();
+                String name = "";
                 if (tagsEntity != null) {
-                    tags.add(tagsEntity);
                     tagIds.add(tagsEntity.getTagId());
+                    name = tagsEntity.getTagName();
                 }
-            }
-            if (0 < tags.size()) {
-                searchKeyword += keywordLogic.toTagsQuery(tagNames.replaceAll("[\\xc2\\xa0]", ""));
-            }
-
-            List<GroupsEntity> groups = new ArrayList<GroupsEntity>();
-            List<Integer> groupIds = new ArrayList<Integer>();
-            if (loginedUser != null) {
-                String[] grouplist = groupNames.split(",");
-                for (String string : grouplist) {
-                    String groupname = string.trim();
-                    if (groupname.startsWith(" ") && groupname.length() > " ".length()) {
-                        groupname = groupname.substring(" ".length());
+                setAttribute("selectedTag", tagsEntity);
+                setAttribute("selectedTagIds", tagIds);
+                setAttribute("searchKeyword", keywordLogic.toTagsQuery(name) + keyword);
+            } else if (StringUtils.isInteger(group)) {
+                // グループを選択している
+                LOG.trace("show on Group");
+                knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                GroupsEntity groupsEntity = groupsDao.selectOnKey(new Integer(group));
+                List<Integer> groupIds = new ArrayList<Integer>();
+                String name = "";
+                if (groupsEntity != null) {
+                    groupIds.add(groupsEntity.getGroupId());
+                    name = groupsEntity.getGroupName();
+                }
+                setAttribute("selectedGroup", groupsEntity);
+                setAttribute("selectedGroupIds", groupIds);
+                setAttribute("searchKeyword", keywordLogic.toGroupsQuery(name) + keyword);
+            } else if (StringUtils.isNotEmpty(user) && StringUtils.isInteger(user)) {
+                // ユーザを選択している
+                LOG.trace("show on User");
+                int userId = Integer.parseInt(user);
+                knowledges.addAll(knowledgeLogic.showKnowledgeOnUser(userId, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                UsersEntity usersEntity = UsersDao.get().selectOnKey(userId);
+                usersEntity.setPassword("");
+                setAttribute("selectedUser", usersEntity);
+            } else if (StringUtils.isNotEmpty(tagNames) || StringUtils.isNotEmpty(groupNames)) {
+                // タグとキーワードで検索
+                LOG.trace("show on Tags and Groups and keyword");
+                String searchKeyword = "";
+                String[] taglist = tagNames.split(",");
+                List<TagsEntity> tags = new ArrayList<TagsEntity>();
+                List<Integer> tagIds = new ArrayList<Integer>();
+                for (String string : taglist) {
+                    String tagname = string.trim();
+                    if (tagname.startsWith(" ") && tagname.length() > " ".length()) {
+                        tagname = tagname.substring(" ".length());
                     }
-                    GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupname);
-                    if (groupsEntity != null) {
-                        groups.add(groupsEntity);
-                        groupIds.add(groupsEntity.getGroupId());
-                    }
-                }
-                if (0 < groups.size()) {
-                    searchKeyword += keywordLogic.toGroupsQuery(groupNames.replaceAll("[\\xc2\\xa0]", ""));
-                }
-            }
-
-            setAttribute("selectedTags", tags);
-            setAttribute("selectedGroups", groups);
-            setAttribute("selectedTagIds", tagIds);
-            setAttribute("selectedGroupIds", groupIds);
-            setAttribute("searchKeyword", searchKeyword + keyword);
-
-            knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
-        } else {
-            // その他(キーワード検索)
-            LOG.trace("search");
-            List<GroupsEntity> groups = null;
-            List<TagsEntity> tags = null;
-            List<Integer> groupIds = new ArrayList<Integer>();
-            List<Integer> tagIds = new ArrayList<Integer>();
-
-            if (loginedUser != null) {
-                String groupKeyword = keywordLogic.parseQuery("groups", keyword);
-                if (groupKeyword != null) {
-                    groups = new ArrayList<GroupsEntity>();
-                    for (String groupName : groupKeyword.split(",")) {
-                        GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupName);
-                        if (groupsEntity != null) {
-                            groups.add(groupsEntity);
-                            groupIds.add(groupsEntity.getGroupId());
-                        }
-                    }
-                    setAttribute("selectedGroups", groups);
-                    setAttribute("selectedGroupIds", groupIds);
-                }
-            }
-
-            String tagKeyword = keywordLogic.parseQuery("tags", keyword);
-            if (tagKeyword != null) {
-                tags = new ArrayList<TagsEntity>();
-                for (String tagName : tagKeyword.split(",")) {
-                    TagsEntity tagsEntity = tagsDao.selectOnTagName(tagName);
+                    TagsEntity tagsEntity = tagsDao.selectOnTagName(tagname);
                     if (tagsEntity != null) {
                         tags.add(tagsEntity);
                         tagIds.add(tagsEntity.getTagId());
                     }
                 }
+                if (0 < tags.size()) {
+                    searchKeyword += keywordLogic.toTagsQuery(tagNames.replaceAll("[\\xc2\\xa0]", ""));
+                }
+    
+                List<GroupsEntity> groups = new ArrayList<GroupsEntity>();
+                List<Integer> groupIds = new ArrayList<Integer>();
+                if (loginedUser != null) {
+                    String[] grouplist = groupNames.split(",");
+                    for (String string : grouplist) {
+                        String groupname = string.trim();
+                        if (groupname.startsWith(" ") && groupname.length() > " ".length()) {
+                            groupname = groupname.substring(" ".length());
+                        }
+                        GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupname);
+                        if (groupsEntity != null) {
+                            groups.add(groupsEntity);
+                            groupIds.add(groupsEntity.getGroupId());
+                        }
+                    }
+                    if (0 < groups.size()) {
+                        searchKeyword += keywordLogic.toGroupsQuery(groupNames.replaceAll("[\\xc2\\xa0]", ""));
+                    }
+                }
+    
                 setAttribute("selectedTags", tags);
+                setAttribute("selectedGroups", groups);
                 setAttribute("selectedTagIds", tagIds);
+                setAttribute("selectedGroupIds", groupIds);
+                setAttribute("searchKeyword", searchKeyword + keyword);
+    
+                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+            } else {
+                // その他(キーワード検索)
+                LOG.trace("search");
+                List<GroupsEntity> groups = null;
+                List<TagsEntity> tags = null;
+                List<Integer> groupIds = new ArrayList<Integer>();
+                List<Integer> tagIds = new ArrayList<Integer>();
+    
+                if (loginedUser != null) {
+                    String groupKeyword = keywordLogic.parseQuery("groups", keyword);
+                    if (groupKeyword != null) {
+                        groups = new ArrayList<GroupsEntity>();
+                        for (String groupName : groupKeyword.split(",")) {
+                            GroupsEntity groupsEntity = groupsDao.selectOnGroupName(groupName);
+                            if (groupsEntity != null) {
+                                groups.add(groupsEntity);
+                                groupIds.add(groupsEntity.getGroupId());
+                            }
+                        }
+                        setAttribute("selectedGroups", groups);
+                        setAttribute("selectedGroupIds", groupIds);
+                    }
+                }
+    
+                String tagKeyword = keywordLogic.parseQuery("tags", keyword);
+                if (tagKeyword != null) {
+                    tags = new ArrayList<TagsEntity>();
+                    for (String tagName : tagKeyword.split(",")) {
+                        TagsEntity tagsEntity = tagsDao.selectOnTagName(tagName);
+                        if (tagsEntity != null) {
+                            tags.add(tagsEntity);
+                            tagIds.add(tagsEntity.getTagId());
+                        }
+                    }
+                    setAttribute("selectedTags", tags);
+                    setAttribute("selectedTagIds", tagIds);
+                }
+    
+                keyword = keywordLogic.parseKeyword(keyword);
+    
+                setAttribute("keyword", keyword);
+                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
             }
-
-            keyword = keywordLogic.parseKeyword(keyword);
-
-            setAttribute("keyword", keyword);
-            knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+    
+            List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);
+            setAttribute("knowledges", stocks);
+            LOG.trace("検索終了");
+            
+            // ナレッジの公開先の情報を取得
+            setKnowledgeTargetsWithConv(loginedUser, knowledges);
+            // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+            setSublistInformations(loginedUser);
+    
+            return forward("list.jsp");
+        } catch (InvalidParamException e) {
+            return forward("list.jsp");
         }
-
-        List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);
-        setAttribute("knowledges", stocks);
-        LOG.trace("検索終了");
-        
-        // ナレッジの公開先の情報を取得
-        setKnowledgeTargetsWithConv(loginedUser, knowledges);
-        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
-        setSublistInformations(loginedUser);
-
-        return forward("list.jsp");
     }
 
     /**

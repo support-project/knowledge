@@ -44,6 +44,10 @@ import org.support.project.knowledge.indexer.impl.LuceneIndexer;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.Searcher;
 import org.support.project.knowledge.searcher.SearchingValue;
+import org.support.project.web.bean.MessageResult;
+import org.support.project.web.common.HttpStatus;
+import org.support.project.web.config.MessageStatus;
+import org.support.project.web.exception.InvalidParamException;
 
 /**
  * Luceneを使った検索
@@ -93,8 +97,9 @@ public class LuceneSearcher implements Searcher {
 
     /**
      * 検索
+     * @throws InvalidParamException 
      */
-    public List<SearchResultValue> search(final SearchingValue value) throws IOException, ParseException, InvalidTokenOffsetsException {
+    public List<SearchResultValue> search(final SearchingValue value) throws IOException, InvalidTokenOffsetsException, InvalidParamException {
         List<SearchResultValue> resultValues = new ArrayList<>();
 
         File indexDir = new File(getIndexPath());
@@ -108,9 +113,19 @@ public class LuceneSearcher implements Searcher {
 
         IndexReader reader = DirectoryReader.open(FSDirectory.open(indexDir));
         IndexSearcher searcher = new IndexSearcher(reader);
-
-        Query query = structQuery(value);
-        log.debug("Searching for: " + query.toString());
+        
+        Query query = null;
+        try {
+            query = structQuery(value);
+            log.debug("Searching for: " + query.toString());
+        } catch (ParseException e) {
+            MessageResult msg = new MessageResult(
+                    MessageStatus.Warning,
+                    HttpStatus.SC_400_BAD_REQUEST,
+                    "knowledge.list.invalid.keyword",
+                    "");
+            throw new InvalidParamException(msg);
+        }
 
         TotalHitCountCollector countCollector = new TotalHitCountCollector();
         searcher.search(query, countCollector);
