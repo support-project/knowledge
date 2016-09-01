@@ -5,8 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-import javax.annotation.Nullable;
-
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.deploy.v0_0_1.InitializeSystem;
@@ -56,7 +54,7 @@ public class InitDB {
         MAP.put("1.6.0", Migrate_1_6_0.get());
     }
 
-    public static void main(@Nullable String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         // 内部的には、日付はGMTとして扱う
         TimeZone zone = TimeZone.getTimeZone("GMT");
         TimeZone.setDefault(zone);
