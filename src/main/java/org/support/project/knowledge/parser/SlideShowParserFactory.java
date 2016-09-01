@@ -16,9 +16,9 @@ public class SlideShowParserFactory {
         if (StringUtils.isEmpty(extension)) {
             return null;
         }
-        if (extension.toLowerCase().equals("pptx")) {
+        if (extension.toLowerCase().equals(".pptx")) {
             return new PptxSlideShowParser();
-        } else if (extension.toLowerCase().equals("pdf")) {
+        } else if (extension.toLowerCase().equals(".pdf")) {
             return new PdfSlideShowParser();
         } else {
             return null;

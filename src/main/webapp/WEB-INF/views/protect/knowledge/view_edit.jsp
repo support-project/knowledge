@@ -29,6 +29,7 @@
 
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
 <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-edit.js") %>"></script>
+<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-attachfile.js") %>"></script>
 
 <script>
 var _UPLOADED = '<%= jspUtil.label("knowledge.edit.label.uploaded") %>';
@@ -38,6 +39,7 @@ var _REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.delete.upload") %>';
 var _FAIL_REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.fail.delete.upload") %>';
 var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
 var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
+var _SET_SLIDE_LABEL= '<%= jspUtil.label("knowledge.edit.set.slide.path") %>';
 var _LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
 var _UPDATE_TITLE = '<%= jspUtil.label("knowledge.edit.title") %>';
 
