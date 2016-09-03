@@ -94,7 +94,7 @@ var setImagePath = function(url, name) {
 
 
 var setSlidePath = function(fileNo, name) {
-    var text = 'すらいどしょー\n';
+    var text = '[slide ' + fileNo + ']\n';
     insertAtCaret('#content', text)
 };
 
