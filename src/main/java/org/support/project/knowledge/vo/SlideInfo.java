@@ -6,6 +6,8 @@ public class SlideInfo {
     
     /** パース結果 */
     private Integer parseStatus;
+    /** ファイル番号 */
+    private Long fileNo;
     /** スライドショーの画像のリスト */
     private List<String> files;
     
@@ -36,5 +38,19 @@ public class SlideInfo {
      */
     public void setFiles(List<String> files) {
         this.files = files;
+    }
+    /**
+     * Get fileNo
+     * @return the fileNo
+     */
+    public Long getFileNo() {
+        return fileNo;
+    }
+    /**
+     * Set fileNo
+     * @param fileNo the fileNo to set
+     */
+    public void setFileNo(Long fileNo) {
+        this.fileNo = fileNo;
     }
 }

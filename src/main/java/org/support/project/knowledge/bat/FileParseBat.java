@@ -38,8 +38,6 @@ import org.support.project.knowledge.logic.SlideLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.parser.ParserFactory;
-import org.support.project.knowledge.parser.SlideShowParser;
-import org.support.project.knowledge.parser.SlideShowParserFactory;
 import org.support.project.knowledge.vo.ParseResult;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.dao.ProxyConfigsDao;
@@ -267,7 +265,6 @@ public class FileParseBat extends AbstractBat {
 
                 // パースステータスをパース完了に変更(もしパースでエラーが発生しても、次回から対象外になる）
                 filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_PARSED, UPDATE_USER_ID);
-
                 boolean slideParse = SlideLogic.get().parseSlide(tmp, knowledgeFilesEntity);
                 if (slideParse) {
                     // スライドのパース済のステータスへ

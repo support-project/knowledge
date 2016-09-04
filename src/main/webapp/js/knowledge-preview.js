@@ -1,17 +1,5 @@
 $(document).ready(function() {
-    /*
-    marked.setOptions({
-        langPrefix : '',
-        highlight : function(code, lang) {
-            console.log('[highlight]' + lang);
-            return code;
-        }
-    });
-    */
 });
-
-
-
 
 
 var emoji = window.emojiParser;
@@ -34,6 +22,8 @@ var preview = function() {
             jqObj.html(content);
         }).then(function () {
             jqObj.find('a.oembed').oembed();
+            // call slide.js
+            showSlide();
         });
     });
 };

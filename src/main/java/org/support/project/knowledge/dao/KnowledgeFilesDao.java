@@ -39,7 +39,8 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
     public List<KnowledgeFilesEntity> selectOnKnowledgeId(Long knowledgeId) {
         StringBuilder sql = new StringBuilder();
         sql.append(
-                "SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, FILE_SIZE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
+                "SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, FILE_SIZE, PARSE_STATUS, "
+                + "INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
         sql.append("FROM KNOWLEDGE_FILES WHERE KNOWLEDGE_ID = ?;");
         return executeQueryList(sql.toString(), KnowledgeFilesEntity.class, knowledgeId);
     }
@@ -50,7 +51,8 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
     public KnowledgeFilesEntity selectOnKeyWithoutBinary(Long fileNo) {
         StringBuilder sql = new StringBuilder();
         sql.append(
-                "SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, FILE_SIZE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
+                "SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, FILE_SIZE, PARSE_STATUS "
+                + "INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
         sql.append("FROM KNOWLEDGE_FILES WHERE FILE_NO = ?;");
         return executeQuerySingle(sql.toString(), KnowledgeFilesEntity.class, fileNo);
     }
