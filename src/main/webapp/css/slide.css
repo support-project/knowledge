@@ -1,13 +1,15 @@
 /* Slideshow container */
 .slideshow-container {
-  max-width: 1000px;
+  /*max-width: 1000px;*/
+  width: 70%;
   position: relative;
   margin: auto;
   border: 10px solid gray;
 }
 
 .slideshow-control {
-  max-width: 1000px;
+  /*max-width: 1000px;*/
+  width: 70%;
   position: relative;
   margin: auto;
 }
@@ -68,11 +70,9 @@
   transition: background-color 0.6s ease;
 }
 
-/*
-.active, .dot:hover {
+.dot.active, .dot:hover {
   background-color: #717171;
 }
-*/
 
 /* Fading animation */
 .fade {

@@ -1,6 +1,8 @@
 package org.support.project.knowledge.logic;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -169,9 +171,26 @@ public class SlideLogic {
     }
     
     
-    public DownloadInfo getSlideImage(String fileNo, String slideImage, LoginedUser loginedUser) {
-        // TODO Auto-generated method stub
-        return null;
+    public DownloadInfo getSlideImage(String fileNo, String slideImage, LoginedUser loginedUser) throws FileNotFoundException {
+        String slidePath = AppConfig.get().getSlidePath();
+        File dir = new File(slidePath);
+        if (!dir.exists()) {
+            return null;
+        }
+        File slideDir = new File(dir, fileNo);
+        if (!slideDir.exists()) {
+            return null;
+        }
+        File file = new File(slideDir, slideImage);
+        if (!file.exists()) {
+            return null;
+        }
+        DownloadInfo down = new DownloadInfo();
+        down.setContentType("application/octet-stream");
+        down.setFileName(slideImage);
+        down.setSize(file.length());
+        down.setInputStream(new FileInputStream(file));
+        return down;
     }
 
 

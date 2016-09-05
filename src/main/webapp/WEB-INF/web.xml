@@ -92,7 +92,7 @@
         </init-param>
         <init-param>
             <param-name>ignore-regular-expression</param-name>
-            <param-value>^/ws|^/template|^/bower|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$</param-value>
+            <param-value>^/ws|^/template|^/bower|css$|js$|ico$|html$</param-value>
         </init-param>
     </filter>
 

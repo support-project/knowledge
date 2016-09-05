@@ -1,5 +1,7 @@
 package org.support.project.knowledge.control.open;
 
+import java.io.FileNotFoundException;
+
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.DI;
@@ -35,7 +37,7 @@ public class FileControl extends Control {
     }
     
     @Get
-    public Boundary slide() throws InvalidParamException {
+    public Boundary slide() throws InvalidParamException, FileNotFoundException {
         String[] pathInfos = getPathInfos();
         if (pathInfos == null || pathInfos.length == 0) {
             return send(HttpStatus.SC_400_BAD_REQUEST);
@@ -55,6 +57,9 @@ public class FileControl extends Control {
         } else {
             // スライドの画像を取得
             DownloadInfo down = SlideLogic.get().getSlideImage(fileNo, slideImage, getLoginedUser());
+            if (down == null) {
+                return sendError(HttpStatus.SC_404_NOT_FOUND, "Not Found");
+            }
             return download(down);
         }
     }
