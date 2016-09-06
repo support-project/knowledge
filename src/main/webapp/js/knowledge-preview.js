@@ -2,7 +2,7 @@ $(document).ready(function() {
 });
 
 
-var emoji = window.emojiParser;
+//var emoji = window.emojiParser;
 var preview = function() {
     $.post(_CONTEXT + '/open.knowledge/marked', {
         title : $('#input_title').val(),
