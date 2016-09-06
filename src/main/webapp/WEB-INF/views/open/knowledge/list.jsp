@@ -119,8 +119,8 @@
             <%
                 request.setAttribute("list_data", jspUtil.getValue("knowledges", List.class));
             %>
-            <c:import url="/WEB-INF/views/open/knowledge/common_list.jsp" />
-            <c:import url="/WEB-INF/views/open/knowledge/common_sub_list.jsp" />
+            <c:import url="/WEB-INF/views/open/knowledge/partials/common_list.jsp" />
+            <c:import url="/WEB-INF/views/open/knowledge/partials/common_sub_list.jsp" />
         </div>
 
         <!-- Pager -->
