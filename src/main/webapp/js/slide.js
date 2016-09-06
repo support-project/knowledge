@@ -15,7 +15,8 @@ var showSlide = function() {
                 success : function(data, dataType) {
                     console.log(data);
                     if (data.files && data.files.length > 0) {
-                        var slidehtml = '<div class="slideshow-container">';
+                        var slidehtml = '<div class="slideshow-area">';
+                        slidehtml += '<div class="slideshow-container">';
                         for (var i = 0; i < data.files.length; i++) {
                             slidehtml += '<div class="mySlides fade in">';
                             slidehtml += '<img src="' + _CONTEXT + '/open.file/slide/' + fileNo + '/';
@@ -34,7 +35,7 @@ var showSlide = function() {
                                 slidehtml += '<span class="dot" onclick="currentSlide(' + (i+1) + ', \'' + slideId + '\')"></span> ';
                             }
                         }
-                        slidehtml += '</div>';
+                        slidehtml += '</div></div>';
                         slideArea.html(slidehtml);
                         showSlides(indexMap[slideId], slideId);
                     }
@@ -56,7 +57,8 @@ function currentSlide(n, slideId) {
 }
 
 function showSlides(n, slideId) {
-    var slideIndex = indexMap[slideId]
+    var slideIndex = indexMap[slideId];
+    console.log(slideIndex);
     var i;
     var slideArea = document.getElementById(slideId);
     var slides = slideArea.getElementsByClassName("mySlides");
@@ -77,6 +79,7 @@ function showSlides(n, slideId) {
     }
     
     $('#' + slideId).find('.current').html(slideIndex);
+    indexMap[slideId] = slideIndex;
 }
 
 

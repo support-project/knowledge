@@ -13,4 +13,5 @@
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-edit.css") %>" />
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-view.css") %>" />
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
+<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/slide.css") %>" />
 

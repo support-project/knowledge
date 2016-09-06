@@ -9,6 +9,8 @@ $(document).ready(function() {
         //console.log($('#content').html());
     }).then(function () {
         jqObj.find('a.oembed').oembed();
+        // call slide.js
+        showSlide();
     });
     
     $('.arrow_question').each(function(i, block) {
@@ -21,6 +23,8 @@ $(document).ready(function() {
             jqObj.html(content);
         }).then(function () {
             jqObj.find('a.oembed').oembed();
+            // call slide.js
+            showSlide();
         });
     });
     $('.arrow_answer').each(function(i, block) {
@@ -34,6 +38,8 @@ $(document).ready(function() {
             return;
         }).then(function () {
             jqObj.find('a.oembed').oembed();
+            // call slide.js
+            showSlide();
         });
     });
 });
