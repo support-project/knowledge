@@ -11,6 +11,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -72,7 +73,17 @@ public class UploadedFileLogic {
         // file.setThumbnailUrl(context + "/open.file/thumbnai?fileNo=" + entity.getFileNo());
         file.setThumbnailUrl(context + "/bower/teambox.free-file-icons/32px/_blank.png");
         file.setName(entity.getFileName());
-        file.setType("-");
+        
+        //file.setType("-");
+        String extention = StringUtils.getExtension(entity.getFileName());
+        if (StringUtils.contains(extention, ".png", ".jpg", ".jpeg", ".gif", ".bmp")) {
+            file.setType("image");
+        } else if (StringUtils.contains(extention, ".pdf", ".pptx")) {
+            file.setType("slide");
+        } else {
+            file.setType("file");
+        }
+        
         file.setSize(entity.getFileSize());
         file.setDeleteUrl(context + "/protect.file/delete?fileNo=" + entity.getFileNo());
         file.setDeleteType("DELETE");
