@@ -36,7 +36,10 @@
 
     <!-- view targets -->
     <div class="form-group">
-        <label for="input_content"><%= jspUtil.label("knowledge.add.label.public.class") %></label><br/>
+        <label for="input_content">
+            <%= jspUtil.label("knowledge.add.label.public.class") %>
+            <font size="-2"><%= jspUtil.label("knowledge.add.label.public.class.info") %></font>
+        </label><br/>
         <label class="radio-inline">
             <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PRIVATE %>" name="publicFlag" 
                 id="publicFlag_private" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", true) %>/>
