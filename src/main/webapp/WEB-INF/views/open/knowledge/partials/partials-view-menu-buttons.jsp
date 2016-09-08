@@ -81,5 +81,3 @@
                 </a>
             </div>
             
-            <div id="panel_target"></div>
-            

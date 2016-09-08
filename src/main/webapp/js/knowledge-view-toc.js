@@ -58,8 +58,10 @@ var showAgenda = function() {
 
         // ターゲットの場所に表示
         var target = $('#panel_target');
-        wx = target.offset().left;
-        wy = target.offset().top;
+//        wx = target.offset().left;
+//        wy = target.offset().top;
+        wx = 0;
+        wx = 0;
 
         // ポップアップウインドウを表示する。
         $('#ipop').css({

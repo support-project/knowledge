@@ -6,6 +6,8 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
+    <div id="panel_target"></div>
+
     <div class="panel panel-success" id="ipop">
       <div class="panel-heading" style="cursor: move;" id="ipop_title">
         <button type="button" class="close" data-dismiss="window" aria-hidden="true" id="ipop_close">x</button>
