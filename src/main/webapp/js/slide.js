@@ -8,18 +8,18 @@ var showSlide = function() {
         if (fileNo) {
             var slideId = 'slide-' + fileNo;
             indexMap[slideId] = 1;
-            console.log(fileNo);
+            //console.log(fileNo);
             $.ajax({
                 type : 'GET',
                 url : url + fileNo,
                 success : function(data, dataType) {
-                    console.log(data);
+                    //console.log(data);
                     if (data.files && data.files.length > 0) {
                         var slidehtml = '<div class="slideshow-area">';
                         slidehtml += '<div class="slideshow-container">';
                         for (var i = 0; i < data.files.length; i++) {
                             slidehtml += '<div class="mySlides fade in">';
-                            slidehtml += '<img src="' + _CONTEXT + '/open.file/slide/' + fileNo + '/';
+                            slidehtml += '<img src="' + _CONTEXT + '/open.file/slide/' + data.fileNo + '/';
                             slidehtml += data.files[i] + '" alt="slide-' + i + '" style="width:100%" />';
                             slidehtml += '</div>';
                         }
@@ -30,7 +30,7 @@ var showSlide = function() {
                         slidehtml += '</div>';
                         slidehtml += '<div style="text-align:center">';
                         slidehtml += '<div class="numbertext"><span class="current">1</span> / ' + data.files.length + '</div>';
-                        if (data.files.length < 30) {
+                        if (data.files.length < 60) {
                             for (var i = 0; i < data.files.length; i++) {
                                 slidehtml += '<span class="dot" onclick="currentSlide(' + (i+1) + ', \'' + slideId + '\')"></span> ';
                             }
@@ -58,7 +58,7 @@ function currentSlide(n, slideId) {
 
 function showSlides(n, slideId) {
     var slideIndex = indexMap[slideId];
-    console.log(slideIndex);
+    //console.log(slideIndex);
     var i;
     var slideArea = document.getElementById(slideId);
     var slides = slideArea.getElementsByClassName("mySlides");

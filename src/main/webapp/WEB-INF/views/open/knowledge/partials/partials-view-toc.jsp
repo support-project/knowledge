@@ -5,8 +5,9 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
-
+    <%-- 目次のダイアログ表示場所
     <div id="panel_target"></div>
+    --%>
 
     <div class="panel panel-success" id="ipop">
       <div class="panel-heading" style="cursor: move;" id="ipop_title">

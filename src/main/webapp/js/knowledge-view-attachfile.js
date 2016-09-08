@@ -64,6 +64,14 @@ $(document).ready(function() {
             $.notify('アップロードに失敗しました', 'warn');
         }
     }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
+    
+    $('#more_attach').click(function() {
+        $('.downloadfile').each(function() {
+            $(this).removeClass('hide');
+            $('#more_attach').addClass('hide');
+        });
+    });
+    
 });
 
 

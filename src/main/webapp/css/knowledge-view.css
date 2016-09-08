@@ -43,7 +43,7 @@
 	width: 48%;
 }
 .downloadfile {
-	margin-top: 5px;
+	margin-top: 2px;
 }
 
 /*============================================================
@@ -146,7 +146,7 @@ Comments
 /*    height: 300px; */
     position: absolute;
     display: none;
-    z-index: 0;
+    z-index: 100000;
 }
 
 .toc-h {
