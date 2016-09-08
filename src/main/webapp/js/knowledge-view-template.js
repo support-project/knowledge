@@ -42,16 +42,16 @@ var addTemplateItem = function(template) {
             if (i > 0) {
                 tag += '<br/>';
             }
-            tag += item.itemName + ': ';
-            
             // Bookmrkの場合は、項目はURLのみ
             if (template.typeId == -99) {
                 var url = '';
                 if (item.itemValue) {
                     url = item.itemValue;
                 }
-                tag += '<a href="' + url + '" target="_blank" >' + url + '</a>';
+                tag += '<h4>' + item.itemName + ': ';
+                tag += '<a href="' + url + '" target="_blank" >' + url + '</a></h4>';
             } else {
+                tag += item.itemName + ': ';
                 if (item.itemType === 1) {
                     // textarea
                     tag += item.itemValue;
