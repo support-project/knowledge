@@ -22,6 +22,7 @@
 
 <c:param name="PARAM_CONTENT">
     <div class="row" id="content_head">
+        <%-- 左上のヘッダー部分 --%>
         <div class="col-sm-8">
             <h4 class="title"><%=jspUtil.out("title", JspUtil.ESCAPE_CLEAR)%></h4>
             <div style="margin-top: 10px;">
@@ -36,21 +37,26 @@
             <jsp:include page="partials/partials-view-stock.jsp"></jsp:include>
             <%-- 公開区分 --%>
             <jsp:include page="partials/partials-view-public-flag.jsp"></jsp:include>
-            <%-- 添付ファイル --%>
-            <jsp:include page="partials/partials-view-attach-files.jsp"></jsp:include>
-
         </div>
 
-        <%-- 公開区分やイイネ件数など --%>
+        <%-- 右上のボタン部分 --%>
         <div class="col-sm-4">
+            <%-- 公開区分やイイネ件数など --%>
             <jsp:include page="partials/partials-view-menu-buttons.jsp"></jsp:include>
+            <%-- 目次 --%>
+            <jsp:include page="partials/partials-view-toc.jsp"></jsp:include>
         </div>
     </div>
 
-    <%-- ナレッジ表示 --%>
+    <%-- ナレッジ表示（メインのコンテンツ部分） --%>
     <div class="row" id="content_main">
-        <div class="col-sm-12">
+        <div class="col-sm-8">
+            <%-- メインのコンテンツ --%>
             <jsp:include page="partials/partials-view-main-contents.jsp"></jsp:include>
+        </div>
+        <div class="col-sm-4">
+            <%-- 添付ファイル --%>
+            <jsp:include page="partials/partials-view-attach-files.jsp"></jsp:include>
         </div>
     </div>
 
@@ -67,8 +73,6 @@
     <%-- Emoji --%>
     <jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
 
-    <%-- 目次 --%>
-    <jsp:include page="partials/partials-view-toc.jsp"></jsp:include>
 
 </c:param>
 
