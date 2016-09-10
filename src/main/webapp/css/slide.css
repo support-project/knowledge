@@ -10,7 +10,7 @@
 #content .slideshow-area {
     width: 100%;
 }
-@media screen and (max-width: 599px) {
+@media screen and (max-width: 991px) {
     .question_Box .slideshow-area {
         width: 100%;
     }
@@ -18,7 +18,7 @@
         display: none;
     }
 }
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 992px) {
     .question_Box .slideshow-area {
         width: 80%;
     }
