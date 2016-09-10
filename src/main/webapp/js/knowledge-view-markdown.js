@@ -10,7 +10,7 @@ $(document).ready(function() {
     }).then(function () {
         jqObj.find('a.oembed').oembed();
         // call slide.js
-        showSlide();
+        showSlide('#content');
     });
     
     $('.arrow_question').each(function(i, block) {
@@ -24,7 +24,7 @@ $(document).ready(function() {
         }).then(function () {
             jqObj.find('a.oembed').oembed();
             // call slide.js
-            showSlide();
+            showSlide('.arrow_question');
         });
     });
     $('.arrow_answer').each(function(i, block) {
@@ -39,7 +39,7 @@ $(document).ready(function() {
         }).then(function () {
             jqObj.find('a.oembed').oembed();
             // call slide.js
-            showSlide();
+            showSlide('.arrow_answer');
         });
     });
 });

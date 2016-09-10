@@ -50,11 +50,11 @@
 
     <%-- ナレッジ表示（メインのコンテンツ部分） --%>
     <div class="row" id="content_main">
-        <div class="col-sm-8">
+        <div class="col-sm-8" id="main_contents">
             <%-- メインのコンテンツ --%>
             <jsp:include page="partials/partials-view-main-contents.jsp"></jsp:include>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4" id="attach_files">
             <%-- 添付ファイル --%>
             <jsp:include page="partials/partials-view-attach-files.jsp"></jsp:include>
         </div>

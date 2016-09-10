@@ -1,8 +1,14 @@
 var indexMap = {};
 
-var showSlide = function() {
+var showSlide = function(parent) {
     var url = _CONTEXT + '/open.file/slide/';
-    $('.slideshow').each(function(i, block) {
+    var target;
+    if (parent) {
+        target = $(parent).find('.slideshow');
+    } else {
+        target = $('.slideshow');
+    }
+    target.each(function(i, block) {
         var fileNo = $(this).attr('slide');
         var slideArea = $(this);
         if (fileNo) {
@@ -31,9 +37,11 @@ var showSlide = function() {
                         slidehtml += '<div style="text-align:center">';
                         slidehtml += '<div class="numbertext"><span class="current">1</span> / ' + data.files.length + '</div>';
                         if (data.files.length < 60) {
+                            slidehtml += '<div class="dotArea">';
                             for (var i = 0; i < data.files.length; i++) {
                                 slidehtml += '<span class="dot" onclick="currentSlide(' + (i+1) + ', \'' + slideId + '\')"></span> ';
                             }
+                            slidehtml += '</div>';
                         }
                         slidehtml += '</div></div>';
                         slideArea.html(slidehtml);

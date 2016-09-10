@@ -16,7 +16,8 @@
     %>
     <hr />
     <h5 id="comments">
-        <i class="fa fa-comments-o"></i>&nbsp;<%=jspUtil.label("knowledge.view.comment.label")%></h5>
+        <i class="fa fa-comments-o"></i>&nbsp;<%=jspUtil.label("knowledge.view.comment.label")%>
+    </h5>
     <c:forEach var="comment" items="${comments}" varStatus="status">
         <%
             CommentsEntity comment = jspUtil.getValue("comment", CommentsEntity.class);
