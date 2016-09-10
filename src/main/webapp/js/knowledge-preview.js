@@ -23,7 +23,7 @@ var preview = function() {
         }).then(function () {
             jqObj.find('a.oembed').oembed();
             // call slide.js
-            showSlide();
+            showSlide('#preview');
         });
     });
 };

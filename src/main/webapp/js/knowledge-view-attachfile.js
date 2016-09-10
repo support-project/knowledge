@@ -22,9 +22,16 @@ $(document).ready(function() {
             
             filediv += '<input type="hidden" name="files" value="' + file.fileNo + '" />';
             filediv += '&nbsp;&nbsp;&nbsp;';
-            filediv += '<button type="button" class="btn btn-success" onclick="setImagePath(\'' + file.url + '\', \'' + file.name + '\')">';
-            filediv += '<i class="fa fa-file-image-o"></i>&nbsp;' + _SET_IMAGE_LABEL;
-            filediv += '</button>';
+            if (file.type === 'image') {
+                filediv += '<button type="button" class="btn btn-success" onclick="setImagePath(\'' + file.url + '\', \'' + file.name + '\')">';
+                filediv += '<i class="fa fa-file-image-o"></i>&nbsp;' + _SET_IMAGE_LABEL;
+                filediv += '</button>';
+            } else if (file.type === 'slide') {
+                filediv += '<button type="button" class="btn btn-success" onclick="setSlidePath(\'' + file.fileNo + '\', \'' + file.name + '\')">';
+                filediv += '<i class="fa fa-television"></i>&nbsp;' + _SET_SLIDE_LABEL;
+                filediv += '</button>';
+            }
+            
             filediv += '<button type="button" class="btn btn-danger" onclick="removeAddedFile(' + file.fileNo + ')">';
             filediv += '<i class="fa fa-remove"></i>';
             filediv += '&nbsp;' + _DELETE_LABEL + '</button>';
@@ -95,10 +102,13 @@ var removeAddedFile = function(fileNo) {
 
 var setImagePath = function(url, name) {
     var text = '\n![' + name + '](' + url + ')\n';
-    var textarea = $('#comment');
-    textarea.val(textarea.val() + text);
+    insertAtCaret('#comment', text)
 };
 
+var setSlidePath = function(fileNo, name) {
+    var text = '[slide ' + fileNo + ']\n';
+    insertAtCaret('#comment', text)
+};
 
 
 

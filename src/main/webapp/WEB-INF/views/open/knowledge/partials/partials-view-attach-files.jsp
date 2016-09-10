@@ -58,9 +58,9 @@
         </c:forEach>
         <% if (count > MAX_COUNT) { %>
         <div class="text-right">
-        <a id="more_attach">more...</a>
-        <% } %>
+            <a id="more_attach">more...</a>
         </div>
+        <% } %>
     </div>
 </div>
 

@@ -35,6 +35,8 @@ var preview = function() {
             return;
         }).then(function () {
             jqObj.find('a.oembed').oembed();
+            // call slide.js
+            showSlide('#preview');
         });
     });
 };
@@ -68,6 +70,8 @@ var previewans = function() {
             jqObj.html(content);
         }).then(function () {
             jqObj.find('a.oembed').oembed();
+            // call slide.js
+            showSlide('#preview');
         });
     });
 };

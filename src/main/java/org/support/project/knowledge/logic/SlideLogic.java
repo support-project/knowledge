@@ -170,8 +170,39 @@ public class SlideLogic {
         return slideInfo;
     }
     
-    
+    /**
+     * 画像取得
+     * @param fileNo
+     * @param slideImage
+     * @param loginedUser
+     * @return
+     * @throws FileNotFoundException
+     */
     public DownloadInfo getSlideImage(String fileNo, String slideImage, LoginedUser loginedUser) throws FileNotFoundException {
+        if (FILE_NO_NOT_PARSED != new Long(fileNo).longValue() 
+                && FILE_NO_ERROR_PARED != new Long(fileNo).longValue()) {
+            KnowledgeFilesEntity entity = KnowledgeFilesDao.get().selectOnKeyWithoutBinary(new Long(fileNo));
+            if (entity == null) {
+                return null;
+            }
+            // 権限チェック
+            if (entity.getKnowledgeId() != null && 0 != entity.getKnowledgeId().longValue()) {
+                // ナレッジに紐づいている場合、そのナレッジにアクセスできれば添付ファイルにアクセス可能
+                KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+                if (knowledgeLogic.select(entity.getKnowledgeId(), loginedUser) == null) {
+                    return null;
+                }
+            } else {
+                // ナレッジに紐づいていない場合、登録者のみがアクセス可能
+                if (loginedUser == null) {
+                    return null;
+                }
+                if (entity.getInsertUser().intValue() != loginedUser.getUserId().intValue()) {
+                    return null;
+                }
+            }
+        }
+        
         String slidePath = AppConfig.get().getSlidePath();
         File dir = new File(slidePath);
         if (!dir.exists()) {

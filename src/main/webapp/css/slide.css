@@ -1,6 +1,5 @@
 /* Slideshow container */
 .slideshow-area {
-    width: 100%;
     position: relative;
     background-color: black;
     border: 10px solid black;
@@ -8,6 +7,25 @@
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
 }
+#content .slideshow-area {
+    width: 100%;
+}
+@media screen and (max-width: 599px) {
+    .question_Box .slideshow-area {
+        width: 100%;
+    }
+    .dotArea {
+        display: none;
+    }
+}
+@media screen and (min-width: 600px) {
+    .question_Box .slideshow-area {
+        width: 80%;
+    }
+}
+
+
+
 .slideshow-container {
   /*max-width: 1000px;*/
   position: relative;
