@@ -1,4 +1,41 @@
 var indexMap = {};
+var full = false;
+
+function requestFullscreen(id) {
+    if (full) {
+        if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+            full = false;
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+            full = false;
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+            full = false;
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+            full = false;
+        }
+    } else {
+        var target = document.getElementById(id);
+        if (target.requestFullscreen) {
+            target.requestFullscreen(); // HTML5 Fullscreen API仕様
+            full = true;
+        } else if (target.webkitRequestFullscreen) {
+            target.webkitRequestFullscreen(); //Chrome15+, Safari5.1+, Opera15+
+            full = true;
+        } else if (target.mozRequestFullScreen) {
+            target.mozRequestFullScreen(); //FF10+
+            full = true;
+        } else if (target.msRequestFullscreen) {
+            target.msRequestFullscreen(); //IE11+
+            full = true;
+        } else {
+            $.notify('ご利用のブラウザはフルスクリーン操作に対応していません', 'warn');
+            return;
+        }
+    }
+}
 
 var showSlide = function(parent) {
     var url = _CONTEXT + '/open.file/slide/';
@@ -13,6 +50,7 @@ var showSlide = function(parent) {
         var slideArea = $(this);
         if (fileNo) {
             var slideId = 'slide-' + fileNo;
+            var slideAreaId = 'slide-area-' + fileNo;
             indexMap[slideId] = 1;
             //console.log(fileNo);
             $.ajax({
@@ -21,21 +59,22 @@ var showSlide = function(parent) {
                 success : function(data, dataType) {
                     //console.log(data);
                     if (data.files && data.files.length > 0) {
-                        var slidehtml = '<div class="slideshow-area">';
+                        var slidehtml = '<div class="slideshow-area" id="' + slideAreaId + '">';
                         slidehtml += '<div class="slideshow-container">';
                         for (var i = 0; i < data.files.length; i++) {
                             slidehtml += '<div class="mySlides fade in">';
                             slidehtml += '<img src="' + _CONTEXT + '/open.file/slide/' + data.fileNo + '/';
-                            slidehtml += data.files[i] + '" alt="slide-' + i + '" style="width:100%" />';
+                            slidehtml += data.files[i] + '" alt="slide-' + i + '" class="slide-image" />';
                             slidehtml += '</div>';
                         }
                         slidehtml += '</div><br/>';
                         slidehtml += '<div class="slideshow-control">';
                         slidehtml += '<a class="prev" onclick="plusSlides(-1, \'' + slideId + '\')">&#10094; prev</a>';
                         slidehtml += '<a class="next" onclick="plusSlides(1, \'' + slideId + '\')">next &#10095;</a>';
-                        slidehtml += '</div>';
                         slidehtml += '<div style="text-align:center">';
-                        slidehtml += '<div class="numbertext"><span class="current">1</span> / ' + data.files.length + '</div>';
+                        slidehtml += '<div class="numbertext"><span class="current">1</span> / ' + data.files.length;
+                        slidehtml += '&nbsp;&nbsp;&nbsp;<a href="#" onclick="requestFullscreen(\'' + slideAreaId + '\');">';
+                        slidehtml += '<i class="full fa fa-television fa-2x" aria-hidden="true"></i></a></div>';
                         if (data.files.length < 60) {
                             slidehtml += '<div class="dotArea">';
                             for (var i = 0; i < data.files.length; i++) {
@@ -43,7 +82,7 @@ var showSlide = function(parent) {
                             }
                             slidehtml += '</div>';
                         }
-                        slidehtml += '</div></div>';
+                        slidehtml += '</div></div></div>';
                         slideArea.html(slidehtml);
                         showSlides(indexMap[slideId], slideId);
                     }
