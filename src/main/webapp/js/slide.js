@@ -31,7 +31,7 @@ function requestFullscreen(id) {
             target.msRequestFullscreen(); //IE11+
             full = true;
         } else {
-            $.notify('ご利用のブラウザはフルスクリーン操作に対応していません', 'warn');
+            $.notify('Fullscreen view is not supported.', 'warn');
             return;
         }
     }
