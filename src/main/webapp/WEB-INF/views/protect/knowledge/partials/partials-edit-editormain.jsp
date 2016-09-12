@@ -96,7 +96,7 @@
     <div class="form-group">
         <ul class="nav nav-tabs">
             <li class="active"><a href="#writeable" data-toggle="tab"><%= jspUtil.label("knowledge.add.label.content") %></a></li>
-            <li><a href="#preview" data-toggle="tab" onclick="preview();"><%= jspUtil.label("label.preview") %></a></li>
+            <li><a href="#previewTab" data-toggle="tab" onclick="preview();"><%= jspUtil.label("label.preview") %></a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="writeable">
@@ -111,14 +111,12 @@
                 <textarea class="form-control" name="content" rows="20" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
             </div>
 
-            <div class="tab-pane preview markdown" id="preview">
-                <span style="display: none;" id="content_text">
-                </span>
+            <div class="tab-pane preview markdown" id="previewTab">
+                <div class="row">
+                <span class="col-sm-8" id="preview"></span>
+                </div>
             </div>
         </div>
     </div>
 
 
-
-
-    
