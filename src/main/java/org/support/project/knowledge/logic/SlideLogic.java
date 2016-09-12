@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.support.project.common.exception.ParseException;
@@ -165,6 +167,15 @@ public class SlideLogic {
             for (File file : slides) {
                 files.add(FileUtil.getFileName(file));
             }
+            Collections.sort(files, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    Integer num1 = new Integer(o1.substring(0, o1.indexOf(".")));
+                    Integer num2 = new Integer(o2.substring(0, o2.indexOf(".")));
+                    return num1.compareTo(num2);
+                }
+            });
+            
             slideInfo.setFiles(files);
         }
         return slideInfo;
