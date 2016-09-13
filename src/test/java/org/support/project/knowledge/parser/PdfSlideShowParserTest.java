@@ -8,11 +8,11 @@ import java.io.IOException;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.util.FileUtil;
 import org.support.project.knowledge.config.AppConfig;
-import org.support.project.knowledge.parser.impl.PdfSlideShowParser;
+import org.support.project.knowledge.parser.impl.PdfSlideShowParserOnPdfbox;
 
 public class PdfSlideShowParserTest {
 
-    public static final String SAMPLE = "sample2";
+    public static final String SAMPLE = "sample4";
     
     public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
         File tempDir = new File(AppConfig.get().getTmpPath());
@@ -24,7 +24,7 @@ public class PdfSlideShowParserTest {
         FileUtil.copy(PdfSlideShowParserTest.class.getResourceAsStream("/org/support/project/knowledge/paeser/" + SAMPLE + ".pdf"),
                 new FileOutputStream(sample));
         
-        PdfSlideShowParser parser = new PdfSlideShowParser();
+        SlideShowParser parser = new PdfSlideShowParserOnPdfbox();
         parser.parse(sample, output);
     }
 
