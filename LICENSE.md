@@ -71,6 +71,10 @@
    - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
    - project-url: https://hc.apache.org/
 
+- Wrappers PDF View
+   - License: [Apache License, Version 2.0] http://www.apache.org/licenses/LICENSE-2.0
+   - project-url: https://mvnrepository.com/artifact/com.kenai.nbpwr/com-sun-pdfview/1.0.5-201003191900
+
 
 
 
@@ -159,5 +163,10 @@
 - clipboard
    - License: [MIT] https://zenorocha.mit-license.org/
    - project-url: https://github.com/zenorocha/clipboard.js
+
+- Easy Wizard
+   - License: [MIT] https://https://opensource.org/licenses/mit-license.php
+   - project-url: http://st3ph.github.io/jquery.easyWizard/
+
 
 
