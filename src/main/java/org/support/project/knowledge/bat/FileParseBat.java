@@ -103,6 +103,10 @@ public class FileParseBat extends AbstractBat {
                 if (knowledgesEntity == null) {
                     continue;
                 }
+                // パースステータスを処理中に変更
+                itemValue.setItemStatus(KnowledgeItemValuesEntity.STATUS_DO_PROCESS);
+                itemValuesDao.update(itemValue);
+                
                 // タグを取得
                 List<TagsEntity> tagsEntities = TagsDao.get().selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
                 // Webアクセス
