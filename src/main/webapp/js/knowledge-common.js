@@ -4,7 +4,7 @@ var emoji = window.emojiParser;
 
 var codeHighlight = function(block) {
     var highlightPromises = [];
-    block.find('pre code').each(function(i, block) {
+    block.find('pre code').not('.lang-math').each(function(i, block) {
         var jqobj = $(this);
         highlightPromises.push(new Promise(function(resolve, reject) {
             try {
@@ -23,7 +23,7 @@ var codeHighlight = function(block) {
             }
         }));
     });
-    block.find('p code').each(function(i, block) {
+    block.find('p code').not('.lang-math').each(function(i, block) {
         var jqobj = $(this);
         highlightPromises.push(new Promise(function(resolve, reject) {
             try {
