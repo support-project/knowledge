@@ -60,25 +60,32 @@ public class SlideLogic {
         if (!slideDir.exists()) {
             slideDir.mkdirs();
         }
-        InputStream inputStream = this.getClass().getResourceAsStream("/org/support/project/knowledge/logic/wait_parsing.png");
-        OutputStream outputStream = new FileOutputStream(new File(slideDir, "wait_parsing.png"));
-        try {
-            FileUtil.copy(inputStream, outputStream);
-        } finally {
-            inputStream.close();
-            outputStream.close();
+        File waitimg = new File(slideDir, "wait_parsing.png");
+        if (!waitimg.exists()) {
+            InputStream inputStream = this.getClass().getResourceAsStream("/org/support/project/knowledge/logic/wait_parsing.png");
+            OutputStream outputStream = new FileOutputStream(waitimg);
+            try {
+                FileUtil.copy(inputStream, outputStream);
+            } finally {
+                inputStream.close();
+                outputStream.close();
+            }
         }
+        
         slideDir = new File(dir, String.valueOf(FILE_NO_ERROR_PARED));
         if (!slideDir.exists()) {
             slideDir.mkdirs();
         }
-        inputStream = this.getClass().getResourceAsStream("/org/support/project/knowledge/logic/error_parsed.png");
-        outputStream = new FileOutputStream(new File(slideDir, "error_parsed.png"));
-        try {
-            FileUtil.copy(inputStream, outputStream);
-        } finally {
-            inputStream.close();
-            outputStream.close();
+        File errorimg = new File(slideDir, "error_parsed.png");
+        if (!errorimg.exists()) {
+            InputStream inputStream = this.getClass().getResourceAsStream("/org/support/project/knowledge/logic/error_parsed.png");
+            OutputStream outputStream = new FileOutputStream(errorimg);
+            try {
+                FileUtil.copy(inputStream, outputStream);
+            } finally {
+                inputStream.close();
+                outputStream.close();
+            }
         }
     }
     
@@ -96,6 +103,7 @@ public class SlideLogic {
         // スライドだったら画像を抽出
         SlideShowParser showParser = SlideShowParserFactory.getParser(knowledgeFilesEntity.getFileName());
         if (showParser != null) {
+            initSlideDir();
             String slidePath = AppConfig.get().getSlidePath();
             File dir = new File(slidePath);
             if (!dir.exists()) {
