@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.pdfbox.tools.imageio.ImageIOUtil;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.sl.draw.Drawable;
 import org.apache.poi.sl.usermodel.Slide;
@@ -59,10 +60,12 @@ public class PptxSlideShowParser implements SlideShowParser {
 
                 // save the result
                 if (!"null".equals(format)) {
-                    String outname = inputFile.getName().replaceFirst(".pptx?", "");
-                    outname = String.format(Locale.ROOT, "%1$s-%2$04d.%3$s", outname, slideNo, format);
-                    File outfile = new File(outputDir, outname);
-                    ImageIO.write(img, format, outfile);
+//                    String outname = inputFile.getName().replaceFirst(".pptx?", "");
+//                    outname = String.format(Locale.ROOT, "%1$s-%2$04d.%3$s", outname, slideNo, format);
+//                    File outfile = new File(outputDir, outname);
+//                    ImageIO.write(img, format, outfile);
+                    ImageIOUtil.writeImage(img, outputDir.getAbsolutePath() + "/" + (slideNo) + ".png", 300);
+                    
                 }
                 slideNo++;
             }
