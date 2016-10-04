@@ -1,1 +1,1 @@
-<p><a href="https://support-project.org/knowledge/index" target="_blank" rel="nofollow">https://support-project.org/knowledge/index</a></p>
+<p><a href="https://support-project.org/knowledge/index" target="_blank" rel="nofollow noopener noreferrer">https://support-project.org/knowledge/index</a></p>
