@@ -1,49 +1,49 @@
 .bootstrap-tagsinput {
-	border: 0px solid #ccc;
-	box-shadow: none;
-	display: inline-block;
-	padding: 4px 6px;
-	margin-bottom: 0px;
-	color: #555;
-	vertical-align: middle;
-	border-radius: 0px;
-	max-width: 100%;
-	line-height: 22px;
-	cursor: text;
+    border: 0px solid #ccc;
+    box-shadow: none;
+    display: inline-block;
+    padding: 4px 6px;
+    margin-bottom: 0px;
+    color: #555;
+    vertical-align: middle;
+    border-radius: 0px;
+    max-width: 100%;
+    line-height: 22px;
+    cursor: text;
 }
 
 #content {
-	margin-top: 16px;
+    margin-top: 16px;
 }
 #content_head {}
 #content_main {}
 #template_items_area {
-	line-height: 30px;
+    line-height: 30px;
 }
 #template h5 {
-	margin-left: 5px;
+    margin-left: 5px;
 }
 .tag_list {
-	margin: 8px 0 8px 5px;
+    margin: 8px 0 8px 5px;
 }
 .insert_info {}
 .article_buttons {}
 .article_buttons div {
-	margin-bottom: 6px;
+    margin-bottom: 6px;
 }
 .article_info {
 }
 .article_info > a {
-	padding: 0px 15px;
+    padding: 0px 15px;
 }
 .btn_edit {
-	width: 97%;
+    width: 97%;
 }
 .btn_stock,.btn_like,.btn_agenda,.btn_copy_url {
-	width: 48%;
+    width: 48%;
 }
 .downloadfile {
-	margin-top: 2px;
+    margin-top: 2px;
 }
 
 /*============================================================
@@ -65,22 +65,22 @@ Comments
     margin-right: 20px;
 }
 @media screen and (max-width: 340px) {
-	.arrow_answer,
-	.arrow_question {
-		width: 50%;
-	}
+    .arrow_answer,
+    .arrow_question {
+        width: 50%;
+    }
 }
 @media screen and (min-width: 341px) and (max-width: 580px) {
-	.arrow_answer,
-	.arrow_question {
-		width: 60%;
-	}
+    .arrow_answer,
+    .arrow_question {
+        width: 60%;
+    }
 }
 @media screen and (min-width: 1228px) {
-	.arrow_answer,
-	.arrow_question {
-		width: 90%;
-	}
+    .arrow_answer,
+    .arrow_question {
+        width: 90%;
+    }
 }
 
 .arrow_answer:after,
@@ -128,10 +128,10 @@ Comments
 }
 
 .arrow_question img {
-	max-width: 100%;
+    max-width: 100%;
 }
 .arrow_answer img {
-	max-width: 100%;
+    max-width: 100%;
 }
 
 .collapse_comment {
