@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.Container;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.logic.SystemConfigLogic;
@@ -21,6 +22,8 @@ import org.support.project.web.common.HttpUtil;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.filter.AuthenticationFilter;
+import org.support.project.web.logic.AuthenticationLogic;
+import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 
 public class CloseAbleAuthenticationFilter extends AuthenticationFilter {
 
@@ -61,7 +64,8 @@ public class CloseAbleAuthenticationFilter extends AuthenticationFilter {
             HttpServletResponse res = (HttpServletResponse) servletresponse;
             try {
                 if (!isLogin(req)) {
-                    cookieLogin(req, res);
+                    AuthenticationLogic logic = Container.getComp(DefaultAuthenticationLogicImpl.class);
+                    logic.cookieLogin(req, res);
                 }
 
                 if (!isLogin(req)) {
