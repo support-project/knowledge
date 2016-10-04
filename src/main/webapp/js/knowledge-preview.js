@@ -28,6 +28,7 @@ var preview = function() {
             MathJax.Hub.Queue(function() {
                 $('#preview').find('.lang-math').each(function(i, block) {
                     var jqobj = $(this);
+                    jqobj.addClass('hljs');
                     MathJax.Hub.Typeset(jqobj[0]);
                 });
             });

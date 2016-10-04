@@ -11,6 +11,14 @@ $(document).ready(function() {
         jqObj.find('a.oembed').oembed();
         // call slide.js
         showSlide('#content');
+        // call MathJax
+        MathJax.Hub.Queue(function() {
+            $('#content').find('.lang-math').each(function(i, block) {
+                var jqobj = $(this);
+                jqobj.addClass('hljs');
+                MathJax.Hub.Typeset(jqobj[0]);
+            });
+        });
     });
     
     $('.arrow_question').each(function(i, block) {
@@ -25,6 +33,14 @@ $(document).ready(function() {
             jqObj.find('a.oembed').oembed();
             // call slide.js
             showSlide('.arrow_question');
+            // call MathJax
+            MathJax.Hub.Queue(function() {
+                $('.arrow_question').find('.lang-math').each(function(i, block) {
+                    var jqobj = $(this);
+                    jqobj.addClass('hljs');
+                    MathJax.Hub.Typeset(jqobj[0]);
+                });
+            });
         });
     });
     $('.arrow_answer').each(function(i, block) {
@@ -40,6 +56,14 @@ $(document).ready(function() {
             jqObj.find('a.oembed').oembed();
             // call slide.js
             showSlide('.arrow_answer');
+            // call MathJax
+            MathJax.Hub.Queue(function() {
+                $('.arrow_answer').find('.lang-math').each(function(i, block) {
+                    var jqobj = $(this);
+                    jqobj.addClass('hljs');
+                    MathJax.Hub.Typeset(jqobj[0]);
+                });
+            });
         });
     });
 });
