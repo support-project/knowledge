@@ -15,9 +15,11 @@ public class KnowledgeItemValuesEntity extends GenKnowledgeItemValuesEntity {
     private static final long serialVersionUID = 1L;
     /** ステータス: 保存済み */
     public static final Integer STATUS_SAVED = 0;
+    /** ステータス: 処理中 */
+    public static final Integer STATUS_DO_PROCESS = 1;
     /** ステータス: Webの値取得済み */
-    public static final Integer STATUS_WEBACCESSED = 1;
-    /** ステータス: Webの値取得済み */
+    public static final Integer STATUS_WEBACCESSED = 10;
+    /** ステータス: エラー */
     public static final Integer STATUS_WEBACCESS_ERROR = -1;
 
     /**
