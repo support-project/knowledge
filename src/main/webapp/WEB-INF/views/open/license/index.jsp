@@ -206,8 +206,9 @@ $(document).ready(function(){
    - License: [MIT] https://https://opensource.org/licenses/mit-license.php
    - project-url: http://st3ph.github.io/jquery.easyWizard/
 
-
-
+- MathJax
+   - License: [Apache License, Version 2.0] https://github.com/mathjax/MathJax/blob/master/LICENSE
+   - project-url: https://www.mathjax.org/
 
 
 
