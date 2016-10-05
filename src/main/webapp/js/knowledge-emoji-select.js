@@ -15,26 +15,11 @@ $(document).ready(function() {
         emojiSelect('#emojiSymbolsModal');
     });
     $('#helpMarkdownModal').on('shown.bs.modal', function (event) {
-        $.post(_CONTEXT + '/open.knowledge/marked', {
-            title : 'Markdown Sample',
-            content : $('#sampleMarkdownText').val()
-        }, function(data) {
-            var html = '<div style="word-break:break-all" id="content">';
-            var content = data.content;
-            html += content;
-            html += '</div>';
-            
-            var jqObj = $('#markdownSamplePreview');
-            jqObj.html(html);
-            jqObj.find('code').addClass('hljs');
-            codeHighlight(jqObj)
-            .then(function() {
-                var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-                jqObj.html(content);
-            }).then(function () {
-                jqObj.find('a.oembed').oembed();
-            });
-        });
+        parseMarkdown(
+            'Markdown Sample',
+            $('#sampleMarkdownText').val(),
+            '#markdownSamplePreview'
+        );
     });
 });
 

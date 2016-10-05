@@ -1,5 +1,6 @@
 var indexMap = {};
 var full = false;
+var slideCount = 0;
 
 function requestFullscreen(id) {
     if (full) {
@@ -38,10 +39,15 @@ function requestFullscreen(id) {
 }
 
 var showSlide = function(parent) {
+    console.log(parent);
     var url = _CONTEXT + '/open.file/slide/';
     var target;
     if (parent) {
-        target = $(parent).find('.slideshow');
+        var jqObj = parent;
+        if (isString(parent)) {
+            jqObj = $(parent);
+        }
+        target = jqObj.find('.slideshow');
     } else {
         target = $('.slideshow');
     }
@@ -49,17 +55,16 @@ var showSlide = function(parent) {
         var fileNo = $(this).attr('slide');
         var slideArea = $(this);
         if (fileNo) {
-            var slideId = 'slide-' + fileNo;
-            var slideAreaId = 'slide-area-' + fileNo;
+            slideCount++;
+            var slideId = 'slide-area-' + slideCount;
             indexMap[slideId] = 1;
-            //console.log(fileNo);
             $.ajax({
                 type : 'GET',
                 url : url + fileNo,
                 success : function(data, dataType) {
                     //console.log(data);
                     if (data.files && data.files.length > 0) {
-                        var slidehtml = '<div class="slideshow-area" id="' + slideAreaId + '">';
+                        var slidehtml = '<div class="slideshow-area" id="' + slideId + '">';
                         slidehtml += '<div class="slideshow-container">';
                         for (var i = 0; i < data.files.length; i++) {
                             slidehtml += '<div class="mySlides fade in">';
@@ -73,7 +78,7 @@ var showSlide = function(parent) {
                         slidehtml += '<a class="next" onclick="plusSlides(1, \'' + slideId + '\')">next &#10095;</a>';
                         slidehtml += '<div style="text-align:center">';
                         slidehtml += '<div class="numbertext"><span class="current">1</span> / ' + data.files.length;
-                        slidehtml += '&nbsp;&nbsp;&nbsp;<a href="#" onclick="requestFullscreen(\'' + slideAreaId + '\');">';
+                        slidehtml += '&nbsp;&nbsp;&nbsp;<a href="#" onclick="requestFullscreen(\'' + slideId + '\');">';
                         slidehtml += '<i class="full fa fa-television fa-2x" aria-hidden="true"></i></a></div>';
                         if (data.files.length < 60) {
                             slidehtml += '<div class="dotArea">';

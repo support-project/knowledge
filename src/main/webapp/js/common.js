@@ -30,3 +30,6 @@ function insertAtCaret(target, str) {
         obj.get(0).setSelectionRange(np, np);
     }
 }
+function isString(obj) {
+    return typeof (obj) == "string" || obj instanceof String;
+};
