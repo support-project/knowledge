@@ -44,10 +44,28 @@ var codeHighlight = function(block) {
             }
         }));
     });
-
     return Promise.all(highlightPromises);
 };
 
+var processLink = function(parent) {
+    if (parent) {
+        var jqObj = parent;
+        if (isString(parent)) {
+            jqObj = $(parent);
+        }
+        target = jqObj.find('.internallink');
+    } else {
+        target = $('.internallink');
+    }
+    target.each(function(i, block) {
+        var knowledgeNo = $(this).text().substring(1);
+        console.log(knowledgeNo);
+        var link = '<a href="' + _CONTEXT + '/open.knowledge/view/' + knowledgeNo + '">';
+        link += '#' + knowledgeNo;
+        link += '</a>';
+        $(this).html(link);
+    });
+};
 
 var processDecoration = function(target) {
     var jqObj = target;
@@ -71,6 +89,8 @@ var processDecoration = function(target) {
                 MathJax.Hub.Typeset(jqobj[0]);
             });
         });
+        // call parse internal link
+        processLink(jqObj);
     }).catch(function(err) {
         console.error(err);
     });
