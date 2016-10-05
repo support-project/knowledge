@@ -25,27 +25,10 @@ var preview = function() {
         html += '</div><!-- /.arrow_question -->';
         html += '</div><!-- /.question_Box -->';
         
-        var jqObj = $('#preview');
+        var target = '#preview';
+        var jqObj = $(target);
         jqObj.html(html);
-        jqObj.find('code').addClass('hljs');
-        codeHighlight(jqObj)
-        .then(function() {
-            var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-            jqObj.html(content);
-            return;
-        }).then(function () {
-            jqObj.find('a.oembed').oembed();
-            // call slide.js
-            showSlide('#preview');
-            // call MathJax
-            MathJax.Hub.Queue(function() {
-                $('#preview').find('.lang-math').each(function(i, block) {
-                    var jqobj = $(this);
-                    jqobj.addClass('hljs');
-                    MathJax.Hub.Typeset(jqobj[0]);
-                });
-            });
-        });
+        processDecoration(target);
     });
 };
 
@@ -69,26 +52,10 @@ var previewans = function() {
         html += '</div>';
         html += '</div>';
         
-        var jqObj = $('#preview');
+        var target = '#preview';
+        var jqObj = $(target);
         jqObj.html(html);
-        jqObj.find('code').addClass('hljs');
-        codeHighlight(jqObj)
-        .then(function() {
-            var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-            jqObj.html(content);
-        }).then(function () {
-            jqObj.find('a.oembed').oembed();
-            // call slide.js
-            showSlide('#preview');
-            // call MathJax
-            MathJax.Hub.Queue(function() {
-                $('#preview').find('.lang-math').each(function(i, block) {
-                    var jqobj = $(this);
-                    jqobj.addClass('hljs');
-                    MathJax.Hub.Typeset(jqobj[0]);
-                });
-            });
-        });
+        processDecoration(target);
     });
 };
 
