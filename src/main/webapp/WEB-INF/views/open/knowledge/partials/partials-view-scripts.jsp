@@ -10,8 +10,7 @@
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
-    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
-    skipStartupTypeset: true
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
   });
 </script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>

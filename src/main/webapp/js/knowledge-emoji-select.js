@@ -19,7 +19,9 @@ $(document).ready(function() {
             'Markdown Sample',
             $('#sampleMarkdownText').val(),
             '#markdownSamplePreview'
-        );
+        ).then(function() {
+            return processMathJax('#sampleMarkdownText');
+        });
     });
 });
 

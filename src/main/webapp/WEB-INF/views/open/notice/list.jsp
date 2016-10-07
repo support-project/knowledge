@@ -18,10 +18,19 @@
     </c:param>
 
     <c:param name="PARAM_SCRIPTS">
+        <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+            skipStartupTypeset: true
+        });
+        </script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
-        <script type="text/javascript" src="<%=jspUtil.mustReloadFile("/js/knowledge-common.js")%>"></script>
-        <script type="text/javascript" src="<%=jspUtil.mustReloadFile("/js/notice-list.js")%>"></script>
+        
+        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/slide.js") %>"></script>
+        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
+        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/notice-list.js") %>"></script>
     </c:param>
 
     <c:param name="PARAM_CONTENT">

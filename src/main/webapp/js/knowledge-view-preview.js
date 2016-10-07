@@ -28,7 +28,9 @@ var preview = function() {
         var target = '#preview';
         var jqObj = $(target);
         jqObj.html(html);
-        processDecoration(target);
+        processDecoration(target).then(function() {
+            return processMathJax(target);
+        });
     });
 };
 
@@ -55,7 +57,9 @@ var previewans = function() {
         var target = '#preview';
         var jqObj = $(target);
         jqObj.html(html);
-        processDecoration(target);
+        processDecoration(target).then(function() {
+            return processMathJax(target);
+        });
     });
 };
 
