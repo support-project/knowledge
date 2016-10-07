@@ -10,7 +10,7 @@
 <ul><li>PegDownProcessorだけだと、そのまま出力する&#xff08;XSSでやばそう&#xff09;</li><li>サニタイジングする</li></ul>
 <pre><code>puts &#39;The best way to log and share programmers knowledge.&#39;
 </code></pre>
-<pre><code class="lang-html">&lt;button&gt;hogehoge&lt;/button&gt;
+<pre><code class="lang-html hljs">&lt;button&gt;hogehoge&lt;/button&gt;
 </code></pre>
-<pre><code class="lang-java">private List&lt;Object&gt; params &#61; new ArrayList&lt;&gt;();
+<pre><code class="lang-java hljs">private List&lt;Object&gt; params &#61; new ArrayList&lt;&gt;();
 </code></pre>

@@ -14,6 +14,15 @@ $(document).ready(function() {
     $('#emojiSymbolsModal').on('loaded.bs.modal', function (event) {
         emojiSelect('#emojiSymbolsModal');
     });
+    $('#helpMarkdownModal').on('shown.bs.modal', function (event) {
+        parseMarkdown(
+            'Markdown Sample',
+            $('#sampleMarkdownText').val(),
+            '#markdownSamplePreview'
+        ).then(function() {
+            return processMathJax('#sampleMarkdownText');
+        });
+    });
     
     $('#sampleMarkdownCheck').click(function() {
         var text = $('#sampleMarkdownText').val();
@@ -120,7 +129,9 @@ var preview = function() {
         var target = '#preview';
         var jqObj = $(target);
         jqObj.html(html);
-        processDecoration(target);
+        processDecoration(target).then(function() {
+            return processMathJax(target);
+        });
     });
 };
     
