@@ -31,7 +31,6 @@ var codeHighlight = function(block) {
         var jqobj = $(this);
         highlightPromises.push(new Promise(function(resolve, reject) {
             try {
-//                jqobj.addClass('hljs');
                 jqobj.addClass('stylus');
                 var text = jqobj.text();
                 if (text.indexOf('://') != -1) {
@@ -93,29 +92,53 @@ var processLink = function(parent) {
     });
 };
 
+
+
+/**
+ * 1つのブロックの装飾処理
+ * @return Promise
+ */
+var decoration = function(jqObj) {
+    console.log(jqObj);
+    return new Promise(function(resolve, reject) {
+        return codeHighlight(jqObj)
+        .then(function() {
+            var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
+            jqObj.html(content);
+            return Promise.resolve();
+        }).then(function () {
+            jqObj.find('a.oembed').oembed();
+            return Promise.resolve();
+        }).then(function () {
+            // call slide.js
+            showSlide(jqObj);
+            return Promise.resolve();
+        }).then(function () {
+            // call parse internal link
+            return processLink(jqObj);
+        }).then(function () {
+            return resolve();
+        }).catch(function(err) {
+            console.error(err);
+            return reject(err);
+        });
+    });
+};
+
 /**
  * 装飾処理
  * @return Promise
  */
 var processDecoration = function(target) {
-    var jqObj = target;
     if (isString(target)) {
-        jqObj = $(target);
+        target = $(target);
     }
-//    jqObj.find('code').addClass('hljs');
-    return codeHighlight(jqObj)
-    .then(function() {
-        var content = emoji(jqObj.html().trim(), _CONTEXT + '/bower/emoji-parser/emoji', {classes: 'emoji-img'});
-        jqObj.html(content);
-    }).then(function () {
-        jqObj.find('a.oembed').oembed();
-        // call slide.js
-        showSlide(jqObj);
-        // call parse internal link
-        processLink(jqObj);
-    }).catch(function(err) {
-        console.error(err);
+    var promises = [];
+    target.each(function(index, element){
+        var jqObj = $(element);
+        promises.push(decoration(jqObj));
     });
+    return Promise.all(promises);
 };
 
 var doPreview = function(titleId, contentId, previewAreaId, titleAreaId) {
