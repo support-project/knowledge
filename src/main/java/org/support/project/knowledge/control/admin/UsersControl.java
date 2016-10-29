@@ -365,4 +365,33 @@ public class UsersControl extends Control {
         return accept_list();
     }
 
+   /**
+     * 承認待ちユーザ削除
+     *
+     * @return
+     */
+    @Get
+    @Auth(roles = "admin")
+    public Boundary accept_delete() {
+        String id = getPathInfo();
+        if (StringUtils.isEmpty(id)) {
+            return accept_list();
+        }
+        if (id.startsWith("/")) {
+            id = id.substring(1);
+        }
+
+        ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
+        ProvisionalRegistrationsEntity entity = dao.selectOnKey(id);
+        if (entity == null) {
+            // 削除する仮登録情報が見つかりませんでした。（他の管理者が削除）
+            addMsgWarn("message.allready.deleted");
+            return accept_list();
+        }
+
+        dao.delete(entity); 
+        addMsgSuccess("message.success.delete");
+
+        return accept_list();
+    }
 }
