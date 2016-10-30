@@ -134,4 +134,22 @@ function showSlides(n, slideId) {
     indexMap[slideId] = slideIndex;
 }
 
+$(document).on({
+	'mouseenter': function () {
+		var id = $(this).attr('id');
+		$(window).on('keypress', function (e) {
+			e.preventDefault();
 
+			if (37 == e.keyCode) {
+				plusSlides(-1, id);
+			}
+
+			if (39 == e.keyCode) {
+				plusSlides(1, id);
+			}
+		});
+	},
+	'mouseleave': function () {
+		$(window).off('keypress');
+	}
+}, '.slideshow-area');
