@@ -4,7 +4,9 @@ var notices = [];
 var showNotice = function(idx) {
     var notice = notices[idx];
     shown = idx;
-    parseMarkdown(notice.title, notice.message, '#notice_content_area', '#notice_title_area');
+    parseMarkdown(notice.title, notice.message, '#notice_content_area', '#notice_title_area').then(function() {
+        return processMathJax('#notice_content_area');
+    });
     if (notice.showNextTime) {
         $('#showagain').prop('checked', true);
     } else {

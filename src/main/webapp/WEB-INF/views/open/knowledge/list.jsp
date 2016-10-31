@@ -21,13 +21,22 @@
     </c:param>
 
     <c:param name="PARAM_SCRIPTS">
-        <script type="text/javascript" src="<%=request.getContextPath()%>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/bower/echojs/dist/echo.min.js"></script>
-        <script type="text/javascript" src="<%=jspUtil.mustReloadFile("/js/knowledge-list.js")%>"></script>
+        <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+            skipStartupTypeset: true
+        });
+        </script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
         
+        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
-        <script type="text/javascript" src="<%=jspUtil.mustReloadFile("/js/knowledge-common.js")%>"></script>
+        
+        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/slide.js") %>"></script>
+        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
+        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-list.js")%>"></script>
         
         <%
             if (jspUtil.logined()) {
@@ -119,8 +128,8 @@
             <%
                 request.setAttribute("list_data", jspUtil.getValue("knowledges", List.class));
             %>
-            <c:import url="/WEB-INF/views/open/knowledge/common_list.jsp" />
-            <c:import url="/WEB-INF/views/open/knowledge/common_sub_list.jsp" />
+            <c:import url="/WEB-INF/views/open/knowledge/partials/common_list.jsp" />
+            <c:import url="/WEB-INF/views/open/knowledge/partials/common_sub_list.jsp" />
         </div>
 
         <!-- Pager -->

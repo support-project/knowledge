@@ -1,0 +1,82 @@
+
+  .wizard-steps-panel {
+    position: relative;
+    height: 4em;
+  }
+
+  .wizard-steps-panel .step-number{
+    display: inline-block;
+    text-align: center;
+    font-size: 26px;
+    position: relative;
+  }
+
+  .wizard-steps-panel .step-number .number{
+    width: 1.7em;
+    height: 1.7em;
+    background-color: #dedede;
+    color: #5a5a5a;
+    margin-left: calc(50% - 1.7em / 2 );
+    border: 4px solid #dedede;
+    border-radius: 1.7em;
+  }
+
+  .wizard-steps-panel .step-number.doing .number,
+  .wizard-steps-panel .step-number.doing .number:after,
+  .wizard-steps-panel .step-number.doing .number:before {
+    background-color: #FF5454;
+    border: 4px solid #FF5454;
+    color: white;
+  }
+
+  .wizard-steps-panel .step-number.done .number,
+  .wizard-steps-panel .step-number.done .number:after,
+  .wizard-steps-panel .step-number.done .number:before {
+    background-color: #79C447;
+    border: 4px solid #79C447;
+    color: white;
+  }
+
+  .wizard-steps-panel .step-number .number:before {
+    content: ' ';
+    position: absolute;
+    border: 4px solid #dedede;
+    border-radius: 4px;
+    left: -4px;
+    right: calc( 50% + 1.4em/2 );
+    top: calc( 1.4em / 2 );
+  }
+
+  .wizard-steps-panel .step-number .number:after  {
+    content: ' ';
+    position: absolute;
+    border: 4px solid #dedede;
+    border-radius: 4px;
+    left: calc( 50% + 1.4em/2 );
+    right: -4px;
+    top: calc( 1.4em / 2 );
+  }
+
+  .wizard-steps-panel.steps-quantity-1 .step-number {
+    width: 99%;
+  }
+
+  .wizard-steps-panel.steps-quantity-2 .step-number {
+    width: 49%;
+  }
+
+  .wizard-steps-panel.steps-quantity-3 .step-number {
+    width: 32%;
+  }
+
+  .wizard-steps-panel.steps-quantity-4 .step-number {
+    width: 24%;
+  }
+
+  .wizard-steps-panel.steps-quantity-5 .step-number {
+    width: 19%;
+  }
+
+  .wizard-steps-panel.steps-quantity-6 .step-number {
+    width: 15%;
+  }

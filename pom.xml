@@ -4,7 +4,7 @@
 
     <groupId>org.support-project</groupId>
     <artifactId>knowledge</artifactId>
-    <version>1.5.0</version>
+    <version>1.6.0</version>
     <packaging>war</packaging>
 
     <name>knowledge</name>
@@ -59,13 +59,13 @@
         <dependency>
             <groupId>org.support-project</groupId>
             <artifactId>web</artifactId>
-            <version>1.5.0</version>
+            <version>1.6.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.support-project</groupId>
             <artifactId>markedj</artifactId>
-            <version>1.5.0</version>
+            <version>1.6.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -123,11 +123,10 @@
             <artifactId>lucene-highlighter</artifactId>
             <version>4.10.2</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-parsers</artifactId>
-            <version>1.9</version>
+            <version>1.13</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.ow2.asm</groupId>
@@ -164,6 +163,13 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kenai.nbpwr</groupId>
+            <artifactId>com-sun-pdfview</artifactId>
+            <version>1.0.5-201003191900</version>
+            <type>nbm</type>
         </dependency>
 
     </dependencies>
@@ -214,7 +220,7 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>0.0.27</version>
+                <version>1.0</version>
                 <executions>
                     <execution>
                         <id>install node and npm</id>

@@ -34,6 +34,7 @@ import org.support.project.knowledge.indexer.IndexingValue;
 import org.support.project.knowledge.logic.CrawlerLogic;
 import org.support.project.knowledge.logic.IndexLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.SlideLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.parser.ParserFactory;
@@ -50,6 +51,7 @@ public class FileParseBat extends AbstractBat {
     public static final int PARSE_STATUS_PARSING = 1;
     public static final int PARSE_STATUS_ERROR_FINISHED = -100;
     public static final int PARSE_STATUS_PARSED = 100;
+    public static final int PARSE_STATUS_SLIDE_PARSED = 101;
 
     public static final int PARSE_STATUS_NO_TARGET = -1;
 
@@ -80,6 +82,11 @@ public class FileParseBat extends AbstractBat {
         crawl();
     }
 
+    
+    /**
+     * 情報の種別がBookmarkの場合に、URLに書かれているページのテキストを取得し検索可能にする
+     * @throws Exception
+     */
     private void crawl() throws Exception {
         KnowledgeItemValuesDao itemValuesDao = KnowledgeItemValuesDao.get();
         List<KnowledgeItemValuesEntity> itemValues = itemValuesDao.selectOnTypeIdAndItemNoAndStatus(TemplateMastersDao.TYPE_ID_BOOKMARK,
@@ -96,6 +103,10 @@ public class FileParseBat extends AbstractBat {
                 if (knowledgesEntity == null) {
                     continue;
                 }
+                // パースステータスを処理中に変更
+                itemValue.setItemStatus(KnowledgeItemValuesEntity.STATUS_DO_PROCESS);
+                itemValuesDao.update(itemValue);
+                
                 // タグを取得
                 List<TagsEntity> tagsEntities = TagsDao.get().selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
                 // Webアクセス
@@ -153,6 +164,13 @@ public class FileParseBat extends AbstractBat {
         }
     }
 
+    /**
+     * 添付したファイルの中身を抽出する
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws MimeTypeException
+     * @throws Exception
+     */
     private void fileParse() throws FileNotFoundException, IOException, MimeTypeException, Exception {
         KnowledgeFilesDao filesDao = KnowledgeFilesDao.get();
         IndexLogic indexLogic = IndexLogic.get();
@@ -251,7 +269,11 @@ public class FileParseBat extends AbstractBat {
 
                 // パースステータスをパース完了に変更(もしパースでエラーが発生しても、次回から対象外になる）
                 filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_PARSED, UPDATE_USER_ID);
-
+                boolean slideParse = SlideLogic.get().parseSlide(tmp, knowledgeFilesEntity);
+                if (slideParse) {
+                    // スライドのパース済のステータスへ
+                    filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_SLIDE_PARSED, UPDATE_USER_ID);
+                }
             } catch (Exception e) {
                 // パースの解析でなんらかのエラー
                 filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_ERROR_FINISHED, UPDATE_USER_ID);

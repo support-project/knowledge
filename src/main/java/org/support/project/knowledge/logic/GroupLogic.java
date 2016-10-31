@@ -304,6 +304,7 @@ public class GroupLogic {
      * @param users
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public MessageResult addUsers(LoginedUser loginedUser, Integer groupId, String users) {
         ExGroupsDao groupsDao = ExGroupsDao.get();
         if (!loginedUser.isAdmin()) {
