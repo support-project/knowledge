@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -12,6 +14,8 @@ import org.support.project.common.exception.ParseException;
 import org.support.project.knowledge.parser.SlideShowParser;
 
 public class PdfSlideShowParserOnPdfbox implements SlideShowParser {
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(PdfSlideShowParserOnPdfbox.class);
 
     @Override
     public void parse(File inputFile, File outputDir) throws ParseException {
@@ -43,6 +47,9 @@ public class PdfSlideShowParserOnPdfbox implements SlideShowParser {
             document.close();
         } catch (IOException e) {
             throw new ParseException(e);
+        } catch (OutOfMemoryError e) {
+            LOG.error("OutOfMemoryError");
+            throw e;
         }
     }
 

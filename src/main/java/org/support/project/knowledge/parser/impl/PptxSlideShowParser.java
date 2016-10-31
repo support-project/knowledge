@@ -8,11 +8,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.tools.imageio.ImageIOUtil;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.sl.draw.Drawable;
@@ -24,6 +23,8 @@ import org.support.project.common.exception.ParseException;
 import org.support.project.knowledge.parser.SlideShowParser;
 
 public class PptxSlideShowParser implements SlideShowParser {
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(PptxSlideShowParser.class);
 
     @Override
     public void parse(File inputFile, File outputDir) throws ParseException {
@@ -71,6 +72,9 @@ public class PptxSlideShowParser implements SlideShowParser {
             }
         } catch (EncryptedDocumentException | IOException e) {
             throw new ParseException(e);
+        } catch (OutOfMemoryError e) {
+            LOG.error("OutOfMemoryError");
+            throw e;
         }
 
     }

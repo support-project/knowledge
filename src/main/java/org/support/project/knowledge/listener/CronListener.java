@@ -46,13 +46,13 @@ public class CronListener implements ServletContextListener {
             @Override
             public void run() {
                 LOG.trace("called. [fileClearfuture]");
-
                 // Java を別のVMで実行（添付ファイルの定期的なクリア）
                 JavaJob job = new JavaJob();
                 job.setCurrentDirectory(logDir);
                 job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
                 job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
                 job.setMainClass(KnowledgeFileClearBat.class.getName());
+                job.setXmx(256);
                 if (StringUtils.isNotEmpty(envValue)) {
                     job.addEnvironment(SystemConfig.KNOWLEDGE_ENV_KEY, envValue);
                 }
@@ -74,12 +74,13 @@ public class CronListener implements ServletContextListener {
             @Override
             public void run() {
                 LOG.trace("called. [parsefuture]");
-                // Java を別のVMで実行（添付ファイルの中身を抽出し検索可能にする）
+                // 添付ファイルの中身を抽出し検索可能にする
                 JavaJob job = new JavaJob();
                 job.setCurrentDirectory(logDir);
                 job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
                 job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
                 job.setMainClass(FileParseBat.class.getName());
+                job.setXmx(1024);
                 if (StringUtils.isNotEmpty(envValue)) {
                     job.addEnvironment(SystemConfig.KNOWLEDGE_ENV_KEY, envValue);
                 }
@@ -101,12 +102,13 @@ public class CronListener implements ServletContextListener {
             @Override
             public void run() {
                 LOG.trace("called. [mailfuture]");
-                // Java を別のVMで実行（添付ファイルの中身を抽出し検索可能にする）
+                // メール送信
                 JavaJob job = new JavaJob();
                 job.setCurrentDirectory(logDir);
                 job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
                 job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
                 job.setMainClass(MailSendBat.class.getName());
+                job.setXmx(256);
                 if (StringUtils.isNotEmpty(envValue)) {
                     job.addEnvironment(SystemConfig.KNOWLEDGE_ENV_KEY, envValue);
                 }
@@ -128,12 +130,13 @@ public class CronListener implements ServletContextListener {
             @Override
             public void run() {
                 LOG.trace("called. [webhookfuture]");
-                // Java を別のVMで実行
+                // Webhook
                 JavaJob job = new JavaJob();
                 job.setCurrentDirectory(logDir);
                 job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
                 job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
                 job.setMainClass(WebhookBat.class.getName());
+                job.setXmx(256);
                 if (StringUtils.isNotEmpty(envValue)) {
                     job.addEnvironment(SystemConfig.KNOWLEDGE_ENV_KEY, envValue);
                 }
@@ -155,12 +158,13 @@ public class CronListener implements ServletContextListener {
             @Override
             public void run() {
                 LOG.trace("called. [mailHookfuture]");
-                // Java を別のVMで実行（添付ファイルの中身を抽出し検索可能にする）
+                // メールからの投稿用のメールの読み込み
                 JavaJob job = new JavaJob();
                 job.setCurrentDirectory(logDir);
                 job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
                 job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
                 job.setMainClass(MailReadBat.class.getName());
+                job.setXmx(256);
                 if (StringUtils.isNotEmpty(envValue)) {
                     job.addEnvironment(SystemConfig.KNOWLEDGE_ENV_KEY, envValue);
                 }
