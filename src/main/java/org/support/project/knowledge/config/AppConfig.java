@@ -18,6 +18,11 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
 
     private boolean convIndexPath = false;
 
+    private String slidePath;
+    
+    private boolean convSlidePath = false;
+    
+
     /**
      * @return the indexPath
      */
@@ -39,6 +44,31 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
      */
     public void setIndexPath(String indexPath) {
         this.indexPath = indexPath;
+    }
+    
+    /**
+     * Get slidePath
+     * @return the slidePath
+     */
+    public String getSlidePath() {
+        if (StringUtils.isEmpty(slidePath)) {
+            return "";
+        }
+
+        if (!convSlidePath) {
+            String path = slidePath;
+            this.slidePath = convPath(path);
+            convSlidePath = true;
+        }
+        return slidePath;
+    }
+
+    /**
+     * Set slidePath
+     * @param slidePath the slidePath to set
+     */
+    public void setSlidePath(String slidePath) {
+        this.slidePath = slidePath;
     }
 
 }

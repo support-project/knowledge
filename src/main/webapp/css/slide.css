@@ -1,0 +1,255 @@
+/* Slideshow container */
+.slideshow-area {
+    position: relative;
+    background-color: black;
+    border: 10px solid black;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+}
+#content .slideshow-area {
+    width: 100%;
+}
+@media screen and (max-width: 991px) {
+    .question_Box .slideshow-area {
+        width: 100%;
+    }
+    .dotArea {
+        display: none;
+    }
+}
+@media screen and (min-width: 992px) {
+    .question_Box .slideshow-area {
+        width: 80%;
+    }
+}
+
+
+
+.slideshow-container {
+  /*max-width: 1000px;*/
+  position: relative;
+  margin: auto;
+  /*border: 10px solid red;*/
+}
+
+.slideshow-control {
+  /*max-width: 1000px;*/
+  position: relative;
+  margin: auto;
+}
+
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  width: auto;
+/*
+  margin-top: -22px;
+  padding: 16px;
+*/
+/*  color: white; */
+  font-weight: bold;
+  font-size: 18px;
+/*  transition: 0.6s ease; */
+  border-radius: 0 3px 3px 0;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.full {
+    height: 40px;
+    width: 40px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover, .full:hover {
+/*    background-color: rgba(0,0,0,0.8);*/
+    background-color: gray;
+}
+
+/* Caption text */
+.text {
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+    font-size: 12px;
+    padding: 8px 12px;
+    color: white;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  cursor:pointer;
+  height: 13px;
+  width: 13px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.dot.active, .dot:hover {
+/*  background-color: #717171;*/
+    background-color: #66cc66;
+}
+
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+
+.slideshow-area:-webkit-full-screen {
+    position : fixed ;
+    left     : 0 ;
+    top      : 0 ;
+    width    : 100% ;
+    height   : 100%;
+}
+.slideshow-area:-moz-full-screen {
+    position : fixed ;
+    left     : 0 ;
+    top      : 0 ;
+    width    : 100% ;
+    height   : 100%;
+}
+.slideshow-area:-ms-fullscreen {
+    position : fixed ;
+    left     : 0 ;
+    top      : 0 ;
+    width    : 100% ;
+    height   : 100%;
+}
+.slideshow-area:fullscreen {
+    position : fixed ;
+    left     : 0 ;
+    top      : 0 ;
+    width    : 100% ;
+    height   : 100%;
+}
+
+.slideshow-area:-webkit-full-screen .slideshow-container,
+.slideshow-area:-webkit-full-screen .mySlides {
+    width    : 100%;
+    height   : 100%;
+}
+.slideshow-area:-moz-full-screen .slideshow-container,
+.slideshow-area:-moz-full-screen .mySlides {
+    width    : 100%;
+    height   : 100%;
+}
+.slideshow-area:-ms-fullscreen .slideshow-container,
+.slideshow-area:-ms-fullscreen .mySlides {
+    width    : 100%;
+    height   : 100%;
+}
+.slideshow-area:fullscreen .slideshow-container,
+.slideshow-area:fullscreen .mySlides {
+    width    : 100%;
+    height   : 100%;
+}
+
+.slideshow-area:-webkit-full-screen .slide-image {
+    height   : 85%;
+    width    : auto;
+    top: 10;
+    left: 0;
+    right: 0;
+    position: absolute;
+    margin: auto;
+}
+.slideshow-area:-moz-full-screen .slide-image {
+    height   : 85%;
+    width    : auto;
+    top: 10;
+    left: 0;
+    right: 0;
+    position: absolute;
+    margin: auto;
+}
+.slideshow-area:-ms-fullscreen .slide-image {
+    height   : 85%;
+    width    : auto;
+    top: 10;
+    left: 0;
+    right: 0;
+    position: absolute;
+    margin: auto;
+}
+.slideshow-area:fullscreen .slide-image {
+    height   : 85%;
+    width    : auto;
+    top: 10;
+    left: 0;
+    right: 0;
+    position: absolute;
+    margin: auto;
+}
+
+.slideshow-area:-webkit-full-screen .slideshow-control {
+    position : fixed ;
+    left     : 0 ;
+    bottom      : 0 ;
+    width    : 100% ;
+    height   : 100px;
+    background-color: black;
+    z-index: 100;
+}
+.slideshow-area:-moz-full-screen .slideshow-control {
+    position : fixed ;
+    left     : 0 ;
+    bottom      : 0 ;
+    width    : 100% ;
+    height   : 100px;
+    background-color: black;
+    z-index: 100;
+}
+.slideshow-area:-ms-fullscreen .slideshow-control {
+    position : fixed ;
+    left     : 0 ;
+    bottom      : 0 ;
+    width    : 100% ;
+    height   : 100px;
+    background-color: black;
+    z-index: 100;
+}
+.slideshow-area:fullscreen .slideshow-control {
+    position : fixed ;
+    left     : 0 ;
+    bottom      : 0 ;
+    width    : 100% ;
+    height   : 100px;
+    background-color: black;
+    z-index: 100;
+}
+
+
+

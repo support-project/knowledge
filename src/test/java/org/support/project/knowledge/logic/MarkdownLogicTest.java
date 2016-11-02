@@ -271,7 +271,7 @@ public class MarkdownLogicTest extends TestCommon {
     public void testAmp()
             throws ParseException, UnsupportedEncodingException, IOException, TransformerFactoryConfigurationError, TransformerException {
         String markdown = "```\n&read_data\n```";
-        String html = "<pre><code>&amp;read_data\n</code></pre>\n";
+        String html = "<pre><code class=\"hljs\">&amp;read_data\n</code></pre>\n";
         String result = MarkdownLogic.get().markdownToHtml(markdown, MarkdownLogic.ENGINE_MARKEDJ).getHtml();
         try {
             org.junit.Assert.assertEquals(html, result);
