@@ -55,6 +55,8 @@ public class WebhookLogic extends HttpLogic {
         String linktop = "<";
         String linkpipe = "|";
         String linkend = ">";
+        String sentend = "\n";
+        String conttab = "--- write contents ---";
         
         /**  This code make JSON to send Slack */
         StringBuffer SendBuff = new StringBuffer();
@@ -63,6 +65,10 @@ public class WebhookLogic extends HttpLogic {
         SendBuff.append(linkpipe);
         SendBuff.append(knowledge.getTitle());
         SendBuff.append(linkend);
+        SendBuff.append(sentend);
+        SendBuff.append(conttab);
+        SendBuff.append(sentend);
+        SendBuff.append(knowledge.getContent());
         String SendString = SendBuff.toString();
         jsonObject.put("text", SendString);
         
@@ -88,6 +94,7 @@ public class WebhookLogic extends HttpLogic {
         UsersEntity insertUser = UsersDao.get().selectOnKey(knowledge.getInsertUser());
         if (insertUser != null) {
             jsonObject.put("insert_user", insertUser.getUserName());
+            jsonObject.put("username", insertUser.getUserName());
         } else {
             jsonObject.put("insert_user", "Unknown user");
         }
@@ -96,6 +103,7 @@ public class WebhookLogic extends HttpLogic {
         UsersEntity updateUser = UsersDao.get().selectOnKey(knowledge.getInsertUser());
         if (updateUser != null) {
             jsonObject.put("update_user", updateUser.getUserName());
+            jsonObject.put("username", updateUser.getUserName());
         } else {
             jsonObject.put("insert_user", "Unknown user");
         }
@@ -134,6 +142,8 @@ public class WebhookLogic extends HttpLogic {
         String linktop = "<";
         String linkpipe = "|";
         String linkend = ">";
+        String sentend = "\n";
+        String conttab = "--- write contents ---";
         
         /**  This code make JSON to send Slack */
         StringBuffer SendBuff = new StringBuffer();
@@ -142,6 +152,10 @@ public class WebhookLogic extends HttpLogic {
         SendBuff.append(linkpipe);
         SendBuff.append(knowledge.getTitle());
         SendBuff.append(linkend);
+        SendBuff.append(sentend);
+        SendBuff.append(conttab);
+        SendBuff.append(sentend);
+        SendBuff.append(comment.getComment());
         String SendString = SendBuff.toString();
         jsonObject.put("text", SendString);
         
@@ -153,6 +167,7 @@ public class WebhookLogic extends HttpLogic {
         UsersEntity insertUser = UsersDao.get().selectOnKey(comment.getInsertUser());
         if (insertUser != null) {
             jsonObject.put("insert_user", insertUser.getUserName());
+            jsonObject.put("username", insertUser.getUserName());
         } else {
             jsonObject.put("insert_user", "Unknown user");
         }
@@ -161,6 +176,7 @@ public class WebhookLogic extends HttpLogic {
         UsersEntity updateUser = UsersDao.get().selectOnKey(comment.getInsertUser());
         if (updateUser != null) {
             jsonObject.put("update_user", updateUser.getUserName());
+            jsonObject.put("username", updateUser.getUserName());
         } else {
             jsonObject.put("insert_user", "Unknown user");
         }
