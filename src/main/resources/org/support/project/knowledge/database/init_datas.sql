@@ -10,7 +10,7 @@ VALUES
 
 INSERT INTO TEMPLATE_MASTERS ( TYPE_ID, TYPE_NAME, TYPE_ICON, DESCRIPTION, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ) 
 VALUES 
-(-99,'bookmark', 'fa-bookmark', 'Webにある情報を共有します。登録したURLの内容を検索可能にします。設定は変更できません。（監理者はProxyの設定を行ってください）',0,'2015-09-09 00:00:00',null,null,0);
+(-99,'bookmark', 'fa-bookmark', 'Webにある情報を共有します。登録したURLの内容を検索可能にします。設定は変更できません。（管理者はProxyの設定を行ってください）',0,'2015-09-09 00:00:00',null,null,0);
 
 INSERT INTO TEMPLATE_ITEMS ( TYPE_ID, ITEM_NO, ITEM_NAME, ITEM_TYPE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ) 
 VALUES 
