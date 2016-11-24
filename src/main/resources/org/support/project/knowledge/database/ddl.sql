@@ -849,3 +849,32 @@ comment on column KNOWLEDGES.INSERT_DATETIME is '登録日時';
 comment on column KNOWLEDGES.UPDATE_USER is '更新ユーザ';
 comment on column KNOWLEDGES.UPDATE_DATETIME is '更新日時';
 comment on column KNOWLEDGES.DELETE_FLAG is '削除フラグ';
+
+comment on table WEBHOOK_CONFIGS is 'Webhooks 設定';
+comment on column WEBHOOK_CONFIGS.HOOK_ID is 'HOOK ID';
+comment on column WEBHOOK_CONFIGS.HOOK is 'HOOK';
+comment on column WEBHOOK_CONFIGS.URL is 'URL';
+comment on column WEBHOOK_CONFIGS.INSERT_USER is '登録ユーザ';
+comment on column WEBHOOK_CONFIGS.INSERT_DATETIME is '登録日時';
+comment on column WEBHOOK_CONFIGS.DELETE_FLAG is '削除フラグ';
+
+comment on table WEBHOOKS is 'Webhooks';
+comment on column WEBHOOKS.WEBHOOK_ID is 'WEBHOOK ID';
+comment on column WEBHOOKS.STATUS is 'ステータス';
+comment on column WEBHOOKS.HOOK is 'HOOK';
+comment on column WEBHOOKS.CONTENT is '通知用json文字列';
+comment on column WEBHOOKS.INSERT_USER is '登録ユーザ';
+comment on column WEBHOOKS.INSERT_DATETIME is '登録日時';
+comment on column WEBHOOKS.UPDATE_USER is '更新ユーザ';
+comment on column WEBHOOKS.UPDATE_DATETIME is '更新日時';
+comment on column WEBHOOKS.DELETE_FLAG is '削除フラグ';
+
+comment on table PINS is 'ピン';
+comment on column PINS.NO is 'NO';
+comment on column PINS.KNOWLEDGE_ID is 'ナレッジID';
+comment on column PINS.ROW_ID is '行ID';
+comment on column PINS.INSERT_USER is '登録ユーザ';
+comment on column PINS.INSERT_DATETIME is '登録日時';
+comment on column PINS.UPDATE_USER is '更新ユーザ';
+comment on column PINS.UPDATE_DATETIME is '更新日時';
+comment on column PINS.DELETE_FLAG is '削除フラグ';
