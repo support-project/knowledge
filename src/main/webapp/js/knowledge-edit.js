@@ -64,7 +64,11 @@ $(document).ready(function() {
         });
         return false;
     });
-    
+
+    // タイトル時にenterを押して保存されないようenterを無効化する
+    $("#input_title").keypress(function(e) {
+        return ! ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13));
+    });
 });
 
 function deleteKnowledge() {
