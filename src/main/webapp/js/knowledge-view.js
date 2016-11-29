@@ -17,7 +17,7 @@ $(document).ready(function(){
 var addlike = function(knowledgeId) {
     var url = _CONTEXT + '/open.knowledge/like/' + knowledgeId;
     $.ajax({
-        type : 'GET',
+        type : 'POST',
         url : url,
         success : function(data, dataType) {
             console.log(data);
