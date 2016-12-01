@@ -1,4 +1,3 @@
-<%-- deprecated (新規追加と更新を分けていたが、edit.jspで共通にした --%>
 <%@page import="org.support.project.common.util.StringUtils"%>
 <%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
@@ -18,21 +17,38 @@
 <c:param name="PARAM_SCRIPTS">
 <jsp:include page="partials/partials-edit-scripts.jsp"></jsp:include>
 <script>
-<c:forEach var="selectedGroup" items="${groups}" varStatus="status">
-selectedGroups.push({label: '<%= jspUtil.out("selectedGroup.label") %>', value: '<%= jspUtil.out("selectedGroup.value") %>'});
+<c:forEach var="group" items="${groups}" varStatus="status">
+selectedGroups.push({label: '<%= jspUtil.out("group.label") %>', value: '<%= jspUtil.out("group.value") %>'});
 </c:forEach>
-<c:forEach var="selectedEditor" items="${editors}" varStatus="status">
-selectedEditors.push({label: '<%= jspUtil.out("selectedEditor.label") %>', value: '<%= jspUtil.out("selectedEditor.value") %>'});
+<c:forEach var="editor" items="${editors}" varStatus="status">
+selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= jspUtil.out("editor.value") %>'});
 </c:forEach>
 </script>
 </c:param>
 
+<c:param name="PARAM_PAGE_TITLE">
+<% if (!StringUtils.isEmpty(jspUtil.getValue("title", String.class))) { %>
+<%= jspUtil.label("label.update") %> - <%= jspUtil.out("title", JspUtil.ESCAPE_CLEAR) %> - Knowledge
+<% } else { %>
+<%= jspUtil.label("label.add") %> - Knowledge
+<% } %>
+</c:param>
+
 <c:param name="PARAM_CONTENT">
-<form action="<%= request.getContextPath()%>/protect.knowledge/add" method="post" role="form" enctype="multipart/form-data" id="knowledgeForm">
+<form action="<%= request.getContextPath()%>/protect.knowledge/save" method="post" role="form" id="knowledgeForm" enctype="multipart/form-data">
     <div class="form-inline">
+        <% if (!StringUtils.isEmpty(jspUtil.getValue("knowledgeId", String.class))) { %>
+        <div class="form-group title" id="title_msg"><%= jspUtil.label("knowledge.edit.title") %></div>
+        <!-- info -->
+        <div class="form-group pull-right">
+            <label for="input_no"><%= jspUtil.label("knowledge.edit.label.key") %></label>
+            <p class="form-control-static"><i class="fa fa-key"></i>&nbsp;<%= jspUtil.out("knowledgeId") %> / <i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%></p>
+        </div>
+        <% } else { %>
         <div class="form-group title" id="title_msg"><%= jspUtil.label("knowledge.add.title") %></div>
+        <% } %>
     </div>
-    <input type="hidden" name="knowledgeId" value="" id="knowledgeId" />
+    <input type="hidden" name="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" id="knowledgeId" />
 
     <!-- Editor Main -->
     <jsp:include page="partials/partials-edit-editormain.jsp"></jsp:include>
@@ -57,11 +73,11 @@ selectedEditors.push({label: '<%= jspUtil.out("selectedEditor.label") %>', value
     <!-- buttons -->
     <hr/>
     <button type="submit" class="btn btn-primary" id="savebutton"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
-    <button type="button" class="btn btn-danger hide" onclick="deleteKnowledge();" id="deleteButton">
+    <button type="button" class="btn btn-danger" onclick="deleteKnowledge();" id="deleteButton">
         <i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %>
     </button>
     <a href="<%= request.getContextPath() %>/open.knowledge/view/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>"
-        class="btn btn-warning hide" role="button" id="cancelButton">
+        class="btn btn-warning" role="button" id="cancelButton">
         <i class="fa fa-undo"></i>&nbsp;<%= jspUtil.label("label.cancel") %>
     </a>
     

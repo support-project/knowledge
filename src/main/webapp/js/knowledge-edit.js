@@ -34,9 +34,6 @@ $(document).ready(function() {
             success: function(result, textStatus, xhr) {
                 // 入力値を初期化
                 console.log(result);
-                
-                $form.attr('action', _CONTEXT + '/protect.knowledge/update');
-                
                 var knowledgeId = result.result;
                 $('#knowledgeId').val(knowledgeId);
                 $('#knowledgeIdForDelete').val(knowledgeId);

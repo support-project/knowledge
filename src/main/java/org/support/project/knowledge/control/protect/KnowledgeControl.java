@@ -115,7 +115,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 setAttribute("publicFlag", KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
             }
         }
-        return forward("view_add.jsp");
+        return forward("edit.jsp");
     }
 
     /**
@@ -169,7 +169,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
         setAttribute("templates", templates);
 
-        return forward("view_edit.jsp");
+        return forward("edit.jsp");
     }
 
     /**
@@ -179,8 +179,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @throws Exception
      * @throws ParseException
      */
-    @Post
-    public Boundary add(KnowledgesEntity entity) throws Exception, ParseException {
+    private Boundary add(KnowledgesEntity entity) throws Exception, ParseException {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
 
@@ -249,8 +248,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws Exception
      */
-    @Post
-    public Boundary update(KnowledgesEntity entity) throws Exception {
+    private Boundary update(KnowledgesEntity entity) throws Exception {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
 
@@ -329,6 +327,23 @@ public class KnowledgeControl extends KnowledgeControlBase {
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(updatedEntity.getKnowledgeId()), "message.success.update");
     }
 
+    /**
+     * Knowledgeの保存
+     * @param entity Knowledge information
+     * @return Boundary
+     * @throws Exception Exception
+     */
+    @Post
+    public Boundary save(KnowledgesEntity entity) throws Exception {
+        if (entity.getKnowledgeId() != null && entity.getKnowledgeId() > 1) {
+            return update(entity);
+        } else {
+            return add(entity);
+        }
+    }
+
+    
+    
     /**
      * ナレッジを削除
      * 

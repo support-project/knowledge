@@ -1,3 +1,4 @@
+<%-- deprecated (新規追加と更新を分けていたが、edit.jspで共通にした --%>
 <%@page import="org.support.project.common.util.StringUtils"%>
 <%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
