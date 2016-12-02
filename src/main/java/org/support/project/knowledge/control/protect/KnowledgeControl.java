@@ -24,6 +24,7 @@ import org.support.project.knowledge.dao.StockKnowledgesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.CommentsEntity;
+import org.support.project.knowledge.entity.DraftKnowledgesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.StockKnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
@@ -46,6 +47,7 @@ import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.UserConfigsDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UserConfigsEntity;
+import org.support.project.web.exception.AuthenticateException;
 import org.support.project.web.exception.InvalidParamException;
 
 import net.arnx.jsonic.JSON;
@@ -342,6 +344,40 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
     }
 
+    /**
+     * 下書き保存
+     * @param entity Knowledge information
+     * @return Boundary
+     * @throws Exception Exception
+     */
+    @Post
+    public Boundary draft() throws Exception {
+        DraftKnowledgesEntity draft = getParamOnProperty(DraftKnowledgesEntity.class);
+        draft.setAccesses(super.getParam("groups"));
+        draft.setEditors(super.getParam("editors"));
+        draft.setTagNames(super.getParam("tagNames"));
+        
+        TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(draft.getTypeId());
+        List<TemplateItemsEntity> items = template.getItems();
+        for (TemplateItemsEntity item : items) {
+            String itemValue = super.getParam("item_" + item.getItemNo());
+            if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
+                itemValue = itemValue.substring(1, itemValue.length() - 1);
+                item.setItemValue(itemValue);
+            } else {
+                item.setItemValue(itemValue);
+            }
+        }
+        
+        // TODO 下書きの時の添付ファイルの操作の記録をどうしよう？
+        try {
+            draft = knowledgeLogic.draft(draft, template, super.getLoginedUser());
+            return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(draft.getDraftId()), "message.success.save");
+        } catch (AuthenticateException e) {
+            // 編集権限が無い
+            return sendMsg(MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, null, "knowledge.edit.noaccess");
+        }
+    }
     
     
     /**

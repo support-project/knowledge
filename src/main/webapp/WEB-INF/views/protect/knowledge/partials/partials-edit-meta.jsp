@@ -40,20 +40,6 @@
             </div>
 
 
-            <!-- tags -->
-            <div class="form-group">
-                <label for="input_tag">
-                <%= jspUtil.label("knowledge.add.label.tags") %>
-                <a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#tagSelectModal"><i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("label.search.tags") %></a>
-                </label>
-                <br/>
-                <div class="tags">
-                <input type="text" class="form-control" name="tagNames" id="input_tags" data-role="tags input"
-                    placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="<%= jspUtil.out("tagNames") %>" />
-                </div>
-            </div>
-
-
             <!-- view targets -->
             <div class="form-group">
                 <label for="input_content">
@@ -89,6 +75,20 @@
                     </p>
                 </div>
                 
+            </div>
+
+
+            <!-- tags -->
+            <div class="form-group">
+                <label for="input_tag">
+                <%= jspUtil.label("knowledge.add.label.tags") %>
+                <a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#tagSelectModal"><i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("label.search.tags") %></a>
+                </label>
+                <br/>
+                <div class="tags">
+                <input type="text" class="form-control" name="tagNames" id="input_tags" data-role="tags input"
+                    placeholder="<%= jspUtil.label("knowledge.add.label.tags") %>" value="<%= jspUtil.out("tagNames") %>" />
+                </div>
             </div>
 
 

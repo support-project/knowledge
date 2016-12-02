@@ -21,6 +21,8 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.DraftItemValuesDao;
+import org.support.project.knowledge.dao.DraftKnowledgesDao;
 import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeEditGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeEditUsersDao;
@@ -37,6 +39,8 @@ import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
+import org.support.project.knowledge.entity.DraftItemValuesEntity;
+import org.support.project.knowledge.entity.DraftKnowledgesEntity;
 import org.support.project.knowledge.entity.KnowledgeEditGroupsEntity;
 import org.support.project.knowledge.entity.KnowledgeEditUsersEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
@@ -59,6 +63,7 @@ import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.exception.AuthenticateException;
 
 /**
  * Logic class for knowledge data
@@ -1365,6 +1370,45 @@ public class KnowledgeLogic {
             stock.setStocks(stocks);
         }
         return list;
+    }
+
+    /**
+     * 下書き保存
+     * @param draft
+     * @param template
+     * @param loginedUser
+     * @return
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public DraftKnowledgesEntity draft(DraftKnowledgesEntity draft, TemplateMastersEntity template, LoginedUser loginedUser) {
+        if (draft.getKnowledgeId() != null && draft.getKnowledgeId() > 0) {
+            // 権限チェック
+            KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(draft.getKnowledgeId());
+            String editorsstr = draft.getEditors();
+            String[] editordids = editorsstr.split(",");
+            List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
+            if (!isEditor(loginedUser, knowledge, editors)) {
+                throw new AuthenticateException("編集する権限がないよ！");
+            }
+        }
+        if (draft.getDraftId() == null || draft.getDraftId() <= 0) {
+            DraftKnowledgesDao.get().insert(draft);
+        } else {
+            DraftKnowledgesDao.get().update(draft);
+            DraftItemValuesDao.get().deleteOnDraftId(draft.getDraftId());
+        }
+        if (template != null && template.getItems() != null) {
+            for (TemplateItemsEntity item : template.getItems()) {
+                DraftItemValuesEntity val = new DraftItemValuesEntity();
+                val.setDraftId(draft.getDraftId());
+                val.setTypeId(template.getTypeId());
+                val.setItemNo(item.getItemNo());
+                val.setItemValue(item.getItemValue());
+                val.setItemStatus(KnowledgeItemValuesEntity.STATUS_SAVED);
+                DraftItemValuesDao.get().save(val);
+            }
+        }
+        return draft;
     }
     
 

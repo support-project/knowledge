@@ -21,6 +21,16 @@ public class DraftItemValuesDao extends GenDraftItemValuesDao {
     public static DraftItemValuesDao get() {
         return Container.getComp(DraftItemValuesDao.class);
     }
+    
+    /**
+     * 下書きのテンプレート拡張項目値を削除
+     * @param draftId
+     * @return
+     */
+    public int deleteOnDraftId(Long draftId) {
+        String sql = "DELETE FROM DRAFT_ITEM_VALUES WHERE DRAFT_ID = ?";
+        return super.executeUpdate(sql, draftId);
+    }
 
 
 

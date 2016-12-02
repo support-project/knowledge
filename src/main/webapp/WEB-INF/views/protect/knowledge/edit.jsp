@@ -37,6 +37,7 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 <c:param name="PARAM_CONTENT">
 <form action="<%= request.getContextPath()%>/protect.knowledge/save" method="post" role="form" id="knowledgeForm" enctype="multipart/form-data">
     <input type="hidden" name="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" id="knowledgeId" />
+    <input type="hidden" name="draftId" value="<%= jspUtil.out("draftId") %>" id="draftId" />
     <%-- ヘッダ部（ボタンなど） --%>
     <div class="row" id="content_head">
         <div class="col-sm-8">

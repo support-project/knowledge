@@ -15,12 +15,17 @@
 %>
 <div class="article_buttons">
     <div>
-        <button type="submit" class="btn btn-primary btn_2" id="draftbutton">
-            <i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.draft") %>
-        </button>
-        <button type="button" class="btn btn-info btn_2" id="releasebutton">
+        <button type="button" class="btn btn-primary btn_1" id="releasebutton">
             <i class="fa fa-rocket"></i>&nbsp;<%= jspUtil.label("label.release") %>
         </button>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-info btn_2" id="draftbutton">
+            <i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.draft") %>
+        </button>
+        <a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
+            class="btn btn-success btn_2" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %>
+        </a>
     </div>
     <div>
         <button type="button" class="btn btn-danger btn_2 <%= hide %>" onclick="deleteKnowledge();" id="deleteButton">
@@ -29,11 +34,6 @@
         <a href="<%= request.getContextPath() %>/open.knowledge/view/<%= jspUtil.out("knowledgeId") %><%= jspUtil.out("params") %>"
             class="btn btn-warning btn_2 <%= hide %>" role="button" id="cancelButton">
             <i class="fa fa-undo"></i>&nbsp;<%= jspUtil.label("label.cancel") %>
-        </a>
-    </div>
-    <div>
-        <a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
-            class="btn btn-success btn_2" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %>
         </a>
     </div>
 </div>
