@@ -15,6 +15,7 @@ import org.support.project.common.util.RandomUtil;
 import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
 
 import net.arnx.jsonic.JSON;
@@ -36,7 +37,11 @@ public class KnowledgeLogicTest extends TestCommon {
         entity.setContent("テストだよ");
         entity.setTypeId(-100);
         KnowledgeLogic logic = KnowledgeLogic.get();
-        entity = logic.insert(entity, null, new ArrayList<Long>(), null, null, null, loginedUser);
+        
+        KnowledgeData data = new KnowledgeData();
+        data.setKnowledge(entity);
+        
+        entity = logic.insert(data, loginedUser);
 
         // publicFlagは指定しないでDBに保存すると、公開になる
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
@@ -62,7 +67,11 @@ public class KnowledgeLogicTest extends TestCommon {
         entity.setContent(RandomUtil.randamGen(1024));
         entity.setTypeId(-99);
         KnowledgeLogic logic = KnowledgeLogic.get();
-        entity = logic.insert(entity, null, new ArrayList<Long>(), null, null, null, loginedUser2);
+        
+        KnowledgeData data = new KnowledgeData();
+        data.setKnowledge(entity);
+        
+        entity = logic.insert(data, loginedUser2);
         // publicFlagは指定しないでDBに保存すると、公開になる
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
         KnowledgesEntity saved = KnowledgesDao.get().selectOnKey(entity.getKnowledgeId());
@@ -71,7 +80,7 @@ public class KnowledgeLogicTest extends TestCommon {
         entity.setTitle(RandomUtil.randamGen(64));
         entity.setContent(RandomUtil.randamGen(1024));
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
-        logic.update(entity, null, new ArrayList<Long>(), null, null, null, loginedUser2);
+        logic.update(data, loginedUser2);
 
         saved = KnowledgesDao.get().selectOnKeyWithUserName(entity.getKnowledgeId());
         entity.setInsertUserName(loginedUser2.getLoginUser().getUserName());

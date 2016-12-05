@@ -17,6 +17,7 @@ import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
+import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.entity.UsersEntity;
@@ -49,17 +50,22 @@ public class NotifyCommentLogicTest extends TestCommon {
         
         LOG.info("テストユーザ1でKnowledge登録");
         KnowledgesEntity knowledge = new KnowledgesEntity();
+        
         knowledge.setTitle("テスト1");
         knowledge.setContent("テスト");
         knowledge.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC); // 公開
-        knowledge1 = KnowledgeLogic.get().insert(knowledge, null, null, null, null, null, loginedUser);
+        KnowledgeData data = new KnowledgeData();
+        data.setKnowledge(knowledge);
+        knowledge1 = KnowledgeLogic.get().insert(data, loginedUser);
         
         LOG.info("テストユーザ1でKnowledge登録");
         knowledge = new KnowledgesEntity();
         knowledge.setTitle("テスト2");
         knowledge.setContent("テスト2");
         knowledge.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE); // 非公開
-        knowledge2 = KnowledgeLogic.get().insert(knowledge, null, null, null, null, null, loginedUser);
+        data = new KnowledgeData();
+        data.setKnowledge(knowledge);
+        knowledge2 = KnowledgeLogic.get().insert(data, loginedUser);
         
         LOG.info("テストユーザ1でKnowledge登録");
         knowledge = new KnowledgesEntity();
@@ -71,7 +77,10 @@ public class NotifyCommentLogicTest extends TestCommon {
         labelValue.setLabel(TargetLogic.ID_PREFIX_USER + loginedUser2.getUserId());
         labelValue.setValue(TargetLogic.ID_PREFIX_USER + loginedUser2.getUserId());
         targets.add(labelValue);
-        knowledge3 = KnowledgeLogic.get().insert(knowledge, null, null, targets, null, null, loginedUser);
+        data = new KnowledgeData();
+        data.setKnowledge(knowledge);
+        data.setViewers(targets);
+        knowledge3 = KnowledgeLogic.get().insert(data, loginedUser);
         
         LOG.info("テストユーザ1でKnowledge登録");
         knowledge = new KnowledgesEntity();
@@ -83,7 +92,10 @@ public class NotifyCommentLogicTest extends TestCommon {
         labelValue.setLabel(TargetLogic.ID_PREFIX_GROUP + group.getGroupId());
         labelValue.setValue(TargetLogic.ID_PREFIX_GROUP + group.getGroupId());
         targets.add(labelValue);
-        knowledge4 = KnowledgeLogic.get().insert(knowledge, null, null, targets, null, null, loginedUser);
+        data = new KnowledgeData();
+        data.setKnowledge(knowledge);
+        data.setViewers(targets);
+        knowledge4 = KnowledgeLogic.get().insert(data, loginedUser);
     }
     
     @Test
