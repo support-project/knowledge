@@ -19,6 +19,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.DraftKnowledgesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.StockKnowledgesDao;
 import org.support.project.knowledge.dao.TagsDao;
@@ -138,30 +139,38 @@ public class KnowledgeControl extends KnowledgeControlBase {
         if (entity == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
         }
-        setAttributeOnProperty(entity);
+        
+        // 下書きが保存されている場合、下書きの内容を読み込む
+        DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKnowledgeAndUser(knowledgeId, getLoginUserId());
+        if (draft != null) {
+            super.setDraftInfo(draft);
+        } else {
+            // ナレッジに紐づく添付ファイルを取得
+            List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(knowledgeId, getRequest().getContextPath());
+            setAttribute("files", files);
 
-        // ナレッジに紐づく添付ファイルを取得
-        List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(knowledgeId, getRequest().getContextPath());
-        setAttribute("files", files);
+            // 表示するグループを取得
+            List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
+            setAttribute("groups", groups);
 
-        // 表示するグループを取得
-        List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
-        setAttribute("groups", groups);
-
-        // 共同編集者
-        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
-        setAttribute("editors", editors);
-        // 編集権限チェック
-        LoginedUser loginedUser = super.getLoginedUser();
-        boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
-        if (!edit) {
-            setAttribute("edit", false);
-            addMsgWarn("knowledge.edit.noaccess");
-            // return forward("/open/knowledge/view.jsp");
-            return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
+            // 共同編集者
+            List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+            setAttribute("editors", editors);
+            
+            // 編集権限チェック
+            LoginedUser loginedUser = super.getLoginedUser();
+            boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
+            if (!edit) {
+                setAttribute("edit", false);
+                addMsgWarn("knowledge.edit.noaccess");
+                // return forward("/open/knowledge/view.jsp");
+                return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
+            }
+            setAttributeOnProperty(entity);
         }
-
+        
         setAttributeForEditPage();
+        
         return forward("edit.jsp");
     }
 

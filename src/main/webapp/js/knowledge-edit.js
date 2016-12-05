@@ -23,12 +23,17 @@ $(document).ready(function() {
                     
                     $('#cancelButton').removeClass('hide');
                     $('#cancelButton').attr('href', _CONTEXT + '/open.knowledge/view/' + knowledgeId);
+                    $('#deleteButton').removeClass('hide');
+                    
+                    $('#draftId').val('');
+                    $('#draft_flag').addClass('hide');
+                    $('#draftDeleteButton').addClass('hide');
                 } else {
                     var draftId = result.result;
                     $('#draftId').val(draftId);
                     $('#draft_flag').removeClass('hide');
+                    $('#draftDeleteButton').removeClass('hide');
                 }
-                $('#deleteButton').removeClass('hide');
                 $.notify(result.message, 'info');
                 return resolve();
             }).fail(function(xhr, textStatus, error) {
@@ -74,6 +79,42 @@ $(document).ready(function() {
     // タイトル時にenterを押して保存されないようenterを無効化する
     $("#input_title").keypress(function(e) {
         return ! ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13));
+    });
+
+    $('#draftDeleteButton').click(function() {
+        var draftId = $('#draftId').val();
+        console.log(draftId);
+        if (draftId) {
+            bootbox.confirm(_CONFIRM, function(result) {
+                if (result) {
+                    $.ajax({
+                        url: _CONTEXT + '/protect.draft/delete/' + draftId,
+                        type: 'DELETE',
+                        timeout: 10000,
+                    }).done(function(result, textStatus, xhr) {
+                        $.notify(result.message, 'info');
+                        $('#draftId').val('');
+                        $('#draft_flag').addClass('hide');
+                        $('#draftDeleteButton').addClass('hide');
+                    }).fail(function(xhr, textStatus, error) {
+                        // 入力値を初期化
+                        if (xhr.responseJSON) {
+                            console.log(xhr.responseJSON);
+                            var msg = xhr.responseJSON;
+                            if (msg.children) {
+                                for (var i = 0; i < msg.children.length; i++) {
+                                    var child = msg.children[i];
+                                    console.log(child);
+                                    $.notify(child.message, 'warn');
+                                }
+                            }
+                        } else {
+                            $.notify(xhr.statusText + ' [' + xhr.status + ']', 'warn');
+                        }
+                    });
+                }
+            }); 
+        }
     });
 });
 

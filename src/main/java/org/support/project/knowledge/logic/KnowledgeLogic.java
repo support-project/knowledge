@@ -1390,14 +1390,22 @@ public class KnowledgeLogic {
             String[] editordids = editorsstr.split(",");
             List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
             if (!isEditor(loginedUser, knowledge, editors)) {
-                throw new AuthenticateException("編集する権限がないよ！");
+                throw new AuthenticateException("errors.noauthority");
             }
         }
         if (draft.getDraftId() == null || draft.getDraftId() <= 0) {
             DraftKnowledgesDao.get().insert(draft);
         } else {
-            DraftKnowledgesDao.get().update(draft);
-            DraftItemValuesDao.get().deleteOnDraftId(draft.getDraftId());
+            DraftKnowledgesEntity saved = DraftKnowledgesDao.get().selectOnKey(draft.getDraftId());
+            if (saved == null) {
+                // 既に別の画面で削除済
+                DraftKnowledgesDao.get().insert(draft);
+            } else {
+                draft.setInsertUser(saved.getInsertUser());
+                draft.setInsertDatetime(saved.getInsertDatetime());
+                DraftKnowledgesDao.get().update(draft);
+                DraftItemValuesDao.get().deleteOnDraftId(draft.getDraftId());
+            }
         }
         if (template != null && template.getItems() != null) {
             for (TemplateItemsEntity item : template.getItems()) {

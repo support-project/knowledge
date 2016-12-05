@@ -30,5 +30,11 @@ public class DraftKnowledgesDao extends GenDraftKnowledgesDao {
         return super.executeQueryList(sql, DraftKnowledgesEntity.class, loginUserId, limit, offset);
     }
 
+    
+    public DraftKnowledgesEntity selectOnKnowledgeAndUser(Long knowledgeId, Integer loginUserId) {
+        String sql = "SELECT * FROM DRAFT_KNOWLEDGES WHERE INSERT_USER = ? AND KNOWLEDGE_ID = ?";
+        return super.executeQuerySingle(sql, DraftKnowledgesEntity.class, loginUserId, knowledgeId);
+    }
+
 
 }
