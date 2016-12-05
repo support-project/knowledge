@@ -1,7 +1,13 @@
 package org.support.project.knowledge.control;
 
+import java.util.List;
+
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.TagsDao;
+import org.support.project.knowledge.dao.TemplateMastersDao;
+import org.support.project.knowledge.entity.TagsEntity;
+import org.support.project.knowledge.entity.TemplateMastersEntity;
 
 @DI(instance = Instance.Prototype)
 public class KnowledgeControlBase extends Control {
@@ -22,4 +28,13 @@ public class KnowledgeControlBase extends Control {
         setAttribute("params", params.toString());
         return params.toString();
     }
+    
+    protected void setAttributeForEditPage() {
+        List<TagsEntity> tagitems = TagsDao.get().selectAll();
+        setAttribute("tagitems", tagitems);
+
+        List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+        setAttribute("templates", templates);
+    }
+    
 }

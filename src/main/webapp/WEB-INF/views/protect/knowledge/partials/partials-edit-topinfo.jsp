@@ -10,7 +10,7 @@
 
 <% String hide = "hide"; %>
 
-<% if (!StringUtils.isEmpty(jspUtil.getValue("knowledgeId", Long.class))) { %>
+<% if (jspUtil.getValue("knowledgeId", Long.class) != null) { %>
     <% hide = ""; %>
     <div class="form-group title" id="title_msg"><%= jspUtil.label("knowledge.edit.title") %></div>
     <!-- info -->
@@ -21,4 +21,18 @@
 <% } else { %>
     <div class="form-group title" id="title_msg"><%= jspUtil.label("knowledge.add.title") %></div>
 <% } %>
+
+
+    <%
+        String draft = "";
+        if (jspUtil.getValue("draftId", Long.class) == null) {
+            draft = "hide";
+        }
+    
+    %>
+    
+    <div class="form-group <%= draft %>" id="draft_flag">
+        <%= jspUtil.label("knowledge.add.draft.flag") %>
+        <span class="tips_info"><%= jspUtil.label("knowledge.add.draft.info") %></span>
+    </div>
 

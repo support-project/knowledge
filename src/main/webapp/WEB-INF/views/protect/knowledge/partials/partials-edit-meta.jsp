@@ -10,7 +10,7 @@
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h4 class="panel-title">
-        属性情報
+        <%= jspUtil.label("knowledge.add.label.meta") %>
         </h4>
     </div>
     <div class="panel-body">

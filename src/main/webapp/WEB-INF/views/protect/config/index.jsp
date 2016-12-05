@@ -47,6 +47,9 @@
             <li><a href="<%=request.getContextPath()%>/open.knowledge/list?user=<%=jspUtil.id()%>">
                 <i class="fa fa-male"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.myknowledge")%>
             </a></li>
+            <li><a href="<%=request.getContextPath()%>/protect.draft/list">
+                <i class="fa fa-database"></i>&nbsp;<%=jspUtil.label("knowledge.draft.list.title")%>
+            </a></li>
             <li><a href="<%=request.getContextPath()%>/protect.stock/mylist">
                 <i class="fa fa-star-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.mystock")%>
             </a></li>

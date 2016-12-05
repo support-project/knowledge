@@ -26,9 +26,11 @@ $(document).ready(function() {
                 } else {
                     var draftId = result.result;
                     $('#draftId').val(draftId);
+                    $('#draft_flag').removeClass('hide');
                 }
                 $('#deleteButton').removeClass('hide');
                 $.notify(result.message, 'info');
+                return resolve();
             }).fail(function(xhr, textStatus, error) {
                 // 入力値を初期化
                 if (xhr.responseJSON) {
@@ -44,6 +46,7 @@ $(document).ready(function() {
                 } else {
                     $.notify(xhr.statusText + ' [' + xhr.status + ']', 'warn');
                 }
+                return reject();
             }).always(function( jqXHR, textStatus ) {
                 // ボタンを有効化し、再送信を許可
                 $button.attr('disabled', false);
@@ -56,7 +59,6 @@ $(document).ready(function() {
         // ページ遷移を禁止して、Ajaxで保存
         saveKnowledge($form, _CONTEXT + '/protect.knowledge/save');
     });
-    
     
     $('#knowledgeForm').submit(function(event) {
         console.log('submit');
