@@ -56,6 +56,8 @@ public class GenKnowledgeFilesEntity implements Serializable {
     private Long knowledgeId;
     /** コメント番号 */
     private Long commentNo;
+    /** 下書きID */
+    private Long draftId;
     /** ファイル名 */
     private String fileName;
     /** ファイルサイズ */
@@ -120,6 +122,22 @@ public class GenKnowledgeFilesEntity implements Serializable {
      * @return this object     */
     public GenKnowledgeFilesEntity setCommentNo(Long commentNo) {
         this.commentNo = commentNo;
+        return this;
+    }
+
+    /**
+     * Get 下書きID.
+     * @return 下書きID
+     */
+    public Long getDraftId() {
+        return this.draftId;
+    }
+    /**
+     * Set 下書きID.
+     * @param draftId 下書きID
+     * @return this object     */
+    public GenKnowledgeFilesEntity setDraftId(Long draftId) {
+        this.draftId = draftId;
         return this;
     }
 
@@ -318,6 +336,7 @@ public class GenKnowledgeFilesEntity implements Serializable {
         builder.append("fileNo = ").append(fileNo).append("\n");
         builder.append("knowledgeId = ").append(knowledgeId).append("\n");
         builder.append("commentNo = ").append(commentNo).append("\n");
+        builder.append("draftId = ").append(draftId).append("\n");
         builder.append("fileName = ").append(fileName).append("\n");
         builder.append("fileSize = ").append(fileSize).append("\n");
         builder.append("fileBinary = ").append(fileBinary).append("\n");

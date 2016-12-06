@@ -1378,11 +1378,12 @@ public class KnowledgeLogic {
      * 下書き保存
      * @param draft
      * @param template
+     * @param files 
      * @param loginedUser
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public DraftKnowledgesEntity draft(DraftKnowledgesEntity draft, TemplateMastersEntity template, LoginedUser loginedUser) {
+    public DraftKnowledgesEntity draft(DraftKnowledgesEntity draft, TemplateMastersEntity template, String[] files, LoginedUser loginedUser) {
         if (draft.getKnowledgeId() != null && draft.getKnowledgeId() > 0) {
             // 権限チェック
             KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(draft.getKnowledgeId());
@@ -1416,6 +1417,24 @@ public class KnowledgeLogic {
                 val.setItemValue(item.getItemValue());
                 val.setItemStatus(KnowledgeItemValuesEntity.STATUS_SAVED);
                 DraftItemValuesDao.get().save(val);
+            }
+        }
+        // 添付ファイルと下書きを紐付ける(紐付けを作るのみ、既存のKnowledgeの添付ファイルを削除はしない）
+        // 削除する場合は、「投稿する」を実施すること（制御を簡単にするため）
+        if (files != null) {
+            for (String string : files) {
+                if (StringUtils.isLong(string)) {
+                    Long fileNo = new Long(string);
+                    KnowledgeFilesEntity entity = KnowledgeFilesDao.get().selectOnKeyWithoutBinary(fileNo);
+                    if (entity != null) {
+                        if (entity.getKnowledgeId() == null || entity.getKnowledgeId().longValue() == 0) {
+                            // 既にKnowledgeに紐付いているものは対象外
+                            entity.setDraftId(draft.getDraftId());
+                            entity.setKnowledgeId(null);
+                            KnowledgeFilesDao.get().update(entity);
+                        }
+                    }
+                }
             }
         }
         return draft;

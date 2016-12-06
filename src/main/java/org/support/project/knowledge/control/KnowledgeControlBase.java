@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.support.project.di.DI;
@@ -8,6 +9,7 @@ import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.DraftKnowledgesEntity;
+import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
@@ -51,6 +53,15 @@ public class KnowledgeControlBase extends Control {
      * @param draft
      */
     protected void setDraftInfo(DraftKnowledgesEntity draft) {
+        List<UploadFile> files = new ArrayList<UploadFile>();
+        // 下書きにのみ紐づくファイルがあれば取得
+        List<UploadFile> draftFiles = new ArrayList<UploadFile>();
+        List<KnowledgeFilesEntity> filesEntities = KnowledgeFilesDao.get().selectOnDraftId(draft.getDraftId());
+        for (KnowledgeFilesEntity entity : filesEntities) {
+            if (entity.getCommentNo() == null || entity.getCommentNo() == 0) {
+                draftFiles.add(UploadedFileLogic.get().convUploadFile(getRequest().getContextPath(), entity));
+            }
+        }
         if (draft.getKnowledgeId() != null && draft.getKnowledgeId() > 0) {
             // ナレッジに紐付いた下書きであれば、Knowledgeの編集権限をチェックする
             KnowledgesEntity knowledge = KnowledgeLogic.get().select(draft.getKnowledgeId(), getLoginedUser());
@@ -59,13 +70,15 @@ public class KnowledgeControlBase extends Control {
             }
             
             // ナレッジに紐づく添付ファイルを取得
-            List<UploadFile> files = UploadedFileLogic.get().selectOnKnowledgeIdWithoutCommentFiles(
+            List<UploadFile> knowledgeFiles = UploadedFileLogic.get().selectOnKnowledgeIdWithoutCommentFiles(
                   draft.getKnowledgeId(), getRequest().getContextPath());
-            setAttribute("files", files);
+            files.addAll(knowledgeFiles);
         } else {
             draft.setKnowledgeId(null);
         }
         setAttributeOnProperty(draft);
+        files.addAll(draftFiles);
+        setAttribute("files", files);
 
         // 表示するグループを取得
         String[] targets = draft.getAccesses().split(",");
@@ -74,7 +87,8 @@ public class KnowledgeControlBase extends Control {
         // 共同編集者
         String[] editordids = draft.getEditors().split(",");
         List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
-        setAttribute("editors", editors);        
+        setAttribute("editors", editors);
+        
     }
     
 }

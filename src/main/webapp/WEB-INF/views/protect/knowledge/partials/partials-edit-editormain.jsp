@@ -12,12 +12,6 @@
     <input type="hidden" name="tag" value="<%= jspUtil.out("tag") %>" />
     <input type="hidden" name="user" value="<%= jspUtil.out("user") %>" />
     
-    <!-- title -->
-    <div class="form-group">
-        <label for="input_title"><%= jspUtil.label("knowledge.add.label.title") %></label>
-        <input type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="<%= jspUtil.out("title") %>" />
-    </div>
-    
     <!-- items -->
     <div class="form-group" id="template_items">
     </div>

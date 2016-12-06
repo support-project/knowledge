@@ -290,6 +290,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         draft.setAccesses(super.getParam("groups"));
         draft.setEditors(super.getParam("editors"));
         draft.setTagNames(super.getParam("tagNames"));
+        String[] files = getParam("files", String[].class);
         
         TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(draft.getTypeId());
         List<TemplateItemsEntity> items = template.getItems();
@@ -302,10 +303,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 item.setItemValue(itemValue);
             }
         }
-        
-        // TODO 下書きの時の添付ファイルの操作の記録をどうしよう？
         try {
-            draft = knowledgeLogic.draft(draft, template, super.getLoginedUser());
+            draft = knowledgeLogic.draft(draft, template, files, super.getLoginedUser());
             return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(draft.getDraftId()), "message.success.save");
         } catch (AuthenticateException e) {
             // 編集権限が無い
