@@ -574,7 +574,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Post
     public Boundary like() throws InvalidParamException {
         Long knowledgeId = super.getPathLong(Long.valueOf(-1));
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
