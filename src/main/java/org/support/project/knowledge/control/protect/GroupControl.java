@@ -50,7 +50,7 @@ public class GroupControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary mygroups() throws InvalidParamException {
         Integer offset = super.getPathInteger(0);
 
@@ -75,7 +75,7 @@ public class GroupControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary list() throws InvalidParamException {
         Integer offset = super.getPathInteger(0);
         String keyword = super.getParam("keyword");
@@ -100,7 +100,7 @@ public class GroupControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view_add() {
         return forward("add_group.jsp");
     }
@@ -113,7 +113,7 @@ public class GroupControl extends Control {
      * @throws ScanException
      * @throws PolicyException
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary add() throws ParseException {
         // 入力チェック
         GroupsEntity groupsEntity = new GroupsEntity();
@@ -144,7 +144,7 @@ public class GroupControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view() throws InvalidParamException {
         Integer groupId = super.getPathInteger(0);
         GroupLogic groupLogic = GroupLogic.get();
@@ -194,7 +194,7 @@ public class GroupControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view_edit() throws InvalidParamException {
         Integer groupId = super.getPathInteger(0);
         GroupLogic groupLogic = GroupLogic.get();
@@ -215,7 +215,7 @@ public class GroupControl extends Control {
      * @throws ScanException
      * @throws PolicyException
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary update() throws ParseException {
         // 入力チェック
         GroupsEntity groupsEntity = new GroupsEntity();
@@ -248,7 +248,7 @@ public class GroupControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary delete() throws InvalidParamException {
         Integer groupId = -1;
         String id = getParam("groupId");
@@ -275,7 +275,7 @@ public class GroupControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(subscribeToken = "knowledge")
     public Boundary unsubscribe() throws InvalidParamException {
         Integer groupId = super.getPathInteger(0);
         GroupLogic groupLogic = GroupLogic.get();
@@ -308,7 +308,7 @@ public class GroupControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(subscribeToken = "knowledge")
     public Boundary subscribe() throws InvalidParamException {
         Integer groupId = super.getPathInteger(0);
         GroupLogic groupLogic = GroupLogic.get();
@@ -338,7 +338,7 @@ public class GroupControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(subscribeToken = "knowledge")
     public Boundary request() throws InvalidParamException {
         Integer groupId = super.getPathInteger(0);
         GroupLogic groupLogic = GroupLogic.get();
@@ -363,7 +363,7 @@ public class GroupControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(subscribeToken = "knowledge")
     public Boundary accept() throws InvalidParamException {
         Integer groupId = super.getPathInteger(0);
         String userIdstr = super.getParam("userId");
@@ -401,7 +401,7 @@ public class GroupControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(subscribeToken = "knowledge")
     public Boundary change() throws InvalidParamException {
         Integer groupId = super.getPathInteger(0);
         String userIdstr = super.getParam("userId");
@@ -503,7 +503,7 @@ public class GroupControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary addUsers() {
         Integer groupId = getParam("group", Integer.class);
         String users = getParam("users");
@@ -517,7 +517,7 @@ public class GroupControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary extractEmail() {
         String str = getParam("str");
         Matcher m = Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+").matcher(str);
@@ -537,7 +537,7 @@ public class GroupControl extends Control {
      * （メールアドレスの存在チェックができてしまうので、いったん管理者だけの機能にする）
      * @return
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     @Auth(roles = "admin")
     public Boundary addUsersOnEmail() {
         Integer groupId = getParam("group", Integer.class);

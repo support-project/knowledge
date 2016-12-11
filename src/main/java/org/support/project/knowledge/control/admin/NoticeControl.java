@@ -10,7 +10,7 @@ public class NoticeControl extends Control {
      * 通知一覧画面を表示
      * @return Boundary
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary list() {
         return forward("list.jsp");

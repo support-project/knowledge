@@ -67,7 +67,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view_add() {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
@@ -123,7 +123,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view_edit() throws InvalidParamException {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
@@ -269,7 +269,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return Boundary
      * @throws Exception Exception
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary save(KnowledgesEntity entity) throws Exception {
         if (entity.getKnowledgeId() != null && entity.getKnowledgeId() > 1) {
             return update(entity);
@@ -284,7 +284,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return Boundary
      * @throws Exception Exception
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary draft() throws Exception {
         DraftKnowledgesEntity draft = getParamOnProperty(DraftKnowledgesEntity.class);
         draft.setAccesses(super.getParam("groups"));
@@ -319,7 +319,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary delete() throws Exception {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
@@ -366,7 +366,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view() throws InvalidParamException {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
@@ -381,7 +381,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary comment() throws Exception {
         // 共通処理呼の表示条件の保持の呼び出し
         String params = setViewParam();
@@ -439,7 +439,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view_targets() throws InvalidParamException {
         Long knowledgeId = super.getPathLong(Long.valueOf(-1));
         List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
@@ -452,7 +452,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary edit_comment() throws InvalidParamException {
         Long commentNo = super.getPathLong(Long.valueOf(-1));
         CommentsDao commentsDao = CommentsDao.get();
@@ -506,7 +506,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary update_comment() throws Exception {
         List<Long> fileNos = new ArrayList<Long>();
         Object obj = getParam("files", Object.class);
@@ -584,7 +584,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws Exception
      */
-    @Get
+    @Get(subscribeToken = "knowledge")
     public Boundary delete_comment() throws Exception {
         Long commentNo = super.getPathLong(Long.valueOf(-1));
         CommentsDao commentsDao = CommentsDao.get();
@@ -624,7 +624,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @throws IOException
      * @throws InvalidParamException
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary stock() throws IOException, InvalidParamException {
         Long knowledgeId = getPathLong();
         if (LOG.isTraceEnabled()) {
@@ -678,7 +678,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @throws IOException
      * @throws InvalidParamException
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary collapse() throws IOException, InvalidParamException {
         Long commentNo = getParam("commentNo", Long.class);
         Integer collapse = getParam("collapse", Integer.class);

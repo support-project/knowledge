@@ -22,7 +22,7 @@ public class DraftControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException 
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary list() throws InvalidParamException {
         Integer page = super.getPathInteger(0);
         int previous = page - 1;
@@ -46,7 +46,7 @@ public class DraftControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException 
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view() throws InvalidParamException {
         Long draftId = super.getPathLong(new Long(0));
         DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKey(draftId);
@@ -67,11 +67,11 @@ public class DraftControl extends KnowledgeControlBase {
     }
     
     /**
-     * 下書きの表示
+     * 下書きの削除
      * @return
      * @throws InvalidParamException 
      */
-    @Delete
+    @Delete(subscribeToken = "knowledge")
     public Boundary delete() throws InvalidParamException {
         Long draftId = super.getPathLong(new Long(0));
         DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKey(draftId);

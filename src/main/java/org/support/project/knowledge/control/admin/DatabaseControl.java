@@ -51,7 +51,7 @@ public class DatabaseControl extends Control {
      * @see org.support.project.web.control.Control#index()
      */
     @Override
-    @Get
+    @Get(publishToken = "admin")
     public Boundary index() {
         H2DBServerLogic h2dbServerLogic = H2DBServerLogic.get();
         boolean active = h2dbServerLogic.isActive();
@@ -65,7 +65,7 @@ public class DatabaseControl extends Control {
      * @return
      */
     @Auth(roles = "admin")
-    @Get
+    @Get(subscribeToken = "admin")
     public Boundary start() {
         H2DBServerLogic h2dbServerLogic = H2DBServerLogic.get();
         h2dbServerLogic.start();
@@ -90,7 +90,7 @@ public class DatabaseControl extends Control {
      * @throws SQLException
      */
     @Auth(roles = "admin")
-    @Get
+    @Get(subscribeToken = "admin")
     public Boundary stop() throws ORMappingException, SQLException {
         // 組み込みDBを使っている場合、コネクション解除
         if (DBConnenctionLogic.get().getCustomConnectionConfig() == null) {
@@ -114,7 +114,7 @@ public class DatabaseControl extends Control {
      * @throws IOException
      */
     @Auth(roles = "admin")
-    @Get
+    @Get(subscribeToken = "admin")
     public Boundary backup() throws IOException {
 
         HttpServletResponse res = getResponse();
@@ -135,7 +135,7 @@ public class DatabaseControl extends Control {
      * @throws IOException
      */
     @Auth(roles = "admin")
-    @Post
+    @Post(subscribeToken = "admin")
     public Boundary restore() throws IOException {
         H2DBServerLogic h2dbServerLogic = H2DBServerLogic.get();
         boolean active = h2dbServerLogic.isActive();
@@ -165,7 +165,7 @@ public class DatabaseControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary connect() {
         ConnectionConfig connectionConfig = DBConnenctionLogic.get().getCustomConnectionConfig();
@@ -203,7 +203,7 @@ public class DatabaseControl extends Control {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary custom_save() throws Exception {
         ConnectionConfig connectionConfig = super.getParamOnProperty(ConnectionConfig.class);
@@ -240,7 +240,7 @@ public class DatabaseControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary custom_delete() {
         ConnectionConfig connectionConfig = DBConnenctionLogic.get().getCustomConnectionConfig();
@@ -272,7 +272,7 @@ public class DatabaseControl extends Control {
      * @return
      * @throws IOException
      */
-    @Get
+    @Get(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary data_transfer() throws IOException {
         ConnectionConfig connectionConfig = DBConnenctionLogic.get().getCustomConnectionConfig();
@@ -289,7 +289,7 @@ public class DatabaseControl extends Control {
      * @return
      * @throws IOException
      */
-    @Get
+    @Get(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary data_transfer_back() throws IOException {
         ConnectionConfig connectionConfig = DBConnenctionLogic.get().getCustomConnectionConfig();
@@ -311,7 +311,7 @@ public class DatabaseControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary reindexing() {
         SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.RE_INDEXING, AppConfig.get().getSystemName());
@@ -328,7 +328,7 @@ public class DatabaseControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary start_reindexing() {
         SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.RE_INDEXING, AppConfig.get().getSystemName());
@@ -353,7 +353,7 @@ public class DatabaseControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary export() {
         SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.get().getSystemName());
@@ -371,7 +371,7 @@ public class DatabaseControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary export_data_create() {
         SystemConfigsEntity entity = SystemConfigsDao.get().selectOnKey(SystemConfig.DATA_EXPORT, AppConfig.get().getSystemName());
@@ -393,7 +393,7 @@ public class DatabaseControl extends Control {
      * @return
      * @throws FileNotFoundException
      */
-    @Get
+    @Get(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary download() throws FileNotFoundException {
         AppConfig config = AppConfig.get();

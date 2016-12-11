@@ -43,7 +43,7 @@ public class LdapControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary config() {
         LdapConfigsDao dao = LdapConfigsDao.get();
@@ -167,7 +167,7 @@ public class LdapControl extends Control {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary check() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException, LdapException,
             InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
@@ -210,7 +210,7 @@ public class LdapControl extends Control {
     }
 
     /**
-     * Ldap認証の設定のテスト
+     * Ldap認証の設定の保存
      * 
      * @return
      * @throws InvalidParamException
@@ -225,7 +225,7 @@ public class LdapControl extends Control {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary save() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException, LdapException,
             InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
@@ -283,7 +283,7 @@ public class LdapControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary delete() {
         LdapConfigsDao dao = LdapConfigsDao.get();

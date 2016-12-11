@@ -24,7 +24,7 @@ public class NotifyControl extends Control {
      * @see org.support.project.web.control.Control#index()
      */
     @Override
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary index() {
         NotifyConfigsDao notifyConfigsDao = NotifyConfigsDao.get();
         NotifyConfigsEntity notifyConfigsEntity = notifyConfigsDao.selectOnKey(getLoginUserId());
@@ -35,7 +35,7 @@ public class NotifyControl extends Control {
         return super.index();
     }
 
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary save() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
         NotifyConfigsEntity entity = super.getParamOnProperty(NotifyConfigsEntity.class);
         NotifyConfigsDao notifyConfigsDao = NotifyConfigsDao.get();

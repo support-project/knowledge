@@ -84,7 +84,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @throws InvalidParamException
      * @throws ParseException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view() throws InvalidParamException, ParseException {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();

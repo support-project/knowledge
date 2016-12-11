@@ -1,5 +1,7 @@
 package org.support.project.knowledge.config;
 
+import org.support.project.web.config.WebConfig;
+
 public class SystemConfig {
     public static final String KNOWLEDGE_ENV_KEY = "KNOWLEDGE_HOME";
 
@@ -15,7 +17,7 @@ public class SystemConfig {
     public static final String USER_ADD_TYPE_VALUE_MAIL = "MAIL";
 
     /** システムへアクセスするためのURLのシステム設定のラベル */
-    public static final String SYSTEM_URL = "SYSTEM_URL";
+    public static final String SYSTEM_URL = WebConfig.KEY_SYSTEM_URL;
     /** アナリティクス設定を保持するキー */
     public static final String ANALYTICS = "ANALYTICS";
 
