@@ -12,7 +12,7 @@ import org.support.project.web.logic.DBConnenctionLogic;
 @DI(instance = Instance.Prototype)
 public class SystemConfigControl extends Control {
 
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary index() {
         Boolean postgres = Boolean.FALSE;

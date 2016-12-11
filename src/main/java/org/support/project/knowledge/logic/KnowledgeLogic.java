@@ -21,6 +21,8 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.DraftItemValuesDao;
+import org.support.project.knowledge.dao.DraftKnowledgesDao;
 import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeEditGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeEditUsersDao;
@@ -37,6 +39,8 @@ import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
+import org.support.project.knowledge.entity.DraftItemValuesEntity;
+import org.support.project.knowledge.entity.DraftKnowledgesEntity;
 import org.support.project.knowledge.entity.KnowledgeEditGroupsEntity;
 import org.support.project.knowledge.entity.KnowledgeEditUsersEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
@@ -55,10 +59,12 @@ import org.support.project.knowledge.entity.ViewHistoriesEntity;
 import org.support.project.knowledge.indexer.IndexingValue;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
+import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.exception.AuthenticateException;
 
 /**
  * Logic class for knowledge data
@@ -153,40 +159,37 @@ public class KnowledgeLogic {
     /**
      * ナレッジを登録
      * 
-     * @param entity
-     * @param tags
-     * @param fileNos
-     * @param targets
-     * @param editors
-     * @param template
+     * @param data
      * @param loginedUser
      * @return
      * @throws Exception
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity insert(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos, List<LabelValue> targets,
-            List<LabelValue> editors, TemplateMastersEntity template, LoginedUser loginedUser) throws Exception {
+    public KnowledgesEntity insert(KnowledgeData data, LoginedUser loginedUser) throws Exception {
         // ナレッジを登録
-        KnowledgesEntity insertedEntity = knowledgesDao.insert(entity);
+        KnowledgesEntity insertedEntity = knowledgesDao.insert(data.getKnowledge());
         // アクセス権を登録
-        saveAccessUser(insertedEntity, loginedUser, targets);
+        saveAccessUser(insertedEntity, loginedUser, data.getViewers());
         // 編集権を登録
-        saveEditorsUser(insertedEntity, loginedUser, editors);
+        saveEditorsUser(insertedEntity, loginedUser, data.getEditors());
         // タグを登録
-        setTags(insertedEntity, tags);
+        setTags(insertedEntity, data.getTags());
         // 添付ファイルを更新（紐付けをセット）
-        fileLogic.setKnowledgeFiles(insertedEntity.getKnowledgeId(), fileNos, loginedUser);
+        fileLogic.setKnowledgeFiles(insertedEntity.getKnowledgeId(), data.getFileNos(), loginedUser);
         // 拡張項目の保存
-        saveTemplateItemValue(insertedEntity.getKnowledgeId(), template, loginedUser);
+        saveTemplateItemValue(insertedEntity.getKnowledgeId(), data.getTemplate(), loginedUser);
 
         // 全文検索エンジンへ登録
-        saveIndex(insertedEntity, tags, targets, template, loginedUser.getUserId());
+        saveIndex(insertedEntity, data.getTags(), data.getViewers(), data.getTemplate(), loginedUser.getUserId());
         // 一覧表示用の情報を更新
         updateKnowledgeExInfo(insertedEntity);
         // 履歴登録
         insertHistory(insertedEntity);
         // 通知
         NotifyLogic.get().notifyOnKnowledgeInsert(insertedEntity);
+        
+        // 下書きがあったら消す
+        removeDraft(data.getDraftId(), loginedUser);
 
         return insertedEntity;
     }
@@ -199,15 +202,15 @@ public class KnowledgeLogic {
      * @param targets
      * @param editors
      * @param template
+     * @param draftId 
      * @param loginedUser
      * @return
      * @throws Exception
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity update(KnowledgesEntity entity, List<TagsEntity> tags, List<Long> fileNos, List<LabelValue> targets,
-            List<LabelValue> editors, TemplateMastersEntity template, LoginedUser loginedUser) throws Exception {
+    public KnowledgesEntity update(KnowledgeData data, LoginedUser loginedUser) throws Exception {
         // ナレッッジを更新
-        KnowledgesEntity updatedEntity = knowledgesDao.update(entity);
+        KnowledgesEntity updatedEntity = knowledgesDao.update(data.getKnowledge());
         // ユーザのアクセス権を解除
         knowledgeUsersDao.deleteOnKnowledgeId(updatedEntity.getKnowledgeId());
         // グループとナレッジのヒモ付を解除
@@ -220,22 +223,22 @@ public class KnowledgeLogic {
         editGroupsDao.deleteOnKnowledgeId(updatedEntity.getKnowledgeId());
 
         // アクセス権を登録
-        saveAccessUser(updatedEntity, loginedUser, targets);
+        saveAccessUser(updatedEntity, loginedUser, data.getViewers());
         // 編集権を登録
-        saveEditorsUser(updatedEntity, loginedUser, editors);
+        saveEditorsUser(updatedEntity, loginedUser, data.getEditors());
 
         // タグを登録
         knowledgeTagsDao.deleteOnKnowledgeId(updatedEntity.getKnowledgeId());
-        setTags(updatedEntity, tags);
+        setTags(updatedEntity, data.getTags());
 
         // 拡張項目の保存
-        saveTemplateItemValue(updatedEntity.getKnowledgeId(), template, loginedUser);
+        saveTemplateItemValue(updatedEntity.getKnowledgeId(), data.getTemplate(), loginedUser);
 
         // 添付ファイルを更新（紐付けをセット）
-        fileLogic.setKnowledgeFiles(updatedEntity.getKnowledgeId(), fileNos, loginedUser);
+        fileLogic.setKnowledgeFiles(updatedEntity.getKnowledgeId(), data.getFileNos(), loginedUser);
 
         // 全文検索エンジンへ登録
-        saveIndex(updatedEntity, tags, targets, template, updatedEntity.getInsertUser());
+        saveIndex(updatedEntity, data.getTags(), data.getViewers(), data.getTemplate(), updatedEntity.getInsertUser());
 
         // 一覧表示用の情報を更新
         updateKnowledgeExInfo(updatedEntity);
@@ -246,8 +249,12 @@ public class KnowledgeLogic {
         // 通知
         NotifyLogic.get().notifyOnKnowledgeUpdate(updatedEntity);
 
+        // 下書きがあったら消す
+        removeDraft(data.getDraftId(), loginedUser);
+        
         return updatedEntity;
     }
+
 
     /**
      * テンプレートにある拡張項目値を保存
@@ -1366,6 +1373,94 @@ public class KnowledgeLogic {
         }
         return list;
     }
-    
 
+    /**
+     * 下書き保存
+     * @param draft
+     * @param template
+     * @param files 
+     * @param loginedUser
+     * @return
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public DraftKnowledgesEntity draft(DraftKnowledgesEntity draft, TemplateMastersEntity template, String[] files, LoginedUser loginedUser) {
+        if (draft.getKnowledgeId() != null && draft.getKnowledgeId() > 0) {
+            // 権限チェック
+            KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(draft.getKnowledgeId());
+            String editorsstr = draft.getEditors();
+            String[] editordids = editorsstr.split(",");
+            List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
+            if (!isEditor(loginedUser, knowledge, editors)) {
+                throw new AuthenticateException("errors.noauthority");
+            }
+        }
+        if (draft.getDraftId() == null || draft.getDraftId() <= 0) {
+            DraftKnowledgesDao.get().insert(draft);
+        } else {
+            DraftKnowledgesEntity saved = DraftKnowledgesDao.get().selectOnKey(draft.getDraftId());
+            if (saved == null) {
+                // 既に別の画面で削除済
+                DraftKnowledgesDao.get().insert(draft);
+            } else {
+                draft.setInsertUser(saved.getInsertUser());
+                draft.setInsertDatetime(saved.getInsertDatetime());
+                DraftKnowledgesDao.get().update(draft);
+                DraftItemValuesDao.get().deleteOnDraftId(draft.getDraftId());
+            }
+        }
+        if (template != null && template.getItems() != null) {
+            for (TemplateItemsEntity item : template.getItems()) {
+                DraftItemValuesEntity val = new DraftItemValuesEntity();
+                val.setDraftId(draft.getDraftId());
+                val.setTypeId(template.getTypeId());
+                val.setItemNo(item.getItemNo());
+                val.setItemValue(item.getItemValue());
+                val.setItemStatus(KnowledgeItemValuesEntity.STATUS_SAVED);
+                DraftItemValuesDao.get().save(val);
+            }
+        }
+        // 添付ファイルと下書きを紐付ける(紐付けを作るのみ、既存のKnowledgeの添付ファイルを削除はしない）
+        // 削除する場合は、「投稿する」を実施すること（制御を簡単にするため）
+        if (files != null) {
+            for (String string : files) {
+                if (StringUtils.isLong(string)) {
+                    Long fileNo = new Long(string);
+                    KnowledgeFilesEntity entity = KnowledgeFilesDao.get().selectOnKeyWithoutBinary(fileNo);
+                    if (entity != null) {
+                        if (entity.getKnowledgeId() == null || entity.getKnowledgeId().longValue() == 0) {
+                            // 既にKnowledgeに紐付いているものは対象外
+                            entity.setDraftId(draft.getDraftId());
+                            entity.setKnowledgeId(null);
+                            KnowledgeFilesDao.get().update(entity);
+                        }
+                    }
+                }
+            }
+        }
+        return draft;
+    }
+    
+    
+    /**
+     * 下書きを削除
+     * @param draftId
+     * @param loginedUser
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void removeDraft(Long draftId, LoginedUser loginedUser) {
+        DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKey(draftId);
+        if (draft == null) {
+            // 既に削除済
+            return;
+        }
+        if (draft.getInsertUser().intValue() != loginedUser.getUserId().intValue()) {
+            // 登録していない下書きを消そうとしているんで、何もしない
+            // TODO エラーにするべき？
+            return;
+        }
+        DraftKnowledgesDao.get().physicalDelete(draft);
+        DraftItemValuesDao.get().deleteOnDraftId(draftId);
+    }
+    
+    
 }

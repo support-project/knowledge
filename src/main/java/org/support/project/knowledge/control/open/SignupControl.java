@@ -42,7 +42,7 @@ public class SignupControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view() {
         return forward("signup.jsp");
     }
@@ -52,7 +52,7 @@ public class SignupControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary save() {
         SystemConfigsDao systemConfigsDao = SystemConfigsDao.get();
         SystemConfigsEntity userAddType = systemConfigsDao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.get().getSystemName());
@@ -123,7 +123,7 @@ public class SignupControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     private ProvisionalRegistrationsEntity addProvisionalRegistration() {
         ProvisionalRegistrationsEntity entity = super.getParams(ProvisionalRegistrationsEntity.class);

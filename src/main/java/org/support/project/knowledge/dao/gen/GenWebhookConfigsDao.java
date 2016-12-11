@@ -21,7 +21,7 @@ import org.support.project.di.Instance;
 import org.support.project.aop.Aspect;
 
 /**
- * Webhooks 設定
+ * Webhook 設定
  * this class is auto generate and not edit.
  * if modify dao method, you can edit WebhookConfigsDao.
  */

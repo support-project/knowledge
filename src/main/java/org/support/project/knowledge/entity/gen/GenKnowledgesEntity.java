@@ -67,6 +67,8 @@ public class GenKnowledgesEntity implements Serializable {
     private Integer commentCount;
     /** テンプレートの種類ID */
     private Integer typeId;
+    /** 通知ステータス */
+    private Integer notifyStatus;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -223,6 +225,22 @@ public class GenKnowledgesEntity implements Serializable {
     }
 
     /**
+     * Get 通知ステータス.
+     * @return 通知ステータス
+     */
+    public Integer getNotifyStatus() {
+        return this.notifyStatus;
+    }
+    /**
+     * Set 通知ステータス.
+     * @param notifyStatus 通知ステータス
+     * @return this object     */
+    public GenKnowledgesEntity setNotifyStatus(Integer notifyStatus) {
+        this.notifyStatus = notifyStatus;
+        return this;
+    }
+
+    /**
      * Get 登録ユーザ.
      * @return 登録ユーザ
      */
@@ -359,6 +377,7 @@ public class GenKnowledgesEntity implements Serializable {
         builder.append("likeCount = ").append(likeCount).append("\n");
         builder.append("commentCount = ").append(commentCount).append("\n");
         builder.append("typeId = ").append(typeId).append("\n");
+        builder.append("notifyStatus = ").append(notifyStatus).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -409,6 +428,11 @@ public class GenKnowledgesEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(this.typeId, convLabelName("Type Id"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(this.notifyStatus, convLabelName("Notify Status"));
         if (error != null) {
             errors.add(error);
         }
@@ -465,6 +489,11 @@ public class GenKnowledgesEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(values.get("typeId"), convLabelName("Type Id"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(values.get("notifyStatus"), convLabelName("Notify Status"));
         if (error != null) {
             errors.add(error);
         }

@@ -32,7 +32,7 @@ public class WebhookControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary config() {
         WebhookConfigsDao dao = WebhookConfigsDao.get();
@@ -42,7 +42,7 @@ public class WebhookControl extends Control {
         return forward("config.jsp");
     }
 
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary save() throws Exception {
         WebhookConfigsDao dao = WebhookConfigsDao.get();
@@ -84,7 +84,7 @@ public class WebhookControl extends Control {
         return config();
     }
 
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary test() throws Exception {
         ProxyConfigsDao proxyConfigDao = ProxyConfigsDao.get();
@@ -117,7 +117,7 @@ public class WebhookControl extends Control {
         return config();
     }
 
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary delete() throws Exception {
         WebhookConfigsDao dao = WebhookConfigsDao.get();

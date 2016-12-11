@@ -51,7 +51,7 @@ public class MailhookControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary index() {
         MailHooksEntity entity = MailHooksDao.get().selectOnKey(MailhookLogic.MAIL_HOOK_ID);
@@ -80,7 +80,7 @@ public class MailhookControl extends Control {
      * @throws NoSuchAlgorithmException 
      * @throws InvalidKeyException 
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary save() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
         IllegalBlockSizeException, BadPaddingException {
@@ -119,7 +119,7 @@ public class MailhookControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary check() {
         MailHooksEntity entity = MailHooksDao.get().selectOnKey(MailhookLogic.MAIL_HOOK_ID);
@@ -139,7 +139,7 @@ public class MailhookControl extends Control {
      * 設定削除
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary delete() {
         MailhookLogic.get().removeHook(MailhookLogic.MAIL_HOOK_ID);
@@ -156,7 +156,7 @@ public class MailhookControl extends Control {
      * @return
      * @throws InvalidParamException 
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary hook() throws InvalidParamException {
         int conditionNo = getPathInteger(-1);
@@ -194,7 +194,7 @@ public class MailhookControl extends Control {
      * @throws IllegalAccessException 
      * @throws InstantiationException 
      */
-    @Post(path = "admin.mailhook/hook")
+    @Post(path = "admin.mailhook/hook", subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary saveHook() throws InvalidParamException, InstantiationException, IllegalAccessException, JSONException, IOException {
         LOG.trace("saveHook");
@@ -234,7 +234,7 @@ public class MailhookControl extends Control {
      * @throws JSONException
      * @throws IOException
      */
-    @Post(path = "admin.mailhook/deleteHook")
+    @Post(path = "admin.mailhook/deleteHook", subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary deleteHook() throws InvalidParamException, InstantiationException, IllegalAccessException, JSONException, IOException {
         Integer conditionNo = super.getParam("conditionNo", Integer.class);

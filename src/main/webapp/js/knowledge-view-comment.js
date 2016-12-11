@@ -5,8 +5,10 @@ $(document).ready(function(){
         var href= $(this).attr("href");
         //var target = $(href == "#" || href == "" ? 'html' : href);
         var target = $(href);
-        var position = target.offset().top;
-        $("html, body").animate({scrollTop:position}, speed, "swing");
+        if (target && target.offset && target.offset()) {
+            var position = target.offset().top;
+            $("html, body").animate({scrollTop:position}, speed, "swing");
+        }
         return false;
     });
 });

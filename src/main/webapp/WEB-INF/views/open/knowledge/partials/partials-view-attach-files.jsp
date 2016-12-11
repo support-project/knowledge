@@ -12,7 +12,7 @@
 <% int MAX_COUNT = 5; %>
 
 <div class="panel panel-primary">
-    <div class="panel-heading" style="cursor: move;">
+    <div class="panel-heading">
         <h4 class="panel-title">
             <i class="fa fa-download"></i>&nbsp;<%= jspUtil.label("knowledge.view.label.attach") %> 
             &nbsp;&nbsp;&nbsp;
@@ -50,7 +50,7 @@
                     </a>
                 </div>
                 <div class="col-xs-10">
-                    <a href="<%=jspUtil.out("file.url")%>"> <%=jspUtil.out("file.name")%></a>
+                    <a href="<%=jspUtil.out("file.url")%>"> <%=jspUtil.out("file.name", jspUtil.ESCAPE_HTML, 20)%></a>
                 </div>
                 </div>
             </div>

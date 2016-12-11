@@ -39,7 +39,7 @@ public class UsersControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary list() throws InvalidParamException {
         Integer offset = super.getPathInteger(0);
@@ -57,7 +57,7 @@ public class UsersControl extends Control {
      * @param keyword
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     private Boundary list(Integer offset, String keyword) {
         UsersDao dao = UsersDao.get();
@@ -83,7 +83,7 @@ public class UsersControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary view_add() {
         String offset = super.getParam("offset", String.class);
@@ -143,7 +143,7 @@ public class UsersControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary view_edit() throws InvalidParamException {
         String offset = super.getParam("offset", String.class);
@@ -174,7 +174,7 @@ public class UsersControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary create() {
         String offset = super.getParam("offset", String.class);
@@ -225,7 +225,7 @@ public class UsersControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary save() {
         String offset = super.getParam("offset", String.class);
@@ -290,7 +290,7 @@ public class UsersControl extends Control {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary delete() throws Exception {
         String offset = super.getParam("offset", String.class);
@@ -317,7 +317,7 @@ public class UsersControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary accept_list() {
         ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
@@ -331,7 +331,7 @@ public class UsersControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary accept() {
         String id = getPathInfo();
@@ -370,7 +370,7 @@ public class UsersControl extends Control {
      *
      * @return
      */
-    @Get
+    @Get(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary accept_delete() {
         String id = getPathInfo();

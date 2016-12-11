@@ -43,7 +43,7 @@ public class MailControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary config() {
         MailConfigsDao dao = MailConfigsDao.get();
@@ -69,7 +69,7 @@ public class MailControl extends Control {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary save()
             throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
@@ -123,7 +123,7 @@ public class MailControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary delete() {
         MailConfigsDao dao = MailConfigsDao.get();
@@ -143,7 +143,7 @@ public class MailControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary test_send() {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();

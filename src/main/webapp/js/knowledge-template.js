@@ -18,10 +18,11 @@ var changeTemplate = function() {
     if ($('#knowledgeId')) {
         knowledgeId = $('#knowledgeId').val();
     }
+    var draftId = $('#draftId').val();
     $.ajax({
         type : 'GET',
         url : url,
-        data : 'type_id=' + typeId + '&knowledge_id=' + knowledgeId,
+        data : 'type_id=' + typeId + '&knowledge_id=' + knowledgeId + '&draft_id=' + draftId,
         success : function(data, dataType) {
             console.log(data);
             addTemplateItem(data);

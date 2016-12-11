@@ -1,3 +1,93 @@
+-- ピン
+drop table if exists PINS cascade;
+
+create table PINS (
+  NO serial not null
+  , KNOWLEDGE_ID bigint not null
+  , ROW_ID character varying(64)
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint PINS_PKC primary key (NO)
+) ;
+
+create index IDX_PINS_INSERT_USER
+  on PINS(INSERT_USER);
+
+-- Webhooks
+drop table if exists WEBHOOKS cascade;
+
+create table WEBHOOKS (
+  WEBHOOK_ID character varying(64) not null
+  , STATUS integer not null
+  , HOOK character varying(20)
+  , CONTENT text
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint WEBHOOKS_PKC primary key (WEBHOOK_ID)
+) ;
+
+create index IDX_WEBHOOKS_STATUS
+  on WEBHOOKS(STATUS);
+
+-- Webhook 設定
+drop table if exists WEBHOOK_CONFIGS cascade;
+
+create table WEBHOOK_CONFIGS (
+  HOOK_ID serial not null
+  , HOOK character varying(20) not null
+  , URL character varying(256) not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint WEBHOOK_CONFIGS_PKC primary key (HOOK_ID)
+) ;
+
+-- ナレッジの項目値
+drop table if exists DRAFT_ITEM_VALUES cascade;
+
+create table DRAFT_ITEM_VALUES (
+  DRAFT_ID bigint not null
+  , TYPE_ID integer not null
+  , ITEM_NO integer not null
+  , ITEM_VALUE text
+  , ITEM_STATUS integer not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint DRAFT_ITEM_VALUES_PKC primary key (DRAFT_ID,TYPE_ID,ITEM_NO)
+) ;
+
+-- ナレッジの下書き
+drop table if exists DRAFT_KNOWLEDGES cascade;
+
+create table DRAFT_KNOWLEDGES (
+  DRAFT_ID BIGSERIAL not null
+  , KNOWLEDGE_ID bigint
+  , TITLE character varying(1024) not null
+  , CONTENT text
+  , PUBLIC_FLAG integer
+  , ACCESSES text
+  , EDITORS text
+  , TAG_NAMES text
+  , TYPE_ID integer
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint DRAFT_KNOWLEDGES_PKC primary key (DRAFT_ID)
+) ;
+
 -- メールから投稿
 drop table if exists MAIL_POSTS cascade;
 
@@ -400,6 +490,7 @@ create table KNOWLEDGE_FILES (
   FILE_NO BIGSERIAL not null
   , KNOWLEDGE_ID bigint
   , COMMENT_NO bigint
+  , DRAFT_ID bigint
   , FILE_NAME character varying(256)
   , FILE_SIZE double precision
   , FILE_BINARY BYTEA
@@ -428,6 +519,7 @@ create table KNOWLEDGES (
   , LIKE_COUNT bigint
   , COMMENT_COUNT integer
   , TYPE_ID integer
+  , NOTIFY_STATUS integer
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -436,57 +528,64 @@ create table KNOWLEDGES (
   , constraint KNOWLEDGES_PKC primary key (KNOWLEDGE_ID)
 ) ;
 
--- Webhook 設定
-drop table if exists WEBHOOK_CONFIGS cascade;
+comment on table PINS is 'ピン';
+comment on column PINS.NO is 'NO';
+comment on column PINS.KNOWLEDGE_ID is 'ナレッジID';
+comment on column PINS.ROW_ID is '行ID';
+comment on column PINS.INSERT_USER is '登録ユーザ';
+comment on column PINS.INSERT_DATETIME is '登録日時';
+comment on column PINS.UPDATE_USER is '更新ユーザ';
+comment on column PINS.UPDATE_DATETIME is '更新日時';
+comment on column PINS.DELETE_FLAG is '削除フラグ';
 
-create table WEBHOOK_CONFIGS (
-  HOOK_ID serial not null
-  , HOOK character varying(20) not null
-  , URL character varying(256) not null
-  , INSERT_USER integer
-  , INSERT_DATETIME timestamp
-  , UPDATE_USER integer
-  , UPDATE_DATETIME timestamp
-  , DELETE_FLAG integer
-  , constraint WEBHOOK_CONFIGS_PKC primary key (HOOK_ID)
-) ;
+comment on table WEBHOOKS is 'Webhooks';
+comment on column WEBHOOKS.WEBHOOK_ID is 'WEBHOOK ID';
+comment on column WEBHOOKS.STATUS is 'ステータス';
+comment on column WEBHOOKS.HOOK is 'HOOK';
+comment on column WEBHOOKS.CONTENT is '通知用json文字列';
+comment on column WEBHOOKS.INSERT_USER is '登録ユーザ';
+comment on column WEBHOOKS.INSERT_DATETIME is '登録日時';
+comment on column WEBHOOKS.UPDATE_USER is '更新ユーザ';
+comment on column WEBHOOKS.UPDATE_DATETIME is '更新日時';
+comment on column WEBHOOKS.DELETE_FLAG is '削除フラグ';
 
--- Webhooks
-drop table if exists WEBHOOKS cascade;
+comment on table WEBHOOK_CONFIGS is 'Webhook 設定';
+comment on column WEBHOOK_CONFIGS.HOOK_ID is 'HOOK ID';
+comment on column WEBHOOK_CONFIGS.HOOK is 'HOOK';
+comment on column WEBHOOK_CONFIGS.URL is 'URL';
+comment on column WEBHOOK_CONFIGS.INSERT_USER is '登録ユーザ';
+comment on column WEBHOOK_CONFIGS.INSERT_DATETIME is '登録日時';
+comment on column WEBHOOK_CONFIGS.UPDATE_USER is '更新ユーザ';
+comment on column WEBHOOK_CONFIGS.UPDATE_DATETIME is '更新日時';
+comment on column WEBHOOK_CONFIGS.DELETE_FLAG is '削除フラグ';
 
-create table WEBHOOKS (
-  WEBHOOK_ID character varying(64) not null
-  , STATUS integer not null
-  , HOOK character varying(20)
-  , CONTENT text
-  , INSERT_USER integer
-  , INSERT_DATETIME timestamp
-  , UPDATE_USER integer
-  , UPDATE_DATETIME timestamp
-  , DELETE_FLAG integer
-  , constraint WEBHOOKS_PKC primary key (WEBHOOK_ID)
-) ;
+comment on table DRAFT_ITEM_VALUES is 'ナレッジの項目値';
+comment on column DRAFT_ITEM_VALUES.DRAFT_ID is '下書きID';
+comment on column DRAFT_ITEM_VALUES.TYPE_ID is 'テンプレートの種類ID';
+comment on column DRAFT_ITEM_VALUES.ITEM_NO is '項目NO';
+comment on column DRAFT_ITEM_VALUES.ITEM_VALUE is '項目値';
+comment on column DRAFT_ITEM_VALUES.ITEM_STATUS is 'ステータス';
+comment on column DRAFT_ITEM_VALUES.INSERT_USER is '登録ユーザ';
+comment on column DRAFT_ITEM_VALUES.INSERT_DATETIME is '登録日時';
+comment on column DRAFT_ITEM_VALUES.UPDATE_USER is '更新ユーザ';
+comment on column DRAFT_ITEM_VALUES.UPDATE_DATETIME is '更新日時';
+comment on column DRAFT_ITEM_VALUES.DELETE_FLAG is '削除フラグ';
 
-create index IDX_WEBHOOKS_STATUS
-  on WEBHOOKS(STATUS);
-
--- ピン
-drop table if exists PINS cascade;
-
-create table PINS (
-  NO SERIAL not null
-  , KNOWLEDGE_ID bigint not null
-  , ROW_ID character varying(64)
-  , INSERT_USER integer
-  , INSERT_DATETIME timestamp
-  , UPDATE_USER integer
-  , UPDATE_DATETIME timestamp
-  , DELETE_FLAG integer
-  , constraint PINS_PKC primary key (NO)
-) ;
-
-create index insert_user
-  on PINS (INSERT_USER) ;
+comment on table DRAFT_KNOWLEDGES is 'ナレッジの下書き';
+comment on column DRAFT_KNOWLEDGES.DRAFT_ID is '下書きID';
+comment on column DRAFT_KNOWLEDGES.KNOWLEDGE_ID is 'ナレッジID';
+comment on column DRAFT_KNOWLEDGES.TITLE is 'タイトル';
+comment on column DRAFT_KNOWLEDGES.CONTENT is '内容';
+comment on column DRAFT_KNOWLEDGES.PUBLIC_FLAG is '公開区分';
+comment on column DRAFT_KNOWLEDGES.ACCESSES is '公開対象';
+comment on column DRAFT_KNOWLEDGES.EDITORS is '共同編集対象';
+comment on column DRAFT_KNOWLEDGES.TAG_NAMES is 'タグ名称一覧';
+comment on column DRAFT_KNOWLEDGES.TYPE_ID is 'テンプレートの種類ID';
+comment on column DRAFT_KNOWLEDGES.INSERT_USER is '登録ユーザ';
+comment on column DRAFT_KNOWLEDGES.INSERT_DATETIME is '登録日時';
+comment on column DRAFT_KNOWLEDGES.UPDATE_USER is '更新ユーザ';
+comment on column DRAFT_KNOWLEDGES.UPDATE_DATETIME is '更新日時';
+comment on column DRAFT_KNOWLEDGES.DELETE_FLAG is '削除フラグ';
 
 comment on table MAIL_POSTS is 'メールから投稿';
 comment on column MAIL_POSTS.MESSAGE_ID is 'Message-ID';
@@ -757,6 +856,7 @@ comment on table KNOWLEDGE_FILES is '添付ファイル';
 comment on column KNOWLEDGE_FILES.FILE_NO is '添付ファイル番号';
 comment on column KNOWLEDGE_FILES.KNOWLEDGE_ID is 'ナレッジID';
 comment on column KNOWLEDGE_FILES.COMMENT_NO is 'コメント番号';
+comment on column KNOWLEDGE_FILES.DRAFT_ID is '下書きID';
 comment on column KNOWLEDGE_FILES.FILE_NAME is 'ファイル名';
 comment on column KNOWLEDGE_FILES.FILE_SIZE is 'ファイルサイズ';
 comment on column KNOWLEDGE_FILES.FILE_BINARY is 'バイナリ';
@@ -777,37 +877,9 @@ comment on column KNOWLEDGES.TAG_NAMES is 'タグ名称一覧';
 comment on column KNOWLEDGES.LIKE_COUNT is 'いいね件数';
 comment on column KNOWLEDGES.COMMENT_COUNT is 'コメント件数';
 comment on column KNOWLEDGES.TYPE_ID is 'テンプレートの種類ID';
+comment on column KNOWLEDGES.NOTIFY_STATUS is '通知ステータス';
 comment on column KNOWLEDGES.INSERT_USER is '登録ユーザ';
 comment on column KNOWLEDGES.INSERT_DATETIME is '登録日時';
 comment on column KNOWLEDGES.UPDATE_USER is '更新ユーザ';
 comment on column KNOWLEDGES.UPDATE_DATETIME is '更新日時';
 comment on column KNOWLEDGES.DELETE_FLAG is '削除フラグ';
-
-comment on table WEBHOOK_CONFIGS is 'Webhooks 設定';
-comment on column WEBHOOK_CONFIGS.HOOK_ID is 'HOOK ID';
-comment on column WEBHOOK_CONFIGS.HOOK is 'HOOK';
-comment on column WEBHOOK_CONFIGS.URL is 'URL';
-comment on column WEBHOOK_CONFIGS.INSERT_USER is '登録ユーザ';
-comment on column WEBHOOK_CONFIGS.INSERT_DATETIME is '登録日時';
-comment on column WEBHOOK_CONFIGS.DELETE_FLAG is '削除フラグ';
-
-comment on table WEBHOOKS is 'Webhooks';
-comment on column WEBHOOKS.WEBHOOK_ID is 'WEBHOOK ID';
-comment on column WEBHOOKS.STATUS is 'ステータス';
-comment on column WEBHOOKS.HOOK is 'HOOK';
-comment on column WEBHOOKS.CONTENT is '通知用json文字列';
-comment on column WEBHOOKS.INSERT_USER is '登録ユーザ';
-comment on column WEBHOOKS.INSERT_DATETIME is '登録日時';
-comment on column WEBHOOKS.UPDATE_USER is '更新ユーザ';
-comment on column WEBHOOKS.UPDATE_DATETIME is '更新日時';
-comment on column WEBHOOKS.DELETE_FLAG is '削除フラグ';
-
-comment on table PINS is 'ピン';
-comment on column PINS.NO is 'NO';
-comment on column PINS.KNOWLEDGE_ID is 'ナレッジID';
-comment on column PINS.ROW_ID is '行ID';
-comment on column PINS.INSERT_USER is '登録ユーザ';
-comment on column PINS.INSERT_DATETIME is '登録日時';
-comment on column PINS.UPDATE_USER is '更新ユーザ';
-comment on column PINS.UPDATE_DATETIME is '更新日時';
-comment on column PINS.DELETE_FLAG is '削除フラグ';

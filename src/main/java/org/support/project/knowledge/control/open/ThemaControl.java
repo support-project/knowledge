@@ -13,11 +13,13 @@ public class ThemaControl extends Control {
 
     @Get
     public Boundary list() {
+        getResponse().setHeader("X-Frame-Options", "SAMEORIGIN");
         return forward("list.jsp");
     }
 
     @Get
     public Boundary show() {
+        getResponse().setHeader("X-Frame-Options", "SAMEORIGIN");
         String thema = getPathInfo();
         if (StringUtils.isEmpty(thema)) {
             thema = "flatly";
@@ -34,6 +36,7 @@ public class ThemaControl extends Control {
 
     @Get
     public Boundary enable() {
+        getResponse().setHeader("X-Frame-Options", "SAMEORIGIN");
         String thema = getPathInfo();
         if (StringUtils.isEmpty(thema)) {
             thema = "flatly";
@@ -48,6 +51,7 @@ public class ThemaControl extends Control {
 
     @Get
     public Boundary highlight() {
+        getResponse().setHeader("X-Frame-Options", "SAMEORIGIN");
         String thema = getPathInfo();
         if (StringUtils.isEmpty(thema)) {
             thema = "dark";
@@ -64,6 +68,7 @@ public class ThemaControl extends Control {
 
     @Get
     public Boundary style() {
+        getResponse().setHeader("X-Frame-Options", "SAMEORIGIN");
         String thema = getPathInfo();
         if (StringUtils.isEmpty(thema)) {
             thema = "dark";

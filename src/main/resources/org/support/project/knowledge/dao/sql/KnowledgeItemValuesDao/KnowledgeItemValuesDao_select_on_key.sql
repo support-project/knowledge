@@ -4,4 +4,3 @@ ITEM_NO = ?
  AND KNOWLEDGE_ID = ?
  AND TYPE_ID = ?
  AND DELETE_FLAG = 0;
-;

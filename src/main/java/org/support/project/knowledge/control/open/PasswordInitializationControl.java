@@ -29,7 +29,7 @@ public class PasswordInitializationControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view() {
         return forward("forgot_pass_request.jsp");
     }
@@ -39,7 +39,7 @@ public class PasswordInitializationControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary request() {
         String email = getParam("username");
 
@@ -82,7 +82,7 @@ public class PasswordInitializationControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary init() throws InvalidParamException {
         String key = getPathString();
         PasswordResetsDao resetsDao = PasswordResetsDao.get();
@@ -105,7 +105,7 @@ public class PasswordInitializationControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary change() {
         String key = getParam("key");
         PasswordResetsDao resetsDao = PasswordResetsDao.get();

@@ -52,7 +52,7 @@ public class AccountControl extends Control {
     /**
      * アカウント情報表示
      */
-    @Get
+    @Get(publishToken = "account")
     @Override
     public Boundary index() {
         SystemConfigsDao dao = SystemConfigsDao.get();
@@ -86,7 +86,7 @@ public class AccountControl extends Control {
      * @throws ScanException
      * @throws PolicyException
      */
-    @Post
+    @Post(subscribeToken = "account")
     public Boundary update() throws ParseException {
         SystemConfigsDao systemConfigsDao = SystemConfigsDao.get();
 
@@ -165,7 +165,7 @@ public class AccountControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "withdrawal")
     public Boundary withdrawal() {
         return forward("withdrawal.jsp");
     }
@@ -176,7 +176,7 @@ public class AccountControl extends Control {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "withdrawal")
     public Boundary delete() throws Exception {
         // アカウント削除(退会処理)
         boolean knowledgeRemove = true;
@@ -200,7 +200,7 @@ public class AccountControl extends Control {
      * @return
      * @throws IOException
      */
-    @Post
+    @Post(subscribeToken = "account")
     public Boundary iconupload() throws IOException {
         AccountLogic logic = AccountLogic.get();
         UploadResults results = new UploadResults();
@@ -254,7 +254,7 @@ public class AccountControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "changekey")
     public Boundary changekey() {
         SystemConfigsDao dao = SystemConfigsDao.get();
         SystemConfigsEntity userAddType = dao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.get().getSystemName());
@@ -266,7 +266,6 @@ public class AccountControl extends Control {
             return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
         }
         // ダブルオプトインでユーザ登録をしている場合のみ、メールアドレス変更通知にてアドレスを変更する
-
         return forward("changekey.jsp");
     }
 
@@ -275,7 +274,7 @@ public class AccountControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "changekey")
     public Boundary changerequest() {
         SystemConfigsDao dao = SystemConfigsDao.get();
         SystemConfigsEntity userAddType = dao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.get().getSystemName());
@@ -305,7 +304,7 @@ public class AccountControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary confirm_mail() throws InvalidParamException {
         // メールアドレス変更ができるのは、ダブルオプトインでユーザ登録する設定になっている場合のみ
         SystemConfigsDao dao = SystemConfigsDao.get();
@@ -337,7 +336,7 @@ public class AccountControl extends Control {
      * デフォルトの公開範囲を表示
      * @return
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary targets() {
         UserConfigsEntity publicFlag = UserConfigsDao.get().physicalSelectOnKey(
                 "DEFAULT_PUBLIC_FLAG", AppConfig.get().getSystemName(), getLoginUserId());
@@ -357,7 +356,7 @@ public class AccountControl extends Control {
     }
     
     
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary savetargets() {
         String publicFlag = getParam("publicFlag");
         String viewers = getParam("viewers");

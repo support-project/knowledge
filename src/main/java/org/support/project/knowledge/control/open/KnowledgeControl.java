@@ -14,6 +14,7 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.DraftItemValuesDao;
 import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
@@ -23,6 +24,7 @@ import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.CommentsEntity;
+import org.support.project.knowledge.entity.DraftItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
@@ -82,7 +84,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @throws InvalidParamException
      * @throws ParseException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view() throws InvalidParamException, ParseException {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
@@ -792,8 +794,20 @@ public class KnowledgeControl extends KnowledgeControlBase {
             template = TemplateMastersDao.get().selectWithItems(typeId);
         }
 
+        String draftId = super.getParam("draft_id");
         String knowledgeId = super.getParam("knowledge_id");
-        if (StringUtils.isNotEmpty(knowledgeId) && StringUtils.isLong(knowledgeId)) {
+        if (StringUtils.isNotEmpty(draftId) && StringUtils.isLong(draftId)) {
+            List<DraftItemValuesEntity> values = DraftItemValuesDao.get().selectOnDraftId(new Long(draftId));
+            List<TemplateItemsEntity> items = template.getItems();
+            for (DraftItemValuesEntity val : values) {
+                for (TemplateItemsEntity item : items) {
+                    if (val.getItemNo().equals(item.getItemNo())) {
+                        item.setItemValue(val.getItemValue());
+                        break;
+                    }
+                }
+            }
+        } else if (StringUtils.isNotEmpty(knowledgeId) && StringUtils.isLong(knowledgeId)) {
             KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
             KnowledgesEntity entity = knowledgeLogic.select(new Long(knowledgeId), getLoginedUser());
             if (entity == null) {

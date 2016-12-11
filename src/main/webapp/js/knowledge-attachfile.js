@@ -9,31 +9,39 @@ $(document).ready(function() {
         //$('#files').show();
         $.each(data.result.files, function(index, file) {
             console.log(file);
-            var filediv = '<div class="filediv" id="file-' + file.fileNo + '">';
-            filediv += '<div class="file-image">';
-            filediv += '<img src="' + file.thumbnailUrl + '" />';
+            var filediv = '<div class="filediv row" id="file-' + file.fileNo + '">';
+            
+            filediv += '<div class="file-image col-xs-1">';
+            filediv += '<img src="' + file.thumbnailUrl + '" width="20"/>';
             filediv += '</div>';
-            filediv += '<div class="file-label">';
+            
+            filediv += '<div class="file-label col-xs-6">';
             filediv += '<a href="' + file.url + '">';
-            filediv += file.name;
+            var filename = file.name;
+            if (filename.length > 20) {
+                filename = filename.substring(0, 17) + '...';
+            }
+            filediv += filename;
             filediv += '</a>';
             filediv += '</div>';
-            filediv += '<br class="fileLabelBr"/>';
             
             filediv += '<input type="hidden" name="files" value="' + file.fileNo + '" />';
-            filediv += '&nbsp;&nbsp;&nbsp;';
+            
+            filediv += '<div class="file-buttons col-xs-4">';
             if (file.type === 'image') {
-                filediv += '<button type="button" class="btn btn-success" onclick="setImagePath(\'' + file.url + '\', \'' + file.name + '\')">';
+                filediv += '<button type="button" class="btn btn-success btn-xs" onclick="setImagePath(\'' + file.url + '\', \'' + file.name + '\')">';
                 filediv += '<i class="fa fa-file-image-o"></i>&nbsp;' + _SET_IMAGE_LABEL;
-                filediv += '</button>';
+                filediv += '</button><br/>';
             } else if (file.type === 'slide') {
-                filediv += '<button type="button" class="btn btn-success" onclick="setSlidePath(\'' + file.fileNo + '\', \'' + file.name + '\')">';
+                filediv += '<button type="button" class="btn btn-success btn-xs" onclick="setSlidePath(\'' + file.fileNo + '\', \'' + file.name + '\')">';
                 filediv += '<i class="fa fa-television"></i>&nbsp;' + _SET_SLIDE_LABEL;
-                filediv += '</button>';
+                filediv += '</button><br/>';
             }
-            filediv += '<button type="button" class="btn btn-danger" onclick="removeAddedFile(' + file.fileNo + ')">';
+            filediv += '<button type="button" class="btn btn-danger btn-xs" onclick="removeAddedFile(' + file.fileNo + ')">';
             filediv += '<i class="fa fa-remove"></i>';
             filediv += '&nbsp;' + _DELETE_LABEL + '</button>';
+            filediv += '</div>';
+            
             filediv += '</div>';
             $('#files').append(filediv);
         });

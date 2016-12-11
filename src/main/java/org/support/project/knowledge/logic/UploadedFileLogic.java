@@ -66,7 +66,7 @@ public class UploadedFileLogic {
      * @param entity
      * @return
      */
-    private UploadFile convUploadFile(String context, KnowledgeFilesEntity entity) {
+    public UploadFile convUploadFile(String context, KnowledgeFilesEntity entity) {
         UploadFile file = new UploadFile();
         file.setFileNo(entity.getFileNo());
         file.setUrl(context + "/open.file/download?fileNo=" + entity.getFileNo());

@@ -37,7 +37,7 @@ public class FileControl extends Control {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary upload() throws Exception {
         UploadResults results = new UploadResults();
         List<UploadFile> files = new ArrayList<UploadFile>();
@@ -68,7 +68,7 @@ public class FileControl extends Control {
         return send(HttpStatus.SC_200_OK, results);
     }
 
-    @Get
+    @Get(subscribeToken = "knowledge")
     public JsonBoundary delete() throws Exception {
         LOG.trace("delete()");
 
