@@ -28,6 +28,7 @@ $(document).ready(function() {
                     $('#draftId').val('');
                     $('#draft_flag').addClass('hide');
                     $('#draftDeleteButton').addClass('hide');
+                    $('#updateContent').val('');
                 } else {
                     var draftId = result.result;
                     $('#draftId').val(draftId);
@@ -81,6 +82,16 @@ $(document).ready(function() {
         return ! ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13));
     });
 
+    // タイトル、コンテンツを変更した場合のみ、「記事の内容を更新した」と判定する
+    $("#input_title").change(function() {
+        $('#updateContent').val('true');
+    });
+    $("#content").change(function() {
+        $('#updateContent').val('true');
+    });
+
+    
+    
     $('#draftDeleteButton').click(function() {
         var draftId = $('#draftId').val();
         console.log(draftId);
