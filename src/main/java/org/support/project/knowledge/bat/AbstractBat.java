@@ -1,5 +1,7 @@
 package org.support.project.knowledge.bat;
 
+import java.util.TimeZone;
+
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.support.project.common.log.Log;
@@ -21,6 +23,10 @@ public abstract class AbstractBat {
     }
 
     protected static void configInit(String batName) {
+        // 内部的には、日付はGMTとして扱う
+        TimeZone zone = TimeZone.getTimeZone("GMT");
+        TimeZone.setDefault(zone);
+        
         AppConfig.initEnvKey(SystemConfig.KNOWLEDGE_ENV_KEY);
         String envValue = System.getenv(SystemConfig.KNOWLEDGE_ENV_KEY);
         LOG.info(batName + " is start.");
