@@ -19,6 +19,7 @@ public class KnowledgeData {
     private List<Long> fileNos;
     private TemplateMastersEntity template;
     private Long draftId;
+    private boolean updateContent;
     
     private String viewersStr;
     private String editorsStr;
@@ -226,6 +227,24 @@ public class KnowledgeData {
      */
     public void setFilesStrs(String[] filesStrs) {
         this.filesStrs = filesStrs;
+    }
+
+
+    /**
+     * Get updateContent
+     * @return the updateContent
+     */
+    public boolean isUpdateContent() {
+        return updateContent;
+    }
+
+
+    /**
+     * Set updateContent
+     * @param updateContent the updateContent to set
+     */
+    public void setUpdateContent(boolean updateContent) {
+        this.updateContent = updateContent;
     }
     
     

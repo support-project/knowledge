@@ -159,10 +159,10 @@ public class KnowledgeLogic {
     /**
      * ナレッジを登録
      * 
-     * @param data
-     * @param loginedUser
-     * @return
-     * @throws Exception
+     * @param data KnowledgeData
+     * @param loginedUser LoginedUser
+     * @return KnowledgesEntity
+     * @throws Exception Exception
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgesEntity insert(KnowledgeData data, LoginedUser loginedUser) throws Exception {
@@ -197,18 +197,15 @@ public class KnowledgeLogic {
     /**
      * ナレッジを更新
      * 
-     * @param entity
-     * @param fileNos
-     * @param targets
-     * @param editors
-     * @param template
-     * @param draftId 
-     * @param loginedUser
-     * @return
-     * @throws Exception
+     * @param data KnowledgeData
+     * @param loginedUser LoginedUser
+     * @return KnowledgesEntity
+     * @throws Exception Exception
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgesEntity update(KnowledgeData data, LoginedUser loginedUser) throws Exception {
+        // 更新前の情報を保持
+        KnowledgesEntity db = knowledgesDao.selectOnKey(data.getKnowledge().getKnowledgeId());
         // ナレッッジを更新
         KnowledgesEntity updatedEntity = knowledgesDao.update(data.getKnowledge());
         // ユーザのアクセス権を解除
@@ -237,17 +234,22 @@ public class KnowledgeLogic {
         // 添付ファイルを更新（紐付けをセット）
         fileLogic.setKnowledgeFiles(updatedEntity.getKnowledgeId(), data.getFileNos(), loginedUser);
 
-        // 全文検索エンジンへ登録
-        saveIndex(updatedEntity, data.getTags(), data.getViewers(), data.getTemplate(), updatedEntity.getInsertUser());
-
         // 一覧表示用の情報を更新
         updateKnowledgeExInfo(updatedEntity);
 
-        // 履歴登録
-        insertHistory(updatedEntity);
-
-        // 通知
-        NotifyLogic.get().notifyOnKnowledgeUpdate(updatedEntity);
+        if (data.isUpdateContent()) {
+            // 履歴登録
+            insertHistory(updatedEntity);
+            // 通知
+            NotifyLogic.get().notifyOnKnowledgeUpdate(updatedEntity);
+        } else {
+            // 更新ユーザ＆更新日付を戻す
+            updatedEntity.setUpdateUser(db.getUpdateUser());
+            updatedEntity.setUpdateDatetime(db.getUpdateDatetime());
+            knowledgesDao.physicalUpdate(updatedEntity);
+        }
+        // 全文検索エンジンへ登録
+        saveIndex(updatedEntity, data.getTags(), data.getViewers(), data.getTemplate(), updatedEntity.getInsertUser());
 
         // 下書きがあったら消す
         removeDraft(data.getDraftId(), loginedUser);
@@ -309,7 +311,7 @@ public class KnowledgeLogic {
         if (tags != null) {
             for (TagsEntity tagsEntity : tags) {
                 KnowledgeTagsEntity knowledgeTagsEntity = new KnowledgeTagsEntity(entity.getKnowledgeId(), tagsEntity.getTagId());
-                knowledgeTagsDao.insert(knowledgeTagsEntity);
+                knowledgeTagsDao.save(knowledgeTagsEntity);
             }
         }
     }

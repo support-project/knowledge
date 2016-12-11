@@ -257,10 +257,23 @@ public class KnowledgeControl extends KnowledgeControlBase {
             return sendValidateError(errors);
         }
 
+        if (!StringUtils.isEmpty(getParam("updateContent")) && getParam("updateContent").toLowerCase().equals("true")) {
+            data.setUpdateContent(true);
+            LOG.debug("コンテンツを更新した");
+        } else {
+            data.setUpdateContent(false);
+            LOG.debug("メタデータのみ更新");
+        }
+        
         KnowledgesEntity updatedEntity = knowledgeLogic.update(data, super.getLoginedUser());
         
-        return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
-                String.valueOf(updatedEntity.getKnowledgeId()), "message.success.update");
+        if (data.isUpdateContent()) {
+            return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
+                    String.valueOf(updatedEntity.getKnowledgeId()), "knowledge.edit.update.content");
+        } else {
+            return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
+                    String.valueOf(updatedEntity.getKnowledgeId()), "knowledge.edit.update.meta");
+        }
     }
 
     /**
