@@ -102,6 +102,14 @@ public class GenNotifyConfigsDao extends AbstractDao {
         return executeQuerySingle(sql, NotifyConfigsEntity.class, userId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM NOTIFY_CONFIGS";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

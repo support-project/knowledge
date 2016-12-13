@@ -102,6 +102,14 @@ public class GenLikesDao extends AbstractDao {
         return executeQuerySingle(sql, LikesEntity.class, no);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM LIKES";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

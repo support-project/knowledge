@@ -1,5 +1,6 @@
 package org.support.project.knowledge.deploy.v0_0_1;
 
+import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.Migrate;
 import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.web.config.WebConfig;
@@ -55,9 +56,13 @@ public class InitializeSystem implements Migrate {
     }
 
     private void createTables() {
+        DatabaseControlDao dao1 = new DatabaseControlDao();
+        dao1.dropAllTable();
+        org.support.project.web.dao.gen.DatabaseControlDao dao2 = new org.support.project.web.dao.gen.DatabaseControlDao();
+        dao2.dropAllTable();
+
         // 存在するテーブルを全て削除
         InitializeDao initializeDao = InitializeDao.get();
-        initializeDao.dropAllTable();
 
         String[] sqlpaths = {
             "/org/support/project/web/database/ddl.sql",

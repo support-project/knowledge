@@ -140,6 +140,14 @@ public class GenKnowledgeEditGroupsDao extends AbstractDao {
         return executeQueryList(sql, KnowledgeEditGroupsEntity.class, knowledgeId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM KNOWLEDGE_EDIT_GROUPS";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

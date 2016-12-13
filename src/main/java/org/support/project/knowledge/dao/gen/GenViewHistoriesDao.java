@@ -102,6 +102,14 @@ public class GenViewHistoriesDao extends AbstractDao {
         return executeQuerySingle(sql, ViewHistoriesEntity.class, historyNo);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM VIEW_HISTORIES";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

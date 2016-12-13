@@ -102,6 +102,14 @@ public class GenDraftKnowledgesDao extends AbstractDao {
         return executeQuerySingle(sql, DraftKnowledgesEntity.class, draftId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM DRAFT_KNOWLEDGES";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

@@ -160,6 +160,14 @@ public class GenItemChoicesDao extends AbstractDao {
         return executeQueryList(sql, ItemChoicesEntity.class, typeId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM ITEM_CHOICES";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

@@ -103,6 +103,14 @@ public class GenKnowledgeFilesDao extends AbstractDao {
         return executeQuerySingle(sql, KnowledgeFilesEntity.class, fileNo);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM KNOWLEDGE_FILES";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

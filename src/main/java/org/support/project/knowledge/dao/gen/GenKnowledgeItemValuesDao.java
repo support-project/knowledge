@@ -160,6 +160,14 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
         return executeQueryList(sql, KnowledgeItemValuesEntity.class, typeId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM KNOWLEDGE_ITEM_VALUES";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity
