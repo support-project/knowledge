@@ -13,6 +13,8 @@ $(document).ready(function() {
             }).done(function(result, textStatus, xhr) {
                 // 入力値を初期化
                 console.log(result);
+                $.notify(result.message, 'info');
+                
                 if (url == _CONTEXT + '/protect.knowledge/save') {
                     var knowledgeId = result.result;
                     $('#knowledgeId').val(knowledgeId);
@@ -29,13 +31,17 @@ $(document).ready(function() {
                     $('#draft_flag').addClass('hide');
                     $('#draftDeleteButton').addClass('hide');
                     $('#updateContent').val('');
+                    
+                    // 画面遷移（表示画面へ）
+                    setTimeout(function() {
+                        window.location.href = _CONTEXT + '/open.knowledge/view/' + knowledgeId;
+                    }, 500);
                 } else {
                     var draftId = result.result;
                     $('#draftId').val(draftId);
                     $('#draft_flag').removeClass('hide');
                     $('#draftDeleteButton').removeClass('hide');
                 }
-                $.notify(result.message, 'info');
                 return resolve();
             }).fail(function(xhr, textStatus, error) {
                 // 入力値を初期化
