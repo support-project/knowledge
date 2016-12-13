@@ -103,6 +103,14 @@ public class GenAccountImagesDao extends AbstractDao {
         return executeQuerySingle(sql, AccountImagesEntity.class, imageId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM ACCOUNT_IMAGES";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

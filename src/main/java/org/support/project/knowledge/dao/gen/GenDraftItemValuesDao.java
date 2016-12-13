@@ -160,6 +160,14 @@ public class GenDraftItemValuesDao extends AbstractDao {
         return executeQueryList(sql, DraftItemValuesEntity.class, typeId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM DRAFT_ITEM_VALUES";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

@@ -140,6 +140,14 @@ public class GenMailHookConditionsDao extends AbstractDao {
         return executeQueryList(sql, MailHookConditionsEntity.class, hookId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM MAIL_HOOK_CONDITIONS";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

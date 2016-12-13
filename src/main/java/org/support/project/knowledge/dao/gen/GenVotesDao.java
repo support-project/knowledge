@@ -102,6 +102,14 @@ public class GenVotesDao extends AbstractDao {
         return executeQuerySingle(sql, VotesEntity.class, voteNo);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM VOTES";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

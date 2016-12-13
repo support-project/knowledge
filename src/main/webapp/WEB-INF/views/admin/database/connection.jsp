@@ -44,6 +44,7 @@
                 console.log(result);
                 if (result.message.lastIndexOf('Processing has been completed', 0) === 0) {
                     $.notify(result.message, 'info');
+                    $("#transfer_msg").alert('close');
                 }
             };
             webSocket.onerror = function(message) {

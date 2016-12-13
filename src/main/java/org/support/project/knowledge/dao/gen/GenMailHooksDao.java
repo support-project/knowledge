@@ -102,6 +102,14 @@ public class GenMailHooksDao extends AbstractDao {
         return executeQuerySingle(sql, MailHooksEntity.class, hookId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM MAIL_HOOKS";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

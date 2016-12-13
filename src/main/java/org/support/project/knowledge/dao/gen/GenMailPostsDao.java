@@ -102,6 +102,14 @@ public class GenMailPostsDao extends AbstractDao {
         return executeQuerySingle(sql, MailPostsEntity.class, messageId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM MAIL_POSTS";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity
