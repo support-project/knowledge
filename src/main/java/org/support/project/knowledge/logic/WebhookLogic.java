@@ -74,6 +74,12 @@ public class WebhookLogic extends HttpLogic {
         jsonObject.put("comment_count", knowledge.getCommentCount());
         jsonObject.put("type_id", knowledge.getTypeId());
         jsonObject.put("link", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
+        
+        if (knowledge.getNotifyStatus() == null || knowledge.getNotifyStatus().intValue() == 0) {
+            jsonObject.put("send_new", true);
+        } else {
+            jsonObject.put("send_new", false);
+        }
 
         if (type != null) {
             if (Notify.TYPE_KNOWLEDGE_INSERT == type) {
