@@ -10,18 +10,19 @@
 
 
 <% String hide = "hide"; %>
-<label for="input_no"><%= jspUtil.label("knowledge.edit.label.key") %></label>
+<span class="dispKnowledgeInfo">
 <% if (jspUtil.getValue("knowledgeId", Long.class) != null) { %>
     <% hide = ""; %>
     <%-- <div class="form-group title" id="title_msg"><%= jspUtil.label("knowledge.edit.title") %></div> --%>
     <!-- info -->
-    <i class="fa fa-key"></i>&nbsp;<%= jspUtil.out("knowledgeId") %>
+    #<%= jspUtil.out("knowledgeId") %>
      / 
     <i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
 <% } else { %>
     <%-- <div class="form-group title" id="title_msg"><%= jspUtil.label("knowledge.add.title") %></div> --%>
     [<%= jspUtil.label("label.new") %>]
 <% } %>
+</span>
 
 <!-- title -->
 <div class="form-group">
