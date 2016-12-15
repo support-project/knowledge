@@ -362,17 +362,30 @@ public class NotifyMailBat extends AbstractBat {
             LOG.warn("Knowledge record not found. id: " + notifyQueuesEntity.getId());
             return;
         }
-
+        
+        // Webhook通知
         sendKnowledgeWebhook(knowledge, notifyQueuesEntity.getType());
-
+        // 「非公開」のナレッジは、メール通知対象外
         if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
             notifyPublicKnowledgeUpdate(notifyQueuesEntity, knowledge);
+            updateNotifyStatus(knowledge);
         } else if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
             notifyProtectKnowledgeUpdate(notifyQueuesEntity, knowledge);
+            updateNotifyStatus(knowledge);
         }
-        // 「非公開」のナレッジは、通知対象外
     }
     
+    /**
+     * 通知を送ったもののステータスを更新
+     * @param knowledge
+     */
+    private void updateNotifyStatus(KnowledgesEntity knowledge) {
+        if (knowledge.getNotifyStatus() == null || knowledge.getNotifyStatus().intValue() == 0) {
+            knowledge.setNotifyStatus(1); // 通知済へ
+            KnowledgesDao.get().physicalUpdate(knowledge); // 更新日時などは更新しない
+        }
+    }
+
     /**
      * 「保護」のナレッジを登録・更新した際にメール通知を送信する
      * @param notifyQueuesEntity
@@ -467,7 +480,7 @@ public class NotifyMailBat extends AbstractBat {
             }
             Locale locale = usersEntity.getLocale();
             MailConfig config;
-            if (notifyQueuesEntity.getType() == Notify.TYPE_KNOWLEDGE_INSERT) {
+            if (knowledge.getNotifyStatus() == null || knowledge.getNotifyStatus().intValue() == 0) {
                 config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_knowledge", locale, MailConfig.class);
             } else {
                 config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_update_knowledge", locale, MailConfig.class);
