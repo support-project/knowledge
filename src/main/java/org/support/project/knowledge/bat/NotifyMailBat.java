@@ -362,16 +362,15 @@ public class NotifyMailBat extends AbstractBat {
             LOG.warn("Knowledge record not found. id: " + notifyQueuesEntity.getId());
             return;
         }
-
-        // 「非公開」のナレッジは、通知対象外
-        // 今まで、非公開のものもWebHookに飛ばしていたが、「公開」＆「保護」のみでOKと考えた
+        
+        // Webhook通知
+        sendKnowledgeWebhook(knowledge, notifyQueuesEntity.getType());
+        // 「非公開」のナレッジは、メール通知対象外
         if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
             notifyPublicKnowledgeUpdate(notifyQueuesEntity, knowledge);
-            sendKnowledgeWebhook(knowledge, notifyQueuesEntity.getType());
             updateNotifyStatus(knowledge);
         } else if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
             notifyProtectKnowledgeUpdate(notifyQueuesEntity, knowledge);
-            sendKnowledgeWebhook(knowledge, notifyQueuesEntity.getType());
             updateNotifyStatus(knowledge);
         }
     }

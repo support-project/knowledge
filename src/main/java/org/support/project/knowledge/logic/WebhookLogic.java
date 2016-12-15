@@ -75,11 +75,14 @@ public class WebhookLogic extends HttpLogic {
         jsonObject.put("type_id", knowledge.getTypeId());
         jsonObject.put("link", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
         
+        boolean became_public = false;
         if (knowledge.getNotifyStatus() == null || knowledge.getNotifyStatus().intValue() == 0) {
-            jsonObject.put("send_new", true);
-        } else {
-            jsonObject.put("send_new", false);
+            if (knowledge.getPublicFlag().intValue() != KnowledgeLogic.PUBLIC_FLAG_PRIVATE) {
+                // 今まで非公開だったものが、初めての通知になった
+                became_public = true;
+            }
         }
+        jsonObject.put("became_public", became_public);
 
         if (type != null) {
             if (Notify.TYPE_KNOWLEDGE_INSERT == type) {
