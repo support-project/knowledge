@@ -61,7 +61,7 @@
                 </div>
                 
                 <div>
-                    <button class="btn btn-success btn_agenda" onclick="showAgenda();">
+                    <button class="btn btn-success btn_agenda" onclick="showAgenda();" id="buttonToc">
                         <i class="fa fa-list"></i>&nbsp;
                         <%=jspUtil.label("knowledge.view.label.show.toc")%>
                     </button>
