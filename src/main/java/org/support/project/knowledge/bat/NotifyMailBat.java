@@ -11,11 +11,13 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.ClassUtils;
+import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.config.LocaleConfigLoader;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.Container;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
 import org.support.project.knowledge.config.NotifyType;
@@ -81,7 +83,7 @@ public class NotifyMailBat extends AbstractBat {
             initLogName("NotifyMailBat.log");
             configInit(ClassUtils.getShortClassName(NotifyMailBat.class));
             
-            NotifyMailBat bat = new NotifyMailBat();
+            NotifyMailBat bat = Container.getComp(NotifyMailBat.class);
             bat.dbInit();
             bat.start();
             
@@ -123,6 +125,7 @@ public class NotifyMailBat extends AbstractBat {
      * @param notifyQueuesEntity
      * @throws Exception 
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     private void notifyLikeInsert(NotifyQueuesEntity notifyQueuesEntity) throws Exception {
         LikesDao likesDao = LikesDao.get();
         LikesEntity like = likesDao.selectOnKey(notifyQueuesEntity.getId());
@@ -223,6 +226,7 @@ public class NotifyMailBat extends AbstractBat {
      * @param notifyQueuesEntity
      * @throws Exception 
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     private void notifyCommentInsert(NotifyQueuesEntity notifyQueuesEntity) throws Exception {
         CommentsDao commentsDao = CommentsDao.get();
         CommentsEntity comment = commentsDao.selectOnKey(notifyQueuesEntity.getId());
@@ -354,6 +358,7 @@ public class NotifyMailBat extends AbstractBat {
      * @param notifyQueuesEntity
      * @throws Exception 
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     private void notifyKnowledgeUpdate(NotifyQueuesEntity notifyQueuesEntity) throws Exception {
         // ナレッジが登録/更新された
         KnowledgesDao knowledgesDao = KnowledgesDao.get();
