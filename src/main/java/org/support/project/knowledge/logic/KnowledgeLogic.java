@@ -207,6 +207,7 @@ public class KnowledgeLogic {
         // 更新前の情報を保持
         KnowledgesEntity db = knowledgesDao.selectOnKey(data.getKnowledge().getKnowledgeId());
         // ナレッッジを更新
+        data.getKnowledge().setNotifyStatus(db.getNotifyStatus()); // 通知フラグはDBの値を引き継ぐ
         KnowledgesEntity updatedEntity = knowledgesDao.update(data.getKnowledge());
         // ユーザのアクセス権を解除
         knowledgeUsersDao.deleteOnKnowledgeId(updatedEntity.getKnowledgeId());
