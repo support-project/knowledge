@@ -6,9 +6,11 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-<link rel="stylesheet"  href="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload.css" />
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
+<!-- build:cssmin(src/main/webapp) css/vendor-knowledge-view.css -->
+<link rel="stylesheet" href="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
+<link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload.css" />
+<link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
+<!-- endbuild -->
 
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-edit.css") %>" />
 <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-view.css") %>" />

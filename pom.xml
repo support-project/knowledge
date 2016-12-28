@@ -194,6 +194,10 @@
                 <version>2.6</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <!-- jspはminify後のものを使うので除外 -->
+                    <warSourceExcludes>
+                        WEB-INF/views/**/*.jsp
+                    </warSourceExcludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -209,7 +213,7 @@
                                 <artifactItem>
                                     <groupId>com.github.jsimone</groupId>
                                     <artifactId>webapp-runner</artifactId>
-                                    <version>8.0.30.2</version>
+                                    <version>8.0.33.4</version>
                                     <destFileName>webapp-runner.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
@@ -228,12 +232,12 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v5.3.0</nodeVersion>
-                            <npmVersion>3.3.12</npmVersion>
+                            <nodeVersion>v6.9.2</nodeVersion>
+                            <npmVersion>3.10.9</npmVersion>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>npm install bower</id>
+                        <id>npm install</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
@@ -248,6 +252,15 @@
                         </goals>
                         <configuration>
                             <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>gulp</id>
+                        <goals>
+                            <goal>gulp</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>default</arguments>
                         </configuration>
                     </execution>
                 </executions>
