@@ -65,7 +65,7 @@ $(document).ready(function() {
             items.forEach(function(item, index) {
                 var start = displayDate(item.startDatetime, '-');
                 var end = displayDate(item.endDatetime, '-');
-                var list = '<a href="#" class="list-group-item" onclick="showNotice(' + index + ');">';
+                var list = '<a class="list-group-item" onclick="showNotice(' + index + ');">';
                 list += '<h4 class="list-group-item-heading">' + item.title + '</h4>';
                 list += '<p class="list-group-item-text">';
                 list += '<i class="fa fa-calendar"></i>&nbsp;';

@@ -45,9 +45,9 @@
 
         <nav>
             <ul class="pager">
-                <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> <%=jspUtil.label("label.previous")%></a></li>
-                <li><a href="#" class="addButton" data-toggle="modal" data-target="#editModal"><i class="fa fa-plus-circle"></i>&nbsp; <%=jspUtil.label("label.add")%></a></li>
-                <li class="next"><a href="#"><%=jspUtil.label("label.next")%> <span aria-hidden="true">&rarr;</span></a></li>
+                <li class="previous"><a class="previousButton"><span aria-hidden="true">&larr;</span> <%=jspUtil.label("label.previous")%></a></li>
+                <li><a class="addButton" data-toggle="modal" data-target="#editModal"><i class="fa fa-plus-circle"></i>&nbsp; <%=jspUtil.label("label.add")%></a></li>
+                <li class="next"><a class="nextButton"><%=jspUtil.label("label.next")%> <span aria-hidden="true">&rarr;</span></a></li>
             </ul>
         </nav>
 
@@ -55,9 +55,9 @@
 
         <nav>
             <ul class="pager">
-                <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> <%=jspUtil.label("label.previous")%></a></li>
-                <li><a href="#" class="addButton" data-toggle="modal" data-target="#editModal"><i class="fa fa-plus-circle"></i>&nbsp; <%=jspUtil.label("label.add")%></a></li>
-                <li class="next"><a href="#"><%=jspUtil.label("label.next")%> <span aria-hidden="true">&rarr;</span></a></li>
+                <li class="previous"><a class="previousButton"><span aria-hidden="true">&larr;</span> <%=jspUtil.label("label.previous")%></a></li>
+                <li><a class="addButton" data-toggle="modal" data-target="#editModal"><i class="fa fa-plus-circle"></i>&nbsp; <%=jspUtil.label("label.add")%></a></li>
+                <li class="next"><a class="nextButton"><%=jspUtil.label("label.next")%> <span aria-hidden="true">&rarr;</span></a></li>
             </ul>
         </nav>
 

@@ -46,7 +46,7 @@ $(document).ready(function() {
             items.forEach(function(item, index) {
                 var start = displayDate(item.startDatetime, '-');
                 var end = displayDate(item.endDatetime, '-');
-                var list = '<a href="#" class="list-group-item" onclick="editNotice(' + index + ');">';
+                var list = '<a class="list-group-item" onclick="editNotice(' + index + ');">';
                 list += '<h4 class="list-group-item-heading">' + item.title + '</h4>';
                 list += '<p class="list-group-item-text">';
                 list += '<i class="fa fa-calendar"></i>&nbsp;';
@@ -72,7 +72,7 @@ $(document).ready(function() {
         doPreview('#input_title','#input_content','#preview');
     });
     
-    $('.previous').click(function() {
+    $('.previousButton').click(function() {
         if (offset === 0) {
             return;
         }
@@ -83,7 +83,7 @@ $(document).ready(function() {
         loadList();
     });
     
-    $('.next').click(function() {
+    $('.nextButton').click(function() {
         offset = offset + limit;
         if (total < offset) {
             offset = offset - limit;
