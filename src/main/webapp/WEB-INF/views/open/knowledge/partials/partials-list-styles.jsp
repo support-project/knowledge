@@ -10,5 +10,7 @@
 <link rel="stylesheet" href="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
 <!-- endbuild -->
 
-<link rel="stylesheet" href="<%=jspUtil.mustReloadFile("/css/knowledge-list.css")%>" />
+<!-- build:css(src/main/webapp) css/app-knowledge-list.css -->
+<link rel="stylesheet" href="css/knowledge-list.css" />
+<!-- endbuild -->
 

@@ -52,15 +52,19 @@
 <link rel="stylesheet" href="bower/font-awesome/css/font-awesome.min.css" />
 <link rel="stylesheet" href="bower/flag-icon-css/css/flag-icon.min.css" />
 
-<!-- build:cssmin(src/main/webapp) css/vendor.css -->
+<!-- build:css(src/main/webapp) css/vendor.css -->
 <link rel="stylesheet" href="bower/jquery-oembed-all/jquery.oembed.css" />
 <!-- endbuild -->
 
 <!--[if lt IE 9]>
+    <!-- build:js(src/main/webapp) css/regacy.js -->
     <script src="bower/html5shiv/dist/html5shiv.min.js"></script>
     <script src="bower/respond/dest/respond.min.js"></script>
+    <!-- endbuild -->
 <![endif]-->
 
-<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/common.css") %>" />
+<!-- build:css(src/main/webapp) css/app-common.css -->
+<link rel="stylesheet" href="css/common.css" />
+<!-- endbuild -->
 
 <!-- Knowledge - <%= jspUtil.label("label.version") %> -->

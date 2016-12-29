@@ -28,8 +28,9 @@
 <script type="text/javascript" src="bower/jquery-oembed-all/jquery.oembed.js"></script>
 <!-- endbuild -->
 
-
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/common.js") %>"></script>
+<!-- build:js(src/main/webapp) js/app-common.js -->
+<script type="text/javascript" src="js/common.js"></script>
+<!-- endbuild -->
 
 
 <script type="text/javascript">

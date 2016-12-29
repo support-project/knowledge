@@ -6,14 +6,16 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-<!-- build:cssmin(src/main/webapp) css/vendor-knowledge-view.css -->
+<!-- build:css(src/main/webapp) css/vendor-knowledge-view.css -->
 <link rel="stylesheet" href="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload.css" />
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
 <!-- endbuild -->
 
-<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-edit.css") %>" />
-<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/knowledge-view.css") %>" />
-<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
-<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/slide.css") %>" />
+<!-- build:css(src/main/webapp) css/app-knowledge-view.css -->
+<link rel="stylesheet" href="css/knowledge-edit.css" />
+<link rel="stylesheet" href="css/knowledge-view.css" />
+<link rel="stylesheet" href="css/markdown.css" />
+<link rel="stylesheet" href="css/slide.css" />
+<!-- endbuild -->
 

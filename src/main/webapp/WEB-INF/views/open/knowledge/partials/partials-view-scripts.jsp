@@ -28,18 +28,19 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="bower/clipboard/dist/clipboard.min.js"></script>
 <!-- endbuild -->
 
-
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/slide.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-markdown.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-template.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-comment.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-emoji-select.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-preview.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-attachfile.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-stock.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-toc.js") %>"></script>
+<!-- build:js(src/main/webapp) js/app-knowledge-view.js -->
+<script type="text/javascript" src="js/slide.js"></script>
+<script type="text/javascript" src="js/knowledge-common.js"></script>
+<script type="text/javascript" src="js/knowledge-view.js"></script>
+<script type="text/javascript" src="js/knowledge-view-markdown.js"></script>
+<script type="text/javascript" src="js/knowledge-view-template.js"></script>
+<script type="text/javascript" src="js/knowledge-view-comment.js"></script>
+<script type="text/javascript" src="js/knowledge-view-emoji-select.js"></script>
+<script type="text/javascript" src="js/knowledge-view-preview.js"></script>
+<script type="text/javascript" src="js/knowledge-view-attachfile.js"></script>
+<script type="text/javascript" src="js/knowledge-view-stock.js"></script>
+<script type="text/javascript" src="js/knowledge-view-toc.js"></script>
+<!-- endbuild -->
 
 
 <script>
