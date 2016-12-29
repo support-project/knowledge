@@ -6,11 +6,8 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-<!-- build:css(src/main/webapp) css/vendor-knowledge-list.css -->
+<!-- build:css(src/main/webapp) css/page-knowledge-list.css -->
 <link rel="stylesheet" href="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
-<!-- endbuild -->
-
-<!-- build:css(src/main/webapp) css/app-knowledge-list.css -->
 <link rel="stylesheet" href="css/knowledge-list.css" />
 <!-- endbuild -->
 

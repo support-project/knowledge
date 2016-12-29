@@ -12,11 +12,15 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
-<link rel="stylesheet" href="<%= request.getContextPath() %>/EasyWizard/easyWizard.css" />
+<!-- build:css(src/main/webapp) css/page-protect-group.css -->
+<link rel="stylesheet" href="EasyWizard/easyWizard.css" />
+<!-- endbuild -->
 </c:param>
 <c:param name="PARAM_SCRIPTS">
-<script type="text/javascript" src="<%= request.getContextPath() %>/EasyWizard/easyWizard.js"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/group.js") %>"></script>
+<!-- build:js(src/main/webapp) js/page-protect-group.js -->
+<script type="text/javascript" src="EasyWizard/easyWizard.js"></script>
+<script type="text/javascript" src="js/group.js"></script>
+<!-- endbuild -->
 <script>
 var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.delete") %>';
 </script>

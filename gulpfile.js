@@ -29,6 +29,8 @@ gulp.task('copy:raw', function() {
             'bower/highlightjs/*',
             'bower/font-awesome/fonts/*',
             'bower/flag-icon-css/*',
+            'bower/html5shiv/*',
+            'bower/respond/*',
             'bower/MathJax/*'
         ]
     )

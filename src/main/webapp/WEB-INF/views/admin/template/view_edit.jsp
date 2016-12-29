@@ -11,11 +11,15 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
-<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/template.css") %>" />
+<!-- build:css(src/main/webapp) css/page-template.css -->
+<link rel="stylesheet" href="css/template.css" />
+<!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/template.js") %>"></script>
+<!-- build:js(src/main/webapp) js/page-template.js -->
+<script type="text/javascript" src="js/template.js"></script>
+<!-- endbuild -->
 <script>
 var LABEL_DELETE = '<%= jspUtil.label("knowledge.template.label.item.delete") %>';
 var LABEL_TEXT_ITEM = '<i class="fa fa-pencil"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.text") %>';

@@ -1,5 +1,5 @@
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false"
-	errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
+    errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -10,27 +10,29 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
-<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
+<!-- build:css(src/main/webapp) css/page-license.css -->
+<link rel="stylesheet" href="css/markdown.css" />
+<!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <script>
 $(document).ready(function(){
-	hljs.initHighlightingOnLoad();
-	marked.setOptions({
-		langPrefix: '',
-		highlight: function(code, lang) {
-			console.log('[highlight]' + lang);
-			return code;
-		}
-	});
-	$('#content').html(marked($('#content').text()));
+    hljs.initHighlightingOnLoad();
+    marked.setOptions({
+        langPrefix: '',
+        highlight: function(code, lang) {
+            console.log('[highlight]' + lang);
+            return code;
+        }
+    });
+    $('#content').html(marked($('#content').text()));
 });
 </script>
 </c:param>
 
-	<c:param name="PARAM_CONTENT">
-	
+    <c:param name="PARAM_CONTENT">
+    
 <div id="content">
 
 ## Knowledge - <%= jspUtil.label("label.version") %>
@@ -216,7 +218,7 @@ $(document).ready(function(){
    
 </div>
 
-	</c:param>
+    </c:param>
 
 </c:import>
 

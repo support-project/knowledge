@@ -12,7 +12,7 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutTop.jsp">
 
 <c:param name="PARAM_HEAD">
-<!-- build:css(src/main/webapp) css/app-top.css -->
+<!-- build:css(src/main/webapp) css/page-top.css -->
 <link rel="stylesheet" href="css/top.css" />
 <!-- endbuild -->
 </c:param>

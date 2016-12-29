@@ -6,13 +6,11 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-<!-- build:css(src/main/webapp) css/vendor-knowledge-view.css -->
+<!-- build:css(src/main/webapp) css/page-knowledge-view.css -->
 <link rel="stylesheet" href="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload.css" />
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
-<!-- endbuild -->
 
-<!-- build:css(src/main/webapp) css/app-knowledge-view.css -->
 <link rel="stylesheet" href="css/knowledge-edit.css" />
 <link rel="stylesheet" href="css/knowledge-view.css" />
 <link rel="stylesheet" href="css/markdown.css" />

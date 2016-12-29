@@ -16,7 +16,7 @@ MathJax.Hub.Config({
 
 <script type="text/javascript" src="bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
 
-<!-- build:js(src/main/webapp) js/vendor-knowledge-view.js -->
+<!-- build:js(src/main/webapp) js/page-knowledge-view.js -->
 <script type="text/javascript" src="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript" src="bower/echojs/dist/echo.min.js"></script>
 <script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
@@ -26,9 +26,7 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 
 <script type="text/javascript" src="bower/clipboard/dist/clipboard.min.js"></script>
-<!-- endbuild -->
 
-<!-- build:js(src/main/webapp) js/app-knowledge-view.js -->
 <script type="text/javascript" src="js/slide.js"></script>
 <script type="text/javascript" src="js/knowledge-common.js"></script>
 <script type="text/javascript" src="js/knowledge-view.js"></script>

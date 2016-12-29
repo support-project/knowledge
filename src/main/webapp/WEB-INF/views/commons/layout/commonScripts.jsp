@@ -9,7 +9,7 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-<!-- build:js(src/main/webapp) js/vendor.js -->
+<!-- build:js(src/main/webapp) js/page-common.js -->
 <script type="text/javascript" src="bower/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="bower/bootstrap/dist/js/bootstrap.min.js"></script>
 
@@ -26,9 +26,7 @@
 
 <script type="text/javascript" src="bower/notify.js/notify.js"></script>
 <script type="text/javascript" src="bower/jquery-oembed-all/jquery.oembed.js"></script>
-<!-- endbuild -->
 
-<!-- build:js(src/main/webapp) js/app-common.js -->
 <script type="text/javascript" src="js/common.js"></script>
 <!-- endbuild -->
 

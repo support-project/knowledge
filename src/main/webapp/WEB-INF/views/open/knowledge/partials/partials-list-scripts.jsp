@@ -6,13 +6,9 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-<!-- build:js(src/main/webapp) js/vendor-knowledge-list.js -->
+<!-- build:js(src/main/webapp) js/page-knowledge-list.js -->
 <script type="text/javascript" src="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript" src="bower/echojs/dist/echo.min.js"></script>
-<!-- endbuild -->
-
-
-<!-- build:js(src/main/webapp) js/app-knowledge-list.js -->
 <script type="text/javascript" src="js/knowledge-list.js"></script>
 <!-- endbuild -->
 

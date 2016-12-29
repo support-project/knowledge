@@ -16,7 +16,9 @@
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/targetselect.js") %>"></script>
+<!-- build:js(src/main/webapp) js/page-protect-targets.js -->
+<script type="text/javascript" src="js/targetselect.js"></script>
+<!-- endbuild -->
 
 <script>
 <c:forEach var="viewer" items="${viewers}" varStatus="status">
