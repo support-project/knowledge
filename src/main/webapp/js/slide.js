@@ -68,8 +68,8 @@ var showSlide = function(parent) {
                         slidehtml += '<div class="slideshow-container">';
                         for (var i = 0; i < data.files.length; i++) {
                             slidehtml += '<div class="mySlides fade in">';
-                            slidehtml += '<img src="' + _CONTEXT + '/open.file/slide/' + data.fileNo + '/';
-                            slidehtml += data.files[i] + '" alt="slide-' + i + '" class="slide-image" />';
+                            slidehtml += '<img src="' + _CONTEXT + '/images/loader.gif" lagy="' + _CONTEXT + '/open.file/slide/' + data.fileNo + '/';
+                            slidehtml += data.files[i] + '" alt="slide-' + i + '" class="slide-image slide-image-' + fileNo + '" />';
                             slidehtml += '</div>';
                         }
                         slidehtml += '</div><br/>';
@@ -125,7 +125,10 @@ function showSlides(n, slideId) {
             dots[i].className = dots[i].className.replace(" active", "");
         }
     }
-    slides[slideIndex-1].style.display = "block"; 
+    slides[slideIndex-1].style.display = "block";
+    var slideimg = $(slides[slideIndex-1].getElementsByTagName('img')[0]);
+    slideimg.attr('src', slideimg.attr('lagy'));
+    
     if (dots[slideIndex-1]) {
         dots[slideIndex-1].className += " active";
     }
