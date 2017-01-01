@@ -17,52 +17,52 @@
 
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.tags.title") %></h4>
-	
-	<nav>
-		<ul class="pager">
-			<li class="previous">
-				<a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("previous") %>">
-					<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
-				</a>
-			</li>
-			<li class="next">
-				<a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("next") %>">
-					<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
-				</a>
-			</li>
-		</ul>
-	</nav>
+    
+    <nav>
+        <ul class="pager">
+            <li class="previous">
+                <a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("previous") %>">
+                    <span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
+                </a>
+            </li>
+            <li class="next">
+                <a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("next") %>">
+                    <%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
-	<c:if test="${empty tags}">
-		<div class="col-sm-12">
-		Empty
-		</div>
-	</c:if>
-	
-	<div class="list-group">
-		<c:forEach var="tag" items="${tags}">
-			<a class="list-group-item " 
-			href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%= jspUtil.out("tag.tagId") %>" >
-				<span class="badge"><%= jspUtil.out("tag.knowledgeCount") %></span>
-				<i class="fa fa-tag"></i>&nbsp;<%= jspUtil.out("tag.tagName") %>
-			</a>
-		</c:forEach>
-	</div>
+    <c:if test="${empty tags}">
+        <div class="col-sm-12">
+        Empty
+        </div>
+    </c:if>
+    
+    <div class="list-group">
+        <c:forEach var="tag" items="${tags}">
+            <a class="list-group-item " 
+            href="<%= request.getContextPath() %>/open.knowledge/list?tag=<%= jspUtil.out("tag.tagId") %>" >
+                <span class="badge"><%= jspUtil.out("tag.knowledgeCount") %></span>
+                <i class="fa fa-tag"></i>&nbsp;<%= jspUtil.out("tag.tagName") %>
+            </a>
+        </c:forEach>
+    </div>
 
-	<nav>
-		<ul class="pager">
-			<li class="previous">
-				<a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("previous") %>">
-					<span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
-				</a>
-			</li>
-			<li class="next">
-				<a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("next") %>">
-					<%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
-				</a>
-			</li>
-		</ul>
-	</nav>
+    <nav>
+        <ul class="pager">
+            <li class="previous">
+                <a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("previous") %>">
+                    <span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
+                </a>
+            </li>
+            <li class="next">
+                <a href="<%= request.getContextPath() %>/open.tag/list/<%= jspUtil.out("next") %>">
+                    <%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
 </c:param>
 
