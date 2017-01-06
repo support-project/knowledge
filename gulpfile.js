@@ -43,7 +43,7 @@ gulp.task('copy:font-awesome', function() {
 });
 gulp.task('copy:flag-icon-css', function() {
     return gulp.src([
-        'src/main/webapp/bower/font-awesome/flag-icon-css/**/*'
+        'src/main/webapp/bower/flag-icon-css/**/*'
     ])
     .pipe(gulp.dest('target/knowledge/bower/flag-icon-css'));
 });
