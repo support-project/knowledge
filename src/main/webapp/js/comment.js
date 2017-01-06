@@ -156,23 +156,6 @@ function deleteComment() {
     }); 
 };
 
-var removeAddedFile = function(fileNo) {
-    var url = _CONTEXT + '/protect.file/delete';
-    $.ajax({
-        type : 'GET',
-        url : url,
-        data : 'fileNo=' + fileNo,
-        success : function(data, dataType) {
-            $.notify(_REMOVE_FILE, 'info');
-            $('#file-' + fileNo).remove();
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            //alert("error: " + textStatus);
-            $.notify(_FAIL_REMOVE_FILE, 'warn');
-        }
-    });
-};
-
 var setImagePath = function(url, name) {
     var text = '\n![' + name + '](' + url + ')\n';
     var textarea = $('#comment');
