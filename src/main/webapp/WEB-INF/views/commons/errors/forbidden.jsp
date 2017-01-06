@@ -8,23 +8,23 @@
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
-	<c:param name="PARAM_CONTENT">
-		<div class="container">
-		<h3>Error</h3>
-		<p>
-			<fmt:bundle basename="appresource">
-			<fmt:message key="message.httpstatus.403" />
-			</fmt:bundle>
-		</p>
-		
-		<%= jspUtil.out(CommonWebParameter.ERROR_ATTRIBUTE) %>
-		<p>
-		<a href="<%= request.getContextPath() %>/index" class="btn btn-info">Back to Top</a>
-		</p>
-		
-		</div>
-		
-	</c:param>
+    <c:param name="PARAM_CONTENT">
+        <div class="container">
+        <h3>Error</h3>
+        <p>
+            <fmt:bundle basename="appresource">
+            <fmt:message key="message.httpstatus.403" />
+            </fmt:bundle>
+        </p>
+        
+        <%= jspUtil.out(CommonWebParameter.ERROR_ATTRIBUTE) %>
+        <p>
+        <a href="<%= request.getContextPath() %>/index" class="btn btn-info">Back to Top</a>
+        </p>
+        
+        </div>
+        
+    </c:param>
 
 </c:import>
 

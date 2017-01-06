@@ -40,7 +40,7 @@
                                 </a>
                             </c:when>
                             <c:otherwise>
-                                <a href="#"> <span class="tag label label-success"><%=jspUtil.out("target.label")%></span>
+                                <a><span class="tag label label-success"><%=jspUtil.out("target.label")%></span>
                                 </a>
                             </c:otherwise>
                         </c:choose>

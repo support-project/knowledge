@@ -6,22 +6,22 @@
 <h3>Error</h3>
 
 <p>
-	<fmt:bundle basename="appresource">
-	<fmt:message key="message.httpstatus.500" />
-	</fmt:bundle>
+    <fmt:bundle basename="appresource">
+    <fmt:message key="message.httpstatus.500" />
+    </fmt:bundle>
 </p>
 
 <%
 if (request.getRemoteAddr().startsWith("192.168.") || request.getRemoteAddr().equals("127.0.0.1")) {
-	if (exception == null && request.getAttribute("SERVER_EXCEPTION") != null) {
-		exception = (Throwable) request.getAttribute("SERVER_EXCEPTION");
-	}
-	if (exception != null) {
-		java.io.PrintWriter pw = new java.io.PrintWriter(out);
-		pw.println("<pre>");
-		exception.printStackTrace(pw);
-		pw.println("</pre>");
-	}
+    if (exception == null && request.getAttribute("SERVER_EXCEPTION") != null) {
+        exception = (Throwable) request.getAttribute("SERVER_EXCEPTION");
+    }
+    if (exception != null) {
+        java.io.PrintWriter pw = new java.io.PrintWriter(out);
+        pw.println("<pre>");
+        exception.printStackTrace(pw);
+        pw.println("</pre>");
+    }
 }
 %>
 

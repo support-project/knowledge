@@ -15,36 +15,34 @@
 
 <%-- 後からヘッダー部に何か追加する場合のパラメータ --%>
 <c:if test="${param.PARAM_HEAD != null}">
-	${param.PARAM_HEAD}
+    ${param.PARAM_HEAD}
 </c:if>
 
 <title>
 <c:if test="${param.PARAM_PAGE_TITLE != null}">
-	${param.PARAM_PAGE_TITLE}
+    ${param.PARAM_PAGE_TITLE}
 </c:if>
 <c:if test="${param.PARAM_PAGE_TITLE == null}">
-	<%= jspUtil.label("knowledge.title") %>
+    <%= jspUtil.label("knowledge.title") %>
 </c:if>
 </title>
-
-<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/common.css") %>" />
 
 </head>
 
 <body>
 
-	<div class="navbar navbar-default navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="<%=request.getContextPath()%>/">
-				<i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
-				<span style="font-size: 8pt;"><%= jspUtil.label("label.version") %></span>
-				</a>
-			</div>
-			<div class="navbar-collapse collapse">
-			</div>
-		</div>
-	</div>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="<%=request.getContextPath()%>/">
+                <i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
+                <span style="font-size: 8pt;"><%= jspUtil.label("label.version") %></span>
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+            </div>
+        </div>
+    </div>
 
 <div class="container" id="content_top">
 ${param.PARAM_CONTENT}

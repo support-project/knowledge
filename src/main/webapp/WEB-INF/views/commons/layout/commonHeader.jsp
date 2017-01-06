@@ -33,27 +33,33 @@
 <meta property="og:url" content="https://support-project.org/knowledge/index" />
 <meta property="og:site_name" content="Knowledge"/>
 
-<link rel="icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/vnd.microsoft.icon" /> 
+<base href="<%= request.getContextPath() %>/" />
+
+<link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon" /> 
 
 <% if (StringUtils.isNotEmpty(jspUtil.out("thema"))) { %>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootswatch/<%= jspUtil.out("thema") %>/bootstrap.min.css" />
+<link rel="stylesheet" href="bower/bootswatch/<%= jspUtil.out("thema") %>/bootstrap.min.css" />
 <% } else { %>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootswatch/<%= jspUtil.cookie(SystemConfig.COOKIE_KEY_THEMA, "flatly") %>/bootstrap.min.css" />
+<link rel="stylesheet" href="bower/bootswatch/<%= jspUtil.cookie(SystemConfig.COOKIE_KEY_THEMA, "flatly") %>/bootstrap.min.css" />
 <% } %>
-
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/font-awesome/css/font-awesome.min.css" />
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-oembed-all/jquery.oembed.css" />
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/flag-icon-css/css/flag-icon.min.css" />
 
 <% if (StringUtils.isNotEmpty(jspUtil.out("highlight"))) { %>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/highlightjs/styles/<%= jspUtil.out("highlight") %>.css" />
+<link rel="stylesheet" href="bower/highlightjs/styles/<%= jspUtil.out("highlight") %>.css" />
 <% } else { %>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/highlightjs/styles/<%= jspUtil.cookie(SystemConfig.COOKIE_KEY_HIGHLIGHT, "darkula") %>.css" />
+<link rel="stylesheet" href="bower/highlightjs/styles/<%= jspUtil.cookie(SystemConfig.COOKIE_KEY_HIGHLIGHT, "darkula") %>.css" />
 <% } %>
 
+<link rel="stylesheet" href="bower/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" href="bower/flag-icon-css/css/flag-icon.min.css" />
+
+<!-- build:css(src/main/webapp) css/page-common.css -->
+<link rel="stylesheet" href="bower/jquery-oembed-all/jquery.oembed.css" />
+<link rel="stylesheet" href="css/common.css" />
+<!-- endbuild -->
+
 <!--[if lt IE 9]>
-    <script src="<%= request.getContextPath() %>/bower/html5shiv/dist/html5shiv.min.js"></script>
-    <script src="<%= request.getContextPath() %>/bower/respond/dest/respond.min.js"></script>
+    <script src="bower/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="bower/respond/dest/respond.min.js"></script>
 <![endif]-->
 
 <!-- Knowledge - <%= jspUtil.label("label.version") %> -->

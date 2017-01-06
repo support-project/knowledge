@@ -8,15 +8,16 @@
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
-	<c:param name="PARAM_CONTENT">
-		<div class="container">
+
+<c:param name="PARAM_CONTENT">
+<div class="container">
 
 <h3>Server Error</h3>
 
 <p>
-	<fmt:bundle basename="appresource">
-	<fmt:message key="message.httpstatus.500" />
-	</fmt:bundle>
+    <fmt:bundle basename="appresource">
+    <fmt:message key="message.httpstatus.500" />
+    </fmt:bundle>
 </p>
 
 <%= jspUtil.out(CommonWebParameter.ERROR_ATTRIBUTE) %>
@@ -24,17 +25,17 @@
 
 <%
 if (request.getRemoteAddr().startsWith("192.168.") 
-		|| request.getRemoteAddr().equals("127.0.0.1") 
-		|| request.getRemoteAddr().equals("0:0:0:0:0:0:0:1")) {
-	if (exception == null && request.getAttribute("SERVER_EXCEPTION") != null) {
-		exception = (Throwable) request.getAttribute("SERVER_EXCEPTION");
-	}
-	if (exception != null) {
-		java.io.PrintWriter pw = new java.io.PrintWriter(out);
-		pw.println("<pre>");
-		exception.printStackTrace(pw);
-		pw.println("</pre>");
-	}
+        || request.getRemoteAddr().equals("127.0.0.1") 
+        || request.getRemoteAddr().equals("0:0:0:0:0:0:0:1")) {
+    if (exception == null && request.getAttribute("SERVER_EXCEPTION") != null) {
+        exception = (Throwable) request.getAttribute("SERVER_EXCEPTION");
+    }
+    if (exception != null) {
+        java.io.PrintWriter pw = new java.io.PrintWriter(out);
+        pw.println("<pre>");
+        exception.printStackTrace(pw);
+        pw.println("</pre>");
+    }
 }
 %>
 
@@ -43,8 +44,8 @@ if (request.getRemoteAddr().startsWith("192.168.")
 </p>
 
 
-	</div>
-	</c:param>
+</div>
+</c:param>
 
 </c:import>
 

@@ -13,29 +13,32 @@ MathJax.Hub.Config({
     tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
   });
 </script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
+<script type="text/javascript" src="bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.fileupload.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<!-- build:js(src/main/webapp) js/page-knowledge-view.js -->
+<script type="text/javascript" src="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script type="text/javascript" src="bower/echojs/dist/echo.min.js"></script>
+<script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/clipboard/dist/clipboard.min.js"></script>
+<script type="text/javascript" src="bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="bower/jquery-file-upload/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/slide.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-markdown.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-template.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-comment.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-emoji-select.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-preview.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-attachfile.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-stock.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-view-toc.js") %>"></script>
+<script type="text/javascript" src="bower/clipboard/dist/clipboard.min.js"></script>
+
+<script type="text/javascript" src="js/slide.js"></script>
+<script type="text/javascript" src="js/knowledge-common.js"></script>
+<script type="text/javascript" src="js/knowledge-view.js"></script>
+<script type="text/javascript" src="js/knowledge-view-markdown.js"></script>
+<script type="text/javascript" src="js/knowledge-view-template.js"></script>
+<script type="text/javascript" src="js/knowledge-view-comment.js"></script>
+<script type="text/javascript" src="js/knowledge-view-emoji-select.js"></script>
+<script type="text/javascript" src="js/knowledge-view-preview.js"></script>
+<script type="text/javascript" src="js/knowledge-view-attachfile.js"></script>
+<script type="text/javascript" src="js/knowledge-view-stock.js"></script>
+<script type="text/javascript" src="js/knowledge-view-toc.js"></script>
+<!-- endbuild -->
 
 
 <script>

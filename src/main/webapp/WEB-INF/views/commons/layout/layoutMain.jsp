@@ -14,19 +14,17 @@
 
 <%-- 後からヘッダー部に何か追加する場合のパラメータ --%>
 <c:if test="${param.PARAM_HEAD != null}">
-	${param.PARAM_HEAD}
+    ${param.PARAM_HEAD}
 </c:if>
 
 <title>
 <c:if test="${param.PARAM_PAGE_TITLE != null}">
-	${param.PARAM_PAGE_TITLE}
+    ${param.PARAM_PAGE_TITLE}
 </c:if>
 <c:if test="${param.PARAM_PAGE_TITLE == null}">
-	<%= jspUtil.label("knowledge.title") %>
+    <%= jspUtil.label("knowledge.title") %>
 </c:if>
 </title>
-
-<link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/common.css") %>" />
 
 </head>
 
@@ -36,11 +34,11 @@
 
 <%-- 
 <ol class="breadcrumb">
-	<li ng-repeat="p in breadcrumbs" > <!-- class="active" -->
-		<a href="{{p.link}}">
-		<i class="fa {{p.icon}}"></i>{{p.label}}
-		</a>
-	</li>
+    <li ng-repeat="p in breadcrumbs" > <!-- class="active" -->
+        <a href="{{p.link}}">
+        <i class="fa {{p.icon}}"></i>{{p.label}}
+        </a>
+    </li>
 </ol>
 --%>
 

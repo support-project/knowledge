@@ -18,8 +18,8 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/highlightjs/styles/<%= jspUtil.out("highlight") %>.css" />
 <style>
 body {
-	padding: 5px;
-	overflow: hidden;
+    padding: 5px;
+    overflow: hidden;
 }
 </style>
 
@@ -39,10 +39,10 @@ hljs.initHighlightingOnLoad();
 
 /** Do not right click */
 function no_rclick() {
-	var msg = 'Do not right click'; // Change
-	if (event.button == 2) {
-		alert(msg);
-	}
+    var msg = 'Do not right click'; // Change
+    if (event.button == 2) {
+        alert(msg);
+    }
 }
 document.onmousedown=no_rclick;
 </code>

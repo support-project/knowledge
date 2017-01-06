@@ -7,8 +7,15 @@
     "url": "https://github.com/support-project/knowledge"
   },
   "dependencies": {
-    "bower": "^1.7.9",
-    "npm": "^3.3.12"
+    "bower": "^1.8.0",
+    "gulp": "^3.9.1",
+    "gulp-usemin": "^0.3.26",
+    "gulp-uglify": "^0.3.1",
+    "gulp-minify-html": "^0.1.4",
+    "gulp-minify-css": "^0.3.7",
+    "gulp-rev": "^7.1.2",
+    "gulp-replace": "^0.5.4",
+    "npm": "^3.10.9"
   },
   "devDependencies": {},
   "scripts": {
