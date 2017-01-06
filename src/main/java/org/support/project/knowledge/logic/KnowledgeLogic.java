@@ -63,6 +63,7 @@ import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.common.HttpStatus;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.exception.AuthenticateException;
 
@@ -1268,7 +1269,23 @@ public class KnowledgeLogic {
             filesDao.changeStatus(knowledgeFilesEntity.getFileNo(), FileParseBat.PARSE_STATUS_WAIT, FileParseBat.UPDATE_USER_ID);
         }
     }
-
+    
+    /**
+     * ナレッジに対し編集権限があるかチェック
+     * @param loginedUser
+     * @param knowledgeId
+     * @return
+     */
+    public boolean isEditor(LoginedUser loginedUser, Long knowledgeId) {
+        KnowledgesEntity check = KnowledgesDao.get().selectOnKey(knowledgeId);
+        if (check == null) {
+            return false;
+        }
+        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+        return isEditor(loginedUser, check, editors);
+    }
+    
+    
     /**
      * ナレッジに対し編集権限があるかチェック
      * 
@@ -1464,6 +1481,7 @@ public class KnowledgeLogic {
         DraftKnowledgesDao.get().physicalDelete(draft);
         DraftItemValuesDao.get().deleteOnDraftId(draftId);
     }
+
     
     
 }

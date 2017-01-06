@@ -164,5 +164,20 @@ var parseMarkdown = function(title, content, previewAreaId, titleAreaId) {
     });
 };
 
+var removeAddedFile = function(fileNo) {
+    var url = _CONTEXT + '/protect.file/delete/' + fileNo;
+    $.ajax({
+        type : 'DELETE',
+        url : url,
+        success : function(data, dataType) {
+            $.notify(_REMOVE_FILE, 'info');
+            $('#file-' + fileNo).remove();
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            $.notify(_FAIL_REMOVE_FILE, 'warn');
+        }
+    });
+};
+
 
 

@@ -79,22 +79,6 @@ $(document).ready(function() {
      }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 });
 
-var removeAddedFile = function(fileNo) {
-    var url = _CONTEXT + '/protect.file/delete';
-    $.ajax({
-        type : 'GET',
-        url : url,
-        data : 'fileNo=' + fileNo,
-        success : function(data, dataType) {
-            $.notify(_REMOVE_FILE, 'info');
-            $('#file-' + fileNo).remove();
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            $.notify(_FAIL_REMOVE_FILE, 'warn');
-        }
-    });
-};
-
 var setImagePath = function(url, name) {
     var text = '\n![' + name + '](' + url + ')\n';
     insertAtCaret('#content', text)
