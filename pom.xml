@@ -196,7 +196,7 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <!-- jspはminify後のものを使うので除外 -->
                     <warSourceExcludes>
-                        WEB-INF/views/**/*.jsp, bower/*
+                        WEB-INF/views/**/*.jsp,bower/**/*
                     </warSourceExcludes>
                 </configuration>
             </plugin>

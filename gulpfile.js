@@ -4,7 +4,7 @@ var uglify = require('gulp-uglify');
 var minifyHtml = require('gulp-minify-html');
 var minifyCss = require('gulp-minify-css');
 var rev = require('gulp-rev');
-//var replace = require('gulp-replace');
+var replace = require('gulp-replace');
 
 gulp.task('min', function() {
     return gulp.src([
@@ -18,26 +18,53 @@ gulp.task('min', function() {
         inlinecss: [ minifyCss, 'concat' ],
         outputRelativePath: '../../'
     }))
-//    .pipe(replace('bar', 'foo'))
     .pipe(gulp.dest('target/knowledge/WEB-INF/views/'));
 });
 
-gulp.task('copy', ['copy:raw']);
-gulp.task('copy:raw', function() {
+gulp.task('copy', ['copy:bootswatch', 'copy:highlightjs', 'copy:font-awesome', 'copy:flag-icon-css', 'copy:html5shiv', 'copy:respond', 'copy:MathJax']);
+gulp.task('copy:bootswatch', function() {
     return gulp.src([
-            'bower/bootswatch/*',
-            'bower/highlightjs/*',
-            'bower/font-awesome/fonts/*',
-            'bower/flag-icon-css/*',
-            'bower/html5shiv/*',
-            'bower/respond/*',
-            'bower/MathJax/*'
-        ]
-    )
-    .pipe(gulp.dest('target/knowledge/bower'));
+        'src/main/webapp/bower/bootswatch/**/*'
+    ])
+    .pipe(replace(/^@import url\("https:\/\/fonts.googleapis.com\/css.*\)\;/, ''))
+    .pipe(gulp.dest('target/knowledge/bower/bootswatch'));
 });
-
-
+gulp.task('copy:highlightjs', function() {
+    return gulp.src([
+        'src/main/webapp/bower/highlightjs/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/highlightjs'));
+});
+gulp.task('copy:font-awesome', function() {
+    return gulp.src([
+        'src/main/webapp/bower/font-awesome/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/font-awesome'));
+});
+gulp.task('copy:flag-icon-css', function() {
+    return gulp.src([
+        'src/main/webapp/bower/font-awesome/flag-icon-css/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/flag-icon-css'));
+});
+gulp.task('copy:html5shiv', function() {
+    return gulp.src([
+        'src/main/webapp/bower/html5shiv/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/html5shiv'));
+});
+gulp.task('copy:respond', function() {
+    return gulp.src([
+        'src/main/webapp/bower/respond/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/respond'));
+});
+gulp.task('copy:MathJax', function() {
+    return gulp.src([
+        'src/main/webapp/bower/MathJax/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/MathJax'));
+});
 
 
 gulp.task('default', ['min', 'copy']);
