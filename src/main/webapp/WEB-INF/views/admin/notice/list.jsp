@@ -25,11 +25,11 @@
         <script type="text/javascript" src="bower/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
         <script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"></script>
         <script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
-        <script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
         <script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
         <script type="text/javascript" src="js/knowledge-common.js"></script>
         <script type="text/javascript" src="js/notice.js"></script>
 <!-- endbuild -->
+        <script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
     </c:param>
 
     <c:param name="PARAM_CONTENT">

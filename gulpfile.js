@@ -21,7 +21,8 @@ gulp.task('min', function() {
     .pipe(gulp.dest('target/knowledge/WEB-INF/views/'));
 });
 
-gulp.task('copy', ['copy:bootswatch', 'copy:highlightjs', 'copy:font-awesome', 'copy:flag-icon-css', 'copy:html5shiv', 'copy:respond', 'copy:MathJax']);
+gulp.task('copy', ['copy:bootswatch', 'copy:highlightjs', 'copy:font-awesome', 'copy:flag-icon-css', 
+    'copy:html5shiv', 'copy:respond', 'copy:MathJax', 'copy:emoji-parser']);
 gulp.task('copy:bootswatch', function() {
     return gulp.src([
         'src/main/webapp/bower/bootswatch/**/*'
@@ -64,6 +65,12 @@ gulp.task('copy:MathJax', function() {
         'src/main/webapp/bower/MathJax/**/*'
     ])
     .pipe(gulp.dest('target/knowledge/bower/MathJax'));
+});
+gulp.task('copy:emoji-parser', function() {
+    return gulp.src([
+        'src/main/webapp/bower/emoji-parser/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/emoji-parser'));
 });
 
 
