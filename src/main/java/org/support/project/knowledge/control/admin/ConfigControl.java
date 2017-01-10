@@ -132,11 +132,10 @@ public class ConfigControl extends Control {
     }
 
     /**
-     * ユーザ登録方法設定を保存
-     * 
+     * システム設定を保存
      * @return
      */
-    @Post(subscribeToken = "admin")
+    @Post(subscribeToken = "admin", checkReferer=false, checkReqToken = true)
     @Auth(roles = "admin")
     public Boundary save_params() {
         List<ValidateError> errors = new ArrayList<>();
