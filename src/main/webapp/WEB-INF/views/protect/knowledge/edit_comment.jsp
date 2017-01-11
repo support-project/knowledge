@@ -40,21 +40,17 @@ var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
 var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 </script>
 
+<script type="text/javascript" src="bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
+<script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
 
 <!-- build:js(src/main/webapp) js/page-comment.js -->
-<script type="text/javascript" src="bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
-
-<script type="text/javascript" src="js/slide.js"></script>
-
 <script type="text/javascript" src="bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="bower/jquery-file-upload/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
-<script type="text/javascript" src="bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-<script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
 
 <script type="text/javascript" src="js/knowledge-common.js"></script>
 <script type="text/javascript" src="js/comment.js"></script>
+<script type="text/javascript" src="js/slide.js"></script>
 <!-- endbuild -->
 
 </c:param>

@@ -26,9 +26,9 @@
             skipStartupTypeset: true
         });
         </script>
-<!-- build:js(src/main/webapp) js/page-open-notice.js -->
         <script type="text/javascript" src="bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
         <script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
+<!-- build:js(src/main/webapp) js/page-open-notice.js -->
         <script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
         
         <script type="text/javascript" src="js/slide.js"></script>
