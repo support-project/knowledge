@@ -86,7 +86,7 @@ public class AccountControl extends Control {
      * @throws ScanException
      * @throws PolicyException
      */
-    @Post(subscribeToken = "account")
+    @Post(subscribeToken = "account", checkReqToken = true)
     public Boundary update() throws ParseException {
         SystemConfigsDao systemConfigsDao = SystemConfigsDao.get();
 
@@ -176,7 +176,7 @@ public class AccountControl extends Control {
      * @return
      * @throws Exception
      */
-    @Post(subscribeToken = "withdrawal")
+    @Post(subscribeToken = "withdrawal", checkReqToken = true)
     public Boundary delete() throws Exception {
         // アカウント削除(退会処理)
         boolean knowledgeRemove = true;
@@ -274,7 +274,7 @@ public class AccountControl extends Control {
      * 
      * @return
      */
-    @Post(subscribeToken = "changekey")
+    @Post(subscribeToken = "changekey", checkReqToken = true)
     public Boundary changerequest() {
         SystemConfigsDao dao = SystemConfigsDao.get();
         SystemConfigsEntity userAddType = dao.selectOnKey(SystemConfig.USER_ADD_TYPE, AppConfig.get().getSystemName());
