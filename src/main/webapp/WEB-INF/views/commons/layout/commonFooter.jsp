@@ -32,7 +32,7 @@
     <!-- /nav -->
     <div class="clearfix"></div>
     <div class="copy">
-        <span>Copyright &#169; 2015 - 2016 <a href="https://support-project.org/knowledge_info/index">support-project.org [Knowledge project]</a></span>
+        <span>Copyright &#169; 2015 - 2017 <a href="https://support-project.org/knowledge_info/index">support-project.org</a></span>
     </div>
     <!-- /copy -->
 </div>
