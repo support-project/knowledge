@@ -15,6 +15,7 @@
 <!-- build:css(src/main/webapp) css/page-protect-account.css -->
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload.css" />
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
+<link rel="stylesheet" href="bower/cropper/dist/cropper.min.css" />
 <!-- endbuild -->
 </c:param>
 
@@ -23,6 +24,7 @@
 <script type="text/javascript" src="bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="bower/jquery-file-upload/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="bower/cropper/dist/cropper.min.js"></script>
 <script type="text/javascript" src="js/account.js"></script>
 <!-- endbuild -->
 </c:param>
@@ -52,12 +54,11 @@
         </div>
         <div class="form-group" id="drop_target">
             <%= jspUtil.label("knowledge.account.label.icon.drop") %><br/>
-            （png/jpg/jpeg/gif）
         </div>
         <div id="fileupload">
             <span class="btn btn-info fileinput-button">
                 <i class="fa fa-cloud-upload"></i>&nbsp;<span><%= jspUtil.label("knowledge.account.label.icon.select") %></span>
-                <input type="file" name="files[]" multiple>
+                <input type="file" name="files[]" id="file">
             </span>
         </div>
         </form>
