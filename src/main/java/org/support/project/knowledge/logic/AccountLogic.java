@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,14 +41,14 @@ public class AccountLogic {
     /**
      * アイコンの保存
      * 
-     * @param fileItem
+     * @param img
      * @param loginedUser
      * @param context
      * @return
      * @throws IOException
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public UploadFile saveIconImage(FileItem fileItem, LoginedUser loginedUser, String context) throws IOException {
+    public UploadFile saveIconImage(byte[] img, LoginedUser loginedUser, String context) throws IOException {
         LOG.trace("saveFile()");
         AccountImagesDao dao = AccountImagesDao.get();
         AccountImagesEntity entity = dao.selectOnUserId(loginedUser.getUserId());
@@ -55,9 +56,9 @@ public class AccountLogic {
             entity = new AccountImagesEntity();
         }
 
-        entity.setFileName(fileItem.getName());
-        entity.setFileSize(new Double(fileItem.getSize()));
-        entity.setFileBinary(fileItem.getInputStream());
+        entity.setFileName("account-" + loginedUser.getUserId() + ".png");
+        entity.setFileSize(new Double(img.length));
+        entity.setFileBinary(new ByteArrayInputStream(img));
         entity.setUserId(loginedUser.getUserId());
 
         String extension = StringUtils.getExtension(entity.getFileName());
@@ -78,8 +79,6 @@ public class AccountLogic {
         entity.setContentType(contentType);
         entity = dao.save(entity);
         UploadFile file = convUploadFile(context, entity);
-        // 処理が完了したら、テンポラリのファイルを削除
-        fileItem.delete();
         return file;
     }
 

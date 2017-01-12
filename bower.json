@@ -25,7 +25,8 @@
     "flag-icon-css": "0.8.5",
     "moment": "2.12.0",
     "clipboard": "1.5.10",
-    "MathJax": "2.6.1"
+    "MathJax": "2.6.1",
+    "cropper": "2.3.4"
   },
   "devDependencies": {},
   "resolutions": {

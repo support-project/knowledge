@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.Base64Utils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.common.validate.Validator;
 import org.support.project.common.validate.ValidatorFactory;
@@ -203,50 +205,28 @@ public class AccountControl extends Control {
     @Post(subscribeToken = "account")
     public Boundary iconupload() throws IOException {
         AccountLogic logic = AccountLogic.get();
-        UploadResults results = new UploadResults();
-        List<UploadFile> files = new ArrayList<UploadFile>();
-        Object obj = getParam("files[]", Object.class);
-        if (obj instanceof FileItem) {
-            FileItem fileItem = (FileItem) obj;
-            ValidateError error = checkFile(fileItem);
-            if (error != null) {
+        String fileimg = getParam("fileimg");
+        if (StringUtils.isEmpty(fileimg)) {
+            ValidateError error = new ValidateError("errors.required", "Image");
+            Msg msg = new Msg(error.getMsg(HttpUtil.getLocale(getRequest())));
+            return send(HttpStatus.SC_400_BAD_REQUEST, msg);
+        }
+        
+        if (fileimg.startsWith("data:image/png;base64,")) {
+            fileimg = fileimg.substring("data:image/png;base64,".length());
+            byte[] img = Base64.decodeBase64(fileimg);
+            
+            if (img.length > 5 * 1024 * 1024) {
+                ValidateError error = new ValidateError("errors.maxfilesize", "5MB");
                 Msg msg = new Msg(error.getMsg(HttpUtil.getLocale(getRequest())));
                 return send(HttpStatus.SC_400_BAD_REQUEST, msg);
             }
-            UploadFile file = logic.saveIconImage(fileItem, getLoginedUser(), getRequest().getContextPath());
-            files.add(file);
-        } else if (obj instanceof List) {
-            @SuppressWarnings("unchecked")
-            List<FileItem> fileItems = (List<FileItem>) obj;
-            for (FileItem fileItem : fileItems) {
-                ValidateError error = checkFile(fileItem);
-                if (error != null) {
-                    Msg msg = new Msg(error.getMsg(HttpUtil.getLocale(getRequest())));
-                    return send(HttpStatus.SC_400_BAD_REQUEST, msg);
-                }
-                UploadFile file = logic.saveIconImage(fileItem, getLoginedUser(), getRequest().getContextPath());
-                files.add(file);
-            }
+            
+            UploadFile file = logic.saveIconImage(img, getLoginedUser(), getRequest().getContextPath());
+            return send(HttpStatus.SC_200_OK, file);
         }
-        results.setFiles(files);
-        return send(HttpStatus.SC_200_OK, results);
-    }
-
-    /**
-     * アップロードされたファイルのチェック アイコン画像の拡張子チェック
-     * 
-     * @param name
-     * @return
-     */
-    private ValidateError checkFile(FileItem fileItem) {
-        if (fileItem.getSize() > 5 * 1024 * 1024) {
-            ValidateError error = new ValidateError("errors.maxfilesize", "5MB");
-            return error;
-        }
-
-        String name = fileItem.getName();
-        Validator validator = ValidatorFactory.getInstance(Validator.EXTENSION);
-        return validator.validate(name, "icon", "png", "jpg", "jpeg", "gif");
+        
+        return send(HttpStatus.SC_400_BAD_REQUEST, "data error");
     }
 
     /**
