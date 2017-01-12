@@ -86,7 +86,7 @@ _GROUPS.push('<%= jspUtil.out("groupitem.groupName") %>');
         </div>
         <% } %>
         <button class="btn btn-primary" type="submit">
-            <i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("label.search") %>
+            <i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("label.search") %>
         </button>
         <button class="btn btn-warning" type="button" id="searchParamClear">
             <i class="fa fa-times-circle"></i>&nbsp;<%= jspUtil.label("label.clear") %>

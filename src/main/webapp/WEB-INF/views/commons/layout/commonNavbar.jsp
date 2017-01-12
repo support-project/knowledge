@@ -36,7 +36,7 @@
                         name="keyword" id="navSearch" value="<%= jspUtil.out("searchKeyword") %>" />
                     <div class="input-group-btn">
                         <button class="btn btn-default" type="submit">
-                            <i class="glyphicon glyphicon-search"></i>
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                     <ul class="dropdown-menu" role="menu">
                         <li >
                             <a href="<%= request.getContextPath() %>/open.knowledge/search" >
-                                <i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
+                                <i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
                             </a>
                         </li>
                         <li class="divider"></li>
@@ -90,7 +90,7 @@
                     <ul class="dropdown-menu" role="menu">
                         <li >
                             <a href="<%= request.getContextPath() %>/open.knowledge/search" >
-                                <i class="glyphicon glyphicon-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
+                                <i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
                             </a>
                         </li>
                         <% if (request.isUserInRole("admin")) { %>
