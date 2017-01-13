@@ -133,6 +133,17 @@ $(document).ready(function() {
             }); 
         }
     });
+    
+    var emojisList = $.map(emojis, function(value, i) {
+        return {'id':i, 'name':value};
+    });
+    
+    $("#content").atwho({
+        at: ':',
+        displayTpl: "<li><img src='bower/emoji-parser/emoji/${name}.png' height='20' width='20'/> ${name} </li>",
+        insertTpl: ":${name}:",
+        data: emojisList
+    });
 });
 
 function deleteKnowledge() {
