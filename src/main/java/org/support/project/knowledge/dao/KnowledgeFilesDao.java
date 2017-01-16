@@ -128,5 +128,20 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
         executeUpdate(sql.toString(), parseStatus, updateUserId, new Timestamp(new Date().getTime()), fileNo);
     }
 
+    /**
+     * 下書きIDのセット
+     * @param entity ファイルEntity
+     * @param updateUserId 更新者
+     */
+    public void updateDraftId(KnowledgeFilesEntity entity, Integer updateUserId) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("UPDATE KNOWLEDGE_FILES ");
+        sql.append("SET DRAFT_ID = ?, KNOWLEDGE_ID = ?, UPDATE_USER = ?, UPDATE_DATETIME = ? ");
+        sql.append("WHERE FILE_NO = ? ");
+        executeUpdate(sql.toString(), entity.getDraftId(), entity.getKnowledgeId(), 
+                updateUserId, new Timestamp(new Date().getTime()), entity.getFileNo());
+        
+    }
+
 
 }

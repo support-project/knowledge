@@ -1451,7 +1451,7 @@ public class KnowledgeLogic {
                             // 既にKnowledgeに紐付いているものは対象外
                             entity.setDraftId(draft.getDraftId());
                             entity.setKnowledgeId(null);
-                            KnowledgeFilesDao.get().update(entity);
+                            KnowledgeFilesDao.get().updateDraftId(entity, loginedUser.getUserId());
                         }
                     }
                 }
