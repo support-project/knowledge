@@ -143,6 +143,22 @@ $(document).ready(function() {
         displayTpl: "<li><img src='bower/emoji-parser/emoji/${name}.png' height='20' width='20'/> ${name} </li>",
         insertTpl: ":${name}:",
         data: emojisList
+    }).atwho({
+        at: "#", 
+        displayTpl: function(k) {
+            return '<li> #' + k.knowledgeId + '&nbsp;<small>' + k.title + '</small></li>';
+        },
+        insertTpl: function(k) {
+            return '#' + k.knowledgeId;
+        },
+        searchKey : 'knowledgeId',
+        callbacks: {
+            remoteFilter: function(query, callback) {
+                $.getJSON("open.knowledge/items", {q: query}, function(data) {
+                    callback(data.items);
+                });
+            }
+        }
     });
 });
 

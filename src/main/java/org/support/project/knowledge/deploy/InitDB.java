@@ -24,6 +24,7 @@ import org.support.project.knowledge.deploy.v1_5_0_2.Migrate_1_5_0_2;
 import org.support.project.knowledge.deploy.v1_6_0.Migrate_1_6_0;
 import org.support.project.knowledge.deploy.v1_7_0.Migrate_1_7_0;
 import org.support.project.knowledge.deploy.v1_7_0.Migrate_1_7_0_1;
+import org.support.project.knowledge.deploy.v1_8_0.Migrate_1_8_0;
 import org.support.project.web.dao.SystemsDao;
 import org.support.project.web.entity.SystemsEntity;
 
@@ -35,7 +36,7 @@ public class InitDB {
     private static final Map<String, Migrate> MAP = new LinkedHashMap<>();
 
     private static final Migrate INIT = InitializeSystem.get();
-    public static final String CURRENT = "1.7.0.1";
+    public static final String CURRENT = "1.8.0";
 
     public InitDB() {
         super();
@@ -56,6 +57,7 @@ public class InitDB {
         MAP.put("1.6.0", Migrate_1_6_0.get());
         MAP.put("1.7.0", Migrate_1_7_0.get());
         MAP.put("1.7.0.1", Migrate_1_7_0_1.get());
+        MAP.put("1.8.0", Migrate_1_8_0.get());
     }
 
     public static void main(String[] args) throws Exception {
