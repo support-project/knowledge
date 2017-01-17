@@ -3,7 +3,7 @@ $(document).ready(function() {
     
     var cropperDialog = function(blobUrl) {
         var dialog = bootbox.confirm({
-            title: 'A custom dialog with init',
+            title: 'Crop your new profile picture',
             message: '<p><i class="fa fa-spin fa-spinner"></i> Loading...</p>',
             buttons: {
                 confirm: {
