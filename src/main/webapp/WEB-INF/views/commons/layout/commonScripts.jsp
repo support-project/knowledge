@@ -32,6 +32,7 @@
 
 
 <script type="text/javascript">
+var _LOGGING_NOTIFY_DESKTOP = true;
 var _CONTEXT = '<%= request.getContextPath() %>';
 <% if (jspUtil.logined()) { %>
 var _LOGIN_USER_ID = <%= jspUtil.id() %>;

@@ -15,6 +15,22 @@ $(document).ready(function() {
     });
 
 });
+function logging(str, level) {
+    console.log(str);
+    if (_LOGGING_NOTIFY_DESKTOP) {
+        if (!level) {
+            level = 'info';
+        }
+        var options = {
+            className: level,
+            autoHideDelay: 10000,
+            globalPosition: 'bottom left'
+        };
+        $.notify(str, options);
+    }
+};
+
+
 function insertAtCaret(target, str) {
     var obj = $(target);
     obj.focus();

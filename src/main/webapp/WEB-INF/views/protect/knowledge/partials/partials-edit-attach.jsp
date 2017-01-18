@@ -16,6 +16,9 @@
                 <input type="file" name="files[]" multiple>
             </span>
         </div>
+        <button type="button" class="btn btn-primary btn-xs" id="previewClipbordImage">
+            <i class="fa fa-clipboard"></i>&nbsp; Upload a image width preview
+        </button>
     </div>
     <div class="file-group tips_info" id="drop_target">
         <%= jspUtil.label("knowledge.add.label.area.upload") %>
@@ -27,6 +30,7 @@
             </div>
         </div>
     </div>
+    
     <div class="file-group" id="files">
     <c:forEach var="file" items="${files}" >
         <div class="filediv row" id="file-<%= jspUtil.out("file.fileNo") %>">
@@ -52,6 +56,7 @@
         </div>
     </c:forEach>
     </div>
+    
 
 
 
