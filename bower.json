@@ -26,7 +26,8 @@
     "moment": "2.12.0",
     "clipboard": "1.5.10",
     "MathJax": "2.6.1",
-    "cropper": "2.3.4"
+    "cropper": "2.3.4",
+    "At.js": "1.5.1"
   },
   "devDependencies": {},
   "resolutions": {

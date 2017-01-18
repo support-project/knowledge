@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload.css" />
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
+<link rel="stylesheet" href="bower/At.js/dist/css/jquery.atwho.min.css" />
 
 <link rel="stylesheet" href="css/knowledge-edit.css" />
 <link rel="stylesheet" href="css/markdown.css" />
