@@ -42,6 +42,9 @@ $(document).ready(function() {
                             img += file.thumbnailUrl + '" ';
                             img += 'width="64" height="64" />';
                             $('#icondiv').append(img);
+                        },
+                        error: function(err) {
+                            $.notify('Save error', 'error');
                         }
                     });
                 }

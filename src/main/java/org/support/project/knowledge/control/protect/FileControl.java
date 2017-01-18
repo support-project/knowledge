@@ -3,15 +3,18 @@ package org.support.project.knowledge.control.protect;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
+import org.support.project.knowledge.logic.AccountLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.UploadFile;
@@ -68,6 +71,52 @@ public class FileControl extends Control {
         results.setFiles(files);
         return send(HttpStatus.SC_200_OK, results);
     }
+    
+    
+    /**
+     * アップロードされたファイルを保存する
+     * 
+     * 画面でプレビューを行った画像のアップロード。クリップボードから張り付けができる。
+     * Base64形式で送られる（multipart-formdataでは無い）ので、デコードして保存する。
+     * 
+     * @return
+     * @throws Exception
+     */
+    @Post(subscribeToken = "knowledge")
+    public Boundary imgupload() throws Exception {
+        UploadResults results = new UploadResults();
+        List<UploadFile> files = new ArrayList<UploadFile>();
+        
+        String fileimg = getParam("fileimg");
+        if (StringUtils.isEmpty(fileimg)) {
+            ValidateError error = new ValidateError("errors.required", "Image");
+            Msg msg = new Msg(error.getMsg(HttpUtil.getLocale(getRequest())));
+            return send(HttpStatus.SC_400_BAD_REQUEST, msg);
+        }
+        
+        if (fileimg.startsWith("data:image/png;base64,")) {
+            fileimg = fileimg.substring("data:image/png;base64,".length());
+            byte[] img = Base64.decodeBase64(fileimg);
+            
+            if (img.length > 5 * 1024 * 1024) {
+                ValidateError error = new ValidateError("errors.maxfilesize", "5MB");
+                Msg msg = new Msg(error.getMsg(HttpUtil.getLocale(getRequest())));
+                return send(HttpStatus.SC_400_BAD_REQUEST, msg);
+            }
+            
+            UploadFile file = fileLogic.saveFile(img, getLoginedUser(), getRequest().getContextPath());
+            files.add(file);
+            results.setFiles(files);
+            return send(HttpStatus.SC_200_OK, results);
+        }
+        return send(HttpStatus.SC_400_BAD_REQUEST, "data error");
+    }
+    
+    
+    
+
+    
+    
 
     @Delete(subscribeToken = "knowledge")
     public JsonBoundary delete() throws Exception {
@@ -94,5 +143,9 @@ public class FileControl extends Control {
         fileLogic.removeFile(fileNo, getLoginedUser());
         return send(HttpStatus.SC_200_OK, "success: " + fileNo);
     }
+    
+    
+    
+    
 
 }
