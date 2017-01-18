@@ -27,6 +27,9 @@ MathJax.Hub.Config({
 
 <script type="text/javascript" src="bower/clipboard/dist/clipboard.min.js"></script>
 
+<script type="text/javascript" src="bower/Caret.js/dist/jquery.caret.min.js"></script>
+<script type="text/javascript" src="bower/At.js/dist/js/jquery.atwho.min.js"></script>
+
 <script type="text/javascript" src="js/slide.js"></script>
 <script type="text/javascript" src="js/knowledge-common.js"></script>
 <script type="text/javascript" src="js/knowledge-view.js"></script>
@@ -38,6 +41,8 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/knowledge-view-attachfile.js"></script>
 <script type="text/javascript" src="js/knowledge-view-stock.js"></script>
 <script type="text/javascript" src="js/knowledge-view-toc.js"></script>
+<script type="text/javascript" src="js/emojilist.js"></script>
+<script type="text/javascript" src="js/autocomplete.js"></script>
 <!-- endbuild -->
 
 

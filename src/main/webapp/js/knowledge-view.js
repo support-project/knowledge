@@ -11,6 +11,9 @@ $(document).ready(function(){
     clipboard.on('success', function(e) {
         $.notify(_MSG_COPIED, 'success');
     });
+    
+    // Auto complete
+    setAutoComplete($("#comment"));
 });
 
 //イイネを押下

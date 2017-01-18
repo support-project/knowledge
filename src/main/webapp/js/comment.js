@@ -100,7 +100,8 @@ $(document).ready(function() {
         }
      }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
     
-    
+    // Auto complete
+    setAutoComplete($("#comment"));
 });
 
 var emoji = window.emojiParser;

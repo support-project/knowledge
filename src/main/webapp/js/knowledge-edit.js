@@ -95,9 +95,7 @@ $(document).ready(function() {
     $("#content").change(function() {
         $('#updateContent').val('true');
     });
-
-    
-    
+    // 下書き保存
     $('#draftDeleteButton').click(function() {
         var draftId = $('#draftId').val();
         console.log(draftId);
@@ -133,33 +131,8 @@ $(document).ready(function() {
             }); 
         }
     });
-    
-    var emojisList = $.map(emojis, function(value, i) {
-        return {'id':i, 'name':value};
-    });
-    
-    $("#content").atwho({
-        at: ':',
-        displayTpl: "<li><img src='bower/emoji-parser/emoji/${name}.png' height='20' width='20'/> ${name} </li>",
-        insertTpl: ":${name}:",
-        data: emojisList
-    }).atwho({
-        at: "#", 
-        displayTpl: function(k) {
-            return '<li> #' + k.knowledgeId + '&nbsp;<small>' + k.title + '</small></li>';
-        },
-        insertTpl: function(k) {
-            return '#' + k.knowledgeId;
-        },
-        searchKey : 'knowledgeId',
-        callbacks: {
-            remoteFilter: function(query, callback) {
-                $.getJSON("open.knowledge/items", {q: query}, function(data) {
-                    callback(data.items);
-                });
-            }
-        }
-    });
+    // Auto complete
+    setAutoComplete($("#content"));
 });
 
 function deleteKnowledge() {
