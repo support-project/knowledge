@@ -257,5 +257,58 @@ public class KnowledgesDao extends GenKnowledgesDao {
             return executeQueryList(sql, KnowledgesEntity.class, params.toArray(new Object[0]));
         }
     }
+    
+    /**
+     * ナレッジIDを前方一致の文字列検索
+     * @param q
+     * @return
+     */
+    public List<KnowledgesEntity> selectKnowledgeOnIdPrefix(String q, int limit, int offset) {
+        String sql = "SELECT KNOWLEDGE_ID, TITLE FROM KNOWLEDGES "
+                + "WHERE CAST(KNOWLEDGE_ID AS VARCHAR(20)) LIKE ? || '%' ORDER BY KNOWLEDGES.KNOWLEDGE_ID DESC LIMIT ? OFFSET ?;";
+        return executeQueryList(sql, KnowledgesEntity.class, q, 5, 0);
+    }
+    /**
+     * ナレッジIDを前方一致の文字列検索
+     * アクセス権のある記事のみを取得
+     * @param q
+     * @return
+     */
+    public List<KnowledgesEntity> selectAccessAbleKnowledgeOnIdPrefix(String q, LoginedUser loginedUser, int limit, int offset) {
+        String sql = SQLManager.getInstance()
+                .getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectAccessAbleKnowledgeOnIdPrefix.sql");
+        List<Object> params = new ArrayList<>();
+        params.add(q);
+        Integer loginuserId = Integer.MIN_VALUE;
+        if (loginedUser != null) {
+            loginuserId = loginedUser.getUserId();
+        }
+        params.add(loginuserId);
+        params.add(loginuserId);
+
+        List<Integer> groups = new ArrayList<>();
+        groups.add(0); // ALL Groups
+        if (loginedUser != null && loginedUser.getGroups() != null) {
+            List<GroupsEntity> userGroups = loginedUser.getGroups();
+            for (GroupsEntity groupsEntity : userGroups) {
+                groups.add(groupsEntity.getGroupId());
+            }
+        }
+        StringBuilder groupParams = new StringBuilder();
+        int cnt = 0;
+        for (Integer integer : groups) {
+            if (cnt > 0) {
+                groupParams.append(", ");
+            }
+            cnt++;
+            params.add(integer);
+            groupParams.append("?");
+        }
+        sql = sql.replace("%GROUPS%", groupParams.toString());
+        params.add(limit);
+        params.add(offset);
+        
+        return executeQueryList(sql, KnowledgesEntity.class, params.toArray(new Object[0]));
+    }
 
 }
