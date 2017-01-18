@@ -3,7 +3,7 @@ $(document).ready(function() {
     
     var cropperDialog = function() {
         var dialog = bootbox.confirm({
-            title: 'Upload a image width preview',
+            title: _IMAGE_UPLOAD,
             message: '<input type="file" name="image" id="image" />',
             buttons: {
                 confirm: {
