@@ -586,9 +586,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setAttributeOnProperty(db);
 
         addMsgSuccess("message.success.update");
-
-        setPathInfo(String.valueOf(commentsEntity.getCommentNo()));
-        return edit_comment();
+        //return devolution(HttpMethod.get, "/open.Knowledge/view", String.valueOf(db.getKnowledgeId()));
+        return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + db.getKnowledgeId());
     }
 
     /**

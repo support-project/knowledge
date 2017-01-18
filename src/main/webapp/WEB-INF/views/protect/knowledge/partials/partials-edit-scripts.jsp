@@ -38,6 +38,7 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/knowledge-tag-select.js"></script>
 <script type="text/javascript" src="js/knowledge-template.js"></script>
 <script type="text/javascript" src="js/emojilist.js"></script>
+<script type="text/javascript" src="js/autocomplete.js"></script>
 <!-- endbuild -->
 
 <script>
