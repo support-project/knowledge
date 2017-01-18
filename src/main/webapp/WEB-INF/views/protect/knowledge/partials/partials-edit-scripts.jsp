@@ -53,6 +53,7 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 var _SET_SLIDE_LABEL= '<%= jspUtil.label("knowledge.edit.set.slide.path") %>';
 var _LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
 var _UPDATE_TITLE = '<%= jspUtil.label("knowledge.edit.title") %>';
+var _IMAGE_UPLOAD = '<%= jspUtil.label("knowledge.edit.image.upload") %>';
 
 var _TAGS = [];
 <c:forEach var="tagitem" items="${tagitems}" varStatus="status">
