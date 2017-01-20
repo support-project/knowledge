@@ -7,6 +7,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
@@ -79,9 +80,10 @@ public class FileControl extends Control {
             return send(HttpStatus.SC_200_OK, "success: " + fileNo);
         }
         
-        if (entity.getKnowledgeId() == null) {
+        if (StringUtils.isEmpty(entity.getKnowledgeId()) || entity.getKnowledgeId() == 0) {
             // 下書き中は、登録者のみ削除可能
             if (entity.getInsertUser().intValue() != getLoginUserId().intValue()) {
+                LOG.info("Login user is not created user.");
                 return send(HttpStatus.SC_400_BAD_REQUEST, "fail: " + fileNo);
             }
         } else {
