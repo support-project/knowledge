@@ -22,7 +22,7 @@ gulp.task('min', function() {
 });
 
 gulp.task('copy', ['copy:bootswatch', 'copy:highlightjs', 'copy:font-awesome', 'copy:flag-icon-css', 
-    'copy:html5shiv', 'copy:respond', 'copy:MathJax', 'copy:emoji-parser']);
+    'copy:html5shiv', 'copy:respond', 'copy:MathJax', 'copy:emoji-parser', 'copy:free-file-icons']);
 gulp.task('copy:bootswatch', function() {
     return gulp.src([
         'src/main/webapp/bower/bootswatch/**/*'
@@ -71,6 +71,12 @@ gulp.task('copy:emoji-parser', function() {
         'src/main/webapp/bower/emoji-parser/**/*'
     ])
     .pipe(gulp.dest('target/knowledge/bower/emoji-parser'));
+});
+gulp.task('copy:free-file-icons', function() {
+    return gulp.src([
+        'src/main/webapp/bower/teambox.free-file-icons/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/teambox.free-file-icons'));
 });
 
 
