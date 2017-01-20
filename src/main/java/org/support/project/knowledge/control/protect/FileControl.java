@@ -128,9 +128,10 @@ public class FileControl extends Control {
             return send(HttpStatus.SC_200_OK, "success: " + fileNo);
         }
         
-        if (entity.getKnowledgeId() == null) {
+        if (StringUtils.isEmpty(entity.getKnowledgeId()) || entity.getKnowledgeId() == 0) {
             // 下書き中は、登録者のみ削除可能
             if (entity.getInsertUser().intValue() != getLoginUserId().intValue()) {
+                LOG.info("Login user is not created user.");
                 return send(HttpStatus.SC_400_BAD_REQUEST, "fail: " + fileNo);
             }
         } else {
