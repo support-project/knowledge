@@ -1,11 +1,13 @@
 bower
 target
+node
+node_modules
+knowledge.iml
+tomcat.8080
 .classpath
 .project
 .settings
 .eclipse-pmd
 .checkstyle
-node
 .idea
 .m2
-knowledge.iml
