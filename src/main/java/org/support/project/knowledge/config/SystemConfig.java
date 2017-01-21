@@ -52,4 +52,8 @@ public class SystemConfig {
     /** ログ・ファイルを定期的に削除する場合の、日数 */
     public static final String LOG_DELETE_TERM = "LOG_DELETE_TERM";
 
+    /** 添付ファイルの最大サイズ */
+    public static final String UPLOAD_MAX_MB_SIZE = "UPLOAD_MAX_MB_SIZE";
+    
+    
 }

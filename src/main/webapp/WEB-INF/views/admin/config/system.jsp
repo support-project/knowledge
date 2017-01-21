@@ -52,6 +52,14 @@
         </label>
     </div>
     
+    <div class="form-group">
+        <label for="limitAttach"><%= jspUtil.label("knowledge.config.system.label.limit.attach") %> [1 - 300]</label>
+        <input type="number" min="1" max="300" step="1"
+            class="form-control" name="uploadMaxMBSize" id="limitAttach" 
+            placeholder="<%= jspUtil.label("knowledge.config.system.label.limit.attach") %>"
+            value="<%= jspUtil.out("uploadMaxMBSize") %>" />
+    </div>
+    
     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
 </form>
 

@@ -127,6 +127,13 @@ public class ConfigControl extends Control {
         if (config != null) {
             setAttribute("system_open_type", config.getConfigValue());
         }
+        
+        config = dao.selectOnKey(SystemConfig.UPLOAD_MAX_MB_SIZE, AppConfig.get().getSystemName());
+        if (config != null) {
+            setAttribute("uploadMaxMBSize", config.getConfigValue());
+        } else {
+            setAttribute("uploadMaxMBSize", "5");
+        }
 
         return forward("system.jsp");
     }
@@ -145,6 +152,18 @@ public class ConfigControl extends Control {
             ValidateError error = new ValidateError("errors.required", getResource("knowledge.config.system.label.url"));
             errors.add(error);
         }
+        String uploadMaxMBSize = getParam("uploadMaxMBSize");
+        if (StringUtils.isEmpty(uploadMaxMBSize) || !StringUtils.isInteger(uploadMaxMBSize)) {
+            uploadMaxMBSize = "5";
+        }
+        int size = Integer.parseInt(uploadMaxMBSize);
+        if (size < 1 || size > 300) {
+            ValidateError error = new ValidateError("errors.range", 
+                    getResource("knowledge.config.system.label.limit.attach"),
+                    "1", "300");
+            errors.add(error);
+        }
+        
         if (!errors.isEmpty()) {
             setResult(null, errors);
             return forward("system.jsp");
@@ -167,6 +186,10 @@ public class ConfigControl extends Control {
                 SystemConfigLogic.get().setClose(false);
             }
         }
+        
+        config = new SystemConfigsEntity(SystemConfig.UPLOAD_MAX_MB_SIZE, AppConfig.get().getSystemName());
+        config.setConfigValue(uploadMaxMBSize);
+        dao.save(config);
 
         String successMsg = "message.success.save";
         setResult(successMsg, errors);
