@@ -19,11 +19,13 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.DraftKnowledgesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.StockKnowledgesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.CommentsEntity;
+import org.support.project.knowledge.entity.DraftKnowledgesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.StockKnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
@@ -33,6 +35,7 @@ import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
+import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.Stock;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LabelValue;
@@ -46,6 +49,7 @@ import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.UserConfigsDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UserConfigsEntity;
+import org.support.project.web.exception.AuthenticateException;
 import org.support.project.web.exception.InvalidParamException;
 
 import net.arnx.jsonic.JSON;
@@ -63,25 +67,20 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view_add() {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
+        setAttributeForEditPage();
 
+        setAttribute("typeId", KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE);
+        
         String offset = super.getParam("offset", String.class);
         if (StringUtils.isEmpty(offset)) {
             offset = "0";
         }
         setAttribute("offset", offset);
-
-        List<TagsEntity> tagitems = TagsDao.get().selectAll();
-        setAttribute("tagitems", tagitems);
-
-        List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
-        setAttribute("templates", templates);
-
-        setAttribute("typeId", KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE);
-
+        
         // グループが指定されてる場合はデフォルトで公開範囲と共同編集者を選択済みにする
         String groupId = super.getParam("group", String.class);
         if (StringUtils.isNotEmpty(groupId)) {
@@ -115,7 +114,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 setAttribute("publicFlag", KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
             }
         }
-        return forward("view_add.jsp");
+        return forward("edit.jsp");
     }
 
     /**
@@ -124,7 +123,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view_edit() throws InvalidParamException {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
@@ -140,36 +139,39 @@ public class KnowledgeControl extends KnowledgeControlBase {
         if (entity == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
         }
-        setAttributeOnProperty(entity);
+        
+        // 下書きが保存されている場合、下書きの内容を読み込む
+        DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKnowledgeAndUser(knowledgeId, getLoginUserId());
+        if (draft != null) {
+            super.setDraftInfo(draft);
+        } else {
+            // ナレッジに紐づく添付ファイルを取得
+            List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(knowledgeId, getRequest().getContextPath());
+            setAttribute("files", files);
 
-        // ナレッジに紐づく添付ファイルを取得
-        List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(knowledgeId, getRequest().getContextPath());
-        setAttribute("files", files);
+            // 表示するグループを取得
+            List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
+            setAttribute("groups", groups);
 
-        // 表示するグループを取得
-        List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
-        setAttribute("groups", groups);
-
-        // 共同編集者
-        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
-        setAttribute("editors", editors);
-        // 編集権限チェック
-        LoginedUser loginedUser = super.getLoginedUser();
-        boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
-        if (!edit) {
-            setAttribute("edit", false);
-            addMsgWarn("knowledge.edit.noaccess");
-            // return forward("/open/knowledge/view.jsp");
-            return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
+            // 共同編集者
+            List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+            setAttribute("editors", editors);
+            
+            // 編集権限チェック
+            LoginedUser loginedUser = super.getLoginedUser();
+            boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
+            if (!edit) {
+                setAttribute("edit", false);
+                addMsgWarn("knowledge.edit.noaccess");
+                // return forward("/open/knowledge/view.jsp");
+                return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
+            }
+            setAttributeOnProperty(entity);
         }
-
-        List<TagsEntity> tagitems = TagsDao.get().selectAll();
-        setAttribute("tagitems", tagitems);
-
-        List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
-        setAttribute("templates", templates);
-
-        return forward("view_edit.jsp");
+        
+        setAttributeForEditPage();
+        
+        return forward("edit.jsp");
     }
 
     /**
@@ -179,37 +181,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @throws Exception
      * @throws ParseException
      */
-    @Post
-    public Boundary add(KnowledgesEntity entity) throws Exception, ParseException {
-        // 共通処理呼の表示条件の保持の呼び出し
-        setViewParam();
-
-        String groupsstr = super.getParam("groups");
-        String[] targets = groupsstr.split(",");
-        // List<GroupsEntity> groups = GroupLogic.get().selectGroups(targets);
-        List<LabelValue> groups = TargetLogic.get().selectTargets(targets);
-        setAttribute("groups", groups);
-
-        String editorsstr = super.getParam("editors");
-        String[] editordids = editorsstr.split(",");
-        List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
-        setAttribute("editors", editors);
-
-        List<TagsEntity> tagitems = TagsDao.get().selectAll();
-        setAttribute("tagitems", tagitems);
-
-        List<Long> fileNos = new ArrayList<Long>();
-        String[] filesArray = getParam("files", String[].class);
-        if (filesArray != null) {
-            for (String string : filesArray) {
-                if (StringUtils.isLong(string)) {
-                    fileNos.add(new Long(string));
-                }
-            }
+    private Boundary add(KnowledgesEntity entity) throws Exception, ParseException {
+        List<ValidateError> errors = entity.validate();
+        if (!errors.isEmpty()) {
+            // 入力エラー
+            return sendValidateError(errors);
         }
-
-        List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
-        setAttribute("templates", templates);
 
         TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(entity.getTypeId());
         List<TemplateItemsEntity> items = template.getItems();
@@ -222,25 +199,17 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 item.setItemValue(itemValue);
             }
         }
-
-        List<ValidateError> errors = entity.validate();
-        if (!errors.isEmpty()) {
-            // 入力エラー
-            return sendValidateError(errors);
-        }
+        
+        KnowledgeData data = KnowledgeData.create(
+                entity, super.getParam("groups"), super.getParam("editors"), super.getParam("tagNames"),
+                getParam("files", String[].class), getParam("draftId", Long.class), template);
+        
         LOG.trace("save");
-        String tags = super.getParam("tagNames");
-        List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
 
-        KnowledgesEntity insertedEntity = knowledgeLogic.insert(entity, tagList, fileNos, groups, editors, template, super.getLoginedUser());
-        setAttributeOnProperty(insertedEntity);
+        KnowledgesEntity insertedEntity = knowledgeLogic.insert(data, super.getLoginedUser());
 
-        List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(insertedEntity.getKnowledgeId(), getRequest().getContextPath());
-        setAttribute("files", files);
-
-        addMsgSuccess("message.success.insert");
-        // return forward("view_edit.jsp");
-        return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(insertedEntity.getKnowledgeId()), "message.success.insert");
+        return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
+                String.valueOf(insertedEntity.getKnowledgeId()), "message.success.insert");
     }
 
     /**
@@ -249,36 +218,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws Exception
      */
-    @Post
-    public Boundary update(KnowledgesEntity entity) throws Exception {
-        // 共通処理呼の表示条件の保持の呼び出し
-        setViewParam();
-
-        String groupsstr = super.getParam("groups");
-        String[] targets = groupsstr.split(",");
-        List<LabelValue> groups = TargetLogic.get().selectTargets(targets);
-        setAttribute("groups", groups);
-
-        String editorsstr = super.getParam("editors");
-        String[] editordids = editorsstr.split(",");
-        List<LabelValue> editors = TargetLogic.get().selectTargets(editordids);
-        setAttribute("editors", editors);
-
-        List<TagsEntity> tagitems = TagsDao.get().selectAll();
-        setAttribute("tagitems", tagitems);
-
-        List<Long> fileNos = new ArrayList<Long>();
-        String[] filesArray = getParam("files", String[].class);
-        if (filesArray != null) {
-            for (String string : filesArray) {
-                if (StringUtils.isLong(string)) {
-                    fileNos.add(new Long(string));
-                }
-            }
+    private Boundary update(KnowledgesEntity entity) throws Exception {
+        List<ValidateError> errors = entity.validate();
+        if (!errors.isEmpty()) {
+            // 入力エラー
+            return sendValidateError(errors);
         }
-
-        List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
-        setAttribute("templates", templates);
 
         TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(entity.getTypeId());
         List<TemplateItemsEntity> items = template.getItems();
@@ -292,19 +237,17 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
         }
 
+        KnowledgeData data = KnowledgeData.create(
+                entity, super.getParam("groups"), super.getParam("editors"), super.getParam("tagNames"),
+                getParam("files", String[].class), getParam("draftId", Long.class), template);
+        
         KnowledgesDao dao = Container.getComp(KnowledgesDao.class);
-        List<ValidateError> errors = entity.validate();
-        if (!errors.isEmpty()) {
-            // 入力エラー
-            return sendValidateError(errors);
-        }
-
         KnowledgesEntity check = dao.selectOnKey(entity.getKnowledgeId());
         if (check == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
         }
         // 編集権限チェック
-        if (!knowledgeLogic.isEditor(super.getLoginedUser(), check, editors)) {
+        if (!knowledgeLogic.isEditor(super.getLoginedUser(), check, data.getEditors())) {
             setAttribute("edit", false);
             addMsgWarn("knowledge.edit.noaccess");
             // return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(entity.getKnowledgeId()));
@@ -314,28 +257,82 @@ public class KnowledgeControl extends KnowledgeControlBase {
             return sendValidateError(errors);
         }
 
-        LOG.trace("save");
-        String tags = super.getParam("tagNames");
-        List<TagsEntity> tagList = knowledgeLogic.manegeTags(tags);
-
-        KnowledgesEntity updatedEntity = knowledgeLogic.update(entity, tagList, fileNos, groups, editors, template, super.getLoginedUser());
-        setAttributeOnProperty(updatedEntity);
-        addMsgSuccess("message.success.update");
-
-        List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(updatedEntity.getKnowledgeId(), getRequest().getContextPath());
-        setAttribute("files", files);
-
-        // return forward("view_edit.jsp");
-        return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(updatedEntity.getKnowledgeId()), "message.success.update");
+        if (!StringUtils.isEmpty(getParam("updateContent")) && getParam("updateContent").toLowerCase().equals("true")) {
+            data.setUpdateContent(true);
+            LOG.debug("コンテンツを更新した");
+        } else {
+            data.setUpdateContent(false);
+            LOG.debug("メタデータのみ更新");
+        }
+        
+        KnowledgesEntity updatedEntity = knowledgeLogic.update(data, super.getLoginedUser());
+        
+        if (data.isUpdateContent()) {
+            return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
+                    String.valueOf(updatedEntity.getKnowledgeId()), "knowledge.edit.update.content");
+        } else {
+            return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
+                    String.valueOf(updatedEntity.getKnowledgeId()), "knowledge.edit.update.meta");
+        }
     }
 
+    /**
+     * Knowledgeの保存
+     * @param entity Knowledge information
+     * @return Boundary
+     * @throws Exception Exception
+     */
+    @Post(subscribeToken = "knowledge")
+    public Boundary save(KnowledgesEntity entity) throws Exception {
+        if (entity.getKnowledgeId() != null && entity.getKnowledgeId() > 1) {
+            return update(entity);
+        } else {
+            return add(entity);
+        }
+    }
+
+    /**
+     * 下書き保存
+     * @param entity Knowledge information
+     * @return Boundary
+     * @throws Exception Exception
+     */
+    @Post(subscribeToken = "knowledge")
+    public Boundary draft() throws Exception {
+        DraftKnowledgesEntity draft = getParamOnProperty(DraftKnowledgesEntity.class);
+        draft.setAccesses(super.getParam("groups"));
+        draft.setEditors(super.getParam("editors"));
+        draft.setTagNames(super.getParam("tagNames"));
+        String[] files = getParam("files", String[].class);
+        
+        TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(draft.getTypeId());
+        List<TemplateItemsEntity> items = template.getItems();
+        for (TemplateItemsEntity item : items) {
+            String itemValue = super.getParam("item_" + item.getItemNo());
+            if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
+                itemValue = itemValue.substring(1, itemValue.length() - 1);
+                item.setItemValue(itemValue);
+            } else {
+                item.setItemValue(itemValue);
+            }
+        }
+        try {
+            draft = knowledgeLogic.draft(draft, template, files, super.getLoginedUser());
+            return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(draft.getDraftId()), "message.success.save");
+        } catch (AuthenticateException e) {
+            // 編集権限が無い
+            return sendMsg(MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, null, "knowledge.edit.noaccess");
+        }
+    }
+    
+    
     /**
      * ナレッジを削除
      * 
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary delete() throws Exception {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
@@ -382,7 +379,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view() throws InvalidParamException {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
@@ -397,7 +394,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary comment() throws Exception {
         // 共通処理呼の表示条件の保持の呼び出し
         String params = setViewParam();
@@ -455,7 +452,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary view_targets() throws InvalidParamException {
         Long knowledgeId = super.getPathLong(Long.valueOf(-1));
         List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
@@ -468,7 +465,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary edit_comment() throws InvalidParamException {
         Long commentNo = super.getPathLong(Long.valueOf(-1));
         CommentsDao commentsDao = CommentsDao.get();
@@ -522,7 +519,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary update_comment() throws Exception {
         List<Long> fileNos = new ArrayList<Long>();
         Object obj = getParam("files", Object.class);
@@ -600,7 +597,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws Exception
      */
-    @Get
+    @Get(subscribeToken = "knowledge")
     public Boundary delete_comment() throws Exception {
         Long commentNo = super.getPathLong(Long.valueOf(-1));
         CommentsDao commentsDao = CommentsDao.get();
@@ -640,7 +637,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @throws IOException
      * @throws InvalidParamException
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary stock() throws IOException, InvalidParamException {
         Long knowledgeId = getPathLong();
         if (LOG.isTraceEnabled()) {
@@ -694,7 +691,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @throws IOException
      * @throws InvalidParamException
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary collapse() throws IOException, InvalidParamException {
         Long commentNo = getParam("commentNo", Long.class);
         Integer collapse = getParam("collapse", Integer.class);

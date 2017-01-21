@@ -34,7 +34,7 @@ public class ConfigControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary config() {
         SystemConfigsDao dao = SystemConfigsDao.get();
@@ -69,7 +69,7 @@ public class ConfigControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary save() {
         List<ValidateError> errors = new ArrayList<>();
@@ -110,7 +110,7 @@ public class ConfigControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary system() {
         SystemConfigsDao dao = SystemConfigsDao.get();
@@ -132,11 +132,10 @@ public class ConfigControl extends Control {
     }
 
     /**
-     * ユーザ登録方法設定を保存
-     * 
+     * システム設定を保存
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin", checkReferer=false, checkReqToken = true)
     @Auth(roles = "admin")
     public Boundary save_params() {
         List<ValidateError> errors = new ArrayList<>();
@@ -180,7 +179,7 @@ public class ConfigControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary analytics() {
         SystemAttributesDao dao = SystemAttributesDao.get();
@@ -198,7 +197,7 @@ public class ConfigControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary analytics_save() {
         String analyticsScript = getParam("analytics_script");

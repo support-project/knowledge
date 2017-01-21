@@ -35,7 +35,7 @@ public class StockControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary mylist() throws InvalidParamException {
         Integer offset = super.getPathInteger(0);
         StocksDao stocksDao = StocksDao.get();
@@ -60,7 +60,7 @@ public class StockControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary add() throws InvalidParamException {
         return forward("add.jsp");
     }
@@ -75,7 +75,7 @@ public class StockControl extends Control {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary insert() throws InvalidParamException, InstantiationException, IllegalAccessException, JSONException, IOException {
         StocksEntity stocksEntity = super.getParamOnProperty(StocksEntity.class);
         stocksEntity.setStockType(StocksEntity.STOCKTYPE_PRIVATE);
@@ -99,7 +99,7 @@ public class StockControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary edit() throws InvalidParamException {
         Long stockId = super.getPathLong(new Long(0));
         StocksDao stocksDao = StocksDao.get();
@@ -120,7 +120,7 @@ public class StockControl extends Control {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary update() throws InvalidParamException, InstantiationException, IllegalAccessException, JSONException, IOException {
         StocksEntity stocksEntity = super.getParamOnProperty(StocksEntity.class);
         stocksEntity.setStockType(StocksEntity.STOCKTYPE_PRIVATE);
@@ -148,7 +148,7 @@ public class StockControl extends Control {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary delete() throws InvalidParamException, InstantiationException, IllegalAccessException, JSONException, IOException {
         StocksDao dao = StocksDao.get();
         Long stockId = getParam("stockId", Long.class);
@@ -165,7 +165,7 @@ public class StockControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary chooselist() throws InvalidParamException {
         Integer offset = super.getPathInteger(0);
         StocksDao stocksDao = StocksDao.get();
@@ -181,7 +181,7 @@ public class StockControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary knowledge() throws InvalidParamException {
         Long stockId = getParam("stockId", Long.class);
         Integer offset = getParam("offset", Integer.class);

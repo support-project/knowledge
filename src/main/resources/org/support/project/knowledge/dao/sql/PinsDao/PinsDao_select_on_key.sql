@@ -2,4 +2,3 @@ SELECT * FROM PINS
  WHERE 
 NO = ?
  AND DELETE_FLAG = 0;
-;

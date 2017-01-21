@@ -102,6 +102,14 @@ public class GenWebhooksDao extends AbstractDao {
         return executeQuerySingle(sql, WebhooksEntity.class, webhookId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM WEBHOOKS";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

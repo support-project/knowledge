@@ -14,7 +14,9 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
     <c:param name="PARAM_HEAD">
-        <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
+<!-- build:css(src/main/webapp) css/page-open-notice.css -->
+        <link rel="stylesheet" href="css/markdown.css" />
+<!-- endbuild -->
     </c:param>
 
     <c:param name="PARAM_SCRIPTS">
@@ -24,13 +26,15 @@
             skipStartupTypeset: true
         });
         </script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
+        <script type="text/javascript" src="bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
+        <script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
+<!-- build:js(src/main/webapp) js/page-open-notice.js -->
+        <script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
         
-        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/slide.js") %>"></script>
-        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
-        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/notice-list.js") %>"></script>
+        <script type="text/javascript" src="js/slide.js"></script>
+        <script type="text/javascript" src="js/knowledge-common.js"></script>
+        <script type="text/javascript" src="js/notice-list.js"></script>
+<!-- endbuild -->
     </c:param>
 
     <c:param name="PARAM_CONTENT">

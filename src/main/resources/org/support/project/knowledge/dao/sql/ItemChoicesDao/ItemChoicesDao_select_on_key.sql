@@ -4,4 +4,3 @@ CHOICE_NO = ?
  AND ITEM_NO = ?
  AND TYPE_ID = ?
  AND DELETE_FLAG = 0;
-;

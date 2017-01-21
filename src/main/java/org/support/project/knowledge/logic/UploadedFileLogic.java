@@ -34,7 +34,17 @@ public class UploadedFileLogic {
     public static UploadedFileLogic get() {
         return Container.getComp(UploadedFileLogic.class);
     }
-
+    
+    /** アイコン画像の種類 */
+    public static final String[] ICONS = { "_blank", "_page", "aac", "ai", "aiff", "avi", "bmp", "c", "cpp",
+            "css", "dat", "dmg", "doc", "dotx", "dwg", "dxf", "eps", "exe", "flv", "gif", "h",
+            "hpp", "html", "ics", "iso", "java", "jpg", "js", "key", "less", "mid", "mp3", "mp4",
+            "mpg", "odf", "ods", "odt", "otp", "ots", "ott", "pdf", "php", "png", "ppt", "psd",
+            "py", "qt", "rar", "rb", "rtf", "sass", "scss", "sql", "tga", "tgz", "tiff", "txt",
+            "wav", "xls", "xlsx", "xml", "yml", "zip" };
+    
+    
+    
     /**
      * ファイルを保存する
      * 
@@ -66,23 +76,28 @@ public class UploadedFileLogic {
      * @param entity
      * @return
      */
-    private UploadFile convUploadFile(String context, KnowledgeFilesEntity entity) {
+    public UploadFile convUploadFile(String context, KnowledgeFilesEntity entity) {
         UploadFile file = new UploadFile();
         file.setFileNo(entity.getFileNo());
         file.setUrl(context + "/open.file/download?fileNo=" + entity.getFileNo());
-        // file.setThumbnailUrl(context + "/open.file/thumbnai?fileNo=" + entity.getFileNo());
-        file.setThumbnailUrl(context + "/bower/teambox.free-file-icons/32px/_blank.png");
         file.setName(entity.getFileName());
         
-        //file.setType("-");
+        String thumbnai = context + "/bower/teambox.free-file-icons/16px/_blank.png";
         String extention = StringUtils.getExtension(entity.getFileName());
-        if (StringUtils.contains(extention, ".png", ".jpg", ".jpeg", ".gif", ".bmp")) {
-            file.setType("image");
-        } else if (StringUtils.contains(extention, ".pdf", ".pptx")) {
-            file.setType("slide");
-        } else {
-            file.setType("file");
+        if (StringUtils.isNotEmpty(extention)) {
+            extention = extention.substring(1); // 先頭の「.」を削除
+            if (StringUtils.contains(extention, "png", "jpg", "jpeg", "gif", "bmp")) {
+                file.setType("image");
+            } else if (StringUtils.contains(extention, "pdf", "pptx")) {
+                file.setType("slide");
+            } else {
+                file.setType("file");
+            }
+            if (StringUtils.contains(extention, ICONS)) {
+                thumbnai = context + "/bower/teambox.free-file-icons/16px/" + extention + ".png";
+            }
         }
+        file.setThumbnailUrl(thumbnai);
         
         file.setSize(entity.getFileSize());
         file.setDeleteUrl(context + "/protect.file/delete?fileNo=" + entity.getFileNo());

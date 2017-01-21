@@ -17,10 +17,10 @@ import org.support.project.common.test.OrderedRunner;
 import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.ormapping.tool.config.ORmappingToolConfig;
-import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.RolesDao;
@@ -113,9 +113,12 @@ public abstract class TestCommon {
         groupuser2 = new LoginedUser();
 
         // DBを完全初期化
-        InitializeDao initializeDao = InitializeDao.get();
-        initializeDao.dropAllTable();
-        InitDB.main(null);
+        DatabaseControlDao dao1 = new DatabaseControlDao();
+        dao1.dropAllTable();
+        org.support.project.web.dao.gen.DatabaseControlDao dao2 = new org.support.project.web.dao.gen.DatabaseControlDao();
+        dao2.dropAllTable();
+        InitDB.main(new String[0]);
+        
         // 全文検索エンジンのインデックスの消去
         AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
         File indexDir = new File(appConfig.getIndexPath());

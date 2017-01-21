@@ -44,6 +44,7 @@
                 console.log(result);
                 if (result.message.lastIndexOf('Processing has been completed', 0) === 0) {
                     $.notify(result.message, 'info');
+                    $("#transfer_msg").alert('close');
                 }
             };
             webSocket.onerror = function(message) {
@@ -113,11 +114,16 @@
 
         <form action="<%=request.getContextPath()%>/admin.database/custom_save" method="post" role="form">
             <div class="form-group">
+                <!-- 
                 <label for="driverClass"><%=jspUtil.label("knowledge.connection.label.driverClass")%></label> <br /> <label
                     class="radio-inline radio_block"> <input type="radio" value="org.h2.Driver" name="driverClass" id="driverClass_h2"
                     <%=jspUtil.checked("org.h2.Driver", "driverClass", true)%> /> <i class="fa fa-chain fa-lg"></i>&nbsp;org.h2.Driver(1.4.183)
-                </label> <br /> <label class="radio-inline radio_block"> <input type="radio" value="org.postgresql.Driver" name="driverClass"
-                    id="driverClass_postgresql" <%=jspUtil.checked("org.postgresql.Driver", "driverClass", false)%> /> <i class="fa fa-chain fa-lg"></i>&nbsp;org.postgresql.Driver(9.3-1103-jdbc41)
+                </label>
+                <br />
+                -->
+                <label class="radio-inline radio_block"> <input type="radio" value="org.postgresql.Driver" name="driverClass"
+                    id="driverClass_postgresql" <%=jspUtil.checked("org.postgresql.Driver", "driverClass", false)%> checked="checked"/>
+                    <i class="fa fa-chain fa-lg"></i>&nbsp;org.postgresql.Driver(9.3-1103-jdbc41)
                 </label>
             </div>
             <div class="form-group">

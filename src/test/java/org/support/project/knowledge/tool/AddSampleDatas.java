@@ -16,6 +16,7 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.knowledge.dao.ExGroupsDao;
+import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.tool.dao.InitializeDao;
@@ -51,11 +52,16 @@ public class AddSampleDatas {
         TimeZone.setDefault(zone);
 
         DBUserPool.get().setUser(2);
-        AddSampleDatas addSampleDatas = new AddSampleDatas();
-        addSampleDatas.createTables();
+
+        // DBを完全初期化
+        DatabaseControlDao dao1 = new DatabaseControlDao();
+        dao1.dropAllTable();
+        org.support.project.web.dao.gen.DatabaseControlDao dao2 = new org.support.project.web.dao.gen.DatabaseControlDao();
+        dao2.dropAllTable();
 
         InitDB.main(args);
 
+        AddSampleDatas addSampleDatas = new AddSampleDatas();
         addSampleDatas.doInitialize();
 
         AddSampleKnowledge.main(args);
@@ -69,18 +75,6 @@ public class AddSampleDatas {
         // break;
         // }
         // }
-    }
-
-    public void createTables() {
-        // 存在するテーブルを全て削除
-        InitializeDao initializeDao = InitializeDao.get();
-        initializeDao.dropAllTable();
-
-        // String[] sqlpaths = {
-        // "/org/support/project/web/database/ddl.sql",
-        // "/org/support/project/knowledge/database/ddl.sql"
-        // };
-        // initializeDao.initializeDatabase(sqlpaths);
     }
 
     public void doInitialize() throws ParserConfigurationException, SAXException, IOException {

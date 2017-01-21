@@ -38,19 +38,33 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
      */
     public List<KnowledgeFilesEntity> selectOnKnowledgeId(Long knowledgeId) {
         StringBuilder sql = new StringBuilder();
-        sql.append(
-                "SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, FILE_SIZE, PARSE_STATUS, "
-                + "INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
+        sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, DRAFT_ID, FILE_NAME, FILE_SIZE, PARSE_STATUS, ");
+        sql.append("INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
         sql.append("FROM KNOWLEDGE_FILES WHERE KNOWLEDGE_ID = ?;");
         return executeQueryList(sql.toString(), KnowledgeFilesEntity.class, knowledgeId);
     }
-
+    
+    /**
+     * 下書きに紐づく添付ファイルを取得
+     * @param draftId
+     * @return
+     */
+    public List<KnowledgeFilesEntity> selectOnDraftId(Long draftId) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, DRAFT_ID, FILE_NAME, FILE_SIZE, PARSE_STATUS, ");
+        sql.append("INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
+        sql.append("FROM KNOWLEDGE_FILES WHERE DRAFT_ID = ?;");
+        return executeQueryList(sql.toString(), KnowledgeFilesEntity.class, draftId);
+    }
+    
+    
+    
     /**
      * キーで1件取得 （ファイルのバイナリは取得しない）
      */
     public KnowledgeFilesEntity selectOnKeyWithoutBinary(Long fileNo) {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, FILE_SIZE, PARSE_STATUS, ");
+        sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, DRAFT_ID, FILE_NAME, FILE_SIZE, PARSE_STATUS, ");
         sql.append("INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
         sql.append("FROM KNOWLEDGE_FILES WHERE FILE_NO = ?;");
         return executeQuerySingle(sql.toString(), KnowledgeFilesEntity.class, fileNo);
@@ -74,11 +88,12 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
 
     /**
      * ナレッジに紐づいていないファイルで、かつ更新日が24時間前のものは削除する
+     * 下書きに紐付いているものも削除しない
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int deleteNotConnectFiles() {
         StringBuilder sql = new StringBuilder();
-        sql.append("DELETE FROM KNOWLEDGE_FILES WHERE KNOWLEDGE_ID IS NULL AND UPDATE_DATETIME < ? ");
+        sql.append("DELETE FROM KNOWLEDGE_FILES WHERE KNOWLEDGE_ID IS NULL AND DRAFT_ID IS NULL AND UPDATE_DATETIME < ? ");
         Timestamp timestamp = new Timestamp(new Date().getTime() - (1000 * 60 * 60 * 24));
         int count = executeUpdate(sql.toString(), timestamp);
         return count;
@@ -91,8 +106,8 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
      */
     public List<KnowledgeFilesEntity> selectWaitStateFiles() {
         StringBuilder sql = new StringBuilder();
-        sql.append(
-                "SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, FILE_SIZE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
+        sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, DRAFT_ID, FILE_SIZE, INSERT_USER, ");
+        sql.append("INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
         sql.append("FROM KNOWLEDGE_FILES WHERE PARSE_STATUS = 0 AND KNOWLEDGE_ID IS NOT NULL");
         return executeQueryList(sql.toString(), KnowledgeFilesEntity.class);
     }
@@ -112,5 +127,21 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
         sql.append("WHERE FILE_NO = ? ");
         executeUpdate(sql.toString(), parseStatus, updateUserId, new Timestamp(new Date().getTime()), fileNo);
     }
+
+    /**
+     * 下書きIDのセット
+     * @param entity ファイルEntity
+     * @param updateUserId 更新者
+     */
+    public void updateDraftId(KnowledgeFilesEntity entity, Integer updateUserId) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("UPDATE KNOWLEDGE_FILES ");
+        sql.append("SET DRAFT_ID = ?, KNOWLEDGE_ID = ?, UPDATE_USER = ?, UPDATE_DATETIME = ? ");
+        sql.append("WHERE FILE_NO = ? ");
+        executeUpdate(sql.toString(), entity.getDraftId(), entity.getKnowledgeId(), 
+                updateUserId, new Timestamp(new Date().getTime()), entity.getFileNo());
+        
+    }
+
 
 }

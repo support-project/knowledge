@@ -1,6 +1,7 @@
-<%@page import="org.support.project.knowledge.config.SystemConfig"%>
-<%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
+<%@page import="org.support.project.web.logic.HttpRequestCheckLogic"%>
+<%@page import="org.support.project.knowledge.config.SystemConfig"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -11,15 +12,21 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload.css" />
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
+<!-- build:css(src/main/webapp) css/page-protect-account.css -->
+<link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload.css" />
+<link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
+<link rel="stylesheet" href="bower/cropper/dist/cropper.min.css" />
+<!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.fileupload.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/account.js") %>"></script>
+<!-- build:js(src/main/webapp) js/page-protect-account.js -->
+<script type="text/javascript" src="bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="bower/jquery-file-upload/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="bower/cropper/dist/cropper.min.js"></script>
+<script type="text/javascript" src="js/account.js"></script>
+<!-- endbuild -->
 </c:param>
 
 
@@ -47,12 +54,11 @@
         </div>
         <div class="form-group" id="drop_target">
             <%= jspUtil.label("knowledge.account.label.icon.drop") %><br/>
-            （png/jpg/jpeg/gif）
         </div>
         <div id="fileupload">
             <span class="btn btn-info fileinput-button">
                 <i class="fa fa-cloud-upload"></i>&nbsp;<span><%= jspUtil.label("knowledge.account.label.icon.select") %></span>
-                <input type="file" name="files[]" multiple>
+                <input type="file" name="files[]" id="file">
             </span>
         </div>
         </form>
@@ -60,6 +66,9 @@
 
     <div class="col-sm-9 col-md-10">
         <form action="<%= request.getContextPath()%>/protect.account/update" method="post" role="form">
+        <input type="hidden" name="<%= HttpRequestCheckLogic.REQ_ID_KEY %>"
+            value="<%= jspUtil.out(HttpRequestCheckLogic.REQ_ID_KEY) %>" />
+        
 <% if(jspUtil.is(1, "authLdap")) { %>
             <div class="form-group">
                 <label for="userKey"><%= jspUtil.label("knowledge.auth.label.id") %></label>

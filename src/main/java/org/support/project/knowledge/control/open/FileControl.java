@@ -33,6 +33,10 @@ public class FileControl extends Control {
         if (entity == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
         }
+        if (entity.getFileBinary() == null) {
+            LOG.debug("File binary is null. [fileNo] " + fileNo);
+            return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+        }
         return download(entity.getFileName(), entity.getFileBinary(), entity.getFileSize().longValue());
     }
     

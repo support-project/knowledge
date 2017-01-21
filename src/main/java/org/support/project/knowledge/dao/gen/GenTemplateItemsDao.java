@@ -140,6 +140,14 @@ public class GenTemplateItemsDao extends AbstractDao {
         return executeQueryList(sql, TemplateItemsEntity.class, typeId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM TEMPLATE_ITEMS";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

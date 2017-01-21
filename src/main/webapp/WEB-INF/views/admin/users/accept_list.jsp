@@ -24,10 +24,16 @@
 
 <c:forEach var="entry" items="${entries}" varStatus="status">
 	<div class="list-group-item">
-		<a href="<%= request.getContextPath() %>/admin.users/accept/<%= jspUtil.out("entry.id") %>" class="btn btn-primary">
-			<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.accept.label.accept") %>
-		</a>
-		<h4 class="list-group-item-heading"><%= jspUtil.out("entry.userName") %> (<%= jspUtil.out("entry.userKey") %>)</h4>
+		<div class="list-group-item-heading">
+			<%= jspUtil.out("entry.userName") %> (<%= jspUtil.out("entry.userKey") %>)
+			<a href="<%= request.getContextPath() %>/admin.users/accept_delete/<%= jspUtil.out("entry.id") %>" class="pull-right btn btn-xs btn-danger">
+				<i class="fa fa-delete"></i>&nbsp;<%= jspUtil.label("knowledge.accept.label.delete") %>
+			</a>
+			<span class="pull-right">&nbsp;</span>
+			<a href="<%= request.getContextPath() %>/admin.users/accept/<%= jspUtil.out("entry.id") %>" class="pull-right btn btn-xs btn-primary">
+				<i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.accept.label.accept") %>
+			</a>
+		</div>
 		<p class="list-group-item-text">
 		<%= jspUtil.label("label.regist.datetime") %>
 			<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("user.insertDatetime")%> / 

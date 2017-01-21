@@ -102,6 +102,14 @@ public class GenCommentsDao extends AbstractDao {
         return executeQuerySingle(sql, CommentsEntity.class, commentNo);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM COMMENTS";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity

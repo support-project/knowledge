@@ -2,6 +2,29 @@ hljs.initHighlightingOnLoad();
 
 var emoji = window.emojiParser;
 
+var highlight = function(highlightPromises, jqobj, addstylus) {
+    highlightPromises.push(new Promise(function(resolve, reject) {
+        try {
+            if (addstylus) {
+                jqobj.addClass('stylus');
+            }
+            var text = jqobj.text();
+            if (text.indexOf('://') != -1) {
+                console.log('skip on hljs freeze word');
+                console.log(text);
+                return resolve();
+            }
+            var result = hljs.highlightAuto(text);
+            jqobj.html(result.value);
+            return resolve();
+        } catch (err) {
+            console.err(err);
+            return reject(err);
+        }
+    }));
+}
+
+
 /**
  * コードハイライト
  * @return Promise
@@ -9,43 +32,13 @@ var emoji = window.emojiParser;
 var codeHighlight = function(block) {
     var highlightPromises = [];
     block.find('pre code').not('.lang-math').each(function(i, block) {
-        var jqobj = $(this);
-        highlightPromises.push(new Promise(function(resolve, reject) {
-            try {
-                var text = jqobj.text();
-                if (text.indexOf('://') != -1) {
-                    console.log('skip on hljs freeze word');
-                    console.log(text);
-                    return resolve();
-                }
-                var result = hljs.highlightAuto(text);
-                jqobj.html(result.value);
-                return resolve();
-            } catch (err) {
-                console.err(err);
-                return reject(err);
-            }
-        }));
+        highlight(highlightPromises, $(this));
     });
     block.find('p code').not('.lang-math').each(function(i, block) {
-        var jqobj = $(this);
-        highlightPromises.push(new Promise(function(resolve, reject) {
-            try {
-                jqobj.addClass('stylus');
-                var text = jqobj.text();
-                if (text.indexOf('://') != -1) {
-                    console.log('skip on hljs freeze word');
-                    console.log(text);
-                    return resolve();
-                }
-                var result = hljs.highlightAuto(text);
-                jqobj.html(result.value);
-                return resolve();
-            } catch (err) {
-                console.err(err);
-                return reject(err);
-            }
-        }));
+        highlight(highlightPromises, $(this), true);
+    });
+    block.find('li code').not('.lang-math').each(function(i, block) {
+        highlight(highlightPromises, $(this), true);
     });
     return Promise.all(highlightPromises);
 };
@@ -168,6 +161,21 @@ var parseMarkdown = function(title, content, previewAreaId, titleAreaId) {
                 return resolve();
             });
         });
+    });
+};
+
+var removeAddedFile = function(fileNo) {
+    var url = _CONTEXT + '/protect.file/delete/' + fileNo;
+    $.ajax({
+        type : 'DELETE',
+        url : url,
+        success : function(data, dataType) {
+            $.notify(_REMOVE_FILE, 'info');
+            $('#file-' + fileNo).remove();
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            $.notify(_FAIL_REMOVE_FILE, 'warn');
+        }
     });
 };
 

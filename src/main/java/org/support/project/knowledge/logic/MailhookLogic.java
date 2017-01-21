@@ -52,6 +52,7 @@ import org.support.project.knowledge.entity.MailHookConditionsEntity;
 import org.support.project.knowledge.entity.MailHooksEntity;
 import org.support.project.knowledge.entity.MailPostsEntity;
 import org.support.project.knowledge.entity.TagsEntity;
+import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
@@ -345,7 +346,13 @@ public class MailhookLogic {
             editors = existsEditors;
         }
         
-        KnowledgesEntity entity = KnowledgeLogic.get().update(knowledge, tagList, null, viewers, editors, null, loginedUser);
+        KnowledgeData data = new KnowledgeData();
+        data.setKnowledge(knowledge);
+        data.setTags(tagList);
+        data.setViewers(viewers);
+        data.setEditors(editors);
+        
+        KnowledgesEntity entity = KnowledgeLogic.get().update(data, loginedUser);
         LOG.info("Knowledge[" + entity.getKnowledgeId() + "] " + entity.getTitle() + " was updated.");
     }
 
@@ -407,7 +414,14 @@ public class MailhookLogic {
         }
         List<Long> fileNos = addAtachFiles(msg);
         
-        entity = KnowledgeLogic.get().insert(entity, tagList, fileNos, viewers, editors, null, loginedUser);
+        KnowledgeData data = new KnowledgeData();
+        data.setKnowledge(entity);
+        data.setTags(tagList);
+        data.setViewers(viewers);
+        data.setEditors(editors);
+        data.setFileNos(fileNos);
+        
+        entity = KnowledgeLogic.get().insert(data, loginedUser);
         
         MailPostsEntity post = new MailPostsEntity();
         post.setMessageId(msgId);

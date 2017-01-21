@@ -143,12 +143,15 @@ Comments
 #ipop {
     padding: 0;
     width: 320px;
-/*    height: 300px; */
-    position: absolute;
+    height: 220px;
+    position: fixed;
     display: none;
     z-index: 100000;
 }
-
+#toc {
+    overflow:auto;
+    height: 178px;
+}
 .toc-h {
     font-size: small;
 }
@@ -162,4 +165,6 @@ Comments
     padding-left: 35px;
 }
 
-
+.dispKnowledgeId {
+    color: #cccccc;
+}

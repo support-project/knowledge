@@ -21,7 +21,7 @@ import org.support.project.di.Instance;
 import org.support.project.aop.Aspect;
 
 /**
- * Webhooks 設定
+ * Webhook 設定
  * this class is auto generate and not edit.
  * if modify dao method, you can edit WebhookConfigsDao.
  */
@@ -100,6 +100,14 @@ public class GenWebhookConfigsDao extends AbstractDao {
     public WebhookConfigsEntity selectOnKey(Integer hookId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/WebhookConfigsDao/WebhookConfigsDao_select_on_key.sql");
         return executeQuerySingle(sql, WebhookConfigsEntity.class, hookId);
+    }
+    /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM WEBHOOK_CONFIGS";
+        return executeQuerySingle(sql, Integer.class);
     }
     /**
      * Physical Insert.

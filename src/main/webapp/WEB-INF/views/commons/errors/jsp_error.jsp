@@ -8,14 +8,14 @@
 <h3>Error</h3>
 
 <p>
-	<fmt:bundle basename="appresource">
-	<fmt:message key="message.httpstatus.500" />
-	</fmt:bundle>
+    <fmt:bundle basename="appresource">
+    <fmt:message key="message.httpstatus.500" />
+    </fmt:bundle>
 </p>
 
 <%
 if (request.getRemoteAddr().startsWith("192.168.") || request.getRemoteAddr().equals("127.0.0.1")) {
-	exception.printStackTrace(new java.io.PrintWriter(out)); 
+    exception.printStackTrace(new java.io.PrintWriter(out)); 
 }
 %>
 

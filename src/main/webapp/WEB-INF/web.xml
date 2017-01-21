@@ -28,6 +28,10 @@
             <param-value>UTF-8</param-value>
         </init-param>
     </filter>
+    <filter>
+        <filter-name>SeqFilter</filter-name>
+        <filter-class>org.support.project.web.filter.SeqFilter</filter-class>
+    </filter>
 
     <!--
     <filter>
@@ -99,6 +103,11 @@
 
     <filter-mapping>
         <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SeqFilter</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>

@@ -102,6 +102,14 @@ public class GenKnowledgesDao extends AbstractDao {
         return executeQuerySingle(sql, KnowledgesEntity.class, knowledgeId);
     }
     /**
+     * Count all data
+     * @return count
+     */
+    public int physicalCountAll() {
+        String sql = "SELECT COUNT(*) FROM KNOWLEDGES";
+        return executeQuerySingle(sql, Integer.class);
+    }
+    /**
      * Physical Insert.
      * it is not create key on database sequence.
      * @param entity entity
@@ -120,6 +128,7 @@ public class GenKnowledgesDao extends AbstractDao {
             entity.getLikeCount(), 
             entity.getCommentCount(), 
             entity.getTypeId(), 
+            entity.getNotifyStatus(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
             entity.getUpdateUser(), 
@@ -151,6 +160,7 @@ public class GenKnowledgesDao extends AbstractDao {
             entity.getLikeCount(), 
             entity.getCommentCount(), 
             entity.getTypeId(), 
+            entity.getNotifyStatus(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
             entity.getUpdateUser(), 
@@ -204,6 +214,7 @@ public class GenKnowledgesDao extends AbstractDao {
             entity.getLikeCount(), 
             entity.getCommentCount(), 
             entity.getTypeId(), 
+            entity.getNotifyStatus(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
             entity.getUpdateUser(), 

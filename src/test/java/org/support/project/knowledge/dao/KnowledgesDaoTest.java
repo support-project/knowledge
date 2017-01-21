@@ -14,6 +14,7 @@ import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
 
 public class KnowledgesDaoTest extends TestCommon {
@@ -33,7 +34,11 @@ public class KnowledgesDaoTest extends TestCommon {
             entity.setTitle("Test-" + i);
             entity.setContent("テスト");
             KnowledgeLogic logic = KnowledgeLogic.get();
-            entity = logic.insert(entity, null, new ArrayList<Long>(), null, null, null, loginedUser);
+            
+            KnowledgeData data = new KnowledgeData();
+            data.setKnowledge(entity);
+
+            entity = logic.insert(data, loginedUser);
             knowledgeIds.add(entity.getKnowledgeId());
         }
         KnowledgesDao dao = KnowledgesDao.get();
@@ -54,7 +59,11 @@ public class KnowledgesDaoTest extends TestCommon {
             entity.setTitle("Test-" + i);
             entity.setContent("テスト");
             KnowledgeLogic logic = KnowledgeLogic.get();
-            entity = logic.insert(entity, null, new ArrayList<Long>(), null, null, null, loginedUser);
+            
+            KnowledgeData data = new KnowledgeData();
+            data.setKnowledge(entity);
+
+            entity = logic.insert(data, loginedUser);
             knowledge.add(entity);
 
             for (int j = 0; j < i; j++) {
@@ -92,7 +101,11 @@ public class KnowledgesDaoTest extends TestCommon {
             entity.setContent("テスト");
             entity.setPublicFlag(0);
             KnowledgeLogic logic = KnowledgeLogic.get();
-            entity = logic.insert(entity, null, new ArrayList<Long>(), null, null, null, loginedUser);
+            
+            KnowledgeData data = new KnowledgeData();
+            data.setKnowledge(entity);
+            
+            entity = logic.insert(data, loginedUser);
             knowledge.add(entity);
 
             for (int j = 0; j < i; j++) {

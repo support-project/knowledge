@@ -4,7 +4,7 @@
     "jquery": "2.2.3",
     "bootstrap": "3.3.6",
     "bootswatch": "3.3.6",
-    "font-awesome": "4.5.0",
+    "font-awesome": "4.7.0",
     "html5shiv": "3.7.2",
     "respond": "1.4.2",
     "notifyjs": "0.3.2",
@@ -21,11 +21,12 @@
     "notify.js": "1.2.8",
     "emoji-parser": "0.1.1",
     "bluebird": "3.0.6",
-    "jquery-oembed-all": "nfl/jquery-oembed-all",
+    "jquery-oembed-all": "support-project/jquery-oembed-all",
     "flag-icon-css": "0.8.5",
     "moment": "2.12.0",
     "clipboard": "1.5.10",
-    "MathJax": "2.6.1"
+    "MathJax": "2.6.1",
+    "cropper": "2.3.4"
   },
   "devDependencies": {},
   "resolutions": {

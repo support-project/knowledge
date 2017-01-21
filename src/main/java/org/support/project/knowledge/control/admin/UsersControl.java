@@ -39,7 +39,7 @@ public class UsersControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary list() throws InvalidParamException {
         Integer offset = super.getPathInteger(0);
@@ -57,7 +57,7 @@ public class UsersControl extends Control {
      * @param keyword
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     private Boundary list(Integer offset, String keyword) {
         UsersDao dao = UsersDao.get();
@@ -83,7 +83,7 @@ public class UsersControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary view_add() {
         String offset = super.getParam("offset", String.class);
@@ -143,7 +143,7 @@ public class UsersControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary view_edit() throws InvalidParamException {
         String offset = super.getParam("offset", String.class);
@@ -174,7 +174,7 @@ public class UsersControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary create() {
         String offset = super.getParam("offset", String.class);
@@ -225,7 +225,7 @@ public class UsersControl extends Control {
      * 
      * @return
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary save() {
         String offset = super.getParam("offset", String.class);
@@ -290,7 +290,7 @@ public class UsersControl extends Control {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary delete() throws Exception {
         String offset = super.getParam("offset", String.class);
@@ -317,7 +317,7 @@ public class UsersControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary accept_list() {
         ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
@@ -331,7 +331,7 @@ public class UsersControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary accept() {
         String id = getPathInfo();
@@ -365,4 +365,33 @@ public class UsersControl extends Control {
         return accept_list();
     }
 
+   /**
+     * 承認待ちユーザ削除
+     *
+     * @return
+     */
+    @Get(subscribeToken = "admin")
+    @Auth(roles = "admin")
+    public Boundary accept_delete() {
+        String id = getPathInfo();
+        if (StringUtils.isEmpty(id)) {
+            return accept_list();
+        }
+        if (id.startsWith("/")) {
+            id = id.substring(1);
+        }
+
+        ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
+        ProvisionalRegistrationsEntity entity = dao.selectOnKey(id);
+        if (entity == null) {
+            // 削除する仮登録情報が見つかりませんでした。（他の管理者が削除）
+            addMsgWarn("message.allready.deleted");
+            return accept_list();
+        }
+
+        dao.delete(entity); 
+        addMsgSuccess("message.success.delete");
+
+        return accept_list();
+    }
 }

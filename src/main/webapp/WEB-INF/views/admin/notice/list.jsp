@@ -14,18 +14,22 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
     <c:param name="PARAM_HEAD">
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" />
-        <link rel="stylesheet" href="<%= jspUtil.mustReloadFile("/css/markdown.css") %>" />
+<!-- build:css(src/main/webapp) css/page-notice-list.css -->
+        <link rel="stylesheet" href="bower/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" />
+        <link rel="stylesheet" href="css/markdown.css" />
+<!-- endbuild -->
     </c:param>
 
     <c:param name="PARAM_SCRIPTS">
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
-        <script type="text/javascript" src="<%=jspUtil.mustReloadFile("/js/knowledge-common.js")%>"></script>
-        <script type="text/javascript" src="<%=jspUtil.mustReloadFile("/js/notice.js")%>"></script>
+<!-- build:js(src/main/webapp) js/page-notice-list.js -->
+        <script type="text/javascript" src="bower/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+        <script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"></script>
+        <script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
+        <script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
+        <script type="text/javascript" src="js/knowledge-common.js"></script>
+        <script type="text/javascript" src="js/notice.js"></script>
+<!-- endbuild -->
+        <script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
     </c:param>
 
     <c:param name="PARAM_CONTENT">
@@ -41,9 +45,9 @@
 
         <nav>
             <ul class="pager">
-                <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> <%=jspUtil.label("label.previous")%></a></li>
-                <li><a href="#" class="addButton" data-toggle="modal" data-target="#editModal"><i class="fa fa-plus-circle"></i>&nbsp; <%=jspUtil.label("label.add")%></a></li>
-                <li class="next"><a href="#"><%=jspUtil.label("label.next")%> <span aria-hidden="true">&rarr;</span></a></li>
+                <li class="previous"><a class="previousButton"><span aria-hidden="true">&larr;</span> <%=jspUtil.label("label.previous")%></a></li>
+                <li><a class="addButton" data-toggle="modal" data-target="#editModal"><i class="fa fa-plus-circle"></i>&nbsp; <%=jspUtil.label("label.add")%></a></li>
+                <li class="next"><a class="nextButton"><%=jspUtil.label("label.next")%> <span aria-hidden="true">&rarr;</span></a></li>
             </ul>
         </nav>
 
@@ -51,9 +55,9 @@
 
         <nav>
             <ul class="pager">
-                <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> <%=jspUtil.label("label.previous")%></a></li>
-                <li><a href="#" class="addButton" data-toggle="modal" data-target="#editModal"><i class="fa fa-plus-circle"></i>&nbsp; <%=jspUtil.label("label.add")%></a></li>
-                <li class="next"><a href="#"><%=jspUtil.label("label.next")%> <span aria-hidden="true">&rarr;</span></a></li>
+                <li class="previous"><a class="previousButton"><span aria-hidden="true">&larr;</span> <%=jspUtil.label("label.previous")%></a></li>
+                <li><a class="addButton" data-toggle="modal" data-target="#editModal"><i class="fa fa-plus-circle"></i>&nbsp; <%=jspUtil.label("label.add")%></a></li>
+                <li class="next"><a class="nextButton"><%=jspUtil.label("label.next")%> <span aria-hidden="true">&rarr;</span></a></li>
             </ul>
         </nav>
 

@@ -121,7 +121,7 @@ var getGroups = function(keyword, offset, listId, pageId, selectFunc) {
         } else {
             html+= '<div class="list-group">';
             for (var int = 0; int < result.length; int++) {
-                html += '<a href="#" class="list-group-item" onclick="' + selectFunc + '(' + int + ')">';
+                html += '<a class="list-group-item" onclick="' + selectFunc + '(' + int + ')">';
                 html += result[int].label;
                 html += '</a>';
             }

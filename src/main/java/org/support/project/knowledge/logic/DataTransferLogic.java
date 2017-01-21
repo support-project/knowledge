@@ -26,11 +26,12 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
+import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.ormapping.config.ConnectionConfig;
+import org.support.project.ormapping.config.ORMappingParameter;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.ormapping.dao.AbstractDao;
-import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.ormapping.transaction.TransactionManager;
 import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.RolesDao;
@@ -72,12 +73,15 @@ public class DataTransferLogic {
         InitDB initDB = new InitDB();
         initDB.start();
         
-        // コピー先のDBの初期化(テーブルを全て消し、マイグレーション実行）
+        // コピー先のDBの初期化
         LOG.info("migrate to db");
         ConnectionManager.getInstance().setDefaultConnectionName(to.getName());
-        InitializeDao initializeDao = InitializeDao.get();
-        initializeDao.setConnectionName(to.getName());
-        initializeDao.dropAllTable();
+        DatabaseControlDao dao1 = new DatabaseControlDao();
+        org.support.project.web.dao.gen.DatabaseControlDao dao2 = new org.support.project.web.dao.gen.DatabaseControlDao();
+        dao1.setConnectionName(to.getName());
+        dao2.setConnectionName(to.getName());
+        dao1.dropAllTable();
+        dao2.dropAllTable();
         initDB.start();
 
         // データコピー先のDBに入っている、初期データを削除
@@ -96,10 +100,13 @@ public class DataTransferLogic {
             Method truncateMethods = targetDao.getClass().getMethod("truncate");
             truncateMethods.invoke(targetDao);
             try {
-                Method resetSequenceMethods = targetDao.getClass().getMethod("resetSequence");
-                resetSequenceMethods.invoke(targetDao);
+                String driverClass = ConnectionManager.getInstance().getDriverClass(to.getName());
+                if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
+                    Method resetSequenceMethods = targetDao.getClass().getMethod("resetSequence");
+                    resetSequenceMethods.invoke(targetDao);
+                }
             } catch (Exception e) {
-                LOG.info(e.getMessage());
+                LOG.debug(e.getMessage());
             }
         }
 
@@ -117,28 +124,51 @@ public class DataTransferLogic {
                 LOG.info("Data transfer : " + class1.getName());
                 Object dao = Container.getComp(class1);
                 // From からデータ取得
-                LOG.info("   -> load data from " + from.getName());
                 ConnectionManager.getInstance().setDefaultConnectionName(from.getName());
                 Method setConnectionNameMethods = class1.getMethod("setConnectionName", String.class);
                 setConnectionNameMethods.invoke(dao, from.getName());
-
-                Method selectAllMethods = class1.getMethod("physicalSelectAll");
-                List<?> list = (List<?>) selectAllMethods.invoke(dao);
-
-                // Toへデータ登録
-                LOG.info("   -> insert data to " + to.getName());
-                ConnectionManager.getInstance().setDefaultConnectionName(to.getName());
-                setConnectionNameMethods.invoke(dao, to.getName());
-                TransactionManager transactionManager = Container.getComp(TransactionManager.class);
-                transactionManager.start(to.getName());
-                for (Object entity : list) {
-                    if (LOG.isTraceEnabled()) {
-                        LOG.trace(entity);
+                
+                try {
+                    int limit = 100;
+                    Method countAllMethods = class1.getMethod("physicalCountAll");
+                    int count = (int) countAllMethods.invoke(dao);
+                    if (count > 0) {
+                        int loop = count / limit;
+                        if (count % limit != 0) {
+                            loop++;
+                        }
+                        for (int i = 0; i < loop; i++) {
+                            ConnectionManager.getInstance().setDefaultConnectionName(from.getName());
+                            setConnectionNameMethods.invoke(dao, from.getName());
+                            // 100 件毎にデータ移行する
+                            Object[] args = new Object[2];
+                            args[0] = limit;
+                            args[1] = limit * i;
+                            LOG.trace("   -> load data from " + from.getName());
+                            Method selectAllMethods = class1.getMethod("physicalSelectAllWithPager", int.class, int.class);
+                            List<?> list = (List<?>) selectAllMethods.invoke(dao, args);
+                            
+                            // Toへデータ登録
+                            LOG.info("   -> insert data to " + to.getName());
+                            ConnectionManager.getInstance().setDefaultConnectionName(to.getName());
+                            setConnectionNameMethods.invoke(dao, to.getName());
+                            TransactionManager transactionManager = Container.getComp(TransactionManager.class);
+                            transactionManager.start(to.getName());
+                            for (Object entity : list) {
+                                if (LOG.isTraceEnabled()) {
+                                    LOG.trace(entity);
+                                }
+                                Method insertMethods = class1.getMethod("rawPhysicalInsert", entity.getClass());
+                                insertMethods.invoke(dao, entity);
+                            }
+                            transactionManager.commit(to.getName());
+                        }
                     }
-                    Method insertMethods = class1.getMethod("rawPhysicalInsert", entity.getClass());
-                    insertMethods.invoke(dao, entity);
+                } catch (NoSuchMethodException e) {
+                    LOG.info("skip: " + class1.getName());
+                    LOG.info(e.getMessage());
+                    continue;
                 }
-                transactionManager.commit(to.getName());
             }
         }
     }

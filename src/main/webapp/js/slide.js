@@ -68,8 +68,8 @@ var showSlide = function(parent) {
                         slidehtml += '<div class="slideshow-container">';
                         for (var i = 0; i < data.files.length; i++) {
                             slidehtml += '<div class="mySlides fade in">';
-                            slidehtml += '<img src="' + _CONTEXT + '/open.file/slide/' + data.fileNo + '/';
-                            slidehtml += data.files[i] + '" alt="slide-' + i + '" class="slide-image" />';
+                            slidehtml += '<img src="' + _CONTEXT + '/images/loader.gif" lagy="' + _CONTEXT + '/open.file/slide/' + data.fileNo + '/';
+                            slidehtml += data.files[i] + '" alt="slide-' + i + '" class="slide-image slide-image-' + fileNo + '" />';
                             slidehtml += '</div>';
                         }
                         slidehtml += '</div><br/>';
@@ -78,7 +78,7 @@ var showSlide = function(parent) {
                         slidehtml += '<a class="next" onclick="plusSlides(1, \'' + slideId + '\')">next &#10095;</a>';
                         slidehtml += '<div style="text-align:center">';
                         slidehtml += '<div class="numbertext"><span class="current">1</span> / ' + data.files.length;
-                        slidehtml += '&nbsp;&nbsp;&nbsp;<a href="#" onclick="requestFullscreen(\'' + slideId + '\');">';
+                        slidehtml += '&nbsp;&nbsp;&nbsp;<a onclick="requestFullscreen(\'' + slideId + '\');">';
                         slidehtml += '<i class="full fa fa-television fa-2x" aria-hidden="true"></i></a></div>';
                         if (data.files.length < 60) {
                             slidehtml += '<div class="dotArea">';
@@ -125,7 +125,10 @@ function showSlides(n, slideId) {
             dots[i].className = dots[i].className.replace(" active", "");
         }
     }
-    slides[slideIndex-1].style.display = "block"; 
+    slides[slideIndex-1].style.display = "block";
+    var slideimg = $(slides[slideIndex-1].getElementsByTagName('img')[0]);
+    slideimg.attr('src', slideimg.attr('lagy'));
+    
     if (dots[slideIndex-1]) {
         dots[slideIndex-1].className += " active";
     }
@@ -134,4 +137,22 @@ function showSlides(n, slideId) {
     indexMap[slideId] = slideIndex;
 }
 
+$(document).on({
+	'mouseenter': function () {
+		var id = $(this).attr('id');
+		$(window).on('keypress', function (e) {
+			e.preventDefault();
 
+			if (37 == e.keyCode) {
+				plusSlides(-1, id);
+			}
+
+			if (39 == e.keyCode) {
+				plusSlides(1, id);
+			}
+		});
+	},
+	'mouseleave': function () {
+		$(window).off('keypress');
+	}
+}, '.slideshow-area');

@@ -17,7 +17,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 
 /**
- * Webhooks 設定
+ * Webhook 設定
  */
 @DI(instance = Instance.Prototype)
 public class GenWebhookConfigsEntity implements Serializable {
@@ -59,9 +59,9 @@ public class GenWebhookConfigsEntity implements Serializable {
     private Integer insertUser;
     /** 登録日時 */
     private Timestamp insertDatetime;
-    /**  */
+    /** 更新ユーザ */
     private Integer updateUser;
-    /**  */
+    /** 更新日時 */
     private Timestamp updateDatetime;
     /** 削除フラグ */
     private Integer deleteFlag;
@@ -147,15 +147,15 @@ public class GenWebhookConfigsEntity implements Serializable {
     }
 
     /**
-     * Get .
-     * @return 
+     * Get 更新ユーザ.
+     * @return 更新ユーザ
      */
     public Integer getUpdateUser() {
         return this.updateUser;
     }
     /**
-     * Set .
-     * @param updateUser 
+     * Set 更新ユーザ.
+     * @param updateUser 更新ユーザ
      * @return this object     */
     public GenWebhookConfigsEntity setUpdateUser(Integer updateUser) {
         this.updateUser = updateUser;
@@ -163,15 +163,15 @@ public class GenWebhookConfigsEntity implements Serializable {
     }
 
     /**
-     * Get .
-     * @return 
+     * Get 更新日時.
+     * @return 更新日時
      */
     public Timestamp getUpdateDatetime() {
         return this.updateDatetime;
     }
     /**
-     * Set .
-     * @param updateDatetime 
+     * Set 更新日時.
+     * @param updateDatetime 更新日時
      * @return this object     */
     public GenWebhookConfigsEntity setUpdateDatetime(Timestamp updateDatetime) {
         this.updateDatetime = updateDatetime;

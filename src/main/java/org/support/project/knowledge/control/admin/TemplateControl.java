@@ -35,7 +35,7 @@ public class TemplateControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary list() {
         // テンプレートの個数はあまり多く出来ないようにする（でないと登録の画面が微妙）
@@ -59,7 +59,7 @@ public class TemplateControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary view_add() {
         return forward("view_add.jsp");
@@ -71,7 +71,7 @@ public class TemplateControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary view_edit() throws InvalidParamException {
         Integer id = super.getPathInteger();
@@ -193,7 +193,7 @@ public class TemplateControl extends Control {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary create() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
         List<ValidateError> errors = new ArrayList<ValidateError>();
@@ -219,7 +219,7 @@ public class TemplateControl extends Control {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary update() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
         List<ValidateError> errors = new ArrayList<ValidateError>();
@@ -245,7 +245,7 @@ public class TemplateControl extends Control {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary delete() throws Exception {
         Integer typeId = getParam("typeId", Integer.class);

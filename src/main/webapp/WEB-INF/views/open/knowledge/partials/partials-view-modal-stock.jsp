@@ -19,9 +19,9 @@
                     <%-- コンテンツ --%>
                     <nav>
                         <ul class="pager">
-                            <li class="previous"><a href="#" onclick="getStockInfoPrevious();"> <span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
+                            <li class="previous"><a onclick="getStockInfoPrevious();"> <span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
                             </a></li>
-                            <li class="next"><a href="#" onclick="getStockInfoNext();"> <%= jspUtil.label("label.next") %> <span
+                            <li class="next"><a onclick="getStockInfoNext();"> <%= jspUtil.label("label.next") %> <span
                                     aria-hidden="true">&rarr;</span>
                             </a></li>
                         </ul>

@@ -8,6 +8,7 @@ SET
  , LIKE_COUNT = ?
  , COMMENT_COUNT = ?
  , TYPE_ID = ?
+ , NOTIFY_STATUS = ?
  , INSERT_USER = ?
  , INSERT_DATETIME = ?
  , UPDATE_USER = ?

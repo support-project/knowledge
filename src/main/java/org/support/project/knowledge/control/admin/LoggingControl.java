@@ -29,7 +29,7 @@ public class LoggingControl extends Control {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(LoggingControl.class);
 
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary index() {
         LOG.trace("index");
@@ -47,7 +47,7 @@ public class LoggingControl extends Control {
         return forward("index.jsp");
     }
 
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary delete_config() {
         LOG.trace("delete_config");
@@ -77,7 +77,7 @@ public class LoggingControl extends Control {
         return index();
     }
 
-    @Get
+    @Get(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary download() throws FileNotFoundException, InvalidParamException {
         LOG.trace("download");

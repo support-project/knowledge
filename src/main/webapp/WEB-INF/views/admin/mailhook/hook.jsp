@@ -13,13 +13,17 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
+<!-- build:css(src/main/webapp) css/page-mailhook.css -->
+<link rel="stylesheet" href="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
+<!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/mailhook.js") %>"></script>
-<script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/targetselect.js") %>"></script>
+<!-- build:js(src/main/webapp) js/page-mailhook.js -->
+<script type="text/javascript" src="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script type="text/javascript" src="js/mailhook.js"></script>
+<script type="text/javascript" src="js/targetselect.js"></script>
+<!-- endbuild -->
 
 <script>
 function deleteMail() {

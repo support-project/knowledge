@@ -31,7 +31,7 @@ var changeTemplate = function() {
 };
 
 var addTemplateItem = function(template) {
-    var templateTag = '<h5><i class="fa ' + template.typeIcon + '"></i>&nbsp;' + template.typeName + '</h5>';
+    var templateTag = '<i class="fa ' + template.typeIcon + '"></i>&nbsp;' + template.typeName + '';
     $('#template').html(templateTag);
     
     if (template.items && template.items.length > 0) {

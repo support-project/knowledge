@@ -50,18 +50,10 @@ var showAgenda = function() {
     $.ipop = function() {
         var wx, wy; // ウインドウの左上座標
 
-        // ウインドウの座標を画面中央にする。
-        // wx = $(document).scrollLeft() + ($(window).width() - $('#ipop').outerWidth()) / 2;
-        // if (wx < 0) wx = 0;
-        // wy = $(document).scrollTop() + ($(window).height() - $('#ipop').outerHeight()) / 2;
-        // if (wy < 0) wy = 0;
-
         // ターゲットの場所に表示
-//        var target = $('#panel_target');
-//        wx = target.offset().left;
-//        wy = target.offset().top;
-        wx = 0;
-        wy = 0;
+        var target = $('#buttonToc');
+        wx = target.offset().left;
+        wy = 50;
 
         // ポップアップウインドウを表示する。
         $('#ipop').css({

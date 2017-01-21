@@ -34,7 +34,7 @@ public class ProxyControl extends Control {
      * 
      * @return
      */
-    @Get
+    @Get(publishToken = "admin")
     @Auth(roles = "admin")
     public Boundary config() {
         ProxyConfigsDao dao = ProxyConfigsDao.get();
@@ -47,7 +47,7 @@ public class ProxyControl extends Control {
         return forward("config.jsp");
     }
 
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary save() throws Exception {
         List<ValidateError> errors = new ArrayList<>();
@@ -92,7 +92,7 @@ public class ProxyControl extends Control {
         return config();
     }
 
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary test() throws Exception {
         try {
@@ -156,7 +156,7 @@ public class ProxyControl extends Control {
         return forward("config.jsp");
     }
 
-    @Post
+    @Post(subscribeToken = "admin")
     @Auth(roles = "admin")
     public Boundary delete() throws Exception {
         ProxyConfigsDao dao = ProxyConfigsDao.get();

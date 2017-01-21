@@ -7,11 +7,13 @@ import org.apache.commons.fileupload.FileItem;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
+import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.knowledge.vo.UploadResults;
@@ -20,7 +22,7 @@ import org.support.project.web.boundary.Boundary;
 import org.support.project.web.boundary.JsonBoundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
-import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Delete;
 import org.support.project.web.control.service.Post;
 
 @DI(instance = Instance.Prototype)
@@ -37,7 +39,7 @@ public class FileControl extends Control {
      * @return
      * @throws Exception
      */
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary upload() throws Exception {
         UploadResults results = new UploadResults();
         List<UploadFile> files = new ArrayList<UploadFile>();
@@ -68,27 +70,30 @@ public class FileControl extends Control {
         return send(HttpStatus.SC_200_OK, results);
     }
 
-    @Get
+    @Delete(subscribeToken = "knowledge")
     public JsonBoundary delete() throws Exception {
         LOG.trace("delete()");
-
-        Long fileNo = getParam("fileNo", Long.class);
+        Long fileNo = getPathLong();
         KnowledgeFilesEntity entity = filesDao.selectOnKeyWithoutBinary(fileNo);
         if (entity == null) {
             // 既に削除済
             return send(HttpStatus.SC_200_OK, "success: " + fileNo);
         }
-
-        if (!getLoginedUser().isAdmin()) {
+        
+        if (StringUtils.isEmpty(entity.getKnowledgeId()) || entity.getKnowledgeId() == 0) {
+            // 下書き中は、登録者のみ削除可能
             if (entity.getInsertUser().intValue() != getLoginUserId().intValue()) {
-                // 登録者以外に削除はさせない
+                LOG.info("Login user is not created user.");
+                return send(HttpStatus.SC_400_BAD_REQUEST, "fail: " + fileNo);
+            }
+        } else {
+            if (!KnowledgeLogic.get().isEditor(getLoginedUser(), entity.getKnowledgeId())) {
+                // アクセス権が無い
                 return send(HttpStatus.SC_400_BAD_REQUEST, "fail: " + fileNo);
             }
         }
-
         // 削除実行
         fileLogic.removeFile(fileNo, getLoginedUser());
-
         return send(HttpStatus.SC_200_OK, "success: " + fileNo);
     }
 

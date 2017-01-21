@@ -1,93 +1,71 @@
 .preview {
-	word-break: break-all;
-	margin-top: 50px;
+    word-break: break-all;
+    margin-top: 50px;
+    padding: 5px;
 }
 
 
 .bootstrap-tagsinput { width: 100%; }
 .bootstrap-tagsinput input {
-	min-width: 300px;
+    min-width: 300px;
 }
 
-
+.file-group {
+    margin-bottom: 6px;
+}
 .filediv {
-	margin: 10px;
-	border-bottom: 1px dotted #cccccc;
-	padding-bottom: 2px;
-}
-.file-image {
-	float: left;
-}
-.file-label {
-	height: 30px;
-	width: 40%;
-	line-height: 30px;
-	margin: 0 auto;
-	vertical-align: middle;
-	float: left;
-}
-@media only screen and (max-width:767px){
-	.file-label {
-		white-space: pre;
-	}
-	.file-label:after {
-		white-space: pre;
-		content: "\A";
-	}
-}
-@media only screen and (min-width:768px){
-	.fileLabelBr {
-		display: none;
-	}
+    margin: 10px;
+    border-bottom: 1px dotted #cccccc;
+    padding-bottom: 2px;
 }
 
 #drop_target {
-	border: 1px solid gray;
-	padding: 5px;
-	border-radius: 10px;		/* CSS3草案 */
-	-webkit-border-radius: 10px;	/* Safari,Google Chrome用 */
-	-moz-border-radius: 10px;	/* Firefox用 */
+    border: 1px solid gray;
+    padding: 5px;
+    border-radius: 10px;        /* CSS3草案 */
+    -webkit-border-radius: 10px;    /* Safari,Google Chrome用 */
+    -moz-border-radius: 10px;    /* Firefox用 */
 }
 
 
 @media only screen and (max-width:767px){
-	.radio-inline { 
-		margin-left: 10px;
-	}
+    .radio-inline { 
+        margin-left: 10px;
+    }
 }
 
 
 .emoji {
-	width: 24px;
-	height: 24px;
+    width: 24px;
+    height: 24px;
 }
 .emojis li {
-	list-style-type: none;
+    list-style-type: none;
 }
 .emojis li .name {
-	cursor: pointer;
-	border-bottom: 1px solid gray;
+    cursor: pointer;
+    border-bottom: 1px solid gray;
 }
 .helpMarkdownLabel {
-	font-size: small;
-	cursor: pointer;
+    font-size: small;
+    cursor: pointer;
 }
 .sampleMarkdownText {
-	word-wrap: break-word;
+    word-wrap: break-word;
 }
 
 #tagDatas .name {
-	cursor: pointer;
-	border-bottom: 1px solid gray;
+    cursor: pointer;
+    border-bottom: 1px solid gray;
 }
 
 #groupDatas .name {
-	cursor: pointer;
-	border-bottom: 1px solid gray;
+    cursor: pointer;
+    border-bottom: 1px solid gray;
 }
 
 .tag_list > a {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 .markdown_sample{
@@ -96,3 +74,34 @@
     height: 300px;
     overflow: auto;
 }
+
+.article_buttons {}
+.article_buttons div {
+    margin-bottom: 6px;
+}
+.btn_1 {
+    width: 97%;
+}
+.btn_2 {
+    width: 48%;
+}
+
+.tips_info {
+/*    border-radius: 5px; */
+/*    padding: 5px; */
+/*    border: 1px solid gray; */
+    font-size: 8pt;
+}
+
+.article_meta {}
+.article_meta .form-group {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid silver;
+}
+
+.dispKnowledgeInfo {
+    color: #999999;
+    font-size: 14pt;
+}
+

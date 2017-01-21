@@ -43,6 +43,9 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
      */
     public KnowledgesEntity() {
         super();
+        // 初期値
+        this.setNotifyStatus(0);
+        this.setDeleteFlag(0);
     }
 
     /**

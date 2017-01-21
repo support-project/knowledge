@@ -16,27 +16,11 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
     <c:param name="PARAM_HEAD">
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
-        <link rel="stylesheet" href="<%=jspUtil.mustReloadFile("/css/knowledge-list.css")%>" />
+        <jsp:include page="partials/partials-list-styles.jsp"></jsp:include>
     </c:param>
 
     <c:param name="PARAM_SCRIPTS">
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
-            skipStartupTypeset: true
-        });
-        </script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
-        
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
-        
-        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/slide.js") %>"></script>
-        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-common.js") %>"></script>
-        <script type="text/javascript" src="<%= jspUtil.mustReloadFile("/js/knowledge-list.js")%>"></script>
+        <jsp:include page="partials/partials-list-scripts.jsp"></jsp:include>
         
         <%
             if (jspUtil.logined()) {

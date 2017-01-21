@@ -14,14 +14,19 @@
 <c:param name="PARAM_HEAD">
 <style>
 .radio_block {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 </style>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-fileinput/css/fileinput.min.css" />
+<!-- build:css(src/main/webapp) css/page-database.css -->
+<link rel="stylesheet" href="bower/bootstrap-fileinput/css/fileinput.min.css" />
+<!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-fileinput/js/fileinput.min.js"></script>
+<!-- build:js(src/main/webapp) js/page-database.js -->
+<script type="text/javascript" src="bower/bootstrap-fileinput/js/fileinput.min.js"></script>
+<!-- endbuild -->
+
 <script>
 $("#input-id").fileinput();
 </script>
@@ -63,12 +68,12 @@ $("#input-id").fileinput();
 <% if (jspUtil.is(Boolean.TRUE, "active")) { %>
 <%= jspUtil.label("knowledge.data.label.active.status.active") %>
 <a href="<%= request.getContextPath()%>/admin.database/stop" class="btn btn-danger">
-	<i class="fa fa-stop"></i>&nbsp;<%= jspUtil.label("knowledge.data.label.active.status.to.stop") %>
+    <i class="fa fa-stop"></i>&nbsp;<%= jspUtil.label("knowledge.data.label.active.status.to.stop") %>
 </a>
 <% } else { %>
 <%= jspUtil.label("knowledge.data.label.active.status.stop") %>
 <a href="<%= request.getContextPath()%>/admin.database/start" class="btn btn-success">
-	<i class="fa fa-play"></i>&nbsp;<%= jspUtil.label("knowledge.data.label.active.status.to.active") %>
+    <i class="fa fa-play"></i>&nbsp;<%= jspUtil.label("knowledge.data.label.active.status.to.active") %>
 </a>
 <% } %>
 
@@ -82,7 +87,7 @@ $("#input-id").fileinput();
 <%= jspUtil.label("knowledge.data.label.backup.msg") %>
 <br/>
 <a href="<%= request.getContextPath()%>/admin.database/backup" class="btn btn-info">
-	<i class="fa fa-cloud-download"></i>&nbsp;<%= jspUtil.label("label.backup") %>
+    <i class="fa fa-cloud-download"></i>&nbsp;<%= jspUtil.label("label.backup") %>
 </a>
 
 
@@ -97,10 +102,10 @@ $("#input-id").fileinput();
 
 
 <form action="<%= request.getContextPath()%>/admin.database/restore" method="post" role="form" enctype="multipart/form-data">
-	<div class="form-group">
-		<input id="input-id" type="file" class="file" data-preview-file-type="text" name="upload">
-	</div>
-	<button type="submit" class="btn btn-danger"><i class="fa fa-cloud-upload"></i>&nbsp;<%= jspUtil.label("label.restore") %></button>
+    <div class="form-group">
+        <input id="input-id" type="file" class="file" data-preview-file-type="text" name="upload">
+    </div>
+    <button type="submit" class="btn btn-danger"><i class="fa fa-cloud-upload"></i>&nbsp;<%= jspUtil.label("label.restore") %></button>
 </form>
 
 

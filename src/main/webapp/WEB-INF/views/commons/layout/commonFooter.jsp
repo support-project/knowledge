@@ -7,34 +7,34 @@
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
 
-	<div id="footer">
-		<ul class="footer-menu list-inline">
-			<li class="first">
-				<a class="" href="<%= request.getContextPath() %>/index" style="cursor: pointer;"> <%= jspUtil.label("knowledge.footer.about") %></a>
-			</li>
-			<li>
-				<a class="" href="https://support-project.org/knowledge_info/open.manual/index" style="cursor: pointer;"> <%= jspUtil.label("knowledge.footer.manual") %></a>
-			</li>
-			<li>
-				<a class="" href="<%= request.getContextPath() %>/open.license" style="cursor: pointer;"> <%= jspUtil.label("knowledge.footer.license") %></a>
-			</li>
-			<li>
-				<a class="" href="<%= request.getContextPath() %>/open.language" style="cursor: pointer;">
-				<% if (jspUtil.locale().getLanguage().equals("ja")) { %>
-					<i class="flag-icon flag-icon-jp"></i>
-				<% } else { %>
-					<i class="flag-icon flag-icon-us"></i>
-				<% } %>
-				&nbsp;<%= jspUtil.locale().getDisplayName(jspUtil.locale()) %>
-				</a>
-			</li>
-		</ul>
-		<!-- /nav -->
-		<div class="clearfix"></div>
-		<div class="copy">
-			<span>Copyright &#169; 2015 - 2016 <a href="https://support-project.org/knowledge_info/index">support-project.org [Knowledge project]</a></span>
-		</div>
-		<!-- /copy -->
-	</div>
-	<!-- /footer -->
-    <p class="pagetop" style="display: none;"><a href="#content_top"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></p>
+<div id="footer">
+    <ul class="footer-menu list-inline">
+        <li class="first">
+            <a class="" href="<%= request.getContextPath() %>/index" style="cursor: pointer;"> <%= jspUtil.label("knowledge.footer.about") %></a>
+        </li>
+        <li>
+            <a class="" href="https://support-project.org/knowledge_info/open.manual/index" style="cursor: pointer;"> <%= jspUtil.label("knowledge.footer.manual") %></a>
+        </li>
+        <li>
+            <a class="" href="<%= request.getContextPath() %>/open.license" style="cursor: pointer;"> <%= jspUtil.label("knowledge.footer.license") %></a>
+        </li>
+        <li>
+            <a class="" href="<%= request.getContextPath() %>/open.language" style="cursor: pointer;">
+            <% if (jspUtil.locale().getLanguage().equals("ja")) { %>
+                <i class="flag-icon flag-icon-jp"></i>
+            <% } else { %>
+                <i class="flag-icon flag-icon-us"></i>
+            <% } %>
+            &nbsp;<%= jspUtil.locale().getDisplayName(jspUtil.locale()) %>
+            </a>
+        </li>
+    </ul>
+    <!-- /nav -->
+    <div class="clearfix"></div>
+    <div class="copy">
+        <span>Copyright &#169; 2015 - 2017 <a href="https://support-project.org/knowledge_info/index">support-project.org</a></span>
+    </div>
+    <!-- /copy -->
+</div>
+<!-- /footer -->
+<p class="pagetop" style="display: none;"><a href="#content_top"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></p>

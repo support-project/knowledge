@@ -21,9 +21,9 @@
 <h4 class="title"><%= jspUtil.label("knowledge.account.changekey.title") %></h4>
 
 <div class="row">
-	<div class="col-sm-12 col-md-12">
-	<%= jspUtil.label("knowledge.account.changekey.complete") %>
-	</div>
+    <div class="col-sm-12 col-md-12">
+    <%= jspUtil.label("knowledge.account.changekey.complete") %>
+    </div>
 </div>
 
 

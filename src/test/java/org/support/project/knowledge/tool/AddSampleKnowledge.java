@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.support.project.common.config.ConfigLoader;
@@ -18,6 +17,7 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.RolesDao;
@@ -114,7 +114,12 @@ public class AddSampleKnowledge {
             entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
         }
         List<TagsEntity> tagList = KnowledgeLogic.get().manegeTags(tags);
-        KnowledgeLogic.get().insert(entity, tagList, new ArrayList<Long>(), null, null, null, loginedUser);
+        
+        KnowledgeData data = new KnowledgeData();
+        data.setKnowledge(entity);
+        data.setTags(tagList);
+        
+        KnowledgeLogic.get().insert(data, loginedUser);
 
         LOG.info("サンプル登録 :" + org.apache.commons.lang.StringUtils.abbreviate(line, 50));
         count++;
