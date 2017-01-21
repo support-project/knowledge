@@ -132,7 +132,7 @@ public class ConfigControl extends Control {
         if (config != null) {
             setAttribute("uploadMaxMBSize", config.getConfigValue());
         } else {
-            setAttribute("uploadMaxMBSize", "5");
+            setAttribute("uploadMaxMBSize", "10"); // default
         }
 
         return forward("system.jsp");
@@ -154,7 +154,8 @@ public class ConfigControl extends Control {
         }
         String uploadMaxMBSize = getParam("uploadMaxMBSize");
         if (StringUtils.isEmpty(uploadMaxMBSize) || !StringUtils.isInteger(uploadMaxMBSize)) {
-            uploadMaxMBSize = "5";
+            ValidateError error = new ValidateError("errors.required", getResource("knowledge.config.system.label.limit.attach"));
+            errors.add(error);
         }
         int size = Integer.parseInt(uploadMaxMBSize);
         if (size < 1 || size > 300) {

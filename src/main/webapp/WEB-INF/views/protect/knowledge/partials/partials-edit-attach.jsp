@@ -23,6 +23,7 @@
     </div>
     <div class="file-group tips_info" id="drop_target">
         <%= jspUtil.label("knowledge.add.label.area.upload") %>
+        <%= jspUtil.label("knowledge.add.label.attach.limit", jspUtil.out("uploadMaxMBSize")) %>
     </div>
     <div class="" style="display: none;" id="progress">
         <div class="progress">

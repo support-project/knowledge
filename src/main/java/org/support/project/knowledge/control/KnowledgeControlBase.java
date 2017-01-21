@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
@@ -18,6 +20,8 @@ import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LabelValue;
+import org.support.project.web.dao.SystemConfigsDao;
+import org.support.project.web.entity.SystemConfigsEntity;
 
 @DI(instance = Instance.Prototype)
 public class KnowledgeControlBase extends Control {
@@ -45,6 +49,13 @@ public class KnowledgeControlBase extends Control {
 
         List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
         setAttribute("templates", templates);
+        
+        SystemConfigsEntity config = SystemConfigsDao.get().selectOnKey(SystemConfig.UPLOAD_MAX_MB_SIZE, AppConfig.get().getSystemName());
+        if (config != null) {
+            setAttribute("uploadMaxMBSize", config.getConfigValue());
+        } else {
+            setAttribute("uploadMaxMBSize", "10"); // default
+        }
     }
     
     /**
