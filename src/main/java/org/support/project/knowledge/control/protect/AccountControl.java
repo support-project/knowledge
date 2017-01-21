@@ -44,7 +44,9 @@ import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 public class AccountControl extends Control {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(AccountControl.class);
-
+    /** アイコン画像の最大サイズ(5MB) */
+    private static final int ICON_IMAGE_MAX_SIZE = 5 * 1024 * 1024;
+    
     /**
      * アカウント情報表示
      */
@@ -210,7 +212,7 @@ public class AccountControl extends Control {
             fileimg = fileimg.substring("data:image/png;base64,".length());
             byte[] img = Base64.decodeBase64(fileimg);
             
-            if (img.length > 5 * 1024 * 1024) {
+            if (img.length > ICON_IMAGE_MAX_SIZE) {
                 ValidateError error = new ValidateError("errors.maxfilesize", "5MB");
                 Msg msg = new Msg(error.getMsg(HttpUtil.getLocale(getRequest())));
                 return send(HttpStatus.SC_400_BAD_REQUEST, msg);
