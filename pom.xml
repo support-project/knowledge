@@ -4,7 +4,7 @@
 
     <groupId>org.support-project</groupId>
     <artifactId>knowledge</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>1.7.0</version>
     <packaging>war</packaging>
 
     <name>knowledge</name>
@@ -59,13 +59,13 @@
         <dependency>
             <groupId>org.support-project</groupId>
             <artifactId>web</artifactId>
-            <version>1.7.0-SNAPSHOT</version>
+            <version>1.7.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.support-project</groupId>
             <artifactId>markedj</artifactId>
-            <version>1.7.0-SNAPSHOT</version>
+            <version>1.6.0</version>
         </dependency>
 
         <dependency>
