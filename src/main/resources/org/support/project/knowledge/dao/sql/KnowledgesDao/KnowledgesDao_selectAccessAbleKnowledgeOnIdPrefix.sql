@@ -38,5 +38,5 @@ SELECT
             )
         )
     ORDER BY
-        KNOWLEDGES.KNOWLEDGE_ID DESC 
+        KNOWLEDGES.KNOWLEDGE_ID ASC 
     LIMIT ? OFFSET ?;
