@@ -197,6 +197,11 @@ public class FileParseBat extends AbstractBat {
 
             // DBから取得したバイナリをいったんファイルに格納
             KnowledgeFilesEntity entity = filesDao.selectOnKey(knowledgeFilesEntity.getFileNo());
+            if (entity.getFileBinary() == null) {
+                LOG.error("binary input stream is null. file no = " + entity.getFileNo() + ". skip this file.");
+                continue;
+            }
+            
             StringBuilder name = new StringBuilder();
             name.append(entity.getFileNo());
             String extension = StringUtils.getExtension(entity.getFileName());
@@ -210,8 +215,12 @@ public class FileParseBat extends AbstractBat {
                 FileUtil.copy(entity.getFileBinary(), outputStream);
                 LOG.info("file: " + entity.getFileNo() + " to " + tmp.getAbsolutePath());
             } finally {
-                outputStream.close();
-                entity.getFileBinary().close();
+                try {
+                    outputStream.close();
+                    entity.getFileBinary().close();
+                } catch (Exception e) {
+                    LOG.error("Any exception was thrown.", e);
+                }
             }
             if (StringUtils.isEmpty(extension)) {
                 String mime = Files.probeContentType(tmp.toPath());
