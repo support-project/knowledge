@@ -19,7 +19,7 @@ public abstract class AbstractSlideShowParser {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(AbstractSlideShowParser.class);
 
-    private static final double SLIDE_WIDTH = 700;
+    private static final double SLIDE_WIDTH = 800;
     
     /**
      * 画像をファイルに保存
