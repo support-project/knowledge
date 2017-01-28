@@ -1,8 +1,3 @@
-## This Project License
-- This project is provided under Apache License, Version 2.0
-- http://www.apache.org/licenses/LICENSE-2.0
-
-
 ## Third-Party License
 
 ### Server side Library
@@ -182,6 +177,5 @@
 - At.js
    - License: [MIT] https://github.com/andyvr/picEdit/blob/master/LICENSE.txt
    - project-url: https://github.com/andyvr/picEdit
-
 
 
