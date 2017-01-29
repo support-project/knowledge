@@ -17,10 +17,10 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 
 /**
- * メールから投稿
+ * サービスの表示言語毎の設定
  */
 @DI(instance = Instance.Prototype)
-public class GenMailPostsEntity implements Serializable {
+public class GenServiceLocaleConfigsEntity implements Serializable {
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
@@ -29,34 +29,32 @@ public class GenMailPostsEntity implements Serializable {
      * Get instance from DI container.
      * @return instance
      */
-    public static GenMailPostsEntity get() {
-        return Container.getComp(GenMailPostsEntity.class);
+    public static GenServiceLocaleConfigsEntity get() {
+        return Container.getComp(GenServiceLocaleConfigsEntity.class);
     }
 
     /**
      * Constructor.
      */
-    public GenMailPostsEntity() {
+    public GenServiceLocaleConfigsEntity() {
         super();
     }
 
     /**
      * Constructor
-     * @param messageId Message-ID
+     * @param serviceName サービス名
      */
 
-    public GenMailPostsEntity(String messageId) {
+    public GenServiceLocaleConfigsEntity(String serviceName) {
         super();
-        this.messageId = messageId;
+        this.serviceName = serviceName;
     }
-    /** Message-ID */
-    private String messageId;
-    /** 投稿区分  1: Knowledge 2:Comment */
-    private Integer postKind;
-    /** ID */
-    private Long id;
-    /** SENDER */
-    private String sender;
+    /** サービス名 */
+    private String serviceName;
+    /** ロケールキー */
+    private String localeKey;
+    /** トップページのHTML */
+    private String pageHtml;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -69,66 +67,50 @@ public class GenMailPostsEntity implements Serializable {
     private Integer deleteFlag;
 
     /**
-     * Get Message-ID.
-     * @return Message-ID
+     * Get サービス名.
+     * @return サービス名
      */
-    public String getMessageId() {
-        return this.messageId;
+    public String getServiceName() {
+        return this.serviceName;
     }
     /**
-     * Set Message-ID.
-     * @param messageId Message-ID
+     * Set サービス名.
+     * @param serviceName サービス名
      * @return this object     */
-    public GenMailPostsEntity setMessageId(String messageId) {
-        this.messageId = messageId;
+    public GenServiceLocaleConfigsEntity setServiceName(String serviceName) {
+        this.serviceName = serviceName;
         return this;
     }
 
     /**
-     * Get 投稿区分  1: Knowledge 2:Comment.
-     * @return 投稿区分  1: Knowledge 2:Comment
+     * Get ロケールキー.
+     * @return ロケールキー
      */
-    public Integer getPostKind() {
-        return this.postKind;
+    public String getLocaleKey() {
+        return this.localeKey;
     }
     /**
-     * Set 投稿区分  1: Knowledge 2:Comment.
-     * @param postKind 投稿区分  1: Knowledge 2:Comment
+     * Set ロケールキー.
+     * @param localeKey ロケールキー
      * @return this object     */
-    public GenMailPostsEntity setPostKind(Integer postKind) {
-        this.postKind = postKind;
+    public GenServiceLocaleConfigsEntity setLocaleKey(String localeKey) {
+        this.localeKey = localeKey;
         return this;
     }
 
     /**
-     * Get ID.
-     * @return ID
+     * Get トップページのHTML.
+     * @return トップページのHTML
      */
-    public Long getId() {
-        return this.id;
+    public String getPageHtml() {
+        return this.pageHtml;
     }
     /**
-     * Set ID.
-     * @param id ID
+     * Set トップページのHTML.
+     * @param pageHtml トップページのHTML
      * @return this object     */
-    public GenMailPostsEntity setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    /**
-     * Get SENDER.
-     * @return SENDER
-     */
-    public String getSender() {
-        return this.sender;
-    }
-    /**
-     * Set SENDER.
-     * @param sender SENDER
-     * @return this object     */
-    public GenMailPostsEntity setSender(String sender) {
-        this.sender = sender;
+    public GenServiceLocaleConfigsEntity setPageHtml(String pageHtml) {
+        this.pageHtml = pageHtml;
         return this;
     }
 
@@ -143,7 +125,7 @@ public class GenMailPostsEntity implements Serializable {
      * Set 登録ユーザ.
      * @param insertUser 登録ユーザ
      * @return this object     */
-    public GenMailPostsEntity setInsertUser(Integer insertUser) {
+    public GenServiceLocaleConfigsEntity setInsertUser(Integer insertUser) {
         this.insertUser = insertUser;
         return this;
     }
@@ -159,7 +141,7 @@ public class GenMailPostsEntity implements Serializable {
      * Set 登録日時.
      * @param insertDatetime 登録日時
      * @return this object     */
-    public GenMailPostsEntity setInsertDatetime(Timestamp insertDatetime) {
+    public GenServiceLocaleConfigsEntity setInsertDatetime(Timestamp insertDatetime) {
         this.insertDatetime = insertDatetime;
         return this;
     }
@@ -175,7 +157,7 @@ public class GenMailPostsEntity implements Serializable {
      * Set 更新ユーザ.
      * @param updateUser 更新ユーザ
      * @return this object     */
-    public GenMailPostsEntity setUpdateUser(Integer updateUser) {
+    public GenServiceLocaleConfigsEntity setUpdateUser(Integer updateUser) {
         this.updateUser = updateUser;
         return this;
     }
@@ -191,7 +173,7 @@ public class GenMailPostsEntity implements Serializable {
      * Set 更新日時.
      * @param updateDatetime 更新日時
      * @return this object     */
-    public GenMailPostsEntity setUpdateDatetime(Timestamp updateDatetime) {
+    public GenServiceLocaleConfigsEntity setUpdateDatetime(Timestamp updateDatetime) {
         this.updateDatetime = updateDatetime;
         return this;
     }
@@ -207,7 +189,7 @@ public class GenMailPostsEntity implements Serializable {
      * Set 削除フラグ.
      * @param deleteFlag 削除フラグ
      * @return this object     */
-    public GenMailPostsEntity setDeleteFlag(Integer deleteFlag) {
+    public GenServiceLocaleConfigsEntity setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
         return this;
     }
@@ -218,22 +200,22 @@ public class GenMailPostsEntity implements Serializable {
      */
     public Object[] getKeyValues() {
         Object[] keyValues = new Object[1];
-        keyValues[0] = this.messageId;
+        keyValues[0] = this.serviceName;
         return keyValues;
     }
     /**
      * Set key values 
-     * @param messageId Message-ID
+     * @param serviceName サービス名
      */
-    public void setKeyValues(String messageId) {
-        this.messageId = messageId;
+    public void setKeyValues(String serviceName) {
+        this.serviceName = serviceName;
     }
     /**
      * compare on key 
      * @param entity entity 
      * @return result 
      */
-    public boolean equalsOnKey(GenMailPostsEntity entity) {
+    public boolean equalsOnKey(GenServiceLocaleConfigsEntity entity) {
         Object[] keyValues1 = getKeyValues();
         Object[] keyValues2 = entity.getKeyValues();
         for (int i = 0; i < keyValues1.length; i++) {
@@ -260,10 +242,9 @@ public class GenMailPostsEntity implements Serializable {
      */
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("messageId = ").append(messageId).append("\n");
-        builder.append("postKind = ").append(postKind).append("\n");
-        builder.append("id = ").append(id).append("\n");
-        builder.append("sender = ").append(sender).append("\n");
+        builder.append("serviceName = ").append(serviceName).append("\n");
+        builder.append("localeKey = ").append(localeKey).append("\n");
+        builder.append("pageHtml = ").append(pageHtml).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -288,27 +269,22 @@ public class GenMailPostsEntity implements Serializable {
         Validator validator;
         ValidateError error;
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(this.messageId, convLabelName("Message Id"));
+        error = validator.validate(this.serviceName, convLabelName("Service Name"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(this.messageId, convLabelName("Message Id"), 128);
+        error = validator.validate(this.serviceName, convLabelName("Service Name"), 64);
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(this.postKind, convLabelName("Post Kind"));
+        error = validator.validate(this.localeKey, convLabelName("Locale Key"));
         if (error != null) {
             errors.add(error);
         }
-        validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(this.postKind, convLabelName("Post Kind"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(this.id, convLabelName("Id"));
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.localeKey, convLabelName("Locale Key"), 12);
         if (error != null) {
             errors.add(error);
         }
@@ -339,27 +315,22 @@ public class GenMailPostsEntity implements Serializable {
         Validator validator;
         ValidateError error;
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(values.get("messageId"), convLabelName("Message Id"));
+        error = validator.validate(values.get("serviceName"), convLabelName("Service Name"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(values.get("messageId"), convLabelName("Message Id"), 128);
+        error = validator.validate(values.get("serviceName"), convLabelName("Service Name"), 64);
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(values.get("postKind"), convLabelName("Post Kind"));
+        error = validator.validate(values.get("localeKey"), convLabelName("Locale Key"));
         if (error != null) {
             errors.add(error);
         }
-        validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(values.get("postKind"), convLabelName("Post Kind"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(values.get("id"), convLabelName("Id"));
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("localeKey"), convLabelName("Locale Key"), 12);
         if (error != null) {
             errors.add(error);
         }
