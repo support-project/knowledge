@@ -35,7 +35,7 @@ public class NotifyEndpoint {
         if (LOG.isInfoEnabled()) {
             if (session.getUserProperties().containsKey(EndpointConfigurator.LOCALE_KEY)) {
                 LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
-                LOG.info("websocket open: " + session.getId() + " : " + loginuser.getUserId());
+                LOG.debug("websocket open: " + session.getId() + " : " + loginuser.getUserId());
             }
         }
         SessionObserver observer = new SessionObserver(session);
@@ -48,7 +48,7 @@ public class NotifyEndpoint {
             String key = (String) iterator.next();
             SessionObserver sessionObserver = map.get(key);
             if (!sessionObserver.isOpen()) {
-                LOG.info("websocket is allready closed: " + session.getId());
+                LOG.debug("websocket is allready closed: " + session.getId());
                 notify.deleteObserver(map.get(session.getId()));
                 map.remove(session.getId());
             }
@@ -61,7 +61,7 @@ public class NotifyEndpoint {
         if (LOG.isInfoEnabled()) {
             if (session.getUserProperties().containsKey(EndpointConfigurator.LOCALE_KEY)) {
                 LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
-                LOG.info("websocket close: " + session.getId() + " : " + loginuser.getUserId());
+                LOG.debug("websocket close: " + session.getId() + " : " + loginuser.getUserId());
             }
         }
         if (map.containsKey(session.getId())) {
