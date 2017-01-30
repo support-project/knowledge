@@ -25,6 +25,7 @@ public class Migrate_1_8_1 implements Migrate {
         
         ServiceConfigsEntity serviceConfigsEntity = new ServiceConfigsEntity(AppConfig.get().getSystemName());
         serviceConfigsEntity.setServiceLabel(AppConfig.get().getSystemName());
+        serviceConfigsEntity.setServiceIcon("fa-book");
         ServiceConfigsDao.get().insert(serviceConfigsEntity);
         
         ServiceLocaleConfigsEntity en = new ServiceLocaleConfigsEntity("en", AppConfig.get().getSystemName());

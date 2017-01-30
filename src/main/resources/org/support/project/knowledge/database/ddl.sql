@@ -19,6 +19,7 @@ drop table if exists SERVICE_CONFIGS cascade;
 create table SERVICE_CONFIGS (
   SERVICE_NAME character varying(64) not null
   , SERVICE_LABEL character varying(24) not null
+  , SERVICE_ICON character varying(24) not null
   , SERVICE_IMAGE BYTEA
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
@@ -571,6 +572,7 @@ comment on column SERVICE_LOCALE_CONFIGS.DELETE_FLAG is '削除フラグ';
 comment on table SERVICE_CONFIGS is 'サービスの設定';
 comment on column SERVICE_CONFIGS.SERVICE_NAME is 'サービス名';
 comment on column SERVICE_CONFIGS.SERVICE_LABEL is '表示名';
+comment on column SERVICE_CONFIGS.SERVICE_ICON is 'アイコン文字列';
 comment on column SERVICE_CONFIGS.SERVICE_IMAGE is '背景画像';
 comment on column SERVICE_CONFIGS.INSERT_USER is '登録ユーザ';
 comment on column SERVICE_CONFIGS.INSERT_DATETIME is '登録日時';

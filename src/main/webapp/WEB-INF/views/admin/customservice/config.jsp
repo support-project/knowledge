@@ -34,10 +34,20 @@
         <form action="<%= request.getContextPath() %>/admin.customservice/save" method="post">
             <input type="hidden" name="<%= HttpRequestCheckLogic.REQ_ID_KEY %>"
                 value="<%= jspUtil.out(HttpRequestCheckLogic.REQ_ID_KEY) %>" />
+            
             <div class="form-group">
                 <label for="serviceLabel"><%= jspUtil.label("knowledge.custom.service.label.title") %></label>
                 <input type="text" class="form-control" name="serviceLabel" id="serviceLabel"
                     placeholder="Label of service" value="<%= jspUtil.sanitize(serviceConfig.getServiceLabel()) %>" />
+            </div>
+            
+            <div class="form-group">
+                <label for="serviceIcon">
+                <%= jspUtil.label("knowledge.custom.service.label.icon") %>
+                <%= jspUtil.label("knowledge.template.label.icon.msg") %>
+                </label>
+                <input type="text" class="form-control" name="serviceIcon" id="serviceIcon"
+                    placeholder="Icon" value="<%= jspUtil.sanitize(serviceConfig.getServiceIcon()) %>" />
             </div>
             
             <div class="panel panel-default">

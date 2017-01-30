@@ -27,11 +27,17 @@
                     class="icon-bar"></span> <span class="icon-bar"></span> <span
                     class="icon-bar"></span>
             </button>
+            <% 
+            String icon = "fa-book";
+            ServiceConfigsEntity serviceConfig = SystemConfig.getServiceConfigsEntity();
+            if (serviceConfig != null && StringUtils.isNotEmpty(serviceConfig.getServiceIcon())) {
+                icon = serviceConfig.getServiceIcon();
+            }
+            %>
             <a class="navbar-brand"
                 href="<%= request.getContextPath() %><%= top %>"
-                style="cursor: pointer;"> <i class="fa fa-book"></i>&nbsp;
+                style="cursor: pointer;"> <i class="fa <%= icon %>"></i>&nbsp;
                 <% 
-                ServiceConfigsEntity serviceConfig = SystemConfig.getServiceConfigsEntity();
                 if (serviceConfig != null && StringUtils.isNotEmpty(serviceConfig.getServiceLabel())) { %>
                     <%= SanitizingLogic.get().sanitize(serviceConfig.getServiceLabel()) %>
                 <% } else { %>

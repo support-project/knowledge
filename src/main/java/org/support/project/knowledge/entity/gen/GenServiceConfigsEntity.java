@@ -54,6 +54,8 @@ public class GenServiceConfigsEntity implements Serializable {
     private String serviceName;
     /** 表示名 */
     private String serviceLabel;
+    /** アイコン文字列 */
+    private String serviceIcon;
     /** 背景画像 */
     private InputStream serviceImage;
     /** 登録ユーザ */
@@ -96,6 +98,22 @@ public class GenServiceConfigsEntity implements Serializable {
      * @return this object     */
     public GenServiceConfigsEntity setServiceLabel(String serviceLabel) {
         this.serviceLabel = serviceLabel;
+        return this;
+    }
+
+    /**
+     * Get アイコン文字列.
+     * @return アイコン文字列
+     */
+    public String getServiceIcon() {
+        return this.serviceIcon;
+    }
+    /**
+     * Set アイコン文字列.
+     * @param serviceIcon アイコン文字列
+     * @return this object     */
+    public GenServiceConfigsEntity setServiceIcon(String serviceIcon) {
+        this.serviceIcon = serviceIcon;
         return this;
     }
 
@@ -245,6 +263,7 @@ public class GenServiceConfigsEntity implements Serializable {
         StringBuilder builder = new StringBuilder();
         builder.append("serviceName = ").append(serviceName).append("\n");
         builder.append("serviceLabel = ").append(serviceLabel).append("\n");
+        builder.append("serviceIcon = ").append(serviceIcon).append("\n");
         builder.append("serviceImage = ").append(serviceImage).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
@@ -286,6 +305,16 @@ public class GenServiceConfigsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
         error = validator.validate(this.serviceLabel, convLabelName("Service Label"), 24);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(this.serviceIcon, convLabelName("Service Icon"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.serviceIcon, convLabelName("Service Icon"), 24);
         if (error != null) {
             errors.add(error);
         }
@@ -332,6 +361,16 @@ public class GenServiceConfigsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
         error = validator.validate(values.get("serviceLabel"), convLabelName("Service Label"), 24);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(values.get("serviceIcon"), convLabelName("Service Icon"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("serviceIcon"), convLabelName("Service Icon"), 24);
         if (error != null) {
             errors.add(error);
         }

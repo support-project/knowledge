@@ -122,6 +122,7 @@ public class GenServiceConfigsDao extends AbstractDao {
         executeUpdate(sql, 
             entity.getServiceName(), 
             entity.getServiceLabel(), 
+            entity.getServiceIcon(), 
             entity.getServiceImage(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
@@ -142,6 +143,7 @@ public class GenServiceConfigsDao extends AbstractDao {
         executeUpdate(sql, 
             entity.getServiceName(), 
             entity.getServiceLabel(), 
+            entity.getServiceIcon(), 
             entity.getServiceImage(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
@@ -188,6 +190,7 @@ public class GenServiceConfigsDao extends AbstractDao {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceConfigsDao/ServiceConfigsDao_update.sql");
         executeUpdate(sql, 
             entity.getServiceLabel(), 
+            entity.getServiceIcon(), 
             entity.getServiceImage(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 

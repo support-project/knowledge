@@ -55,7 +55,7 @@ Fields1=SERVICE_NAME
 Fields2=SERVICE_NAME
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4238,4344,3455,R,R
+Position="MAIN",0,4238,4344,3674,R,R
 Dependence=1
 Caption=
 PName=
@@ -63,7 +63,7 @@ ModifiedDateTime=20170130131105
 LineMode=0
 Bar1=424
 Bar2=434
-Bar3=346
+Bar3=367
 TermPos1=R
 TermPos2=R
 
@@ -74,7 +74,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1600
-Top=350
+Top=400
 Field="サービス名","SERVICE_NAME","@VARCHAR(64)","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ロケールキー","LOCALE_KEY","@VARCHAR(12)","NOT NULL",1,"","",$FFFFFFFF,""
 Field="トップページのHTML","PAGE_HTML","text",,,"","",$FFFFFFFF,""
@@ -82,7 +82,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170130131057
-Position="MAIN",1600,350
+Position="MAIN",1600,400
 
 [Entity]
 PName=SERVICE_CONFIGS
@@ -94,11 +94,12 @@ Left=1600
 Top=200
 Field="サービス名","SERVICE_NAME","@VARCHAR(64)","NOT NULL",0,"","",$FFFFFFFF,""
 Field="表示名","SERVICE_LABEL","@VARCHAR(24)","NOT NULL",,"","",$FFFFFFFF,""
+Field="アイコン文字列","SERVICE_ICON","@VARCHAR(24)","NOT NULL",,"","",$FFFFFFFF,""
 Field="背景画像","SERVICE_IMAGE","BYTEA",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170129100939
+ModifiedDateTime=20170131001923
 Position="MAIN",1600,200
 
 [Entity]
