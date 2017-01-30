@@ -1,8 +1,15 @@
-<%@page import="org.support.project.web.bean.LabelValue"%>
-<%@page import="java.util.List"%>
-<%@page import="org.support.project.knowledge.config.AppConfig"%>
-<%@page import="org.support.project.web.util.JspUtil"%>
+<%@page import="org.support.project.knowledge.entity.ServiceConfigsEntity"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
+
+<%@page import="java.util.List"%>
+<%@page import="org.support.project.common.util.StringUtils"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
+<%@page import="org.support.project.web.logic.SanitizingLogic"%>
+<%@page import="org.support.project.web.bean.LabelValue"%>
+<%@page import="org.support.project.knowledge.config.SystemConfig"%>
+<%@page import="org.support.project.knowledge.entity.ServiceLocaleConfigsEntity"%>
+<%@page import="org.support.project.knowledge.config.AppConfig"%>
+
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -22,7 +29,14 @@
             </button>
             <a class="navbar-brand"
                 href="<%= request.getContextPath() %><%= top %>"
-                style="cursor: pointer;"> <i class="fa fa-book"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.title") %>
+                style="cursor: pointer;"> <i class="fa fa-book"></i>&nbsp;
+                <% 
+                ServiceConfigsEntity serviceConfig = SystemConfig.getServiceConfigsEntity();
+                if (serviceConfig != null && StringUtils.isNotEmpty(serviceConfig.getServiceLabel())) { %>
+                    <%= SanitizingLogic.get().sanitize(serviceConfig.getServiceLabel()) %>
+                <% } else { %>
+                    <%=jspUtil.label("knowledge.navbar.title") %>
+                <% } %>
             </a>
         </div>
 
