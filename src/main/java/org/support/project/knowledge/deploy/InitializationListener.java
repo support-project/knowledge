@@ -1,6 +1,7 @@
 package org.support.project.knowledge.deploy;
 
 import java.io.File;
+import java.util.List;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -10,6 +11,11 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.config.AnalyticsConfig;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
+import org.support.project.knowledge.dao.ServiceConfigsDao;
+import org.support.project.knowledge.dao.ServiceLocaleConfigsDao;
+import org.support.project.knowledge.entity.ServiceConfigsEntity;
+import org.support.project.knowledge.entity.ServiceLocaleConfigsEntity;
+import org.support.project.knowledge.logic.ServiceConfigLogic;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.web.dao.SystemAttributesDao;
 import org.support.project.web.entity.SystemAttributesEntity;
@@ -57,6 +63,9 @@ public class InitializationListener implements ServletContextListener {
             // 設定を毎回DBから取得するのはパフォーマンス面で良くないので、メモリに保持する
             AnalyticsConfig.get().setAnalyticsScript(config.getConfigValue());
         }
+        
+        // トップページ情報を取得
+        ServiceConfigLogic.get().load();
     }
 
 }

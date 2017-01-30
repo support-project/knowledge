@@ -46,12 +46,68 @@ SqlSeparator=0
 ShowTag=1
 ShowCommonAttributes=0
 
+[Relation]
+Entity1=SERVICE_CONFIGS
+Entity2=SERVICE_LOCALE_CONFIGS
+RelationType1=1
+RelationType2=3
+Fields1=SERVICE_NAME
+Fields2=SERVICE_NAME
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,4238,4344,3674,R,R
+Dependence=1
+Caption=
+PName=
+ModifiedDateTime=20170130131105
+LineMode=0
+Bar1=424
+Bar2=434
+Bar3=367
+TermPos1=R
+TermPos2=R
+
+[Entity]
+PName=SERVICE_LOCALE_CONFIGS
+LName=サービスの表示言語毎の設定
+Comment=
+TableOption=
+Page=MAIN
+Left=1600
+Top=400
+Field="サービス名","SERVICE_NAME","@VARCHAR(64)","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ロケールキー","LOCALE_KEY","@VARCHAR(12)","NOT NULL",1,"","",$FFFFFFFF,""
+Field="トップページのHTML","PAGE_HTML","text",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170130131057
+Position="MAIN",1600,400
+
+[Entity]
+PName=SERVICE_CONFIGS
+LName=サービスの設定
+Comment=
+TableOption=
+Page=MAIN
+Left=1600
+Top=200
+Field="サービス名","SERVICE_NAME","@VARCHAR(64)","NOT NULL",0,"","",$FFFFFFFF,""
+Field="表示名","SERVICE_LABEL","@VARCHAR(24)","NOT NULL",,"","",$FFFFFFFF,""
+Field="アイコン文字列","SERVICE_ICON","@VARCHAR(24)","NOT NULL",,"","",$FFFFFFFF,""
+Field="背景画像","SERVICE_IMAGE","BYTEA",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170131001923
+Position="MAIN",1600,200
+
 [Entity]
 PName=PINS
 LName=ピン
 Comment=
 TableOption=
-Page=Main
+Page=MAIN
 Left=1750
 Top=1900
 Field="NO","NO","serial","NOT NULL",0,"","",$FFFFFFFF,""
@@ -62,7 +118,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20161206105257
-Position="Main",1750,1900
+Position="MAIN",1750,1900
 
 [Relation]
 Entity1=WEBHOOK_CONFIGS
@@ -90,7 +146,7 @@ PName=WEBHOOKS
 LName=Webhooks
 Comment=
 TableOption=
-Page=Main
+Page=MAIN
 Left=2300
 Top=1850
 Field="WEBHOOK ID","WEBHOOK_ID","@VARCHAR(64)","NOT NULL",0,"","",$FFFFFFFF,""
@@ -102,14 +158,14 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20161206105158
-Position="Main",2300,1850
+Position="MAIN",2300,1850
 
 [Entity]
 PName=WEBHOOK_CONFIGS
 LName=Webhook 設定
 Comment=
 TableOption=
-Page=Main
+Page=MAIN
 Left=2300
 Top=1650
 Field="HOOK ID","HOOK_ID","serial","NOT NULL",0,"","",$FFFFFFFF,""
@@ -119,7 +175,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20161206103902
-Position="Main",2300,1650
+Position="MAIN",2300,1650
 
 [Relation]
 Entity1=DRAFT_KNOWLEDGES
@@ -418,15 +474,15 @@ Fields1=TYPE_ID,ITEM_NO
 Fields2=TYPE_ID,ITEM_NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,3356,6905,3308,R,R
+Position="MAIN",1,1632,4394,3345,R,R
 Dependence=1
 Caption=
 PName=
-ModifiedDateTime=20150910034625
-LineMode=0
-Bar1=336
-Bar2=690
-Bar3=331
+ModifiedDateTime=20170129095207
+LineMode=1
+Bar1=163
+Bar2=439
+Bar3=334
 TermPos1=R
 TermPos2=R
 
@@ -436,7 +492,7 @@ LName=選択肢の値
 Comment=
 TableOption=
 Page=MAIN
-Left=1350
+Left=950
 Top=300
 Field="テンプレートの種類ID","TYPE_ID","@INT","NOT NULL",0,"","",$FFFFFFFF,""
 Field="項目NO","ITEM_NO","@INT","NOT NULL",1,"","",$FFFFFFFF,""
@@ -447,7 +503,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150910041119
-Position="MAIN",1350,300,542,135
+Position="MAIN",950,300,542,135
 
 [Relation]
 Entity1=TEMPLATE_MASTERS

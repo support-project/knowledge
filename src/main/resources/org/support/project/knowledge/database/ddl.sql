@@ -1,3 +1,34 @@
+-- サービスの表示言語毎の設定
+drop table if exists SERVICE_LOCALE_CONFIGS cascade;
+
+create table SERVICE_LOCALE_CONFIGS (
+  SERVICE_NAME character varying(64) not null
+  , LOCALE_KEY character varying(12) not null
+  , PAGE_HTML text
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint SERVICE_LOCALE_CONFIGS_PKC primary key (SERVICE_NAME,LOCALE_KEY)
+) ;
+
+-- サービスの設定
+drop table if exists SERVICE_CONFIGS cascade;
+
+create table SERVICE_CONFIGS (
+  SERVICE_NAME character varying(64) not null
+  , SERVICE_LABEL character varying(24) not null
+  , SERVICE_ICON character varying(24) not null
+  , SERVICE_IMAGE BYTEA
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint SERVICE_CONFIGS_PKC primary key (SERVICE_NAME)
+) ;
+
 -- ピン
 drop table if exists PINS cascade;
 
@@ -528,6 +559,27 @@ create table KNOWLEDGES (
   , constraint KNOWLEDGES_PKC primary key (KNOWLEDGE_ID)
 ) ;
 
+comment on table SERVICE_LOCALE_CONFIGS is 'サービスの表示言語毎の設定';
+comment on column SERVICE_LOCALE_CONFIGS.SERVICE_NAME is 'サービス名';
+comment on column SERVICE_LOCALE_CONFIGS.LOCALE_KEY is 'ロケールキー';
+comment on column SERVICE_LOCALE_CONFIGS.PAGE_HTML is 'トップページのHTML';
+comment on column SERVICE_LOCALE_CONFIGS.INSERT_USER is '登録ユーザ';
+comment on column SERVICE_LOCALE_CONFIGS.INSERT_DATETIME is '登録日時';
+comment on column SERVICE_LOCALE_CONFIGS.UPDATE_USER is '更新ユーザ';
+comment on column SERVICE_LOCALE_CONFIGS.UPDATE_DATETIME is '更新日時';
+comment on column SERVICE_LOCALE_CONFIGS.DELETE_FLAG is '削除フラグ';
+
+comment on table SERVICE_CONFIGS is 'サービスの設定';
+comment on column SERVICE_CONFIGS.SERVICE_NAME is 'サービス名';
+comment on column SERVICE_CONFIGS.SERVICE_LABEL is '表示名';
+comment on column SERVICE_CONFIGS.SERVICE_ICON is 'アイコン文字列';
+comment on column SERVICE_CONFIGS.SERVICE_IMAGE is '背景画像';
+comment on column SERVICE_CONFIGS.INSERT_USER is '登録ユーザ';
+comment on column SERVICE_CONFIGS.INSERT_DATETIME is '登録日時';
+comment on column SERVICE_CONFIGS.UPDATE_USER is '更新ユーザ';
+comment on column SERVICE_CONFIGS.UPDATE_DATETIME is '更新日時';
+comment on column SERVICE_CONFIGS.DELETE_FLAG is '削除フラグ';
+
 comment on table PINS is 'ピン';
 comment on column PINS.NO is 'NO';
 comment on column PINS.KNOWLEDGE_ID is 'ナレッジID';
@@ -589,7 +641,7 @@ comment on column DRAFT_KNOWLEDGES.DELETE_FLAG is '削除フラグ';
 
 comment on table MAIL_POSTS is 'メールから投稿';
 comment on column MAIL_POSTS.MESSAGE_ID is 'Message-ID';
-comment on column MAIL_POSTS.POST_KIND is '投稿区分	 1: Knowledge 2:Comment';
+comment on column MAIL_POSTS.POST_KIND is '投稿区分  1: Knowledge 2:Comment';
 comment on column MAIL_POSTS.ID is 'ID';
 comment on column MAIL_POSTS.SENDER is 'SENDER';
 comment on column MAIL_POSTS.INSERT_USER is '登録ユーザ';
@@ -601,10 +653,10 @@ comment on column MAIL_POSTS.DELETE_FLAG is '削除フラグ';
 comment on table MAIL_HOOK_CONDITIONS is 'メールから投稿する条件';
 comment on column MAIL_HOOK_CONDITIONS.HOOK_ID is 'HOOK_ID';
 comment on column MAIL_HOOK_CONDITIONS.CONDITION_NO is 'CONDITION_NO';
-comment on column MAIL_HOOK_CONDITIONS.CONDITION_KIND is '条件の種類	 1:宛先が「条件文字」であった場合';
+comment on column MAIL_HOOK_CONDITIONS.CONDITION_KIND is '条件の種類  1:宛先が「条件文字」であった場合';
 comment on column MAIL_HOOK_CONDITIONS.CONDITION is '条件の文字';
 comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER is '投稿者';
-comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER_KIND is '投稿者の指定	 1:送信者のメールアドレスから、2:常に固定';
+comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER_KIND is '投稿者の指定  1:送信者のメールアドレスから、2:常に固定';
 comment on column MAIL_HOOK_CONDITIONS.PUBLIC_FLAG is '公開区分';
 comment on column MAIL_HOOK_CONDITIONS.TAGS is 'タグ';
 comment on column MAIL_HOOK_CONDITIONS.VIEWERS is '公開先';
