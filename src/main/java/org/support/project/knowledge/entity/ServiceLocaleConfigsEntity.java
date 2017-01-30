@@ -39,11 +39,12 @@ public class ServiceLocaleConfigsEntity extends GenServiceLocaleConfigsEntity {
 
     /**
      * Constructor
+     * @param localeKey ロケールキー
      * @param serviceName サービス名
      */
 
-    public ServiceLocaleConfigsEntity(String serviceName) {
-        super( serviceName);
+    public ServiceLocaleConfigsEntity(String localeKey, String serviceName) {
+        super( localeKey,  serviceName);
     }
 
 }

@@ -1,10 +1,24 @@
 package org.support.project.knowledge.config;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import org.support.project.knowledge.entity.ServiceConfigsEntity;
+import org.support.project.knowledge.entity.ServiceLocaleConfigsEntity;
 import org.support.project.web.config.WebConfig;
 
 public class SystemConfig {
     public static final String KNOWLEDGE_ENV_KEY = "KNOWLEDGE_HOME";
-
+    
+    /** システム設定情報 */
+    private static ServiceConfigsEntity serviceConfigsEntity = null;
+    /** 言語毎のシステム設定情報 */
+    private static Map<String, ServiceLocaleConfigsEntity> serviceLocaleConfigsEntities = new HashMap<>();
+    /** デフォルトの言語 */
+    public static final String DEFAULT_LANGUAGE = "en";
+    
     /** ユーザ登録のやりかたを判定するシステム設定のラベル */
     public static final String USER_ADD_TYPE = "USER_ADD_TYPE";
     /** ユーザ登録のやりかた: 管理者が登録（デフォルト） */
@@ -54,6 +68,58 @@ public class SystemConfig {
 
     /** 添付ファイルの最大サイズ */
     public static final String UPLOAD_MAX_MB_SIZE = "UPLOAD_MAX_MB_SIZE";
+
+    /**
+     * @return the serviceConfigsEntity
+     */
+    public static ServiceConfigsEntity getServiceConfigsEntity() {
+        return serviceConfigsEntity;
+    }
+    /**
+     * @param serviceConfigsEntity the serviceConfigsEntity to set
+     */
+    public static void setServiceConfigsEntity(ServiceConfigsEntity serviceConfigsEntity) {
+        SystemConfig.serviceConfigsEntity = serviceConfigsEntity;
+    }
+    /**
+     * @return the serviceLocaleConfigsEntities
+     */
+    public static ServiceLocaleConfigsEntity getServiceLocaleConfigsEntity(Locale locale) {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(locale.getLanguage());
+        buffer.append("_").append(locale.getCountry());
+        buffer.append("_").append(locale.getVariant());
+        if (serviceLocaleConfigsEntities.containsKey(buffer.toString())) {
+            return serviceLocaleConfigsEntities.get(buffer.toString());
+        }
+        buffer = new StringBuffer();
+        buffer.append(locale.getLanguage());
+        buffer.append("_").append(locale.getCountry());
+        if (serviceLocaleConfigsEntities.containsKey(buffer.toString())) {
+            return serviceLocaleConfigsEntities.get(buffer.toString());
+        }
+        buffer = new StringBuffer();
+        buffer.append(locale.getLanguage());
+        if (serviceLocaleConfigsEntities.containsKey(buffer.toString())) {
+            return serviceLocaleConfigsEntities.get(buffer.toString());
+        }
+        buffer = new StringBuffer();
+        buffer.append(DEFAULT_LANGUAGE);
+        if (serviceLocaleConfigsEntities.containsKey(buffer.toString())) {
+            return serviceLocaleConfigsEntities.get(buffer.toString());
+        }
+        return null;
+    }
+    /**
+     * @param serviceLocaleConfigsEntities the serviceLocaleConfigsEntities to set
+     */
+    public static void setServiceLocaleConfigsEntities(List<ServiceLocaleConfigsEntity> localeConfigsEntities) {
+        if (localeConfigsEntities != null) {
+            for (ServiceLocaleConfigsEntity serviceLocaleConfigsEntity : localeConfigsEntities) {
+                serviceLocaleConfigsEntities.put(serviceLocaleConfigsEntity.getLocaleKey(), serviceLocaleConfigsEntity);
+            }
+        }
+    }
     
     
 }

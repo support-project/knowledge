@@ -42,11 +42,13 @@ public class GenServiceLocaleConfigsEntity implements Serializable {
 
     /**
      * Constructor
+     * @param localeKey ロケールキー
      * @param serviceName サービス名
      */
 
-    public GenServiceLocaleConfigsEntity(String serviceName) {
+    public GenServiceLocaleConfigsEntity(String localeKey, String serviceName) {
         super();
+        this.localeKey = localeKey;
         this.serviceName = serviceName;
     }
     /** サービス名 */
@@ -199,15 +201,18 @@ public class GenServiceLocaleConfigsEntity implements Serializable {
      * @return values 
      */
     public Object[] getKeyValues() {
-        Object[] keyValues = new Object[1];
-        keyValues[0] = this.serviceName;
+        Object[] keyValues = new Object[2];
+        keyValues[0] = this.localeKey;
+        keyValues[1] = this.serviceName;
         return keyValues;
     }
     /**
      * Set key values 
+     * @param localeKey ロケールキー
      * @param serviceName サービス名
      */
-    public void setKeyValues(String serviceName) {
+    public void setKeyValues(String localeKey, String serviceName) {
+        this.localeKey = localeKey;
         this.serviceName = serviceName;
     }
     /**
@@ -242,8 +247,8 @@ public class GenServiceLocaleConfigsEntity implements Serializable {
      */
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("serviceName = ").append(serviceName).append("\n");
         builder.append("localeKey = ").append(localeKey).append("\n");
+        builder.append("serviceName = ").append(serviceName).append("\n");
         builder.append("pageHtml = ").append(pageHtml).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");

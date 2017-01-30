@@ -10,7 +10,7 @@ create table SERVICE_LOCALE_CONFIGS (
   , UPDATE_USER integer
   , UPDATE_DATETIME timestamp
   , DELETE_FLAG integer
-  , constraint SERVICE_LOCALE_CONFIGS_PKC primary key (SERVICE_NAME)
+  , constraint SERVICE_LOCALE_CONFIGS_PKC primary key (SERVICE_NAME,LOCALE_KEY)
 ) ;
 
 -- サービスの設定

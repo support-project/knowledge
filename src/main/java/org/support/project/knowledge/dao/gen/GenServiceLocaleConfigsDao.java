@@ -59,12 +59,13 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
     }
     /**
      * Select data on key.
+     * @param  localeKey localeKey
      * @param  serviceName serviceName
      * @return data
      */
-    public ServiceLocaleConfigsEntity physicalSelectOnKey(String serviceName) {
+    public ServiceLocaleConfigsEntity physicalSelectOnKey(String localeKey, String serviceName) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_physical_select_on_key.sql");
-        return executeQuerySingle(sql, ServiceLocaleConfigsEntity.class, serviceName);
+        return executeQuerySingle(sql, ServiceLocaleConfigsEntity.class, localeKey, serviceName);
     }
     /**
      * Select all data that not deleted.
@@ -94,12 +95,49 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
     }
     /**
      * Select data that not deleted on key.
+     * @param  localeKey localeKey
      * @param  serviceName serviceName
      * @return data
      */
-    public ServiceLocaleConfigsEntity selectOnKey(String serviceName) {
+    public ServiceLocaleConfigsEntity selectOnKey(String localeKey, String serviceName) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_select_on_key.sql");
-        return executeQuerySingle(sql, ServiceLocaleConfigsEntity.class, serviceName);
+        return executeQuerySingle(sql, ServiceLocaleConfigsEntity.class, localeKey, serviceName);
+    }
+    /**
+     * Select data that not deleted on LOCALE_KEY column.
+     * @param localeKey localeKey
+     * @return list
+     */
+    public List<ServiceLocaleConfigsEntity> selectOnLocaleKey(String localeKey) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_select_on_locale_key.sql");
+        return executeQueryList(sql, ServiceLocaleConfigsEntity.class, localeKey);
+    }
+    /**
+     * Select data that not deleted on SERVICE_NAME column.
+     * @param serviceName serviceName
+     * @return list
+     */
+    public List<ServiceLocaleConfigsEntity> selectOnServiceName(String serviceName) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_select_on_service_name.sql");
+        return executeQueryList(sql, ServiceLocaleConfigsEntity.class, serviceName);
+    }
+    /**
+     * Select data on LOCALE_KEY column.
+     * @param localeKey localeKey
+     * @return list
+     */
+    public List<ServiceLocaleConfigsEntity> physicalSelectOnLocaleKey(String localeKey) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_physical_select_on_locale_key.sql");
+        return executeQueryList(sql, ServiceLocaleConfigsEntity.class, localeKey);
+    }
+    /**
+     * Select data on SERVICE_NAME column.
+     * @param serviceName serviceName
+     * @return list
+     */
+    public List<ServiceLocaleConfigsEntity> physicalSelectOnServiceName(String serviceName) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_physical_select_on_service_name.sql");
+        return executeQueryList(sql, ServiceLocaleConfigsEntity.class, serviceName);
     }
     /**
      * Count all data
@@ -119,8 +157,8 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
     public ServiceLocaleConfigsEntity rawPhysicalInsert(ServiceLocaleConfigsEntity entity) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_raw_insert.sql");
         executeUpdate(sql, 
-            entity.getServiceName(), 
             entity.getLocaleKey(), 
+            entity.getServiceName(), 
             entity.getPageHtml(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
@@ -139,8 +177,8 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
     public ServiceLocaleConfigsEntity physicalInsert(ServiceLocaleConfigsEntity entity) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_insert.sql");
         executeUpdate(sql, 
-            entity.getServiceName(), 
             entity.getLocaleKey(), 
+            entity.getServiceName(), 
             entity.getPageHtml(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
@@ -186,13 +224,13 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
     public ServiceLocaleConfigsEntity physicalUpdate(ServiceLocaleConfigsEntity entity) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_update.sql");
         executeUpdate(sql, 
-            entity.getLocaleKey(), 
             entity.getPageHtml(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
             entity.getUpdateUser(), 
             entity.getUpdateDatetime(), 
             entity.getDeleteFlag(), 
+            entity.getLocaleKey(), 
             entity.getServiceName());
         return entity;
     }
@@ -205,7 +243,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ServiceLocaleConfigsEntity update(Integer user, ServiceLocaleConfigsEntity entity) {
-        ServiceLocaleConfigsEntity db = selectOnKey(entity.getServiceName());
+        ServiceLocaleConfigsEntity db = selectOnKey(entity.getLocaleKey(), entity.getServiceName());
         entity.setInsertUser(db.getInsertUser());
         entity.setInsertDatetime(db.getInsertDatetime());
         entity.setDeleteFlag(db.getDeleteFlag());
@@ -235,7 +273,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ServiceLocaleConfigsEntity save(Integer user, ServiceLocaleConfigsEntity entity) {
-        ServiceLocaleConfigsEntity db = selectOnKey(entity.getServiceName());
+        ServiceLocaleConfigsEntity db = selectOnKey(entity.getLocaleKey(), entity.getServiceName());
         if (db == null) {
             return insert(user, entity);
         } else {
@@ -250,7 +288,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ServiceLocaleConfigsEntity save(ServiceLocaleConfigsEntity entity) {
-        ServiceLocaleConfigsEntity db = selectOnKey(entity.getServiceName());
+        ServiceLocaleConfigsEntity db = selectOnKey(entity.getLocaleKey(), entity.getServiceName());
         if (db == null) {
             return insert(entity);
         } else {
@@ -259,12 +297,13 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
     }
     /**
      * Physical Delete.
+     * @param  localeKey localeKey
      * @param  serviceName serviceName
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void physicalDelete(String serviceName) {
+    public void physicalDelete(String localeKey, String serviceName) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_delete.sql");
-        executeUpdate(sql, serviceName);
+        executeUpdate(sql, localeKey, serviceName);
     }
     /**
      * Physical Delete.
@@ -272,7 +311,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void physicalDelete(ServiceLocaleConfigsEntity entity) {
-        physicalDelete(entity.getServiceName());
+        physicalDelete(entity.getLocaleKey(), entity.getServiceName());
 
     }
     /**
@@ -280,11 +319,12 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * if delete flag is exists, the data is logical delete.
      * set saved user id.
      * @param user saved userid
+     * @param  localeKey localeKey
      * @param  serviceName serviceName
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(Integer user, String serviceName) {
-        ServiceLocaleConfigsEntity db = selectOnKey(serviceName);
+    public void delete(Integer user, String localeKey, String serviceName) {
+        ServiceLocaleConfigsEntity db = selectOnKey(localeKey, serviceName);
         db.setDeleteFlag(1);
         db.setUpdateUser(user);
         db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
@@ -293,13 +333,14 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
     /**
      * Delete.
      * if delete flag is exists, the data is logical delete.
+     * @param  localeKey localeKey
      * @param  serviceName serviceName
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(String serviceName) {
+    public void delete(String localeKey, String serviceName) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer user = (Integer) pool.getUser();
-        delete(user, serviceName);
+        delete(user, localeKey, serviceName);
     }
     /**
      * Delete.
@@ -310,7 +351,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void delete(Integer user, ServiceLocaleConfigsEntity entity) {
-        delete(user, entity.getServiceName());
+        delete(user, entity.getLocaleKey(), entity.getServiceName());
 
     }
     /**
@@ -321,7 +362,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void delete(ServiceLocaleConfigsEntity entity) {
-        delete(entity.getServiceName());
+        delete(entity.getLocaleKey(), entity.getServiceName());
 
     }
     /**
@@ -329,11 +370,12 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * if delete flag is exists and delete flag is true, delete flug is false to activate.
      * set saved user id.
      * @param user saved userid
+     * @param  localeKey localeKey
      * @param  serviceName serviceName
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void activation(Integer user, String serviceName) {
-        ServiceLocaleConfigsEntity db = physicalSelectOnKey(serviceName);
+    public void activation(Integer user, String localeKey, String serviceName) {
+        ServiceLocaleConfigsEntity db = physicalSelectOnKey(localeKey, serviceName);
         db.setDeleteFlag(0);
         db.setUpdateUser(user);
         db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
@@ -342,13 +384,14 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
     /**
      * Ativation.
      * if delete flag is exists and delete flag is true, delete flug is false to activate.
+     * @param  localeKey localeKey
      * @param  serviceName serviceName
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void activation(String serviceName) {
+    public void activation(String localeKey, String serviceName) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer user = (Integer) pool.getUser();
-        activation(user, serviceName);
+        activation(user, localeKey, serviceName);
     }
     /**
      * Ativation.
@@ -359,7 +402,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void activation(Integer user, ServiceLocaleConfigsEntity entity) {
-        activation(user, entity.getServiceName());
+        activation(user, entity.getLocaleKey(), entity.getServiceName());
 
     }
     /**
@@ -369,7 +412,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void activation(ServiceLocaleConfigsEntity entity) {
-        activation(entity.getServiceName());
+        activation(entity.getLocaleKey(), entity.getServiceName());
 
     }
 
