@@ -46,7 +46,7 @@ _GROUPS.push('<%= jspUtil.out("groupitem.groupName") %>');
 
 <c:param name="PARAM_CONTENT">
 
-    <h4 class="title"><%= jspUtil.label("knowledge.search.title") %></h4>
+    <h4 class="title"><%= jspUtil.label("knowledge.navbar.search") %></h4>
     
     <form role="form" action="<%=request.getContextPath()%><%=top%>">
     
