@@ -105,7 +105,18 @@
                     </a>
                 </div>
             </div>
+            
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <small class="text-info"><%= jspUtil.label("knowledge.list.msg.advanced.serch") %></small>
+                    <a href="<%= request.getContextPath() %>/open.knowledge/search" >
+                        &gt;&gt;
+                        <i class="fa fa-search-plus"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
+                    </a>
+                </div>
+            </div>
         </c:if>
+        
 
         <!-- リスト -->
         <div class="row" id="knowledgeList">
