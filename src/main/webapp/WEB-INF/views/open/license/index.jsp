@@ -219,7 +219,7 @@ $(document).ready(function(){
    - License: [MIT] https://github.com/ichord/At.js/blob/master/LICENSE-MIT
    - project-url: http://ichord.github.io/At.js/
 
-- At.js
+- picEdit
    - License: [MIT] https://github.com/andyvr/picEdit/blob/master/LICENSE.txt
    - project-url: https://github.com/andyvr/picEdit
 
