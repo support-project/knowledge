@@ -152,7 +152,7 @@ public class FileControl extends Control {
             }
         }
         // 削除実行
-        fileLogic.removeFile(fileNo, getLoginedUser());
+        fileLogic.removeFile(fileNo);
         return send(HttpStatus.SC_200_OK, "success: " + fileNo);
     }
     

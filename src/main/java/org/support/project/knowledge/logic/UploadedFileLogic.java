@@ -233,10 +233,9 @@ public class UploadedFileLogic {
      * ファイルを削除する
      * 
      * @param fileNo
-     * @param loginedUser
      * @throws Exception
      */
-    public void removeFile(Long fileNo, LoginedUser loginedUser) throws Exception {
+    public void removeFile(Long fileNo) throws Exception {
         // DBのデータを削除
         filesDao.physicalDelete(fileNo); // バイナリは大きいので、物理削除する
 
