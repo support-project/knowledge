@@ -8,6 +8,7 @@ import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.dao.gen.GenKnowledgeFilesDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.web.bean.LoginedUser;
@@ -87,16 +88,15 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
     }
 
     /**
-     * ナレッジに紐づいていないファイルで、かつ更新日が24時間前のものは削除する
-     * 下書きに紐付いているものも削除しない
+     * ナレッジに紐づいていないファイルで、かつ更新日が24時間前のものを取得
+     * 下書きに紐付いているものも対象外
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public int deleteNotConnectFiles() {
+    public List<KnowledgeFilesEntity> deleteNotConnectFiles() {
         StringBuilder sql = new StringBuilder();
-        sql.append("DELETE FROM KNOWLEDGE_FILES WHERE KNOWLEDGE_ID IS NULL AND DRAFT_ID IS NULL AND UPDATE_DATETIME < ? ");
+        sql.append("SELECT FILE_NO FROM KNOWLEDGE_FILES WHERE KNOWLEDGE_ID IS NULL AND DRAFT_ID IS NULL AND UPDATE_DATETIME < ? ");
         Timestamp timestamp = new Timestamp(new Date().getTime() - (1000 * 60 * 60 * 24));
-        int count = executeUpdate(sql.toString(), timestamp);
-        return count;
+        return executeQueryList(sql.toString(), KnowledgeFilesEntity.class, timestamp);
     }
 
     /**
@@ -108,8 +108,8 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, DRAFT_ID, FILE_SIZE, INSERT_USER, ");
         sql.append("INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ");
-        sql.append("FROM KNOWLEDGE_FILES WHERE PARSE_STATUS = 0 AND KNOWLEDGE_ID IS NOT NULL");
-        return executeQueryList(sql.toString(), KnowledgeFilesEntity.class);
+        sql.append("FROM KNOWLEDGE_FILES WHERE PARSE_STATUS < ?");
+        return executeQueryList(sql.toString(), KnowledgeFilesEntity.class, FileParseBat.PARSE_STATUS_PARSING);
     }
 
     /**
