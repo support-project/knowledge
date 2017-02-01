@@ -31,11 +31,8 @@ public abstract class AbstractSlideShowParser {
     protected void writeImage(BufferedImage org, String path) throws IOException {
         int width = org.getWidth();
         double scale = 1.0;
-        if (width > SLIDE_WIDTH) {
-            scale =  SLIDE_WIDTH / width;
-        }
+        scale =  SLIDE_WIDTH / width;
         LOG.info(path + " を保存します。 scale: " + scale);
-        
         
         ImageFilter filter = new AreaAveragingScaleFilter((int) (org.getWidth() * scale), (int) (org.getHeight() * scale));
         ImageProducer p = new FilteredImageSource(org.getSource(), filter);
