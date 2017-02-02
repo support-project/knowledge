@@ -1,5 +1,5 @@
 .preview {
-    word-break: break-all;
+    word-break: normal;
     margin-top: 50px;
     padding: 5px;
 }
