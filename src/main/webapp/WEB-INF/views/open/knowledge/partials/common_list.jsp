@@ -109,7 +109,7 @@
 
             <c:if test="${!empty keyword}">
                 <div class="item_caption">
-                    <p style="word-break: break-all" class="content">
+                    <p style="word-break: normal" class="content">
                         <%=jspUtil.out("knowledge.content", JspUtil.ESCAPE_CLEAR, 300)%>
                     </p>
                 </div>

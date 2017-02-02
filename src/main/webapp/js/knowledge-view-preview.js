@@ -17,7 +17,7 @@ var preview = function() {
         html += '</div>';
         html += '<div class="arrow_question">';
         
-        html += '<div style="word-break:break-all" id="content">';
+        html += '<div style="word-break:normal" id="content">';
         var content = data.content;
         html += content;
         html += '</div>';
@@ -47,7 +47,7 @@ var previewans = function() {
         html += 'alt="icon" width="64" height="64"/>';
         html += '</div>';
         html += '<div class="arrow_answer">';
-        html += '<div style="word-break:break-all" id="content">';
+        html += '<div style="word-break:normal" id="content">';
         var content = data.content;
         html += content;
         html += '</div>';

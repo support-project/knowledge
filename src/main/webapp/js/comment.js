@@ -118,7 +118,7 @@ var preview = function() {
         html += '<h3>';
         html += data.title;
         html += '</h3><hr/>';
-        html += '<div style="word-break:break-all" id="content">';
+        html += '<div style="word-break:normal" id="content">';
         var content = data.content;
         html += content;
         html += '</div>';
