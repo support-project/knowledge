@@ -12,6 +12,7 @@ import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.LogManageLogic;
+import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.entity.MailsEntity;
@@ -63,7 +64,7 @@ public class KnowledgeFileClearBat extends AbstractBat {
         
         List<MailsEntity> mailsEntities = MailsDao.get().physicalSelectAll();
         for (MailsEntity mailsEntity : mailsEntities) {
-            if (NumberUtils.is(mailsEntity.getStatus(), MailSendBat.MAIL_STATUS_SENDED)) {
+            if (NumberUtils.is(mailsEntity.getStatus(), MailLogic.MAIL_STATUS_SENDED)) {
                 // 送信済みになっているものは、削除
                 MailsDao.get().physicalDelete(mailsEntity);
             }
