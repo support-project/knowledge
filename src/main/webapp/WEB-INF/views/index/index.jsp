@@ -22,6 +22,13 @@
 <!-- endbuild -->
 </c:param>
 <c:param name="PARAM_SCRIPTS">
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#headerwrap').click(function() {
+        location.href='<%= request.getContextPath()%>/open.knowledge/list';
+    });
+});
+</script>
 </c:param>
 
 <c:param name="PARAM_CONTENT">
@@ -31,7 +38,7 @@
         <%= SanitizingLogic.get().sanitize(localeConfig.getPageHtml()) %>
     <% } else { %>
     <div id="headerimg">
-        <div id="headerwrap" onclick="location.href='<%= request.getContextPath()%>/open.knowledge/list';" style="cursor: pointer;">
+        <div id="headerwrap">
             <h1><span><i class="fa fa-book"></i>&nbsp;Knowledge</span></h1>
             <h2><span>Free Knowledge Base System</span></h2>
             <br/>
