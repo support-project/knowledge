@@ -194,7 +194,7 @@ public class NotifyMailBat extends AbstractBat {
         MailsEntity mailsEntity = new MailsEntity();
         String mailId = idGenu("Notify");
         mailsEntity.setMailId(mailId);
-        mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
+        mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
         mailsEntity.setToAddress(user.getMailAddress());
         mailsEntity.setToName(user.getUserName());
         
@@ -325,7 +325,7 @@ public class NotifyMailBat extends AbstractBat {
         MailsEntity mailsEntity = new MailsEntity();
         String mailId = idGenu("Notify");
         mailsEntity.setMailId(mailId);
-        mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
+        mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
         mailsEntity.setToAddress(user.getMailAddress());
         mailsEntity.setToName(user.getUserName());
         
@@ -545,7 +545,7 @@ public class NotifyMailBat extends AbstractBat {
         MailsEntity mailsEntity = new MailsEntity();
         String mailId = idGenu("Notify");
         mailsEntity.setMailId(mailId);
-        mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
+        mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
         mailsEntity.setToAddress(usersEntity.getMailAddress());
         mailsEntity.setToName(usersEntity.getUserName());
         String title = config.getTitle();

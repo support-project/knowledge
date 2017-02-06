@@ -34,7 +34,6 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.bat.MailSendBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
 import org.support.project.knowledge.config.SystemConfig;
@@ -62,47 +61,92 @@ public class MailLogic {
 
     /** ログ */
     private static final Log LOG = LogFactory.getLog(MailLogic.class);
+    
+    /** メールの状態：未送信（送信待ち） */
+    public static final int MAIL_STATUS_UNSENT = 0;
+    /** メールの状態：送信済 */
+    public static final int MAIL_STATUS_SENDED = 100;
+    /** メールの状態：なんらかのエラーが発生した(カウントアップ) */
+    public static final int MAIL_STATUS_ERROR_1 = 1;
+    public static final int MAIL_STATUS_ERROR_2 = 2;
+    public static final int MAIL_STATUS_ERROR_3 = 3;
+    /** メールの状態：アドレスのフォーマットエラー */
+    public static final int MAIL_STATUS_FORMAT_ERROR = 10;
 
+    public static final String MAIL_FORMAT = "^[a-zA-Z0-9!#$%&'_`/=~\\*\\+\\-\\?\\^\\{\\|\\}]+(\\.[a-zA-Z0-9!#$%&'_`/=~\\*\\+\\-\\?\\^\\{\\|\\}]+)*"
+            + "@" + "[a-zA-Z0-9][a-zA-Z0-9\\-]*(\\.[a-zA-Z0-9\\-]+)*$";
+    
+    
     // private static final DateFormat DAY_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
     private static final String MAIL_CONFIG_DIR = "/org/support/project/knowledge/mail/";
 
     public static MailLogic get() {
         return Container.getComp(MailLogic.class);
     }
-
+    
     /**
-     * メールを送信
-     * 
-     * @param config
-     * @param entity
-     * @throws MessagingException
-     * @throws UnsupportedEncodingException
-     * @throws BadPaddingException
-     * @throws IllegalBlockSizeException
-     * @throws NoSuchPaddingException
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
+     * メール送信の実行
+     * @throws BadPaddingException 
+     * @throws IllegalBlockSizeException 
+     * @throws NoSuchPaddingException 
+     * @throws NoSuchAlgorithmException 
+     * @throws InvalidKeyException 
      */
-    public void mailSend(MailConfigsEntity config, MailsEntity entity) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
-            IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, MessagingException {
+    public void startSendMails() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+        MailConfigsDao mailConfigsDao = MailConfigsDao.get();
+        MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
+        if (mailConfigsEntity == null) {
+            // メールの設定が登録されていなければ、送信処理は終了
+            return;
+        }
+        
+        MailsDao dao = MailsDao.get();
+        List<MailsEntity> entities = dao.selectOnStatus(MAIL_STATUS_ERROR_3);
+        Session session = getSession(mailConfigsEntity);
+        int count = 0;
+        for (MailsEntity mailsEntity : entities) {
+            if (mailsEntity.getToAddress().matches(MAIL_FORMAT)) {
+                try {
+                    MailLogic.get().mailSend(session, mailConfigsEntity, mailsEntity);
+                    // ステータス更新
+                    // mailsEntity.setStatus(MAIL_STATUS_SENDED);
+                    // MailsDao.get().save(mailsEntity);
+                    // 送信処理が終われば、物理削除
+                    dao.physicalDelete(mailsEntity);
+                } catch (Exception e) {
+                    LOG.error("mail send error", e);
+                    //メール送信失敗（3回リトライする）
+                    int status = MAIL_STATUS_UNSENT;
+                    if (mailsEntity.getStatus() != null) {
+                        status = mailsEntity.getStatus();
+                    }
+                    status++;
+                    mailsEntity.setStatus(status);
+                    MailsDao.get().save(mailsEntity);
+                }
+            } else {
+                mailsEntity.setStatus(MAIL_STATUS_FORMAT_ERROR);
+                dao.save(mailsEntity);
+            }
+            count++;
+        }
+        LOG.info("MAIL sended. count: " + count);
+    }
+    
+    /**
+     * メール送信のセッションを取得
+     * @param config
+     * @return
+     * @throws InvalidKeyException
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchPaddingException
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     */
+    private Session getSession(MailConfigsEntity config) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         String host = config.getHost();
         String port = String.valueOf(config.getPort());
-
-        String to = entity.getToAddress();
-        String toName = entity.getToName();
-
-        String from = entity.getFromAddress();
-        String fromName = entity.getFromName();
-        if (StringUtils.isEmpty(from)) {
-            from = config.getFromAddress();
-        }
-        if (StringUtils.isEmpty(fromName)) {
-            fromName = config.getFromName();
-        }
-
-        String title = entity.getTitle();
-        String message = entity.getContent();
-
+        
         Properties property = new Properties();
         property.put("mail.smtp.host", host);
         property.put("mail.smtp.port", port);
@@ -129,6 +173,58 @@ public class MailLogic {
             // 認証無し
             session = Session.getDefaultInstance(property);
         }
+        return session;
+    }
+    
+    /**
+     * メールを送信
+     * @param config メール送信設定
+     * @param entity メール情報
+     * @throws InvalidKeyException
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchPaddingException
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     * @throws UnsupportedEncodingException
+     * @throws MessagingException
+     */
+    public void mailSend(MailConfigsEntity config, MailsEntity entity) throws InvalidKeyException, NoSuchAlgorithmException, 
+        NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, MessagingException {
+        Session session = getSession(config);
+        this.mailSend(session, config, entity);
+    }
+    
+    
+    /**
+     * メールを送信
+     * @param session メール送信セッション
+     * @param config メール送信設定
+     * @param entity メール情報
+     * @throws MessagingException
+     * @throws UnsupportedEncodingException
+     * @throws BadPaddingException
+     * @throws IllegalBlockSizeException
+     * @throws NoSuchPaddingException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     */
+    private void mailSend(Session session, MailConfigsEntity config, MailsEntity entity) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
+            IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, MessagingException {
+        String to = entity.getToAddress();
+        String toName = entity.getToName();
+
+        String from = entity.getFromAddress();
+        String fromName = entity.getFromName();
+        if (StringUtils.isEmpty(from)) {
+            from = config.getFromAddress();
+        }
+        if (StringUtils.isEmpty(fromName)) {
+            fromName = config.getFromName();
+        }
+
+        String title = entity.getTitle();
+        String message = entity.getContent();
+
 
         MimeMessage mimeMessage = new MimeMessage(session);
         InternetAddress toAddress = new InternetAddress(to, toName, MAIL_ENCODE);
@@ -222,7 +318,7 @@ public class MailLogic {
         MailsEntity mailsEntity = new MailsEntity();
         String mailId = idGen("Invitation");
         mailsEntity.setMailId(mailId);
-        mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
+        mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
         mailsEntity.setToAddress(entity.getUserKey());
         mailsEntity.setToName(entity.getUserName());
 
@@ -261,7 +357,7 @@ public class MailLogic {
         MailsEntity mailsEntity = new MailsEntity();
         String mailId = idGen("Accept");
         mailsEntity.setMailId(mailId);
-        mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
+        mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
         mailsEntity.setToAddress(entity.getUserKey());
         mailsEntity.setToName(entity.getUserName());
 
@@ -319,7 +415,7 @@ public class MailLogic {
                 MailsEntity mailsEntity = new MailsEntity();
                 String mailId = idGen("Notify");
                 mailsEntity.setMailId(mailId);
-                mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
+                mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
                 mailsEntity.setToAddress(entity.getMailAddress());
                 mailsEntity.setToName(entity.getUserName());
                 mailsEntity.setTitle(title);
@@ -365,7 +461,7 @@ public class MailLogic {
                 MailsEntity mailsEntity = new MailsEntity();
                 String mailId = idGen("Notify");
                 mailsEntity.setMailId(mailId);
-                mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
+                mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
                 mailsEntity.setToAddress(entity.getMailAddress());
                 mailsEntity.setToName(entity.getUserName());
                 mailsEntity.setTitle(title);
@@ -393,7 +489,7 @@ public class MailLogic {
         MailsEntity mailsEntity = new MailsEntity();
         String mailId = idGen("MAIL-RESET");
         mailsEntity.setMailId(mailId);
-        mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
+        mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
         mailsEntity.setToAddress(email);
         mailsEntity.setToName(email);
 
@@ -426,7 +522,7 @@ public class MailLogic {
         MailsEntity mailsEntity = new MailsEntity();
         String mailId = idGen("MAIL-CHANGE");
         mailsEntity.setMailId(mailId);
-        mailsEntity.setStatus(MailSendBat.MAIL_STATUS_UNSENT);
+        mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
         mailsEntity.setToAddress(mailChangesEntity.getMailAddress());
         mailsEntity.setToName(loginedUser.getLoginUser().getUserName());
 
@@ -483,5 +579,6 @@ public class MailLogic {
         }
         return content;
     }
+
 
 }
