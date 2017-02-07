@@ -41,6 +41,7 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/knowledge-view-attachfile.js"></script>
 <script type="text/javascript" src="js/knowledge-view-stock.js"></script>
 <script type="text/javascript" src="js/knowledge-view-toc.js"></script>
+<script type="text/javascript" src="js/paste_image.js"></script>
 <script type="text/javascript" src="js/emojilist.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
 <!-- endbuild -->
