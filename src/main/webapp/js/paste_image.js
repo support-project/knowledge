@@ -14,7 +14,7 @@ $(document).ready(function () {
             imageBlob = event.clipboardData.items[0].getAsFile();
             formData = new FormData();
             formData.append('files[]', imageBlob);
-            url = _CONTEXT + 'protect.file/upload';
+            url = _CONTEXT + '/protect.file/upload';
             jQuery.ajax({
                 type: 'POST',
                 url: url,
