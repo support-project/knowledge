@@ -5,11 +5,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.entity.ServiceConfigsEntity;
 import org.support.project.knowledge.entity.ServiceLocaleConfigsEntity;
 import org.support.project.web.config.WebConfig;
 
 public class SystemConfig {
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(SystemConfig.class);
+    
     public static final String KNOWLEDGE_ENV_KEY = "KNOWLEDGE_HOME";
     
     /** システム設定情報 */
@@ -116,6 +121,7 @@ public class SystemConfig {
     public static void setServiceLocaleConfigsEntities(List<ServiceLocaleConfigsEntity> localeConfigsEntities) {
         if (localeConfigsEntities != null) {
             for (ServiceLocaleConfigsEntity serviceLocaleConfigsEntity : localeConfigsEntities) {
+                LOG.info("Load custom top page infomation. language: " + serviceLocaleConfigsEntity.getLocaleKey());
                 serviceLocaleConfigsEntities.put(serviceLocaleConfigsEntity.getLocaleKey(), serviceLocaleConfigsEntity);
             }
         }

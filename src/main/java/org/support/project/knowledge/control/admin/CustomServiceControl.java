@@ -7,7 +7,6 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.control.Control;
-import org.support.project.knowledge.dao.ServiceConfigsDao;
 import org.support.project.knowledge.entity.ServiceConfigsEntity;
 import org.support.project.knowledge.logic.ServiceConfigLogic;
 import org.support.project.web.annotation.Auth;
@@ -45,7 +44,7 @@ public class CustomServiceControl extends Control {
         }
         
         String enPage = getParam("enPage");
-        String jaPage = getParam("enPage");
+        String jaPage = getParam("jaPage");
         
         ServiceConfigLogic.get().saveConfig(getLoginedUser(), configsEntity, enPage, jaPage);
         
