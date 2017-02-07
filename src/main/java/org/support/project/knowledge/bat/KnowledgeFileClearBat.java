@@ -9,8 +9,11 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.NumberUtils;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
+import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.LogManageLogic;
+import org.support.project.knowledge.logic.MailLogic;
+import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.entity.MailsEntity;
 
@@ -37,9 +40,17 @@ public class KnowledgeFileClearBat extends AbstractBat {
 
     private void start() {
         KnowledgeFilesDao filesDao = KnowledgeFilesDao.get();
-        int count = filesDao.deleteNotConnectFiles();
-        if (count > 0) {
-            LOG.debug("Knowledge Files deleted. Count: " + count + "");
+        List<KnowledgeFilesEntity> files = filesDao.deleteNotConnectFiles();
+        if (files != null && !files.isEmpty()) {
+            LOG.debug("Knowledge Files deleted. Count: " + files.size() + "");
+            for (KnowledgeFilesEntity file : files) {
+                // 添付ファイルの削除
+                try {
+                    UploadedFileLogic.get().removeFile(file.getFileNo());
+                } catch (Exception e) {
+                    LOG.error("File delete error. file_no = " + file.getFileNo(), e);
+                }
+            }
         }
         
         // メール送信とNotifyのゴミ情報をクリア
@@ -53,7 +64,7 @@ public class KnowledgeFileClearBat extends AbstractBat {
         
         List<MailsEntity> mailsEntities = MailsDao.get().physicalSelectAll();
         for (MailsEntity mailsEntity : mailsEntities) {
-            if (NumberUtils.is(mailsEntity.getStatus(), MailSendBat.MAIL_STATUS_SENDED)) {
+            if (NumberUtils.is(mailsEntity.getStatus(), MailLogic.MAIL_STATUS_SENDED)) {
                 // 送信済みになっているものは、削除
                 MailsDao.get().physicalDelete(mailsEntity);
             }

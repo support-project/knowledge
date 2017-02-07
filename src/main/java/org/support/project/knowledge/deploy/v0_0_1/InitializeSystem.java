@@ -1,7 +1,16 @@
 package org.support.project.knowledge.deploy.v0_0_1;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import org.support.project.common.util.FileUtil;
+import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.dao.ServiceConfigsDao;
+import org.support.project.knowledge.dao.ServiceLocaleConfigsDao;
 import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.Migrate;
+import org.support.project.knowledge.entity.ServiceConfigsEntity;
+import org.support.project.knowledge.entity.ServiceLocaleConfigsEntity;
 import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.web.config.WebConfig;
 import org.support.project.web.dao.RolesDao;
@@ -24,7 +33,7 @@ public class InitializeSystem implements Migrate {
         return true;
     }
 
-    private void addInitDatas() {
+    private void addInitDatas() throws UnsupportedEncodingException, IOException {
         // 権限の追加
         RolesEntity adminRole = RolesEntity.get();
         adminRole.setRoleId(1);
@@ -53,6 +62,19 @@ public class InitializeSystem implements Migrate {
         userRolesEntity.setUserId(1);
         userRolesEntity.setRoleId(1);
         userRolesDao.save(userRolesEntity);
+        
+        ServiceConfigsEntity serviceConfigsEntity = new ServiceConfigsEntity(AppConfig.get().getSystemName());
+        serviceConfigsEntity.setServiceLabel(AppConfig.get().getSystemName());
+        serviceConfigsEntity.setServiceIcon("fa-book");
+        ServiceConfigsDao.get().insert(serviceConfigsEntity);
+        
+        ServiceLocaleConfigsEntity en = new ServiceLocaleConfigsEntity("en", AppConfig.get().getSystemName());
+        en.setPageHtml(FileUtil.read(getClass().getResourceAsStream("/org/support/project/knowledge/deploy/v1_8_0/top_info.html")));
+        ServiceLocaleConfigsDao.get().insert(en);
+        
+        ServiceLocaleConfigsEntity ja = new ServiceLocaleConfigsEntity("ja", AppConfig.get().getSystemName());
+        ja.setPageHtml(FileUtil.read(getClass().getResourceAsStream("/org/support/project/knowledge/deploy/v1_8_0/top_info_ja.html")));
+        ServiceLocaleConfigsDao.get().insert(ja);
     }
 
     private void createTables() {

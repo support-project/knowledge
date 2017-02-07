@@ -10,5 +10,9 @@
 <script type="text/javascript" src="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript" src="bower/echojs/dist/echo.min.js"></script>
 <script type="text/javascript" src="js/knowledge-list.js"></script>
+
+<script type="text/javascript" src="js/knowledge-common.js"></script>
+<script type="text/javascript" src="js/knowledge-view-markdown.js"></script>
+<script type="text/javascript" src="js/knowledge-view-emoji-select.js"></script>
 <!-- endbuild -->
 

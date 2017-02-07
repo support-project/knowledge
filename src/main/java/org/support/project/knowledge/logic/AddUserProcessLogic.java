@@ -32,6 +32,7 @@ public class AddUserProcessLogic implements AddUserProcess {
         entity.setMyItemStock(INT_FLAG.ON.getValue());
         entity.setToItemComment(INT_FLAG.ON.getValue());
         entity.setToItemSave(INT_FLAG.ON.getValue());
+        entity.setToItemIgnorePublic(INT_FLAG.OFF.getValue());
         entity.setUserId(user.getUserId());
         notifyConfigsDao.save(entity);
         

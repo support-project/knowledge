@@ -1483,5 +1483,21 @@ public class KnowledgeLogic {
     }
 
     
+    /**
+     * アクセス可能な記事を、IDの前方一致で取得
+     * @param q
+     * @param loginedUser
+     * @return
+     */
+    public List<KnowledgesEntity> selectAccessAbleKnowledge(String q, LoginedUser loginedUser) {
+        int limit = 5;
+        int offset = 0;
+        if (loginedUser.isAdmin()) {
+            return KnowledgesDao.get().selectKnowledgeOnIdPrefix(q, limit, offset);
+        }
+        return KnowledgesDao.get().selectAccessAbleKnowledgeOnIdPrefix(q, loginedUser, limit, offset);
+    }
+
+    
     
 }

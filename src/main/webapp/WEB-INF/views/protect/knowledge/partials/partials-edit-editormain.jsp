@@ -37,7 +37,7 @@
 
             <div class="tab-pane preview markdown" id="previewTab">
                 <div class="row">
-                <span class="col-sm-8" id="preview"></span>
+                <span id="preview"></span>
                 </div>
             </div>
         </div>

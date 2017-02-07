@@ -25,10 +25,10 @@
         <%-- 左上のヘッダー部分 --%>
         <div class="col-sm-8">
             <h4 class="title">
-            <%=jspUtil.out("title", JspUtil.ESCAPE_CLEAR)%>
             <span class="dispKnowledgeId">
                 #<%= jspUtil.out("knowledgeId") %>
             </span>
+            <%=jspUtil.out("title", JspUtil.ESCAPE_CLEAR)%>
             </h4>
             <div style="margin-top: 10px;">
                 <h5>

@@ -4,7 +4,7 @@
 
     <groupId>org.support-project</groupId>
     <artifactId>knowledge</artifactId>
-    <version>1.7.0</version>
+    <version>1.8.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>knowledge</name>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.support-project</groupId>
             <artifactId>web</artifactId>
-            <version>1.7.0</version>
+            <version>1.8.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -126,7 +126,7 @@
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-parsers</artifactId>
-            <version>1.13</version>
+            <version>1.14</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.ow2.asm</groupId>

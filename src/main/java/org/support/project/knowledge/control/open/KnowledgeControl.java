@@ -42,6 +42,7 @@ import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LikeCount;
+import org.support.project.knowledge.vo.ListData;
 import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.knowledge.vo.UploadFile;
@@ -554,8 +555,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
 //        setAttribute("stocks", list);
         setAttribute("popularities", stocks);
         LOG.trace("取得完了");
-
-        
         
         // ナレッジの公開先の情報を取得
         setKnowledgeTargetsWithConv(loginedUser, list);
@@ -829,4 +828,20 @@ public class KnowledgeControl extends KnowledgeControlBase {
         return send(template);
     }
 
+    
+    /**
+     * オートコンプリートの候補を取得（JSON）
+     * 
+     * @return
+     * @throws ParseException
+     */
+    @Get
+    public Boundary items() throws ParseException {
+        String q = super.getParameter("q");
+        List<KnowledgesEntity> list = KnowledgeLogic.get().selectAccessAbleKnowledge(q, getLoginedUser());
+        ListData listdata = new ListData();
+        listdata.setItems(list);
+        return super.send(listdata);
+    }
+    
 }

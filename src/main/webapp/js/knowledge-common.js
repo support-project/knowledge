@@ -150,7 +150,7 @@ var parseMarkdown = function(title, content, previewAreaId, titleAreaId) {
             if (titleAreaId) {
                 $(titleAreaId).html(data.title);
             }
-            var html = '<div style="word-break:break-all" id="content">';
+            var html = '<div style="word-break:normal" id="content">';
             var content = data.content;
             html += content;
             html += '</div>';

@@ -95,9 +95,7 @@ $(document).ready(function() {
     $("#content").change(function() {
         $('#updateContent').val('true');
     });
-
-    
-    
+    // 下書き保存
     $('#draftDeleteButton').click(function() {
         var draftId = $('#draftId').val();
         console.log(draftId);
@@ -133,6 +131,8 @@ $(document).ready(function() {
             }); 
         }
     });
+    // Auto complete
+    setAutoComplete($("#content"));
 });
 
 function deleteKnowledge() {

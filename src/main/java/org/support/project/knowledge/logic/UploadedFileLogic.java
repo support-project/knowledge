@@ -1,7 +1,9 @@
 package org.support.project.knowledge.logic;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +13,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -69,6 +72,29 @@ public class UploadedFileLogic {
         return file;
     }
 
+    /**
+     * ファイルを保存する
+     * 
+     * @param img
+     * @param loginedUser
+     * @param context
+     * @return
+     * @throws IOException
+     */
+    public UploadFile saveFile(byte[] img, LoginedUser loginedUser, String context) {
+        LOG.trace("saveFile()");
+        KnowledgeFilesEntity entity = new KnowledgeFilesEntity();
+        entity.setFileName("image-" + DateUtils.formatTransferDateTime(new Date()) + ".png");
+        entity.setFileSize(new Double(img.length));
+        entity.setFileBinary(new ByteArrayInputStream(img));
+        entity.setParseStatus(0);
+        entity = filesDao.insert(entity);
+        UploadFile file = convUploadFile(context, entity);
+        return file;
+    }
+    
+    
+    
     /**
      * KnowledgeFilesEntity の情報から、画面に戻す UploadFile の情報を生成する
      * 
@@ -207,10 +233,9 @@ public class UploadedFileLogic {
      * ファイルを削除する
      * 
      * @param fileNo
-     * @param loginedUser
      * @throws Exception
      */
-    public void removeFile(Long fileNo, LoginedUser loginedUser) throws Exception {
+    public void removeFile(Long fileNo) throws Exception {
         // DBのデータを削除
         filesDao.physicalDelete(fileNo); // バイナリは大きいので、物理削除する
 
@@ -314,5 +339,6 @@ public class UploadedFileLogic {
         }
         return filesDao.selectOnKey(fileNo);
     }
+
 
 }

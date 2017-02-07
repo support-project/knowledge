@@ -12,9 +12,25 @@
 <link rel="stylesheet" href="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload.css" />
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
+<link rel="stylesheet" href="bower/At.js/dist/css/jquery.atwho.min.css" />
+<link rel="stylesheet" href="bower/picEdit/dist/css/picedit.min.css" />
 
 <link rel="stylesheet" href="css/knowledge-edit.css" />
 <link rel="stylesheet" href="css/markdown.css" />
 <link rel="stylesheet" href="css/slide.css" />
 <!-- endbuild -->
 
+<style>
+<%-- width の上書き --%>
+.picedit_box {
+    display: inline-block;
+    position: relative;
+    border: 1px solid #ddd;
+    font-family: "Myriad Pro", Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    width: 250px; 
+    height: 200px;
+    color: #aaa;
+    overflow: hidden;
+}
+</style>

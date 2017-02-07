@@ -77,7 +77,7 @@
                 <div class="row ">
                     <div class="col-sm-12">
                         <h3>Display sample</h3>
-                        <div class="markdown viewarea markdown_sample" id="markdownSamplePreview" style="word-break: break-all;">
+                        <div class="markdown viewarea markdown_sample" id="markdownSamplePreview" style="word-break: normal;">
                         <li class="fa fa-refresh fa-spin fa-5x"></li>
                         </div>
                     </div>

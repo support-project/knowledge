@@ -1,5 +1,5 @@
 .preview {
-    word-break: break-all;
+    word-break: normal;
     margin-top: 50px;
     padding: 5px;
 }
@@ -103,5 +103,20 @@
 .dispKnowledgeInfo {
     color: #999999;
     font-size: 14pt;
+}
+
+@media only screen and (max-width:767px){
+    .confirmWidth {
+        width: 300px;
+        margin: 0 auto;
+        text-align: center;
+    }
+}
+@media only screen and (min-width:768px){
+    .confirmWidth {
+        width: 768px;
+        margin: 0 auto;
+        text-align: center;
+    }
 }
 

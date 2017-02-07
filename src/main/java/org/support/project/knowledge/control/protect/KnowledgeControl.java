@@ -17,6 +17,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.DraftKnowledgesDao;
@@ -46,8 +47,10 @@ import org.support.project.web.config.HttpMethod;
 import org.support.project.web.config.MessageStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UserConfigsDao;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UserConfigsEntity;
 import org.support.project.web.exception.AuthenticateException;
 import org.support.project.web.exception.InvalidParamException;
@@ -114,6 +117,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 setAttribute("publicFlag", KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
             }
         }
+        
         return forward("edit.jsp");
     }
 
@@ -127,6 +131,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     public Boundary view_edit() throws InvalidParamException {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
+        setAttributeForEditPage();
 
         String offset = super.getParam("offset", String.class);
         if (StringUtils.isEmpty(offset)) {
@@ -168,8 +173,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
             setAttributeOnProperty(entity);
         }
-        
-        setAttributeForEditPage();
         
         return forward("edit.jsp");
     }
@@ -586,9 +589,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setAttributeOnProperty(db);
 
         addMsgSuccess("message.success.update");
-
-        setPathInfo(String.valueOf(commentsEntity.getCommentNo()));
-        return edit_comment();
+        //return devolution(HttpMethod.get, "/open.Knowledge/view", String.valueOf(db.getKnowledgeId()));
+        return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + db.getKnowledgeId());
     }
 
     /**

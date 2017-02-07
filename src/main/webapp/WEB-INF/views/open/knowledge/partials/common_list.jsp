@@ -23,7 +23,12 @@
         <div class="knowledge_item">
             <a href="<%=request.getContextPath()%>/open.knowledge/view/<%=jspUtil.out("knowledge.knowledgeId")%><%=jspUtil.out("params")%>">
                 <div class="insert_info">
-                    <h4><%=jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR)%></h4>
+                    <h4>
+                        <span class="dispKnowledgeId">
+                            #<%= jspUtil.out("knowledge.knowledgeId") %>
+                        </span>
+                        <%=jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR)%>
+                    </h4>
                     <div>
                         <img src="<%=request.getContextPath()%>/images/loader.gif"
                             data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("knowledge.insertUser")%>" alt="icon" width="36"
@@ -104,7 +109,7 @@
 
             <c:if test="${!empty keyword}">
                 <div class="item_caption">
-                    <p style="word-break: break-all" class="content">
+                    <p style="word-break: normal" class="content">
                         <%=jspUtil.out("knowledge.content", JspUtil.ESCAPE_CLEAR, 300)%>
                     </p>
                 </div>
