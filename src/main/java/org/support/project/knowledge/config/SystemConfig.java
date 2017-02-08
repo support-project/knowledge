@@ -1,9 +1,9 @@
 package org.support.project.knowledge.config;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -20,7 +20,7 @@ public class SystemConfig {
     /** システム設定情報 */
     private static ServiceConfigsEntity serviceConfigsEntity = null;
     /** 言語毎のシステム設定情報 */
-    private static Map<String, ServiceLocaleConfigsEntity> serviceLocaleConfigsEntities = new HashMap<>();
+    private static Map<String, ServiceLocaleConfigsEntity> serviceLocaleConfigsEntities = new ConcurrentHashMap<>();
     /** デフォルトの言語 */
     public static final String DEFAULT_LANGUAGE = "en";
     
@@ -122,7 +122,16 @@ public class SystemConfig {
         if (localeConfigsEntities != null) {
             for (ServiceLocaleConfigsEntity serviceLocaleConfigsEntity : localeConfigsEntities) {
                 LOG.info("Load custom top page infomation. language: " + serviceLocaleConfigsEntity.getLocaleKey());
-                serviceLocaleConfigsEntities.put(serviceLocaleConfigsEntity.getLocaleKey(), serviceLocaleConfigsEntity);
+                if (serviceLocaleConfigsEntities.containsKey(serviceLocaleConfigsEntity.getLocaleKey())) {
+                    ServiceLocaleConfigsEntity entity = serviceLocaleConfigsEntities.get(serviceLocaleConfigsEntity.getLocaleKey());
+                    if (entity != null) {
+                        entity.setPageHtml(serviceLocaleConfigsEntity.getPageHtml());
+                    } else {
+                        serviceLocaleConfigsEntities.put(serviceLocaleConfigsEntity.getLocaleKey(), serviceLocaleConfigsEntity);
+                    }
+                } else {
+                    serviceLocaleConfigsEntities.put(serviceLocaleConfigsEntity.getLocaleKey(), serviceLocaleConfigsEntity);
+                }
             }
         }
     }
