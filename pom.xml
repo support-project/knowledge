@@ -4,7 +4,7 @@
 
     <groupId>org.support-project</groupId>
     <artifactId>knowledge</artifactId>
-    <version>1.7.0</version>
+    <version>1.7.1</version>
     <packaging>war</packaging>
 
     <name>knowledge</name>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.support-project</groupId>
             <artifactId>web</artifactId>
-            <version>1.7.0</version>
+            <version>1.7.1</version>
         </dependency>
 
         <dependency>
