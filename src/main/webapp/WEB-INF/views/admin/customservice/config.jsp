@@ -26,12 +26,16 @@
     </c:param>
 
     <c:param name="PARAM_SCRIPTS">
+<!-- build:js(src/main/webapp) js/page-customservice.js -->
+<script type="text/javascript" src="js/customservice.js"></script>
+<!-- endbuild -->
+
     </c:param>
 
     <c:param name="PARAM_CONTENT">
         <h4 class="title"><%=jspUtil.label("knowledge.custom.service.title")%></h4>
 
-        <form action="<%= request.getContextPath() %>/admin.customservice/save" method="post">
+        <form action="<%= request.getContextPath() %>/admin.customservice/save" method="post" id="fm">
             <input type="hidden" name="<%= HttpRequestCheckLogic.REQ_ID_KEY %>"
                 value="<%= jspUtil.out(HttpRequestCheckLogic.REQ_ID_KEY) %>" />
             
