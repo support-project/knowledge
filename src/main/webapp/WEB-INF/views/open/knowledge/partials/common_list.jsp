@@ -89,7 +89,7 @@
                     <c:set var="tagIds" value="${knowledge.tagIds.split(',')}" />
                     <i class="fa fa-tags"></i>
                     <c:forEach var="tagName" items="${knowledge.tagNames.split(',')}" varStatus="status">
-                        <a href="<%= request.getContextPath()%>/open.knowledge/list?tag=<c:out value="${tagIds[status.index]}"/>">
+                        <a href="<%= request.getContextPath()%>/open.knowledge/list?tagNames=<%=jspUtil.out("tagName")%>">
                             <span class="tag label label-info"><i class="fa fa-tag"></i><%=jspUtil.out("tagName")%></span>
                         </a>&nbsp;
                     </c:forEach>
