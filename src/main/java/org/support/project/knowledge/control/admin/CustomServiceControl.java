@@ -11,6 +11,8 @@ import org.support.project.knowledge.entity.ServiceConfigsEntity;
 import org.support.project.knowledge.logic.ServiceConfigLogic;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
+import org.support.project.web.common.HttpStatus;
+import org.support.project.web.config.MessageStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 
@@ -53,7 +55,9 @@ public class CustomServiceControl extends Control {
         
         String successMsg = "message.success.save";
         setResult(successMsg, errors);
-        return forward("config.jsp");
+        
+        return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
+                "success", "message.success.insert");
     }
     
     
