@@ -34,6 +34,7 @@ import org.support.project.knowledge.dao.KnowledgeTagsDao;
 import org.support.project.knowledge.dao.KnowledgeUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
+import org.support.project.knowledge.dao.StockKnowledgesDao;
 import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
@@ -984,6 +985,9 @@ public class KnowledgeLogic {
         IndexLogic indexLogic = IndexLogic.get();
         indexLogic.delete(knowledgeId);
         indexLogic.delete("WEB-" + knowledgeId);
+        
+        // ストック一覧から削除
+        StockKnowledgesDao.get().deleteOnKnowledgeId(knowledgeId);
     }
 
     /**
