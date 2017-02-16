@@ -22,18 +22,9 @@ $(document).ready(function () {
                 processData: false,
                 data: formData,
                 success: function (msg) {
-                    var file,str,obj,s,p,np;
-                    if (0 < msg.files.length) {
-                        file = msg.files[0];
-                        str = '![' + file.name + '](' + file.url + ')';
-                        obj = $(element);
-                        obj.focus();
-                        s = obj.val();
-                        p = obj.get(0).selectionStart;
-                        np = p + str.length;
-                        obj.val(s.substr(0, p) + str + s.substr(p));
-                        obj.get(0).setSelectionRange(np, np);
-                    }
+                    uploadedFiles(msg.files);
+                    var target = $(element);
+                    writeImageLink(msg, target);
                 }
             });
         }
@@ -50,3 +41,20 @@ $(document).ready(function () {
     }
 
 });
+
+
+var writeImageLink = function(msg, obj) {
+    var file,str,obj,s,p,np;
+    if (0 < msg.files.length) {
+        file = msg.files[0];
+        str = '![' + file.name + '](' + file.url + ')';
+        obj.focus();
+        s = obj.val();
+        p = obj.get(0).selectionStart;
+        np = p + str.length;
+        obj.val(s.substr(0, p) + str + s.substr(p));
+        obj.get(0).setSelectionRange(np, np);
+    }
+};
+
+
