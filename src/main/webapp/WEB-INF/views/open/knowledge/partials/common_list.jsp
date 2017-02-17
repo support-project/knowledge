@@ -20,7 +20,7 @@
     </c:if>
 
     <c:forEach var="knowledge" items="${list_data}" varStatus="status">
-        <c:if test="${status.index == 1}">
+        <c:if test="${status.index == 2}">
             <div class="ad_item">
 
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -120,8 +120,8 @@
                 <c:if test="${!empty knowledge.tagNames}">
                     <c:set var="tagIds" value="${knowledge.tagIds.split(',')}" />
                     <i class="fa fa-tags"></i>
-                    <c:forEach var="tagName" items="${knowledge.tagNames.split(',')}" varStatus="status2">
-                        <a href="<%= request.getContextPath()%>/open.knowledge/list?tag=<c:out value="${tagIds[status.index]}"/>">
+                    <c:forEach var="tagName" items="${knowledge.tagNames.split(',')}" varStatus="status">
+                        <a href="<%= request.getContextPath()%>/open.knowledge/list?tagNames=<%=jspUtil.out("tagName")%>">
                             <span class="tag label label-info"><i class="fa fa-tag"></i><%=jspUtil.out("tagName")%></span>
                         </a>&nbsp;
                     </c:forEach>

@@ -29,6 +29,7 @@ $(document).ready(function() {
                         },
                         success: function(data) {
                             uploadedFiles(data.files);
+                            writeImageLink(data, $('#content'));
                         },
                         error: function(err) {
                             $.notify('Save error', 'error');

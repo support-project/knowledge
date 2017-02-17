@@ -40,7 +40,11 @@ public class StockControl extends Control {
         Integer offset = super.getPathInteger(0);
         StocksDao stocksDao = StocksDao.get();
 
-        List<StocksEntity> stocks = stocksDao.selectMyStocksWithKnowledgeCount(super.getLoginedUser(), offset * LIST_LIMIT, LIST_LIMIT);
+        List<StocksEntity> stocks = stocksDao.selectMyStocks(super.getLoginedUser(), offset * LIST_LIMIT, LIST_LIMIT);
+        for (StocksEntity stocksEntity : stocks) {
+            int count = StockKnowledgesDao.get().selectActiveOnStockId(stocksEntity.getStockId()).size();
+            stocksEntity.setKnowledgeCount(count);
+        }
         setAttribute("stocks", stocks);
 
         int previous = offset - 1;
