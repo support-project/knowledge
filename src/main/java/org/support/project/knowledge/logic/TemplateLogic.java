@@ -44,6 +44,7 @@ public class TemplateLogic {
     public static final int ITEM_TYPE_CHECKBOX = 11;
     public static final int ITEM_TYPE_DATE = 20;
     public static final int ITEM_TYPE_TIME = 21;
+    public static final int ITEM_TYPE_TIMEZONE = 22;
 
     public static final String ITEM_TYPE_TEXT_STRING = "text";
     public static final String ITEM_TYPE_TEXTAREA_STRING = "textarea";
