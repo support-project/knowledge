@@ -13,11 +13,9 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
-import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
-import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
@@ -39,8 +37,7 @@ public class TemplateControl extends Control {
     @Auth(roles = "admin")
     public Boundary list() {
         // テンプレートの個数はあまり多く出来ないようにする（でないと登録の画面が微妙）
-        TemplateMastersDao mastersDao = TemplateMastersDao.get();
-        List<TemplateMastersEntity> templates = mastersDao.selectAll();
+        List<TemplateMastersEntity> templates = TemplateLogic.get().selectAll();
         Collections.sort(templates, new Comparator<TemplateMastersEntity>() {
             @Override
             public int compare(TemplateMastersEntity o1, TemplateMastersEntity o2) {
@@ -83,7 +80,7 @@ public class TemplateControl extends Control {
         setAttribute("items", entity.getItems());
 
         boolean editable = true;
-        if (KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE == id || KnowledgeLogic.TEMPLATE_TYPE_BOOKMARK == id) {
+        if (TemplateLogic.get().isProtectedType(id)) {
             editable = false;
         }
         setAttribute("editable", editable);
@@ -249,7 +246,7 @@ public class TemplateControl extends Control {
     @Auth(roles = "admin")
     public Boundary delete() throws Exception {
         Integer typeId = getParam("typeId", Integer.class);
-        if (KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE == typeId || KnowledgeLogic.TEMPLATE_TYPE_BOOKMARK == typeId) {
+        if (TemplateLogic.get().isProtectedType(typeId)) {
             addMsgWarn("knowledge.template.msg.not.delete");
             super.setPathInfo(String.valueOf(typeId));
             return view_edit();

@@ -47,6 +47,43 @@ ShowTag=1
 ShowCommonAttributes=0
 
 [Relation]
+Entity1=KNOWLEDGES
+Entity2=PARTICIPANTS
+RelationType1=1
+RelationType2=3
+Fields1=KNOWLEDGE_ID
+Fields2=KNOWLEDGE_ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,9500,4988,4156,R,R
+Dependence=1
+Caption=
+PName=
+LineMode=0
+Bar1=950
+Bar2=499
+Bar3=416
+TermPos1=R
+TermPos2=R
+
+[Entity]
+PName=PARTICIPANTS
+LName=参加者
+Comment=
+TableOption=
+Page=Main
+Left=1450
+Top=1450
+Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ユーザID","USER_ID","@INT","NOT NULL",1,"","",$FFFFFFFF,""
+Field="ステータス","STATUS","@INT","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170216142857
+Position="Main",1450,1450
+
+[Relation]
 Entity1=SERVICE_CONFIGS
 Entity2=SERVICE_LOCALE_CONFIGS
 RelationType1=1
@@ -244,7 +281,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1600
-Top=850
+Top=800
 Field="下書きID","DRAFT_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="テンプレートの種類ID","TYPE_ID","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 Field="項目NO","ITEM_NO","@INT","NOT NULL",2,"","",$FFFFFFFF,""
@@ -254,7 +291,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20161118154223
-Position="MAIN",1600,850
+Position="MAIN",1600,800
 
 [Entity]
 PName=DRAFT_KNOWLEDGES
@@ -751,14 +788,14 @@ Fields1=COMMENT_NO
 Fields2=COMMENT_NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,5422,4072,4828,R,R
+Position="MAIN",0,5486,4072,4707,R,R
 Dependence=0
 Caption=
 PName=
 LineMode=0
-Bar1=542
+Bar1=549
 Bar2=407
-Bar3=483
+Bar3=471
 TermPos1=R
 TermPos2=R
 
@@ -848,8 +885,8 @@ LName=コメント
 Comment=
 TableOption=
 Page=MAIN
-Left=1400
-Top=1350
+Left=1600
+Top=1300
 Field="コメント番号","COMMENT_NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="コメント","COMMENT","text",,,"","",$FFFFFFFF,""
@@ -859,7 +896,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150910035117
-Position="MAIN",1400,1350
+Position="MAIN",1600,1300
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -1132,7 +1169,7 @@ Fields1=KNOWLEDGE_ID
 Fields2=KNOWLEDGE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,1708,7637,5252,R,R
+Position="MAIN",0,1708,7637,5285,R,R
 Dependence=1
 Caption=
 PName=
@@ -1140,7 +1177,7 @@ ModifiedDateTime=20161206103055
 LineMode=0
 Bar1=171
 Bar2=764
-Bar3=525
+Bar3=528
 TermPos1=R
 TermPos2=R
 
@@ -1151,7 +1188,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1600
-Top=1050
+Top=1000
 Field="添付ファイル番号","FILE_NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint",,,"","",$FFFFFFFF,""
 Field="コメント番号","COMMENT_NO","bigint",,,"","",$FFFFFFFF,""
@@ -1165,7 +1202,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20161206105608
-Position="MAIN",1600,1050
+Position="MAIN",1600,1000
 
 [Entity]
 PName=KNOWLEDGES

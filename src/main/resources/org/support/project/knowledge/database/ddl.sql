@@ -1,3 +1,18 @@
+-- 参加者
+drop table if exists PARTICIPANTS cascade;
+
+create table PARTICIPANTS (
+  KNOWLEDGE_ID bigint not null
+  , USER_ID integer not null
+  , STATUS integer not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint PARTICIPANTS_PKC primary key (KNOWLEDGE_ID,USER_ID)
+) ;
+
 -- サービスの表示言語毎の設定
 drop table if exists SERVICE_LOCALE_CONFIGS cascade;
 
@@ -558,6 +573,16 @@ create table KNOWLEDGES (
   , DELETE_FLAG integer
   , constraint KNOWLEDGES_PKC primary key (KNOWLEDGE_ID)
 ) ;
+
+comment on table PARTICIPANTS is '参加者';
+comment on column PARTICIPANTS.KNOWLEDGE_ID is 'ナレッジID';
+comment on column PARTICIPANTS.USER_ID is 'ユーザID';
+comment on column PARTICIPANTS.STATUS is 'ステータス';
+comment on column PARTICIPANTS.INSERT_USER is '登録ユーザ';
+comment on column PARTICIPANTS.INSERT_DATETIME is '登録日時';
+comment on column PARTICIPANTS.UPDATE_USER is '更新ユーザ';
+comment on column PARTICIPANTS.UPDATE_DATETIME is '更新日時';
+comment on column PARTICIPANTS.DELETE_FLAG is '削除フラグ';
 
 comment on table SERVICE_LOCALE_CONFIGS is 'サービスの表示言語毎の設定';
 comment on column SERVICE_LOCALE_CONFIGS.SERVICE_NAME is 'サービス名';

@@ -32,17 +32,36 @@ public class TemplateLogic {
     public static TemplateLogic get() {
         return Container.getComp(TemplateLogic.class);
     }
-
+    
+    public static final int TYPE_ID_KNOWLEDGE = -100;
+    public static final int TYPE_ID_BOOKMARK = -99;
+    public static final int TYPE_ID_EVENT = -101;
+    public static final int[] PROTECTED_TYPE_IDS = {TYPE_ID_KNOWLEDGE, TYPE_ID_BOOKMARK, TYPE_ID_EVENT};
+    
     public static final int ITEM_TYPE_TEXT = 0;
     public static final int ITEM_TYPE_TEXTAREA = 1;
     public static final int ITEM_TYPE_RADIO = 10;
     public static final int ITEM_TYPE_CHECKBOX = 11;
+    public static final int ITEM_TYPE_DATE = 20;
+    public static final int ITEM_TYPE_TIME = 21;
 
     public static final String ITEM_TYPE_TEXT_STRING = "text";
     public static final String ITEM_TYPE_TEXTAREA_STRING = "textarea";
     public static final String ITEM_TYPE_RADIO_STRING = "radio";
     public static final String ITEM_TYPE_CHECKBOX_STRING = "checkbox";
+    public static final String ITEM_TYPE_RADIO_DATE = "date";
+    public static final String ITEM_TYPE_RADIO_TIME = "time";
 
+    public boolean isProtectedType(int typeId) {
+        boolean result = false;
+        for (int i : PROTECTED_TYPE_IDS) {
+            if (i == typeId) {
+                result = true;
+            }
+        }
+        return result;
+    }
+    
     /**
      * 画面から取得した項目の種類のテキストを、DBに保存するInt値に変換
      * 
@@ -92,6 +111,8 @@ public class TemplateLogic {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public TemplateMastersEntity addTemplate(TemplateMastersEntity template, LoginedUser loginedUser) {
         TemplateMastersDao templateDao = TemplateMastersDao.get();
+        int id = templateDao.getNextId();
+        template.setTypeId(id);
         // テンプレート保存
         TemplateMastersEntity insertedTemplate = templateDao.insert(template);
         Integer typeId = insertedTemplate.getTypeId();
@@ -128,11 +149,8 @@ public class TemplateLogic {
         templateDao.update(db);
 
         Integer typeId = template.getTypeId();
-        if (KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE == typeId) {
-            // 項目の増減はできない
-            return template;
-        } else if (KnowledgeLogic.TEMPLATE_TYPE_BOOKMARK == typeId) {
-            // 項目の増減はできない
+        if (isProtectedType(typeId)) {
+            // 予約されたテンプレートの項目の増減はできない
             return template;
         }
 
@@ -258,6 +276,36 @@ public class TemplateLogic {
             }
         }
         return entity;
+    }
+
+    public List<TemplateMastersEntity> selectAll() {
+        List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+        // ソート
+        Collections.sort(templates, new Comparator<TemplateMastersEntity>() {
+            @Override
+            public int compare(TemplateMastersEntity o1, TemplateMastersEntity o2) {
+                if (o1.getTypeId().intValue() == TemplateLogic.TYPE_ID_KNOWLEDGE) {
+                    return -1;
+                }
+                if (o2.getTypeId().intValue() == TemplateLogic.TYPE_ID_KNOWLEDGE) {
+                    return 1;
+                }
+                if (o1.getTypeId().intValue() == TemplateLogic.TYPE_ID_BOOKMARK) {
+                    return -1;
+                }
+                if (o2.getTypeId().intValue() == TemplateLogic.TYPE_ID_BOOKMARK) {
+                    return 1;
+                }
+                if (o1.getTypeId().intValue() == TemplateLogic.TYPE_ID_EVENT) {
+                    return -1;
+                }
+                if (o2.getTypeId().intValue() == TemplateLogic.TYPE_ID_EVENT) {
+                    return 1;
+                }
+                return o1.getTypeId().compareTo(o2.getTypeId());
+            }
+        });
+        return templates;
     }
 
 }

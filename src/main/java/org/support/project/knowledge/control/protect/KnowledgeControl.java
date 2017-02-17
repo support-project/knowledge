@@ -34,6 +34,7 @@ import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.Stock;
@@ -73,7 +74,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setViewParam();
         setAttributeForEditPage();
 
-        setAttribute("typeId", KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE);
+        setAttribute("typeId", TemplateLogic.TYPE_ID_KNOWLEDGE); // 初期値
         
         String offset = super.getParam("offset", String.class);
         if (StringUtils.isEmpty(offset)) {
@@ -351,7 +352,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         List<TagsEntity> tagitems = TagsDao.get().selectAll();
         setAttribute("tagitems", tagitems);
 
-        List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+        List<TemplateMastersEntity> templates = TemplateLogic.get().selectAll();
         setAttribute("templates", templates);
 
         Long knowledgeId = new Long(id);

@@ -42,6 +42,7 @@ import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.searcher.Searcher;
 import org.support.project.knowledge.searcher.impl.LuceneSearcher;
@@ -803,7 +804,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(typeId);
         if (template == null) {
             // そのテンプレートは既に削除済みの場合、通常のナレッジのテンプレートで表示する（ナレッジのテンプレートは削除できないようにする）
-            typeId = TemplateMastersDao.TYPE_ID_KNOWLEDGE;
+            typeId = TemplateLogic.TYPE_ID_KNOWLEDGE;
             template = TemplateMastersDao.get().selectWithItems(typeId);
         }
 

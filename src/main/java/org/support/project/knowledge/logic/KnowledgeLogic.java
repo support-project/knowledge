@@ -64,7 +64,6 @@ import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
-import org.support.project.web.common.HttpStatus;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.exception.AuthenticateException;
 
@@ -85,11 +84,6 @@ public class KnowledgeLogic {
     public static final int PUBLIC_FLAG_PRIVATE = 1;
     /** Open range: PROTECT */
     public static final int PUBLIC_FLAG_PROTECT = 2;
-
-    /** Template type: Knowledge */
-    public static final int TEMPLATE_TYPE_KNOWLEDGE = -100;
-    /** Template type: Bookmark */
-    public static final int TEMPLATE_TYPE_BOOKMARK = -99;
 
     /** Index type: Bookmark */
     public static final int TYPE_KNOWLEDGE = IndexType.knowledge.getValue();
