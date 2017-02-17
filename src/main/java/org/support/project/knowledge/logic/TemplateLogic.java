@@ -275,6 +275,13 @@ public class TemplateLogic {
                 templateItemsEntity.getChoices().add(itemChoicesEntity);
             }
         }
+        
+        boolean editable = true;
+        if (TemplateLogic.get().isProtectedType(id)) {
+            editable = false;
+        }
+        entity.setEditable(editable);
+        
         return entity;
     }
 

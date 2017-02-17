@@ -2,12 +2,9 @@ package org.support.project.knowledge.control.admin;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.HttpStatus;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
@@ -19,6 +16,7 @@ import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
+import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.MessageStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
@@ -38,55 +36,40 @@ public class TemplateControl extends Control {
     public Boundary list() {
         // テンプレートの個数はあまり多く出来ないようにする（でないと登録の画面が微妙）
         List<TemplateMastersEntity> templates = TemplateLogic.get().selectAll();
-        Collections.sort(templates, new Comparator<TemplateMastersEntity>() {
-            @Override
-            public int compare(TemplateMastersEntity o1, TemplateMastersEntity o2) {
-                if (!o1.getTypeId().equals(o2.getTypeId())) {
-                    return o1.getTypeId().compareTo(o2.getTypeId());
-                }
-                return 0;
-            }
-        });
         setAttribute("templates", templates);
         return forward("list.jsp");
     }
 
     /**
-     * 登録画面を表示する
-     * 
+     * 編集画面を表示する
      * @return
+     * @throws InvalidParamException
      */
     @Get(publishToken = "admin")
     @Auth(roles = "admin")
-    public Boundary view_add() {
-        return forward("view_add.jsp");
+    public Boundary edit() throws InvalidParamException {
+        Integer id = super.getPathInteger(-1);
+        setAttribute("id", id);
+        return forward("edit.jsp");
     }
-
+    
     /**
-     * 更新画面を表示する
+     * 編集画面を表示する
      * 
      * @return
      * @throws InvalidParamException
      */
     @Get(publishToken = "admin")
     @Auth(roles = "admin")
-    public Boundary view_edit() throws InvalidParamException {
-        Integer id = super.getPathInteger();
+    public Boundary load() throws InvalidParamException {
+        Integer id = super.getPathInteger(-1);
         TemplateMastersEntity entity = TemplateLogic.get().loadTemplate(id);
         if (entity == null) {
             sendError(404, null);
         }
-        setAttributeOnProperty(entity);
-        setAttribute("items", entity.getItems());
-
-        boolean editable = true;
-        if (TemplateLogic.get().isProtectedType(id)) {
-            editable = false;
-        }
-        setAttribute("editable", editable);
-        return forward("view_edit.jsp");
+        return send(entity);
     }
-
+    
     /**
      * リクエスト情報にあるテンプレートの情報を取得する 同時にバリデーションエラーもチェックし、もしバリデーションエラーが発生する場合、 引数のerrorsのリストに追加していく
      * 
@@ -155,6 +138,10 @@ public class TemplateControl extends Control {
                 if (typeNum == TemplateLogic.ITEM_TYPE_RADIO || typeNum == TemplateLogic.ITEM_TYPE_CHECKBOX) {
                     String[] choiceLabels = getParam("label_item" + idx, String[].class);
                     String[] choiceValues = getParam("value_item" + idx, String[].class);
+                    if (choiceLabels == null || choiceValues == null) {
+                        errors.add(new ValidateError("errors.required", getResource("knowledge.template.label.choice")));
+                        return null;
+                    }
                     if (choiceLabels.length != choiceValues.length) {
                         errors.add(new ValidateError("errors.invalid", "Request Data"));
                         return null;
@@ -203,7 +190,7 @@ public class TemplateControl extends Control {
         template = TemplateLogic.get().addTemplate(template, getLoginedUser());
 
         // メッセージ送信
-        return sendMsg(MessageStatus.Success, HttpStatus.SC_OK, String.valueOf(template.getTypeId()), "message.success.insert");
+        return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(template.getTypeId()), "message.success.insert");
     }
 
     /**
@@ -233,7 +220,7 @@ public class TemplateControl extends Control {
             return send(e.getMessageResult());
         }
         // メッセージ送信
-        return sendMsg(MessageStatus.Success, HttpStatus.SC_OK, String.valueOf(template.getTypeId()), "message.success.update");
+        return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(template.getTypeId()), "message.success.update");
     }
 
     /**
@@ -247,15 +234,10 @@ public class TemplateControl extends Control {
     public Boundary delete() throws Exception {
         Integer typeId = getParam("typeId", Integer.class);
         if (TemplateLogic.get().isProtectedType(typeId)) {
-            addMsgWarn("knowledge.template.msg.not.delete");
-            super.setPathInfo(String.valueOf(typeId));
-            return view_edit();
+            return sendMsg(MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST, "", "knowledge.template.msg.not.delete");
         }
-
         TemplateLogic.get().deleteTemplate(typeId, getLoginedUser());
-        String successMsg = "message.success.delete";
-        setResult(successMsg, null);
-        return list();
+        return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(typeId), "message.success.delete");
     }
 
 }
