@@ -22,6 +22,15 @@ $(document).ready(function() {
     $('#input_tags').on('beforeItemRemove', function(event) {
         event.cancel = true;
     });
+
+    $('.dropdown-keyword-sort').click(function () {
+        var $this = $(this);
+        var $currentKeywordSort = $('#current-keyword-sort');
+        $currentKeywordSort.text($this.text());
+        setCookie($currentKeywordSort.data('key'), $this.data('value'));
+        location.reload();
+    });
+
     echo.init();
 });
 

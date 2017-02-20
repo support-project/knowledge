@@ -8,6 +8,7 @@ import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
@@ -35,12 +36,15 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.DiffLogic;
 import org.support.project.knowledge.logic.GroupLogic;
+import org.support.project.knowledge.logic.IndexLogic;
 import org.support.project.knowledge.logic.KeywordLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
+import org.support.project.knowledge.searcher.Searcher;
+import org.support.project.knowledge.searcher.impl.LuceneSearcher;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.ListData;
 import org.support.project.knowledge.vo.MarkDown;
@@ -311,6 +315,16 @@ public class KnowledgeControl extends KnowledgeControlBase {
         String user = getParam("user");
         String tagNames = getParam("tagNames");
         String groupNames = getParam("groupNames");
+
+        String keywordSortTypeString = getCookie(SystemConfig.COOKIE_KEY_KEYWORD_SORT_TYPE);
+        int keywordSortType;
+        if ("" == keywordSortTypeString) {
+            keywordSortType = KnowledgeLogic.KEYWORD_SORT_TYPE_SCORE;
+        } else {
+            keywordSortType = Integer.valueOf(keywordSortTypeString);
+        }
+        knowledgeLogic.setKeywordSortType(keywordSortType);
+        setAttribute("keywordSortType", keywordSortType);
 
         List<KnowledgesEntity> knowledges = new ArrayList<>();
         try {

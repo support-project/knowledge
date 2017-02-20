@@ -67,7 +67,8 @@ public class SystemConfig {
     public static final String COOKIE_KEY_THEMA = "THEMA";
     /** Cookieにセットする際のキー：コードハイライトのスタイル */
     public static final String COOKIE_KEY_HIGHLIGHT = "HIGHLIGHT";
-
+    /** Cookieにセットする際のキー：キーワード検索時のソートタイプ */
+    public static final String COOKIE_KEY_KEYWORD_SORT_TYPE = "KEYWORD_SORT_TYPE";
     /** ログ・ファイルを定期的に削除する場合の、日数 */
     public static final String LOG_DELETE_TERM = "LOG_DELETE_TERM";
 

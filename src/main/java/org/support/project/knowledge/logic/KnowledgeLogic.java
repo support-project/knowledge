@@ -117,6 +117,24 @@ public class KnowledgeLogic {
     /** UploadedFileLogic */
     private UploadedFileLogic fileLogic = UploadedFileLogic.get();
 
+    /** キーワード検索時のソート順 : スコア順 */
+    public static final int KEYWORD_SORT_TYPE_SCORE = 1;
+
+    /** キーワード検索時のソート順 : 日付順 */
+    public static final int KEYWORD_SORT_TYPE_TIME = 2;
+
+    /** キーワード検索時のソート順 */
+    private int keywordSortType = KEYWORD_SORT_TYPE_SCORE;
+
+    /**
+     * キーワード検索時のソート順をセットする
+     *
+     * @param keywordSortType
+     */
+    public void setKeywordSortType(int keywordSortType) {
+        this.keywordSortType = keywordSortType;
+    }
+
     /**
      * タグの文字列（カンマ区切り）から、登録済のタグであれば、それを取得し、 存在しないものであれば、新たにタグを生成してタグの情報を取得
      * 
@@ -462,7 +480,7 @@ public class KnowledgeLogic {
             LOG.debug("search params：" + PropertyUtil.reflectionToString(searchingValue));
         }
         LOG.trace("検索開始");
-        List<SearchResultValue> list = IndexLogic.get().search(searchingValue);
+        List<SearchResultValue> list = IndexLogic.get().search(searchingValue, this.keywordSortType);
         LOG.trace("検索終了");
         LOG.trace("付加情報をセット開始");
         List<KnowledgesEntity> result = getKnowledgeDatas(list);
