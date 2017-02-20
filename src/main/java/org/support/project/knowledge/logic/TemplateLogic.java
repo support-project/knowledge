@@ -45,6 +45,10 @@ public class TemplateLogic {
     public static final int ITEM_TYPE_DATE = 20;
     public static final int ITEM_TYPE_TIME = 21;
     public static final int ITEM_TYPE_TIMEZONE = 22;
+    public static final int[] ITEM_TYPE_NUMS = {
+            ITEM_TYPE_TEXT, ITEM_TYPE_TEXTAREA, ITEM_TYPE_RADIO, ITEM_TYPE_CHECKBOX,
+            ITEM_TYPE_DATE, ITEM_TYPE_TIME, ITEM_TYPE_TIMEZONE
+    };
 
     public static final String ITEM_TYPE_TEXT_STRING = "text";
     public static final String ITEM_TYPE_TEXTAREA_STRING = "textarea";
@@ -52,7 +56,13 @@ public class TemplateLogic {
     public static final String ITEM_TYPE_CHECKBOX_STRING = "checkbox";
     public static final String ITEM_TYPE_RADIO_DATE = "date";
     public static final String ITEM_TYPE_RADIO_TIME = "time";
-
+    public static final String ITEM_TYPE_RADIO_TIMEZONE = "timezone";
+    public static final String[] ITEM_TYPE_STRINGS = {
+            ITEM_TYPE_TEXT_STRING, ITEM_TYPE_TEXTAREA_STRING, ITEM_TYPE_RADIO_STRING, ITEM_TYPE_CHECKBOX_STRING,
+            ITEM_TYPE_RADIO_DATE, ITEM_TYPE_RADIO_TIME, ITEM_TYPE_RADIO_TIMEZONE
+    };
+    
+    
     public boolean isProtectedType(int typeId) {
         boolean result = false;
         for (int i : PROTECTED_TYPE_IDS) {
@@ -70,17 +80,13 @@ public class TemplateLogic {
      * @return
      */
     public int convType(String type) {
-        if (ITEM_TYPE_TEXT_STRING.equals(type)) {
-            return ITEM_TYPE_TEXT;
-        } else if (ITEM_TYPE_TEXTAREA_STRING.equals(type)) {
-            return ITEM_TYPE_TEXTAREA;
-        } else if (ITEM_TYPE_RADIO_STRING.equals(type)) {
-            return ITEM_TYPE_RADIO;
-        } else if (ITEM_TYPE_CHECKBOX_STRING.equals(type)) {
-            return ITEM_TYPE_CHECKBOX;
+        for (int i = 0; i < ITEM_TYPE_STRINGS.length; i++) {
+            if (ITEM_TYPE_STRINGS[i].equals(type)) {
+                return ITEM_TYPE_NUMS[i];
+            }
         }
-        LOG.warn("Item type: " + type + " is undefined.");
-        return -1;
+        LOG.warn("Item type: " + type + " is undefined. set default type: " + ITEM_TYPE_TEXT);
+        return ITEM_TYPE_TEXT;
     }
 
     /**
@@ -90,17 +96,13 @@ public class TemplateLogic {
      * @return
      */
     public String convType(int type) {
-        if (ITEM_TYPE_TEXT == type) {
-            return ITEM_TYPE_TEXT_STRING;
-        } else if (ITEM_TYPE_TEXTAREA == type) {
-            return ITEM_TYPE_TEXTAREA_STRING;
-        } else if (ITEM_TYPE_RADIO == type) {
-            return ITEM_TYPE_RADIO_STRING;
-        } else if (ITEM_TYPE_CHECKBOX == type) {
-            return ITEM_TYPE_CHECKBOX_STRING;
+        for (int i = 0; i < ITEM_TYPE_NUMS.length; i++) {
+            if (ITEM_TYPE_NUMS[i] == type) {
+                return ITEM_TYPE_STRINGS[i];
+            }
         }
-        LOG.warn("Item type: " + type + " is undefined.");
-        return "";
+        LOG.warn("Item type: " + type + " is undefined. set default type text: " + ITEM_TYPE_TEXT_STRING);
+        return ITEM_TYPE_TEXT_STRING;
     }
 
     /**

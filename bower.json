@@ -28,7 +28,10 @@
     "MathJax": "2.6.1",
     "cropper": "2.3.4",
     "At.js": "1.5.1",
-    "picEdit": "andyvr/picEdit"
+    "picEdit": "andyvr/picEdit",
+    "clockpicker": "0.0.7",
+    "moment-timezone": "0.5.11",
+    "jstzdetect": "1.0.6"
   },
   "devDependencies": {},
   "resolutions": {
