@@ -1,0 +1,24 @@
+INSERT INTO SURVEY_CHOICES
+( 
+CHOICE_NO
+ , ITEM_NO
+ , KNOWLEDGE_ID
+ , CHOICE_VALUE
+ , CHOICE_LABEL
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

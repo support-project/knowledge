@@ -285,10 +285,14 @@ public class KnowledgeControl extends KnowledgeControlBase {
      */
     @Post(subscribeToken = "knowledge")
     public Boundary save(KnowledgesEntity entity) throws Exception {
-        if (entity.getKnowledgeId() != null && entity.getKnowledgeId() > 1) {
-            return update(entity);
-        } else {
-            return add(entity);
+        try {
+            if (entity.getKnowledgeId() != null && entity.getKnowledgeId() > 1) {
+                return update(entity);
+            } else {
+                return add(entity);
+            }
+        } catch(InvalidParamException e) {
+            return send(e.getMessageResult());
         }
     }
 

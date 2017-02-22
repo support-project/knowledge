@@ -58,6 +58,9 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.entity.ViewHistoriesEntity;
 import org.support.project.knowledge.indexer.IndexingValue;
+import org.support.project.knowledge.logic.hook.AfterSaveHook;
+import org.support.project.knowledge.logic.hook.BeforeSaveHook;
+import org.support.project.knowledge.logic.hook.HookFactory;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.knowledge.vo.KnowledgeData;
@@ -180,6 +183,10 @@ public class KnowledgeLogic {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgesEntity insert(KnowledgeData data, LoginedUser loginedUser) throws Exception {
+        List<BeforeSaveHook> beforeSaveHooks = HookFactory.getBeforeSaveHookInstance(data, null);
+        for (BeforeSaveHook beforeSaveHook : beforeSaveHooks) {
+            beforeSaveHook.beforeSave(data, null, loginedUser);
+        }
         // ナレッジを登録
         KnowledgesEntity insertedEntity = knowledgesDao.insert(data.getKnowledge());
         // アクセス権を登録
@@ -205,6 +212,10 @@ public class KnowledgeLogic {
         // 下書きがあったら消す
         removeDraft(data.getDraftId(), loginedUser);
 
+        List<AfterSaveHook> afterSaveHooks = HookFactory.getAfterSaveHookInstance(data);
+        for (AfterSaveHook afterSaveHook : afterSaveHooks) {
+            afterSaveHook.afterSave(data, loginedUser);
+        }
         return insertedEntity;
     }
 
@@ -220,6 +231,11 @@ public class KnowledgeLogic {
     public KnowledgesEntity update(KnowledgeData data, LoginedUser loginedUser) throws Exception {
         // 更新前の情報を保持
         KnowledgesEntity db = knowledgesDao.selectOnKey(data.getKnowledge().getKnowledgeId());
+        List<BeforeSaveHook> beforeSaveHooks = HookFactory.getBeforeSaveHookInstance(data, db);
+        for (BeforeSaveHook beforeSaveHook : beforeSaveHooks) {
+            beforeSaveHook.beforeSave(data, db, loginedUser);
+        }
+
         // ナレッッジを更新
         data.getKnowledge().setNotifyStatus(db.getNotifyStatus()); // 通知フラグはDBの値を引き継ぐ
         KnowledgesEntity updatedEntity = knowledgesDao.update(data.getKnowledge());
@@ -269,6 +285,10 @@ public class KnowledgeLogic {
         // 下書きがあったら消す
         removeDraft(data.getDraftId(), loginedUser);
         
+        List<AfterSaveHook> afterSaveHooks = HookFactory.getAfterSaveHookInstance(data);
+        for (AfterSaveHook afterSaveHook : afterSaveHooks) {
+            afterSaveHook.afterSave(data, loginedUser);
+        }
         return updatedEntity;
     }
 

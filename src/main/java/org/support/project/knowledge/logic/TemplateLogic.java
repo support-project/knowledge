@@ -39,6 +39,8 @@ public class TemplateLogic {
     public static final int[] PROTECTED_TYPE_IDS = {TYPE_ID_KNOWLEDGE, TYPE_ID_BOOKMARK, TYPE_ID_EVENT};
     
     public static final int ITEM_TYPE_TEXT = 0;
+    public static final int ITEM_TYPE_INTEGER = 1;
+    public static final int ITEM_TYPE_NUMBER = 2;
     public static final int ITEM_TYPE_TEXTAREA = 1;
     public static final int ITEM_TYPE_RADIO = 10;
     public static final int ITEM_TYPE_CHECKBOX = 11;
