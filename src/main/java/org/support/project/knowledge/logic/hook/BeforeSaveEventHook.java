@@ -27,6 +27,7 @@ public class BeforeSaveEventHook implements BeforeSaveHook {
     public static final int ITEM_NO_START = 1;
     public static final int ITEM_NO_END = 2;
     public static final int ITEM_NO_TIMEZONE = 3;
+    public static final int ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED = 4;
     
     public Date parseDate(KnowledgeData knowledgeData, LoginedUser loginedUser) throws InvalidParamException {
         EventsEntity event = new EventsEntity();
@@ -36,28 +37,47 @@ public class BeforeSaveEventHook implements BeforeSaveHook {
             Resources resources = Resources.getInstance(loginedUser.getLocale());
             throw new InvalidParamException(
                     new MessageResult(MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST,
-                            resources.getResource("errors.required", "Date,Start,End,Timezone"), ""));
+                            resources.getResource("errors.invalid", "Request data"), ""));
         }
         String date = null;
         String start = null;
         String end = null;
         String timezone = null;
+        String limit = null;
+        String dateLabel = null;
+        String startLabel = null;
+        String endLabel = null;
+        String timezoneLabel = null;
+        String limitLabel = null;
+        
         for (TemplateItemsEntity item : items) {
             if (item.getItemNo() == ITEM_NO_DATE) {
                 date = item.getItemValue();
+                dateLabel = item.getItemName();
             } else if (item.getItemNo() == ITEM_NO_START) {
                 start = item.getItemValue();
+                startLabel = item.getItemName();
             } else if (item.getItemNo() == ITEM_NO_END) {
                 end = item.getItemValue();
+                endLabel = item.getItemName();
             } else if (item.getItemNo() == ITEM_NO_TIMEZONE) {
                 timezone = item.getItemValue();
+                timezoneLabel = item.getItemName();
+            } else if (item.getItemNo() == ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED) {
+                limit = item.getItemValue();
+                limitLabel = item.getItemName();
             }
         }
         Resources resources = Resources.getInstance(loginedUser.getLocale());
-        if (StringUtils.isEmpty(date) || StringUtils.isEmpty(start) || StringUtils.isEmpty(end) || StringUtils.isEmpty(timezone)) {
+        if (StringUtils.isEmpty(date) || StringUtils.isEmpty(start) || StringUtils.isEmpty(end) 
+                || StringUtils.isEmpty(timezone) || StringUtils.isEmpty(limit) ) {
+            StringBuilder label = new StringBuilder();
+            label.append(dateLabel).append(",").append(startLabel).append(",").append(endLabel).append(",");
+            label.append(timezoneLabel).append(",").append(limitLabel);
+            
             throw new InvalidParamException(
                     new MessageResult(MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST,
-                            resources.getResource("errors.required", "Date,Start,End,Timezone"), ""));
+                            resources.getResource("errors.required", label.toString()), ""));
         }
         String[] zones = TimeZone.getAvailableIDs();
         boolean exist = false;
@@ -69,7 +89,7 @@ public class BeforeSaveEventHook implements BeforeSaveHook {
         if (!exist) {
             throw new InvalidParamException(
                     new MessageResult(MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST,
-                            resources.getResource("errors.invalid", "Timezone"), ""));
+                            resources.getResource("errors.invalid", timezoneLabel), ""));
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         try {
@@ -78,7 +98,7 @@ public class BeforeSaveEventHook implements BeforeSaveHook {
         } catch (ParseException e) {
             throw new InvalidParamException(
                     new MessageResult(MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST,
-                            resources.getResource("errors.invalid", "Date,Start"), ""));
+                            resources.getResource("errors.invalid", dateLabel + "," + startLabel), ""));
         }
     }
     

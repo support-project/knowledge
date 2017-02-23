@@ -39,28 +39,32 @@ public class TemplateLogic {
     public static final int[] PROTECTED_TYPE_IDS = {TYPE_ID_KNOWLEDGE, TYPE_ID_BOOKMARK, TYPE_ID_EVENT};
     
     public static final int ITEM_TYPE_TEXT = 0;
-    public static final int ITEM_TYPE_INTEGER = 1;
-    public static final int ITEM_TYPE_NUMBER = 2;
     public static final int ITEM_TYPE_TEXTAREA = 1;
+    public static final int ITEM_TYPE_INTEGER = 2;
+    public static final int ITEM_TYPE_NUMBER = 3;
     public static final int ITEM_TYPE_RADIO = 10;
     public static final int ITEM_TYPE_CHECKBOX = 11;
     public static final int ITEM_TYPE_DATE = 20;
     public static final int ITEM_TYPE_TIME = 21;
     public static final int ITEM_TYPE_TIMEZONE = 22;
     public static final int[] ITEM_TYPE_NUMS = {
-            ITEM_TYPE_TEXT, ITEM_TYPE_TEXTAREA, ITEM_TYPE_RADIO, ITEM_TYPE_CHECKBOX,
+            ITEM_TYPE_TEXT, ITEM_TYPE_TEXTAREA, ITEM_TYPE_INTEGER, ITEM_TYPE_NUMBER, 
+            ITEM_TYPE_RADIO, ITEM_TYPE_CHECKBOX,
             ITEM_TYPE_DATE, ITEM_TYPE_TIME, ITEM_TYPE_TIMEZONE
     };
 
     public static final String ITEM_TYPE_TEXT_STRING = "text";
     public static final String ITEM_TYPE_TEXTAREA_STRING = "textarea";
+    public static final String ITEM_TYPE_INTEGER_STRING = "integer";
+    public static final String ITEM_TYPE_NUMBER_STRING = "number";
     public static final String ITEM_TYPE_RADIO_STRING = "radio";
     public static final String ITEM_TYPE_CHECKBOX_STRING = "checkbox";
     public static final String ITEM_TYPE_RADIO_DATE = "date";
     public static final String ITEM_TYPE_RADIO_TIME = "time";
     public static final String ITEM_TYPE_RADIO_TIMEZONE = "timezone";
     public static final String[] ITEM_TYPE_STRINGS = {
-            ITEM_TYPE_TEXT_STRING, ITEM_TYPE_TEXTAREA_STRING, ITEM_TYPE_RADIO_STRING, ITEM_TYPE_CHECKBOX_STRING,
+            ITEM_TYPE_TEXT_STRING, ITEM_TYPE_TEXTAREA_STRING, ITEM_TYPE_INTEGER_STRING, ITEM_TYPE_NUMBER_STRING,
+            ITEM_TYPE_RADIO_STRING, ITEM_TYPE_CHECKBOX_STRING,
             ITEM_TYPE_RADIO_DATE, ITEM_TYPE_RADIO_TIME, ITEM_TYPE_RADIO_TIMEZONE
     };
     

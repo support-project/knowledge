@@ -16,6 +16,19 @@ var createTextItem = function(item) {
     tag += '" value="' + val + '" />';
     return tag;
 };
+
+var createIntegerItem = function(item) {
+    // Integer
+    var tag = '<input type="number" class="form-control" name="item_' + item.itemNo;
+    var val = '';
+    if (item.itemValue) {
+        val = item.itemValue;
+    }
+    tag += '" value="' + val + '" min="0" step="1"/>';
+    return tag;
+};
+
+
 var createRadioItem = function(item) {
     var tag = '';
     if (item.choices) {
@@ -120,6 +133,9 @@ var addTemplateItem = function(template) {
             if (item.itemType === 1) {
                 // textarea
                 tag += createTextItem(item);
+            } else if (item.itemType === 2) {
+                // Integer
+                tag += createIntegerItem(item);
             } else if (item.itemType === 10) {
                 // Radio
                 tag += createRadioItem(item);

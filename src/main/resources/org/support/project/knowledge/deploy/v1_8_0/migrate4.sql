@@ -19,7 +19,7 @@ VALUES
 (-101,3,'Timezone',22,0,'2017-02-16 00:00:00',null,null,0);
 INSERT INTO TEMPLATE_ITEMS ( TYPE_ID, ITEM_NO, ITEM_NAME, ITEM_TYPE, INSERT_USER, INSERT_DATETIME, UPDATE_USER, UPDATE_DATETIME, DELETE_FLAG ) 
 VALUES 
-(-101,4,'The number to be accepted',1,0,'2017-02-16 00:00:00',null,null,0);
+(-101,4,'The number to be accepted',2,0,'2017-02-16 00:00:00',null,null,0);
 
 
 -- アンケートの回答の値

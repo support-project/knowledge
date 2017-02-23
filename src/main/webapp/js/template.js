@@ -1,6 +1,7 @@
 $(document).ready(function() {
     var item = 0;
     var choiceCount = new Array();
+    var editable = false;
 
     //item数初期化
     item = $('.add_item').length;
@@ -93,20 +94,33 @@ $(document).ready(function() {
         if(kind === LABEL_CHECKBOX_ITEM) {
             prefix = 'checkbox';
         }
+        if(kind === LABEL_INTEGER_ITEM) {
+            prefix = 'integer';
+        }
+        if(kind === LABEL_DATE_ITEM) {
+            prefix = 'date';
+        }
+        if(kind === LABEL_TIME_ITEM) {
+            prefix = 'time';
+        }
+        if(kind === LABEL_TIMEZONE_ITEM) {
+            prefix = 'timezone';
+        }
         var addItem = '';
         addItem += '<div id="' + itemId + '" class="add_item">';
-        
             addItem += '<h5 class="item_title">' + kind + '<input type="hidden" name="itemType" value="' + prefix + '_' + itemId + '"/>';
-            addItem += '<button type="button" class="btn btn-warning" id="deleteItem_' + itemId + '" >';
-            addItem += '<i class="fa fa-minus-square"></i>&nbsp;' + LABEL_DELETE;
-            addItem += '</button>&nbsp;';
-            if (kind === LABEL_RADIO_ITEM || kind === LABEL_CHECKBOX_ITEM) {
-                addItem += '<button type="button" class="btn btn-success" id="addChoice_' + itemId + '" >';
-                addItem += '<i class="fa fa-plus-circle"></i>&nbsp;' + LABEL_ADD_CHOICE;
+            if (editable) {
+                addItem += '<button type="button" class="btn btn-warning" id="deleteItem_' + itemId + '" >';
+                addItem += '<i class="fa fa-minus-square"></i>&nbsp;' + LABEL_DELETE;
                 addItem += '</button>&nbsp;';
-                addItem += '<button type="button" class="btn btn-success" id="deleteChoice_' + itemId + '" >';
-                addItem += '<i class="fa fa-minus-circle"></i>&nbsp;' + LABEL_DELETE_CHOICE;
-                addItem += '</button>';
+                if (kind === LABEL_RADIO_ITEM || kind === LABEL_CHECKBOX_ITEM) {
+                    addItem += '<button type="button" class="btn btn-success" id="addChoice_' + itemId + '" >';
+                    addItem += '<i class="fa fa-plus-circle"></i>&nbsp;' + LABEL_ADD_CHOICE;
+                    addItem += '</button>&nbsp;';
+                    addItem += '<button type="button" class="btn btn-success" id="deleteChoice_' + itemId + '" >';
+                    addItem += '<i class="fa fa-minus-circle"></i>&nbsp;' + LABEL_DELETE_CHOICE;
+                    addItem += '</button>';
+                }
             }
             addItem += '</h5>';
             addItem += '<div class="form-group">';
@@ -162,31 +176,38 @@ $(document).ready(function() {
                 $('#typeName').val(result.typeName);
                 $('#typeIcon').val(result.typeIcon);
                 $('#description').val(result.description);
+                editable = result.editable;
                 if (!result.editable) {
                     $('#editableMsg').removeClass('hide');
                 } else {
-                    $('#addText').removeClass('hide');
-                    $('#addRadio').removeClass('hide');
-                    $('#addCheckbox').removeClass('hide');
-                    item = result.items.length;
-                    result.items.forEach(function(item) {
-                        logging(item);
-                        var itemId = 'item' + item.itemNo;
-                        if (item.itemType === 0) {
-                            addItem(itemId, LABEL_TEXT_ITEM, item.itemName, item.description);
-                        } else if (item.itemType === 10) {
-                            addItem(itemId, LABEL_RADIO_ITEM, item.itemName, item.description);
-                            item.choices.forEach(function(choice) {
-                                addChoice(itemId, choice.choiceLabel, choice.choiceValue);
-                            });
-                        } else if (item.itemType === 11) {
-                            addItem(itemId, LABEL_CHECKBOX_ITEM, item.itemName, item.description);
-                            item.choices.forEach(function(choice) {
-                                addChoice(itemId, choice.choiceLabel, choice.choiceValue);
-                            });
-                        }
-                    });
+                    $('.editbtn').removeClass('hide');
                 }
+                item = result.items.length;
+                result.items.forEach(function(item) {
+                    logging(item);
+                    var itemId = 'item' + item.itemNo;
+                    if (item.itemType === 0) {
+                        addItem(itemId, LABEL_TEXT_ITEM, item.itemName, item.description);
+                    } else if (item.itemType === 2) {
+                        addItem(itemId, LABEL_INTEGER_ITEM, item.itemName, item.description);
+                    } else if (item.itemType === 10) {
+                        addItem(itemId, LABEL_RADIO_ITEM, item.itemName, item.description);
+                        item.choices.forEach(function(choice) {
+                            addChoice(itemId, choice.choiceLabel, choice.choiceValue);
+                        });
+                    } else if (item.itemType === 11) {
+                        addItem(itemId, LABEL_CHECKBOX_ITEM, item.itemName, item.description);
+                        item.choices.forEach(function(choice) {
+                            addChoice(itemId, choice.choiceLabel, choice.choiceValue);
+                        });
+                    } else if (item.itemType === 20) {
+                        addItem(itemId, LABEL_DATE_ITEM, item.itemName, item.description);
+                    } else if (item.itemType === 21) {
+                        addItem(itemId, LABEL_TIME_ITEM, item.itemName, item.description);
+                    } else if (item.itemType === 22) {
+                        addItem(itemId, LABEL_TIMEZONE_ITEM, item.itemName, item.description);
+                    }
+                });
             }).fail(function(xhr, textStatus, error) {
                 handleErrorResponse(xhr, textStatus, error);
             });
@@ -204,12 +225,31 @@ $(document).ready(function() {
         addItem(itemId, LABEL_RADIO_ITEM);
         addChoice(itemId);
     });
-    
     //チェックボックスの選択肢追加
     $("#addCheckbox").click(function(){
         var itemId = createItemId();
         addItem(itemId, LABEL_CHECKBOX_ITEM);
         addChoice(itemId);
+    });
+    //整数のアイテムを追加
+    $("#addInteger").click(function(){
+        var itemId = createItemId();
+        addItem(itemId, LABEL_INTEGER_ITEM);
+    });
+    //日付のアイテムを追加
+    $("#addDate").click(function(){
+        var itemId = createItemId();
+        addItem(itemId, LABEL_DATE_ITEM);
+    });
+    //時間のアイテムを追加
+    $("#addTime").click(function(){
+        var itemId = createItemId();
+        addItem(itemId, LABEL_TIME_ITEM);
+    });
+    //タイムゾーンのアイテムを追加
+    $("#addTimezone").click(function(){
+        var itemId = createItemId();
+        addItem(itemId, LABEL_TIMEZONE_ITEM);
     });
     
     $('#deletebutton').click(function(){
@@ -220,9 +260,7 @@ $(document).ready(function() {
         $('#templateForm').attr('action', _CONTEXT + '/admin.template/update');
         loaddata($('#typeId').val());
     } else {
-        $('#addText').removeClass('hide');
-        $('#addRadio').removeClass('hide');
-        $('#addCheckbox').removeClass('hide');
+        $('.editbtn').removeClass('hide');
     }
     
     // フォームのサブミットは禁止
