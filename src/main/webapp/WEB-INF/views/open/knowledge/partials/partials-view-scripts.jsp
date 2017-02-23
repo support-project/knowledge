@@ -29,6 +29,7 @@ MathJax.Hub.Config({
 
 <script type="text/javascript" src="bower/Caret.js/dist/jquery.caret.min.js"></script>
 <script type="text/javascript" src="bower/At.js/dist/js/jquery.atwho.min.js"></script>
+<script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
 
 <script type="text/javascript" src="js/slide.js"></script>
 <script type="text/javascript" src="js/knowledge-common.js"></script>
