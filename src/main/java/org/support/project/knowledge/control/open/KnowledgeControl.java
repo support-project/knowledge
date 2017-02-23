@@ -1,6 +1,7 @@
 package org.support.project.knowledge.control.open;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -262,6 +263,13 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
         }
         LOG.trace("タグ、グループ取得完了");
+        
+        List<TemplateMastersEntity> templateList = TemplateMastersDao.get().selectAll();
+        Map<Integer, TemplateMastersEntity> templates = new HashMap<>();
+        for (TemplateMastersEntity templateMastersEntity : templateList) {
+            templates.put(templateMastersEntity.getTypeId(), templateMastersEntity);
+        }
+        setAttribute("templates", templates);
     }
     
     /**
@@ -466,7 +474,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             setKnowledgeTargetsWithConv(loginedUser, knowledges);
             // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
             setSublistInformations(loginedUser);
-    
+            
             return forward("list.jsp");
         } catch (InvalidParamException e) {
             return forward("list.jsp");
