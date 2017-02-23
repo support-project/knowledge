@@ -229,13 +229,32 @@ public class KnowledgeControl extends KnowledgeControlBase {
         TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(entity.getTypeId());
         List<TemplateItemsEntity> items = template.getItems();
         for (TemplateItemsEntity item : items) {
-            String itemValue = super.getParam("item_" + item.getItemNo());
-            if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
-                itemValue = itemValue.substring(1, itemValue.length() - 1);
-                item.setItemValue(itemValue);
-            } else {
-                item.setItemValue(itemValue);
+            item.setItemValue("");
+            String[] itemValues = super.getParam("item_" + item.getItemNo(), String[].class);
+            if (itemValues != null && itemValues.length == 1) {
+                String itemValue = itemValues[0];
+                if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
+                    itemValue = itemValue.substring(1, itemValue.length() - 1);
+                    item.setItemValue(itemValue);
+                } else {
+                    item.setItemValue(itemValue);
+                }
+            } else if (itemValues != null && itemValues.length > 1) {
+                for (String itemValue : itemValues) {
+                    StringBuilder value = new StringBuilder();
+                    if (!StringUtils.isEmpty(item.getItemValue())) {
+                        value.append(item.getItemValue()).append(",");
+                    }
+                    if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
+                        itemValue = itemValue.substring(1, itemValue.length() - 1);
+                        value.append(itemValue);
+                    } else {
+                        value.append(itemValue);
+                    }
+                    item.setItemValue(value.toString());
+                }
             }
+            
         }
 
         KnowledgeData data = KnowledgeData.create(
