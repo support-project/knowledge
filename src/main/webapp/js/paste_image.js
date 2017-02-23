@@ -2,6 +2,10 @@
  * Created by tetsukazu on 2017/02/05.
  */
 $(document).ready(function () {
+    var createFileName = function() {
+        var m = moment();
+        return 'clip-' + m.format('YYYYMMDDHHmmss') + '.png';
+    };
     var handlePasteImage = function (element) {
         return function (event) {
             var imageBlob,formData,url;
@@ -13,7 +17,7 @@ $(document).ready(function () {
             }
             imageBlob = event.clipboardData.items[0].getAsFile();
             formData = new FormData();
-            formData.append('files[]', imageBlob);
+            formData.append('files[]', imageBlob, createFileName());
             url = _CONTEXT + '/protect.file/upload';
             jQuery.ajax({
                 type: 'POST',
