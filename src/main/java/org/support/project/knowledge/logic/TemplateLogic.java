@@ -160,6 +160,7 @@ public class TemplateLogic {
         Integer typeId = template.getTypeId();
         if (isProtectedType(typeId)) {
             // 予約されたテンプレートの項目の増減はできない
+            updateItems(template, typeId);
             return template;
         }
 
@@ -180,6 +181,20 @@ public class TemplateLogic {
         insertItems(template, typeId);
 
         return db;
+    }
+    
+    /**
+     * 予約されたタイプの項目情報を更新
+     * @param template
+     * @param typeId
+     */
+    private void updateItems(TemplateMastersEntity template, Integer typeId) {
+        TemplateItemsDao itemsDao = TemplateItemsDao.get();
+        List<TemplateItemsEntity> itemsEntities = template.getItems();
+        for (TemplateItemsEntity templateItemsEntity : itemsEntities) {
+            templateItemsEntity.setTypeId(typeId);
+            itemsDao.update(templateItemsEntity);
+        }
     }
 
     /**
