@@ -59,10 +59,17 @@
 
         <!-- Filter -->
         <c:if
-            test="${!empty selectedTag || !empty selectedGroup || !empty selectedUser || !empty selectedTags || !empty selectedGroups || !empty keyword}">
+            test="${!empty selectedTag || !empty selectedGroup || !empty selectedUser || !empty selectedTags || !empty selectedGroups || !empty keyword || !empty type}">
             <div class="row">
                 <div class="col-sm-12 selected_tag">
 
+                    <c:if test="${!empty type}">
+                        <a class="text-link" href="<%=request.getContextPath()%>/open.knowledge/list?template=<%=jspUtil.out("type.typeId")%>">
+                            <i class="fa <%= jspUtil.out("type.typeIcon") %>"></i>&nbsp;
+                            <%=jspUtil.out("type.typeName")%>
+                        </a>
+                    </c:if>
+                    
                     <c:if test="${!empty selectedTag}">
                         <a class="text-link" href="<%=request.getContextPath()%>/open.knowledge/list?tag=<%=jspUtil.out("selectedTag.tagId")%>">
                             <i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("selectedTag.tagName")%>
