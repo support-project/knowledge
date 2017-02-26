@@ -126,9 +126,9 @@ public class FileParseBat extends AbstractBat {
                     IndexingValue value = new IndexingValue();
                     value.setType(IndexType.bookmarkContent.getValue());
                     value.setId(WEB_ID_PREFIX + itemValue.getKnowledgeId());
+                    value.setTemplate(knowledgesEntity.getTypeId());
                     value.setTitle(itemValue.getItemValue());
                     value.setContents(content);
-
                     value.addUser(knowledgesEntity.getInsertUser());
                     if (knowledgesEntity.getPublicFlag() == null || KnowledgeLogic.PUBLIC_FLAG_PUBLIC == knowledgesEntity.getPublicFlag()) {
                         value.addUser(KnowledgeLogic.ALL_USER);
@@ -263,6 +263,7 @@ public class FileParseBat extends AbstractBat {
                 IndexingValue value = new IndexingValue();
                 value.setType(TYPE_FILE);
                 value.setId(ID_PREFIX + entity.getFileNo());
+                value.setTemplate(knowledgesEntity.getTypeId());
                 value.setTitle(entity.getFileName());
                 value.setContents(result.getText());
                 value.addUser(entity.getInsertUser());

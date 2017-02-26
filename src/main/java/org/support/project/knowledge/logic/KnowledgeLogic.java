@@ -441,6 +441,7 @@ public class KnowledgeLogic {
             throws Exception {
         IndexingValue indexingValue = new IndexingValue();
         indexingValue.setType(TYPE_KNOWLEDGE);
+        indexingValue.setTemplate(entity.getTypeId());
         indexingValue.setId(String.valueOf(entity.getKnowledgeId()));
         indexingValue.setTitle(entity.getTitle());
 
@@ -1229,6 +1230,7 @@ public class KnowledgeLogic {
 
         IndexingValue indexingValue = new IndexingValue();
         indexingValue.setType(TYPE_COMMENT);
+        indexingValue.setTemplate(entity.getTypeId());
         indexingValue.setId(COMMENT_ID_PREFIX + String.valueOf(commentsEntity.getCommentNo()));
         indexingValue.setTitle("");
         indexingValue.setContents(commentsEntity.getComment());

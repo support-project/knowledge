@@ -38,6 +38,7 @@ public class LuceneIndexer implements Indexer {
     public static final String FIELD_LABEL_GROUPS = "groups";
     public static final String FIELD_LABEL_CREATE_USER = "creator";
     public static final String FIELD_LABEL_TIME = "time";
+    public static final String FIELD_LABEL_TEMPLATE = "template";
 
     // private Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_4_10_2);
     private Analyzer analyzer = new JapaneseAnalyzer();
@@ -85,6 +86,11 @@ public class LuceneIndexer implements Indexer {
         // id
         Field idField = new StringField(FIELD_LABEL_ID, indexingValue.getId(), Field.Store.YES);
         doc.add(idField);
+        // template
+        if (indexingValue.getTemplate() != null) {
+            Field templateField = new IntField(FIELD_LABEL_TEMPLATE, indexingValue.getTemplate(), Field.Store.YES);
+            doc.add(templateField);
+        }
         // タイトル
         doc.add(new TextField(FIELD_LABEL_TITLE, indexingValue.getTitle(), Field.Store.YES));
         // 内容
