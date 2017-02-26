@@ -162,10 +162,15 @@ var addTemplateItem = function(template) {
         }
     }
     if (exists_date) {
+        var lang = 'en';
+        if (_LANG) {
+            lang = _LANG;
+        }
         $('.datepicker').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true,
-            todayHighlight: true
+            todayHighlight: true,
+            language: lang,
         });
     }
     if (exists_time) {

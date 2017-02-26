@@ -16,7 +16,6 @@
 .events {
     width: 100%;
     text-align: center;
-    padding-left: 10px;
     border: 1px solid #ecf0f1;
     border-radius: 4px;
 }

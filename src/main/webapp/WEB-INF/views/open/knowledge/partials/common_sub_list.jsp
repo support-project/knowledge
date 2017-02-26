@@ -13,7 +13,9 @@
 <!-- Sub List -->
 <div class="col-sm-12 col-md-4">
 
-<h5>- <i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.label("knowledge.list.events") %> - </h5>
+<h5>- <i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.label("knowledge.list.events") %> - 
+<span id="loading" class="hide"><i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></span>
+</h5>
 <div class="events">
 <div id="datepicker"></div>
 </div>

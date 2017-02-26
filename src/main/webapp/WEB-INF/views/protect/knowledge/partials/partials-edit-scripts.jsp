@@ -50,6 +50,7 @@ MathJax.Hub.Config({
 <!-- endbuild -->
 
 <script>
+var _LANG = '<%= jspUtil.locale().getLanguage()%>';
 var _UPLOADED = '<%= jspUtil.label("knowledge.edit.label.uploaded") %>';
 var _DELETE_LABEL= '<%= jspUtil.label("label.delete") %>';
 var _FAIL_UPLOAD = '<%= jspUtil.label("knowledge.edit.label.fail.upload") %>';

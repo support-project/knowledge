@@ -1,8 +1,12 @@
 $(document).ready(function() {
     var tz = jstz.determine();
     var now = moment();
+    var result = [];
     
     var loadEvents = function(m) {
+        logging(m.format('YYYY-MM-DD'));
+        $('#loading').removeClass('hide');
+        $("#datepicker").datepicker('remove');
         var data = {
             timezone: tz.name(),
             date: m.format('YYYYMM')
@@ -14,21 +18,21 @@ $(document).ready(function() {
             timeout: 10000,
         }).done(function(result, textStatus, xhr) {
             logging(result);
-            
-            var lang = 'en';
-            if (_LANG) {
-                lang = _LANG;
-            }
             $('#datepicker').datepicker({
                 todayHighlight: false,
                 language: lang,
+                defaultViewDate: {
+                    year: m.year(),
+                    month: m.month(),
+                    day: 1
+                },
                 beforeShowDay : function(date) {
                     var d = moment(date);
-                    logging(d.format());
+                    //logging(d.format());
                     for (var idx = 0; idx < result.length; idx++) {
                         var event = result[idx];
                         var ed = moment.utc(event.startDateTime).tz(data.timezone);
-                        logging(ed.format());
+                        //logging(ed.format());
                         if (ed.year() === d.year() && ed.month() === d.month() && ed.date() === d.date()) {
                             return {
                                 tooltip: 'event',
@@ -38,19 +42,30 @@ $(document).ready(function() {
                     }
                 }
             });
-            $('#datepicker').on("changeDate", function() {
-                logging('changeDate');
-                logging($('#datepicker').datepicker('getFormattedDate'));
-            });
-            $('#datepicker').on("changeMonth", function() {
-                logging('changeMonth');
-                logging($('#datepicker').datepicker('getFormattedDate'));
-            });
         }).fail(function(xhr, textStatus, error) {
             handleErrorResponse(xhr, textStatus, error);
         }).always(function( jqXHR, textStatus ) {
+            $('#loading').addClass('hide');
         });
     };
     
+    var lang = 'en';
+    if (_LANG) {
+        lang = _LANG;
+    }
+    $('#datepicker').datepicker({
+        todayHighlight: false,
+        language: lang
+    });
+    $('#datepicker').on("changeDate", function() {
+        logging('changeDate');
+        logging($('#datepicker').datepicker('getFormattedDate'));
+    });
+    $('#datepicker').on("changeMonth", function(e) {
+        var current = moment(e.date);
+        logging('changeMonth:' + current.format());
+        loadEvents(current);
+    });
+   
     loadEvents(now);
 });
