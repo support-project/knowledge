@@ -10,6 +10,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenEventsDao;
 import org.support.project.knowledge.entity.EventsEntity;
+import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.entity.GroupsEntity;
@@ -31,12 +32,24 @@ public class EventsDao extends GenEventsDao {
     }
     
     public List<EventsEntity> selectAccessAbleEvents(Calendar start, Calendar end, LoginedUser loginedUser) {
-        String sql = SQLManager.getInstance()
-                .getSql("/org/support/project/knowledge/dao/sql/EventsDao/EventsDao_selectAccessAbleEvents.sql");
+        String sql;
+        if (loginedUser != null && loginedUser.isAdmin()) {
+            sql = SQLManager.getInstance()
+                    .getSql("/org/support/project/knowledge/dao/sql/EventsDao/EventsDao_selectAdminEvents.sql");
+        } else {
+            sql = SQLManager.getInstance()
+                    .getSql("/org/support/project/knowledge/dao/sql/EventsDao/EventsDao_selectAccessAbleEvents.sql");
+        }
         List<Object> params = new ArrayList<>();
         params.add(new Timestamp(start.getTimeInMillis()));
         params.add(new Timestamp(end.getTimeInMillis()));
-        
+        if (loginedUser == null || !loginedUser.isAdmin()) {
+            sql = addAccessCondition(loginedUser, sql, params);
+        }
+        return executeQueryList(sql, EventsEntity.class, params.toArray(new Object[0]));
+    }
+
+    private String addAccessCondition(LoginedUser loginedUser, String sql, List<Object> params) {
         Integer loginuserId = Integer.MIN_VALUE;
         if (loginedUser != null) {
             loginuserId = loginedUser.getUserId();
@@ -63,8 +76,27 @@ public class EventsDao extends GenEventsDao {
             groupParams.append("?");
         }
         sql = sql.replace("%GROUPS%", groupParams.toString());
-        
-        return executeQueryList(sql, EventsEntity.class, params.toArray(new Object[0]));    }
+        return sql;
+    }
+
+    public List<KnowledgesEntity> selectAccessAbleEvents(Calendar start, LoginedUser loginedUser, int limit, int offset) {
+        String sql;
+        if (loginedUser != null && loginedUser.isAdmin()) {
+            sql = SQLManager.getInstance()
+                    .getSql("/org/support/project/knowledge/dao/sql/EventsDao/EventsDao_selectAdminKnowledgeEvents.sql");
+        } else {
+            sql = SQLManager.getInstance()
+                    .getSql("/org/support/project/knowledge/dao/sql/EventsDao/EventsDao_selectAccessAbleKnowledgeEvents.sql");
+        }
+        List<Object> params = new ArrayList<>();
+        params.add(new Timestamp(start.getTimeInMillis()));
+        if (loginedUser == null || !loginedUser.isAdmin()) {
+            sql = addAccessCondition(loginedUser, sql, params);
+        }
+        params.add(limit);
+        params.add(offset);
+        return executeQueryList(sql, KnowledgesEntity.class, params.toArray(new Object[0]));
+    }
 
 
 

@@ -19,25 +19,25 @@ import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance = Instance.Prototype)
 public class EventControl extends Control {
+    public static final int PAGE_LIMIT = 50;
+    
     @Get
-    public Boundary list() throws InvalidParamException, ParseException {
+    public Boundary list() throws InvalidParamException {
         String date = getParam("date");
         String timezone = getParam("timezone");
         if (StringUtils.isEmpty(date) || StringUtils.isEmpty(timezone)) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
         }
-        DateFormat monthformat = new SimpleDateFormat("YYYYMM");
-        try {
-            monthformat.parse(date);
-        } catch (ParseException e) {
-            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
-        }
         if (!TimeZoneLogic.get().exist(timezone)) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
         }
-        List<EventsEntity> events = EventsLogic.get().eventList(date, timezone, getLoginedUser());
-        return send(events);
+        DateFormat monthformat = new SimpleDateFormat("yyyyMM");
+        try {
+            monthformat.parse(date);
+            List<EventsEntity> events = EventsLogic.get().eventList(date, timezone, getLoginedUser());
+            return send(events);
+        } catch (ParseException e) {
+            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
+        }
     }
-    
-    
 }

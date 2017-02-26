@@ -15,6 +15,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.EventsDao;
 import org.support.project.knowledge.entity.EventsEntity;
+import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.web.bean.LoginedUser;
 
 @DI(instance = Instance.Singleton)
@@ -63,6 +64,19 @@ public class EventsLogic {
         logging(end);
         
         return EventsDao.get().selectAccessAbleEvents(start, end, loginedUser);
+    }
+
+    public List<KnowledgesEntity> eventKnowledgeList(String date, String timezone, LoginedUser loginedUser) throws ParseException {
+        DateFormat format = new SimpleDateFormat("yyyyMMdd");
+        Date d = format.parse(date);
+        TimeZone tz = TimeZone.getTimeZone(timezone);
+        Calendar start = Calendar.getInstance(tz);
+        start.setTime(d);
+        start.set(Calendar.HOUR, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+        return EventsDao.get().selectAccessAbleEvents(start, loginedUser, 50, 0);
     }
 
 }

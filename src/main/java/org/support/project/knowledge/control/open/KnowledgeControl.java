@@ -1,6 +1,9 @@
 package org.support.project.knowledge.control.open;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,7 @@ import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.DiffLogic;
+import org.support.project.knowledge.logic.EventsLogic;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KeywordLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
@@ -42,6 +46,7 @@ import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
+import org.support.project.knowledge.logic.TimeZoneLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.ListData;
@@ -482,6 +487,43 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
     }
 
+    /**
+     * 閲覧履歴の表示
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary events() throws InvalidParamException {
+        String date = getParam("date");
+        String timezone = getParam("timezone");
+        LoginedUser loginedUser = super.getLoginedUser();
+        if (StringUtils.isEmpty(date) || StringUtils.isEmpty(timezone)) {
+            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
+        }
+        if (!TimeZoneLogic.get().exist(timezone)) {
+            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
+        }
+        DateFormat monthformat = new SimpleDateFormat("yyyyMMdd");
+        List<KnowledgesEntity> knowledges;
+        try {
+            Date d = monthformat.parse(date);
+            setAttribute("start", d);
+            knowledges = EventsLogic.get().eventKnowledgeList(date, timezone, loginedUser);
+            List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, loginedUser);
+            setAttribute("knowledges", stocks);
+        } catch (java.text.ParseException e) {
+            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
+        }
+        // ナレッジの公開先の情報を取得
+        setKnowledgeTargetsWithConv(loginedUser, knowledges);
+        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+        setSublistInformations(loginedUser);
+
+        return forward("events.jsp");
+    }
+    
+    
     /**
      * 閲覧履歴の表示
      * 

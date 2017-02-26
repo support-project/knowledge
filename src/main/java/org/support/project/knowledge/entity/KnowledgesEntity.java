@@ -1,5 +1,7 @@
 package org.support.project.knowledge.entity;
 
+import java.sql.Timestamp;
+
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -38,6 +40,9 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
     /** 指定期間内のイイネ件数 */
     private Integer likeCountOnTerm;
 
+    /** 開催日     UTC(Eventの場合のみ） */
+    private Timestamp startDateTime;
+    
     /**
      * コンストラクタ
      */
@@ -148,6 +153,20 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
      */
     public void setLikeCountOnTerm(Integer likeCountOnTerm) {
         this.likeCountOnTerm = likeCountOnTerm;
+    }
+
+    /**
+     * @return the startDateTime
+     */
+    public Timestamp getStartDateTime() {
+        return startDateTime;
+    }
+
+    /**
+     * @param startDateTime the startDateTime to set
+     */
+    public void setStartDateTime(Timestamp startDateTime) {
+        this.startDateTime = startDateTime;
     }
 
 }

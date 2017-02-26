@@ -36,7 +36,7 @@ $(document).ready(function() {
                         if (ed.year() === d.year() && ed.month() === d.month() && ed.date() === d.date()) {
                             return {
                                 tooltip: 'event',
-                                classes: 'active'
+                                classes: 'today'
                             }
                         }
                     }
@@ -57,9 +57,10 @@ $(document).ready(function() {
         todayHighlight: false,
         language: lang
     });
-    $('#datepicker').on("changeDate", function() {
+    $('#datepicker').on("changeDate", function(e) {
         logging('changeDate');
-        logging($('#datepicker').datepicker('getFormattedDate'));
+        var current = moment(e.date);
+        location.href = _CONTEXT + '/open.knowledge/events?date=' + current.format('YYYYMMDD') + '&timezone=' + encodeURIComponent(tz.name());
     });
     $('#datepicker').on("changeMonth", function(e) {
         var current = moment(e.date);
