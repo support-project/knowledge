@@ -14,6 +14,7 @@ import org.support.project.knowledge.entity.EventsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.logic.TemplateLogic;
+import org.support.project.knowledge.logic.TimeZoneLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
@@ -79,13 +80,7 @@ public class BeforeSaveEventHook implements BeforeSaveHook {
                     new MessageResult(MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST,
                             resources.getResource("errors.required", label.toString()), ""));
         }
-        String[] zones = TimeZone.getAvailableIDs();
-        boolean exist = false;
-        for (String zone : zones) {
-            if (timezone.equals(zone)) {
-                exist = true;
-            }
-        }
+        boolean exist = TimeZoneLogic.get().exist(timezone);
         if (!exist) {
             throw new InvalidParamException(
                     new MessageResult(MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST,
