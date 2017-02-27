@@ -13,6 +13,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.EventsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
+import org.support.project.knowledge.logic.EventsLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.TimeZoneLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
@@ -24,11 +25,11 @@ import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance = Instance.Singleton)
 public class BeforeSaveEventHook implements BeforeSaveHook {
-    public static final int ITEM_NO_DATE = 0;
-    public static final int ITEM_NO_START = 1;
-    public static final int ITEM_NO_END = 2;
-    public static final int ITEM_NO_TIMEZONE = 3;
-    public static final int ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED = 4;
+    public static final int ITEM_NO_DATE = EventsLogic.ITEM_NO_DATE;
+    public static final int ITEM_NO_START = EventsLogic.ITEM_NO_START;
+    public static final int ITEM_NO_END = EventsLogic.ITEM_NO_END;
+    public static final int ITEM_NO_TIMEZONE = EventsLogic.ITEM_NO_TIMEZONE;
+    public static final int ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED = EventsLogic.ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED;
     
     public Date parseDate(KnowledgeData knowledgeData, LoginedUser loginedUser) throws InvalidParamException {
         EventsEntity event = new EventsEntity();

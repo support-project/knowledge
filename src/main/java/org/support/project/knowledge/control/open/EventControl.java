@@ -12,6 +12,7 @@ import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.entity.EventsEntity;
 import org.support.project.knowledge.logic.EventsLogic;
 import org.support.project.knowledge.logic.TimeZoneLogic;
+import org.support.project.knowledge.vo.Participations;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.service.Get;
@@ -40,4 +41,17 @@ public class EventControl extends Control {
             return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
         }
     }
+    
+    /**
+     * 指定のイベントに参加登録しているかを取得する
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary participation() throws InvalidParamException {
+        Long knowledgeId = getPathLong();
+        Participations participations = EventsLogic.get().isParticipation(knowledgeId, getLoginUserId());
+        return send(participations);
+    }
+    
 }

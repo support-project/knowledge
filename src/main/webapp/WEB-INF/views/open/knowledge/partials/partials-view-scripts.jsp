@@ -42,6 +42,7 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/knowledge-view-attachfile.js"></script>
 <script type="text/javascript" src="js/knowledge-view-stock.js"></script>
 <script type="text/javascript" src="js/knowledge-view-toc.js"></script>
+<script type="text/javascript" src="js/knowledge-view-event.js"></script>
 <script type="text/javascript" src="js/paste_image.js"></script>
 <script type="text/javascript" src="js/emojilist.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
@@ -50,6 +51,9 @@ MathJax.Hub.Config({
 
 <script>
 var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';
+var _LABEL_PARTICIPANTS = '<%= jspUtil.label("knowledge.view.label.participants") %>';
+var _LABEL_STATUS_PARTICIPANT = '<%= jspUtil.label("knowledge.view.label.status.participation") %>';
+var _LABEL_STATUS_WAIT_CANCEL = '<%= jspUtil.label("knowledge.view.label.status.wait.cansel") %>';
 
 var _UPLOADED = '<%= jspUtil.label("knowledge.edit.label.uploaded") %>';
 var _DELETE_LABEL= '<%= jspUtil.label("label.delete") %>';
@@ -62,5 +66,7 @@ var _SET_SLIDE_LABEL= '<%= jspUtil.label("knowledge.edit.set.slide.path") %>';
 var _MSG_TOC_EMPTY = '<%= jspUtil.label("knowledge.view.msg.toc.empty") %>';
 var _MSG_COPIED = '<%= jspUtil.label("knowledge.view.msg.url.copy") %>';
 var _IMAGE_UPLOAD = '<%= jspUtil.label("knowledge.edit.image.upload") %>';
+
+var _LOGINED = <%= jspUtil.logined() %>;
 
 </script>
