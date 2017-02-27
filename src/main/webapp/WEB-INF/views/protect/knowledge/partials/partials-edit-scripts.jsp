@@ -31,7 +31,6 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
 <script type="text/javascript" src="bower/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
 <script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
-<script type="text/javascript" src="bower/jstzdetect/jstz.min.js"></script>
 
 <script type="text/javascript" src="js/tagselect.js"></script>
 <script type="text/javascript" src="js/slide.js"></script>

@@ -20,7 +20,7 @@
 <div id="datepicker"></div>
 </div>
 <div style="width: 100%;text-align: right;">
-    &nbsp;--- 
+    &nbsp;&nbsp;
 </div>
 
 <h5>- <i class="fa fa-group"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.group") %> - </h5>

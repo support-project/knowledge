@@ -1,9 +1,13 @@
-<%@page import="org.support.project.knowledge.entity.KnowledgesEntity"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@page import="java.util.Map"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.DateFormat"%>
 <%@page import="org.support.project.common.util.NumberUtils"%>
+<%@page import="org.support.project.common.util.DateUtils"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
+<%@page import="org.support.project.knowledge.config.AppConfig"%>
 <%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
+<%@page import="org.support.project.knowledge.entity.KnowledgesEntity"%>
 <%@page import="org.support.project.knowledge.entity.TemplateMastersEntity"%>
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -13,6 +17,7 @@
 <%
     JspUtil jspUtil = new JspUtil(request, pageContext);
     Map<Integer, TemplateMastersEntity> templates = jspUtil.getValue("templates", Map.class);
+    String timezone = jspUtil.out("timezone");
 %>
 
 <!-- List -->
@@ -25,39 +30,46 @@
     <c:forEach var="knowledge" items="${list_data}" varStatus="status">
         <% KnowledgesEntity knowledge = (KnowledgesEntity) pageContext.getAttribute("knowledge"); %>
         <div class="knowledge_item">
-                <div class="insert_info">
-                    <a href="<%=request.getContextPath()%>/open.knowledge/view/<%=jspUtil.out("knowledge.knowledgeId")%><%=jspUtil.out("params")%>"
-                        class="text-primary btn-link">
-                        <div class="list-title">
-                        <%=jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR)%>
-                        </div>
-                    </a>
-                    <div>
-                        <span class="dispKnowledgeId">
-                            #<%= jspUtil.out("knowledge.knowledgeId") %>
-                        </span>
+            <div class="insert_info">
+                <a href="<%=request.getContextPath()%>/open.knowledge/view/<%=jspUtil.out("knowledge.knowledgeId")%><%=jspUtil.out("params")%>"
+                    class="text-primary btn-link">
+                    <div class="list-title">
+                    <%=jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR)%>
+                    </div>
+                </a>
+                <div>
+                    <span class="dispKnowledgeId">
+                        #<%= jspUtil.out("knowledge.knowledgeId") %>
+                    </span>
+                    <img src="<%=request.getContextPath()%>/images/loader.gif"
+                        data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("knowledge.insertUser")%>" alt="icon"
+                        width="20" height="20" />
+                    <%
+                        String insertLink = "<a href=\"" + request.getContextPath() + "/open.account/info/" + jspUtil.out("knowledge.insertUser") + "\" class=\"text-primary btn-link\">"
+                                        + jspUtil.out("knowledge.insertUserName", JspUtil.ESCAPE_CLEAR) + "</a>";
+                    %>
+                    <%=jspUtil.label("knowledge.view.info.insert", insertLink, jspUtil.date("knowledge.insertDatetime"))%>
+                    <% if (!jspUtil.date("knowledge.insertDatetime").equals(jspUtil.date("knowledge.updateDatetime"))) { %>
+                        (
                         <img src="<%=request.getContextPath()%>/images/loader.gif"
-                            data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("knowledge.insertUser")%>" alt="icon"
+                            data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("knowledge.updateUser")%>" alt="icon"
                             width="20" height="20" />
                         <%
-                            String insertLink = "<a href=\"" + request.getContextPath() + "/open.account/info/" + jspUtil.out("knowledge.insertUser") + "\" class=\"text-primary btn-link\">"
-                                            + jspUtil.out("knowledge.insertUserName", JspUtil.ESCAPE_CLEAR) + "</a>";
+                            String updateLink = "<a href=\"" + request.getContextPath() + "/open.account/info/" + jspUtil.out("knowledge.updateUser") + "\" class=\"text-primary btn-link\">"
+                                            + jspUtil.out("knowledge.updateUserName", JspUtil.ESCAPE_CLEAR) + "</a>";
                         %>
-                        <%=jspUtil.label("knowledge.view.info.insert", insertLink, jspUtil.date("knowledge.insertDatetime"))%>
-                        <% if (!jspUtil.date("knowledge.insertDatetime").equals(jspUtil.date("knowledge.updateDatetime"))) { %>
-                            (
-                            <img src="<%=request.getContextPath()%>/images/loader.gif"
-                                data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("knowledge.updateUser")%>" alt="icon"
-                                width="20" height="20" />
-                            <%
-                                String updateLink = "<a href=\"" + request.getContextPath() + "/open.account/info/" + jspUtil.out("knowledge.updateUser") + "\" class=\"text-primary btn-link\">"
-                                                + jspUtil.out("knowledge.updateUserName", JspUtil.ESCAPE_CLEAR) + "</a>";
-                            %>
-                            <%=jspUtil.label("knowledge.view.info.update", updateLink, jspUtil.date("knowledge.updateDatetime"))%>
-                            )
-                        <% } %>
-                    </div>
+                        <%=jspUtil.label("knowledge.view.info.update", updateLink, jspUtil.date("knowledge.updateDatetime"))%>
+                        )
+                    <% } %>
                 </div>
+                 <% if (knowledge.getStartDateTime() != null) { %>
+                 <div>
+                     <i class="fa fa-calendar"></i>&nbsp;
+                    <%= jspUtil.label("knowledge.list.event.datetime") %>: <%= knowledge.getLocalStartDateTime(jspUtil.locale(), timezone) %>
+                 </div>
+                 <% } %>
+            </div>
+        
             <div class="item-info">
                 <a class="text-primary btn-link"
                     href="<%=request.getContextPath()%>/open.knowledge/likes/<%=jspUtil.out("knowledge.knowledgeId")%><%=jspUtil.out("params")%>">

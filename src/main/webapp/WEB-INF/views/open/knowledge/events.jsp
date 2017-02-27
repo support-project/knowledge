@@ -1,7 +1,7 @@
-<%@page import="java.util.Date"%>
-<%@page import="org.support.project.common.util.DateUtils"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
+<%@page import="java.util.Date"%>
 <%@page import="java.util.List"%>
+<%@page import="org.support.project.common.util.DateUtils"%>
 <%@page import="org.support.project.common.util.NumberUtils"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
 <%@page import="org.support.project.web.control.NoticesControl"%>
@@ -26,6 +26,9 @@
 
     <c:param name="PARAM_SCRIPTS">
         <jsp:include page="partials/partials-list-scripts.jsp"></jsp:include>
+        <script>
+        _SELECTED_DATE = '<%= jspUtil.out("date") %>';
+        </script>
     </c:param>
 
     <c:param name="PARAM_CONTENT">

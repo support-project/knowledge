@@ -9,7 +9,6 @@
 <!-- build:js(src/main/webapp) js/page-knowledge-list.js -->
 <script type="text/javascript" src="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript" src="bower/echojs/dist/echo.min.js"></script>
-<script type="text/javascript" src="bower/jstzdetect/jstz.min.js"></script>
 <script type="text/javascript" src="bower/moment/moment.js"></script>
 <script type="text/javascript" src="bower/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
 <script type="text/javascript" src="bower/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
@@ -25,4 +24,5 @@
 
 <script>
 var _LANG = '<%= jspUtil.locale().getLanguage()%>';
+var _SELECTED_DATE = '';
 </script>

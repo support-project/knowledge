@@ -1,6 +1,9 @@
 package org.support.project.knowledge.entity;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
@@ -62,7 +65,21 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
     public KnowledgesEntity(Long knowledgeId) {
         super(knowledgeId);
     }
-
+    
+    /**
+     * 開始日時を指定のタイムゾーンの日時として取得
+     * @param locale
+     * @param timezone
+     * @return
+     */
+    public String getLocalStartDateTime(Locale locale, String timezone) {
+        DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+        TimeZone tz = TimeZone.getTimeZone(timezone);
+        format.setTimeZone(tz);
+        return format.format(startDateTime);
+    }
+    
+    
     /*
      * (non-Javadoc)
      * 

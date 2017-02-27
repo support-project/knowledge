@@ -1,6 +1,9 @@
 $(document).ready(function() {
     var tz = jstz.determine();
     var now = moment();
+    if (_SELECTED_DATE) {
+        now = moment(_SELECTED_DATE, 'YYYYMMDD');
+    }
     var result = [];
     
     var loadEvents = function(m) {
