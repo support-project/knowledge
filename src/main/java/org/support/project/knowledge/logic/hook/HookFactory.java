@@ -12,7 +12,8 @@ public class HookFactory {
     
     public static List<BeforeSaveHook> getBeforeSaveHookInstance(KnowledgeData knowledgeData, KnowledgesEntity db) {
         List<BeforeSaveHook> hooks = new ArrayList<BeforeSaveHook>();
-        if (TemplateLogic.TYPE_ID_EVENT == knowledgeData.getKnowledge().getTypeId()) {
+        if (knowledgeData.getKnowledge().getTypeId() != null
+                && TemplateLogic.TYPE_ID_EVENT == knowledgeData.getKnowledge().getTypeId()) {
             hooks.add(Container.getComp(BeforeSaveEventHook.class));
         }
         if (db != null) {
@@ -26,7 +27,8 @@ public class HookFactory {
     
     public static List<AfterSaveHook> getAfterSaveHookInstance(KnowledgeData knowledgeData) {
         List<AfterSaveHook> hooks = new ArrayList<AfterSaveHook>();
-        if (TemplateLogic.TYPE_ID_EVENT == knowledgeData.getKnowledge().getTypeId()) {
+        if (knowledgeData.getKnowledge().getTypeId() != null
+                && TemplateLogic.TYPE_ID_EVENT == knowledgeData.getKnowledge().getTypeId()) {
             hooks.add(Container.getComp(AfterSaveEventHook.class));
         }
         return hooks;
