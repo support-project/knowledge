@@ -48,12 +48,14 @@ $(document).ready(function() {
                 if (xhr.responseJSON) {
                     console.log(xhr.responseJSON);
                     var msg = xhr.responseJSON;
-                    if (msg.children) {
+                    if (msg.children && msg.children.length > 0) {
                         for (var i = 0; i < msg.children.length; i++) {
                             var child = msg.children[i];
                             console.log(child);
                             $.notify(child.message, 'warn');
                         }
+                    } else {
+                        $.notify(msg.message, 'warn');
                     }
                 } else {
                     $.notify(xhr.statusText + ' [' + xhr.status + ']', 'warn');

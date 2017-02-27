@@ -17,10 +17,6 @@ import org.support.project.ormapping.common.SQLManager;
  */
 @DI(instance = Instance.Singleton)
 public class TemplateMastersDao extends GenTemplateMastersDao {
-
-    public static final int TYPE_ID_KNOWLEDGE = -100;
-    public static final int TYPE_ID_BOOKMARK = -99;
-
     /**
      * ID
      */

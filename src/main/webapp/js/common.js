@@ -49,3 +49,26 @@ function insertAtCaret(target, str) {
 function isString(obj) {
     return typeof (obj) == "string" || obj instanceof String;
 };
+
+var handleErrorResponse = function(xhr, textStatus, error) {
+    console.log(error);
+    console.log(xhr);
+    if (xhr.responseJSON) {
+        var msg = xhr.responseJSON;
+        if (msg.children) {
+            for (var i = 0; i < msg.children.length; i++) {
+                var child = msg.children[i];
+                console.log(child);
+                $.notify(child.message, 'warn');
+            }
+        } else {
+            $.notify('data load error. please try again.', 'warn');
+        }
+    } else {
+        if (xhr) {
+            $.notify(xhr.statusText, 'warn');
+        } else {
+            $.notify('data load error. please try again.', 'warn');
+        }
+    }
+};

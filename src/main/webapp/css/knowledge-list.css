@@ -2,9 +2,9 @@
     width: 100%;
     border: 1px solid transparent;
     box-shadow: none;
-    margin-top: 5px;
+    margin-top: 0px;
     margin-bottom: 5px;
-    padding: 5px;
+    padding: 1px 5px;
 }
 
 .knowledge_item:hover {
@@ -21,10 +21,16 @@
     text-decoration: none;
     outline: 0;
 }
+.list-title {
+    font-size: 22px;
+    padding-top: 15px;
+    margin-bottom: 3px;
+}
 
 .insert_info {
     border-bottom: 1px solid #cccccc;
-    padding-bottom: 2px;
+    margin: 0px;
+    padding: 0px;
 }
 
 .item_caption {
@@ -51,4 +57,6 @@
 .dispKnowledgeId {
     color: #999999;
 }
-
+.title-link:hover {
+    color: #999999;
+}

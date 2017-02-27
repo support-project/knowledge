@@ -32,17 +32,53 @@ public class TemplateLogic {
     public static TemplateLogic get() {
         return Container.getComp(TemplateLogic.class);
     }
-
+    
+    public static final int TYPE_ID_KNOWLEDGE = -100;
+    public static final int TYPE_ID_BOOKMARK = -99;
+    public static final int TYPE_ID_EVENT = -101;
+    public static final int[] PROTECTED_TYPE_IDS = {TYPE_ID_KNOWLEDGE, TYPE_ID_BOOKMARK, TYPE_ID_EVENT};
+    
     public static final int ITEM_TYPE_TEXT = 0;
     public static final int ITEM_TYPE_TEXTAREA = 1;
+    public static final int ITEM_TYPE_INTEGER = 2;
+    public static final int ITEM_TYPE_NUMBER = 3;
     public static final int ITEM_TYPE_RADIO = 10;
     public static final int ITEM_TYPE_CHECKBOX = 11;
+    public static final int ITEM_TYPE_DATE = 20;
+    public static final int ITEM_TYPE_TIME = 21;
+    public static final int ITEM_TYPE_TIMEZONE = 22;
+    public static final int[] ITEM_TYPE_NUMS = {
+            ITEM_TYPE_TEXT, ITEM_TYPE_TEXTAREA, ITEM_TYPE_INTEGER, ITEM_TYPE_NUMBER, 
+            ITEM_TYPE_RADIO, ITEM_TYPE_CHECKBOX,
+            ITEM_TYPE_DATE, ITEM_TYPE_TIME, ITEM_TYPE_TIMEZONE
+    };
 
     public static final String ITEM_TYPE_TEXT_STRING = "text";
     public static final String ITEM_TYPE_TEXTAREA_STRING = "textarea";
+    public static final String ITEM_TYPE_INTEGER_STRING = "integer";
+    public static final String ITEM_TYPE_NUMBER_STRING = "number";
     public static final String ITEM_TYPE_RADIO_STRING = "radio";
     public static final String ITEM_TYPE_CHECKBOX_STRING = "checkbox";
-
+    public static final String ITEM_TYPE_RADIO_DATE = "date";
+    public static final String ITEM_TYPE_RADIO_TIME = "time";
+    public static final String ITEM_TYPE_RADIO_TIMEZONE = "timezone";
+    public static final String[] ITEM_TYPE_STRINGS = {
+            ITEM_TYPE_TEXT_STRING, ITEM_TYPE_TEXTAREA_STRING, ITEM_TYPE_INTEGER_STRING, ITEM_TYPE_NUMBER_STRING,
+            ITEM_TYPE_RADIO_STRING, ITEM_TYPE_CHECKBOX_STRING,
+            ITEM_TYPE_RADIO_DATE, ITEM_TYPE_RADIO_TIME, ITEM_TYPE_RADIO_TIMEZONE
+    };
+    
+    
+    public boolean isProtectedType(int typeId) {
+        boolean result = false;
+        for (int i : PROTECTED_TYPE_IDS) {
+            if (i == typeId) {
+                result = true;
+            }
+        }
+        return result;
+    }
+    
     /**
      * 画面から取得した項目の種類のテキストを、DBに保存するInt値に変換
      * 
@@ -50,17 +86,13 @@ public class TemplateLogic {
      * @return
      */
     public int convType(String type) {
-        if (ITEM_TYPE_TEXT_STRING.equals(type)) {
-            return ITEM_TYPE_TEXT;
-        } else if (ITEM_TYPE_TEXTAREA_STRING.equals(type)) {
-            return ITEM_TYPE_TEXTAREA;
-        } else if (ITEM_TYPE_RADIO_STRING.equals(type)) {
-            return ITEM_TYPE_RADIO;
-        } else if (ITEM_TYPE_CHECKBOX_STRING.equals(type)) {
-            return ITEM_TYPE_CHECKBOX;
+        for (int i = 0; i < ITEM_TYPE_STRINGS.length; i++) {
+            if (ITEM_TYPE_STRINGS[i].equals(type)) {
+                return ITEM_TYPE_NUMS[i];
+            }
         }
-        LOG.warn("Item type: " + type + " is undefined.");
-        return -1;
+        LOG.warn("Item type: " + type + " is undefined. set default type: " + ITEM_TYPE_TEXT);
+        return ITEM_TYPE_TEXT;
     }
 
     /**
@@ -70,17 +102,13 @@ public class TemplateLogic {
      * @return
      */
     public String convType(int type) {
-        if (ITEM_TYPE_TEXT == type) {
-            return ITEM_TYPE_TEXT_STRING;
-        } else if (ITEM_TYPE_TEXTAREA == type) {
-            return ITEM_TYPE_TEXTAREA_STRING;
-        } else if (ITEM_TYPE_RADIO == type) {
-            return ITEM_TYPE_RADIO_STRING;
-        } else if (ITEM_TYPE_CHECKBOX == type) {
-            return ITEM_TYPE_CHECKBOX_STRING;
+        for (int i = 0; i < ITEM_TYPE_NUMS.length; i++) {
+            if (ITEM_TYPE_NUMS[i] == type) {
+                return ITEM_TYPE_STRINGS[i];
+            }
         }
-        LOG.warn("Item type: " + type + " is undefined.");
-        return "";
+        LOG.warn("Item type: " + type + " is undefined. set default type text: " + ITEM_TYPE_TEXT_STRING);
+        return ITEM_TYPE_TEXT_STRING;
     }
 
     /**
@@ -92,6 +120,8 @@ public class TemplateLogic {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public TemplateMastersEntity addTemplate(TemplateMastersEntity template, LoginedUser loginedUser) {
         TemplateMastersDao templateDao = TemplateMastersDao.get();
+        int id = templateDao.getNextId();
+        template.setTypeId(id);
         // テンプレート保存
         TemplateMastersEntity insertedTemplate = templateDao.insert(template);
         Integer typeId = insertedTemplate.getTypeId();
@@ -128,11 +158,9 @@ public class TemplateLogic {
         templateDao.update(db);
 
         Integer typeId = template.getTypeId();
-        if (KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE == typeId) {
-            // 項目の増減はできない
-            return template;
-        } else if (KnowledgeLogic.TEMPLATE_TYPE_BOOKMARK == typeId) {
-            // 項目の増減はできない
+        if (isProtectedType(typeId)) {
+            // 予約されたテンプレートの項目の増減はできない
+            updateItems(template, typeId);
             return template;
         }
 
@@ -153,6 +181,20 @@ public class TemplateLogic {
         insertItems(template, typeId);
 
         return db;
+    }
+    
+    /**
+     * 予約されたタイプの項目情報を更新
+     * @param template
+     * @param typeId
+     */
+    private void updateItems(TemplateMastersEntity template, Integer typeId) {
+        TemplateItemsDao itemsDao = TemplateItemsDao.get();
+        List<TemplateItemsEntity> itemsEntities = template.getItems();
+        for (TemplateItemsEntity templateItemsEntity : itemsEntities) {
+            templateItemsEntity.setTypeId(typeId);
+            itemsDao.update(templateItemsEntity);
+        }
     }
 
     /**
@@ -257,7 +299,44 @@ public class TemplateLogic {
                 templateItemsEntity.getChoices().add(itemChoicesEntity);
             }
         }
+        
+        boolean editable = true;
+        if (TemplateLogic.get().isProtectedType(id)) {
+            editable = false;
+        }
+        entity.setEditable(editable);
+        
         return entity;
+    }
+
+    public List<TemplateMastersEntity> selectAll() {
+        List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+        // ソート
+        Collections.sort(templates, new Comparator<TemplateMastersEntity>() {
+            @Override
+            public int compare(TemplateMastersEntity o1, TemplateMastersEntity o2) {
+                if (o1.getTypeId().intValue() == TemplateLogic.TYPE_ID_KNOWLEDGE) {
+                    return -1;
+                }
+                if (o2.getTypeId().intValue() == TemplateLogic.TYPE_ID_KNOWLEDGE) {
+                    return 1;
+                }
+                if (o1.getTypeId().intValue() == TemplateLogic.TYPE_ID_BOOKMARK) {
+                    return -1;
+                }
+                if (o2.getTypeId().intValue() == TemplateLogic.TYPE_ID_BOOKMARK) {
+                    return 1;
+                }
+                if (o1.getTypeId().intValue() == TemplateLogic.TYPE_ID_EVENT) {
+                    return -1;
+                }
+                if (o2.getTypeId().intValue() == TemplateLogic.TYPE_ID_EVENT) {
+                    return 1;
+                }
+                return o1.getTypeId().compareTo(o2.getTypeId());
+            }
+        });
+        return templates;
     }
 
 }

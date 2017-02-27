@@ -26,6 +26,11 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="bower/Caret.js/dist/jquery.caret.min.js"></script>
 <script type="text/javascript" src="bower/At.js/dist/js/jquery.atwho.min.js"></script>
 <script type="text/javascript" src="bower/picEdit/dist/js/picedit.min.js"></script>
+<script type="text/javascript" src="bower/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"></script>
+<script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
+<script type="text/javascript" src="bower/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
+<script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
 
 <script type="text/javascript" src="js/tagselect.js"></script>
 <script type="text/javascript" src="js/slide.js"></script>
@@ -44,6 +49,7 @@ MathJax.Hub.Config({
 <!-- endbuild -->
 
 <script>
+var _LANG = '<%= jspUtil.locale().getLanguage()%>';
 var _UPLOADED = '<%= jspUtil.label("knowledge.edit.label.uploaded") %>';
 var _DELETE_LABEL= '<%= jspUtil.label("label.delete") %>';
 var _FAIL_UPLOAD = '<%= jspUtil.label("knowledge.edit.label.fail.upload") %>';

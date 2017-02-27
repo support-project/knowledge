@@ -1,0 +1,22 @@
+INSERT INTO SURVEY_ITEM_ANSWERS
+( 
+ANSWER_ID
+ , ITEM_NO
+ , KNOWLEDGE_ID
+ , ITEM_VALUE
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

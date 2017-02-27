@@ -14,6 +14,8 @@
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
 <link rel="stylesheet" href="bower/At.js/dist/css/jquery.atwho.min.css" />
 <link rel="stylesheet" href="bower/picEdit/dist/css/picedit.min.css" />
+<link rel="stylesheet" href="bower/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" />
+<link rel="stylesheet" href="bower/clockpicker/dist/bootstrap-clockpicker.min.css" />
 
 <link rel="stylesheet" href="css/knowledge-edit.css" />
 <link rel="stylesheet" href="css/markdown.css" />

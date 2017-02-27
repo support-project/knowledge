@@ -41,7 +41,6 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.indexer.impl.LuceneIndexer;
-import org.support.project.knowledge.logic.IndexLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.Searcher;
@@ -81,6 +80,8 @@ public class LuceneSearcher implements Searcher {
     public static final String FIELD_LABEL_CREATE_USER = LuceneIndexer.FIELD_LABEL_CREATE_USER;
     /** ラベル：日時 */
     public static final String FIELD_LABEL_TIME = LuceneIndexer.FIELD_LABEL_TIME;
+    /** ラベル：テンプレート */
+    public static final String FIELD_LABEL_TEMPLATE = LuceneIndexer.FIELD_LABEL_TEMPLATE;
 
     /** 検索キーワードを抽出するアナライザー N-gramではなく形態素解析を利用 */
     // private Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_4_10_2);
@@ -278,6 +279,11 @@ public class LuceneSearcher implements Searcher {
             Query query = queryParser.parse(value.getCreator());
             container.add(query, BooleanClause.Occur.MUST);
         }
+        if (value.getTemplate() != null) {
+            Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TEMPLATE, 1, value.getTemplate(), value.getTemplate(), true, true);
+            container.add(query, BooleanClause.Occur.MUST);
+        }
+        
         return container;
     }
 
@@ -302,10 +308,4 @@ public class LuceneSearcher implements Searcher {
         highlighter.setMaxDocCharsToAnalyze(Integer.MAX_VALUE);
         return highlighter.getBestFragment(analyzer, fieldName, fieldValue);
     }
-
-	public List<SearchResultValue> search(SearchingValue value) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

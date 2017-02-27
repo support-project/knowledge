@@ -1,3 +1,4 @@
+<%@page import="org.support.project.knowledge.logic.TemplateLogic"%>
 <%@page import="org.support.project.common.util.StringUtils"%>
 <%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
@@ -71,13 +72,41 @@
                     </button>
                 </div>
                 
+                <% if (jspUtil.is(TemplateLogic.TYPE_ID_EVENT, "typeId")) { %>
+                <div>
+                    <% if (jspUtil.logined()) { %>
+                        <button class="btn btn-info btn_col2 hide" id="btnParticipation">
+                            <i class="fa fa-user-plus"></i>&nbsp;
+                            <%=jspUtil.label("knowledge.view.label.participation")%>
+                        </button>
+                        <button class="btn btn-warning btn_col2 hide" id="btnNonparticipation">
+                            <i class="fa fa-user-times"></i>&nbsp;
+                            <%=jspUtil.label("knowledge.view.label.nonparticipation")%>
+                        </button>
+                    <% } else { %>
+                        <a href="protect.knowledge/view/<%=jspUtil.out("knowledgeId")%>" class="btn btn-default btn_col2">
+                            <i class="fa fa-user-plus"></i>&nbsp;
+                            <%=jspUtil.label("knowledge.view.label.participation")%>
+                        </a>
+                    <% } %>
+                </div>
+                <% } %>
             </div>
 
             <div class="article_info">
                 <a href="<%=request.getContextPath()%>/open.knowledge/likes/<%=jspUtil.out("knowledgeId")%><%=jspUtil.out("params")%>">
                     <i class="fa fa-thumbs-o-up"></i>&nbsp;<%=jspUtil.label("knowledge.view.like")%> × <span id="like_count"><%=jspUtil.out("like_count")%></span>
-                </a> <a href="#comments" id="commentsLink"> <i class="fa fa-comments-o"></i>&nbsp;<%=jspUtil.label("knowledge.view.comment.label")%>
+                </a>
+                <a href="#comments" id="commentsLink"> <i class="fa fa-comments-o"></i>&nbsp;<%=jspUtil.label("knowledge.view.comment.label")%>
                     × <%=jspUtil.out("comments.size()")%>
                 </a>
             </div>
             
+            <% if (jspUtil.is(TemplateLogic.TYPE_ID_EVENT, "typeId")) { %>
+            <div class="article_info">
+            <a id="eventInfoLink">
+                <i class="fa fa-users"></i>&nbsp;<%= jspUtil.label("knowledge.view.label.participants") %>
+                <span id="eventStatus"></span>
+            </a>
+            </div>
+            <% } %>

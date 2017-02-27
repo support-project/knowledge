@@ -1,6 +1,10 @@
 package org.support.project.knowledge.control.open;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +12,6 @@ import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
-import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
@@ -35,16 +38,16 @@ import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.DiffLogic;
+import org.support.project.knowledge.logic.EventsLogic;
 import org.support.project.knowledge.logic.GroupLogic;
-import org.support.project.knowledge.logic.IndexLogic;
 import org.support.project.knowledge.logic.KeywordLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
+import org.support.project.knowledge.logic.TimeZoneLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
-import org.support.project.knowledge.searcher.Searcher;
-import org.support.project.knowledge.searcher.impl.LuceneSearcher;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.ListData;
 import org.support.project.knowledge.vo.MarkDown;
@@ -261,6 +264,13 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
         }
         LOG.trace("タグ、グループ取得完了");
+        
+        List<TemplateMastersEntity> templateList = TemplateMastersDao.get().selectAll();
+        Map<Integer, TemplateMastersEntity> templates = new HashMap<>();
+        for (TemplateMastersEntity templateMastersEntity : templateList) {
+            templates.put(templateMastersEntity.getTypeId(), templateMastersEntity);
+        }
+        setAttribute("templates", templates);
     }
     
     /**
@@ -315,6 +325,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         String user = getParam("user");
         String tagNames = getParam("tagNames");
         String groupNames = getParam("groupNames");
+        String template = getParam("template");
 
         String keywordSortTypeString = getCookie(SystemConfig.COOKIE_KEY_KEYWORD_SORT_TYPE);
         int keywordSortType;
@@ -412,7 +423,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 setAttribute("selectedGroupIds", groupIds);
                 setAttribute("searchKeyword", searchKeyword + keyword);
     
-                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, template, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
             } else {
                 // その他(キーワード検索)
                 LOG.trace("search");
@@ -454,24 +465,65 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 keyword = keywordLogic.parseKeyword(keyword);
     
                 setAttribute("keyword", keyword);
-                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, template, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
             }
     
             List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);
             setAttribute("knowledges", stocks);
             LOG.trace("検索終了");
             
+            if (StringUtils.isNotEmpty(template) && StringUtils.isInteger(template)) {
+                TemplateMastersEntity templateMastersEntity = TemplateMastersDao.get().selectOnKey(new Integer(template));
+                setAttribute("type", templateMastersEntity);
+            }
             // ナレッジの公開先の情報を取得
             setKnowledgeTargetsWithConv(loginedUser, knowledges);
             // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
             setSublistInformations(loginedUser);
-    
+            
             return forward("list.jsp");
         } catch (InvalidParamException e) {
             return forward("list.jsp");
         }
     }
 
+    /**
+     * 閲覧履歴の表示
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary events() throws InvalidParamException {
+        String date = getParam("date");
+        String timezone = getParam("timezone");
+        LoginedUser loginedUser = super.getLoginedUser();
+        if (StringUtils.isEmpty(date) || StringUtils.isEmpty(timezone)) {
+            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
+        }
+        if (!TimeZoneLogic.get().exist(timezone)) {
+            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
+        }
+        DateFormat monthformat = new SimpleDateFormat("yyyyMMdd");
+        List<KnowledgesEntity> knowledges;
+        try {
+            Date d = monthformat.parse(date);
+            setAttribute("start", d);
+            knowledges = EventsLogic.get().eventKnowledgeList(date, timezone, loginedUser);
+            List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, loginedUser);
+            setAttribute("knowledges", stocks);
+        } catch (java.text.ParseException e) {
+            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
+        }
+        // ナレッジの公開先の情報を取得
+        setKnowledgeTargetsWithConv(loginedUser, knowledges);
+        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+        setSublistInformations(loginedUser);
+
+        return forward("events.jsp");
+    }
+    
+    
     /**
      * 閲覧履歴の表示
      * 
@@ -661,7 +713,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
         if (loginedUser != null) {
             setAttribute("groupNames", keywordLogic.parseQuery("groups", keyword));
         }
-
+        List<TemplateMastersEntity> templates = TemplateLogic.get().selectAll();
+        setAttribute("templates", templates);
         return forward("search.jsp");
     }
 
@@ -803,7 +856,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(typeId);
         if (template == null) {
             // そのテンプレートは既に削除済みの場合、通常のナレッジのテンプレートで表示する（ナレッジのテンプレートは削除できないようにする）
-            typeId = TemplateMastersDao.TYPE_ID_KNOWLEDGE;
+            typeId = TemplateLogic.TYPE_ID_KNOWLEDGE;
             template = TemplateMastersDao.get().selectWithItems(typeId);
         }
 
