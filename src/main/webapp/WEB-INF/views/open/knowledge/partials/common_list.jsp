@@ -1,3 +1,4 @@
+<%@page import="org.support.project.knowledge.logic.EventsLogic"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.Date"%>
@@ -9,6 +10,7 @@
 <%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
 <%@page import="org.support.project.knowledge.entity.KnowledgesEntity"%>
 <%@page import="org.support.project.knowledge.entity.TemplateMastersEntity"%>
+<%@page import="org.support.project.knowledge.vo.StockKnowledge"%>
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -65,7 +67,24 @@
                  <% if (knowledge.getStartDateTime() != null) { %>
                  <div>
                      <i class="fa fa-calendar"></i>&nbsp;
-                    <%= jspUtil.label("knowledge.list.event.datetime") %>: <%= knowledge.getLocalStartDateTime(jspUtil.locale(), timezone) %>
+                     <%= jspUtil.label("knowledge.list.event.datetime") %>: <%= knowledge.getLocalStartDateTime(jspUtil.locale(), timezone) %>
+                     
+                     <%
+                     if (knowledge instanceof StockKnowledge) { 
+                         StockKnowledge stock = (StockKnowledge) knowledge;
+                         if (stock.getParticipations() != null) {
+                     %>
+                     <i class="fa fa-users"></i>&nbsp;<%= stock.getParticipations().getCount() %> /  <%= stock.getParticipations().getLimit() %>
+                     <% if (stock.getParticipations().getStatus() != null) { %>
+                     <span class="badge">
+                         <% if (stock.getParticipations().getStatus() == EventsLogic.STSTUS_PARTICIPATION) { %>
+                            <%= jspUtil.label("knowledge.view.label.status.participation") %>
+                         <% } else { %>
+                            <%= jspUtil.label("knowledge.view.label.status.wait.cansel") %>
+                         <% } %>
+                     </span>
+                     <% } %>
+                     <% } } %>
                  </div>
                  <% } %>
             </div>

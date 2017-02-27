@@ -28,6 +28,8 @@ import org.support.project.web.bean.LoginedUser;
 
 @DI(instance = Instance.Singleton)
 public class EventsLogic {
+    private static final int PAGE_LIMIT = 10;
+
     /** ログ */
     private static final Log LOG = LogFactory.getLog(EventsLogic.class);
     
@@ -94,7 +96,7 @@ public class EventsLogic {
         start.set(Calendar.MINUTE, 0);
         start.set(Calendar.SECOND, 0);
         start.set(Calendar.MILLISECOND, 0);
-        return EventsDao.get().selectAccessAbleEvents(start, loginedUser, 50, 0);
+        return EventsDao.get().selectAccessAbleEvents(start, loginedUser, PAGE_LIMIT, 0);
     }
 
     public Participations isParticipation(Long knowledgeId, Integer userId) {
