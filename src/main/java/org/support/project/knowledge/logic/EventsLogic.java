@@ -28,7 +28,7 @@ import org.support.project.web.bean.LoginedUser;
 
 @DI(instance = Instance.Singleton)
 public class EventsLogic {
-    private static final int PAGE_LIMIT = 10;
+    private static final int PAGE_LIMIT = 20;
 
     /** ログ */
     private static final Log LOG = LogFactory.getLog(EventsLogic.class);
