@@ -1,8 +1,11 @@
 package org.support.project.knowledge.vo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Participations {
+public class Participations implements Serializable {
+    /** シリアルバージョン */
+    private static final long serialVersionUID = 1L;
     /** 参加可能人数 */
     private Integer limit;
     /** 参加登録人数 */

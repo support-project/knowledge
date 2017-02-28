@@ -51,6 +51,7 @@ import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.ListData;
 import org.support.project.knowledge.vo.MarkDown;
+import org.support.project.knowledge.vo.Participations;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LabelValue;
@@ -511,6 +512,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
             setAttribute("start", d);
             knowledges = EventsLogic.get().eventKnowledgeList(date, timezone, loginedUser);
             List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, loginedUser);
+            for (StockKnowledge stock : stocks) {
+                Participations participations = EventsLogic.get().isParticipation(stock.getKnowledgeId(), getLoginUserId());
+                stock.setParticipations(participations);
+            }
             setAttribute("knowledges", stocks);
         } catch (java.text.ParseException e) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
