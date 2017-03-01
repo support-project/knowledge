@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>[Knowledge] Test mail</title>
-	<contents xml:space="preserve">
-
+<title>[Knowledge] Test mail</title>
+<contents xml:space="preserve">
 This is test mail.
 
 ------------------------------------------
  This e-mail has been sent automatically from the system.
  Please understand that it can not reply to this email.
+</contents>
 
-	</contents>
-	
+<templateTitle>Transmission test</templateTitle>
+<description>
+The text of the test mail when confirming the mail setting.
+</description>
 </mail>
 
 

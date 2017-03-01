@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>[Knowledge] Knowledge inserted {KnowledgeId} - {KnowledgeTitle}</title>
-	<contents xml:space="preserve">
-
+<title>[Knowledge] Knowledge inserted {KnowledgeId} - {KnowledgeTitle}</title>
+<contents xml:space="preserve">
 Knowledge has been inserted：{KnowledgeId}
 
 {URL}
@@ -18,9 +17,20 @@ Title: {KnowledgeTitle}
 ------------------------------------------
  This e-mail has been sent automatically from the system.
  Please understand that it can not reply to this email.
+</contents>
 
-	</contents>
-	
+<templateTitle>Add article</templateTitle>
+<description>
+When a article is registered, System will send an e-mail notification.
+
+[Reserved keywords]
+If you write the following keywords in the body, replace the value when sending mail.
+
+- {URL} : URL of Target data
+- {KnowledgeId} : ID
+- {KnowledgeTitle} : Title
+- {Contents} : Content of article
+</description>
 </mail>
 
 

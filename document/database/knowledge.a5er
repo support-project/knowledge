@@ -47,6 +47,103 @@ ShowTag=1
 ShowCommonAttributes=0
 
 [Relation]
+Entity1=LOCALES
+Entity2=MAIL_LOCALE_TEMPLATES
+RelationType1=1
+RelationType2=3
+Fields1=KEY
+Fields2=KEY
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,5226,5024,4040,R,R
+Dependence=1
+Caption=
+PName=
+LineMode=0
+Bar1=523
+Bar2=502
+Bar3=404
+TermPos1=R
+TermPos2=R
+
+[Relation]
+Entity1=MAIL_TEMPLATES
+Entity2=MAIL_LOCALE_TEMPLATES
+RelationType1=2
+RelationType2=3
+Fields1=TEMPLATE_ID
+Fields2=TEMPLATE_ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,4464,5489,4842,R,R
+Dependence=1
+Caption=
+PName=
+LineMode=0
+Bar1=446
+Bar2=549
+Bar3=484
+TermPos1=R
+TermPos2=R
+
+[Entity]
+PName=MAIL_LOCALE_TEMPLATES
+LName=ロケール毎のメールテンプレート
+Comment=
+TableOption=
+Page=MAIN
+Left=2950
+Top=250
+Field="テンプレートID","TEMPLATE_ID","@VARCHAR(32)","NOT NULL",0,"","",$FFFFFFFF,""
+Field="キー","KEY","@VARCHAR(12)","NOT NULL",1,"","",$FFFFFFFF,""
+Field=" タイトル","TITLE","text","NOT NULL",,"","",$FFFFFFFF,""
+Field="本文","CONTENT","text",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170228163618
+Position="MAIN",2950,250
+
+[Entity]
+PName=LOCALES
+LName=ロケール
+Comment=
+TableOption=
+Page=MAIN
+Left=3550
+Top=50
+Field="キー","KEY","@VARCHAR(12)","NOT NULL",0,"","",$FFFFFFFF,""
+Field="言語","LANGUAGE","@VARCHAR(4)","NOT NULL",,"","",$FFFFFFFF,""
+Field="国","COUNTRY","@VARCHAR(4)",,,"","",$FFFFFFFF,""
+Field="バリアント","VARIANT","@VARCHAR(4)",,,"","",$FFFFFFFF,""
+Field="表示名","DISP_NAME","@VARCHAR(128)",,,"","",$FFFFFFFF,""
+Field="国旗のアイコン","FLAG_ICON","@VARCHAR(24)",,,"","",$FFFFFFFF,""
+NoDDL=1
+UsingCommonColumns=0
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170228162957
+Position="MAIN",3550,50
+
+[Entity]
+PName=MAIL_TEMPLATES
+LName=メールテンプレート
+Comment=
+TableOption=
+Page=MAIN
+Left=2950
+Top=50
+Field="テンプレートID","TEMPLATE_ID","@VARCHAR(32)","NOT NULL",0,"","",$FFFFFFFF,""
+Field="テンプレートタイトル","TEMPLATE_TITLE","@VARCHAR(128)","NOT NULL",,"","",$FFFFFFFF,""
+Field="説明文","DESCRIPTION","text",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170301131519
+Position="MAIN",2950,50
+
+[Relation]
 Entity1=SURVEY_ANSWERS
 Entity2=SURVEY_ITEM_ANSWERS
 RelationType1=1
@@ -76,7 +173,7 @@ Fields1=KNOWLEDGE_ID
 Fields2=ITEM_NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4194,5115,6744,R,R
+Position="MAIN",0,4194,5115,6185,R,R
 Dependence=0
 Caption=
 PName=
@@ -84,7 +181,7 @@ ModifiedDateTime=20170220204434
 LineMode=0
 Bar1=419
 Bar2=512
-Bar3=674
+Bar3=618
 TermPos1=R
 TermPos2=R
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>Information from [Knowledge]</title>
-	<contents xml:space="preserve">
+<title>Information from [Knowledge]</title>
+<contents xml:space="preserve">
 Dear {UserName} 
 
 We registered with the Knowledge, thank you.
@@ -16,8 +16,16 @@ I will be able to add comments.
 ------------------------------------------
  This e-mail has been sent automatically from the system.
  Please understand that it can not reply to this email.
-	</contents>
-	
+</contents>
+<templateTitle>User registration notice</templateTitle>
+<description>
+If the setting of user registration is set to "approve by administrator", 
+When the administrator approves it, System will send an e-mail notification to the approved users.
+
+[Reserved keywords]
+If you write the following keywords in the body, replace the value when sending mail.
+
+- {UserName}: Name of the registered user
+- {URL}: Access URL to Knowledge
+</description>
 </mail>
-
-

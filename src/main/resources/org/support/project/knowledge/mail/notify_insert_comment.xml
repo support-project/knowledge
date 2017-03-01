@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>[Knowledge] コメント登録 {KnowledgeId} - {KnowledgeTitle}</title>
-	<contents xml:space="preserve">
-
-以下のナレッジにコメントが登録されました：{KnowledgeId}
+<title>[Knowledge] Add Comment {KnowledgeId} - {KnowledgeTitle}</title>
+<contents xml:space="preserve">
+Comment was added：{KnowledgeId}
 
 {URL}
 
@@ -17,14 +16,25 @@
 
 {Contents}
 
-
-
 ------------------------------------------
  This e-mail has been sent automatically from the system.
  Please understand that it can not reply to this email.
+</contents>
 
-	</contents>
-	
+<templateTitle>Register a comment</templateTitle>
+<description>
+When a comment is registered, System will give out a notice.
+
+[Reserved keywords]
+If you write the following keywords in the body, replace the value when sending mail.
+
+- {URL} : URL of Target data
+- {CommentInsertUser} : User name who comment saved
+- {CommentContents} : Contents of comment
+- {KnowledgeId} : ID
+- {KnowledgeTitle} : Title
+- {Contents} : Content of article
+</description>
 </mail>
 
 

@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -22,6 +23,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.support.project.aop.Aspect;
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.config.LocaleConfigLoader;
 import org.support.project.common.log.Log;
@@ -37,9 +39,14 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
 import org.support.project.knowledge.config.SystemConfig;
+import org.support.project.knowledge.dao.MailLocaleTemplatesDao;
+import org.support.project.knowledge.dao.MailTemplatesDao;
+import org.support.project.knowledge.entity.MailLocaleTemplatesEntity;
+import org.support.project.knowledge.entity.MailTemplatesEntity;
 import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.parser.ParserFactory;
 import org.support.project.knowledge.vo.ParseResult;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.config.WebConfig;
 import org.support.project.web.dao.MailConfigsDao;
@@ -580,5 +587,33 @@ public class MailLogic {
         return content;
     }
 
+    
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void initMailTemplate() {
+        String[] templateIds = {
+                "invitation", "mail_confirm", "notify_accept_user", "notify_add_user",
+                "notify_insert_comment_myitem", "notify_insert_comment", "notify_insert_knowledge",
+                "notify_insert_like_myitem", "notify_update_knowledge", "password_reset", "test_mail"
+        };
+        for (String templateId : templateIds) {
+            MailConfig enConfig = LocaleConfigLoader.load(MAIL_CONFIG_DIR, templateId, Locale.ENGLISH, MailConfig.class);
+            MailConfig jaConfig = LocaleConfigLoader.load(MAIL_CONFIG_DIR, templateId, Locale.JAPANESE, MailConfig.class);
+            
+            MailTemplatesEntity mailTemplate = new MailTemplatesEntity(templateId);
+            mailTemplate.setTemplateTitle(enConfig.getTemplateTitle());
+            mailTemplate.setDescription(enConfig.getDescription());
+            MailTemplatesDao.get().save(mailTemplate);
+            
+            MailLocaleTemplatesEntity en = new MailLocaleTemplatesEntity(Locale.ENGLISH.toString(), templateId);
+            en.setTitle(enConfig.getTitle());
+            en.setContent(enConfig.getContents());
+            MailLocaleTemplatesDao.get().save(en);
+            
+            MailLocaleTemplatesEntity ja = new MailLocaleTemplatesEntity(Locale.JAPANESE.toString(), templateId);
+            ja.setTitle(jaConfig.getTitle());
+            ja.setContent(jaConfig.getContents());
+            MailLocaleTemplatesDao.get().save(ja);
+        }
+    }
 
 }
