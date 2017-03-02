@@ -159,7 +159,7 @@ public class MailControl extends Control {
             addMsgWarn(getResource("knowledge.mail.error.to.address"));
             return config();
         }
-        MailLocaleTemplatesEntity template = MailLogic.get().load(MailLogic.TEST_MAIL, getLoginedUser().getLocale());
+        MailLocaleTemplatesEntity template = MailLogic.get().load(getLoginedUser().getLocale(), MailLogic.TEST_MAIL);
         MailsEntity entity = new MailsEntity();
         entity.setFromAddress(mailConfigsEntity.getFromAddress());
         entity.setFromName(mailConfigsEntity.getFromName());
