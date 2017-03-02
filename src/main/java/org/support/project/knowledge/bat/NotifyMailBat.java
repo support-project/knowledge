@@ -13,18 +13,17 @@ import java.util.UUID;
 import org.apache.commons.lang.ClassUtils;
 import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
-import org.support.project.common.config.LocaleConfigLoader;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.knowledge.config.AppConfig;
-import org.support.project.knowledge.config.MailConfig;
 import org.support.project.knowledge.config.NotifyType;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
+import org.support.project.knowledge.dao.MailLocaleTemplatesDao;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.dao.TargetsDao;
@@ -33,6 +32,7 @@ import org.support.project.knowledge.dao.WebhooksDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
+import org.support.project.knowledge.entity.MailLocaleTemplatesEntity;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
@@ -61,8 +61,6 @@ import net.arnx.jsonic.JSON;
 public class NotifyMailBat extends AbstractBat {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(NotifyMailBat.class);
-    /** config dir for mail */
-    private static final String MAIL_CONFIG_DIR = "/org/support/project/knowledge/mail/";
     /** date format */
     private static DateFormat getDayFormat() {
         return new SimpleDateFormat("yyyyMMddHHmmss");
@@ -161,8 +159,8 @@ public class NotifyMailBat extends AbstractBat {
             if (notifyConfigsEntity != null && INT_FLAG.flagCheck(notifyConfigsEntity.getMyItemLike())) {
                 // 登録者でかつイイネが登録した場合に通知が欲しい
                 Locale locale = user.getLocale();
-                MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_like_myitem", locale, MailConfig.class);
-                sendLikeMail(like, knowledge, likeUser, user, config);
+                MailLocaleTemplatesEntity template = MailLocaleTemplatesDao.get().selectOnKey(locale.toString(), MailLogic.NOTIFY_INSERT_LIKE_MYITEM);
+                sendLikeMail(like, knowledge, likeUser, user, template);
             }
         }
     }
@@ -173,10 +171,10 @@ public class NotifyMailBat extends AbstractBat {
      * @param knowledge
      * @param likeUser
      * @param user
-     * @param config
+     * @param template
      * @throws Exception 
      */
-    private void sendLikeMail(LikesEntity like, KnowledgesEntity knowledge, UsersEntity likeUser, UsersEntity user, MailConfig config)
+    private void sendLikeMail(LikesEntity like, KnowledgesEntity knowledge, UsersEntity likeUser, UsersEntity user, MailLocaleTemplatesEntity template)
             throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
@@ -198,11 +196,11 @@ public class NotifyMailBat extends AbstractBat {
         mailsEntity.setToAddress(user.getMailAddress());
         mailsEntity.setToName(user.getUserName());
         
-        String title = config.getTitle();
+        String title = template.getTitle();
         title = title.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
         title = title.replace("{KnowledgeTitle}", StringUtils.abbreviate(knowledge.getTitle(), 80));
         mailsEntity.setTitle(title);
-        String contents = config.getContents();
+        String contents = template.getContent();
         contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
         contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
         contents = contents.replace("{Contents}", getContent(knowledge.getContent()));
@@ -260,16 +258,16 @@ public class NotifyMailBat extends AbstractBat {
         UsersEntity user = NotifyCommentLogic.get().getInsertUserOnComment(NotifyType.Mail, comment, knowledge);
         if (user != null) {
             Locale locale = user.getLocale();
-            MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_comment_myitem", locale, MailConfig.class);
-            sendCommentMail(comment, knowledge, commentUser, user, config);
+            MailLocaleTemplatesEntity template = MailLocaleTemplatesDao.get().selectOnKey(locale.toString(), MailLogic.NOTIFY_INSERT_COMMENT_MYITEM);
+            sendCommentMail(comment, knowledge, commentUser, user, template);
         }
         // 宛先のナレッジにコメント追加で通知が欲しいユーザに通知
         List<UsersEntity> users = NotifyCommentLogic.get().getTargetUsersOnComment(NotifyType.Mail, comment, knowledge);
         for (UsersEntity target : users) {
             // 宛先にメール送信
             Locale locale = target.getLocale();
-            MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_comment", locale, MailConfig.class);
-            sendCommentMail(comment, knowledge, commentUser, target, config);
+            MailLocaleTemplatesEntity template = MailLocaleTemplatesDao.get().selectOnKey(locale.toString(), MailLogic.NOTIFY_INSERT_COMMENT);
+            sendCommentMail(comment, knowledge, commentUser, target, template);
         }
     }
 
@@ -307,7 +305,7 @@ public class NotifyMailBat extends AbstractBat {
      * @param user メールの送信先
      * @throws Exception 
      */
-    private void sendCommentMail(CommentsEntity comment, KnowledgesEntity knowledge, UsersEntity commentUser, UsersEntity user, MailConfig config)
+    private void sendCommentMail(CommentsEntity comment, KnowledgesEntity knowledge, UsersEntity commentUser, UsersEntity user, MailLocaleTemplatesEntity template)
             throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
@@ -329,11 +327,11 @@ public class NotifyMailBat extends AbstractBat {
         mailsEntity.setToAddress(user.getMailAddress());
         mailsEntity.setToName(user.getUserName());
         
-        String title = config.getTitle();
+        String title = template.getTitle();
         title = title.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
         title = title.replace("{KnowledgeTitle}", StringUtils.abbreviate(knowledge.getTitle(), 80));
         mailsEntity.setTitle(title);
-        String contents = config.getContents();
+        String contents = template.getContent();
         contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
         contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
         contents = contents.replace("{Contents}", getContent(knowledge.getContent()));
@@ -484,14 +482,13 @@ public class NotifyMailBat extends AbstractBat {
                 LOG.trace("[Notify] " + usersEntity.getMailAddress());
             }
             Locale locale = usersEntity.getLocale();
-            MailConfig config;
+            MailLocaleTemplatesEntity template;
             if (knowledge.getNotifyStatus() == null || knowledge.getNotifyStatus().intValue() == 0) {
-                config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_insert_knowledge", locale, MailConfig.class);
+                template = MailLocaleTemplatesDao.get().selectOnKey(locale.toString(), MailLogic.NOTIFY_INSERT_KNOWLEDGE);
             } else {
-                config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "notify_update_knowledge", locale, MailConfig.class);
+                template = MailLocaleTemplatesDao.get().selectOnKey(locale.toString(), MailLogic.NOTIFY_UPDATE_KNOWLEDGE);
             }
-            
-            insertNotifyKnowledgeUpdateMailQue(knowledge, usersEntity, config);
+            insertNotifyKnowledgeUpdateMailQue(knowledge, usersEntity, template);
         }
     }
 
@@ -528,7 +525,7 @@ public class NotifyMailBat extends AbstractBat {
      * @param config
      * @throws Exception 
      */
-    private void insertNotifyKnowledgeUpdateMailQue(KnowledgesEntity knowledge, UsersEntity usersEntity, MailConfig config) throws Exception {
+    private void insertNotifyKnowledgeUpdateMailQue(KnowledgesEntity knowledge, UsersEntity usersEntity, MailLocaleTemplatesEntity template) throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
         if (mailConfigsEntity == null) {
@@ -548,11 +545,11 @@ public class NotifyMailBat extends AbstractBat {
         mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
         mailsEntity.setToAddress(usersEntity.getMailAddress());
         mailsEntity.setToName(usersEntity.getUserName());
-        String title = config.getTitle();
+        String title = template.getTitle();
         title = title.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
         title = title.replace("{KnowledgeTitle}", StringUtils.abbreviate(knowledge.getTitle(), 80));
         mailsEntity.setTitle(title);
-        String contents = config.getContents();
+        String contents = template.getContent();
         contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
         contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
         contents = contents.replace("{User}", knowledge.getUpdateUserName());

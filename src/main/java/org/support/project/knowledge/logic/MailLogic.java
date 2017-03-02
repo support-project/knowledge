@@ -61,6 +61,24 @@ import org.support.project.web.entity.UsersEntity;
 
 @DI(instance = Instance.Singleton)
 public class MailLogic {
+    public static final String TEST_MAIL = "test_mail";
+    public static final String NOTIFY_UPDATE_KNOWLEDGE = "notify_update_knowledge";
+    public static final String NOTIFY_ACCEPT_USER = "notify_accept_user";
+    public static final String NOTIFY_ADD_USER = "notify_add_user";
+    public static final String INVITATION = "invitation";
+    public static final String PASSWORD_RESET = "password_reset";
+    public static final String MAIL_CONFIRM = "mail_confirm";
+    public static final String NOTIFY_INSERT_KNOWLEDGE = "notify_insert_knowledge";
+    public static final String NOTIFY_INSERT_LIKE_MYITEM = "notify_insert_like_myitem";
+    public static final String NOTIFY_INSERT_COMMENT = "notify_insert_comment";
+    public static final String NOTIFY_INSERT_COMMENT_MYITEM = "notify_insert_comment_myitem";
+
+    public static String[] TEMPLATE_IDS = {
+            INVITATION, MAIL_CONFIRM, NOTIFY_ACCEPT_USER, NOTIFY_ADD_USER,
+            NOTIFY_INSERT_COMMENT_MYITEM, NOTIFY_INSERT_COMMENT, NOTIFY_INSERT_KNOWLEDGE,
+            NOTIFY_INSERT_LIKE_MYITEM, NOTIFY_UPDATE_KNOWLEDGE, PASSWORD_RESET, TEST_MAIL
+    };
+    
     // private static final String MAIL_ENCODE = "ISO-2022-JP";
     private static final String MAIL_ENCODE = "UTF-8";
 
@@ -88,6 +106,18 @@ public class MailLogic {
     public static MailLogic get() {
         return Container.getComp(MailLogic.class);
     }
+    
+    /**
+     * メール設定の読み込み
+     * 
+     * @param configName
+     * @param locale
+     * @return
+     */
+    public MailLocaleTemplatesEntity load(String configName, Locale locale) {
+        return MailLocaleTemplatesDao.get().selectOnKey(locale.toString(), configName);
+    }
+    
     
     /**
      * メール送信の実行
@@ -134,6 +164,15 @@ public class MailLogic {
                 dao.save(mailsEntity);
             }
             count++;
+            
+            // 一気に大量に送信しようとするとエラーになることがあるため、少し待機
+            synchronized (this) {
+                try {
+                    wait(100);
+                } catch (InterruptedException e) {
+                    LOG.info(e.getMessage());
+                }
+            }
         }
         LOG.info("MAIL sended. count: " + count);
     }
@@ -264,17 +303,6 @@ public class MailLogic {
         return builder.toString();
     }
 
-    /**
-     * メール設定の読み込み
-     * 
-     * @param configName
-     * @param locale
-     * @return
-     */
-    public MailConfig load(String configName, Locale locale) {
-        MailConfig mailConfig = LocaleConfigLoader.load(MAIL_CONFIG_DIR, configName, locale, MailConfig.class);
-        return mailConfig;
-    }
 
     /**
      * URLを生成
@@ -327,11 +355,10 @@ public class MailLogic {
         mailsEntity.setToAddress(entity.getUserKey());
         mailsEntity.setToName(entity.getUserName());
 
-        MailConfig mailConfig = load("invitation", locale);
+        MailLocaleTemplatesEntity mailConfig = load(INVITATION, locale);
 
         mailsEntity.setTitle(mailConfig.getTitle());
-
-        String contents = mailConfig.getContents();
+        String contents = mailConfig.getContent();
         contents = contents.replace("{UserName}", entity.getUserName());
         StringBuilder path = new StringBuilder();
         path.append(url);
@@ -408,9 +435,9 @@ public class MailLogic {
                     continue;
                 }
                 Locale locale = entity.getLocale();
-                MailConfig mailConfig = load("notify_add_user", locale);
+                MailLocaleTemplatesEntity mailConfig = load(NOTIFY_ADD_USER, locale);
 
-                String contents = mailConfig.getContents();
+                String contents = mailConfig.getContent();
                 contents = contents.replace("{UserId}", String.valueOf(user.getUserId()));
                 contents = contents.replace("{UserName}", user.getUserName());
                 contents = contents.replace("{UserMail}", user.getMailAddress());
@@ -457,9 +484,9 @@ public class MailLogic {
                     continue;
                 }
                 Locale locale = entity.getLocale();
-                MailConfig mailConfig = load("notify_accept_user", locale);
+                MailLocaleTemplatesEntity mailConfig = load(NOTIFY_ACCEPT_USER, locale);
 
-                String contents = mailConfig.getContents();
+                String contents = mailConfig.getContent();
                 String title = mailConfig.getTitle();
 
                 MailsDao mailsDao = MailsDao.get();
@@ -498,11 +525,11 @@ public class MailLogic {
         mailsEntity.setToAddress(email);
         mailsEntity.setToName(email);
 
-        MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "password_reset", locale, MailConfig.class);
+        MailLocaleTemplatesEntity template = MailLocaleTemplatesDao.get().selectOnKey(locale.toString(), PASSWORD_RESET);
 
-        String title = config.getTitle();
+        String title = template.getTitle();
         mailsEntity.setTitle(title);
-        String contents = config.getContents();
+        String contents = template.getContent();
         contents = contents.replace("{MAIL}", email);
         contents = contents.replace("{URL}", makeURL("open.PasswordInitialization/init/", resetsEntity.getId()));
 
@@ -531,11 +558,11 @@ public class MailLogic {
         mailsEntity.setToAddress(mailChangesEntity.getMailAddress());
         mailsEntity.setToName(loginedUser.getLoginUser().getUserName());
 
-        MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, "mail_confirm", loginedUser.getLocale(), MailConfig.class);
+        MailLocaleTemplatesEntity template = MailLocaleTemplatesDao.get().selectOnKey(loginedUser.getLocale().toString(), MAIL_CONFIRM);
 
-        String title = config.getTitle();
+        String title = template.getTitle();
         mailsEntity.setTitle(title);
-        String contents = config.getContents();
+        String contents = template.getContent();
         contents = contents.replace("{UserName}", loginedUser.getLoginUser().getUserName());
         contents = contents.replace("{URL}", makeURL("protect.Account/confirm_mail/", mailChangesEntity.getId()));
 
@@ -588,12 +615,7 @@ public class MailLogic {
     
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void initMailTemplate() {
-        String[] templateIds = {
-                "invitation", "mail_confirm", "notify_accept_user", "notify_add_user",
-                "notify_insert_comment_myitem", "notify_insert_comment", "notify_insert_knowledge",
-                "notify_insert_like_myitem", "notify_update_knowledge", "password_reset", "test_mail"
-        };
-        for (String templateId : templateIds) {
+        for (String templateId : TEMPLATE_IDS) {
             MailConfig enConfig = LocaleConfigLoader.load(MAIL_CONFIG_DIR, templateId, Locale.ENGLISH, MailConfig.class);
             MailConfig jaConfig = LocaleConfigLoader.load(MAIL_CONFIG_DIR, templateId, Locale.JAPANESE, MailConfig.class);
             

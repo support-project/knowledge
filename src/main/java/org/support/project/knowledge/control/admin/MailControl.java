@@ -20,8 +20,8 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
-import org.support.project.knowledge.config.MailConfig;
 import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.entity.MailLocaleTemplatesEntity;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
@@ -159,14 +159,14 @@ public class MailControl extends Control {
             addMsgWarn(getResource("knowledge.mail.error.to.address"));
             return config();
         }
-        MailConfig config = MailLogic.get().load("test_mail", getLoginedUser().getLocale());
+        MailLocaleTemplatesEntity template = MailLogic.get().load(MailLogic.TEST_MAIL, getLoginedUser().getLocale());
         MailsEntity entity = new MailsEntity();
         entity.setFromAddress(mailConfigsEntity.getFromAddress());
         entity.setFromName(mailConfigsEntity.getFromName());
-        entity.setTitle(getResource(config.getTitle()));
+        entity.setTitle(getResource(template.getTitle()));
         entity.setToAddress(toAddress);
         entity.setToName(toAddress);
-        entity.setContent(config.getContents());
+        entity.setContent(template.getContent());
 
         try {
             MailLogic.get().mailSend(mailConfigsEntity, entity);
