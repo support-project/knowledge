@@ -85,6 +85,9 @@
             <li><a href="<%=request.getContextPath()%>/admin.customservice/config" style="cursor: pointer;">
                 <i class="fa fa-magic"></i>&nbsp;<%=jspUtil.label("knowledge.custom.service.title")%>
             </a></li>
+            <li><a href="<%=request.getContextPath()%>/admin.mailtemplate/index" style="cursor: pointer;">
+                <i class="fa fa-envelope-square"></i>&nbsp;<%=jspUtil.label("knowledge.mailtemplate.title")%>
+            </a></li>
 
         </ul>
 

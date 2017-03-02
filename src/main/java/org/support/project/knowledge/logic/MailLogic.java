@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -46,7 +45,6 @@ import org.support.project.knowledge.entity.MailTemplatesEntity;
 import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.parser.ParserFactory;
 import org.support.project.knowledge.vo.ParseResult;
-import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.config.WebConfig;
 import org.support.project.web.dao.MailConfigsDao;
@@ -614,6 +612,51 @@ public class MailLogic {
             ja.setContent(jaConfig.getContents());
             MailLocaleTemplatesDao.get().save(ja);
         }
+    }
+
+    public List<MailTemplatesEntity> selectAll(Locale locale) {
+        List<MailTemplatesEntity> templates = MailTemplatesDao.get().selectAll();
+        for (MailTemplatesEntity template : templates) {
+            // いったんはDBの値を使わず、ロケールにあったリソースファイルのタイトル／説明を取得する
+            MailConfig config = LocaleConfigLoader.load(MAIL_CONFIG_DIR, template.getTemplateId(), locale, MailConfig.class);
+            template.setTemplateTitle(config.getTemplateTitle());
+            template.setDescription(config.getDescription().trim());
+            
+            MailLocaleTemplatesEntity en = MailLocaleTemplatesDao.get().selectOnKey(Locale.ENGLISH.toString(), template.getTemplateId());
+            MailLocaleTemplatesEntity ja = MailLocaleTemplatesDao.get().selectOnKey(Locale.JAPANESE.toString(), template.getTemplateId());
+            template.setEn(en);
+            template.setJa(ja);
+        }
+        return templates;
+    }
+
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void save(String templateId, String enTitle, String enContent, String jaTitle, String jaContent) {
+        MailLocaleTemplatesEntity en = new MailLocaleTemplatesEntity(Locale.ENGLISH.toString(), templateId);
+        en.setTitle(enTitle);
+        en.setContent(enContent);
+        MailLocaleTemplatesDao.get().save(en);
+        
+        MailLocaleTemplatesEntity ja = new MailLocaleTemplatesEntity(Locale.JAPANESE.toString(), templateId);
+        ja.setTitle(jaTitle);
+        ja.setContent(jaContent);
+        MailLocaleTemplatesDao.get().save(ja);
+    }
+
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void initialize(String templateId) {
+        MailConfig enConfig = LocaleConfigLoader.load(MAIL_CONFIG_DIR, templateId, Locale.ENGLISH, MailConfig.class);
+        MailConfig jaConfig = LocaleConfigLoader.load(MAIL_CONFIG_DIR, templateId, Locale.JAPANESE, MailConfig.class);
+        
+        MailLocaleTemplatesEntity en = new MailLocaleTemplatesEntity(Locale.ENGLISH.toString(), templateId);
+        en.setTitle(enConfig.getTitle());
+        en.setContent(enConfig.getContents());
+        MailLocaleTemplatesDao.get().save(en);
+        
+        MailLocaleTemplatesEntity ja = new MailLocaleTemplatesEntity(Locale.JAPANESE.toString(), templateId);
+        ja.setTitle(jaConfig.getTitle());
+        ja.setContent(jaConfig.getContents());
+        MailLocaleTemplatesDao.get().save(ja);
     }
 
 }
