@@ -11,6 +11,7 @@ import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.Migrate;
 import org.support.project.knowledge.entity.ServiceConfigsEntity;
 import org.support.project.knowledge.entity.ServiceLocaleConfigsEntity;
+import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.web.config.WebConfig;
 import org.support.project.web.dao.RolesDao;
@@ -75,6 +76,9 @@ public class InitializeSystem implements Migrate {
         ServiceLocaleConfigsEntity ja = new ServiceLocaleConfigsEntity("ja", AppConfig.get().getSystemName());
         ja.setPageHtml(FileUtil.read(getClass().getResourceAsStream("/org/support/project/knowledge/deploy/v1_8_0/top_info_ja.html")));
         ServiceLocaleConfigsDao.get().insert(ja);
+        
+        // メールのテンプレートを初期化
+        MailLogic.get().initMailTemplate();
     }
 
     private void createTables() {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>Information from [Knowledge]</title>
-	<contents xml:space="preserve">
+<title>Information from [Knowledge]</title>
+<contents xml:space="preserve">
 Dear {UserName} 
 
 We registered with the Knowledge, thank you.
@@ -15,9 +15,17 @@ Sorry to trouble you, but please access from the following link.
  Please understand that it can not reply to this email.
 
  If you do not register within 60 minutes, the registration will be invalid.
+</contents>
 
-	</contents>
-	
+<templateTitle>Double opt-in</templateTitle>
+<description>
+In the case where the user registration setting is "to register by the user himself and check whether mail arrives"
+Send double opt-in mail to the registered user's email address.
+
+[Reserved keywords]
+If you write the following keywords in the body, replace the value when sending mail.
+
+- {UserName}: Name of the registered user
+- {URL}: Access URL to Knowledge
+</description>
 </mail>
-
-

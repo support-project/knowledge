@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>Information from [Knowledge] on add user</title>
-	<contents xml:space="preserve">
+<title>Information from [Knowledge] on add user</title>
+<contents xml:space="preserve">
 There was a user of registration request.
 In the administrator of the page, please check.
 
@@ -9,8 +9,13 @@ In the administrator of the page, please check.
  This e-mail has been sent automatically from the system.
  Please understand that it can not reply to this email.
 
-	</contents>
-	
+</contents>
+
+<templateTitle>Register a user</templateTitle>
+<description>
+If the setting of user registration is set to "approve by administrator", 
+When there is a request for user registration, System notify the administrator of e-mail.
+</description>
 </mail>
 
 

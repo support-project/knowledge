@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>[Knowledge] 承認待ちのユーザ追加(通知)</title>
-	<contents xml:space="preserve">
+<title>[Knowledge] 承認待ちのユーザ追加(通知)</title>
+<contents xml:space="preserve">
 ユーザの登録リクエストがありました。
 管理者のページにて、確認をお願いします。
 
@@ -9,8 +9,13 @@
 ※本メールはシステムより自動で送信されています。
  このメールに対する返信は出来ませんので御了承ください。
 
-	</contents>
-	
+</contents>
+
+<templateTitle>承認待ちのユーザの登録</templateTitle>
+<description>
+ユーザ登録の設定が「管理者が承認する」になっている場合で、
+ユーザ登録のリクエストがあった場合に管理者にメール通知します。
+</description>
 </mail>
 
 

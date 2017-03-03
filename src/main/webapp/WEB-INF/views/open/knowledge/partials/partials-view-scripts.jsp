@@ -66,7 +66,7 @@ var _SET_SLIDE_LABEL= '<%= jspUtil.label("knowledge.edit.set.slide.path") %>';
 var _MSG_TOC_EMPTY = '<%= jspUtil.label("knowledge.view.msg.toc.empty") %>';
 var _MSG_COPIED = '<%= jspUtil.label("knowledge.view.msg.url.copy") %>';
 var _IMAGE_UPLOAD = '<%= jspUtil.label("knowledge.edit.image.upload") %>';
-
+var _MSG_CONFIRM_CANCEL = '<%= jspUtil.label("knowledge.view.msg.confirm.cancel") %>';
 var _LOGINED = <%= jspUtil.logined() %>;
 
 </script>

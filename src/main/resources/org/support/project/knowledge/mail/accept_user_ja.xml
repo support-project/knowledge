@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>情報共有のサービス[Knowledge]へのご招待</title>
-	<contents xml:space="preserve">
+<title>情報共有のサービス[Knowledge]へのご招待</title>
+<contents xml:space="preserve">
 {UserName} 様
 
 Knowledgeに登録いただき、ありがとうございます。
@@ -17,8 +17,16 @@ Knowledgeに登録いただき、ありがとうございます。
 ※本メールはシステムより自動で送信されています。
  このメールに対する返信は出来ませんので御了承ください。
 
-	</contents>
-	
+</contents>
+<templateTitle>ユーザ登録の通知</templateTitle>
+<description>
+ユーザ登録の設定が「管理者が承認する」になっている場合で、
+管理者が承認したさいに、承認されたユーザにメール通知を出します。
+
+[予約語]
+以下のキーワードを本文内に書いておくと、メールを送る際に値を置換します。
+
+- {UserName} : 登録したユーザの名称
+- {URL} : KnowledgeへのアクセスURL
+</description>
 </mail>
-
-
