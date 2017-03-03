@@ -21,6 +21,8 @@ public class TemplateMastersEntity extends GenTemplateMastersEntity {
 
     private List<TemplateItemsEntity> items = new ArrayList<TemplateItemsEntity>();
 
+    private boolean editable;
+    
     /**
      * インスタンス取得 AOPに対応
      * 
@@ -69,6 +71,20 @@ public class TemplateMastersEntity extends GenTemplateMastersEntity {
             return resources.getResource("knowledge.template.label.description");
         }
         return label;
+    }
+
+    /**
+     * @return the editable
+     */
+    public boolean isEditable() {
+        return editable;
+    }
+
+    /**
+     * @param editable the editable to set
+     */
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 
 }

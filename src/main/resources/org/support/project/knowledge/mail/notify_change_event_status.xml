@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail>
+<title>[Knowledge] Event status changed {KnowledgeId} - {KnowledgeTitle}</title>
+<contents xml:space="preserve">
+The status of the event you have registered for cancellation waiting has been updated.
+
+{URL}
+
+------------------------------------------
+#{KnowledgeId}: {KnowledgeTitle}
+
+Status: {Status}
+
+------------------------------------------
+ This e-mail has been sent automatically from the system.
+ Please understand that it can not reply to this email.
+</contents>
+
+<templateTitle>Event status changed</templateTitle>
+<description>
+system will send a notification when the user status changed.
+
+[Reserved keywords]
+If you write the following keywords in the body, replace the value when sending mail.
+
+- {URL} : Access URL to Knowledge
+- {KnowledgeId} : ID
+- {KnowledgeTitle} : Title
+- {Status} : Status
+</description>
+</mail>
+
+

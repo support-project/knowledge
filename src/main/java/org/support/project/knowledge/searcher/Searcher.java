@@ -12,9 +12,10 @@ public interface Searcher {
      * 検索
      * 
      * @param value
+     * @param keywordSortType
      * @return
      * @throws Exception
      */
-    List<SearchResultValue> search(SearchingValue value) throws Exception;
+    List<SearchResultValue> search(SearchingValue value, int keywordSortType) throws Exception;
 
 }

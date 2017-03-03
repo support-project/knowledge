@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>[Knowledge] 新しいメールアドレスの確認</title>
-	<contents xml:space="preserve">
-
+<title>[Knowledge] 新しいメールアドレスの確認</title>
+<contents xml:space="preserve">
 {UserName} 様
 
 メールアドレスの変更確認のメールです。
@@ -14,9 +13,18 @@
 ------------------------------------------
 ※本メールはシステムより自動で送信されています。
  このメールに対する返信は出来ませんので御了承ください。
+</contents>
 
-	</contents>
-	
+<templateTitle>メールアドレス変更確認</templateTitle>
+<description>
+ユーザがメールアドレスの変更をリクエストしたさいに、新しいメールアドレスにメールが届くかチェックします。
+
+[予約語]
+以下のキーワードを本文内に書いておくと、メールを送る際に値を置換します。
+
+- {UserName} : 登録したユーザの名称
+- {URL} : KnowledgeへのアクセスURL
+</description>
 </mail>
 
 

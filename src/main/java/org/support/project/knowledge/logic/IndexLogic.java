@@ -48,9 +48,9 @@ public class IndexLogic {
      * @return
      * @throws Exception
      */
-    public List<SearchResultValue> search(SearchingValue search) throws Exception {
+    public List<SearchResultValue> search(SearchingValue search, int keywordSortType) throws Exception {
         Searcher searcher = Container.getComp(Searcher.class);
-        List<SearchResultValue> list = searcher.search(search);
+        List<SearchResultValue> list = searcher.search(search, keywordSortType);
         if (LOG.isDebugEnabled()) {
             LOG.debug(JSON.encode(list, true));
         }

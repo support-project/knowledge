@@ -58,13 +58,15 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.entity.ViewHistoriesEntity;
 import org.support.project.knowledge.indexer.IndexingValue;
+import org.support.project.knowledge.logic.hook.AfterSaveHook;
+import org.support.project.knowledge.logic.hook.BeforeSaveHook;
+import org.support.project.knowledge.logic.hook.HookFactory;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
-import org.support.project.web.common.HttpStatus;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.exception.AuthenticateException;
 
@@ -85,11 +87,6 @@ public class KnowledgeLogic {
     public static final int PUBLIC_FLAG_PRIVATE = 1;
     /** Open range: PROTECT */
     public static final int PUBLIC_FLAG_PROTECT = 2;
-
-    /** Template type: Knowledge */
-    public static final int TEMPLATE_TYPE_KNOWLEDGE = -100;
-    /** Template type: Bookmark */
-    public static final int TEMPLATE_TYPE_BOOKMARK = -99;
 
     /** Index type: Bookmark */
     public static final int TYPE_KNOWLEDGE = IndexType.knowledge.getValue();
@@ -116,6 +113,24 @@ public class KnowledgeLogic {
     private KnowledgeTagsDao knowledgeTagsDao = KnowledgeTagsDao.get();
     /** UploadedFileLogic */
     private UploadedFileLogic fileLogic = UploadedFileLogic.get();
+
+    /** キーワード検索時のソート順 : スコア順 */
+    public static final int KEYWORD_SORT_TYPE_SCORE = 1;
+
+    /** キーワード検索時のソート順 : 日付順 */
+    public static final int KEYWORD_SORT_TYPE_TIME = 2;
+
+    /** キーワード検索時のソート順 */
+    private int keywordSortType = KEYWORD_SORT_TYPE_SCORE;
+
+    /**
+     * キーワード検索時のソート順をセットする
+     *
+     * @param keywordSortType
+     */
+    public void setKeywordSortType(int keywordSortType) {
+        this.keywordSortType = keywordSortType;
+    }
 
     /**
      * タグの文字列（カンマ区切り）から、登録済のタグであれば、それを取得し、 存在しないものであれば、新たにタグを生成してタグの情報を取得
@@ -168,6 +183,10 @@ public class KnowledgeLogic {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgesEntity insert(KnowledgeData data, LoginedUser loginedUser) throws Exception {
+        List<BeforeSaveHook> beforeSaveHooks = HookFactory.getBeforeSaveHookInstance(data, null);
+        for (BeforeSaveHook beforeSaveHook : beforeSaveHooks) {
+            beforeSaveHook.beforeSave(data, null, loginedUser);
+        }
         // ナレッジを登録
         KnowledgesEntity insertedEntity = knowledgesDao.insert(data.getKnowledge());
         // アクセス権を登録
@@ -193,6 +212,10 @@ public class KnowledgeLogic {
         // 下書きがあったら消す
         removeDraft(data.getDraftId(), loginedUser);
 
+        List<AfterSaveHook> afterSaveHooks = HookFactory.getAfterSaveHookInstance(data);
+        for (AfterSaveHook afterSaveHook : afterSaveHooks) {
+            afterSaveHook.afterSave(data, loginedUser);
+        }
         return insertedEntity;
     }
 
@@ -208,6 +231,11 @@ public class KnowledgeLogic {
     public KnowledgesEntity update(KnowledgeData data, LoginedUser loginedUser) throws Exception {
         // 更新前の情報を保持
         KnowledgesEntity db = knowledgesDao.selectOnKey(data.getKnowledge().getKnowledgeId());
+        List<BeforeSaveHook> beforeSaveHooks = HookFactory.getBeforeSaveHookInstance(data, db);
+        for (BeforeSaveHook beforeSaveHook : beforeSaveHooks) {
+            beforeSaveHook.beforeSave(data, db, loginedUser);
+        }
+
         // ナレッッジを更新
         data.getKnowledge().setNotifyStatus(db.getNotifyStatus()); // 通知フラグはDBの値を引き継ぐ
         KnowledgesEntity updatedEntity = knowledgesDao.update(data.getKnowledge());
@@ -257,6 +285,10 @@ public class KnowledgeLogic {
         // 下書きがあったら消す
         removeDraft(data.getDraftId(), loginedUser);
         
+        List<AfterSaveHook> afterSaveHooks = HookFactory.getAfterSaveHookInstance(data);
+        for (AfterSaveHook afterSaveHook : afterSaveHooks) {
+            afterSaveHook.afterSave(data, loginedUser);
+        }
         return updatedEntity;
     }
 
@@ -409,6 +441,7 @@ public class KnowledgeLogic {
             throws Exception {
         IndexingValue indexingValue = new IndexingValue();
         indexingValue.setType(TYPE_KNOWLEDGE);
+        indexingValue.setTemplate(entity.getTypeId());
         indexingValue.setId(String.valueOf(entity.getKnowledgeId()));
         indexingValue.setTitle(entity.getTitle());
 
@@ -462,7 +495,7 @@ public class KnowledgeLogic {
             LOG.debug("search params：" + PropertyUtil.reflectionToString(searchingValue));
         }
         LOG.trace("検索開始");
-        List<SearchResultValue> list = IndexLogic.get().search(searchingValue);
+        List<SearchResultValue> list = IndexLogic.get().search(searchingValue, this.keywordSortType);
         LOG.trace("検索終了");
         LOG.trace("付加情報をセット開始");
         List<KnowledgesEntity> result = getKnowledgeDatas(list);
@@ -482,7 +515,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, LoginedUser loginedUser,
+    public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, String template, LoginedUser loginedUser,
             Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setKeyword(keyword);
@@ -495,7 +528,10 @@ public class KnowledgeLogic {
                 searchingValue.addTag(tagsEntity.getTagId());
             }
         }
-
+        // テンプレート指定もユーザに関係なく条件追加
+        if (StringUtils.isNotEmpty(template) && StringUtils.isInteger(template)) {
+            searchingValue.setTemplate(new Integer(template));
+        }
         // ログインしてない場合はグループ検索ができないので公開記事のみを対象にして検索する
         if (loginedUser == null) {
             searchingValue.addUser(ALL_USER);
@@ -537,7 +573,7 @@ public class KnowledgeLogic {
      * @throws Exception
      */
     public List<KnowledgesEntity> searchKnowledge(String keyword, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
-        return searchKnowledge(keyword, null, null, loginedUser, offset, limit);
+        return searchKnowledge(keyword, null, null, null, loginedUser, offset, limit);
     }
 
     /**
@@ -1197,6 +1233,7 @@ public class KnowledgeLogic {
 
         IndexingValue indexingValue = new IndexingValue();
         indexingValue.setType(TYPE_COMMENT);
+        indexingValue.setTemplate(entity.getTypeId());
         indexingValue.setId(COMMENT_ID_PREFIX + String.valueOf(commentsEntity.getCommentNo()));
         indexingValue.setTitle("");
         indexingValue.setContents(commentsEntity.getComment());

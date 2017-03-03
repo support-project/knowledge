@@ -25,7 +25,6 @@ import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateItemsDao;
-import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
@@ -36,6 +35,7 @@ import org.support.project.knowledge.logic.IndexLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.SlideLogic;
 import org.support.project.knowledge.logic.TargetLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.parser.ParserFactory;
 import org.support.project.knowledge.vo.ParseResult;
@@ -89,7 +89,7 @@ public class FileParseBat extends AbstractBat {
      */
     private void crawl() throws Exception {
         KnowledgeItemValuesDao itemValuesDao = KnowledgeItemValuesDao.get();
-        List<KnowledgeItemValuesEntity> itemValues = itemValuesDao.selectOnTypeIdAndItemNoAndStatus(TemplateMastersDao.TYPE_ID_BOOKMARK,
+        List<KnowledgeItemValuesEntity> itemValues = itemValuesDao.selectOnTypeIdAndItemNoAndStatus(TemplateLogic.TYPE_ID_BOOKMARK,
                 TemplateItemsDao.ITEM_ID_BOOKMARK_URL, KnowledgeItemValuesEntity.STATUS_SAVED);
         if (itemValues != null && !itemValues.isEmpty()) {
             ProxyConfigsEntity proxyConfigs = ProxyConfigsDao.get().selectOnKey(AppConfig.get().getSystemName());
@@ -126,9 +126,9 @@ public class FileParseBat extends AbstractBat {
                     IndexingValue value = new IndexingValue();
                     value.setType(IndexType.bookmarkContent.getValue());
                     value.setId(WEB_ID_PREFIX + itemValue.getKnowledgeId());
+                    value.setTemplate(knowledgesEntity.getTypeId());
                     value.setTitle(itemValue.getItemValue());
                     value.setContents(content);
-
                     value.addUser(knowledgesEntity.getInsertUser());
                     if (knowledgesEntity.getPublicFlag() == null || KnowledgeLogic.PUBLIC_FLAG_PUBLIC == knowledgesEntity.getPublicFlag()) {
                         value.addUser(KnowledgeLogic.ALL_USER);
@@ -263,6 +263,7 @@ public class FileParseBat extends AbstractBat {
                 IndexingValue value = new IndexingValue();
                 value.setType(TYPE_FILE);
                 value.setId(ID_PREFIX + entity.getFileNo());
+                value.setTemplate(knowledgesEntity.getTypeId());
                 value.setTitle(entity.getFileName());
                 value.setContents(result.getText());
                 value.addUser(entity.getInsertUser());

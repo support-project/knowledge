@@ -20,12 +20,15 @@
         </li>
         <li>
             <a class="" href="<%= request.getContextPath() %>/open.language" style="cursor: pointer;">
+            <%-- 
             <% if (jspUtil.locale().getLanguage().equals("ja")) { %>
-                <i class="flag-icon flag-icon-jp"></i>
+                <i class="flag-icon flag-icon-jp"></i>&nbsp;
             <% } else { %>
-                <i class="flag-icon flag-icon-us"></i>
+                <i class="flag-icon flag-icon-us"></i>&nbsp;
             <% } %>
-            &nbsp;<%= jspUtil.locale().getDisplayName(jspUtil.locale()) %>
+            --%>
+            <i class="fa fa-language"></i>&nbsp;
+            <%= jspUtil.locale().getDisplayName(jspUtil.locale()) %>
             </a>
         </li>
     </ul>

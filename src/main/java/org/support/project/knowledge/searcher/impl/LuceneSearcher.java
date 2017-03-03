@@ -41,6 +41,7 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.indexer.impl.LuceneIndexer;
+import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.Searcher;
 import org.support.project.knowledge.searcher.SearchingValue;
@@ -79,6 +80,8 @@ public class LuceneSearcher implements Searcher {
     public static final String FIELD_LABEL_CREATE_USER = LuceneIndexer.FIELD_LABEL_CREATE_USER;
     /** ラベル：日時 */
     public static final String FIELD_LABEL_TIME = LuceneIndexer.FIELD_LABEL_TIME;
+    /** ラベル：テンプレート */
+    public static final String FIELD_LABEL_TEMPLATE = LuceneIndexer.FIELD_LABEL_TEMPLATE;
 
     /** 検索キーワードを抽出するアナライザー N-gramではなく形態素解析を利用 */
     // private Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_4_10_2);
@@ -99,7 +102,7 @@ public class LuceneSearcher implements Searcher {
      * 検索
      * @throws InvalidParamException 
      */
-    public List<SearchResultValue> search(final SearchingValue value) throws IOException, InvalidTokenOffsetsException, InvalidParamException {
+    public List<SearchResultValue> search(final SearchingValue value, int keywordSortType) throws IOException, InvalidTokenOffsetsException, InvalidParamException {
         List<SearchResultValue> resultValues = new ArrayList<>();
 
         File indexDir = new File(getIndexPath());
@@ -133,7 +136,16 @@ public class LuceneSearcher implements Searcher {
 
         TopDocsCollector<? extends ScoreDoc> collector;
         if (StringUtils.isNotEmpty(value.getKeyword())) {
-            collector = TopScoreDocCollector.create(value.getOffset() + value.getLimit(), true);
+            switch (keywordSortType) {
+            case KnowledgeLogic.KEYWORD_SORT_TYPE_TIME:
+                Sort sort = new Sort(new SortField(FIELD_LABEL_TIME, SortField.Type.LONG, true));
+                collector = TopFieldCollector.create(sort, value.getOffset() + value.getLimit(), true, false, false, false);
+                break;
+            case KnowledgeLogic.KEYWORD_SORT_TYPE_SCORE:
+            default:
+                collector = TopScoreDocCollector.create(value.getOffset() + value.getLimit(), true);
+                break;
+            }
         } else {
             // Sort sort = new Sort(new SortField(FIELD_LABEL_ID, SortField.Type.INT, true));
             // Sort sort = Sort.INDEXORDER;
@@ -267,6 +279,11 @@ public class LuceneSearcher implements Searcher {
             Query query = queryParser.parse(value.getCreator());
             container.add(query, BooleanClause.Occur.MUST);
         }
+        if (value.getTemplate() != null) {
+            Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TEMPLATE, 1, value.getTemplate(), value.getTemplate(), true, true);
+            container.add(query, BooleanClause.Occur.MUST);
+        }
+        
         return container;
     }
 
@@ -291,5 +308,4 @@ public class LuceneSearcher implements Searcher {
         highlighter.setMaxDocCharsToAnalyze(Integer.MAX_VALUE);
         return highlighter.getBestFragment(analyzer, fieldName, fieldValue);
     }
-
 }

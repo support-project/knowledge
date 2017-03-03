@@ -22,6 +22,7 @@
         </language>
     </languages>
     <addUserProcess>org.support.project.knowledge.logic.AddUserProcessLogic</addUserProcess>
+    <afterLangSelectPage>/open.knowledge/list</afterLangSelectPage>
 </app>
 
 

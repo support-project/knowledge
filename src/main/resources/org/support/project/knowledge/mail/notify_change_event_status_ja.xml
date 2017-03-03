@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail>
+<title>[Knowledge] イベントへの参加通知 {KnowledgeId} - {KnowledgeTitle}</title>
+<contents xml:space="preserve">
+キャンセル待ちの以下のイベントでキャンセルが出ました。
+
+{URL}
+
+------------------------------------------
+#{KnowledgeId}: {KnowledgeTitle}
+
+Status: {Status}
+
+------------------------------------------
+※本メールはシステムより自動で送信されています。
+ このメールに対する返信は出来ませんので御了承ください。
+</contents>
+
+<templateTitle>イベントへの参加通知</templateTitle>
+<description>
+キャンセル待ちのユーザが、参加受付済状態に変更になった場合に通知します。
+
+[予約語]
+以下のキーワードを本文内に書いておくと、メールを送る際に値を置換します。
+
+- {URL} : 記事へのアクセスURL
+- {KnowledgeId} : 記事のID
+- {KnowledgeTitle} : 記事のタイトル
+- {Status} : 参加ステータス（参加登録済／キャンセル待ち）
+</description>
+</mail>
+
+

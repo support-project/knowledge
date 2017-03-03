@@ -6,22 +6,18 @@ $(document).ready(function() {
             return code;
         }
     });
-    $('.content').each(function(i) {
-        // var text = $(this).text();
-        // $(this).html(marked(text));
-    });
-    
-    /*
-    $('.thumbnail').hover(function() {
-        $(this).find('.discription').slideDown(250); // .fadeIn(250)
-    }, function() {
-        $(this).find('.discription').slideUp(250); // .fadeOut(205)
-    });
-    */
-
     $('#input_tags').on('beforeItemRemove', function(event) {
         event.cancel = true;
     });
+
+    $('.dropdown-keyword-sort').click(function () {
+        var $this = $(this);
+        var $currentKeywordSort = $('#current-keyword-sort');
+        $currentKeywordSort.text($this.text());
+        setCookie($currentKeywordSort.data('key'), $this.data('value'));
+        location.reload();
+    });
+
     echo.init();
 });
 

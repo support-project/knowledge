@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>[Knowledge] 評価の通知 {KnowledgeId} - {KnowledgeTitle}</title>
-	<contents xml:space="preserve">
-
+<title>[Knowledge] 評価の通知 {KnowledgeId} - {KnowledgeTitle}</title>
+<contents xml:space="preserve">
 以下のナレッジに「いいね！」が押されました！
 
 {URL}
@@ -16,8 +15,21 @@
 ※本メールはシステムより自動で送信されています。
  このメールに対する返信は出来ませんので御了承ください。
 
-	</contents>
-	
+</contents>
+
+<templateTitle>評価の通知</templateTitle>
+<description>
+自分の投稿に「いいね！」が押された際に、通知を出します。
+
+[予約語]
+以下のキーワードを本文内に書いておくと、メールを送る際に値を置換します。
+
+- {URL} : 記事へのアクセスURL
+- {KnowledgeId} : 記事のID
+- {KnowledgeTitle} : 記事のタイトル
+- {Contents} : 記事の本文
+
+</description>
 </mail>
 
 
