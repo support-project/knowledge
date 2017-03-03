@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail>
+<title>[Knowledge] 参加者の通知 {KnowledgeId} - {KnowledgeTitle}</title>
+<contents xml:space="preserve">
+あなたが登録したイベントに「参加者」が登録されました
+
+{URL}
+
+------------------------------------------
+#{KnowledgeId}: {KnowledgeTitle}
+{Participant}
+
+------------------------------------------
+※本メールはシステムより自動で送信されています。
+ このメールに対する返信は出来ませんので御了承ください。
+</contents>
+
+<templateTitle>参加者登録</templateTitle>
+<description>
+参加者が登録された場合に、開催者（＝登録者）に通知をだします。
+
+[予約語]
+以下のキーワードを本文内に書いておくと、メールを送る際に値を置換します。
+
+- {URL} : 記事へのアクセスURL
+- {Participant} : 参加者
+- {KnowledgeId} : 記事のID
+- {KnowledgeTitle} : 記事のタイトル
+</description>
+</mail>
+
+

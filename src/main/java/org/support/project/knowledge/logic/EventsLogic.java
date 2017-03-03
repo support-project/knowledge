@@ -39,8 +39,8 @@ public class EventsLogic {
     public static final int ITEM_NO_TIMEZONE = 3;
     public static final int ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED = 4;
     
-    public static final int STSTUS_PARTICIPATION = 1;
-    public static final int STSTUS_WAIT_CANSEL = 0;
+    public static final int STSTUS_PARTICIPATION = 2;
+    public static final int STSTUS_WAIT_CANSEL = 1;
     
     
     public static EventsLogic get() {
@@ -150,6 +150,13 @@ public class EventsLogic {
             participant.setStatus(STSTUS_WAIT_CANSEL);
         }
         ParticipantsDao.get().insert(participant);
+        
+        // 開催者（＝登録者）へメール通知
+        MailLogic.get().notifyAddParticipateForSponsor(knowledgeId, userId, participant.getStatus());
+        
+        // 参加者へメール通知
+        MailLogic.get().notifyAddParticipateForParticipant(knowledgeId, userId, participant.getStatus());
+        
         return participant.getStatus().intValue() == STSTUS_PARTICIPATION;
     }
     
@@ -167,6 +174,9 @@ public class EventsLogic {
         }
         ParticipantsDao.get().physicalDelete(participant); // 物理的に削除
         
+        // 開催者（＝登録者）へメール通知
+        MailLogic.get().notifyRemoveParticipateForSponsor(knowledgeId, userId);
+
         if (participant.getStatus().intValue() == STSTUS_PARTICIPATION) {
             List<Participation> participants = ParticipantsDao.get().selectParticipations(knowledgeId);
             for (int i = 0; i < participants.size(); i++) {
@@ -175,6 +185,10 @@ public class EventsLogic {
                     ParticipantsEntity entity = new ParticipantsEntity(knowledgeId, p.getUserId());
                     entity.setStatus(STSTUS_PARTICIPATION);
                     ParticipantsDao.get().update(entity);
+                    
+                    // キャンセル待ちが参加登録済になった参加者へメール通知
+                    MailLogic.get().notifyChangeParticipateStatusForParticipant(knowledgeId, p.getUserId());
+                    
                     break; // キャンセル待ちの１件を本登録に変更
                 }
             }

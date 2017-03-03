@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail>
+<title>[Knowledge] Add Participant {KnowledgeId} - {KnowledgeTitle}</title>
+<contents xml:space="preserve">
+Add a participant for your event.
+
+{URL}
+
+------------------------------------------
+#{KnowledgeId}: {KnowledgeTitle}
+{Participant}
+
+------------------------------------------
+ This e-mail has been sent automatically from the system.
+ Please understand that it can not reply to this email.
+</contents>
+
+<templateTitle>Add Participant</templateTitle>
+<description>
+Service send a notice on add a participant for event.
+
+[Reserved keywords]
+If you write the following keywords in the body, replace the value when sending mail.
+
+- {URL} : Access URL to Knowledge
+- {Participant} : Participant
+- {KnowledgeId} : ID
+- {KnowledgeTitle} : Title
+</description>
+</mail>
+
+

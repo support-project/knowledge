@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail>
+<title>[Knowledge] Registration to event {KnowledgeId} - {KnowledgeTitle}</title>
+<contents xml:space="preserve">
+You registered below event.
+
+{URL}
+
+------------------------------------------
+#{KnowledgeId}: {KnowledgeTitle}
+
+Status: {Status}
+
+------------------------------------------
+ This e-mail has been sent automatically from the system.
+ Please understand that it can not reply to this email.
+</contents>
+
+<templateTitle>Registration to event</templateTitle>
+<description>
+System will notify the user who registered for participation.
+
+[Reserved keywords]
+If you write the following keywords in the body, replace the value when sending mail.
+
+- {URL} : Access URL to Knowledge
+- {KnowledgeId} : ID
+- {KnowledgeTitle} : Title
+- {Status} : Status
+</description>
+</mail>
+
+

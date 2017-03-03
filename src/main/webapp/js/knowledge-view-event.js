@@ -10,7 +10,7 @@ $(document).ready(function() {
         }).done(function(result, textStatus, xhr) {
             console.log(result);
             participations = result.participations;
-            if (result.status) {
+            if (result.status > 0) {
                 $('#btnNonparticipation').removeClass('hide');
                 $('#btnParticipation').addClass('hide');
             } else {
@@ -41,9 +41,9 @@ $(document).ready(function() {
                 var p = participations[i];
                 list += '<li class="list-group-item">';
                 if (p.status === 1) {
-                    list += '<span class="badge">' + _LABEL_STATUS_PARTICIPANT + '</span>';
-                } else {
                     list += '<span class="badge">' + _LABEL_STATUS_WAIT_CANCEL + '</span>';
+                } else {
+                    list += '<span class="badge">' + _LABEL_STATUS_PARTICIPANT + '</span>';
                 }
                 list += p.userName;
                 list += '</li>';
@@ -83,16 +83,20 @@ $(document).ready(function() {
         });
     });
     $('#btnNonparticipation').click(function() {
-        $.ajax({
-            url: _CONTEXT + '/protect.event/nonparticipation/' + $('#knowledgeId').val(),
-            type: 'DELETE',
-            timeout: 10000,
-        }).done(function(result, textStatus, xhr) {
-            isParticipation();
-            $.notify(result.msg, 'success');
-        }).fail(function(xhr, textStatus, error) {
-            handleErrorResponse(xhr, textStatus, error);
-        }).always(function( jqXHR, textStatus ) {
+        bootbox.confirm(_MSG_CONFIRM_CANCEL, function(result) {
+            if (result) {
+                $.ajax({
+                    url: _CONTEXT + '/protect.event/nonparticipation/' + $('#knowledgeId').val(),
+                    type: 'DELETE',
+                    timeout: 10000,
+                }).done(function(result, textStatus, xhr) {
+                    isParticipation();
+                    $.notify(result.msg, 'success');
+                }).fail(function(xhr, textStatus, error) {
+                    handleErrorResponse(xhr, textStatus, error);
+                }).always(function( jqXHR, textStatus ) {
+                });
+            }
         });
     });
     
