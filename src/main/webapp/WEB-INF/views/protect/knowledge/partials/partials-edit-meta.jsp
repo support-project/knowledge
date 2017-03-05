@@ -25,7 +25,7 @@
                 <c:forEach var="template" items="${templates}" >
                     <label class="radio-inline">
                         <% 
-                        int type = TemplateLogic.TYPE_ID_KNOWLEDGE;
+                        int type = jspUtil.getValue("typeId", Integer.class);
                         if (pageContext.getAttribute("typeId") != null) {
                             type = (int) pageContext.getAttribute("typeId");
                         }
