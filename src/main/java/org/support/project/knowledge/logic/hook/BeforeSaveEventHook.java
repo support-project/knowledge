@@ -1,8 +1,8 @@
 package org.support.project.knowledge.logic.hook;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -14,6 +14,7 @@ import org.support.project.knowledge.entity.EventsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.logic.EventsLogic;
+import org.support.project.knowledge.logic.MailEventLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.TimeZoneLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
@@ -31,7 +32,7 @@ public class BeforeSaveEventHook implements BeforeSaveHook {
     public static final int ITEM_NO_TIMEZONE = EventsLogic.ITEM_NO_TIMEZONE;
     public static final int ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED = EventsLogic.ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED;
     
-    public Date parseDate(KnowledgeData knowledgeData, LoginedUser loginedUser) throws InvalidParamException {
+    public EventsEntity parseDate(KnowledgeData knowledgeData, LoginedUser loginedUser) throws InvalidParamException {
         EventsEntity event = new EventsEntity();
         event.setKnowledgeId(knowledgeData.getKnowledge().getKnowledgeId());
         List<TemplateItemsEntity> items = knowledgeData.getTemplate().getItems();
@@ -90,7 +91,12 @@ public class BeforeSaveEventHook implements BeforeSaveHook {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         try {
             sdf.setTimeZone(TimeZone.getTimeZone(timezone));
-            return sdf.parse(date + " " + start);
+            
+            event.setStartDateTime(new Timestamp(sdf.parse(date + " " + start).getTime()));
+            event.setTimeZone(timezone);
+            event.setNotifyStatus(MailEventLogic.NOTIFY_STATUS_NOT_SEND);
+
+            return event;
         } catch (ParseException e) {
             throw new InvalidParamException(
                     new MessageResult(MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST,

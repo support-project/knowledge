@@ -77,7 +77,7 @@
                      <i class="fa fa-users"></i>&nbsp;<%= stock.getParticipations().getCount() %> /  <%= stock.getParticipations().getLimit() %>
                      <% if (stock.getParticipations().getStatus() != null) { %>
                      <span class="badge">
-                         <% if (stock.getParticipations().getStatus() == EventsLogic.STSTUS_PARTICIPATION) { %>
+                         <% if (stock.getParticipations().getStatus() == EventsLogic.STATUS_PARTICIPATION) { %>
                             <%= jspUtil.label("knowledge.view.label.status.participation") %>
                          <% } else { %>
                             <%= jspUtil.label("knowledge.view.label.status.wait.cansel") %>

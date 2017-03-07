@@ -1,8 +1,5 @@
 package org.support.project.knowledge.logic.hook;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -19,12 +16,7 @@ public class AfterSaveEventHook implements AfterSaveHook {
     public void afterSave(KnowledgeData knowledgeData, LoginedUser loginedUser) throws Exception {
         if (TemplateLogic.TYPE_ID_EVENT == knowledgeData.getKnowledge().getTypeId()) {
             BeforeSaveEventHook beforehook = Container.getComp(BeforeSaveEventHook.class);
-            Date date = beforehook.parseDate(knowledgeData, loginedUser);
-            
-            EventsEntity event = new EventsEntity();
-            event.setKnowledgeId(knowledgeData.getKnowledge().getKnowledgeId());
-            event.setStartDateTime(new Timestamp(date.getTime()));
-            
+            EventsEntity event = beforehook.parseDate(knowledgeData, loginedUser);
             EventsDao.get().save(event);
         }
     }

@@ -53,6 +53,10 @@ public class GenEventsEntity implements Serializable {
     private Long knowledgeId;
     /** 開催日     UTC */
     private Timestamp startDateTime;
+    /** タイムゾーン */
+    private String timeZone;
+    /** 通知ステータス */
+    private Integer notifyStatus;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -93,6 +97,38 @@ public class GenEventsEntity implements Serializable {
      * @return this object     */
     public GenEventsEntity setStartDateTime(Timestamp startDateTime) {
         this.startDateTime = startDateTime;
+        return this;
+    }
+
+    /**
+     * Get タイムゾーン.
+     * @return タイムゾーン
+     */
+    public String getTimeZone() {
+        return this.timeZone;
+    }
+    /**
+     * Set タイムゾーン.
+     * @param timeZone タイムゾーン
+     * @return this object     */
+    public GenEventsEntity setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+        return this;
+    }
+
+    /**
+     * Get 通知ステータス.
+     * @return 通知ステータス
+     */
+    public Integer getNotifyStatus() {
+        return this.notifyStatus;
+    }
+    /**
+     * Set 通知ステータス.
+     * @param notifyStatus 通知ステータス
+     * @return this object     */
+    public GenEventsEntity setNotifyStatus(Integer notifyStatus) {
+        this.notifyStatus = notifyStatus;
         return this;
     }
 
@@ -226,6 +262,8 @@ public class GenEventsEntity implements Serializable {
         StringBuilder builder = new StringBuilder();
         builder.append("knowledgeId = ").append(knowledgeId).append("\n");
         builder.append("startDateTime = ").append(startDateTime).append("\n");
+        builder.append("timeZone = ").append(timeZone).append("\n");
+        builder.append("notifyStatus = ").append(notifyStatus).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -256,6 +294,16 @@ public class GenEventsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
         error = validator.validate(this.startDateTime, convLabelName("Start Date Time"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.timeZone, convLabelName("Time Zone"), 64);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(this.notifyStatus, convLabelName("Notify Status"));
         if (error != null) {
             errors.add(error);
         }
@@ -292,6 +340,16 @@ public class GenEventsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
         error = validator.validate(values.get("startDateTime"), convLabelName("Start Date Time"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("timeZone"), convLabelName("Time Zone"), 64);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(values.get("notifyStatus"), convLabelName("Notify Status"));
         if (error != null) {
             errors.add(error);
         }

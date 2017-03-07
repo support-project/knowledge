@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail>
+<title>[Knowledge] Event notification {Date} {Start} #{KnowledgeId}: {KnowledgeTitle}</title>
+<contents xml:space="preserve">
+Dear {UserName}
+
+The following event of your {Status} will be held in {Timing}.
+For details of the event, please check the following URL.
+
+{URL}
+
+------------------------------------------
+#{KnowledgeId}: {KnowledgeTitle}
+
+DateTime: {Date} {Start} - {End}
+Place: {Place}
+Status: {Status}
+
+------------------------------------------
+ This e-mail has been sent automatically from the system.
+ Please understand that it can not reply to this email.
+</contents>
+
+<templateTitle>Event notification</templateTitle>
+<description>
+Send event notice to participants / users who stock events.
+The timing to transmit is as follows.
+- Sunday: Notice when it is held on that week (Sunday to Saturday)
+- Day of the meeting date: Notice when holding on that day
+- 30 minutes before the start time: Notify when 30 minutes have passed before the start time
+
+[Reserved keywords]
+If you write the following keywords in the body, replace the value when sending mail.
+
+- {URL} : URL of Target data
+- {KnowledgeId} : ID
+- {KnowledgeTitle} : Title
+- {UserName} : UserName
+- {Status} : Status（Participant/Wait Cancel/Stocked）
+- {Timing} : Timing（this week／today/soon）
+- {Date} : Date
+- {Start} : Start time
+- {End} : End time
+- {Place}: Place
+</description>
+</mail>
+
+

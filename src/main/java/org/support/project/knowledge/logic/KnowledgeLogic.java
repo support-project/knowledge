@@ -189,6 +189,7 @@ public class KnowledgeLogic {
         }
         // ナレッジを登録
         KnowledgesEntity insertedEntity = knowledgesDao.insert(data.getKnowledge());
+        data.getKnowledge().setKnowledgeId(insertedEntity.getKnowledgeId());
         // アクセス権を登録
         saveAccessUser(insertedEntity, loginedUser, data.getViewers());
         // 編集権を登録
