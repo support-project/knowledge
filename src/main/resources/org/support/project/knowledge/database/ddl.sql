@@ -114,6 +114,8 @@ drop table if exists EVENTS cascade;
 create table EVENTS (
   KNOWLEDGE_ID bigint not null
   , START_DATE_TIME timestamp not null
+  , TIME_ZONE character varying(64)
+  , NOTIFY_STATUS integer
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -776,6 +778,8 @@ comment on column SURVEYS.DELETE_FLAG is '削除フラグ';
 comment on table EVENTS is 'イベント';
 comment on column EVENTS.KNOWLEDGE_ID is 'ナレッジID';
 comment on column EVENTS.START_DATE_TIME is '開催日     UTC';
+comment on column EVENTS.TIME_ZONE is 'タイムゾーン';
+comment on column EVENTS.NOTIFY_STATUS is '通知ステータス';
 comment on column EVENTS.INSERT_USER is '登録ユーザ';
 comment on column EVENTS.INSERT_DATETIME is '登録日時';
 comment on column EVENTS.UPDATE_USER is '更新ユーザ';
