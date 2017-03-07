@@ -118,7 +118,9 @@ public class MailEventLogic extends MailLogic {
             // 既に通知済
             return;
         }
-        LOG.info("差: " + (event.getStartDateTime().getTime() - now.getTimeInMillis()));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("差: " + (event.getStartDateTime().getTime() - now.getTimeInMillis()));
+        }
         // 30分を切った？
         if (event.getStartDateTime().getTime() - now.getTimeInMillis() > (1000 * 60 * 30)) {
             return;
