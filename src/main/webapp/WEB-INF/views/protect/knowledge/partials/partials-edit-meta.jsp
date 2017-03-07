@@ -32,7 +32,6 @@
                         TemplateMastersEntity template = (TemplateMastersEntity) pageContext.getAttribute("template");
                         String id = "typeId_" + template.getTypeId();
                         
-                        System.out.println(template.toString());
                         StringBuilder builder = new StringBuilder();
                         builder.append("<input type=\"radio\" value=\"").append(template.getTypeId()).append("\" name=\"typeId\" ");
                         builder.append("id=\"").append(id).append("\"");
