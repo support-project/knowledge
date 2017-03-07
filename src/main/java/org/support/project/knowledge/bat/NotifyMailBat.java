@@ -8,6 +8,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
+import org.support.project.knowledge.logic.MailEventLogic;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.vo.Notify;
 
@@ -62,8 +63,11 @@ public class NotifyMailBat extends AbstractBat {
             notifyQueuesDao.physicalDelete(notifyQueuesEntity); // とっておいてもしょうがないので物理削除
         }
         LOG.info("Notify process finished. count: " + notifyQueuesEntities.size());
+        
+        LOG.info("Notify event started.");
+        MailEventLogic.get().notifyEvents();
+        LOG.info("Notify event finished.");
     }
-    
     
 
 

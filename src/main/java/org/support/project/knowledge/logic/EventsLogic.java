@@ -38,27 +38,29 @@ public class EventsLogic {
     public static final int ITEM_NO_END = 2;
     public static final int ITEM_NO_TIMEZONE = 3;
     public static final int ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED = 4;
+    public static final int ITEM_NO_PLACE = 5;
     
-    public static final int STSTUS_PARTICIPATION = 2;
-    public static final int STSTUS_WAIT_CANSEL = 1;
+    public static final int STATUS_PARTICIPATION = 2;
+    public static final int STATUS_WAIT_CANSEL = 1;
     
     
     public static EventsLogic get() {
         return Container.getComp(EventsLogic.class);
     }
 
-    private void logging(Calendar calendar) {
+    public void logging(Calendar calendar) {
         if (LOG.isDebugEnabled()) {
             StringBuilder builder = new  StringBuilder();
             builder.append(calendar.getTimeInMillis()).append(" ");
             builder.append(calendar.get(Calendar.YEAR)).append("/")
                 .append(calendar.get(Calendar.MONTH) + 1).append("/")
                 .append(calendar.get(Calendar.DATE)).append(" ");
-            builder.append(calendar.get(Calendar.HOUR)).append(":")
+            builder.append(calendar.get(Calendar.HOUR_OF_DAY)).append(":")
                 .append(calendar.get(Calendar.MINUTE)).append(":")
                 .append(calendar.get(Calendar.SECOND)).append(".")
                 .append(calendar.get(Calendar.MILLISECOND)).append(" ");
             builder.append(calendar.getTimeZone().getDisplayName());
+            builder.append(" ").append("[DAY_OF_WEEK]").append(calendar.get(Calendar.DAY_OF_WEEK));
             LOG.debug(builder.toString());
         }
     }
@@ -130,7 +132,7 @@ public class EventsLogic {
         ParticipantsEntity participant = ParticipantsDao.get().selectOnKey(knowledgeId, userId);
         if (participant != null) {
             // 既に登録済
-            if (participant.getStatus().intValue() == STSTUS_PARTICIPATION) {
+            if (participant.getStatus().intValue() == STATUS_PARTICIPATION) {
                 return true;
             } else {
                 return false;
@@ -145,9 +147,9 @@ public class EventsLogic {
         List<Participation> participants = ParticipantsDao.get().selectParticipations(knowledgeId);
         participant = new ParticipantsEntity(knowledgeId, userId);
         if (participants.size() < limitCnt) {
-            participant.setStatus(STSTUS_PARTICIPATION);
+            participant.setStatus(STATUS_PARTICIPATION);
         } else {
-            participant.setStatus(STSTUS_WAIT_CANSEL);
+            participant.setStatus(STATUS_WAIT_CANSEL);
         }
         ParticipantsDao.get().insert(participant);
         
@@ -157,7 +159,7 @@ public class EventsLogic {
         // 参加者へメール通知
         MailLogic.get().notifyAddParticipateForParticipant(knowledgeId, userId, participant.getStatus());
         
-        return participant.getStatus().intValue() == STSTUS_PARTICIPATION;
+        return participant.getStatus().intValue() == STATUS_PARTICIPATION;
     }
     
     /**
@@ -177,13 +179,13 @@ public class EventsLogic {
         // 開催者（＝登録者）へメール通知
         MailLogic.get().notifyRemoveParticipateForSponsor(knowledgeId, userId);
 
-        if (participant.getStatus().intValue() == STSTUS_PARTICIPATION) {
+        if (participant.getStatus().intValue() == STATUS_PARTICIPATION) {
             List<Participation> participants = ParticipantsDao.get().selectParticipations(knowledgeId);
             for (int i = 0; i < participants.size(); i++) {
                 Participation p = participants.get(i);
-                if (p.getStatus().intValue() == STSTUS_WAIT_CANSEL) {
+                if (p.getStatus().intValue() == STATUS_WAIT_CANSEL) {
                     ParticipantsEntity entity = new ParticipantsEntity(knowledgeId, p.getUserId());
-                    entity.setStatus(STSTUS_PARTICIPATION);
+                    entity.setStatus(STATUS_PARTICIPATION);
                     ParticipantsDao.get().update(entity);
                     
                     // キャンセル待ちが参加登録済になった参加者へメール通知

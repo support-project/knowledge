@@ -109,13 +109,15 @@ public class MailLogic {
     public static final String NOTIFY_REMOVE_PARTICIPATE = "notify_remove_participate";
     public static final String NOTIFY_REGISTRATION_EVENT = "notify_registration_event";
     public static final String NOTIFY_CHANGE_EVENT_STATUS = "notify_change_event_status";
+    public static final String NOTIFY_EVENT = "notify_event";
+    
     
     public static String[] TEMPLATE_IDS = {
         INVITATION, MAIL_CONFIRM, NOTIFY_ACCEPT_USER, NOTIFY_ADD_USER,
         NOTIFY_INSERT_COMMENT_MYITEM, NOTIFY_INSERT_COMMENT, NOTIFY_INSERT_KNOWLEDGE,
         NOTIFY_INSERT_LIKE_MYITEM, NOTIFY_UPDATE_KNOWLEDGE, PASSWORD_RESET, TEST_MAIL,
         NOTIFY_ADD_PARTICIPATE, NOTIFY_REMOVE_PARTICIPATE,
-        NOTIFY_REGISTRATION_EVENT, NOTIFY_CHANGE_EVENT_STATUS
+        NOTIFY_REGISTRATION_EVENT, NOTIFY_CHANGE_EVENT_STATUS, NOTIFY_EVENT
     };
     // private static final String MAIL_ENCODE = "ISO-2022-JP";
     private static final String MAIL_ENCODE = "UTF-8";
@@ -1173,7 +1175,7 @@ public class MailLogic {
      * @param string
      * @return
      */
-    private String idGenu(String label) {
+    protected String idGenu(String label) {
         StringBuilder builder = new StringBuilder();
         builder.append(label);
         builder.append("-");
@@ -1321,7 +1323,7 @@ public class MailLogic {
         StringBuilder builder = new StringBuilder();
         Resources resources = Resources.getInstance(sponsor.getLocale());
         builder.append(participant.getUserName());
-        if (status == EventsLogic.STSTUS_PARTICIPATION) {
+        if (status == EventsLogic.STATUS_PARTICIPATION) {
             builder.append("[").append(resources.getResource("knowledge.view.label.status.participation")).append("]");
         } else {
             builder.append("[").append(resources.getResource("knowledge.view.label.status.wait.cansel")).append("]");
@@ -1380,7 +1382,7 @@ public class MailLogic {
         contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
         StringBuilder builder = new StringBuilder();
         Resources resources = Resources.getInstance(participant.getLocale());
-        if (status == EventsLogic.STSTUS_PARTICIPATION) {
+        if (status == EventsLogic.STATUS_PARTICIPATION) {
             builder.append(resources.getResource("knowledge.view.label.status.participation"));
         } else {
             builder.append(resources.getResource("knowledge.view.label.status.wait.cansel"));
