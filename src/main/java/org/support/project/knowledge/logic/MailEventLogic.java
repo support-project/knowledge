@@ -104,23 +104,55 @@ public class MailEventLogic extends MailLogic {
                 continue;
             }
             List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(event.getKnowledgeId());
-            notifyWeek(event, knowledge, values, now, mailConfigsEntity);
-            notifyDate(event, knowledge, values, now, mailConfigsEntity);
             notifyMin(event, knowledge, values, now, mailConfigsEntity);
+            notifyDate(event, knowledge, values, now, mailConfigsEntity);
+            notifyWeek(event, knowledge, values, now, mailConfigsEntity);
         }
 
     }
 
-    private void notifyMin(EventsEntity event, KnowledgesEntity knowledge, List<KnowledgeItemValuesEntity> values, Calendar now, MailConfigsEntity mailConfigsEntity) {
-        // TODO Auto-generated method stub
+    private void notifyMin(EventsEntity event, KnowledgesEntity knowledge, List<KnowledgeItemValuesEntity> values,
+            Calendar now, MailConfigsEntity mailConfigsEntity) {
+        int timing = NOTIFY_STATUS_BEFORE_MIN;
+        if (event.getNotifyStatus() >= timing) {
+            // 既に通知済
+            return;
+        }
+        LOG.info("差: " + (event.getStartDateTime().getTime() - now.getTimeInMillis()));
+        // 30分を切った？
+        if (event.getStartDateTime().getTime() - now.getTimeInMillis() > (1000 * 60 * 30)) {
+            return;
+        }
+        sendNotify(event, knowledge, values, timing);
     }
 
-    private void notifyDate(EventsEntity event, KnowledgesEntity knowledge, List<KnowledgeItemValuesEntity> values, Calendar now, MailConfigsEntity mailConfigsEntity) {
-        // TODO Auto-generated method stub
+    private void notifyDate(EventsEntity event, KnowledgesEntity knowledge, List<KnowledgeItemValuesEntity> values,
+            Calendar now, MailConfigsEntity mailConfigsEntity) {
+        int timing = NOTIFY_STATUS_BEFORE_DATE;
+        if (event.getNotifyStatus() >= timing) {
+            // 既に通知済
+            return;
+        }
+        // 今日？
+        TimeZone timezone = TimeZone.getTimeZone(event.getTimeZone());
+        Calendar today = Calendar.getInstance(timezone);
+        today.setTimeInMillis(now.getTimeInMillis());
+        
+        Calendar eventDay = Calendar.getInstance(timezone);
+        eventDay.setTimeInMillis(event.getStartDateTime().getTime());
+        if (today.get(Calendar.YEAR) != eventDay.get(Calendar.YEAR) ||
+                today.get(Calendar.MONTH) != eventDay.get(Calendar.MONTH) ||
+                today.get(Calendar.DATE) != eventDay.get(Calendar.DATE)) {
+            // イベント当日以外は通知しない
+            return;
+        }
+        sendNotify(event, knowledge, values, timing);
     }
 
-    private void notifyWeek(EventsEntity event, KnowledgesEntity knowledge, List<KnowledgeItemValuesEntity> values, Calendar now, MailConfigsEntity mailConfigsEntity) {
-        if (event.getNotifyStatus() >= NOTIFY_STATUS_BEFORE_WEEK) {
+    private void notifyWeek(EventsEntity event, KnowledgesEntity knowledge, List<KnowledgeItemValuesEntity> values,
+            Calendar now, MailConfigsEntity mailConfigsEntity) {
+        int timing = NOTIFY_STATUS_BEFORE_WEEK;
+        if (event.getNotifyStatus() >= timing) {
             // 既に通知済
             return;
         }
@@ -133,6 +165,11 @@ public class MailEventLogic extends MailLogic {
             return;
         }
         
+        sendNotify(event, knowledge, values, timing);
+    }
+
+
+    private void sendNotify(EventsEntity event, KnowledgesEntity knowledge, List<KnowledgeItemValuesEntity> values, int timing) {
         List<Integer> userIds = new ArrayList<>();
         // 参加者に通知
         List<ParticipantsEntity> participants = ParticipantsDao.get().selectOnKnowledgeId(event.getKnowledgeId());
@@ -140,7 +177,7 @@ public class MailEventLogic extends MailLogic {
             if (!userIds.contains(participant.getUserId())) {
                 UsersEntity user = UsersDao.get().selectOnKey(participant.getUserId());
                 if (user != null) {
-                    this.sendNotifyEvent(event, knowledge, values, user, participant.getStatus(), NOTIFY_STATUS_BEFORE_WEEK);
+                    this.sendNotifyEvent(event, knowledge, values, user, participant.getStatus(), timing);
                     userIds.add(participant.getUserId());
                 }
             }
@@ -151,12 +188,12 @@ public class MailEventLogic extends MailLogic {
             if (!userIds.contains(stockKnowledgesEntity.getInsertUser())) {
                 UsersEntity user = UsersDao.get().selectOnKey(stockKnowledgesEntity.getInsertUser());
                 if (user != null) {
-                    this.sendNotifyEvent(event, knowledge, values, user, STATUS_STOCKED, NOTIFY_STATUS_BEFORE_WEEK);
+                    this.sendNotifyEvent(event, knowledge, values, user, STATUS_STOCKED, timing);
                     userIds.add(stockKnowledgesEntity.getInsertUser());
                 }
             }
         }
-        event.setNotifyStatus(NOTIFY_STATUS_BEFORE_WEEK);
+        event.setNotifyStatus(timing);
         EventsDao.get().save(event);
     }
 
