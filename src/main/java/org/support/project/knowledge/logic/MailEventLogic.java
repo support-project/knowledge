@@ -119,12 +119,14 @@ public class MailEventLogic extends MailLogic {
             return;
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug("差: " + (event.getStartDateTime().getTime() - now.getTimeInMillis()));
+            LOG.debug("開始までの時間: " + (event.getStartDateTime().getTime() - now.getTimeInMillis()));
         }
         // 30分を切った？
-        if (event.getStartDateTime().getTime() - now.getTimeInMillis() > (1000 * 60 * 30)) {
+        if (event.getStartDateTime().getTime() <= now.getTimeInMillis() ||
+                event.getStartDateTime().getTime() - now.getTimeInMillis() > (1000 * 60 * 30)) {
             return;
         }
+        LOG.info("イベントのメール通知 [ID] " + knowledge.getKnowledgeId() + " [Timing] 30分前");
         sendNotify(event, knowledge, values, timing);
     }
 
@@ -148,6 +150,7 @@ public class MailEventLogic extends MailLogic {
             // イベント当日以外は通知しない
             return;
         }
+        LOG.info("イベントのメール通知 [ID] " + knowledge.getKnowledgeId() + " [Timing] 本日開催");
         sendNotify(event, knowledge, values, timing);
     }
 
@@ -166,7 +169,7 @@ public class MailEventLogic extends MailLogic {
             // 日曜日でない場合は通知しない
             return;
         }
-        
+        LOG.info("イベントのメール通知 [ID] " + knowledge.getKnowledgeId() + " [Timing] 今週開催");
         sendNotify(event, knowledge, values, timing);
     }
 

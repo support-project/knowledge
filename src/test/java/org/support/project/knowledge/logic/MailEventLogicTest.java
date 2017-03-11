@@ -17,20 +17,19 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.test.Order;
 import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.EventsDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
-import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.ParticipantsDao;
 import org.support.project.knowledge.dao.StockKnowledgesDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.EventsEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
-import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.ParticipantsEntity;
 import org.support.project.knowledge.entity.StockKnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
@@ -104,6 +103,7 @@ public class MailEventLogicTest extends TestCommon{
      * @throws Exception 
      */
     @Test
+    @Order(order = 1)
     public void testNotifyEvents() throws Exception {
         KnowledgesEntity knowledge = new KnowledgesEntity();
         knowledge.setTitle("Sample1");
@@ -124,6 +124,7 @@ public class MailEventLogicTest extends TestCommon{
         for (TemplateItemsEntity item : items) {
             if (item.getItemNo() == EventsLogic.ITEM_NO_DATE) {
                 item.setItemValue(dateFormat.format(new Date(now.getTimeInMillis())));
+                LOG.info(item.getItemValue());
             } else if (item.getItemNo() == EventsLogic.ITEM_NO_START) {
                 item.setItemValue("11:00");
             } else if (item.getItemNo() == EventsLogic.ITEM_NO_END) {
@@ -153,6 +154,7 @@ public class MailEventLogicTest extends TestCommon{
         Calendar today = Calendar.getInstance(timezone);
         EventsLogic.get().logging(today);
         if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+            LOG.info("Today is sunday.");
             Assert.assertEquals(1, mails.size());
         } else {
             Assert.assertEquals(0, mails.size());
@@ -167,6 +169,7 @@ public class MailEventLogicTest extends TestCommon{
      * @throws Exception 
      */
     @Test
+    @Order(order = 2)
     public void testNotifyEvents2() throws Exception {
         KnowledgesEntity knowledge = new KnowledgesEntity();
         knowledge.setTitle("Sample2");
@@ -226,6 +229,7 @@ public class MailEventLogicTest extends TestCommon{
      * @throws Exception 
      */
     @Test
+    @Order(order = 3)
     public void testNotifyEvents3() throws Exception {
         KnowledgesEntity knowledge = new KnowledgesEntity();
         knowledge.setTitle("Sample3");
