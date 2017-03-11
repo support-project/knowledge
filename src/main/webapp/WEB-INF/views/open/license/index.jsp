@@ -195,7 +195,7 @@ $(document).ready(function(){
    - License: [MIT] https://github.com/lipis/flag-icon-css/blob/master/LICENSE
    - project-url: https://github.com/lipis/flag-icon-css
 
-- moment
+- moment / moment-timezone
    - License: [MIT] https://github.com/moment/moment/blob/develop/LICENSE
    - project-url: http://momentjs.com/
 
@@ -223,6 +223,13 @@ $(document).ready(function(){
    - License: [MIT] https://github.com/andyvr/picEdit/blob/master/LICENSE.txt
    - project-url: https://github.com/andyvr/picEdit
 
+- clockpicker
+   - License: [MIT] https://github.com/weareoutman/clockpicker/blob/gh-pages/LICENSE
+   - project-url: https://weareoutman.github.io/clockpicker/
+
+- jstzdetect
+   - License: [MIT] https://pellepim.bitbucket.io/jstz/
+   - project-url: https://pellepim.bitbucket.io/jstz/
 
 
    
