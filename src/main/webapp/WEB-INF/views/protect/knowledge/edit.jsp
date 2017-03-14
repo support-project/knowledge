@@ -1,7 +1,10 @@
-<%@page import="org.support.project.common.util.StringUtils"%>
-<%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
-<%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
+
+<%@page import="org.support.project.common.util.StringUtils"%>
+<%@page import="org.support.project.web.logic.HttpRequestCheckLogic"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
+<%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
+
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -36,6 +39,8 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 
 <c:param name="PARAM_CONTENT">
 <form action="<%= request.getContextPath()%>/protect.knowledge/save" method="post" role="form" id="knowledgeForm" enctype="multipart/form-data">
+    <input type="hidden" name="<%= HttpRequestCheckLogic.REQ_ID_KEY %>"
+        value="<%= jspUtil.out(HttpRequestCheckLogic.REQ_ID_KEY) %>" />
     <input type="hidden" name="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" id="knowledgeId" />
     <input type="hidden" name="draftId" value="<%= jspUtil.out("draftId") %>" id="draftId" />
     <input type="hidden" name="updateContent" value="" id="updateContent" />
@@ -69,6 +74,9 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 <jsp:include page="partials/partials-edit-editor-modal.jsp"></jsp:include>
 <%-- Viewer select modal --%>
 <jsp:include page="partials/partials-edit-viewer-modal.jsp"></jsp:include>
+
+<%-- Survey --%>
+<jsp:include page="partials/partials-edit-survey.jsp"></jsp:include>
 
 <jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
 <jsp:include page="markdown.jsp"></jsp:include>

@@ -123,10 +123,19 @@
             </div>
         
             <!-- upload files -->
-            <div>
+            <div class="form-group">
                 <jsp:include page="partials-edit-attach.jsp"></jsp:include>
             </div>
-                
+            
+            <!-- Survey -->
+            <div >
+                <label for="editSurveyBtn">Survey</label>
+                <a id="editSurveyBtn" class="btn btn-primary btn-xs" data-toggle="modal" href="#editSurvey">
+                    <i class="fa fa-th-list"></i>&nbsp;Edit Survey
+                </a>
+            </div>
+            
+            
         </div>
         
 

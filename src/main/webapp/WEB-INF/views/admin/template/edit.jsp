@@ -18,6 +18,7 @@
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-template.js -->
 <script type="text/javascript" src="js/template.js"></script>
+<script type="text/javascript" src="js/admin-template-edit.js"></script>
 <!-- endbuild -->
 <script>
 var LABEL_DELETE = '<%= jspUtil.label("knowledge.template.label.item.delete") %>';

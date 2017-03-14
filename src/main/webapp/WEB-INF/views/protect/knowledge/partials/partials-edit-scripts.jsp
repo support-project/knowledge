@@ -46,6 +46,9 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/knowledge-clipimage.js"></script>
 <script type="text/javascript" src="js/emojilist.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
+
+<script type="text/javascript" src="js/template.js"></script>
+<script type="text/javascript" src="js/knowledge-edit-survey.js"></script>
 <!-- endbuild -->
 
 <script>
@@ -61,6 +64,24 @@ var _SET_SLIDE_LABEL= '<%= jspUtil.label("knowledge.edit.set.slide.path") %>';
 var _LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
 var _UPDATE_TITLE = '<%= jspUtil.label("knowledge.edit.title") %>';
 var _IMAGE_UPLOAD = '<%= jspUtil.label("knowledge.edit.image.upload") %>';
+
+<%-- テンプレート用 --%>
+var LABEL_DELETE = '<%= jspUtil.label("knowledge.template.label.item.delete") %>';
+var LABEL_TEXT_ITEM = '<i class="fa fa-pencil"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.text") %>';
+var LABEL_RADIO_ITEM = '<i class="fa fa-dot-circle-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.radio") %>';
+var LABEL_CHECKBOX_ITEM = '<i class="fa fa-check-square-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.checkbox") %>';
+var LABEL_INTEGER_ITEM = '<i class="fa fa-calculator"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.integer") %>';
+var LABEL_DATE_ITEM = '<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.date") %>';
+var LABEL_TIME_ITEM = '<i class="fa fa-clock-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.time") %>';
+var LABEL_TIMEZONE_ITEM = '<i class="fa fa-globe"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.timezone") %>';
+var LABEL_ITEM_TITLE = '<%= jspUtil.label("knowledge.template.label.item.title") %>';
+var LABEL_ITEM_DESCRIPTION = '<%= jspUtil.label("knowledge.template.label.item.description") %>';
+var LABEL_ADD_CHOICE = '<%= jspUtil.label("knowledge.template.label.choice.add") %>';
+var LABEL_DELETE_CHOICE = '<%= jspUtil.label("knowledge.template.label.choice.remove") %>';
+var LABEL_CHOICE_LABEL = '<%= jspUtil.label("knowledge.template.label.choice.label") %>';
+var LABEL_CHOICE_VALUE = '<%= jspUtil.label("knowledge.template.label.choice.value") %>';
+<%-- テンプレート用(END) --%>
+
 
 var _TAGS = [];
 <c:forEach var="tagitem" items="${tagitems}" varStatus="status">

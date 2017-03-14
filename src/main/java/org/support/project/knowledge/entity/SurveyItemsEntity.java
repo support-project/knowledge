@@ -1,16 +1,12 @@
 package org.support.project.knowledge.entity;
 
-import org.support.project.knowledge.entity.gen.GenSurveyItemsEntity;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.support.project.common.bean.ValidateError;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-
-import java.sql.Timestamp;
+import org.support.project.knowledge.entity.gen.GenSurveyItemsEntity;
 
 
 /**
@@ -19,6 +15,8 @@ import java.sql.Timestamp;
 @DI(instance = Instance.Prototype)
 public class SurveyItemsEntity extends GenSurveyItemsEntity {
 
+    private List<SurveyChoicesEntity> choices = new ArrayList<>();
+    
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
 
@@ -45,6 +43,20 @@ public class SurveyItemsEntity extends GenSurveyItemsEntity {
 
     public SurveyItemsEntity(Integer itemNo, Long knowledgeId) {
         super( itemNo,  knowledgeId);
+    }
+
+    /**
+     * @return the choices
+     */
+    public List<SurveyChoicesEntity> getChoices() {
+        return choices;
+    }
+
+    /**
+     * @param choices the choices to set
+     */
+    public void setChoices(List<SurveyChoicesEntity> choices) {
+        this.choices = choices;
     }
 
 }

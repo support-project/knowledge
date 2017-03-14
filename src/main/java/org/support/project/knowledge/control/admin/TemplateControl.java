@@ -81,7 +81,7 @@ public class TemplateControl extends Control {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    private TemplateMastersEntity loadParams(List<ValidateError> errors)
+    protected TemplateMastersEntity loadParams(List<ValidateError> errors)
             throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
         TemplateMastersEntity template = new TemplateMastersEntity();
         Map<String, String> values = getParams();

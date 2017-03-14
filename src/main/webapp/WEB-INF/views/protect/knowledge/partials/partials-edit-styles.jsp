@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="bower/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" />
 <link rel="stylesheet" href="bower/clockpicker/dist/bootstrap-clockpicker.min.css" />
 
+<link rel="stylesheet" href="css/template.css" />
 <link rel="stylesheet" href="css/knowledge-edit.css" />
 <link rel="stylesheet" href="css/markdown.css" />
 <link rel="stylesheet" href="css/slide.css" />

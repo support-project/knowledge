@@ -45,11 +45,3 @@
     </div>
 </div>
 
-<%--
-一覧に戻るボタンは、使わない
-        <a href="<%= request.getContextPath() %>/open.knowledge/list/<%= jspUtil.out("offset") %><%= jspUtil.out("params") %>"
-            class="btn btn-success btn_2" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %>
-        </a>
-
---%>
-
