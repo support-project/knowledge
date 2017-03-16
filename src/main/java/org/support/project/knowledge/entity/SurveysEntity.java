@@ -17,6 +17,7 @@ public class SurveysEntity extends GenSurveysEntity {
 
     private List<SurveyItemsEntity> items = new ArrayList<SurveyItemsEntity>();
     
+    private boolean editable;
     
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
@@ -57,6 +58,20 @@ public class SurveysEntity extends GenSurveysEntity {
      */
     public void setItems(List<SurveyItemsEntity> items) {
         this.items = items;
+    }
+
+    /**
+     * @return the editable
+     */
+    public boolean isEditable() {
+        return editable;
+    }
+
+    /**
+     * @param editable the editable to set
+     */
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 
 }

@@ -152,21 +152,6 @@ $(document).ready(function() {
         });
     };
     
-    var handleErrorResponse = function(xhr, textStatus, error) {
-        // 入力値を初期化
-        console.log(xhr.responseJSON);
-        var msg = xhr.responseJSON;
-        if (msg.children) {
-            for (var i = 0; i < msg.children.length; i++) {
-                var child = msg.children[i];
-                console.log(child);
-                $.notify(child.message, 'warn');
-            }
-        } else {
-            $.notify('data load error. please try again.', 'warn');
-        }
-    };
-    
     //テキストのアイテムを追加
     $("#addText").click(function(){
         var itemId = createItemId();
@@ -218,7 +203,7 @@ $(document).ready(function() {
                 timeout: 10000
             }).done(function(result, textStatus, xhr) {
                 logging(result);
-                $('#typeName').val(result.typeName);
+                $('#typeName').val(result.typeName ? result.typeName : result.title);
                 $('#typeIcon').val(result.typeIcon);
                 $('#description').val(result.description);
                 document._TEMPLATE.editable = result.editable;
@@ -254,7 +239,11 @@ $(document).ready(function() {
                     }
                 });
             }).fail(function(xhr, textStatus, error) {
-                handleErrorResponse(xhr, textStatus, error);
+                if (xhr.status === 404) {
+                    console.log('survey data is not exist.');
+                } else {
+                    handleErrorResponse(xhr, textStatus, error);
+                }
             });
         });
     };

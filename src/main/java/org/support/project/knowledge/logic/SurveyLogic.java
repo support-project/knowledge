@@ -1,6 +1,11 @@
 package org.support.project.knowledge.logic;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
@@ -26,6 +31,7 @@ public class SurveyLogic extends TemplateLogic {
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public SurveysEntity saveSurvey(SurveysEntity survey, LoginedUser loginedUser) {
+        LOG.trace("saveSurvey");
         SurveyItemsDao.get().deleteOnKnowledgeId(survey.getKnowledgeId());
         SurveyChoicesDao.get().deleteOnKnowledgeId(survey.getKnowledgeId());
         
@@ -52,6 +58,47 @@ public class SurveyLogic extends TemplateLogic {
         
         
         return new SurveysEntity();
+    }
+
+    public SurveysEntity loadSurvey(Long id) {
+        LOG.trace("loadSurvey");
+        SurveysEntity entity = SurveysDao.get().selectOnKey(id);
+        if (entity == null) {
+            return null;
+        }
+        List<SurveyItemsEntity> itemsEntities = SurveyItemsDao.get().selectOnKnowledgeId(id);
+        entity.setItems(itemsEntities);
+        Map<Integer, SurveyItemsEntity> itemMap = new HashMap<Integer, SurveyItemsEntity>();
+        for (SurveyItemsEntity itemsEntity : itemsEntities) {
+            itemsEntity.setChoices(new ArrayList<SurveyChoicesEntity>());
+            itemMap.put(itemsEntity.getItemNo(), itemsEntity);
+        }
+        
+        List<SurveyChoicesEntity> choicesEntities = SurveyChoicesDao.get().selectOnKnowledgeId(id);
+        // 念のためソート
+        Collections.sort(choicesEntities, new Comparator<SurveyChoicesEntity>() {
+            @Override
+            public int compare(SurveyChoicesEntity o1, SurveyChoicesEntity o2) {
+                if (!o1.getKnowledgeId().equals(o2.getKnowledgeId())) {
+                    return o1.getKnowledgeId().compareTo(o2.getKnowledgeId());
+                }
+                if (!o1.getItemNo().equals(o2.getItemNo())) {
+                    return o1.getItemNo().compareTo(o2.getItemNo());
+                }
+                if (!o1.getChoiceNo().equals(o2.getChoiceNo())) {
+                    return o1.getChoiceNo().compareTo(o2.getChoiceNo());
+                }
+                return 0;
+            }
+        });
+        for (SurveyChoicesEntity itemChoicesEntity : choicesEntities) {
+            if (itemMap.containsKey(itemChoicesEntity.getItemNo())) {
+                SurveyItemsEntity templateItemsEntity = itemMap.get(itemChoicesEntity.getItemNo());
+                templateItemsEntity.getChoices().add(itemChoicesEntity);
+            }
+        }
+        entity.setEditable(true);
+        return entity;
     }
 
 }

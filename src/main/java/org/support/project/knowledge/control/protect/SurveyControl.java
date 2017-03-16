@@ -21,6 +21,7 @@ import org.support.project.knowledge.logic.SurveyLogic;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.MessageStatus;
+import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.exception.InvalidParamException;
 
@@ -96,4 +97,25 @@ public class SurveyControl extends TemplateControl {
         
         return survey;
     }
+    
+    /**
+     * 保存されているデータを取得
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary load() throws InvalidParamException {
+        Long id = super.getPathLong(new Long(-1));
+        SurveysEntity entity = SurveyLogic.get().loadSurvey(id);
+        if (entity == null) {
+            return sendError(404, null);
+        }
+        return send(entity);
+    }
+    
+    
+    
+    
+    
 }

@@ -54,7 +54,7 @@ public class TemplateControl extends Control {
     }
     
     /**
-     * 編集画面を表示する
+     * 保存されているデータを取得
      * 
      * @return
      * @throws InvalidParamException
@@ -65,7 +65,7 @@ public class TemplateControl extends Control {
         Integer id = super.getPathInteger(-1);
         TemplateMastersEntity entity = TemplateLogic.get().loadTemplate(id);
         if (entity == null) {
-            sendError(404, null);
+            return sendError(404, null);
         }
         return send(entity);
     }

@@ -6,6 +6,7 @@ $(document).ready(function() {
             $('#survey_edit').removeClass('hide');
             document._TEMPLATE.editable = true;
             $('#knowledgeIdSurvey').val(knowledgeId);
+            document.loaddata(_CONTEXT + '/protect.survey/load/' + knowledgeId);
         }
     });
     
