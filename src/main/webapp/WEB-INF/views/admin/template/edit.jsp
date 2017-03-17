@@ -17,26 +17,10 @@
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-template.js -->
-<script type="text/javascript" src="js/template.js"></script>
+<script type="text/javascript" src="js/template-item-edit.js"></script>
 <script type="text/javascript" src="js/admin-template-edit.js"></script>
 <!-- endbuild -->
-<script>
-var LABEL_DELETE = '<%= jspUtil.label("knowledge.template.label.item.delete") %>';
-var LABEL_TEXT_ITEM = '<i class="fa fa-pencil"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.text") %>';
-var LABEL_RADIO_ITEM = '<i class="fa fa-dot-circle-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.radio") %>';
-var LABEL_CHECKBOX_ITEM = '<i class="fa fa-check-square-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.checkbox") %>';
-var LABEL_INTEGER_ITEM = '<i class="fa fa-calculator"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.integer") %>';
-var LABEL_DATE_ITEM = '<i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.date") %>';
-var LABEL_TIME_ITEM = '<i class="fa fa-clock-o"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.time") %>';
-var LABEL_TIMEZONE_ITEM = '<i class="fa fa-globe"></i>&nbsp;<%= jspUtil.label("knowledge.template.label.item.timezone") %>';
-var LABEL_ITEM_TITLE = '<%= jspUtil.label("knowledge.template.label.item.title") %>';
-var LABEL_ITEM_DESCRIPTION = '<%= jspUtil.label("knowledge.template.label.item.description") %>';
-var LABEL_ADD_CHOICE = '<%= jspUtil.label("knowledge.template.label.choice.add") %>';
-var LABEL_DELETE_CHOICE = '<%= jspUtil.label("knowledge.template.label.choice.remove") %>';
-var LABEL_CHOICE_LABEL = '<%= jspUtil.label("knowledge.template.label.choice.label") %>';
-var LABEL_CHOICE_VALUE = '<%= jspUtil.label("knowledge.template.label.choice.value") %>';
-var LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
-</script>
+<jsp:include page="include_template_label.jsp"></jsp:include>
 </c:param>
 
 
@@ -69,6 +53,9 @@ var LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
     <div class="form-group">
         <a class="btn btn-info hide editbtn" id="addText"><i class="fa fa-pencil"></i>
             &nbsp;<%= jspUtil.label("knowledge.template.label.item.add", jspUtil.label("knowledge.template.label.item.text")) %>
+        </a>
+        <a class="btn btn-info hide editbtn" id="addTextArea"><i class="fa fa-pencil-square-o"></i>
+            &nbsp;<%= jspUtil.label("knowledge.template.label.item.add", jspUtil.label("knowledge.template.label.item.textarea")) %>
         </a>
         <a class="btn btn-info hide editbtn" id="addRadio"><i class="fa fa-dot-circle-o"></i>
             &nbsp;<%= jspUtil.label("knowledge.template.label.item.add", jspUtil.label("knowledge.template.label.item.radio")) %>

@@ -2,7 +2,7 @@ $(document).ready(function() {
     if ($('#typeId').val() && $('#typeId').val() !== '-1') {
         $('#templateForm').attr('action', _CONTEXT + '/admin.template/update');
         var id = $('#typeId').val();
-        this.loaddata(_CONTEXT + '/admin.template/load/' + id);
+        this.__load_survey(_CONTEXT + '/admin.template/load/' + id);
     } else {
         $('.editbtn').removeClass('hide');
         document._TEMPLATE.editable = true;

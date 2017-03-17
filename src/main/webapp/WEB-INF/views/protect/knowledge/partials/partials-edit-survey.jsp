@@ -18,12 +18,12 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
                 <span class="sr-only"><%= jspUtil.label("label.close") %></span></button>
                 <h4 class="modal-title" id="myModalLabel">
-                    アンケート編集
+                    <%= jspUtil.label("knowledge.survey.label.edit") %>
                 </h4>
             </div>
             <div class="modal-body">
                 <div id="survey_info" class="">
-                    先に保存してね！（下書きではない）
+                    <%= jspUtil.label("knowledge.survey.msg.survey") %>
                 </div>
                 <div id="survey_edit" class="hide">
                     
@@ -45,6 +45,9 @@
     <div class="form-group">
         <a class="btn btn-info editbtn" id="addText"><i class="fa fa-pencil"></i>
             &nbsp;<%= jspUtil.label("knowledge.template.label.item.add", jspUtil.label("knowledge.template.label.item.text")) %>
+        </a>
+        <a class="btn btn-info editbtn" id="addTextArea"><i class="fa fa-pencil-square-o"></i>
+            &nbsp;<%= jspUtil.label("knowledge.template.label.item.add", jspUtil.label("knowledge.template.label.item.textarea")) %>
         </a>
         <a class="btn btn-info editbtn" id="addRadio"><i class="fa fa-dot-circle-o"></i>
             &nbsp;<%= jspUtil.label("knowledge.template.label.item.add", jspUtil.label("knowledge.template.label.item.radio")) %>

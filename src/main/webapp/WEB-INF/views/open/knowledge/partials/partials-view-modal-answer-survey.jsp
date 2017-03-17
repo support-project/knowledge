@@ -1,0 +1,34 @@
+<%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<% JspUtil jspUtil = new JspUtil(request, pageContext); %>
+
+<div class="modal fade" id="modalAnswerSurvey" tabindex="-1" role="dialog" aria-labelledby="modalAnswerSurveyLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modalAnswerSurveyLabel">
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="surveyDescription"></div>
+                <div class="form-group" id="template_items">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-close"></i>&nbsp;<%= jspUtil.label("label.close") %></button>
+                <button type="button" class="btn btn-primary" id="saveSurveyButton">
+                    <i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
+            </div>
+        </div>
+    </div>
+</div>
+

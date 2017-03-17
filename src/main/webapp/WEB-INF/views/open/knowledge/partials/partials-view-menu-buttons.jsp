@@ -72,8 +72,8 @@
                     </button>
                 </div>
                 
-                <% if (jspUtil.is(TemplateLogic.TYPE_ID_EVENT, "typeId")) { %>
                 <div>
+                <% if (jspUtil.is(TemplateLogic.TYPE_ID_EVENT, "typeId")) { %>
                     <% if (jspUtil.logined()) { %>
                         <button class="btn btn-info btn_col2 hide" id="btnParticipation">
                             <i class="fa fa-user-plus"></i>&nbsp;
@@ -89,8 +89,13 @@
                             <%=jspUtil.label("knowledge.view.label.participation")%>
                         </a>
                     <% } %>
-                </div>
                 <% } %>
+                    
+                    <a id="btnAnswerSurvey" class="btn btn-info btn_col2 hide" data-toggle="modal" href="#modalAnswerSurvey">
+                        <i class="fa fa-check-square-o"></i>&nbsp;
+                        <%=jspUtil.label("knowledge.view.label.answer")%>
+                    </a>
+                </div>
             </div>
 
             <div class="article_info">

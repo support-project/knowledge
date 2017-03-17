@@ -92,7 +92,7 @@ var processLink = function(parent) {
  * @return Promise
  */
 var decoration = function(jqObj) {
-    console.log(jqObj);
+//    console.log(jqObj);
     return new Promise(function(resolve, reject) {
         return codeHighlight(jqObj)
         .then(function() {

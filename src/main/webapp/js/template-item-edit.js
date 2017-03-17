@@ -1,3 +1,6 @@
+/**
+ * テンプレートの項目を管理するページで使う共通関数
+ */
 $(document).ready(function() {
     var item = 0;
     var choiceCount = new Array();
@@ -7,7 +10,7 @@ $(document).ready(function() {
 
     //item数初期化
     item = $('.add_item').length;
-    console.log($('.add_item').length);
+//    console.log($('.add_item').length);
     
     /** 入力項目のIDを生成 **/
     var createItemId = function() {
@@ -90,22 +93,19 @@ $(document).ready(function() {
             value = '';
         }
         var prefix = 'text';
-        if (kind === LABEL_RADIO_ITEM) {
+        if (kind === LABEL_TEXTAREA_ITEM) {
+            prefix = 'textarea';
+        } else if (kind === LABEL_RADIO_ITEM) {
             prefix = 'radio';
-        }
-        if(kind === LABEL_CHECKBOX_ITEM) {
+        } else if(kind === LABEL_CHECKBOX_ITEM) {
             prefix = 'checkbox';
-        }
-        if(kind === LABEL_INTEGER_ITEM) {
+        } else if(kind === LABEL_INTEGER_ITEM) {
             prefix = 'integer';
-        }
-        if(kind === LABEL_DATE_ITEM) {
+        } else if(kind === LABEL_DATE_ITEM) {
             prefix = 'date';
-        }
-        if(kind === LABEL_TIME_ITEM) {
+        } else if(kind === LABEL_TIME_ITEM) {
             prefix = 'time';
-        }
-        if(kind === LABEL_TIMEZONE_ITEM) {
+        } else if(kind === LABEL_TIMEZONE_ITEM) {
             prefix = 'timezone';
         }
         var addItem = '';
@@ -156,6 +156,11 @@ $(document).ready(function() {
     $("#addText").click(function(){
         var itemId = createItemId();
         addItem(itemId, LABEL_TEXT_ITEM);
+    });
+    //テキストのアイテムを追加
+    $("#addTextArea").click(function(){
+        var itemId = createItemId();
+        addItem(itemId, LABEL_TEXTAREA_ITEM);
     });
     //ラジオボタンの選択肢追加
     $("#addRadio").click(function(){
@@ -214,6 +219,8 @@ $(document).ready(function() {
                     var itemId = 'item' + item.itemNo;
                     if (item.itemType === 0) {
                         addItem(itemId, LABEL_TEXT_ITEM, item.itemName, item.description);
+                    } else if (item.itemType === 1) {
+                        addItem(itemId, LABEL_TEXTAREA_ITEM, item.itemName, item.description);
                     } else if (item.itemType === 2) {
                         addItem(itemId, LABEL_INTEGER_ITEM, item.itemName, item.description);
                     } else if (item.itemType === 10) {
@@ -236,7 +243,7 @@ $(document).ready(function() {
                 });
             }).fail(function(xhr, textStatus, error) {
                 if (xhr.status === 404) {
-                    console.log('survey data is not exist.');
+                    console.log('data is not exist.');
                 } else {
                     handleErrorResponse(xhr, textStatus, error);
                 }
@@ -244,5 +251,5 @@ $(document).ready(function() {
         });
     };
     
-    this.loaddata = loaddata;
+    this.__load_survey = loaddata;
 });
