@@ -18,7 +18,9 @@ import org.support.project.knowledge.dao.SurveyChoicesDao;
 import org.support.project.knowledge.dao.SurveyItemAnswersDao;
 import org.support.project.knowledge.dao.SurveyItemsDao;
 import org.support.project.knowledge.dao.SurveysDao;
+import org.support.project.knowledge.entity.SurveyAnswersEntity;
 import org.support.project.knowledge.entity.SurveyChoicesEntity;
+import org.support.project.knowledge.entity.SurveyItemAnswersEntity;
 import org.support.project.knowledge.entity.SurveyItemsEntity;
 import org.support.project.knowledge.entity.SurveysEntity;
 import org.support.project.web.bean.LoginedUser;
@@ -111,6 +113,16 @@ public class SurveyLogic extends TemplateLogic {
         
         SurveyAnswersDao.get().deleteOnKnowledgeId(knowledgeId);
         SurveyItemAnswersDao.get().deleteOnKnowledgeId(knowledgeId);
+    }
+    
+    
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void saveAnswer(SurveyAnswersEntity answer, Integer userId) {
+        SurveyAnswersDao.get().save(answer);
+        List<SurveyItemAnswersEntity> items = answer.getItems();
+        for (SurveyItemAnswersEntity item : items) {
+            SurveyItemAnswersDao.get().save(item);
+        }
     }
 
 }

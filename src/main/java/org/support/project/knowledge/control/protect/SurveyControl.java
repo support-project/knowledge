@@ -5,13 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.admin.TemplateControl;
 import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.SurveyAnswersEntity;
 import org.support.project.knowledge.entity.SurveyChoicesEntity;
+import org.support.project.knowledge.entity.SurveyItemAnswersEntity;
 import org.support.project.knowledge.entity.SurveyItemsEntity;
 import org.support.project.knowledge.entity.SurveysEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
@@ -30,6 +35,8 @@ import net.arnx.jsonic.JSONException;
 
 @DI(instance = Instance.Prototype)
 public class SurveyControl extends TemplateControl {
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(SurveyControl.class);
 
     
     /**
@@ -128,6 +135,74 @@ public class SurveyControl extends TemplateControl {
     }
     
     
-    
+    /**
+     * 登録 画面遷移すると再度画面を作るのが面倒なので、Ajaxアクセスとする
+     * 
+     * @return
+     * @throws InvalidParamException
+     * @throws IOException
+     * @throws JSONException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    @Post(subscribeToken = "knowledge", checkReqToken = true)
+    public Boundary answer() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
+        String id = getParam("knowledgeId");
+        if (!StringUtils.isLong(id)) {
+            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD_REQUEST");
+        }
+        Long knowledgeId = new Long(id);
+        
+        SurveysEntity survey = SurveyLogic.get().loadSurvey(knowledgeId);
+        if (survey == null) {
+            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD_REQUEST");
+        }
+        SurveyAnswersEntity answer = new SurveyAnswersEntity();
+        answer.setAnswerId(getLoginUserId()); // 回答のIDは、ユーザとする（ユーザ毎に1件）
+        answer.setKnowledgeId(knowledgeId);
+        
+        List<SurveyItemsEntity> items = survey.getItems();
+        for (SurveyItemsEntity item : items) {
+            SurveyItemAnswersEntity answerItem = new SurveyItemAnswersEntity();
+            answerItem.setAnswerId(getLoginUserId());
+            answerItem.setKnowledgeId(knowledgeId);
+            answerItem.setItemNo(item.getItemNo());
+            answerItem.setItemValue("");
+            answer.getItems().add(answerItem);
+            
+            String[] itemValues = super.getParam("item_" + item.getItemNo(), String[].class);
+            if (itemValues != null && itemValues.length == 1) {
+                String itemValue = itemValues[0];
+                if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
+                    itemValue = itemValue.substring(1, itemValue.length() - 1);
+                    answerItem.setItemValue(itemValue);
+                } else {
+                    answerItem.setItemValue(itemValue);
+                }
+            } else if (itemValues != null && itemValues.length > 1) {
+                for (String itemValue : itemValues) {
+                    StringBuilder value = new StringBuilder();
+                    if (!StringUtils.isEmpty(answerItem.getItemValue())) {
+                        value.append(answerItem.getItemValue()).append(",");
+                    }
+                    if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
+                        itemValue = itemValue.substring(1, itemValue.length() - 1);
+                        value.append(itemValue);
+                    } else {
+                        value.append(itemValue);
+                    }
+                    answerItem.setItemValue(value.toString());
+                }
+            }
+        }
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(PropertyUtil.reflectionToString(answer));
+        }
+        SurveyLogic.get().saveAnswer(answer, getLoginUserId());
+        
+        // メッセージ送信
+        return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, "saved", "message.success.save");
+    }    
     
 }
