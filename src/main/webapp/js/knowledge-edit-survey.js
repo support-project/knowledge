@@ -10,6 +10,22 @@ $(document).ready(function() {
         }
     });
     
+    $('#deletebutton').click(function(){
+        var knowledgeId = $('#knowledgeId').val();
+        bootbox.confirm("Are you sure delete?", function(result) {
+            if (result) {
+                $.ajax({
+                    url: _CONTEXT + '/protect.survey/delete/' + knowledgeId,
+                    type: 'DELETE',
+                    timeout: 10000  // 単位はミリ秒
+                }).done(function(result, textStatus, xhr) {
+                    $.notify(result.message, 'success');
+                }).fail(function(xhr, textStatus, error) {
+                    handleErrorResponse(xhr, textStatus, error);
+                });
+            }
+        }); 
+    });
     
     // フォームのサブミットは禁止
     $('#surveyForm').submit(function(event) {

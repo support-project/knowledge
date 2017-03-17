@@ -21,6 +21,10 @@ public class SurveyAnswersDao extends GenSurveyAnswersDao {
     public static SurveyAnswersDao get() {
         return Container.getComp(SurveyAnswersDao.class);
     }
+    public void deleteOnKnowledgeId(Long knowledgeId) {
+        String sql = "DELETE FROM SURVEY_ANSWERS WHERE KNOWLEDGE_ID = ?";
+        executeUpdate(sql, knowledgeId);
+    }
 
 
 

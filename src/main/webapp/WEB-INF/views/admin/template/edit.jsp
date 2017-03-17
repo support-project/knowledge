@@ -37,16 +37,6 @@ var LABEL_CHOICE_LABEL = '<%= jspUtil.label("knowledge.template.label.choice.lab
 var LABEL_CHOICE_VALUE = '<%= jspUtil.label("knowledge.template.label.choice.value") %>';
 var LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
 </script>
-<script>
-function deleteTemplate() {
-    bootbox.confirm("Are you sure delete this data?", function(result) {
-        if (result) {
-            $('#templateForm').attr('action', '<%= request.getContextPath()%>/admin.template/delete');
-            $('#templateForm').submit();
-        }
-    }); 
-};
-</script>
 </c:param>
 
 

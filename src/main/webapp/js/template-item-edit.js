@@ -190,11 +190,6 @@ $(document).ready(function() {
         addItem(itemId, LABEL_TIMEZONE_ITEM);
     });
     
-    $('#deletebutton').click(function(){
-        deleteTemplate();
-    });
-    
-    
     var loaddata = function(url) {
         return new Promise(function(resolve, reject) {
             $.ajax({
@@ -206,6 +201,7 @@ $(document).ready(function() {
                 $('#typeName').val(result.typeName ? result.typeName : result.title);
                 $('#typeIcon').val(result.typeIcon);
                 $('#description').val(result.description);
+                $('#deletebutton').removeClass('hide');
                 document._TEMPLATE.editable = result.editable;
                 if (!result.editable) {
                     $('#editableMsg').removeClass('hide');

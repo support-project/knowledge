@@ -69,7 +69,7 @@
 
 
     <button type="submit" class="btn btn-primary" id="surveySavebutton"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
-    <button type="button" class="btn btn-danger hide" id="surveyDeletebutton"><i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %></button>
+    <button type="button" class="btn btn-danger hide" id="deletebutton"><i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %></button>
     <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i>&nbsp;<%= jspUtil.label("label.close") %></button>
 
 </form>

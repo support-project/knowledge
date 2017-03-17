@@ -21,6 +21,7 @@ import org.support.project.knowledge.logic.SurveyLogic;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.MessageStatus;
+import org.support.project.web.control.service.Delete;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.exception.InvalidParamException;
@@ -114,6 +115,17 @@ public class SurveyControl extends TemplateControl {
         return send(entity);
     }
     
+    /**
+     * アンケート削除
+     * @return
+     * @throws InvalidParamException
+     */
+    @Delete
+    public Boundary delete() throws InvalidParamException {
+        Long id = super.getPathLong(new Long(-1));
+        SurveyLogic.get().deleteSurvey(id);
+        return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, String.valueOf(id), "message.success.delete");
+    }
     
     
     

@@ -13,7 +13,9 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.SurveyAnswersDao;
 import org.support.project.knowledge.dao.SurveyChoicesDao;
+import org.support.project.knowledge.dao.SurveyItemAnswersDao;
 import org.support.project.knowledge.dao.SurveyItemsDao;
 import org.support.project.knowledge.dao.SurveysDao;
 import org.support.project.knowledge.entity.SurveyChoicesEntity;
@@ -99,6 +101,16 @@ public class SurveyLogic extends TemplateLogic {
         }
         entity.setEditable(true);
         return entity;
+    }
+
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void deleteSurvey(Long knowledgeId) {
+        SurveysDao.get().physicalDelete(knowledgeId);
+        SurveyItemsDao.get().deleteOnKnowledgeId(knowledgeId);
+        SurveyChoicesDao.get().deleteOnKnowledgeId(knowledgeId);
+        
+        SurveyAnswersDao.get().deleteOnKnowledgeId(knowledgeId);
+        SurveyItemAnswersDao.get().deleteOnKnowledgeId(knowledgeId);
     }
 
 }
