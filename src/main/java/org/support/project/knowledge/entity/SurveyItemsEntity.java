@@ -17,6 +17,9 @@ public class SurveyItemsEntity extends GenSurveyItemsEntity {
 
     private List<SurveyChoicesEntity> choices = new ArrayList<>();
     
+    /** 項目値 */
+    private String itemValue;
+    
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
 
@@ -57,6 +60,20 @@ public class SurveyItemsEntity extends GenSurveyItemsEntity {
      */
     public void setChoices(List<SurveyChoicesEntity> choices) {
         this.choices = choices;
+    }
+
+    /**
+     * @return the itemValue
+     */
+    public String getItemValue() {
+        return itemValue;
+    }
+
+    /**
+     * @param itemValue the itemValue to set
+     */
+    public void setItemValue(String itemValue) {
+        this.itemValue = itemValue;
     }
 
 }

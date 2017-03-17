@@ -115,7 +115,7 @@ public class SurveyControl extends TemplateControl {
     @Get
     public Boundary load() throws InvalidParamException {
         Long id = super.getPathLong(new Long(-1));
-        SurveysEntity entity = SurveyLogic.get().loadSurvey(id);
+        SurveysEntity entity = SurveyLogic.get().loadSurvey(id, getLoginUserId());
         if (entity == null) {
             return sendError(404, null);
         }
@@ -153,7 +153,7 @@ public class SurveyControl extends TemplateControl {
         }
         Long knowledgeId = new Long(id);
         
-        SurveysEntity survey = SurveyLogic.get().loadSurvey(knowledgeId);
+        SurveysEntity survey = SurveyLogic.get().loadSurvey(knowledgeId, getLoginUserId());
         if (survey == null) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD_REQUEST");
         }

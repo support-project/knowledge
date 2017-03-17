@@ -64,13 +64,13 @@ public class SurveyLogic extends TemplateLogic {
         return new SurveysEntity();
     }
 
-    public SurveysEntity loadSurvey(Long id) {
+    public SurveysEntity loadSurvey(Long knowledgeId, Integer userId) {
         LOG.trace("loadSurvey");
-        SurveysEntity entity = SurveysDao.get().selectOnKey(id);
+        SurveysEntity entity = SurveysDao.get().selectOnKey(knowledgeId);
         if (entity == null) {
             return null;
         }
-        List<SurveyItemsEntity> itemsEntities = SurveyItemsDao.get().selectOnKnowledgeId(id);
+        List<SurveyItemsEntity> itemsEntities = SurveyItemsDao.get().selectOnKnowledgeId(knowledgeId);
         entity.setItems(itemsEntities);
         Map<Integer, SurveyItemsEntity> itemMap = new HashMap<Integer, SurveyItemsEntity>();
         for (SurveyItemsEntity itemsEntity : itemsEntities) {
@@ -78,7 +78,7 @@ public class SurveyLogic extends TemplateLogic {
             itemMap.put(itemsEntity.getItemNo(), itemsEntity);
         }
         
-        List<SurveyChoicesEntity> choicesEntities = SurveyChoicesDao.get().selectOnKnowledgeId(id);
+        List<SurveyChoicesEntity> choicesEntities = SurveyChoicesDao.get().selectOnKnowledgeId(knowledgeId);
         // 念のためソート
         Collections.sort(choicesEntities, new Comparator<SurveyChoicesEntity>() {
             @Override
@@ -101,6 +101,15 @@ public class SurveyLogic extends TemplateLogic {
                 templateItemsEntity.getChoices().add(itemChoicesEntity);
             }
         }
+        
+        List<SurveyItemAnswersEntity> annswers = SurveyItemAnswersDao.get().selectOnKnowledgeIdAndAnswerId(knowledgeId, userId);
+        for (SurveyItemAnswersEntity answer : annswers) {
+            if (itemMap.containsKey(answer.getItemNo())) {
+                SurveyItemsEntity templateItemsEntity = itemMap.get(answer.getItemNo());
+                templateItemsEntity.setItemValue(answer.getItemValue());
+            }
+        }
+        
         entity.setEditable(true);
         return entity;
     }
