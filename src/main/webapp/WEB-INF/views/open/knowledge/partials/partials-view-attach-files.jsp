@@ -9,23 +9,30 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-<% int MAX_COUNT = 5; %>
+<% int MAX_COUNT = 6; %>
 
-<div class="panel panel-primary">
+<%
+    int num = 0;
+    List<UploadFile> attachs = jspUtil.getValue("files", List.class);
+    for (int i = 0; i < attachs.size(); i++) {
+        UploadFile attach = attachs.get(i);
+        if (attach.getCommentNo() == null || attach.getCommentNo() == 0) {
+            num++;
+        }
+    }
+    String e = "hide";
+    if (num > 0) {
+        e = "";
+    }
+%>
+
+<div id="attachFilesPanel"></div>
+
+<div class="panel panel-info <%= e %>">
     <div class="panel-heading">
         <h4 class="panel-title">
             <i class="fa fa-download"></i>&nbsp;<%= jspUtil.label("knowledge.view.label.attach") %> 
             &nbsp;&nbsp;&nbsp;
-            <%
-                int num = 0;
-                List<UploadFile> attachs = jspUtil.getValue("files", List.class);
-                for (int i = 0; i < attachs.size(); i++) {
-                    UploadFile attach = attachs.get(i);
-                    if (attach.getCommentNo() == null || attach.getCommentNo() == 0) {
-                        num++;
-                    }
-                }
-            %>
             - [<%= num %>]
         </h4>
     </div>
@@ -34,6 +41,7 @@
             int count = 0;
             String hide = "";
         %>
+        <div class="row">
         <c:forEach var="file" items="${files}" >
             <% count++; %>
             <c:if test="${file.commentNo == 0}">
@@ -42,20 +50,17 @@
                     hide = "hide";
                 }
             %>
-            <div class="row">
-                <div class="downloadfile <%= hide %>">
-                <div class="col-xs-1">
+            <div class="downloadfile <%= hide %>">
+                <div class="col-xs-6">
                     <a href="<%=jspUtil.out("file.url")%>">
                     <img src="<%=jspUtil.out("file.thumbnailUrl")%>" width="20"/> 
                     </a>
-                </div>
-                <div class="col-xs-10">
-                    <a href="<%=jspUtil.out("file.url")%>"> <%=jspUtil.out("file.name", jspUtil.ESCAPE_HTML, 20)%></a>
-                </div>
+                    <a href="<%=jspUtil.out("file.url")%>"> <%=jspUtil.out("file.name", jspUtil.ESCAPE_HTML, 100)%></a>
                 </div>
             </div>
             </c:if>
         </c:forEach>
+        </div>
         <% if (count > MAX_COUNT) { %>
         <div class="text-right">
             <a id="more_attach">more...</a>

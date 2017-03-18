@@ -10,7 +10,7 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
-<div class="panel panel-primary">
+<div class="panel panel-success">
     <div class="panel-heading">
         <h4 class="panel-title">
         <%= jspUtil.label("knowledge.add.label.meta") %>
@@ -100,7 +100,7 @@
             <div class="form-group">
                 <label for="input_tag">
                 <%= jspUtil.label("knowledge.add.label.tags") %>
-                <a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#tagSelectModal"><i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("label.search.tags") %></a>
+                <a class="btn btn-info btn-xs" data-toggle="modal" data-target="#tagSelectModal"><i class="fa fa-tags"></i>&nbsp;<%= jspUtil.label("label.search.tags") %></a>
                 </label>
                 <br/>
                 <div class="tags">
@@ -113,7 +113,7 @@
             <!-- editors -->
             <div class="form-group" id="editor_area">
                 <label for="input_groups"><%= jspUtil.label("knowledge.add.label.editors") %></label><br/>
-                <a id="groupselect" class="btn btn-primary btn-xs" data-toggle="modal" href="#editorSelectModal">
+                <a id="groupselect" class="btn btn-info btn-xs" data-toggle="modal" href="#editorSelectModal">
                     <i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.editors.select") %>
                 </a>
                 <p>
@@ -130,7 +130,7 @@
             <!-- Survey -->
             <div >
                 <label for="editSurveyBtn">Survey</label>
-                <a id="editSurveyBtn" class="btn btn-primary btn-xs" data-toggle="modal" href="#editSurvey">
+                <a id="editSurveyBtn" class="btn btn-info btn-xs" data-toggle="modal" href="#editSurvey">
                     <i class="fa fa-th-list"></i>&nbsp;Edit Survey
                 </a>
             </div>
