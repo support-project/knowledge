@@ -10,12 +10,14 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
+<div id="comments"></div>
+
     <%
         List commentList = jspUtil.getValue("comments", List.class);
                 if (commentList != null && !commentList.isEmpty()) {
     %>
     <hr />
-    <h5 id="comments">
+    <h5>
         <i class="fa fa-comments-o"></i>&nbsp;<%=jspUtil.label("knowledge.view.comment.label")%>
     </h5>
     <c:forEach var="comment" items="${comments}" varStatus="status">
