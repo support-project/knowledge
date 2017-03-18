@@ -17,6 +17,11 @@ $(document).ready(function() {
                 type: 'GET',
                 timeout: 10000  // 単位はミリ秒
             }).done(function(result, textStatus, xhr) {
+                if (!result.survey) {
+                    // 回答無し
+                    $('#dataSurveyAnswerTitle').text('no exist');
+                    return;
+                }
                 $('#dataSurveyAnswerTitle').text(result.survey.title);
                 $('#dataSurveyAnswerCount').text(result.answers.length);
                 
