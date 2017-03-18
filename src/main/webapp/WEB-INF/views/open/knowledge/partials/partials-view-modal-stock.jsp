@@ -17,21 +17,26 @@
                 </div>
                 <div class="modal-body">
                     <%-- コンテンツ --%>
-                    <nav>
-                        <ul class="pager">
-                            <li class="previous"><a onclick="getStockInfoPrevious();"> <span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
-                            </a></li>
-                            <li class="next"><a onclick="getStockInfoNext();"> <%= jspUtil.label("label.next") %> <span
-                                    aria-hidden="true">&rarr;</span>
-                            </a></li>
-                        </ul>
-                    </nav>
-                    Page: <span id="stockPage"></span>
-
                     <div id="stockSelect"></div>
                     <span id="stockLink" style="display: none;"> <%= jspUtil.label("knowledge.stock.empty") %><br /> <a
                         href="<%= request.getContextPath() %>/protect.stock/mylist"><%= jspUtil.label("knowledge.stock.label.link") %></a>
                     </span>
+                    
+                    Page: <span id="stockPage"></span>
+                    <nav>
+                        <ul class="pager">
+                            <li class="">
+                                <a onclick="getStockInfoPrevious();">
+                                <span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a onclick="getStockInfoNext();"> <%= jspUtil.label("label.next") %>
+                                <span aria-hidden="true">&rarr;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
