@@ -23,6 +23,7 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.SurveyLogic;
+import org.support.project.knowledge.vo.SurveyReport;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.MessageStatus;
@@ -203,6 +204,23 @@ public class SurveyControl extends TemplateControl {
         
         // メッセージ送信
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, "saved", "message.success.save");
-    }    
+    }
+    
+    
+    /**
+     * 回答のレポート表示
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary report() throws InvalidParamException {
+        Long knowledgeId = super.getPathLong(new Long(-1));
+        KnowledgesEntity knowledge = KnowledgeLogic.get().select(knowledgeId, getLoginedUser());
+        if (knowledge == null || !KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledge, null)) {
+            return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+        }
+        SurveyReport report = SurveyLogic.get().loadAnswers(knowledgeId, getLoginUserId());
+        return send(report);
+    }
     
 }

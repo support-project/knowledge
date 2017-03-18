@@ -23,7 +23,10 @@ import org.support.project.knowledge.entity.SurveyChoicesEntity;
 import org.support.project.knowledge.entity.SurveyItemAnswersEntity;
 import org.support.project.knowledge.entity.SurveyItemsEntity;
 import org.support.project.knowledge.entity.SurveysEntity;
+import org.support.project.knowledge.vo.SurveyReport;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.dao.UsersDao;
+import org.support.project.web.entity.UsersEntity;
 
 @DI(instance = Instance.Singleton)
 public class SurveyLogic extends TemplateLogic {
@@ -58,9 +61,6 @@ public class SurveyLogic extends TemplateLogic {
             }
             itemNo++;
         }
-        
-        
-        
         return new SurveysEntity();
     }
 
@@ -71,6 +71,16 @@ public class SurveyLogic extends TemplateLogic {
             return null;
         }
         List<SurveyItemsEntity> itemsEntities = SurveyItemsDao.get().selectOnKnowledgeId(knowledgeId);
+        // 念のためソート
+        Collections.sort(itemsEntities, new Comparator<SurveyItemsEntity>() {
+            @Override
+            public int compare(SurveyItemsEntity o1, SurveyItemsEntity o2) {
+                if (!o1.getItemNo().equals(o2.getItemNo())) {
+                    return o1.getItemNo().compareTo(o2.getItemNo());
+                }
+                return 0;
+            }
+        });
         entity.setItems(itemsEntities);
         Map<Integer, SurveyItemsEntity> itemMap = new HashMap<Integer, SurveyItemsEntity>();
         for (SurveyItemsEntity itemsEntity : itemsEntities) {
@@ -132,6 +142,33 @@ public class SurveyLogic extends TemplateLogic {
         for (SurveyItemAnswersEntity item : items) {
             SurveyItemAnswersDao.get().save(item);
         }
+    }
+
+    public SurveyReport loadAnswers(Long knowledgeId, Integer userId) {
+        SurveyReport report = new SurveyReport();
+        List<SurveyAnswersEntity> answers = SurveyAnswersDao.get().selectOnKnowledgeId(knowledgeId);
+        for (SurveyAnswersEntity answer : answers) {
+            List<SurveyItemAnswersEntity> items = SurveyItemAnswersDao.get().selectOnKnowledgeIdAndAnswerId(knowledgeId, answer.getAnswerId());
+            // 念のためソート
+            Collections.sort(items, new Comparator<SurveyItemAnswersEntity>() {
+                @Override
+                public int compare(SurveyItemAnswersEntity o1, SurveyItemAnswersEntity o2) {
+                    if (!o1.getItemNo().equals(o2.getItemNo())) {
+                        return o1.getItemNo().compareTo(o2.getItemNo());
+                    }
+                    return 0;
+                }
+            });
+            answer.setItems(items);
+            
+            UsersEntity user = UsersDao.get().selectOnKey(answer.getAnswerId());
+            answer.setUserName(user.getUserName());
+        }
+        report.setAnswers(answers);
+        
+        SurveysEntity survey = this.loadSurvey(knowledgeId, userId);
+        report.setSurvey(survey);
+        return report;
     }
 
 }

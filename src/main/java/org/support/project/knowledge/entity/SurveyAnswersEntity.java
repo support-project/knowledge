@@ -17,6 +17,9 @@ public class SurveyAnswersEntity extends GenSurveyAnswersEntity {
 
     private List<SurveyItemAnswersEntity> items = new ArrayList<SurveyItemAnswersEntity>();
     
+    /** 回答者の名前 */
+    private String userName;
+    
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
 
@@ -57,6 +60,20 @@ public class SurveyAnswersEntity extends GenSurveyAnswersEntity {
      */
     public void setItems(List<SurveyItemAnswersEntity> items) {
         this.items = items;
+    }
+
+    /**
+     * @return the userName
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * @param userName the userName to set
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 }
