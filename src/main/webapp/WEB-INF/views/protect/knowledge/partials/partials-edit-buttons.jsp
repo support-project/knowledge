@@ -30,18 +30,19 @@
         <button type="submit" class="btn btn-info btn_2" id="draftbutton">
             <i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.draft") + jspUtil.label("label.save") %>
         </button>
-        <button type="button" class="btn btn-success btn_2 <%= draftDeleteHide %>" onclick="" id="draftDeleteButton">
+        <button type="button" class="btn btn-info btn_2 text-warning <%= draftDeleteHide %>" onclick="" id="draftDeleteButton">
             <i class="fa fa-eraser"></i>&nbsp; <%= jspUtil.label("label.draft") + jspUtil.label("label.delete") %>
         </button>
     </div>
     <div>
         <a href="<%= cancelUrl %>"
-            class="btn btn-warning btn_2" role="button" id="cancelButton">
+            class="btn btn-info btn_2" role="button" id="cancelButton">
             <i class="fa fa-undo"></i>&nbsp;<%= jspUtil.label("label.cancel") %>
         </a>
-        <button type="button" class="btn btn-danger btn_2 <%= deleteHide %>" onclick="deleteKnowledge();" id="deleteButton">
+        <button type="button" class="btn btn-info btn_2 text-warning <%= deleteHide %>" onclick="deleteKnowledge();" id="deleteButton">
             <i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %>
         </button>
     </div>
+    
 </div>
 

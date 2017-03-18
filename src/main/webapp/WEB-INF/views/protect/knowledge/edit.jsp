@@ -56,6 +56,7 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
             <jsp:include page="partials/partials-edit-buttons.jsp"></jsp:include>
         </div>
     </div>
+    
     <%-- ナレッジ編集（メインのコンテンツ部分） --%>
     <div class="row" id="content_main">
         <div class="col-sm-8">
