@@ -76,6 +76,9 @@
 
     <%-- Stock Modal --%>
     <jsp:include page="partials/partials-view-modal-stock.jsp"></jsp:include>
+    
+    <%-- Survey --%>
+    <jsp:include page="partials/partials-view-modal-answer-survey.jsp"></jsp:include>
 
     <%-- Emoji --%>
     <jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>

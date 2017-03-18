@@ -35,7 +35,6 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/knowledge-common.js"></script>
 <script type="text/javascript" src="js/knowledge-view.js"></script>
 <script type="text/javascript" src="js/knowledge-view-markdown.js"></script>
-<script type="text/javascript" src="js/knowledge-view-template.js"></script>
 <script type="text/javascript" src="js/knowledge-view-comment.js"></script>
 <script type="text/javascript" src="js/knowledge-view-emoji-select.js"></script>
 <script type="text/javascript" src="js/knowledge-view-preview.js"></script>
@@ -46,6 +45,13 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/paste_image.js"></script>
 <script type="text/javascript" src="js/emojilist.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
+
+<script type="text/javascript" src="js/template-item-view.js"></script>
+<script type="text/javascript" src="js/knowledge-view-template.js"></script>
+
+<script type="text/javascript" src="js/template-item-input.js"></script>
+<script type="text/javascript" src="js/knowledge-view-survey.js"></script>
+
 <!-- endbuild -->
 
 

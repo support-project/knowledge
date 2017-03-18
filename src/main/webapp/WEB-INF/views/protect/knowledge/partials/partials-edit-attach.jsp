@@ -17,9 +17,11 @@
                 <input type="file" name="files[]" multiple>
             </span>
         </div>
-        <button type="button" class="btn btn-primary btn-xs" id="previewClipbordImage">
-            <i class="fa fa-clipboard"></i>&nbsp; <%= jspUtil.label("knowledge.edit.image.upload") %>
-        </button>
+        <div style="margin-top: 2px;">
+            <button type="button" class="btn btn-primary btn-xs" id="previewClipbordImage">
+                <i class="fa fa-clipboard"></i>&nbsp; <%= jspUtil.label("knowledge.edit.image.upload") %>
+            </button>
+        </div>
     </div>
     <div class="file-group tips_info" id="drop_target">
         <%= jspUtil.label("knowledge.add.label.area.upload") %>

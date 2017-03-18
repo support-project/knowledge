@@ -16,7 +16,7 @@ $(document).ready(function() {
 
 });
 function logging(str, level) {
-    console.log(str);
+//    console.log(str);
     if (_LOGGING_NOTIFY_DESKTOP) {
         if (!level) {
             level = 'info';

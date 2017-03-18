@@ -302,7 +302,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return Boundary
      * @throws Exception Exception
      */
-    @Post(subscribeToken = "knowledge")
+    @Post(subscribeToken = "knowledge", checkReqToken = true)
     public Boundary save(KnowledgesEntity entity) throws Exception {
         try {
             if (entity.getKnowledgeId() != null && entity.getKnowledgeId() > 1) {
@@ -321,7 +321,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return Boundary
      * @throws Exception Exception
      */
-    @Post(subscribeToken = "knowledge")
+    @Post(subscribeToken = "knowledge", checkReqToken = true)
     public Boundary draft() throws Exception {
         DraftKnowledgesEntity draft = getParamOnProperty(DraftKnowledgesEntity.class);
         draft.setAccesses(super.getParam("groups"));
@@ -356,7 +356,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws Exception
      */
-    @Post(subscribeToken = "knowledge")
+    @Post(subscribeToken = "knowledge", checkReqToken = true)
     public Boundary delete() throws Exception {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();

@@ -41,11 +41,17 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/knowledge-target-select.js"></script>
 <script type="text/javascript" src="js/knowledge-preview.js"></script>
 <script type="text/javascript" src="js/knowledge-tag-select.js"></script>
-<script type="text/javascript" src="js/knowledge-template.js"></script>
 <script type="text/javascript" src="js/paste_image.js"></script>
 <script type="text/javascript" src="js/knowledge-clipimage.js"></script>
 <script type="text/javascript" src="js/emojilist.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
+
+<script type="text/javascript" src="js/template-item-edit.js"></script>
+<script type="text/javascript" src="js/knowledge-edit-survey.js"></script>
+
+<script type="text/javascript" src="js/template-item-input.js"></script>
+<script type="text/javascript" src="js/knowledge-template.js"></script>
+
 <!-- endbuild -->
 
 <script>
@@ -66,5 +72,8 @@ var _TAGS = [];
 <c:forEach var="tagitem" items="${tagitems}" varStatus="status">
 _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 </c:forEach>
-
 </script>
+
+<%-- テンプレート用 --%>
+<jsp:include page="/WEB-INF/views/admin/template/include_template_label.jsp"></jsp:include>
+<%-- テンプレート用(END) --%>
