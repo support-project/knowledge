@@ -219,7 +219,14 @@ public class MailEventLogicTest extends TestCommon{
         for (MailsEntity mailsEntity : mails) {
             LOG.info(mailsEntity);
         }
-        Assert.assertEquals(1, mails.size());
+        
+        Calendar check = Calendar.getInstance(timezone);
+        if (check.get(Calendar.DATE) != now.get(Calendar.DATE)) {
+            Assert.assertEquals(0, mails.size());
+        } else {
+            Assert.assertEquals(1, mails.size());
+        }
+        
     }
     
     
