@@ -68,6 +68,9 @@ var _LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
 var _UPDATE_TITLE = '<%= jspUtil.label("knowledge.edit.title") %>';
 var _IMAGE_UPLOAD = '<%= jspUtil.label("knowledge.edit.image.upload") %>';
 
+var _ANSWER_DATETIME = '<%= jspUtil.label("knowledge.survey.label.answer.date") %>';
+var _ANSWER_USER = '<%= jspUtil.label("knowledge.survey.label.answer.user") %>';
+
 var _TAGS = [];
 <c:forEach var="tagitem" items="${tagitems}" varStatus="status">
 _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
