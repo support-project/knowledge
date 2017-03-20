@@ -8,13 +8,13 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-            <input type="hidden" id="knowledgeId" value="<%=jspUtil.out("knowledgeId")%>" /> <input type="hidden" id="typeId"
-                value="<%=jspUtil.out("typeId")%>" />
-            <%-- テンプレートの項目 --%>
-            <div style="word-break: break-all; display: none;" id="template_items_area" class="markdown">
-                <span id="template_items"></span>
-            </div>
-            <%-- ナレッジコンテンツ --%>
-            <div style="word-break: break-all;" id="content" class="markdown viewarea">
-                <%=jspUtil.out("content", JspUtil.ESCAPE_NONE)%>
-            </div>
+<input type="hidden" id="knowledgeId" value="<%=jspUtil.out("knowledgeId")%>" />
+<input type="hidden" id="typeId" value="<%=jspUtil.out("typeId")%>" />
+<%-- テンプレートの項目 --%>
+<div style="word-break: normal; display: none;" id="template_items_area" class="markdown">
+    <span id="template_items"></span>
+</div>
+<%-- ナレッジコンテンツ --%>
+<div style="word-break: normal;" id="content" class="markdown viewarea">
+    <%=jspUtil.out("content", JspUtil.ESCAPE_NONE)%>
+</div>

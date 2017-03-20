@@ -30,14 +30,14 @@
                 <a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
                 <a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
                 <span class="helpMarkdownLabel pull-right">
-                    <a data-toggle="modal" data-target="#helpMarkdownModal">Markdown supported</a>
+                    <a data-toggle="modal" data-target="#helpMarkdownModal"><i class="fa fa-info-circle" aria-hidden="true"></i>Markdown information</a>
                 </span>
                 <textarea class="form-control" name="content" rows="20" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
             </div>
 
             <div class="tab-pane preview markdown" id="previewTab">
                 <div class="row">
-                <span class="col-sm-8" id="preview"></span>
+                <span id="preview"></span>
                 </div>
             </div>
         </div>

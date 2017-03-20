@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>[Knowledge] ユーザ追加(通知)</title>
-	<contents xml:space="preserve">
+<title>[Knowledge] ユーザ追加(通知)</title>
+<contents xml:space="preserve">
 ユーザを追加しました。念のため確認してください。
 
 ユーザ番号: {UserId}
@@ -12,8 +12,20 @@
 ※本メールはシステムより自動で送信されています。
  このメールに対する返信は出来ませんので御了承ください。
 
-	</contents>
-	
+</contents>
+
+<templateTitle>ユーザ追加通知</templateTitle>
+<description>
+新しくユーザが追加したさいに、管理者に通知のメールを送ります。
+
+[予約語]
+以下のキーワードを本文内に書いておくと、メールを送る際に値を置換します。
+
+- {UserId} : 登録したユーザのID（番号）
+- {UserName} : ユーザの名称
+- {UserMail} : メールアドレス
+
+</description>
 </mail>
 
 

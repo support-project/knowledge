@@ -44,6 +44,15 @@
                 </c:if>
             </div>
        </div>
+            
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                <a href="<%=request.getContextPath()%>/protect.stock/mylist">
+                    &gt;&gt;
+                    <%=jspUtil.label("knowledge.list.link.stock")%>
+                </a>
+            </div>
+        </div>
 
         <!-- リスト -->
         <div class="row" id="knowledgeList">

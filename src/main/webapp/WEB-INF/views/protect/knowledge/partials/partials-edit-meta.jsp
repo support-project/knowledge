@@ -1,7 +1,10 @@
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
+<%@page import="java.io.PrintWriter"%>
 <%@page import="org.support.project.common.util.StringUtils"%>
-<%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
+<%@page import="org.support.project.knowledge.entity.TemplateMastersEntity"%>
+<%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
+<%@page import="org.support.project.knowledge.logic.TemplateLogic"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -21,14 +24,29 @@
                 <label for="input_title"><%= jspUtil.label("knowledge.add.label.type") %></label><br/>
                 <c:forEach var="template" items="${templates}" >
                     <label class="radio-inline">
-                        <input type="radio" value="<%= jspUtil.out("template.typeId") %>" name="typeId" 
-                            id="typeId_<%= jspUtil.out("template.typeId") %>" <%= jspUtil.checked(jspUtil.out("template.typeId"), "typeId", false) %>/>
-                        <% if (!StringUtils.isEmpty(jspUtil.out("template.typeIcon"))) { %>
-                            <i class="fa <%= jspUtil.out("template.typeIcon") %>"></i>&nbsp;
-                        <% } else { %>
-                            <i class="fa fa-edit"></i>&nbsp;
-                        <% } %>
-                        <%= jspUtil.out("template.typeName") %>
+                        <% 
+                        int type = jspUtil.getValue("typeId", Integer.class);
+                        if (pageContext.getAttribute("typeId") != null) {
+                            type = (int) pageContext.getAttribute("typeId");
+                        }
+                        TemplateMastersEntity template = (TemplateMastersEntity) pageContext.getAttribute("template");
+                        String id = "typeId_" + template.getTypeId();
+                        
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("<input type=\"radio\" value=\"").append(template.getTypeId()).append("\" name=\"typeId\" ");
+                        builder.append("id=\"").append(id).append("\"");
+                        if (template.getTypeId() == type) {
+                            builder.append(" checked");
+                        }
+                        builder.append(" />");
+                        if (!StringUtils.isEmpty(template.getTypeIcon())) {
+                            builder.append("<i class=\"fa ").append(template.getTypeIcon()).append("\" ></i>&nbsp;");
+                        } else {
+                            builder.append("<i class=\"fa fa-edit\"></i>&nbsp;");
+                        }
+                        builder.append(template.getTypeName());
+                        %>
+                        <%= builder.toString() %>
                     </label>
                     <br/>
                 </c:forEach>

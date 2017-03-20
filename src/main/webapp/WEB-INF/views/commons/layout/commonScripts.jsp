@@ -27,11 +27,14 @@
 <script type="text/javascript" src="bower/notify.js/notify.js"></script>
 <script type="text/javascript" src="bower/jquery-oembed-all/jquery.oembed.js"></script>
 
+<script type="text/javascript" src="bower/jstzdetect/jstz.min.js"></script>
+
 <script type="text/javascript" src="js/common.js"></script>
 <!-- endbuild -->
 
 
 <script type="text/javascript">
+var _LOGGING_NOTIFY_DESKTOP = false;
 var _CONTEXT = '<%= request.getContextPath() %>';
 <% if (jspUtil.logined()) { %>
 var _LOGIN_USER_ID = <%= jspUtil.id() %>;
@@ -71,6 +74,7 @@ var setCookie = function(c_name, value, expiredays, path) {
     document.cookie = s;
 }
 setCookie('<%= AppConfig.get().getSystemName() %>_<%= JspUtil.TIME_ZONE_OFFSET %>', (new Date()).getTimezoneOffset(), 60);
+setCookie('<%= AppConfig.get().getSystemName() %>_TIMEZONE', jstz.determine().name(), 60);
 
 <% 
 

@@ -36,10 +36,10 @@
 .article_info > a {
     padding: 0px 15px;
 }
-.btn_edit {
+.btn_edit,.btn_col1 {
     width: 97%;
 }
-.btn_stock,.btn_like,.btn_agenda,.btn_copy_url {
+.btn_stock,.btn_like,.btn_agenda,.btn_copy_url,.btn_col2 {
     width: 48%;
 }
 .downloadfile {
@@ -166,5 +166,5 @@ Comments
 }
 
 .dispKnowledgeId {
-    color: #cccccc;
+    color: #999999;
 }

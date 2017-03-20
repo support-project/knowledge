@@ -80,6 +80,11 @@
             <param-name>cookie-secure</param-name>
             <param-value>false</param-value>
         </init-param>
+        <init-param>
+            <param-name>outPage</param-name>
+            <param-value>/open.knowledge/list</param-value>
+        </init-param>
+        
     </filter>
 
     <filter>

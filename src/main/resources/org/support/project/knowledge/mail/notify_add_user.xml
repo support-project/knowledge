@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mail>
-	<title>Information from [Knowledge] on add user</title>
-	<contents xml:space="preserve">
+<title>Information from [Knowledge] on add user</title>
+<contents xml:space="preserve">
 I added the user. Please check just in case.
 
 No: {UserId}
@@ -12,8 +12,19 @@ Mail: {UserMail}
  This e-mail has been sent automatically from the system.
  Please understand that it can not reply to this email.
 
-	</contents>
-	
+</contents>
+
+<templateTitle>User additional notification</templateTitle>
+<description>
+When newly added by the user, System will send a notification email to the administrator.
+
+[Reserved keywords]
+If you write the following keywords in the body, replace the value when sending mail.
+
+- {UserId} : User ID
+- {UserName} : User Name
+- {UserMail} : Mail Address
+</description>
 </mail>
 
 

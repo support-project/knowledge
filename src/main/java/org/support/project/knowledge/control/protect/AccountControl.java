@@ -1,21 +1,16 @@
 package org.support.project.knowledge.control.protect;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.fileupload.FileItem;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
-import org.support.project.common.util.Base64Utils;
 import org.support.project.common.util.StringUtils;
-import org.support.project.common.validate.Validator;
-import org.support.project.common.validate.ValidatorFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -26,7 +21,6 @@ import org.support.project.knowledge.logic.AccountLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UserLogicEx;
 import org.support.project.knowledge.vo.UploadFile;
-import org.support.project.knowledge.vo.UploadResults;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.Msg;
@@ -50,7 +44,9 @@ import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 public class AccountControl extends Control {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(AccountControl.class);
-
+    /** アイコン画像の最大サイズ(5MB) */
+    private static final int ICON_IMAGE_MAX_SIZE = 5 * 1024 * 1024;
+    
     /**
      * アカウント情報表示
      */
@@ -216,7 +212,7 @@ public class AccountControl extends Control {
             fileimg = fileimg.substring("data:image/png;base64,".length());
             byte[] img = Base64.decodeBase64(fileimg);
             
-            if (img.length > 5 * 1024 * 1024) {
+            if (img.length > ICON_IMAGE_MAX_SIZE) {
                 ValidateError error = new ValidateError("errors.maxfilesize", "5MB");
                 Msg msg = new Msg(error.getMsg(HttpUtil.getLocale(getRequest())));
                 return send(HttpStatus.SC_400_BAD_REQUEST, msg);

@@ -1,7 +1,9 @@
 package org.support.project.knowledge.control.open;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpStatus;
 import org.support.project.common.util.StringUtils;
@@ -10,8 +12,10 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.dao.AccountImagesDao;
 import org.support.project.knowledge.dao.ExUsersDao;
+import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.AccountImagesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.vo.AccountInfo;
 import org.support.project.knowledge.vo.StockKnowledge;
@@ -80,6 +84,13 @@ public class AccountControl extends Control {
         setAttribute("previous", previous);
         setAttribute("next", offset + 1);
 
+        List<TemplateMastersEntity> templateList = TemplateMastersDao.get().selectAll();
+        Map<Integer, TemplateMastersEntity> templates = new HashMap<>();
+        for (TemplateMastersEntity templateMastersEntity : templateList) {
+            templates.put(templateMastersEntity.getTypeId(), templateMastersEntity);
+        }
+        setAttribute("templates", templates);
+        
         return forward("account.jsp");
     }
 

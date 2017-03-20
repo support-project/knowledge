@@ -14,6 +14,7 @@
 <!-- build:css(src/main/webapp) css/page-comment.css -->
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload.css" />
 <link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
+<link rel="stylesheet" href="bower/At.js/dist/css/jquery.atwho.min.css" />
 
 <link rel="stylesheet" href="css/knowledge-edit.css" />
 <link rel="stylesheet" href="css/markdown.css" />
@@ -48,9 +49,15 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 <script type="text/javascript" src="bower/jquery-file-upload/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 
+<script type="text/javascript" src="bower/Caret.js/dist/jquery.caret.min.js"></script>
+<script type="text/javascript" src="bower/At.js/dist/js/jquery.atwho.min.js"></script>
+
 <script type="text/javascript" src="js/knowledge-common.js"></script>
 <script type="text/javascript" src="js/comment.js"></script>
 <script type="text/javascript" src="js/slide.js"></script>
+
+<script type="text/javascript" src="js/emojilist.js"></script>
+<script type="text/javascript" src="js/autocomplete.js"></script>
 <!-- endbuild -->
 
 </c:param>

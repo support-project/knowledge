@@ -34,6 +34,7 @@ import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.Stock;
@@ -73,7 +74,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setViewParam();
         setAttributeForEditPage();
 
-        setAttribute("typeId", KnowledgeLogic.TEMPLATE_TYPE_KNOWLEDGE);
+        setAttribute("typeId", TemplateLogic.TYPE_ID_KNOWLEDGE); // 初期値
         
         String offset = super.getParam("offset", String.class);
         if (StringUtils.isEmpty(offset)) {
@@ -114,6 +115,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 setAttribute("publicFlag", KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
             }
         }
+        
         return forward("edit.jsp");
     }
 
@@ -127,6 +129,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     public Boundary view_edit() throws InvalidParamException {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
+        setAttributeForEditPage();
 
         String offset = super.getParam("offset", String.class);
         if (StringUtils.isEmpty(offset)) {
@@ -168,8 +171,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
             setAttributeOnProperty(entity);
         }
-        
-        setAttributeForEditPage();
         
         return forward("edit.jsp");
     }
@@ -228,13 +229,32 @@ public class KnowledgeControl extends KnowledgeControlBase {
         TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(entity.getTypeId());
         List<TemplateItemsEntity> items = template.getItems();
         for (TemplateItemsEntity item : items) {
-            String itemValue = super.getParam("item_" + item.getItemNo());
-            if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
-                itemValue = itemValue.substring(1, itemValue.length() - 1);
-                item.setItemValue(itemValue);
-            } else {
-                item.setItemValue(itemValue);
+            item.setItemValue("");
+            String[] itemValues = super.getParam("item_" + item.getItemNo(), String[].class);
+            if (itemValues != null && itemValues.length == 1) {
+                String itemValue = itemValues[0];
+                if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
+                    itemValue = itemValue.substring(1, itemValue.length() - 1);
+                    item.setItemValue(itemValue);
+                } else {
+                    item.setItemValue(itemValue);
+                }
+            } else if (itemValues != null && itemValues.length > 1) {
+                for (String itemValue : itemValues) {
+                    StringBuilder value = new StringBuilder();
+                    if (!StringUtils.isEmpty(item.getItemValue())) {
+                        value.append(item.getItemValue()).append(",");
+                    }
+                    if (itemValue.startsWith("[") && itemValue.endsWith("]")) {
+                        itemValue = itemValue.substring(1, itemValue.length() - 1);
+                        value.append(itemValue);
+                    } else {
+                        value.append(itemValue);
+                    }
+                    item.setItemValue(value.toString());
+                }
             }
+            
         }
 
         KnowledgeData data = KnowledgeData.create(
@@ -284,10 +304,14 @@ public class KnowledgeControl extends KnowledgeControlBase {
      */
     @Post(subscribeToken = "knowledge")
     public Boundary save(KnowledgesEntity entity) throws Exception {
-        if (entity.getKnowledgeId() != null && entity.getKnowledgeId() > 1) {
-            return update(entity);
-        } else {
-            return add(entity);
+        try {
+            if (entity.getKnowledgeId() != null && entity.getKnowledgeId() > 1) {
+                return update(entity);
+            } else {
+                return add(entity);
+            }
+        } catch(InvalidParamException e) {
+            return send(e.getMessageResult());
         }
     }
 
@@ -351,7 +375,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         List<TagsEntity> tagitems = TagsDao.get().selectAll();
         setAttribute("tagitems", tagitems);
 
-        List<TemplateMastersEntity> templates = TemplateMastersDao.get().selectAll();
+        List<TemplateMastersEntity> templates = TemplateLogic.get().selectAll();
         setAttribute("templates", templates);
 
         Long knowledgeId = new Long(id);
@@ -586,9 +610,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setAttributeOnProperty(db);
 
         addMsgSuccess("message.success.update");
-
-        setPathInfo(String.valueOf(commentsEntity.getCommentNo()));
-        return edit_comment();
+        //return devolution(HttpMethod.get, "/open.Knowledge/view", String.valueOf(db.getKnowledgeId()));
+        return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + db.getKnowledgeId());
     }
 
     /**

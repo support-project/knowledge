@@ -72,5 +72,17 @@ public class StocksDao extends GenStocksDao {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_selectStockOnKnowledge.sql");
         return executeQueryList(sql, StocksEntity.class, loginedUser.getUserId(), knowledgesEntity.getKnowledgeId());
     }
+    
+    /**
+     * 指定ユーザのストックの一覧を表示
+     * @param loginedUser
+     * @param offset
+     * @param limit
+     * @return
+     */
+    public List<StocksEntity> selectMyStocks(LoginedUser loginedUser, int offset, int limit) {
+        String sql = "SELECT * FROM STOCKS WHERE STOCKS.INSERT_USER = ? AND STOCKS.DELETE_FLAG = 0 ORDER BY STOCKS.INSERT_DATETIME LIMIT ? OFFSET ?";
+        return executeQueryList(sql, StocksEntity.class, loginedUser.getUserId(), limit, offset);
+    }
 
 }

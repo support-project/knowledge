@@ -3,6 +3,7 @@ package org.support.project.knowledge;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -111,6 +112,12 @@ public abstract class TestCommon {
         loginedUser3 = new LoginedUser();
         groupuser1 = new LoginedUser();
         groupuser2 = new LoginedUser();
+        
+        loginedUser.setLocale(Locale.ENGLISH);
+        loginedUser2.setLocale(Locale.ENGLISH);
+        loginedUser3.setLocale(Locale.ENGLISH);
+        groupuser1.setLocale(Locale.ENGLISH);
+        groupuser2.setLocale(Locale.ENGLISH);
 
         // DBを完全初期化
         DatabaseControlDao dao1 = new DatabaseControlDao();
@@ -161,6 +168,7 @@ public abstract class TestCommon {
         entity.setUserKey(RandomUtil.randamGen(64));
         entity.setUserName(userName);
         entity.setPassword(RandomUtil.randamGen(64));
+        entity.setMailAddress("sample@example.com");
         entity = UsersDao.get().insert(entity);
         user.setLoginUser(entity);
 

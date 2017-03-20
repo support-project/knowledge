@@ -64,14 +64,11 @@ public class MarkdownLogic {
     public MarkDown markdownToHtml(String markdown, int engine) throws ParseException {
         MarkDown result = new MarkDown();
         if (engine == ENGINE_MARKEDJS) {
-            LOG.warn("marked.js parser was deprecated");
-            markdownToHtmlOnMarkedJs(markdown, result);
+            LOG.error("marked.js parser was deprecated");
         } else if (engine == ENGINE_PEGDOWN) {
-            LOG.warn("PegDown parser was deprecated");
-            markdownToHtmlOnPegDown(markdown, result);
-        } else {
-            markdownToHtmlOnMarkedJ(markdown, result);
+            LOG.error("PegDown parser was deprecated");
         }
+        markdownToHtmlOnMarkedJ(markdown, result);
         return sanitize(markdown, result);
     }
 
@@ -127,92 +124,6 @@ public class MarkdownLogic {
             Date end = new Date();
             // 以前、別のMarkdownパーサーのパースが凄く時間がかかったので、パース時間を出力している
             LOG.debug("Parse time (MarkedJ): " + (end.getTime() - start.getTime()) + " [ms]");
-        }
-    }
-
-    /**
-     * PegDownでMarkDownのパース
-     * 
-     * @param markdown
-     * @param result
-     */
-    private void markdownToHtmlOnPegDown(String markdown, MarkDown result) {
-        Date start = new Date();
-        result.setMarkdown(markdown);
-        String html = markdown;
-        try {
-            // Markdownのパース
-            PegDownProcessor processor = new PegDownProcessor(Extensions.ALL - Extensions.ANCHORLINKS);
-            html = processor.markdownToHtml(markdown, new LinkRenderer() {
-                @Override
-                public Rendering render(AnchorLinkNode node) {
-                    return new Rendering(node.getText(), node.getText());
-                }
-            });
-            result.setHtml(html);
-            result.setParsed(true);
-            if (LOG.isDebugEnabled()) {
-                Date end = new Date();
-                LOG.debug("Parse time (PegDown): " + (end.getTime() - start.getTime()) + " [ms]");
-            }
-        } catch (Exception e) {
-            // Markdownのパースに失敗する事がある
-            LOG.error("Markdown parse error.", e);
-            // PegDownをデフォルトとして、失敗した場合、Marked.jsでパースしてみる
-            markdownToHtmlOnMarkedJs(markdown, result);
-        }
-    }
-
-    private ScriptEngine getScriptEngine() throws ScriptException, IOException {
-        if (initEngine) {
-            return engine;
-        }
-        ScriptEngineManager manager = new ScriptEngineManager();
-        engine = manager.getEngineByName("js");
-        if (engine == null) {
-            LOG.info("JavaScriptはサポート外");
-            initEngine = true;
-            return null;
-        }
-        Reader fr = null;
-        try {
-            fr = new InputStreamReader(this.getClass().getResourceAsStream("/org/support/project/knowledge/logic/marked.js"),
-                    Charset.forName("UTF-8"));
-            engine.eval(fr);
-            initEngine = true;
-            return engine;
-        } finally {
-            if (fr != null) {
-                fr.close();
-            }
-        }
-    }
-
-    /**
-     * marked.jsでMarkDownのパース
-     * 
-     * @param markdown
-     * @param result
-     */
-    private void markdownToHtmlOnMarkedJs(String markdown, MarkDown result) {
-        Date start = new Date();
-        result.setMarkdown(markdown);
-        String html = markdown;
-        try {
-            engine = getScriptEngine();
-            if (engine == null) {
-                return;
-            }
-            engine.put("content", markdown);
-            html = (String) engine.eval("marked(content)");
-            result.setHtml(html);
-            result.setParsed(true);
-            if (LOG.isDebugEnabled()) {
-                Date end = new Date();
-                LOG.debug("Parse time (marked.js): " + (end.getTime() - start.getTime()) + " [ms]");
-            }
-        } catch (Exception e) {
-            LOG.error("Markdown parse error.", e);
         }
     }
 

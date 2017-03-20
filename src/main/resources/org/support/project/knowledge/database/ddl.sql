@@ -1,3 +1,175 @@
+-- ロケール毎のメールテンプレート
+drop table if exists MAIL_LOCALE_TEMPLATES cascade;
+
+create table MAIL_LOCALE_TEMPLATES (
+  TEMPLATE_ID character varying(32) not null
+  , KEY character varying(12) not null
+  , TITLE text not null
+  , CONTENT text
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint MAIL_LOCALE_TEMPLATES_PKC primary key (TEMPLATE_ID,KEY)
+) ;
+
+-- メールテンプレート
+drop table if exists MAIL_TEMPLATES cascade;
+
+create table MAIL_TEMPLATES (
+  TEMPLATE_ID character varying(32) not null
+  , TEMPLATE_TITLE character varying(128) not null
+  , DESCRIPTION text
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint MAIL_TEMPLATES_PKC primary key (TEMPLATE_ID)
+) ;
+
+-- アンケートの回答の値
+drop table if exists SURVEY_ITEM_ANSWERS cascade;
+
+create table SURVEY_ITEM_ANSWERS (
+  KNOWLEDGE_ID bigint not null
+  , ANSWER_ID integer not null
+  , ITEM_NO integer not null
+  , ITEM_VALUE text
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint SURVEY_ITEM_ANSWERS_PKC primary key (KNOWLEDGE_ID,ANSWER_ID,ITEM_NO)
+) ;
+
+-- アンケートの回答
+drop table if exists SURVEY_ANSWERS cascade;
+
+create table SURVEY_ANSWERS (
+  KNOWLEDGE_ID bigint not null
+  , ANSWER_ID integer not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint SURVEY_ANSWERS_PKC primary key (KNOWLEDGE_ID,ANSWER_ID)
+) ;
+
+-- アンケートの選択肢の値
+drop table if exists SURVEY_CHOICES cascade;
+
+create table SURVEY_CHOICES (
+  KNOWLEDGE_ID bigint not null
+  , ITEM_NO integer not null
+  , CHOICE_NO integer not null
+  , CHOICE_VALUE character varying(256) not null
+  , CHOICE_LABEL character varying(256) not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint SURVEY_CHOICES_PKC primary key (KNOWLEDGE_ID,ITEM_NO,CHOICE_NO)
+) ;
+
+-- アンケート項目
+drop table if exists SURVEY_ITEMS cascade;
+
+create table SURVEY_ITEMS (
+  KNOWLEDGE_ID bigint not null
+  , ITEM_NO integer not null
+  , ITEM_NAME character varying(32) not null
+  , ITEM_TYPE integer not null
+  , DESCRIPTION character varying(1024)
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint SURVEY_ITEMS_PKC primary key (KNOWLEDGE_ID,ITEM_NO)
+) ;
+
+-- アンケート
+drop table if exists SURVEYS cascade;
+
+create table SURVEYS (
+  KNOWLEDGE_ID bigint not null
+  , TITLE character varying(256) not null
+  , DESCRIPTION text
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint SURVEYS_PKC primary key (KNOWLEDGE_ID)
+) ;
+
+-- イベント
+drop table if exists EVENTS cascade;
+
+create table EVENTS (
+  KNOWLEDGE_ID bigint not null
+  , START_DATE_TIME timestamp not null
+  , TIME_ZONE character varying(64)
+  , NOTIFY_STATUS integer
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint EVENTS_PKC primary key (KNOWLEDGE_ID)
+) ;
+
+-- 参加者
+drop table if exists PARTICIPANTS cascade;
+
+create table PARTICIPANTS (
+  KNOWLEDGE_ID bigint not null
+  , USER_ID integer not null
+  , STATUS integer not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint PARTICIPANTS_PKC primary key (KNOWLEDGE_ID,USER_ID)
+) ;
+
+-- サービスの表示言語毎の設定
+drop table if exists SERVICE_LOCALE_CONFIGS cascade;
+
+create table SERVICE_LOCALE_CONFIGS (
+  SERVICE_NAME character varying(64) not null
+  , LOCALE_KEY character varying(12) not null
+  , PAGE_HTML text
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint SERVICE_LOCALE_CONFIGS_PKC primary key (SERVICE_NAME,LOCALE_KEY)
+) ;
+
+-- サービスの設定
+drop table if exists SERVICE_CONFIGS cascade;
+
+create table SERVICE_CONFIGS (
+  SERVICE_NAME character varying(64) not null
+  , SERVICE_LABEL character varying(24) not null
+  , SERVICE_ICON character varying(24) not null
+  , SERVICE_IMAGE BYTEA
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint SERVICE_CONFIGS_PKC primary key (SERVICE_NAME)
+) ;
+
 -- ピン
 drop table if exists PINS cascade;
 
@@ -528,6 +700,123 @@ create table KNOWLEDGES (
   , constraint KNOWLEDGES_PKC primary key (KNOWLEDGE_ID)
 ) ;
 
+comment on table MAIL_LOCALE_TEMPLATES is 'ロケール毎のメールテンプレート';
+comment on column MAIL_LOCALE_TEMPLATES.TEMPLATE_ID is 'テンプレートID';
+comment on column MAIL_LOCALE_TEMPLATES.KEY is 'キー';
+comment on column MAIL_LOCALE_TEMPLATES.TITLE is 'タイトル';
+comment on column MAIL_LOCALE_TEMPLATES.CONTENT is '本文';
+comment on column MAIL_LOCALE_TEMPLATES.INSERT_USER is '登録ユーザ';
+comment on column MAIL_LOCALE_TEMPLATES.INSERT_DATETIME is '登録日時';
+comment on column MAIL_LOCALE_TEMPLATES.UPDATE_USER is '更新ユーザ';
+comment on column MAIL_LOCALE_TEMPLATES.UPDATE_DATETIME is '更新日時';
+comment on column MAIL_LOCALE_TEMPLATES.DELETE_FLAG is '削除フラグ';
+
+comment on table MAIL_TEMPLATES is 'メールテンプレート';
+comment on column MAIL_TEMPLATES.TEMPLATE_ID is 'テンプレートID';
+comment on column MAIL_TEMPLATES.TEMPLATE_TITLE is 'テンプレートタイトル';
+comment on column MAIL_TEMPLATES.DESCRIPTION is '説明文';
+comment on column MAIL_TEMPLATES.INSERT_USER is '登録ユーザ';
+comment on column MAIL_TEMPLATES.INSERT_DATETIME is '登録日時';
+comment on column MAIL_TEMPLATES.UPDATE_USER is '更新ユーザ';
+comment on column MAIL_TEMPLATES.UPDATE_DATETIME is '更新日時';
+comment on column MAIL_TEMPLATES.DELETE_FLAG is '削除フラグ';
+
+comment on table SURVEY_ITEM_ANSWERS is 'アンケートの回答の値';
+comment on column SURVEY_ITEM_ANSWERS.KNOWLEDGE_ID is 'ナレッジID';
+comment on column SURVEY_ITEM_ANSWERS.ANSWER_ID is '回答ID';
+comment on column SURVEY_ITEM_ANSWERS.ITEM_NO is '項目NO';
+comment on column SURVEY_ITEM_ANSWERS.ITEM_VALUE is '項目値';
+comment on column SURVEY_ITEM_ANSWERS.INSERT_USER is '登録ユーザ';
+comment on column SURVEY_ITEM_ANSWERS.INSERT_DATETIME is '登録日時';
+comment on column SURVEY_ITEM_ANSWERS.UPDATE_USER is '更新ユーザ';
+comment on column SURVEY_ITEM_ANSWERS.UPDATE_DATETIME is '更新日時';
+comment on column SURVEY_ITEM_ANSWERS.DELETE_FLAG is '削除フラグ';
+
+comment on table SURVEY_ANSWERS is 'アンケートの回答';
+comment on column SURVEY_ANSWERS.KNOWLEDGE_ID is 'ナレッジID';
+comment on column SURVEY_ANSWERS.ANSWER_ID is '回答ID';
+comment on column SURVEY_ANSWERS.INSERT_USER is '登録ユーザ';
+comment on column SURVEY_ANSWERS.INSERT_DATETIME is '登録日時';
+comment on column SURVEY_ANSWERS.UPDATE_USER is '更新ユーザ';
+comment on column SURVEY_ANSWERS.UPDATE_DATETIME is '更新日時';
+comment on column SURVEY_ANSWERS.DELETE_FLAG is '削除フラグ';
+
+comment on table SURVEY_CHOICES is 'アンケートの選択肢の値';
+comment on column SURVEY_CHOICES.KNOWLEDGE_ID is 'ナレッジID';
+comment on column SURVEY_CHOICES.ITEM_NO is '項目NO';
+comment on column SURVEY_CHOICES.CHOICE_NO is '選択肢番号';
+comment on column SURVEY_CHOICES.CHOICE_VALUE is '選択肢値';
+comment on column SURVEY_CHOICES.CHOICE_LABEL is '選択肢ラベル';
+comment on column SURVEY_CHOICES.INSERT_USER is '登録ユーザ';
+comment on column SURVEY_CHOICES.INSERT_DATETIME is '登録日時';
+comment on column SURVEY_CHOICES.UPDATE_USER is '更新ユーザ';
+comment on column SURVEY_CHOICES.UPDATE_DATETIME is '更新日時';
+comment on column SURVEY_CHOICES.DELETE_FLAG is '削除フラグ';
+
+comment on table SURVEY_ITEMS is 'アンケート項目';
+comment on column SURVEY_ITEMS.KNOWLEDGE_ID is 'ナレッジID';
+comment on column SURVEY_ITEMS.ITEM_NO is '項目NO';
+comment on column SURVEY_ITEMS.ITEM_NAME is '項目名';
+comment on column SURVEY_ITEMS.ITEM_TYPE is '項目の種類';
+comment on column SURVEY_ITEMS.DESCRIPTION is '説明';
+comment on column SURVEY_ITEMS.INSERT_USER is '登録ユーザ';
+comment on column SURVEY_ITEMS.INSERT_DATETIME is '登録日時';
+comment on column SURVEY_ITEMS.UPDATE_USER is '更新ユーザ';
+comment on column SURVEY_ITEMS.UPDATE_DATETIME is '更新日時';
+comment on column SURVEY_ITEMS.DELETE_FLAG is '削除フラグ';
+
+comment on table SURVEYS is 'アンケート';
+comment on column SURVEYS.KNOWLEDGE_ID is 'ナレッジID';
+comment on column SURVEYS.TITLE is 'タイトル';
+comment on column SURVEYS.DESCRIPTION is '説明';
+comment on column SURVEYS.INSERT_USER is '登録ユーザ';
+comment on column SURVEYS.INSERT_DATETIME is '登録日時';
+comment on column SURVEYS.UPDATE_USER is '更新ユーザ';
+comment on column SURVEYS.UPDATE_DATETIME is '更新日時';
+comment on column SURVEYS.DELETE_FLAG is '削除フラグ';
+
+comment on table EVENTS is 'イベント';
+comment on column EVENTS.KNOWLEDGE_ID is 'ナレッジID';
+comment on column EVENTS.START_DATE_TIME is '開催日     UTC';
+comment on column EVENTS.TIME_ZONE is 'タイムゾーン';
+comment on column EVENTS.NOTIFY_STATUS is '通知ステータス';
+comment on column EVENTS.INSERT_USER is '登録ユーザ';
+comment on column EVENTS.INSERT_DATETIME is '登録日時';
+comment on column EVENTS.UPDATE_USER is '更新ユーザ';
+comment on column EVENTS.UPDATE_DATETIME is '更新日時';
+comment on column EVENTS.DELETE_FLAG is '削除フラグ';
+
+comment on table PARTICIPANTS is '参加者';
+comment on column PARTICIPANTS.KNOWLEDGE_ID is 'ナレッジID';
+comment on column PARTICIPANTS.USER_ID is 'ユーザID';
+comment on column PARTICIPANTS.STATUS is 'ステータス';
+comment on column PARTICIPANTS.INSERT_USER is '登録ユーザ';
+comment on column PARTICIPANTS.INSERT_DATETIME is '登録日時';
+comment on column PARTICIPANTS.UPDATE_USER is '更新ユーザ';
+comment on column PARTICIPANTS.UPDATE_DATETIME is '更新日時';
+comment on column PARTICIPANTS.DELETE_FLAG is '削除フラグ';
+
+comment on table SERVICE_LOCALE_CONFIGS is 'サービスの表示言語毎の設定';
+comment on column SERVICE_LOCALE_CONFIGS.SERVICE_NAME is 'サービス名';
+comment on column SERVICE_LOCALE_CONFIGS.LOCALE_KEY is 'ロケールキー';
+comment on column SERVICE_LOCALE_CONFIGS.PAGE_HTML is 'トップページのHTML';
+comment on column SERVICE_LOCALE_CONFIGS.INSERT_USER is '登録ユーザ';
+comment on column SERVICE_LOCALE_CONFIGS.INSERT_DATETIME is '登録日時';
+comment on column SERVICE_LOCALE_CONFIGS.UPDATE_USER is '更新ユーザ';
+comment on column SERVICE_LOCALE_CONFIGS.UPDATE_DATETIME is '更新日時';
+comment on column SERVICE_LOCALE_CONFIGS.DELETE_FLAG is '削除フラグ';
+
+comment on table SERVICE_CONFIGS is 'サービスの設定';
+comment on column SERVICE_CONFIGS.SERVICE_NAME is 'サービス名';
+comment on column SERVICE_CONFIGS.SERVICE_LABEL is '表示名';
+comment on column SERVICE_CONFIGS.SERVICE_ICON is 'アイコン文字列';
+comment on column SERVICE_CONFIGS.SERVICE_IMAGE is '背景画像';
+comment on column SERVICE_CONFIGS.INSERT_USER is '登録ユーザ';
+comment on column SERVICE_CONFIGS.INSERT_DATETIME is '登録日時';
+comment on column SERVICE_CONFIGS.UPDATE_USER is '更新ユーザ';
+comment on column SERVICE_CONFIGS.UPDATE_DATETIME is '更新日時';
+comment on column SERVICE_CONFIGS.DELETE_FLAG is '削除フラグ';
+
 comment on table PINS is 'ピン';
 comment on column PINS.NO is 'NO';
 comment on column PINS.KNOWLEDGE_ID is 'ナレッジID';
@@ -589,7 +878,7 @@ comment on column DRAFT_KNOWLEDGES.DELETE_FLAG is '削除フラグ';
 
 comment on table MAIL_POSTS is 'メールから投稿';
 comment on column MAIL_POSTS.MESSAGE_ID is 'Message-ID';
-comment on column MAIL_POSTS.POST_KIND is '投稿区分	 1: Knowledge 2:Comment';
+comment on column MAIL_POSTS.POST_KIND is '投稿区分  1: Knowledge 2:Comment';
 comment on column MAIL_POSTS.ID is 'ID';
 comment on column MAIL_POSTS.SENDER is 'SENDER';
 comment on column MAIL_POSTS.INSERT_USER is '登録ユーザ';
@@ -601,10 +890,10 @@ comment on column MAIL_POSTS.DELETE_FLAG is '削除フラグ';
 comment on table MAIL_HOOK_CONDITIONS is 'メールから投稿する条件';
 comment on column MAIL_HOOK_CONDITIONS.HOOK_ID is 'HOOK_ID';
 comment on column MAIL_HOOK_CONDITIONS.CONDITION_NO is 'CONDITION_NO';
-comment on column MAIL_HOOK_CONDITIONS.CONDITION_KIND is '条件の種類	 1:宛先が「条件文字」であった場合';
+comment on column MAIL_HOOK_CONDITIONS.CONDITION_KIND is '条件の種類  1:宛先が「条件文字」であった場合';
 comment on column MAIL_HOOK_CONDITIONS.CONDITION is '条件の文字';
 comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER is '投稿者';
-comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER_KIND is '投稿者の指定	 1:送信者のメールアドレスから、2:常に固定';
+comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER_KIND is '投稿者の指定  1:送信者のメールアドレスから、2:常に固定';
 comment on column MAIL_HOOK_CONDITIONS.PUBLIC_FLAG is '公開区分';
 comment on column MAIL_HOOK_CONDITIONS.TAGS is 'タグ';
 comment on column MAIL_HOOK_CONDITIONS.VIEWERS is '公開先';

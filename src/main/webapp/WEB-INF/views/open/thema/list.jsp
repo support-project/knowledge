@@ -119,13 +119,13 @@ function setStyle() {
 
 <div class="row">
     <div class="col-xs-12">
-        <form class="form-inline" method="get" action="#">
+        <form class="form-inline" method="get">
             (Advanced option) Other: 
             <div class="form-group">
                 <!-- <label class="sr-only" for="thema">Other thema</label> -->
                 <input type="text" class="form-control" id="thema" placeholder="Other thema">
             </div>
-            <button type="submit" class="btn btn-default" onclick="setThema()">
+            <button type="button" class="btn btn-default" onclick="setThema()">
                 <%= jspUtil.label("knowledge.config.thema.enable") %>
             </button>
             <a href="https://bootswatch.com/" target="_blank">thema list</a>
@@ -183,12 +183,12 @@ function setStyle() {
 
 <div class="row">
     <div class="col-xs-12">
-        <form class="form-inline" method="get" action="#">
+        <form class="form-inline" method="get">
             (Advanced option) Other: 
             <div class="form-group">
                 <input type="text" class="form-control" id="style" placeholder="Other code highlight style">
             </div>
-            <button type="submit" class="btn btn-default" onclick="setStyle()">
+            <button type="button" class="btn btn-default" onclick="setStyle()">
                 <%= jspUtil.label("knowledge.config.thema.enable") %>
             </button>
             <a href="https://highlightjs.org/static/demo/" target="_blank">style list</a>

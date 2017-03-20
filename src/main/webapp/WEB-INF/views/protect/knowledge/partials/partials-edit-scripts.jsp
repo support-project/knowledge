@@ -23,6 +23,14 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="bower/jquery-file-upload/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="bower/Caret.js/dist/jquery.caret.min.js"></script>
+<script type="text/javascript" src="bower/At.js/dist/js/jquery.atwho.min.js"></script>
+<script type="text/javascript" src="bower/picEdit/dist/js/picedit.min.js"></script>
+<script type="text/javascript" src="bower/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"></script>
+<script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
+<script type="text/javascript" src="bower/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
+<script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
 
 <script type="text/javascript" src="js/tagselect.js"></script>
 <script type="text/javascript" src="js/slide.js"></script>
@@ -34,9 +42,14 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/knowledge-preview.js"></script>
 <script type="text/javascript" src="js/knowledge-tag-select.js"></script>
 <script type="text/javascript" src="js/knowledge-template.js"></script>
+<script type="text/javascript" src="js/paste_image.js"></script>
+<script type="text/javascript" src="js/knowledge-clipimage.js"></script>
+<script type="text/javascript" src="js/emojilist.js"></script>
+<script type="text/javascript" src="js/autocomplete.js"></script>
 <!-- endbuild -->
 
 <script>
+var _LANG = '<%= jspUtil.locale().getLanguage()%>';
 var _UPLOADED = '<%= jspUtil.label("knowledge.edit.label.uploaded") %>';
 var _DELETE_LABEL= '<%= jspUtil.label("label.delete") %>';
 var _FAIL_UPLOAD = '<%= jspUtil.label("knowledge.edit.label.fail.upload") %>';
@@ -47,6 +60,7 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 var _SET_SLIDE_LABEL= '<%= jspUtil.label("knowledge.edit.set.slide.path") %>';
 var _LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
 var _UPDATE_TITLE = '<%= jspUtil.label("knowledge.edit.title") %>';
+var _IMAGE_UPLOAD = '<%= jspUtil.label("knowledge.edit.image.upload") %>';
 
 var _TAGS = [];
 <c:forEach var="tagitem" items="${tagitems}" varStatus="status">

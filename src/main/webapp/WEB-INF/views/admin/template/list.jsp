@@ -17,13 +17,13 @@
 <h4 class="title"><%= jspUtil.label("knowledge.navbar.config.admin.template") %></h4>
 
 <nav>
-	<ul class="pager">
-		<li >
-			<a href="<%= request.getContextPath() %>/admin.template/view_add">
-				<i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("label.add") %>
-			</a>
-		</li>
-	</ul>
+    <ul class="pager">
+        <li >
+            <a href="<%= request.getContextPath() %>/admin.template/edit">
+                <i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("label.add") %>
+            </a>
+        </li>
+    </ul>
 </nav>
 
 
@@ -33,15 +33,15 @@
 </c:if>
 
 <c:forEach var="template" items="${templates}" varStatus="status">
-	<a href="<%= request.getContextPath() %>/admin.template/view_edit/<%= jspUtil.out("template.typeId") %>" class="list-group-item">
-		<h4 class="list-group-item-heading">
-			<i class="fa <%= jspUtil.out("template.typeIcon") %>"></i>&nbsp;<%= jspUtil.out("template.typeName") %>
-		</h4>
-		<p class="list-group-item-text">
-		<%= jspUtil.out("template.description") %>
-		</p>
-		
-	</a>
+    <a href="<%= request.getContextPath() %>/admin.template/edit/<%= jspUtil.out("template.typeId") %>" class="list-group-item">
+        <h4 class="list-group-item-heading">
+            <i class="fa <%= jspUtil.out("template.typeIcon") %>"></i>&nbsp;<%= jspUtil.out("template.typeName") %>
+        </h4>
+        <p class="list-group-item-text">
+        <%= jspUtil.out("template.description") %>
+        </p>
+        
+    </a>
 </c:forEach>
 </div>
 

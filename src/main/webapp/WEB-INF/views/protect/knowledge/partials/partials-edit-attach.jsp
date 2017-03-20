@@ -10,15 +10,20 @@
 
     <div class="file-group">
         <div id="fileupload">
-        <label for="input_fileupload"><%= jspUtil.label("knowledge.add.label.files") %></label>
+            <label for="input_fileupload"><%= jspUtil.label("knowledge.add.label.files") %></label>
+            <br/>
             <span class="btn btn-primary fileinput-button btn-xs">
                 <i class="fa fa-cloud-upload"></i>&nbsp;<span><%= jspUtil.label("knowledge.add.label.select.file") %></span>
                 <input type="file" name="files[]" multiple>
             </span>
         </div>
+        <button type="button" class="btn btn-primary btn-xs" id="previewClipbordImage">
+            <i class="fa fa-clipboard"></i>&nbsp; <%= jspUtil.label("knowledge.edit.image.upload") %>
+        </button>
     </div>
     <div class="file-group tips_info" id="drop_target">
         <%= jspUtil.label("knowledge.add.label.area.upload") %>
+        <%= jspUtil.label("knowledge.add.label.attach.limit", jspUtil.out("uploadMaxMBSize")) %>
     </div>
     <div class="" style="display: none;" id="progress">
         <div class="progress">
@@ -27,6 +32,7 @@
             </div>
         </div>
     </div>
+    
     <div class="file-group" id="files">
     <c:forEach var="file" items="${files}" >
         <div class="filediv row" id="file-<%= jspUtil.out("file.fileNo") %>">
@@ -52,6 +58,7 @@
         </div>
     </c:forEach>
     </div>
+    
 
 
 

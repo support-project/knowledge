@@ -25,7 +25,6 @@ import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateItemsDao;
-import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
@@ -36,6 +35,7 @@ import org.support.project.knowledge.logic.IndexLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.SlideLogic;
 import org.support.project.knowledge.logic.TargetLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.parser.ParserFactory;
 import org.support.project.knowledge.vo.ParseResult;
@@ -48,12 +48,12 @@ public class FileParseBat extends AbstractBat {
     private static final Log LOG = LogFactory.getLog(FileParseBat.class);
 
     public static final int PARSE_STATUS_WAIT = 0;
-    public static final int PARSE_STATUS_PARSING = 1;
-    public static final int PARSE_STATUS_ERROR_FINISHED = -100;
+    public static final int PARSE_STATUS_SLIDE_PARSED = 1;
+    /** スライドからテキスト抽出が終わった場合のステータス(これ以下のステータスは、パース対象） */
+    public static final int PARSE_STATUS_PARSING = 50;
     public static final int PARSE_STATUS_PARSED = 100;
-    public static final int PARSE_STATUS_SLIDE_PARSED = 101;
-
-    public static final int PARSE_STATUS_NO_TARGET = -1;
+    public static final int PARSE_STATUS_ERROR_FINISHED = 1000;
+    public static final int PARSE_STATUS_NO_TARGET = 1001;
 
     public static final Integer UPDATE_USER_ID = -100; // システムユーザ（パースバッチ）
 
@@ -89,7 +89,7 @@ public class FileParseBat extends AbstractBat {
      */
     private void crawl() throws Exception {
         KnowledgeItemValuesDao itemValuesDao = KnowledgeItemValuesDao.get();
-        List<KnowledgeItemValuesEntity> itemValues = itemValuesDao.selectOnTypeIdAndItemNoAndStatus(TemplateMastersDao.TYPE_ID_BOOKMARK,
+        List<KnowledgeItemValuesEntity> itemValues = itemValuesDao.selectOnTypeIdAndItemNoAndStatus(TemplateLogic.TYPE_ID_BOOKMARK,
                 TemplateItemsDao.ITEM_ID_BOOKMARK_URL, KnowledgeItemValuesEntity.STATUS_SAVED);
         if (itemValues != null && !itemValues.isEmpty()) {
             ProxyConfigsEntity proxyConfigs = ProxyConfigsDao.get().selectOnKey(AppConfig.get().getSystemName());
@@ -126,9 +126,9 @@ public class FileParseBat extends AbstractBat {
                     IndexingValue value = new IndexingValue();
                     value.setType(IndexType.bookmarkContent.getValue());
                     value.setId(WEB_ID_PREFIX + itemValue.getKnowledgeId());
+                    value.setTemplate(knowledgesEntity.getTypeId());
                     value.setTitle(itemValue.getItemValue());
                     value.setContents(content);
-
                     value.addUser(knowledgesEntity.getInsertUser());
                     if (knowledgesEntity.getPublicFlag() == null || KnowledgeLogic.PUBLIC_FLAG_PUBLIC == knowledgesEntity.getPublicFlag()) {
                         value.addUser(KnowledgeLogic.ALL_USER);
@@ -177,26 +177,21 @@ public class FileParseBat extends AbstractBat {
         KnowledgesDao knowledgesDao = KnowledgesDao.get();
         TagsDao tagsDao = TagsDao.get();
 
-        // パースステータスがパース待ち（0）かつナレッジに紐づいているものを取得
+        // パースステータスがパース中より前のものを取得
         List<KnowledgeFilesEntity> filesEntities = filesDao.selectWaitStateFiles();
         AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
         File tmpDir = new File(appConfig.getTmpPath());
         LOG.info("file target count: " + filesEntities.size());
 
         for (KnowledgeFilesEntity knowledgeFilesEntity : filesEntities) {
-            // ナレッジを取得
-            KnowledgesEntity knowledgesEntity = knowledgesDao.selectOnKey(knowledgeFilesEntity.getKnowledgeId());
-            if (knowledgesEntity == null) {
-                // 紐づくナレッジが存在していないのであれば解析はしない（例えば、一度添付ファイル付きのナレッジを登録後、ナレッジを削除した場合）
-                // ナレッジに紐づいていないファイルで、かつ更新日が24時間前のものは削除される
-                filesDao.changeStatus(knowledgeFilesEntity.getFileNo(), PARSE_STATUS_NO_TARGET, UPDATE_USER_ID);
-                continue;
-            }
-            // タグを取得
-            List<TagsEntity> tagsEntities = tagsDao.selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
-
             // DBから取得したバイナリをいったんファイルに格納
             KnowledgeFilesEntity entity = filesDao.selectOnKey(knowledgeFilesEntity.getFileNo());
+            if (entity.getFileBinary() == null) {
+                LOG.error("binary input stream is null. file no = " + entity.getFileNo() + ". skip this file.");
+                filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_ERROR_FINISHED, UPDATE_USER_ID);
+                continue;
+            }
+            
             StringBuilder name = new StringBuilder();
             name.append(entity.getFileNo());
             String extension = StringUtils.getExtension(entity.getFileName());
@@ -210,8 +205,12 @@ public class FileParseBat extends AbstractBat {
                 FileUtil.copy(entity.getFileBinary(), outputStream);
                 LOG.info("file: " + entity.getFileNo() + " to " + tmp.getAbsolutePath());
             } finally {
-                outputStream.close();
-                entity.getFileBinary().close();
+                try {
+                    outputStream.close();
+                    entity.getFileBinary().close();
+                } catch (Exception e) {
+                    LOG.error("Any exception was thrown.", e);
+                }
             }
             if (StringUtils.isEmpty(extension)) {
                 String mime = Files.probeContentType(tmp.toPath());
@@ -224,11 +223,36 @@ public class FileParseBat extends AbstractBat {
                     tmp = new File(name.toString());
                 }
             }
-
-            // パースステータスをパース中（1）に変更(もしパースでエラーが発生しても、次回から対象外になる）
-            filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_PARSING, UPDATE_USER_ID);
-
             try {
+                try {
+                    // スライドの抽出は、パース待ちの場合は、どのようなステータスでも実施
+                    if (entity.getParseStatus().intValue() == PARSE_STATUS_WAIT) {
+                        boolean slideParse = SlideLogic.get().parseSlide(tmp, knowledgeFilesEntity);
+                        if (slideParse) {
+                            // スライドのパース済のステータスへ
+                            filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_SLIDE_PARSED, UPDATE_USER_ID);
+                        }
+                    }
+                } catch (Exception e) {
+                    // スライド画像抽出に失敗しても、ログだけだして次の処理へ
+                    LOG.error("Slide parse error. file_no = " + entity.getFileNo(), e);
+                }
+                
+                // ナレッジを取得
+                KnowledgesEntity knowledgesEntity = knowledgesDao.selectOnKey(knowledgeFilesEntity.getKnowledgeId());
+                if (knowledgesEntity == null) {
+                    // 紐づくナレッジが存在していないのであれば解析はしない（例えば、一度添付ファイル付きのナレッジを登録後、ナレッジを削除した場合）
+                    // 理由：ナレッジに紐付いていないため、アクセス権が不定
+                    // ナレッジに紐づいていないファイルで、かつ更新日が24時間前のものは削除される
+                    filesDao.changeStatus(knowledgeFilesEntity.getFileNo(), PARSE_STATUS_NO_TARGET, UPDATE_USER_ID);
+                    continue;
+                }
+                // タグを取得
+                List<TagsEntity> tagsEntities = tagsDao.selectOnKnowledgeId(knowledgesEntity.getKnowledgeId());
+                
+                // パースステータスをパース中（1）に変更(もしパースでエラーが発生しても、次回から対象外になる）
+                filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_PARSING, UPDATE_USER_ID);
+
                 // パースを実行
                 Parser parser = ParserFactory.getParser(tmp.getAbsolutePath());
                 ParseResult result = parser.parse(tmp);
@@ -239,6 +263,7 @@ public class FileParseBat extends AbstractBat {
                 IndexingValue value = new IndexingValue();
                 value.setType(TYPE_FILE);
                 value.setId(ID_PREFIX + entity.getFileNo());
+                value.setTemplate(knowledgesEntity.getTypeId());
                 value.setTitle(entity.getFileName());
                 value.setContents(result.getText());
                 value.addUser(entity.getInsertUser());
@@ -269,20 +294,16 @@ public class FileParseBat extends AbstractBat {
 
                 // パースステータスをパース完了に変更(もしパースでエラーが発生しても、次回から対象外になる）
                 filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_PARSED, UPDATE_USER_ID);
-                boolean slideParse = SlideLogic.get().parseSlide(tmp, knowledgeFilesEntity);
-                if (slideParse) {
-                    // スライドのパース済のステータスへ
-                    filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_SLIDE_PARSED, UPDATE_USER_ID);
-                }
             } catch (Exception e) {
                 // パースの解析でなんらかのエラー
                 filesDao.changeStatus(entity.getFileNo(), PARSE_STATUS_ERROR_FINISHED, UPDATE_USER_ID);
                 LOG.error("File parse error.", e);
                 throw e;
+            } finally {
+                // 終了すれば、テンポラリを削除
+                tmp.delete();
+                LOG.info("deleteed: " + tmp.getAbsolutePath());
             }
-            // 終了すれば、テンポラリを削除
-            tmp.delete();
-            LOG.info("deleteed: " + tmp.getAbsolutePath());
         }
     }
 

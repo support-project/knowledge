@@ -12,7 +12,9 @@ public class StockKnowledge extends KnowledgesEntity {
     private static final long serialVersionUID = 1L;
     
     private List<StocksEntity> stocks;
-
+    
+    private Participations participations;
+    
     /**
      * Get stocks
      * @return the stocks
@@ -27,6 +29,20 @@ public class StockKnowledge extends KnowledgesEntity {
      */
     public void setStocks(List<StocksEntity> stocks) {
         this.stocks = stocks;
+    }
+
+    /**
+     * @return the participations
+     */
+    public Participations getParticipations() {
+        return participations;
+    }
+
+    /**
+     * @param participations the participations to set
+     */
+    public void setParticipations(Participations participations) {
+        this.participations = participations;
     }
     
     

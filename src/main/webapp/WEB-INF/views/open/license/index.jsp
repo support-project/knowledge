@@ -135,7 +135,6 @@ $(document).ready(function(){
    - License: [MIT] http://fortawesome.github.io/Font-Awesome/license/
    - project-url: http://fortawesome.github.io/Font-Awesome/
 
-
 - html5shiv
    - License: [MIT] https://github.com/aFarkas/html5shiv/blob/master/MIT%20and%20GPL2%20licenses.md
    - project-url: https://github.com/aFarkas/html5shiv
@@ -196,7 +195,7 @@ $(document).ready(function(){
    - License: [MIT] https://github.com/lipis/flag-icon-css/blob/master/LICENSE
    - project-url: https://github.com/lipis/flag-icon-css
 
-- moment
+- moment / moment-timezone
    - License: [MIT] https://github.com/moment/moment/blob/develop/LICENSE
    - project-url: http://momentjs.com/
 
@@ -212,7 +211,25 @@ $(document).ready(function(){
    - License: [Apache License, Version 2.0] https://github.com/mathjax/MathJax/blob/master/LICENSE
    - project-url: https://www.mathjax.org/
 
+- Cropper.js
+   - License: [MIT] https://github.com/fengyuanchen/cropperjs/blob/master/LICENSE
+   - project-url: https://fengyuanchen.github.io/cropperjs/
 
+- At.js
+   - License: [MIT] https://github.com/ichord/At.js/blob/master/LICENSE-MIT
+   - project-url: http://ichord.github.io/At.js/
+
+- picEdit
+   - License: [MIT] https://github.com/andyvr/picEdit/blob/master/LICENSE.txt
+   - project-url: https://github.com/andyvr/picEdit
+
+- clockpicker
+   - License: [MIT] https://github.com/weareoutman/clockpicker/blob/gh-pages/LICENSE
+   - project-url: https://weareoutman.github.io/clockpicker/
+
+- jstzdetect
+   - License: [MIT] https://pellepim.bitbucket.io/jstz/
+   - project-url: https://pellepim.bitbucket.io/jstz/
 
 
    

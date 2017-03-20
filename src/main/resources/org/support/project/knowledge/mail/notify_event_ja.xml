@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail>
+<title>[Knowledge] 開催通知 {Date} {Start} #{KnowledgeId}: {KnowledgeTitle}</title>
+<contents xml:space="preserve">
+{UserName} 様
+
+あなたの {Status} の以下のイベントが {Timing} 開催されます。
+イベントの詳細は以下のURLをご確認ください。
+
+{URL}
+
+------------------------------------------
+#{KnowledgeId}: {KnowledgeTitle}
+
+開催日時: {Date} {Start} - {End}
+開催場所: {Place}
+ステータス: {Status}
+
+------------------------------------------
+※本メールはシステムより自動で送信されています。
+ このメールに対する返信は出来ませんので御了承ください。
+</contents>
+
+<templateTitle>イベントの開催通知</templateTitle>
+<description>
+イベントの開催通知を、参加登録者／イベントをストックしたユーザに送ります。
+送信するタイミングは、以下の通り。
+・日曜日: その週（日曜〜土曜）に開催される場合に通知
+・開催日当日: その日に開催される場合に通知
+・開催時刻の30分前: 開催まで30分をきった場合に通知
+
+[予約語]
+以下のキーワードを本文内に書いておくと、メールを送る際に値を置換します。
+
+- {URL} : 記事へのアクセスURL
+- {KnowledgeId} : 記事のID
+- {KnowledgeTitle} : 記事のタイトル
+- {UserName} : メールの宛先名称
+- {Status} : 参加ステータス（参加登録済／キャンセル待ち/ストック中）
+- {Timing} : 通知のタイミング（今週／本日/もうすぐ）
+- {Date} : 開催日
+- {Start} : 開始時刻
+- {End} : 終了時刻
+- {Place}: 開催場所
+</description>
+</mail>
+
+

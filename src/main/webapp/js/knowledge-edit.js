@@ -48,12 +48,14 @@ $(document).ready(function() {
                 if (xhr.responseJSON) {
                     console.log(xhr.responseJSON);
                     var msg = xhr.responseJSON;
-                    if (msg.children) {
+                    if (msg.children && msg.children.length > 0) {
                         for (var i = 0; i < msg.children.length; i++) {
                             var child = msg.children[i];
                             console.log(child);
                             $.notify(child.message, 'warn');
                         }
+                    } else {
+                        $.notify(msg.message, 'warn');
                     }
                 } else {
                     $.notify(xhr.statusText + ' [' + xhr.status + ']', 'warn');
@@ -95,9 +97,7 @@ $(document).ready(function() {
     $("#content").change(function() {
         $('#updateContent').val('true');
     });
-
-    
-    
+    // 下書き保存
     $('#draftDeleteButton').click(function() {
         var draftId = $('#draftId').val();
         console.log(draftId);
@@ -133,6 +133,8 @@ $(document).ready(function() {
             }); 
         }
     });
+    // Auto complete
+    setAutoComplete($("#content"));
 });
 
 function deleteKnowledge() {

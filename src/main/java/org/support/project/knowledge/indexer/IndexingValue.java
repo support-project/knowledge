@@ -30,6 +30,10 @@ public class IndexingValue {
     private Integer creator;
     /** 作成日時（ソート用) */
     private Long time;
+    
+    /** テンプレート */
+    private Integer template;
+    
 
     /**
      * コンストラクタ
@@ -189,6 +193,20 @@ public class IndexingValue {
      */
     public void setTime(Long time) {
         this.time = time;
+    }
+
+    /**
+     * @return the template
+     */
+    public Integer getTemplate() {
+        return template;
+    }
+
+    /**
+     * @param template the template to set
+     */
+    public void setTemplate(Integer template) {
+        this.template = template;
     }
 
 }

@@ -46,7 +46,7 @@ _GROUPS.push('<%= jspUtil.out("groupitem.groupName") %>');
 
 <c:param name="PARAM_CONTENT">
 
-    <h4 class="title"><%= jspUtil.label("knowledge.search.title") %></h4>
+    <h4 class="title"><%= jspUtil.label("knowledge.navbar.search") %></h4>
     
     <form role="form" action="<%=request.getContextPath()%><%=top%>">
     
@@ -58,7 +58,18 @@ _GROUPS.push('<%= jspUtil.out("groupitem.groupName") %>');
             <input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.search.placeholder") %>"
                 name="keyword" id="searchkeyword" value="<%=jspUtil.out("searchKeyword")%>" />
         </div>
-
+        <div class="form-group">
+            <label for="input_tag">
+            <%= jspUtil.label("knowledge.add.label.type") %>
+            </label><br/>
+            <input type="radio" name="template" value="" checked="checked">ALL &nbsp;
+            <c:forEach var="template" items="${templates}" varStatus="status">
+                <label><input type="radio" name="template" value="<%= jspUtil.out("template.typeId") %>">
+                <i class="fa <%= jspUtil.out("template.typeIcon") %>"></i>
+                <%= jspUtil.out("template.typeName") %>&nbsp;
+                </label>
+            </c:forEach>
+        </div>
         <div class="form-group">
             <label for="input_tag">
             <%= jspUtil.label("knowledge.search.tags") %>

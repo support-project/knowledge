@@ -18,6 +18,7 @@ gulp.task('min', function() {
         inlinecss: [ minifyCss, 'concat' ],
         outputRelativePath: '../../'
     }))
+    .pipe(replace('var _LOGGING_NOTIFY_DESKTOP = true;', 'var _LOGGING_NOTIFY_DESKTOP = false;'))
     .pipe(gulp.dest('target/knowledge/WEB-INF/views/'));
 });
 

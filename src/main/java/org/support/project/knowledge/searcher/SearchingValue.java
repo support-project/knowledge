@@ -15,6 +15,8 @@ public class SearchingValue {
 
     /** データのタイプ */
     private Integer type;
+    /** テンプレートのタイプ */
+    private Integer template;
 
     /** コンテンツの文字列 */
     private String keyword;
@@ -181,6 +183,20 @@ public class SearchingValue {
      */
     public void setCreator(Integer creator) {
         this.creator = creator;
+    }
+
+    /**
+     * @return the template
+     */
+    public Integer getTemplate() {
+        return template;
+    }
+
+    /**
+     * @param template the template to set
+     */
+    public void setTemplate(Integer template) {
+        this.template = template;
     }
 
 }
