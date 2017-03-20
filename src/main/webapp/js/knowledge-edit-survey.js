@@ -39,7 +39,9 @@ $(document).ready(function() {
                 result.answers.forEach(function(answer) {
                     report += '<tr>';
                     report += '<td>';
-                    report += answer.insertDatetime;
+                    var m = moment(answer.insertDatetime, 'YYYY-MM-DD HH:mm:ss.SSS');
+                    console.log(m.format('YYYY-MM-DD HH:mm'));
+                    report += m.format('YYYY-MM-DD HH:mm');
                     report += '</td>';
                     report += '<td>';
                     report += answer.userName;
