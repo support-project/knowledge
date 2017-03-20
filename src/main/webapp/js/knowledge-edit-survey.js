@@ -6,6 +6,7 @@ $(document).ready(function() {
             $('#survey_edit').removeClass('hide');
             document._TEMPLATE.editable = true;
             $('#knowledgeIdSurvey').val(knowledgeId);
+            $('#items').html('');
             document.__load_survey(_CONTEXT + '/protect.survey/load/' + knowledgeId);
         }
     });
@@ -26,7 +27,9 @@ $(document).ready(function() {
                 $('#dataSurveyAnswerCount').text(result.answers.length);
                 
                 var report = '';
-                report += '<table class="table table-bordered table-striped table-responsive table-sm"><thead><tr class="bg-primary">';
+                report += '<table class="table table-bordered table-striped table-sm"><thead><tr class="bg-primary">';
+                report += '<td>' + _ANSWER_DATETIME + '</td>';
+                report += '<td>' + _ANSWER_USER + '</td>';
                 result.survey.items.forEach(function(item) {
                     report += '<td>';
                     report += item.itemName;
@@ -35,6 +38,15 @@ $(document).ready(function() {
                 report += '</tr></thead><tbody>';
                 result.answers.forEach(function(answer) {
                     report += '<tr>';
+                    report += '<td>';
+                    var m = moment(answer.insertDatetime, 'YYYY-MM-DD HH:mm:ss.SSS');
+                    console.log(m.format('YYYY-MM-DD HH:mm'));
+                    report += m.format('YYYY-MM-DD HH:mm');
+                    report += '</td>';
+                    report += '<td>';
+                    report += answer.userName;
+                    report += '</td>';
+                    
                     answer.items.forEach(function(answerItem) {
                         report += '<td>';
                         report += answerItem.itemValue;

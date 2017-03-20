@@ -55,7 +55,6 @@ MathJax.Hub.Config({
 <!-- endbuild -->
 
 <script>
-var _LANG = '<%= jspUtil.locale().getLanguage()%>';
 var _UPLOADED = '<%= jspUtil.label("knowledge.edit.label.uploaded") %>';
 var _DELETE_LABEL= '<%= jspUtil.label("label.delete") %>';
 var _FAIL_UPLOAD = '<%= jspUtil.label("knowledge.edit.label.fail.upload") %>';
@@ -67,6 +66,9 @@ var _SET_SLIDE_LABEL= '<%= jspUtil.label("knowledge.edit.set.slide.path") %>';
 var _LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
 var _UPDATE_TITLE = '<%= jspUtil.label("knowledge.edit.title") %>';
 var _IMAGE_UPLOAD = '<%= jspUtil.label("knowledge.edit.image.upload") %>';
+
+var _ANSWER_DATETIME = '<%= jspUtil.label("knowledge.survey.label.answer.date") %>';
+var _ANSWER_USER = '<%= jspUtil.label("knowledge.survey.label.answer.user") %>';
 
 var _TAGS = [];
 <c:forEach var="tagitem" items="${tagitems}" varStatus="status">

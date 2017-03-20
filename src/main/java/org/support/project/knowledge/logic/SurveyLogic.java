@@ -161,8 +161,10 @@ public class SurveyLogic extends TemplateLogic {
             });
             answer.setItems(items);
             
-            UsersEntity user = UsersDao.get().selectOnKey(answer.getAnswerId());
-            answer.setUserName(user.getUserName());
+            UsersEntity user = UsersDao.get().physicalSelectOnKey(answer.getAnswerId());
+            if (user != null) {
+                answer.setUserName(user.getUserName());
+            }
         }
         report.setAnswers(answers);
         
