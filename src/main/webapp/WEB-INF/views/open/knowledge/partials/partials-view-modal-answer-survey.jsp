@@ -8,7 +8,7 @@
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
 <div class="modal fade" id="modalAnswerSurvey" tabindex="-1" role="dialog" aria-labelledby="modalAnswerSurveyLabel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form action="<%=request.getContextPath()%>/protect.survey/answer" method="post" role="form" id="answerForm">
             <input type="hidden" name="<%= HttpRequestCheckLogic.REQ_ID_KEY %>"

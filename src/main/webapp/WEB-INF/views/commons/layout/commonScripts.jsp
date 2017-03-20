@@ -41,6 +41,7 @@ var _LOGIN_USER_ID = <%= jspUtil.id() %>;
 <% } else { %>
 var _LOGIN_USER_ID = null;
 <% } %>
+var _LANG = '<%= jspUtil.locale().getLanguage()%>';
 
 var getCookies = function() {
     var result = new Array();
