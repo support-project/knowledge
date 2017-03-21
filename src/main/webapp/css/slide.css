@@ -7,10 +7,15 @@
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
 }
-#content .slideshow-area {
-    width: 100%;
+.slideshow-area .slide-image {
+    width    : 100%;
 }
+
+
 @media screen and (max-width: 991px) {
+    #content .slideshow-area {
+        width: 100%;
+    }
     .question_Box .slideshow-area {
         width: 100%;
     }
@@ -19,6 +24,9 @@
     }
 }
 @media screen and (min-width: 992px) {
+    #content .slideshow-area {
+        width: 70%;
+    }
     .question_Box .slideshow-area {
         width: 80%;
     }
