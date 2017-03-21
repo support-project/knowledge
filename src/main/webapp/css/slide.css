@@ -13,10 +13,7 @@
 
 
 @media screen and (max-width: 991px) {
-    #content .slideshow-area {
-        width: 100%;
-    }
-    .question_Box .slideshow-area {
+    .slideshow-area {
         width: 100%;
     }
     .dotArea {
@@ -24,11 +21,18 @@
     }
 }
 @media screen and (min-width: 992px) {
-    #content .slideshow-area {
-        width: 70%;
+    #content .slideshow-area:-webkit-full-screen,
+    #content .slideshow-area:-moz-full-screen, 
+    #content .slideshow-area:-ms-fullscreen,
+    #content .slideshow-area:fullscreen {
+        position : fixed ;
+        left     : 0 ;
+        top      : 0 ;
+        width    : 100% ;
+        height   : 100%;
     }
-    .question_Box .slideshow-area {
-        width: 80%;
+    .slideshow-area {
+        width: 75%;
     }
 }
 
