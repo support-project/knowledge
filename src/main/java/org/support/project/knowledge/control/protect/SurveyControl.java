@@ -41,7 +41,8 @@ public class SurveyControl extends TemplateControl {
 
     
     /**
-     * 登録 画面遷移すると再度画面を作るのが面倒なので、Ajaxアクセスとする
+     * 登録
+     * 画面遷移すると再度画面を作るのが面倒なので、Ajaxアクセスとする
      * 
      * @return
      * @throws InvalidParamException
@@ -137,7 +138,8 @@ public class SurveyControl extends TemplateControl {
     
     
     /**
-     * 登録 画面遷移すると再度画面を作るのが面倒なので、Ajaxアクセスとする
+     * 回答
+     * 画面遷移すると再度画面を作るのが面倒なので、Ajaxアクセスとする
      * 
      * @return
      * @throws InvalidParamException
@@ -215,8 +217,7 @@ public class SurveyControl extends TemplateControl {
     @Get
     public Boundary report() throws InvalidParamException {
         Long knowledgeId = super.getPathLong(new Long(-1));
-        KnowledgesEntity knowledge = KnowledgeLogic.get().select(knowledgeId, getLoginedUser());
-        if (knowledge == null || !KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledge, null)) {
+        if (!KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledgeId)) {
             return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
         }
         SurveyReport report = SurveyLogic.get().loadAnswers(knowledgeId, getLoginUserId());
