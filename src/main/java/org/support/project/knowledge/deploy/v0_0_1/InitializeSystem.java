@@ -1,9 +1,8 @@
 package org.support.project.knowledge.deploy.v0_0_1;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
 import org.support.project.common.util.FileUtil;
+import org.support.project.common.util.StringUtils;
+import org.support.project.common.util.SystemUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.ServiceConfigsDao;
 import org.support.project.knowledge.dao.ServiceLocaleConfigsDao;
@@ -22,7 +21,8 @@ import org.support.project.web.entity.UserRolesEntity;
 import org.support.project.web.entity.UsersEntity;
 
 public class InitializeSystem implements Migrate {
-
+    private String adminKey = "admin";
+    
     public static InitializeSystem get() {
         return org.support.project.di.Container.getComp(InitializeSystem.class);
     }
@@ -34,7 +34,7 @@ public class InitializeSystem implements Migrate {
         return true;
     }
 
-    private void addInitDatas() throws UnsupportedEncodingException, IOException {
+    private void addInitDatas() throws Exception {
         // 権限の追加
         RolesEntity adminRole = RolesEntity.get();
         adminRole.setRoleId(1);
@@ -52,9 +52,17 @@ public class InitializeSystem implements Migrate {
         UsersDao usersDao = UsersDao.get();
         UsersEntity usersEntity = UsersEntity.get();
         usersEntity.setUserId(1);
-        usersEntity.setUserKey("admin");
-        usersEntity.setPassword("admin123");
-        usersEntity.setUserName("管理者ユーザ");
+        String admin = SystemUtils.getenv("KNOWLEDGE_ADMIN_KEY");
+        if (!StringUtils.isEmpty(admin)) {
+            adminKey = admin;
+        }
+        usersEntity.setUserKey(adminKey);
+        String password = SystemUtils.getenv("KNOWLEDGE_ADMIN_PASSWORD");
+        if (StringUtils.isEmpty(password)) {
+            password = "admin123";
+        }
+        usersEntity.setPassword(password);
+        usersEntity.setUserName("Administrator");
         usersDao.save(usersEntity);
 
         // 管理者ユーザと管理者権を紐付け
@@ -81,6 +89,7 @@ public class InitializeSystem implements Migrate {
         MailLogic.get().initMailTemplate();
     }
 
+
     private void createTables() {
         DatabaseControlDao dao1 = new DatabaseControlDao();
         dao1.dropAllTable();
@@ -97,5 +106,6 @@ public class InitializeSystem implements Migrate {
         };
         initializeDao.initializeDatabase(sqlpaths);
     }
-
+    
+    
 }
