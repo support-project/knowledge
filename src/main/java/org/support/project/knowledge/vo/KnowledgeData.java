@@ -212,7 +212,7 @@ public class KnowledgeData {
      * @param tagsStr the tagsStr to set
      */
     public void setTagsStr(String tagsStr) {
-        this.tagsStr = tagsStr;
+        this.setTags(tagsStr);
     }
     /**
      * Get filesStrs

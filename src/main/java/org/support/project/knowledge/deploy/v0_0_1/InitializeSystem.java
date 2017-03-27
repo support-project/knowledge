@@ -52,9 +52,9 @@ public class InitializeSystem implements Migrate {
         UsersDao usersDao = UsersDao.get();
         UsersEntity usersEntity = UsersEntity.get();
         usersEntity.setUserId(1);
-        usersEntity.setUserKey("admin");
-        usersEntity.setPassword("admin123");
-        usersEntity.setUserName("管理者ユーザ");
+        usersEntity.setUserKey("root");
+        usersEntity.setPassword("A4ss7VdDIhlegz8iZzJOslKPT0Jb9-y5rG1ZAYZqqHAEl1wf3fJDnu8qizjrHl-0");
+        usersEntity.setUserName("Administrator");
         usersDao.save(usersEntity);
 
         // 管理者ユーザと管理者権を紐付け
