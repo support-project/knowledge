@@ -305,7 +305,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     @Post(subscribeToken = "knowledge", checkReqToken = true)
     public Boundary save(KnowledgesEntity entity) throws Exception {
         try {
-            if (entity.getKnowledgeId() != null && entity.getKnowledgeId() > 1) {
+            if (entity.getKnowledgeId() != null && entity.getKnowledgeId() >= 1) {
                 return update(entity);
             } else {
                 return add(entity);
