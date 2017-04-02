@@ -8,7 +8,7 @@
 
 
 ## Live Demo
-- [https://support-project.org/knowledge/index](https://support-project.org/knowledge/index)
+- [https://test-knowledge.support-project.org](https://test-knowledge.support-project.org)
 - Demo users
    - [id/password] user1 / user1
    - [id/password] user2 / user2
@@ -25,8 +25,7 @@
 
 
 ## Project website (more info)
-- [landing page](https://support-project.org/knowledge_info/index)
-- [online manual](https://support-project.org/knowledge_info/open.manual/index)
+- [landing page and Online manual](https://information-knowledge.support-project.org/)
 
 
 
