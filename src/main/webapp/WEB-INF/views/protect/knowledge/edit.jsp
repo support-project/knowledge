@@ -84,6 +84,8 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 <jsp:include page="../../open/tag/dialog.jsp"></jsp:include>
 
 <form action="<%= request.getContextPath()%>/protect.knowledge/delete" method="post" role="form" id="knowledgeDeleteForm">
+    <input type="hidden" name="<%= HttpRequestCheckLogic.REQ_ID_KEY %>"
+        value="<%= jspUtil.out(HttpRequestCheckLogic.REQ_ID_KEY) %>" />
     <input type="hidden" name="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" id="knowledgeIdForDelete" />
 </form>
 
