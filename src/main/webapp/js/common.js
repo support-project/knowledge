@@ -16,7 +16,7 @@ $(document).ready(function() {
     
     // セッションが切れないように、定期的にアクセスする(5分に1回)
     var accessInterval = function() {
-        setInterval(() => {
+        setInterval(function() {
             var url = _CONTEXT + '/open.interval/access';
             $.ajax({
                 type : 'GET',
