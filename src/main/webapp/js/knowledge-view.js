@@ -14,6 +14,20 @@ $(document).ready(function(){
     
     // Auto complete
     setAutoComplete($("#comment"));
+    
+    $('.inner-page-link').click(function(){
+        var speed = 500;
+        var href= $(this).attr("href");
+        //var target = $(href == "#" || href == "" ? 'html' : href);
+        var target = $(href);
+        if (target && target.offset && target.offset()) {
+            var position = target.offset().top;
+            position = position - 100;
+            $("html, body").animate({scrollTop:position}, speed, "swing");
+        }
+        return false;
+    });
+    
 });
 
 //イイネを押下

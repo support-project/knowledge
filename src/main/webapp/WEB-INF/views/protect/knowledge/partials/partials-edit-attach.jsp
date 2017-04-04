@@ -12,15 +12,18 @@
         <div id="fileupload">
             <label for="input_fileupload"><%= jspUtil.label("knowledge.add.label.files") %></label>
             <br/>
-            <span class="btn btn-primary fileinput-button btn-xs">
+            <span class="btn btn-info fileinput-button btn-xs">
                 <i class="fa fa-cloud-upload"></i>&nbsp;<span><%= jspUtil.label("knowledge.add.label.select.file") %></span>
                 <input type="file" name="files[]" multiple>
             </span>
         </div>
-        <button type="button" class="btn btn-primary btn-xs" id="previewClipbordImage">
-            <i class="fa fa-clipboard"></i>&nbsp; <%= jspUtil.label("knowledge.edit.image.upload") %>
-        </button>
+        <div style="margin-top: 2px;">
+            <button type="button" class="btn btn-info btn-xs" id="previewClipbordImage">
+                <i class="fa fa-clipboard"></i>&nbsp; <%= jspUtil.label("knowledge.edit.image.upload") %>
+            </button>
+        </div>
     </div>
+    
     <div class="file-group tips_info" id="drop_target">
         <%= jspUtil.label("knowledge.add.label.area.upload") %>
         <%= jspUtil.label("knowledge.add.label.attach.limit", jspUtil.out("uploadMaxMBSize")) %>

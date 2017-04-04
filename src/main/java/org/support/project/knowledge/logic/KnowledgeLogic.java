@@ -1349,22 +1349,24 @@ public class KnowledgeLogic {
                     return true;
                 }
             }
-            for (LabelValue labelValue : editors) {
-                Integer id = TargetLogic.get().getGroupId(labelValue.getValue());
-                if (id != Integer.MIN_VALUE) {
-                    List<GroupsEntity> groups = loginedUser.getGroups();
-                    if (groups != null) {
-                        for (GroupsEntity groupsEntity : groups) {
-                            if (groupsEntity.getGroupId().intValue() == id.intValue()) {
-                                return true;
+            if (editors != null) {
+                for (LabelValue labelValue : editors) {
+                    Integer id = TargetLogic.get().getGroupId(labelValue.getValue());
+                    if (id != Integer.MIN_VALUE) {
+                        List<GroupsEntity> groups = loginedUser.getGroups();
+                        if (groups != null) {
+                            for (GroupsEntity groupsEntity : groups) {
+                                if (groupsEntity.getGroupId().intValue() == id.intValue()) {
+                                    return true;
+                                }
                             }
                         }
-                    }
-                } else {
-                    id = TargetLogic.get().getUserId(labelValue.getValue());
-                    if (id != Integer.MIN_VALUE) {
-                        if (id.intValue() == loginedUser.getUserId().intValue()) {
-                            return true;
+                    } else {
+                        id = TargetLogic.get().getUserId(labelValue.getValue());
+                        if (id != Integer.MIN_VALUE) {
+                            if (id.intValue() == loginedUser.getUserId().intValue()) {
+                                return true;
+                            }
                         }
                     }
                 }

@@ -41,15 +41,20 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/knowledge-target-select.js"></script>
 <script type="text/javascript" src="js/knowledge-preview.js"></script>
 <script type="text/javascript" src="js/knowledge-tag-select.js"></script>
-<script type="text/javascript" src="js/knowledge-template.js"></script>
 <script type="text/javascript" src="js/paste_image.js"></script>
 <script type="text/javascript" src="js/knowledge-clipimage.js"></script>
 <script type="text/javascript" src="js/emojilist.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
+
+<script type="text/javascript" src="js/template-item-edit.js"></script>
+<script type="text/javascript" src="js/knowledge-edit-survey.js"></script>
+
+<script type="text/javascript" src="js/template-item-input.js"></script>
+<script type="text/javascript" src="js/knowledge-template.js"></script>
+
 <!-- endbuild -->
 
 <script>
-var _LANG = '<%= jspUtil.locale().getLanguage()%>';
 var _UPLOADED = '<%= jspUtil.label("knowledge.edit.label.uploaded") %>';
 var _DELETE_LABEL= '<%= jspUtil.label("label.delete") %>';
 var _FAIL_UPLOAD = '<%= jspUtil.label("knowledge.edit.label.fail.upload") %>';
@@ -62,9 +67,15 @@ var _LABEL_UPDATE = '<%= jspUtil.label("label.update") %>';
 var _UPDATE_TITLE = '<%= jspUtil.label("knowledge.edit.title") %>';
 var _IMAGE_UPLOAD = '<%= jspUtil.label("knowledge.edit.image.upload") %>';
 
+var _ANSWER_DATETIME = '<%= jspUtil.label("knowledge.survey.label.answer.date") %>';
+var _ANSWER_USER = '<%= jspUtil.label("knowledge.survey.label.answer.user") %>';
+
 var _TAGS = [];
 <c:forEach var="tagitem" items="${tagitems}" varStatus="status">
 _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 </c:forEach>
-
 </script>
+
+<%-- テンプレート用 --%>
+<jsp:include page="/WEB-INF/views/admin/template/include_template_label.jsp"></jsp:include>
+<%-- テンプレート用(END) --%>

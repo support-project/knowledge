@@ -36,13 +36,13 @@
                 <a href="<%=request.getContextPath()%>/open.knowledge/view/<%=jspUtil.out("knowledge.knowledgeId")%><%=jspUtil.out("params")%>"
                     class="text-primary btn-link">
                     <div class="list-title">
+                    <span class="dispKnowledgeId">
+                        #<%= jspUtil.out("knowledge.knowledgeId") %>
+                    </span>
                     <%=jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR)%>
                     </div>
                 </a>
                 <div>
-                    <span class="dispKnowledgeId">
-                        #<%= jspUtil.out("knowledge.knowledgeId") %>
-                    </span>
                     <img src="<%=request.getContextPath()%>/images/loader.gif"
                         data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("knowledge.insertUser")%>" alt="icon"
                         width="20" height="20" />

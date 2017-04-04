@@ -30,25 +30,30 @@
             </span>
             <%=jspUtil.out("title", JspUtil.ESCAPE_CLEAR)%>
             </h4>
-            <div style="margin-top: 10px;">
-                <h5>
-                <jsp:include page="partials/partials-view-template.jsp"></jsp:include>
-                </h5>
+
+            <div class="meta-info">
+                <%-- いいね、コメント、参加者 --%>
+                <jsp:include page="partials/partials-view-count.jsp"></jsp:include>
             </div>
-            
-            <%-- 更新者情報 --%>
-            <jsp:include page="partials/partials-view-editor.jsp"></jsp:include>
-            <%-- タグ --%>
-            <jsp:include page="partials/partials-view-tag.jsp"></jsp:include>
-            <%-- ストックに入れているか --%>
-            <jsp:include page="partials/partials-view-stock.jsp"></jsp:include>
-            <%-- 公開区分 --%>
-            <jsp:include page="partials/partials-view-public-flag.jsp"></jsp:include>
+            <div class="meta-info">
+                <%-- 更新者情報 --%>
+                <jsp:include page="partials/partials-view-editor.jsp"></jsp:include>
+            </div>
+            <div class="meta-info">
+                <%-- テンプレートの種類表示 --%>
+                <jsp:include page="partials/partials-view-template.jsp"></jsp:include>
+                <%-- タグ --%>
+                <jsp:include page="partials/partials-view-tag.jsp"></jsp:include>
+                <%-- ストックに入れているか --%>
+                <jsp:include page="partials/partials-view-stock.jsp"></jsp:include>
+                <%-- 公開区分 --%>
+                <jsp:include page="partials/partials-view-public-flag.jsp"></jsp:include>
+            </div>
         </div>
 
         <%-- 右上のボタン部分 --%>
         <div class="col-sm-4">
-            <%-- 公開区分やイイネ件数など --%>
+            <%-- ボタン --%>
             <jsp:include page="partials/partials-view-menu-buttons.jsp"></jsp:include>
             <%-- 目次 --%>
             <jsp:include page="partials/partials-view-toc.jsp"></jsp:include>
@@ -57,16 +62,21 @@
 
     <%-- ナレッジ表示（メインのコンテンツ部分） --%>
     <div class="row" id="content_main">
-        <div class="col-sm-8" id="main_contents">
+        <div class="col-sm-12" >
             <%-- メインのコンテンツ --%>
             <jsp:include page="partials/partials-view-main-contents.jsp"></jsp:include>
         </div>
-        <div class="col-sm-4" id="attach_files">
+    </div>
+     
+    <%-- 添付ファイル --%>
+    <div class="row">
+        <div class="col-sm-12" >
             <%-- 添付ファイル --%>
             <jsp:include page="partials/partials-view-attach-files.jsp"></jsp:include>
         </div>
     </div>
-
+     
+     
     <%-- コメント表示 --%>
     <jsp:include page="partials/partials-view-comment-list.jsp"></jsp:include>
 
@@ -76,6 +86,9 @@
 
     <%-- Stock Modal --%>
     <jsp:include page="partials/partials-view-modal-stock.jsp"></jsp:include>
+    
+    <%-- Survey --%>
+    <jsp:include page="partials/partials-view-modal-answer-survey.jsp"></jsp:include>
 
     <%-- Emoji --%>
     <jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>

@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.fileupload.FileItem;
 import org.support.project.aop.Aspect;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
@@ -25,8 +24,12 @@ import org.support.project.knowledge.entity.AccountImagesEntity;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.ConfirmMailChangesDao;
+import org.support.project.web.dao.GroupsDao;
+import org.support.project.web.dao.RolesDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.ConfirmMailChangesEntity;
+import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.entity.RolesEntity;
 import org.support.project.web.entity.UsersEntity;
 
 @DI(instance = Instance.Singleton)
@@ -209,5 +212,29 @@ public class AccountLogic {
         mailChangesDao.delete(mailChangesEntity);
         return errors;
     }
+    
+    /**
+     * ログインユーザのオブジェクトを生成する
+     * @param userKey
+     * @return
+     */
+    public LoginedUser createLoginUser(String userKey) {
+        UsersDao usersDao = UsersDao.get();
+        UsersEntity usersEntity = usersDao.selectOnUserKey(userKey);
+        RolesDao rolesDao = RolesDao.get();
+        List<RolesEntity> rolesEntities = rolesDao.selectOnUserKey(userKey);
 
+        LoginedUser loginedUser = new LoginedUser();
+        loginedUser.setLoginUser(usersEntity);
+        loginedUser.setRoles(rolesEntities);
+        loginedUser.setLocale(usersEntity.getLocale());
+
+        // グループ
+        GroupsDao groupsDao = GroupsDao.get();
+        List<GroupsEntity> groups = groupsDao.selectMyGroup(loginedUser, 0, Integer.MAX_VALUE);
+        loginedUser.setGroups(groups);
+        
+        return loginedUser;
+    }
+    
 }

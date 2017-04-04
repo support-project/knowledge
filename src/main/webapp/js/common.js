@@ -13,10 +13,26 @@ $(document).ready(function() {
         }, 500);
         return false;
     });
-
+    
+    // セッションが切れないように、定期的にアクセスする(5分に1回)
+    var accessInterval = function() {
+        setInterval(function() {
+            var url = _CONTEXT + '/open.interval/access';
+            $.ajax({
+                type : 'GET',
+                url : url
+            }).done(function(result, textStatus, xhr) {
+                console.log('OK');
+            }).fail(function(xhr, textStatus, error) {
+                console.error(error);
+            }).always(function( jqXHR, textStatus ) {
+            });
+        }, 1000 * 60 * 5);
+    };
+    accessInterval();
 });
 function logging(str, level) {
-    console.log(str);
+//    console.log(str);
     if (_LOGGING_NOTIFY_DESKTOP) {
         if (!level) {
             level = 'info';
