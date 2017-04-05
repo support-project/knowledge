@@ -51,7 +51,7 @@ public class SurveyControl extends TemplateControl {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    @Post(subscribeToken = "knowledge", checkReqToken = true)
+    @Post(subscribeToken = "survey", checkReqToken = true)
     public Boundary save() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
         List<ValidateError> errors = new ArrayList<ValidateError>();
         TemplateMastersEntity template = loadParams(errors);
@@ -223,5 +223,40 @@ public class SurveyControl extends TemplateControl {
         SurveyReport report = SurveyLogic.get().loadAnswers(knowledgeId, getLoginUserId());
         return send(report);
     }
+    
+    
+    /**
+     * アンケート編集画面を表示
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get(publishToken = "survey")
+    public Boundary edit() throws InvalidParamException {
+        Long knowledgeId = super.getPathLong(new Long(-1));
+        if (!KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledgeId)) {
+            return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+        }
+        setAttribute("knowledgeId", knowledgeId);
+        return forward("edit.jsp");
+    }
+    /**
+     * アンケート結果レポート
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary answers() throws InvalidParamException {
+        Long knowledgeId = super.getPathLong(new Long(-1));
+        if (!KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledgeId)) {
+            return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+        }
+        setAttribute("knowledgeId", knowledgeId);
+        return forward("answers.jsp");
+    }
+    
+    
+    
+    
+    
     
 }

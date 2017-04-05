@@ -46,9 +46,6 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/emojilist.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
 
-<script type="text/javascript" src="js/template-item-edit.js"></script>
-<script type="text/javascript" src="js/knowledge-edit-survey.js"></script>
-
 <script type="text/javascript" src="js/template-item-input.js"></script>
 <script type="text/javascript" src="js/knowledge-template.js"></script>
 
@@ -76,6 +73,3 @@ _TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
 </c:forEach>
 </script>
 
-<%-- テンプレート用 --%>
-<jsp:include page="/WEB-INF/views/admin/template/include_template_label.jsp"></jsp:include>
-<%-- テンプレート用(END) --%>

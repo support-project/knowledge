@@ -185,3 +185,10 @@
 - jstzdetect
    - License: [MIT] https://pellepim.bitbucket.io/jstz/
    - project-url: https://pellepim.bitbucket.io/jstz/
+
+- bootstrap-table
+   - License: [MIT] https://github.com/wenzhixin/bootstrap-table/blob/develop/LICENSE
+   - project-url: http://bootstrap-table.wenzhixin.net.cn/
+   
+   
+   

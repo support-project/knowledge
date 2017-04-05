@@ -1319,6 +1319,9 @@ public class KnowledgeLogic {
      * @return
      */
     public boolean isEditor(LoginedUser loginedUser, Long knowledgeId) {
+        if (loginedUser.isAdmin()) {
+            return true;
+        }
         KnowledgesEntity check = KnowledgesDao.get().selectOnKey(knowledgeId);
         if (check == null) {
             return false;
