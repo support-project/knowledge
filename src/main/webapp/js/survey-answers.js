@@ -14,36 +14,43 @@ $(document).ready(function() {
             $('#dataSurveyAnswerTitle').text(result.survey.title);
             $('#dataSurveyAnswerCount').text(result.answers.length);
             
-            var report = '';
-            report += '<table class="table table-bordered table-striped table-sm"><thead><tr class="bg-primary">';
-            report += '<td>' + _ANSWER_DATETIME + '</td>';
-            report += '<td>' + _ANSWER_USER + '</td>';
-            result.survey.items.forEach(function(item) {
-                report += '<td>';
-                report += item.itemName;
-                report += '</td>';
+            var columns = [];
+            var data = [];
+            
+            columns.push({
+                field: 'answer_datetime',
+                title: _ANSWER_DATETIME
             });
-            report += '</tr></thead><tbody>';
+            columns.push({
+                field: 'answer_user',
+                title: _ANSWER_USER
+            });
+            result.survey.items.forEach(function(item) {
+                columns.push({
+                    field: item.itemNo,
+                    title: item.itemName
+                });
+            });
+
+            
             result.answers.forEach(function(answer) {
-                report += '<tr>';
-                report += '<td>';
-                var m = moment(answer.insertDatetime, 'YYYY-MM-DD HH:mm:ss.SSS');
-                console.log(m.format('YYYY-MM-DD HH:mm'));
-                report += m.format('YYYY-MM-DD HH:mm');
-                report += '</td>';
-                report += '<td>';
-                report += answer.userName;
-                report += '</td>';
+                var row = {};
+                row.answer_datetime = moment(answer.insertDatetime, 'YYYY-MM-DD HH:mm:ss.SSS').format('YYYY-MM-DD HH:mm');
+                row.answer_user = answer.userName;
                 
                 answer.items.forEach(function(answerItem) {
-                    report += '<td>';
-                    report += answerItem.itemValue;
-                    report += '</td>';
-                })
-                report += '</tr>';
+                    row[answerItem.itemNo] = answerItem.itemValue;
+                });
+                data.push(row);
             });
-            report += '</tbody></table>';
-            $('#dataSurveyAnswerValues').html(report);
+            
+            $('#table').bootstrapTable({
+                columns: columns,
+                data: data,
+                showExport: true,
+                exportTypes: ['json', 'xml', 'csv']
+            });
+            
         }).fail(function(xhr, textStatus, error) {
             handleErrorResponse(xhr, textStatus, error);
         });

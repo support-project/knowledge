@@ -14,20 +14,17 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
-<style>
-#dataSurveyAnswerValues {
-    width: 100%;
-    white-space: nowrap;
-    overflow-x: scroll;
-    max-height: 400px;
-    overflow-y: auto;
-}
-</style>
+<!-- build:css(src/main/webapp) css/page-survey-answers.css -->
+<link rel="stylesheet" href="bower/bootstrap-table/dist/bootstrap-table.min.css" />
+<!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-survey-answers.js -->
 <script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
+<script type="text/javascript" src="bower/bootstrap-table/dist/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="bower/bootstrap-table/dist/extensions/export/bootstrap-table-export.min.js"></script>
+<script type="text/javascript" src="bower/tableExport.jquery.plugin/tableExport.min.js"></script>
 
 <script type="text/javascript" src="js/survey-answers.js"></script>
 <!-- endbuild -->
@@ -48,7 +45,7 @@ var _ANSWER_USER = '<%= jspUtil.label("knowledge.survey.label.answer.user") %>';
 <div>
     <%= jspUtil.label("knowledge.survey.label.answer.count") %>: <span id="dataSurveyAnswerCount"></span>
 </div>
-<div id="dataSurveyAnswerValues"></div>
+<table id="table" class="table table-bordered table-striped table-sm"></table>
 <div class="modal-footer">
     <a href="<%= request.getContextPath() %>/open.knowledge/view/<%= jspUtil.out("knowledgeId") %>"
         class="btn btn-warning" role="button"><i class="fa fa-undo"></i>&nbsp;<%= jspUtil.label("label.back") %>
