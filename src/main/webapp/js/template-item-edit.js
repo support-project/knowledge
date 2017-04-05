@@ -46,22 +46,19 @@ $(document).ready(function() {
         var tb = "#ch_" + itemId;
         
         var addItem = '';
-        addItem += '<div class="form-group choice_item_top">';
-        addItem += '<label for="">';
-        addItem += LABEL_CHOICE_LABEL;
-        addItem += '</label>';
-        addItem += '<input type="text" class="form-control" name="label_' + itemId // + '_' + c 
-            + '" id="label_' + itemId + '_' + c + '" value="' + label + '" />';
-        addItem += '</div>';
-        
-        addItem += '<div class="form-group choice_item_bottom">';
-        addItem += '<label for="">';
-        addItem += LABEL_CHOICE_VALUE;
-        addItem += '</label>';
+        addItem += '<div class="form-group form-inline">';
+        addItem += '<label for="" class="col-sm-3 control-label">' + LABEL_CHOICE_VALUE + ' / ' + LABEL_ITEM_TITLE + '</label>';
+        addItem += '<div class="col-sm-3 input-group">';
+        addItem += '<div class="input-group-addon"><i class="fa fa-database" aria-hidden="true"></i></div>';
         addItem += '<input type="text" class="form-control" name="value_' + itemId // + '_' + c 
-            + '" id="value_' + itemId + '_' + c + '" value="' + value + '" />';
+        + '" id="value_' + itemId + '_' + c + '" value="' + value + '" />';
         addItem += '</div>';
-        
+        addItem += '<div class="col-sm-6 input-group">';
+        addItem += '<div class="input-group-addon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>';
+        addItem += '<input type="text" class="form-control" name="label_' + itemId // + '_' + c 
+        + '" id="label_' + itemId + '_' + c + '" value="' + label + '" />';
+        addItem += '</div>';
+        addItem += '</div>';
         $(tb).append(addItem);
     };
     /**
@@ -77,9 +74,8 @@ $(document).ready(function() {
         c--;
         choiceCount[itemId] = c;
         
-        var tb = "#ch_" + itemId + " div:last";
-        $(tb).remove(); // value
-        $(tb).remove(); // label
+        var tb = "#ch_" + itemId + "";
+        $(tb).children().last().remove();
     };
     
     /**
@@ -126,13 +122,16 @@ $(document).ready(function() {
             }
             addItem += '</h5>';
             addItem += '<div class="form-group">';
-            addItem += '<label for="">';
-            addItem += LABEL_ITEM_TITLE + '</label>';
+            addItem += '<label for="" class="col-sm-2 control-label">' + LABEL_ITEM_TITLE + '</label>';
+            addItem += '<div class="col-sm-10 input-group"><div class="input-group-addon"><i class="fa fa-tag" aria-hidden="true"></i></div>';
             addItem += '<input type="text" class="form-control" name="title_' + itemId + '" id="title_' + itemId + '" value="' + label + '" />';
             addItem += '</div>';
+            addItem += '</div>';
             addItem += '<div class="form-group">';
-            addItem += '<label for="">' + LABEL_ITEM_DESCRIPTION + '</label>';
+            addItem += '<label for="" class="col-sm-2 control-label">' + LABEL_ITEM_DESCRIPTION + '</label>';
+            addItem += '<div class="col-sm-10 input-group"><div class="input-group-addon"><i class="fa fa-commenting-o" aria-hidden="true"></i></div>';
             addItem += '<input type="text" class="form-control" name="description_' + itemId + '" id="description_' + itemId + '" value="' + value + '" />';
+            addItem += '</div>';
             addItem += '</div>';
             
             addItem += '<div id="ch_' + itemId + '" class="choice_item_list">';

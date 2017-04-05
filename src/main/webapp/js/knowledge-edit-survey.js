@@ -5,7 +5,6 @@ $(document).ready(function() {
             $('#survey_info').addClass('hide');
             $('#survey_edit').removeClass('hide');
             document._TEMPLATE.editable = true;
-            $('#knowledgeIdSurvey').val(knowledgeId);
             $('#items').html('');
             document.__load_survey(_CONTEXT + '/protect.survey/load/' + knowledgeId);
         }

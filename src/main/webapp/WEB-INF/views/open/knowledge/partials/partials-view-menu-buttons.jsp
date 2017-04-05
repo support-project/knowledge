@@ -90,11 +90,26 @@
             </a>
         <% } %>
     <% } %>
-        
         <a id="btnAnswerSurvey" class="btn btn-info btn_col2 hide" data-toggle="modal" href="#modalAnswerSurvey">
             <i class="fa fa-check-square-o"></i>&nbsp;
             <%=jspUtil.label("knowledge.view.label.answer")%>
         </a>
     </div>
+
+    <%
+        if (request.getRemoteUser() != null && (Boolean) request.getAttribute("edit")) {
+    %>
+    <!-- Survey -->
+    <div >
+        <a id="editSurveyBtn" class="btn btn-info btn_col2" href="<%= request.getContextPath()%>/protect.survey/edit/<%=jspUtil.out("knowledgeId")%>">
+            <i class="fa fa-th-list"></i>&nbsp;
+            <%=jspUtil.label("knowledge.survey.label.edit")%>
+        </a>
+
+    </div>
+    <% } %>
+
+
+
 </div>
 
