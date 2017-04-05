@@ -239,6 +239,20 @@ public class SurveyControl extends TemplateControl {
         setAttribute("knowledgeId", knowledgeId);
         return forward("edit.jsp");
     }
+    /**
+     * アンケート結果レポート
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary answers() throws InvalidParamException {
+        Long knowledgeId = super.getPathLong(new Long(-1));
+        if (!KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledgeId)) {
+            return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+        }
+        setAttribute("knowledgeId", knowledgeId);
+        return forward("answers.jsp");
+    }
     
     
     

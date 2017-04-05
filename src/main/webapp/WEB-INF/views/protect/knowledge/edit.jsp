@@ -76,9 +76,6 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
 <%-- Viewer select modal --%>
 <jsp:include page="partials/partials-edit-viewer-modal.jsp"></jsp:include>
 
-<%-- Survey --%>
-<jsp:include page="partials/partials-edit-survey.jsp"></jsp:include>
-
 <jsp:include page="../../open/emoji/cheatsheet.jsp"></jsp:include>
 <jsp:include page="markdown.jsp"></jsp:include>
 <jsp:include page="../../open/tag/dialog.jsp"></jsp:include>

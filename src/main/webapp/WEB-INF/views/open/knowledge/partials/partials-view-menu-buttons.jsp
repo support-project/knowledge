@@ -105,7 +105,11 @@
             <i class="fa fa-th-list"></i>&nbsp;
             <%=jspUtil.label("knowledge.survey.label.edit")%>
         </a>
-
+        
+        <a id="answersSurveyBtn" class="btn btn-info btn_col2" href="<%= request.getContextPath()%>/protect.survey/answers/<%=jspUtil.out("knowledgeId")%>">
+            <i class="fa fa-bar-chart"></i>&nbsp;
+            <%=jspUtil.label("knowledge.survey.label.report")%>
+        </a>
     </div>
     <% } %>
 

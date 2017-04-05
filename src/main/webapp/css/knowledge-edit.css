@@ -120,10 +120,3 @@
     }
 }
 
-#dataSurveyAnswerValues {
-    width: 100%;
-    white-space: nowrap;
-    overflow-x: scroll;
-    max-height: 400px;
-    overflow-y: auto;
-}
