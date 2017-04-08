@@ -25,6 +25,20 @@ $(document).ready(function() {
         var s = '#' + itemId;
         $(s).remove();
     };
+    
+    var moveupItem = function(itemId) {
+        var s = '#' + itemId;
+        var e = $(s);
+        e.prev().insertAfter(e);
+        
+    }
+    var movedownItem = function(itemId) {
+        var s = '#' + itemId;
+        var e = $(s);
+        e.next().insertBefore(e);
+        
+    }
+    
     /**
      * 入力項目に対し、選択肢を追加（ラジオやチェックボックスなどの選択項目）
      * @param itemid 入力項目のID
@@ -108,17 +122,23 @@ $(document).ready(function() {
         addItem += '<div id="' + itemId + '" class="add_item">';
             addItem += '<h5 class="item_title">' + kind + '<input type="hidden" name="itemType" value="' + prefix + '_' + itemId + '"/>';
             if (document._TEMPLATE.editable) {
-                addItem += '<button type="button" class="btn btn-warning" id="deleteItem_' + itemId + '" >';
-                addItem += '<i class="fa fa-minus-square"></i>&nbsp;' + LABEL_DELETE;
-                addItem += '</button>&nbsp;';
                 if (kind === LABEL_RADIO_ITEM || kind === LABEL_CHECKBOX_ITEM) {
                     addItem += '<button type="button" class="btn btn-success" id="addChoice_' + itemId + '" >';
                     addItem += '<i class="fa fa-plus-circle"></i>&nbsp;' + LABEL_ADD_CHOICE;
                     addItem += '</button>&nbsp;';
                     addItem += '<button type="button" class="btn btn-success" id="deleteChoice_' + itemId + '" >';
                     addItem += '<i class="fa fa-minus-circle"></i>&nbsp;' + LABEL_DELETE_CHOICE;
-                    addItem += '</button>';
+                    addItem += '</button>&nbsp;';
                 }
+                addItem += '<button type="button" class="btn btn-info" id="moveupItem_' + itemId + '" >';
+                addItem += '<i class="fa fa-arrow-up"></i>&nbsp;' + LABEL_MOVE_UP;
+                addItem += '</button>&nbsp;';
+                addItem += '<button type="button" class="btn btn-info" id="movedownItem_' + itemId + '" >';
+                addItem += '<i class="fa fa-arrow-down"></i>&nbsp;' + LABEL_MOVE_DOWN;
+                addItem += '</button>&nbsp;';
+                addItem += '<button type="button" class="btn btn-warning" id="deleteItem_' + itemId + '" >';
+                addItem += '<i class="fa fa-minus-square"></i>&nbsp;' + LABEL_DELETE;
+                addItem += '</button>&nbsp;';
             }
             addItem += '</h5>';
             addItem += '<div class="form-group">';
@@ -142,6 +162,12 @@ $(document).ready(function() {
         
         $('#deleteItem_' + itemId).click(function() {
             deleteItem(itemId);
+        });
+        $('#moveupItem_' + itemId).click(function() {
+            moveupItem(itemId);
+        });
+        $('#movedownItem_' + itemId).click(function() {
+            movedownItem(itemId);
         });
         $('#addChoice_' + itemId).click(function() {
             addChoice(itemId);

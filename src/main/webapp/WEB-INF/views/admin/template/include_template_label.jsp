@@ -25,5 +25,9 @@ var LABEL_ADD_CHOICE = '<%= jspUtil.label("knowledge.template.label.choice.add")
 var LABEL_DELETE_CHOICE = '<%= jspUtil.label("knowledge.template.label.choice.remove") %>';
 var LABEL_CHOICE_LABEL = '<%= jspUtil.label("knowledge.template.label.choice.label") %>';
 var LABEL_CHOICE_VALUE = '<%= jspUtil.label("knowledge.template.label.choice.value") %>';
+
+var LABEL_MOVE_UP = '<%= jspUtil.label("label.move.up") %>';
+var LABEL_MOVE_DOWN = '<%= jspUtil.label("label.move.down") %>';
+
 </script>
 

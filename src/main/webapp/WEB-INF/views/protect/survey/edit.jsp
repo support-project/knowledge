@@ -34,6 +34,12 @@
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.survey.label.edit") %></h4>
 
+<div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Information</strong><br/>
+    - <%= jspUtil.label("knowledge.survey.msg.warning.move") %>
+</div>
+
 <form action="<%= request.getContextPath()%>/protect.survey/save" method="post" role="form" id="surveyForm">
     <input type="hidden" name="<%= HttpRequestCheckLogic.REQ_ID_KEY %>"
         value="<%= jspUtil.out(HttpRequestCheckLogic.REQ_ID_KEY) %>" />
