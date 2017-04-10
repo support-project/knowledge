@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.logic.H2DBServerLogic;
+import org.support.project.knowledge.TestCommon;
+import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.entity.LikesEntity;
 
 public class LikesDaoTest {
@@ -17,6 +19,7 @@ public class LikesDaoTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+        AppConfig.initEnvKey(TestCommon.KNOWLEDGE_TEST_HOME);
         H2DBServerLogic.get().start();
     }
 

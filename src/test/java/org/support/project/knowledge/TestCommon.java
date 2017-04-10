@@ -41,6 +41,7 @@ import org.support.project.web.entity.UsersEntity;
  */
 @RunWith(OrderedRunner.class)
 public abstract class TestCommon {
+    public static final String KNOWLEDGE_TEST_HOME = "KNOWLEDGE_TEST_HOME";
     /** login user for test */
     public static LoginedUser loginedUser = null;
     /** login user for test */
@@ -62,6 +63,7 @@ public abstract class TestCommon {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+        AppConfig.initEnvKey(KNOWLEDGE_TEST_HOME);
         H2DBServerLogic.get().start();
         testConnection();
         initData();
