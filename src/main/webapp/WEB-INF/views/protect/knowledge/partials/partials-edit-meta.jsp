@@ -27,7 +27,7 @@
                         <% 
                         int type = jspUtil.getValue("typeId", Integer.class);
                         if (pageContext.getAttribute("typeId") != null) {
-                            type = (int) pageContext.getAttribute("typeId");
+                            type = (Integer) pageContext.getAttribute("typeId");
                         }
                         TemplateMastersEntity template = (TemplateMastersEntity) pageContext.getAttribute("template");
                         String id = "typeId_" + template.getTypeId();
