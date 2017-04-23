@@ -231,6 +231,14 @@ $(document).ready(function(){
    - License: [MIT] https://pellepim.bitbucket.io/jstz/
    - project-url: https://pellepim.bitbucket.io/jstz/
 
+- diff2html
+   - License: [MIT] https://github.com/rtfpessoa/diff2html#license
+   - project-url: https://diff2html.xyz/
+
+- jsdiff
+   - License: [BSD License] https://github.com/kpdecker/jsdiff/blob/master/LICENSE
+   - project-url: https://github.com/kpdecker/jsdiff
+
 
    
 </div>
