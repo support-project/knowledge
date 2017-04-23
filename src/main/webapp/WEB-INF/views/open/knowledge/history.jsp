@@ -12,14 +12,26 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
     <c:param name="PARAM_HEAD">
+    <link rel="stylesheet" type="text/css" href="bower/diff2html/dist/diff2html.css">
     </c:param>
 
     <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-knowledge-history.js -->
     <script type="text/javascript" src="bower/echojs/dist/echo.min.js"></script>
+    <script type="text/javascript" src="bower/jsdiff/diff.min.js"></script>
+    <script type="text/javascript" src="bower/diff2html/dist/diff2html.min.js"></script>
+    <script type="text/javascript" src="bower/diff2html/dist/diff2html-ui.min.js"></script>
 <!-- endbuild -->
     <script>
     echo.init();
+    $(document).ready(function() {
+        var historyContent = document.querySelector("#history-content").value;
+        var nowContent = document.querySelector("#now-content").value;
+        var unifiedDiff = JsDiff.createTwoFilesPatch('History → Now', 'History → Now', historyContent, nowContent);
+        var diff2htmlUi = new Diff2HtmlUI({diff: unifiedDiff});
+        diff2htmlUi.draw('#content-diff', {inputFormat: 'diff', matching: 'lines'});
+        diff2htmlUi.highlightCode('#content-diff');
+    });
     </script>
     </c:param>
 
@@ -36,22 +48,20 @@
 </p>
 
 <h5 class="sub_title"><%= jspUtil.label("knowledge.histories.label.diff") %></h5>
-<pre><c:if test="${empty changes}"><%= jspUtil.label("knowledge.histories.list.label.empty") %></c:if>
-<c:forEach var="change" items="${changes}" varStatus="status"><%= jspUtil.out("change") %></c:forEach>
-</pre>
+<div id="content-diff"></div>
 
 <br/>
 <h5 class="sub_title"><%= jspUtil.label("knowledge.histories.label.history") %></h5>
 <div class="form-group">
     <label for="input_content"><%= jspUtil.label("knowledge.add.label.content") %></label>
-    <textarea class="form-control" name="content" rows="5" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content" readonly="readonly"><%= jspUtil.out("history.content") %></textarea>
+    <textarea id="history-content" class="form-control" name="content" rows="5" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content" readonly="readonly"><%= jspUtil.out("history.content") %></textarea>
 </div>
 
 <br/>
 <h5 class="sub_title"><%= jspUtil.label("knowledge.histories.label.now") %></h5>
 <div class="form-group">
     <label for="input_content"><%= jspUtil.label("knowledge.add.label.content") %></label>
-    <textarea class="form-control" name="content" rows="5" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content" readonly="readonly"><%= jspUtil.out("now.content") %></textarea>
+    <textarea id="now-content" class="form-control" name="content" rows="5" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content" readonly="readonly"><%= jspUtil.out("now.content") %></textarea>
 </div>
 
 
