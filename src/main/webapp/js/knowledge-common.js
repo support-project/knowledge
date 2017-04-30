@@ -109,6 +109,26 @@ var decoration = function(jqObj) {
         }).then(function () {
             // call parse internal link
             return processLink(jqObj);
+        }).then(function() {
+            // issue 711 脚注記法を正しく処理
+            jqObj.find('a').each(function() {
+                if ($(this).attr("href").startsWith('#fn')) {
+                    var href= $(this).attr("href");
+                    var target = $(href == "#" || href == "" ? 'html' : href);
+                    var position = target.offset().top;
+                    console.log(position);
+                    // ヘッダーの分だけずらす
+                    position -= 80;
+                    var link = location.pathname + $(this).attr("href");
+                    $(this).attr("href", link);
+                    $(this).click(function() {
+                        var speed = 400;
+                        console.log(position);
+                        $('body,html').animate({scrollTop:position}, speed, 'swing');
+                        return false;
+                    });
+                }
+            });
         }).then(function () {
             return resolve();
         }).catch(function(err) {
