@@ -104,6 +104,15 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
         return executeQuerySingle(sql, MailLocaleTemplatesEntity.class, key, templateId);
     }
     /**
+     * Select data that not deleted on KEY column.
+     * @param key key
+     * @return list
+     */
+    public List<MailLocaleTemplatesEntity> selectOnKey(String key) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_select_on_col_key.sql");
+        return executeQueryList(sql, MailLocaleTemplatesEntity.class, key);
+    }
+    /**
      * Select data that not deleted on TEMPLATE_ID column.
      * @param templateId templateId
      * @return list
@@ -118,7 +127,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * @return list
      */
     public List<MailLocaleTemplatesEntity> physicalSelectOnKey(String key) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_physical_select_on_key.sql");
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_physical_select_on_col_key.sql");
         return executeQueryList(sql, MailLocaleTemplatesEntity.class, key);
     }
     /**

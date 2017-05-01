@@ -13,7 +13,7 @@
 
     <!-- FileAppender -->
     <appender name="APP_FILEOUT" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="${user.dir}/app.log" />
+        <param name="File" value="${user.home}/app.log" />
         <param name="Append" value="true" />
         <param name="DatePattern" value="'.'yyyy-MM-dd" />
         <layout class="org.apache.log4j.PatternLayout">
