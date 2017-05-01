@@ -74,27 +74,27 @@ public class DataTransferLogic {
         initDB.start();
         
         // コピー先のDBの初期化
-        LOG.info("migrate to db");
+        LOG.info("init and migrate to db : " + to.getName());
         ConnectionManager.getInstance().setDefaultConnectionName(to.getName());
-        DatabaseControlDao dao1 = new DatabaseControlDao();
-        org.support.project.web.dao.gen.DatabaseControlDao dao2 = new org.support.project.web.dao.gen.DatabaseControlDao();
-        dao1.setConnectionName(to.getName());
-        dao2.setConnectionName(to.getName());
-        dao1.dropAllTable();
-        dao2.dropAllTable();
+        DatabaseControlDao knowledgeControlDao = new DatabaseControlDao();
+        org.support.project.web.dao.gen.DatabaseControlDao webControlDao = new org.support.project.web.dao.gen.DatabaseControlDao();
+        knowledgeControlDao.setConnectionName(to.getName());
+        webControlDao.setConnectionName(to.getName());
+        knowledgeControlDao.dropAllTable();
+        webControlDao.dropAllTable();
         initDB.start();
 
         // データコピー先のDBに入っている、初期データを削除
         LOG.info("clear init data from to db.");
         ConnectionManager.getInstance().setDefaultConnectionName(to.getName());
         List<AbstractDao> truncateTargets = new ArrayList<AbstractDao>();
-        truncateTargets.add(GroupsDao.get());
+//        truncateTargets.add(GroupsDao.get());
         truncateTargets.add(RolesDao.get());
         truncateTargets.add(UserRolesDao.get());
         truncateTargets.add(UsersDao.get());
-        truncateTargets.add(SystemsDao.get());
-        truncateTargets.add(TemplateItemsDao.get());
-        truncateTargets.add(TemplateMastersDao.get());
+//        truncateTargets.add(SystemsDao.get());
+//        truncateTargets.add(TemplateItemsDao.get());
+//        truncateTargets.add(TemplateMastersDao.get());
         for (AbstractDao targetDao : truncateTargets) {
             targetDao.setConnectionName(to.getName());
             Method truncateMethods = targetDao.getClass().getMethod("truncate");
@@ -149,7 +149,7 @@ public class DataTransferLogic {
                             List<?> list = (List<?>) selectAllMethods.invoke(dao, args);
                             
                             // Toへデータ登録
-                            LOG.info("   -> insert data to " + to.getName());
+                            LOG.info("   -> insert data(100) to " + to.getName());
                             ConnectionManager.getInstance().setDefaultConnectionName(to.getName());
                             setConnectionNameMethods.invoke(dao, to.getName());
                             TransactionManager transactionManager = Container.getComp(TransactionManager.class);
@@ -158,8 +158,26 @@ public class DataTransferLogic {
                                 if (LOG.isTraceEnabled()) {
                                     LOG.trace(entity);
                                 }
-                                Method insertMethods = class1.getMethod("rawPhysicalInsert", entity.getClass());
-                                insertMethods.invoke(dao, entity);
+                                Method getKeyValuesMethods = entity.getClass().getMethod("getKeyValues");
+                                Object[] keys = (Object[]) getKeyValuesMethods.invoke(entity);
+                                Class<?>[] params = new Class[keys.length];
+                                StringBuilder builder = new StringBuilder();
+                                for (int j = 0; j < keys.length; j++) {
+                                    params[j] = keys[j].getClass();
+                                    if (j > 0) {
+                                        builder.append(",");
+                                    }
+                                    builder.append(keys[j]);
+                                }
+                                LOG.trace(class1.getName() + " : " + builder.toString());
+                                Method physicalSelectOnKeyMethods = class1.getMethod("physicalSelectOnKey", params);
+                                Object obj = physicalSelectOnKeyMethods.invoke(dao, keys);
+                                if (obj == null) {
+                                    Method insertMethods = class1.getMethod("rawPhysicalInsert", entity.getClass());
+                                    insertMethods.invoke(dao, entity);
+                                } else {
+                                    LOG.warn("skip (already exists): " + class1.getName() + " : " + builder.toString());
+                                }
                             }
                             transactionManager.commit(to.getName());
                         }
