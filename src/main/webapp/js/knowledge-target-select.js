@@ -165,7 +165,7 @@ var viewEditor = function() {
     for (var i = 0; i < selectedEditors.length; i++) {
         var item = selectedEditors[i];
         values.push(item.value);
-        labels.push(item.label);
+        labels.push(unescapeHTML(item.label));
     }
     if (selectedEditors.length == 0) {
         $('#clearSelectedEditor').hide();

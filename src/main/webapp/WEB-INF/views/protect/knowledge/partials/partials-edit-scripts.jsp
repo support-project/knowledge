@@ -68,8 +68,10 @@ var _ANSWER_DATETIME = '<%= jspUtil.label("knowledge.survey.label.answer.date") 
 var _ANSWER_USER = '<%= jspUtil.label("knowledge.survey.label.answer.user") %>';
 
 var _TAGS = [];
+var tagname;
 <c:forEach var="tagitem" items="${tagitems}" varStatus="status">
-_TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
+tagname = unescapeHTML('<%= jspUtil.out("tagitem.tagName") %>');
+_TAGS.push(tagname);
 </c:forEach>
 </script>
 

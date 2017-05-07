@@ -32,13 +32,17 @@
 
 <script>
 var _TAGS = [];
+var tagname;
 <c:forEach var="tagitem" items="${tagitems}" varStatus="status">
-_TAGS.push('<%= jspUtil.out("tagitem.tagName") %>');
+tagname = unescapeHTML('<%= jspUtil.out("tagitem.tagName") %>');
+_TAGS.push(tagname);
 </c:forEach>
 
 var _GROUPS = [];
+var groupname;
 <c:forEach var="groupitem" items="${groupitems}" varStatus="status">
-_GROUPS.push('<%= jspUtil.out("groupitem.groupName") %>');
+groupname = unescapeHTML('<%= jspUtil.out("groupitem.groupName") %>');
+_GROUPS.push(groupname);
 </c:forEach>
 </script>
 

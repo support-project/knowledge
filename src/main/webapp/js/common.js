@@ -66,6 +66,16 @@ function isString(obj) {
     return typeof (obj) == "string" || obj instanceof String;
 };
 
+function unescapeHTML(str) {
+    var div = document.createElement("div");
+    div.innerHTML = str.replace(/</g,"&lt;")
+                       .replace(/>/g,"&gt;")
+                       .replace(/ /g, "&nbsp;")
+                       .replace(/\r/g, "&#13;")
+                       .replace(/\n/g, "&#10;");
+    return div.textContent || div.innerText;
+};
+
 var handleErrorResponse = function(xhr, textStatus, error) {
     console.log(error);
     console.log(xhr);
