@@ -20,12 +20,14 @@ public class LikesDaoTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         AppConfig.initEnvKey(TestCommon.KNOWLEDGE_TEST_HOME);
-        H2DBServerLogic.get().start();
+        if (!H2DBServerLogic.get().isActive()) {
+            H2DBServerLogic.get().start();
+        }
     }
 
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
-        H2DBServerLogic.get().stop();
+//        H2DBServerLogic.get().stop();
     }
 
     @Before

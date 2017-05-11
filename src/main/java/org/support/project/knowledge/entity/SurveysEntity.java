@@ -19,6 +19,8 @@ public class SurveysEntity extends GenSurveysEntity {
     
     private boolean editable;
     
+    private String knowledgeTitle;
+    
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
 
@@ -72,6 +74,20 @@ public class SurveysEntity extends GenSurveysEntity {
      */
     public void setEditable(boolean editable) {
         this.editable = editable;
+    }
+
+    /**
+     * @return the knowledgeTitle
+     */
+    public String getKnowledgeTitle() {
+        return knowledgeTitle;
+    }
+
+    /**
+     * @param knowledgeTitle the knowledgeTitle to set
+     */
+    public void setKnowledgeTitle(String knowledgeTitle) {
+        this.knowledgeTitle = knowledgeTitle;
     }
 
 }
