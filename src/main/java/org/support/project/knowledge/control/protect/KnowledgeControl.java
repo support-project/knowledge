@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -276,14 +277,24 @@ public class KnowledgeControl extends KnowledgeControlBase {
             errors.add(new ValidateError("knowledge.edit.noaccess"));
             return sendValidateError(errors);
         }
-
+        
         if (!StringUtils.isEmpty(getParam("updateContent")) && getParam("updateContent").toLowerCase().equals("true")) {
             data.setUpdateContent(true);
             LOG.debug("コンテンツを更新した");
         } else {
+            // メタデータのみ更新
             data.setUpdateContent(false);
             LOG.debug("メタデータのみ更新");
+            if (check.getNotifyStatus() == null || check.getNotifyStatus().intValue() == INT_FLAG.OFF.getValue()) {
+                if (check.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PRIVATE &&
+                        check.getPublicFlag().intValue() != data.getKnowledge().getPublicFlag().intValue()) {
+                    // まだ通知を一度も出しておらず、かつ、「非公開」になっていたものを、それ以外の区分に変更した場合は、通知を出す
+                    data.setUpdateContent(true);
+                    LOG.debug("メタデータのみ更新であったが、非公開から公開などへ変更した");
+                }
+            }
         }
+        
         
         KnowledgesEntity updatedEntity = knowledgeLogic.update(data, super.getLoginedUser());
         
