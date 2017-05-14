@@ -108,6 +108,24 @@ public class SurveyControl extends TemplateControl {
         return survey;
     }
     
+    
+    /**
+     * 一覧取得
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary list() throws InvalidParamException {
+        Integer page = super.getPathInteger(0);
+        String plefix = getParam("q");
+        if (plefix == null) {
+            plefix = "";
+        }
+        List<SurveysEntity> list = SurveyLogic.get().listSurveys(getLoginedUser(), plefix, page);
+        return send(list);
+    }
+    
+    
     /**
      * 保存されているデータを取得
      * 

@@ -29,6 +29,11 @@
 <jsp:include page="/WEB-INF/views/admin/template/include_template_label.jsp"></jsp:include>
 <%-- テンプレート用(END) --%>
 
+<script>
+var _MSG_SUVEY_NOT_FOUND = '<%= jspUtil.label("knowledge.survey.msg.survey.notfound") %>';
+var _MSG_CONFIRM_COPY = '<%= jspUtil.label("knowledge.survey.msg.copy.confirm") %>';
+</script>
+
 </c:param>
 
 <c:param name="PARAM_CONTENT">
@@ -44,6 +49,14 @@
     <input type="hidden" name="<%= HttpRequestCheckLogic.REQ_ID_KEY %>"
         value="<%= jspUtil.out(HttpRequestCheckLogic.REQ_ID_KEY) %>" />
     <input type="hidden" name="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" id="knowledgeId" />
+    
+    <div class="form-group">
+        <a id="btnCopySurvey" class="btn btn-success btn_col2" data-toggle="modal" href="#modalCopySurvey">
+            <i class="fa fa-copy"></i>&nbsp;
+            <%=jspUtil.label("knowledge.survey.label.copy")%>
+        </a>
+    </div>
+
 
     <div id="survey_info" class="">
         <%= jspUtil.label("knowledge.survey.msg.survey") %>
@@ -100,6 +113,37 @@
         </a>
     </div>
 </form>
+
+
+<!-- Copy dialog -->
+<div class="modal fade" id="modalCopySurvey" tabindex="-1" role="dialog" aria-labelledby="modalCopySurvey">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"><%=jspUtil.label("knowledge.survey.label.copy")%></h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <%=jspUtil.label("knowledge.survey.msg.copy.select")%>
+                </div>
+                
+                <div id="surveyList">
+                
+                
+                </div>
+                
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-close"></i>&nbsp;<%= jspUtil.label("label.close") %></button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </c:param>

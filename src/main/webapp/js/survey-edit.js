@@ -67,4 +67,70 @@ $(document).ready(function() {
         return false;
     });
     
+    var copySurvey = function(id) {
+        $('#typeName').val('');
+        $('#description').val('');
+        $('.deleteItemButton').click();
+        return document.__load_survey(_CONTEXT + '/protect.survey/load/' + id);
+    };
+    
+    
+    $('#modalCopySurvey').on('show.bs.modal', function (event) {
+        $('#surveyList').html('<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>');
+    });
+    $('#modalCopySurvey').on('shown.bs.modal', function (event) {
+        $.ajax({
+            url: _CONTEXT + '/protect.survey/list',
+            type: 'GET',
+            data: '',
+            timeout: 10000,  // 単位はミリ秒
+        }).done(function(result, textStatus, xhr) {
+            console.log(result);
+            if (result.length > 0) {
+                var listHtml = '<div class="list-group">';
+                result.forEach(function(survey) {
+                    listHtml += '<button type="button" class="list-group-item list-group-item-action surveyItem">';
+                    listHtml += '<span class="surveyItemId">#' + survey.knowledgeId + '</span>';
+                    listHtml += '  ' + survey.title + ' / ' + survey.knowledgeTitle;
+                    
+                    listHtml += '</button>';
+                });
+                listHtml += '</div>'
+                $('#surveyList').html(listHtml);
+                
+                $('.surveyItem').click(function() {
+                    var id = $(this).find('.surveyItemId').text().substring(1);
+                    bootbox.confirm({
+                        title: 'Confirm copy',
+                        message: _MSG_CONFIRM_COPY,
+                        buttons: {
+                            confirm: {
+                                label: '<i class="fa fa-check"></i> Yes',
+                                className: 'btn-success'
+                            },
+                            cancel: {
+                                label: '<i class="fa fa-times"></i> No',
+                                className: 'btn-danger'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                copySurvey(id).then(function() {
+                                    $('#modalCopySurvey').modal('hide');
+                                });
+                            }
+                        }
+                    });
+                });
+            } else {
+                $('#surveyList').html(_MSG_SUVEY_NOT_FOUND);
+            }
+        }).fail(function(xhr, textStatus, error) {
+            handleErrorResponse(xhr, textStatus, error);
+        });
+    });
+    
+    
+    
+    
 });
