@@ -63,7 +63,36 @@ public class SurveyLogic extends TemplateLogic {
         }
         return new SurveysEntity();
     }
+    
+    /**
+     * 登録されているアンケートの一覧を取得（ページ制御あり）
+     * @param user ログインユーザ
+     * @param idPrefix IDのプレフィックス（絞込条件） 
+     * @param page ページ番号
+     * @return 
+     */
+    public List<SurveysEntity> listSurveys(LoginedUser user, String idPrefix, int page) {
+        int limit = 10;
+        int offset = page * limit;
+        if (user == null) {
+            // アンケート一覧はコピーする対象を選択する機能なので、Knowledge編集者のはずで、userがnullはありえない
+            return new ArrayList<>();
+        } else if (user.isAdmin()) {
+            // アクセス権関係なく、全てのアンケート情報を取得
+            return SurveysDao.get().selectWithKnowledgeTitle(idPrefix, limit, offset);
+        } else {
+            // アクセス可能なアンケートの情報を取得
+            return SurveysDao.get().selectWithKnowledgeTitleOnlyAccessAble(user, idPrefix, limit, offset);
+        }
+    }
 
+    
+    /**
+     * アンケート情報の取得
+     * @param knowledgeId
+     * @param userId
+     * @return
+     */
     public SurveysEntity loadSurvey(Long knowledgeId, Integer userId) {
         LOG.trace("loadSurvey");
         SurveysEntity entity = SurveysDao.get().selectOnKey(knowledgeId);

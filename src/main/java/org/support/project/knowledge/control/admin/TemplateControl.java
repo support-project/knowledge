@@ -30,10 +30,11 @@ public class TemplateControl extends Control {
      * テンプレートの一覧を表示
      * 
      * @return
+     * @throws InvalidParamException 
      */
     @Get(publishToken = "admin")
     @Auth(roles = "admin")
-    public Boundary list() {
+    public Boundary list() throws InvalidParamException {
         // テンプレートの個数はあまり多く出来ないようにする（でないと登録の画面が微妙）
         List<TemplateMastersEntity> templates = TemplateLogic.get().selectAll();
         setAttribute("templates", templates);

@@ -136,7 +136,7 @@ $(document).ready(function() {
                 addItem += '<button type="button" class="btn btn-info" id="movedownItem_' + itemId + '" >';
                 addItem += '<i class="fa fa-arrow-down"></i>&nbsp;' + LABEL_MOVE_DOWN;
                 addItem += '</button>&nbsp;';
-                addItem += '<button type="button" class="btn btn-warning" id="deleteItem_' + itemId + '" >';
+                addItem += '<button type="button" class="btn btn-warning deleteItemButton" id="deleteItem_' + itemId + '" >';
                 addItem += '<i class="fa fa-minus-square"></i>&nbsp;' + LABEL_DELETE;
                 addItem += '</button>&nbsp;';
             }
@@ -266,11 +266,13 @@ $(document).ready(function() {
                         addItem(itemId, LABEL_TIMEZONE_ITEM, item.itemName, item.description);
                     }
                 });
+                return resolve();
             }).fail(function(xhr, textStatus, error) {
                 if (xhr.status === 404) {
                     console.log('data is not exist.');
                 } else {
                     handleErrorResponse(xhr, textStatus, error);
+                    return reject('error');
                 }
             });
         });
