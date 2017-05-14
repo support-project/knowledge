@@ -130,12 +130,13 @@ var _MSG_CONFIRM_COPY = '<%= jspUtil.label("knowledge.survey.msg.copy.confirm") 
                     <%=jspUtil.label("knowledge.survey.msg.copy.select")%>
                 </div>
                 
-                <div id="surveyList">
-                
-                
+                <div class="form-inline form-group text-right">
+                    <%=jspUtil.label("knowledge.survey.label.search")%>:
+                    <input type="number" class="form-control" id="searchId" placeholder="Id" value="" />
                 </div>
-                
-                
+                <hr/>
+                <div id="surveyList">
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">

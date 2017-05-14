@@ -72,7 +72,7 @@ public class SurveyLogic extends TemplateLogic {
      * @return 
      */
     public List<SurveysEntity> listSurveys(LoginedUser user, String idPrefix, int page) {
-        int limit = 20;
+        int limit = 10;
         int offset = page * limit;
         if (user == null) {
             // アンケート一覧はコピーする対象を選択する機能なので、Knowledge編集者のはずで、userがnullはありえない
