@@ -35,7 +35,8 @@ $(document).ready(function() {
             
             result.answers.forEach(function(answer) {
                 var row = {};
-                row.answer_datetime = moment(answer.insertDatetime, 'YYYY-MM-DD HH:mm:ss.SSS').format('YYYY-MM-DD HH:mm');
+                row.answer_datetime = answer.localDatetime;
+//                row.answer_datetime = moment(answer.insertDatetime, 'YYYY-MM-DD HH:mm:ss.SSS').format('YYYY-MM-DD HH:mm');
                 row.answer_user = answer.userName;
                 
                 answer.items.forEach(function(answerItem) {
