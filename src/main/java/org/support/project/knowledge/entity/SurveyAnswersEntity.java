@@ -19,6 +19,8 @@ public class SurveyAnswersEntity extends GenSurveyAnswersEntity {
     
     /** 回答者の名前 */
     private String userName;
+    /** 回答集計を操作しているユーザのタイムゾーン／ロケールでの日付文字列 */
+    private String localDatetime;
     
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
@@ -74,6 +76,20 @@ public class SurveyAnswersEntity extends GenSurveyAnswersEntity {
      */
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    /**
+     * @return the localDatetime
+     */
+    public String getLocalDatetime() {
+        return localDatetime;
+    }
+
+    /**
+     * @param localDatetime the localDatetime to set
+     */
+    public void setLocalDatetime(String localDatetime) {
+        this.localDatetime = localDatetime;
     }
 
 }

@@ -31,6 +31,7 @@ import org.support.project.web.control.service.Delete;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.exception.InvalidParamException;
+import org.support.project.web.logic.DateConvertLogic;
 
 import net.arnx.jsonic.JSONException;
 
@@ -239,6 +240,10 @@ public class SurveyControl extends TemplateControl {
             return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
         }
         SurveyReport report = SurveyLogic.get().loadAnswers(knowledgeId, getLoginUserId());
+        List<SurveyAnswersEntity> answers = report.getAnswers();
+        for (SurveyAnswersEntity ans : answers) {
+            ans.setLocalDatetime(DateConvertLogic.get().convertDate(ans.getInsertDatetime(), getRequest()));
+        }
         return send(report);
     }
     
