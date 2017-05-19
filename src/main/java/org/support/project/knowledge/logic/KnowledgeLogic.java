@@ -540,7 +540,7 @@ public class KnowledgeLogic {
         }
 
         // グループが指定されてる場合はグループのみ対象にして検索する
-        if (groups != null) {
+        if (groups != null && !groups.isEmpty()) {
             for (GroupsEntity groupsEntity : groups) {
                 searchingValue.addGroup(groupsEntity.getGroupId());
             }
