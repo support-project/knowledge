@@ -18,7 +18,7 @@
 
 <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-top.css -->
-<link rel="stylesheet" href="css/top.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/top.css" />
 <!-- endbuild -->
 </c:param>
 <c:param name="PARAM_SCRIPTS">

@@ -27,7 +27,7 @@
 
     <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-customservice.js -->
-<script type="text/javascript" src="js/customservice.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/customservice.js"></script>
 <!-- endbuild -->
 
     </c:param>

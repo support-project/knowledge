@@ -11,14 +11,14 @@
 
 <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-template.css -->
-<link rel="stylesheet" href="css/template.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/template.css" />
 <!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-template.js -->
-<script type="text/javascript" src="js/template-item-edit.js"></script>
-<script type="text/javascript" src="js/admin-template-edit.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/template-item-edit.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/admin-template-edit.js"></script>
 <!-- endbuild -->
 <jsp:include page="include_template_label.jsp"></jsp:include>
 </c:param>

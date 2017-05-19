@@ -12,15 +12,15 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
     <c:param name="PARAM_HEAD">
-    <link rel="stylesheet" type="text/css" href="bower/diff2html/dist/diff2html.css">
+    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/bower/diff2html/dist/diff2html.css">
     </c:param>
 
     <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-knowledge-history.js -->
-    <script type="text/javascript" src="bower/echojs/dist/echo.min.js"></script>
-    <script type="text/javascript" src="bower/jsdiff/diff.min.js"></script>
-    <script type="text/javascript" src="bower/diff2html/dist/diff2html.min.js"></script>
-    <script type="text/javascript" src="bower/diff2html/dist/diff2html-ui.min.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jsdiff/diff.min.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/bower/diff2html/dist/diff2html.min.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/bower/diff2html/dist/diff2html-ui.min.js"></script>
 <!-- endbuild -->
     <script>
     echo.init();

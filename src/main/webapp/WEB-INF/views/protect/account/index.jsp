@@ -13,19 +13,19 @@
 
 <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-protect-account.css -->
-<link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload.css" />
-<link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
-<link rel="stylesheet" href="bower/cropper/dist/cropper.min.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/cropper/dist/cropper.min.css" />
 <!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-protect-account.js -->
-<script type="text/javascript" src="bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
-<script type="text/javascript" src="bower/jquery-file-upload/js/jquery.fileupload.js"></script>
-<script type="text/javascript" src="bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
-<script type="text/javascript" src="bower/cropper/dist/cropper.min.js"></script>
-<script type="text/javascript" src="js/account.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/cropper/dist/cropper.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/account.js"></script>
 <!-- endbuild -->
 </c:param>
 

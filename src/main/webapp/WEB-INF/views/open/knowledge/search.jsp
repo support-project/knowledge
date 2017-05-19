@@ -16,18 +16,18 @@
 
 <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-knowledge-search.css -->
-<link rel="stylesheet" href="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
-<link rel="stylesheet" href="css/knowledge-edit.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-edit.css" />
 <!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-knowledge-search.js -->
-<script type="text/javascript" src="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-<script type="text/javascript" src="bower/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
-<script type="text/javascript" src="js/tagselect.js"></script>
-<script type="text/javascript" src="js/groupselect.js"></script>
-<script type="text/javascript" src="js/search.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/tagselect.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/groupselect.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
 <!-- endbuild -->
 
 <script>

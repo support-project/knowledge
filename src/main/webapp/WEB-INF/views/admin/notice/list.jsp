@@ -15,21 +15,21 @@
 
     <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-notice-list.css -->
-        <link rel="stylesheet" href="bower/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" />
-        <link rel="stylesheet" href="css/markdown.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/css/markdown.css" />
 <!-- endbuild -->
     </c:param>
 
     <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-notice-list.js -->
-        <script type="text/javascript" src="bower/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-        <script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"></script>
-        <script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
-        <script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
-        <script type="text/javascript" src="js/knowledge-common.js"></script>
-        <script type="text/javascript" src="js/notice.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-common.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/js/notice.js"></script>
 <!-- endbuild -->
-        <script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
     </c:param>
 
     <c:param name="PARAM_CONTENT">

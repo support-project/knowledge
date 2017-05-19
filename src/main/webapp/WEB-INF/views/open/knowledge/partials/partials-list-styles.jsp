@@ -7,9 +7,9 @@
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
 <!-- build:css(src/main/webapp) css/page-knowledge-list.css -->
-<link rel="stylesheet" href="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
-<link rel="stylesheet" href="bower/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" />
-<link rel="stylesheet" href="css/knowledge-list.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-list.css" />
 <!-- endbuild -->
 
 <style>

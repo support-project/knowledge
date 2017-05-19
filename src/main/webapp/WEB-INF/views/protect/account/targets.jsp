@@ -17,7 +17,7 @@
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-protect-targets.js -->
-<script type="text/javascript" src="js/targetselect.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/targetselect.js"></script>
 <!-- endbuild -->
 
 <script>
