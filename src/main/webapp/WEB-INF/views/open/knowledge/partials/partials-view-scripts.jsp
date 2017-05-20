@@ -31,11 +31,16 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="bower/At.js/dist/js/jquery.atwho.min.js"></script>
 <script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
 
+<script type="text/javascript" src="bower/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"></script>
+<script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
+<script type="text/javascript" src="bower/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
+<script type="text/javascript" src="bower/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
+
 <script type="text/javascript" src="js/slide.js"></script>
 <script type="text/javascript" src="js/knowledge-common.js"></script>
 <script type="text/javascript" src="js/knowledge-view.js"></script>
 <script type="text/javascript" src="js/knowledge-view-markdown.js"></script>
-<script type="text/javascript" src="js/knowledge-view-template.js"></script>
 <script type="text/javascript" src="js/knowledge-view-comment.js"></script>
 <script type="text/javascript" src="js/knowledge-view-emoji-select.js"></script>
 <script type="text/javascript" src="js/knowledge-view-preview.js"></script>
@@ -46,6 +51,13 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="js/paste_image.js"></script>
 <script type="text/javascript" src="js/emojilist.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
+
+<script type="text/javascript" src="js/template-item-view.js"></script>
+<script type="text/javascript" src="js/knowledge-view-template.js"></script>
+
+<script type="text/javascript" src="js/template-item-input.js"></script>
+<script type="text/javascript" src="js/knowledge-view-survey.js"></script>
+
 <!-- endbuild -->
 
 

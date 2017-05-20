@@ -3,7 +3,6 @@ package org.support.project.knowledge.dao;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-
 import org.support.project.knowledge.dao.gen.GenSurveyItemsDao;
 
 /**
@@ -20,6 +19,11 @@ public class SurveyItemsDao extends GenSurveyItemsDao {
      */
     public static SurveyItemsDao get() {
         return Container.getComp(SurveyItemsDao.class);
+    }
+    
+    public void deleteOnKnowledgeId(Long knowledgeId) {
+        String sql = "DELETE FROM SURVEY_ITEMS WHERE KNOWLEDGE_ID = ?";
+        executeUpdate(sql, knowledgeId);
     }
 
 

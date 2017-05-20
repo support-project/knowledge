@@ -22,11 +22,19 @@ gulp.task('min', function() {
     .pipe(gulp.dest('target/knowledge/WEB-INF/views/'));
 });
 
-gulp.task('copy', ['copy:bootswatch', 'copy:highlightjs', 'copy:font-awesome', 'copy:flag-icon-css', 
-    'copy:html5shiv', 'copy:respond', 'copy:MathJax', 'copy:emoji-parser', 'copy:free-file-icons']);
+gulp.task('copy', ['copy:bootswatch', 'copy:bootswatch2', 'copy:highlightjs', 'copy:font-awesome', 'copy:flag-icon-css', 
+    'copy:html5shiv', 'copy:respond', 'copy:MathJax', 'copy:emoji-parser', 'copy:free-file-icons',
+    'copy:diff2html', 'copy:jsdiff']);
+
 gulp.task('copy:bootswatch', function() {
     return gulp.src([
         'src/main/webapp/bower/bootswatch/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/bootswatch'));
+});
+gulp.task('copy:bootswatch2', function() {
+    return gulp.src([
+        'src/main/webapp/bower/bootswatch/**/*.css'
     ])
     .pipe(replace(/^@import url\("https:\/\/fonts.googleapis.com\/css.*\)\;/, ''))
     .pipe(gulp.dest('target/knowledge/bower/bootswatch'));
@@ -79,6 +87,17 @@ gulp.task('copy:free-file-icons', function() {
     ])
     .pipe(gulp.dest('target/knowledge/bower/teambox.free-file-icons'));
 });
-
+gulp.task('copy:diff2html', function() {
+    return gulp.src([
+        'src/main/webapp/bower/diff2html/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/diff2html'));
+});
+gulp.task('copy:jsdiff', function() {
+    return gulp.src([
+        'src/main/webapp/bower/jsdiff/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/jsdiff'));
+});
 
 gulp.task('default', ['min', 'copy']);

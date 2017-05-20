@@ -39,7 +39,7 @@ function requestFullscreen(id) {
 }
 
 var showSlide = function(parent) {
-    console.log(parent);
+//    console.log(parent);
     var url = _CONTEXT + '/open.file/slide/';
     var target;
     if (parent) {

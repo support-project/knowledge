@@ -8,15 +8,13 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-            <c:if test="${!empty stocks}">
-                <div class="tag_list">
-                    <i class="fa fa-star-o"></i>
-                    <c:forEach var="stock" items="${stocks}" varStatus="status">
-                        <a href="<%=request.getContextPath()%>/open.knowledge/stocks?stockid=<%=jspUtil.out("stock.stockId")%>"> <span
-                            class="tag label label-primary"> <i class="fa fa-star"></i><%=jspUtil.out("stock.stockName")%></span>
-                        </a>&nbsp;
-                </c:forEach>
-                </div>
-            </c:if>
+<c:if test="${!empty stocks}">
+    <i class="fa fa-star-o"></i>
+    <c:forEach var="stock" items="${stocks}" varStatus="status">
+        <a href="<%=request.getContextPath()%>/open.knowledge/stocks?stockid=<%=jspUtil.out("stock.stockId")%>"> <span
+            class="tag label label-primary"> <i class="fa fa-star"></i><%=jspUtil.out("stock.stockName")%></span>
+        </a>&nbsp;
+    </c:forEach>
+</c:if>
 
 

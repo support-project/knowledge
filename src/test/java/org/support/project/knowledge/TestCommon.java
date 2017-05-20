@@ -20,6 +20,7 @@ import org.support.project.common.util.RandomUtil;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.InitDB;
+import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.ormapping.tool.config.ORmappingToolConfig;
 import org.support.project.web.bean.LoginedUser;
@@ -41,12 +42,15 @@ import org.support.project.web.entity.UsersEntity;
  */
 @RunWith(OrderedRunner.class)
 public abstract class TestCommon {
+    public static final String KNOWLEDGE_TEST_HOME = "KNOWLEDGE_TEST_HOME";
     /** login user for test */
     public static LoginedUser loginedUser = null;
     /** login user for test */
     public static LoginedUser loginedUser2 = null;
     /** login user for test */
     public static LoginedUser loginedUser3 = null;
+    /** login user for test */
+    public static LoginedUser loginedAdmin = null;
     
     /** group for test */
     public static GroupsEntity group = null;
@@ -62,9 +66,13 @@ public abstract class TestCommon {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        H2DBServerLogic.get().start();
+        AppConfig.initEnvKey(KNOWLEDGE_TEST_HOME);
+        if (!H2DBServerLogic.get().isActive()) {
+            H2DBServerLogic.get().start();
+        }
         testConnection();
         initData();
+        DBUserPool.get().setUser(loginedUser.getUserId());
     }
     /**
      * @AfterClass
@@ -72,7 +80,7 @@ public abstract class TestCommon {
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
-        H2DBServerLogic.get().stop();
+//        H2DBServerLogic.get().stop();
     }
     /**
      * @Before
@@ -110,12 +118,14 @@ public abstract class TestCommon {
         loginedUser = new LoginedUser();
         loginedUser2 = new LoginedUser();
         loginedUser3 = new LoginedUser();
+        loginedAdmin = new LoginedUser();
         groupuser1 = new LoginedUser();
         groupuser2 = new LoginedUser();
         
         loginedUser.setLocale(Locale.ENGLISH);
         loginedUser2.setLocale(Locale.ENGLISH);
         loginedUser3.setLocale(Locale.ENGLISH);
+        loginedAdmin.setLocale(Locale.ENGLISH);
         groupuser1.setLocale(Locale.ENGLISH);
         groupuser2.setLocale(Locale.ENGLISH);
 
@@ -131,10 +141,12 @@ public abstract class TestCommon {
         File indexDir = new File(appConfig.getIndexPath());
         FileUtil.delete(indexDir);
         
+        Integer[] rolesAdmin = {1}; // 2はユーザ、1はAdmin
         Integer[] roles = {2}; // 2はユーザ、1はAdmin
         addUser(loginedUser, "テストユーザ1", roles);
         addUser(loginedUser2, "テストユーザ2", roles);
         addUser(loginedUser3, "テストユーザ3", roles);
+        addUser(loginedAdmin, "管理者", rolesAdmin);
         
         addUser(groupuser1, "GroupUser1", roles);
         addUser(groupuser2, "GroupUser2", roles);

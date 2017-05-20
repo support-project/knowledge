@@ -958,7 +958,7 @@ public class MailLogic {
      */
     private void updateNotifyStatus(KnowledgesEntity knowledge) {
         if (knowledge.getNotifyStatus() == null || knowledge.getNotifyStatus().intValue() == 0) {
-            knowledge.setNotifyStatus(1); // 通知済へ
+            knowledge.setNotifyStatus(INT_FLAG.ON.getValue()); // 通知済へ
             KnowledgesDao.get().physicalUpdate(knowledge); // 更新日時などは更新しない
         }
     }

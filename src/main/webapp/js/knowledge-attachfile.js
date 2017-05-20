@@ -81,6 +81,10 @@ var uploadedFiles = function(files) {
         $('#files').append(filediv);
     });
     $.notify(_UPLOADED, 'success');
+    
+    // 下書き保存も実行
+    var $form = $('#knowledgeForm');
+    saveKnowledge($form, _CONTEXT + '/protect.knowledge/draft', false);
 };
 
 

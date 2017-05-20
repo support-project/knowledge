@@ -30,10 +30,11 @@ public class TemplateControl extends Control {
      * テンプレートの一覧を表示
      * 
      * @return
+     * @throws InvalidParamException 
      */
     @Get(publishToken = "admin")
     @Auth(roles = "admin")
-    public Boundary list() {
+    public Boundary list() throws InvalidParamException {
         // テンプレートの個数はあまり多く出来ないようにする（でないと登録の画面が微妙）
         List<TemplateMastersEntity> templates = TemplateLogic.get().selectAll();
         setAttribute("templates", templates);
@@ -54,7 +55,7 @@ public class TemplateControl extends Control {
     }
     
     /**
-     * 編集画面を表示する
+     * 保存されているデータを取得
      * 
      * @return
      * @throws InvalidParamException
@@ -65,7 +66,7 @@ public class TemplateControl extends Control {
         Integer id = super.getPathInteger(-1);
         TemplateMastersEntity entity = TemplateLogic.get().loadTemplate(id);
         if (entity == null) {
-            sendError(404, null);
+            return sendError(404, null);
         }
         return send(entity);
     }
@@ -81,7 +82,7 @@ public class TemplateControl extends Control {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    private TemplateMastersEntity loadParams(List<ValidateError> errors)
+    protected TemplateMastersEntity loadParams(List<ValidateError> errors)
             throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
         TemplateMastersEntity template = new TemplateMastersEntity();
         Map<String, String> values = getParams();

@@ -8,16 +8,14 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-            <c:if test="${!empty tagNames}">
-                <div class="tag_list">
-                    <i class="fa fa-tags"></i>&nbsp;
-                    <c:forEach var="tagName" items="${tagNames.split(',')}">
-                        <a href="<%=request.getContextPath()%>/open.knowledge/list?tagNames=<%=jspUtil.out("tagName")%>"> <span
-                            class="tag label label-info"><i class="fa fa-tag"></i><%=jspUtil.out("tagName")%></span>
-                        </a>
-                    </c:forEach>
-                </div>
-            </c:if>
+<c:if test="${!empty tagNames}">
+    <i class="fa fa-tags"></i>&nbsp;
+    <c:forEach var="tagName" items="${tagNames.split(',')}">
+        <a href="<%=request.getContextPath()%>/open.knowledge/list?tagNames=<%=jspUtil.out("tagName", JspUtil.ESCAPE_URL)%>"> <span
+            class="tag label label-info"><i class="fa fa-tag"></i><%=jspUtil.out("tagName")%></span>
+        </a>
+    </c:forEach>
+</c:if>
 
 
 

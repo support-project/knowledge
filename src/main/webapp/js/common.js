@@ -13,10 +13,26 @@ $(document).ready(function() {
         }, 500);
         return false;
     });
-
+    
+    // セッションが切れないように、定期的にアクセスする(5分に1回)
+    var accessInterval = function() {
+        setInterval(function() {
+            var url = _CONTEXT + '/open.interval/access';
+            $.ajax({
+                type : 'GET',
+                url : url
+            }).done(function(result, textStatus, xhr) {
+                console.log('OK');
+            }).fail(function(xhr, textStatus, error) {
+                console.error(error);
+            }).always(function( jqXHR, textStatus ) {
+            });
+        }, 1000 * 60 * 5);
+    };
+    accessInterval();
 });
 function logging(str, level) {
-    console.log(str);
+//    console.log(str);
     if (_LOGGING_NOTIFY_DESKTOP) {
         if (!level) {
             level = 'info';
@@ -48,6 +64,16 @@ function insertAtCaret(target, str) {
 }
 function isString(obj) {
     return typeof (obj) == "string" || obj instanceof String;
+};
+
+function unescapeHTML(str) {
+    var div = document.createElement("div");
+    div.innerHTML = str.replace(/</g,"&lt;")
+                       .replace(/>/g,"&gt;")
+                       .replace(/ /g, "&nbsp;")
+                       .replace(/\r/g, "&#13;")
+                       .replace(/\n/g, "&#10;");
+    return div.textContent || div.innerText;
 };
 
 var handleErrorResponse = function(xhr, textStatus, error) {

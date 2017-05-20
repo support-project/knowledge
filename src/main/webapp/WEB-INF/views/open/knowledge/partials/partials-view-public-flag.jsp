@@ -8,46 +8,37 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
+<% if (jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag")) { %>
+<%=jspUtil.label("label.public.view")%>
+<% } %>
 
-            <%--概要；記事のステータスが公開時に「公開」とは表示しないようにする
-            <%= jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag",
-                jspUtil.label("label.public.view")) %>
-            --%>
-            <%
-                if (jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag")) {
-            %>
-            <div class="tag_list"><%=jspUtil.label("label.private.view")%></div>
-            <%
-                }
-            %>
-            <%
-                if (jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag")) {
-            %>
-            <div class="tag_list"><%=jspUtil.label("label.protect.view")%>
-                <c:if test="${targets.containsKey(knowledgeId)}">
-                    <c:forEach var="target" items="${targets.get(knowledgeId)}">
-                        <c:choose>
-                            <c:when test="${targetLogic.isGroupLabel(target.value)}">
-                                <c:set var="groupId" value="${targetLogic.getGroupId(target.value)}" />
-                                <a href="<%=request.getContextPath()%>/open.knowledge/list?group=<%=jspUtil.out("groupId")%>"> <span
-                                    class="tag label label-success"><i class="fa fa-users"></i><%=jspUtil.out("target.label")%></span>
-                                </a>
-                            </c:when>
-                            <c:when test="${targetLogic.isUserLabel(target.value)}">
-                                <c:set var="userId" value="${targetLogic.getUserId(target.value)}" />
-                                <a href="<%=request.getContextPath()%>/open.knowledge/list?user=<%=jspUtil.out("userId")%>"> <span
-                                    class="tag label label-success"><i class="fa fa-user"></i><%=jspUtil.out("target.label")%></span>
-                                </a>
-                            </c:when>
-                            <c:otherwise>
-                                <a><span class="tag label label-success"><%=jspUtil.out("target.label")%></span>
-                                </a>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-                    &nbsp;
-                </c:if>
-            </div>
-            <%
-                }
-            %>
+<% if (jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag")) { %>
+<%=jspUtil.label("label.private.view")%>
+<% } %>
+
+<% if (jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag")) { %>
+<%=jspUtil.label("label.protect.view")%>
+    <c:if test="${targets.containsKey(knowledgeId)}">
+        <c:forEach var="target" items="${targets.get(knowledgeId)}">
+            <c:choose>
+                <c:when test="${targetLogic.isGroupLabel(target.value)}">
+                    <c:set var="groupId" value="${targetLogic.getGroupId(target.value)}" />
+                    <a href="<%=request.getContextPath()%>/open.knowledge/list?group=<%=jspUtil.out("groupId")%>"> <span
+                        class="tag label label-success"><i class="fa fa-users"></i><%=jspUtil.out("target.label")%></span>
+                    </a>
+                </c:when>
+                <c:when test="${targetLogic.isUserLabel(target.value)}">
+                    <c:set var="userId" value="${targetLogic.getUserId(target.value)}" />
+                    <a href="<%=request.getContextPath()%>/open.knowledge/list?user=<%=jspUtil.out("userId")%>"> <span
+                        class="tag label label-success"><i class="fa fa-user"></i><%=jspUtil.out("target.label")%></span>
+                    </a>
+                </c:when>
+                <c:otherwise>
+                    <a><span class="tag label label-success"><%=jspUtil.out("target.label")%></span>
+                    </a>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+        &nbsp;
+    </c:if>
+<% } %>

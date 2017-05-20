@@ -1,16 +1,12 @@
 package org.support.project.knowledge.entity;
 
-import org.support.project.knowledge.entity.gen.GenSurveysEntity;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.support.project.common.bean.ValidateError;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-
-import java.sql.Timestamp;
+import org.support.project.knowledge.entity.gen.GenSurveysEntity;
 
 
 /**
@@ -19,6 +15,12 @@ import java.sql.Timestamp;
 @DI(instance = Instance.Prototype)
 public class SurveysEntity extends GenSurveysEntity {
 
+    private List<SurveyItemsEntity> items = new ArrayList<SurveyItemsEntity>();
+    
+    private boolean editable;
+    
+    private String knowledgeTitle;
+    
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
 
@@ -44,6 +46,48 @@ public class SurveysEntity extends GenSurveysEntity {
 
     public SurveysEntity(Long knowledgeId) {
         super( knowledgeId);
+    }
+
+    /**
+     * @return the items
+     */
+    public List<SurveyItemsEntity> getItems() {
+        return items;
+    }
+
+    /**
+     * @param items the items to set
+     */
+    public void setItems(List<SurveyItemsEntity> items) {
+        this.items = items;
+    }
+
+    /**
+     * @return the editable
+     */
+    public boolean isEditable() {
+        return editable;
+    }
+
+    /**
+     * @param editable the editable to set
+     */
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    /**
+     * @return the knowledgeTitle
+     */
+    public String getKnowledgeTitle() {
+        return knowledgeTitle;
+    }
+
+    /**
+     * @param knowledgeTitle the knowledgeTitle to set
+     */
+    public void setKnowledgeTitle(String knowledgeTitle) {
+        this.knowledgeTitle = knowledgeTitle;
     }
 
 }

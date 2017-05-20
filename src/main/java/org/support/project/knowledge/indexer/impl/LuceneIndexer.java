@@ -50,30 +50,32 @@ public class LuceneIndexer implements Indexer {
     }
 
     public void writeIndex(IndexingValue indexingValue) throws Exception {
-        boolean create = true;
-        File indexDir = new File(getIndexPath());
-        if (!indexDir.exists()) {
-            indexDir.mkdirs();
-        } else {
-            String[] children = indexDir.list();
-            if (children != null && children.length > 0) {
-                create = false;
+        synchronized (FIELD_LABEL_TYPE) {
+            boolean create = true;
+            File indexDir = new File(getIndexPath());
+            if (!indexDir.exists()) {
+                indexDir.mkdirs();
+            } else {
+                String[] children = indexDir.list();
+                if (children != null && children.length > 0) {
+                    create = false;
+                }
             }
-        }
-        Directory dir = FSDirectory.open(indexDir);
-        IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_2, analyzer);
-        if (create) {
-            iwc.setOpenMode(OpenMode.CREATE);
-        } else {
-            iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
-        }
-        IndexWriter writer = null;
-        try {
-            writer = new IndexWriter(dir, iwc);
-            addDoc(writer, indexingValue);
-        } finally {
-            if (writer != null) {
-                writer.close();
+            Directory dir = FSDirectory.open(indexDir);
+            IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_2, analyzer);
+            if (create) {
+                iwc.setOpenMode(OpenMode.CREATE);
+            } else {
+                iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
+            }
+            IndexWriter writer = null;
+            try {
+                writer = new IndexWriter(dir, iwc);
+                addDoc(writer, indexingValue);
+            } finally {
+                if (writer != null) {
+                    writer.close();
+                }
             }
         }
     }

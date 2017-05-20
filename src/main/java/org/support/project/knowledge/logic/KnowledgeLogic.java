@@ -540,9 +540,24 @@ public class KnowledgeLogic {
         }
 
         // グループが指定されてる場合はグループのみ対象にして検索する
-        if (groups != null) {
+        if (groups != null && !groups.isEmpty()) {
+            boolean exit = false;
             for (GroupsEntity groupsEntity : groups) {
-                searchingValue.addGroup(groupsEntity.getGroupId());
+                // 指定のグループは、自分が所属しているグループかどうか
+                List<GroupsEntity> logiedUserGroups = loginedUser.getGroups();
+                if (logiedUserGroups != null && !logiedUserGroups.isEmpty()) {
+                    for (GroupsEntity userGroup : logiedUserGroups) {
+                        if (userGroup.getGroupId().intValue() == groupsEntity.getGroupId().intValue()) {
+                            searchingValue.addGroup(groupsEntity.getGroupId());
+                            exit = true;
+                        }
+                    }
+                }
+            }
+            if (!exit) {
+                // 権限の無いグループの情報を参照しようとしているので、検索できないようにする
+                LOG.warn("Bad request group param");
+                searchingValue.addTag(-123); //ありえないタグで検索するので、絶対に何もヒットしない
             }
             return searchKnowledge(searchingValue);
         }
@@ -1319,6 +1334,9 @@ public class KnowledgeLogic {
      * @return
      */
     public boolean isEditor(LoginedUser loginedUser, Long knowledgeId) {
+        if (loginedUser.isAdmin()) {
+            return true;
+        }
         KnowledgesEntity check = KnowledgesDao.get().selectOnKey(knowledgeId);
         if (check == null) {
             return false;
@@ -1349,22 +1367,24 @@ public class KnowledgeLogic {
                     return true;
                 }
             }
-            for (LabelValue labelValue : editors) {
-                Integer id = TargetLogic.get().getGroupId(labelValue.getValue());
-                if (id != Integer.MIN_VALUE) {
-                    List<GroupsEntity> groups = loginedUser.getGroups();
-                    if (groups != null) {
-                        for (GroupsEntity groupsEntity : groups) {
-                            if (groupsEntity.getGroupId().intValue() == id.intValue()) {
-                                return true;
+            if (editors != null) {
+                for (LabelValue labelValue : editors) {
+                    Integer id = TargetLogic.get().getGroupId(labelValue.getValue());
+                    if (id != Integer.MIN_VALUE) {
+                        List<GroupsEntity> groups = loginedUser.getGroups();
+                        if (groups != null) {
+                            for (GroupsEntity groupsEntity : groups) {
+                                if (groupsEntity.getGroupId().intValue() == id.intValue()) {
+                                    return true;
+                                }
                             }
                         }
-                    }
-                } else {
-                    id = TargetLogic.get().getUserId(labelValue.getValue());
-                    if (id != Integer.MIN_VALUE) {
-                        if (id.intValue() == loginedUser.getUserId().intValue()) {
-                            return true;
+                    } else {
+                        id = TargetLogic.get().getUserId(labelValue.getValue());
+                        if (id != Integer.MIN_VALUE) {
+                            if (id.intValue() == loginedUser.getUserId().intValue()) {
+                                return true;
+                            }
                         }
                     }
                 }

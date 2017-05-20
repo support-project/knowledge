@@ -231,6 +231,24 @@ $(document).ready(function(){
    - License: [MIT] https://pellepim.bitbucket.io/jstz/
    - project-url: https://pellepim.bitbucket.io/jstz/
 
+- bootstrap-table
+   - License: [MIT] https://github.com/wenzhixin/bootstrap-table/blob/develop/LICENSE
+   - project-url: http://bootstrap-table.wenzhixin.net.cn/
+
+- tableExport.jquery.plugin
+   - License: [MIT] https://github.com/hhurz/tableExport.jquery.plugin/blob/master/bower.json
+   - project-url: https://github.com/hhurz/tableExport.jquery.plugin
+
+- diff2html
+   - License: [MIT] https://github.com/rtfpessoa/diff2html#license
+   - project-url: https://diff2html.xyz/
+
+- jsdiff
+   - License: [BSD License] https://github.com/kpdecker/jsdiff/blob/master/LICENSE
+   - project-url: https://github.com/kpdecker/jsdiff
+   
+   
+   
 
    
 </div>

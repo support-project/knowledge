@@ -21,10 +21,11 @@ public class DataTransferBat extends AbstractBat implements Runnable {
         try {
             initLogName("DataTransferBat.log");
             configInit(ClassUtils.getShortClassName(DataTransferBat.class));
-    
+            DataTransferLogic.get().requestTransfer();
             DataTransferBat bat = new DataTransferBat();
             bat.dbInit();
             bat.start();
+            
         } catch (Exception e) {
             LOG.error("any error", e);
             throw e;
@@ -38,10 +39,10 @@ public class DataTransferBat extends AbstractBat implements Runnable {
         try {
             AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
             String[] parms = { "-tcp", "-baseDir", appConfig.getDatabasePath() };
-
+            
+            LOG.info("start h2 database");
             Server server = Server.createTcpServer(parms);
             server.start();
-
             // System.out.println("Database start...");
             serverStarted = true;
             while (runing) {
