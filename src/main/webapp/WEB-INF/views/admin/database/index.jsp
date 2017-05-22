@@ -18,13 +18,13 @@
 }
 </style>
 <!-- build:css(src/main/webapp) css/page-database.css -->
-<link rel="stylesheet" href="bower/bootstrap-fileinput/css/fileinput.min.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-fileinput/css/fileinput.min.css" />
 <!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-database.js -->
-<script type="text/javascript" src="bower/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-fileinput/js/fileinput.min.js"></script>
 <!-- endbuild -->
 
 <script>

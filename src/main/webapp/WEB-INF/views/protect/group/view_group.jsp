@@ -19,7 +19,7 @@
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-protect-group.js -->
 <script type="text/javascript" src="EasyWizard/easyWizard.js"></script>
-<script type="text/javascript" src="js/group.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/group.js"></script>
 <!-- endbuild -->
 <script>
 var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.delete") %>';

@@ -14,14 +14,14 @@
 
 <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-open-account.css -->
-<link rel="stylesheet" href="css/knowledge-list.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-list.css" />
 <!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-open-account.js -->
-<script type="text/javascript" src="bower/echojs/dist/echo.min.js"></script>
-<script type="text/javascript" src="js/knowledge-list.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-list.js"></script>
 <!-- endbuild -->
 </c:param>
 

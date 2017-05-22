@@ -11,7 +11,7 @@
 
 <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-license.css -->
-<link rel="stylesheet" href="css/markdown.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/markdown.css" />
 <!-- endbuild -->
 </c:param>
 

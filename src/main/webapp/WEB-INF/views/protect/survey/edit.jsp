@@ -15,14 +15,14 @@
 
 <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-survey-edit.css -->
-<link rel="stylesheet" href="css/template.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/template.css" />
 <!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-survey-edit.js -->
-<script type="text/javascript" src="js/template-item-edit.js"></script>
-<script type="text/javascript" src="js/survey-edit.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/template-item-edit.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/survey-edit.js"></script>
 <!-- endbuild -->
 
 <%-- テンプレート用 --%>
