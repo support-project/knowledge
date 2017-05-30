@@ -61,6 +61,16 @@
 .dispKnowledgeId {
     color: #999999;
 }
+
+.ad_item {
+    width: 100%;
+    border: 1px solid transparent;
+    box-shadow: none;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 5px;
+}
+
 .title-link:hover {
     color: #999999;
 }

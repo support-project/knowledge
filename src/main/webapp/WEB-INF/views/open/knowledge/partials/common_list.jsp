@@ -30,6 +30,37 @@
     </c:if>
 
     <c:forEach var="knowledge" items="${list_data}" varStatus="status">
+        <c:if test="${status.index == 2}">
+            <div class="ad_item">
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 320*100 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:320px;height:100px"
+     data-ad-client="ca-pub-6818655992018426"
+     data-ad-slot="6826060792"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+            </div>
+        </c:if>
+        <c:if test="${status.index == 21}">
+            <div class="ad_item">
+            
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 320*100 -2 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:320px;height:100px"
+     data-ad-client="ca-pub-6818655992018426"
+     data-ad-slot="9081523196"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+            
+            </div>
+        </c:if>
+        
         <% KnowledgesEntity knowledge = (KnowledgesEntity) pageContext.getAttribute("knowledge"); %>
         <div class="knowledge_item">
             <div class="insert_info">
@@ -143,7 +174,7 @@
                 &nbsp;&nbsp;&nbsp;
                 <c:if test="${!empty knowledge.stocks}">
                     <i class="fa fa-star-o"></i>
-                    <c:forEach var="stock" items="${knowledge.stocks}" varStatus="status">
+                    <c:forEach var="stock" items="${knowledge.stocks}" varStatus="status3">
                         <a href="<%=request.getContextPath()%>/open.knowledge/stocks?stockid=<%=jspUtil.out("stock.stockId")%>">
                         <span class="tag label label-primary">
                             <i class="fa fa-star"></i><%=jspUtil.out("stock.stockName")%></span>
