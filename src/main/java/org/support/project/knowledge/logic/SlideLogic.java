@@ -236,7 +236,7 @@ public class SlideLogic {
             return null;
         }
         DownloadInfo down = new DownloadInfo();
-        down.setContentType("application/octet-stream");
+        down.setContentType("image/png");
         down.setFileName(slideImage);
         down.setSize(file.length());
         down.setInputStream(new FileInputStream(file));
