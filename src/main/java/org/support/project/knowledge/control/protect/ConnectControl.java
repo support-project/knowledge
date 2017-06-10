@@ -153,8 +153,6 @@ public class ConnectControl extends Control {
         return index();
     }
     
-    
-    
     @Post
     public Boundary update() {
         String key = getParam("key");
