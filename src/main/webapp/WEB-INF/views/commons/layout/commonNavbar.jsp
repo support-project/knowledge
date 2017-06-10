@@ -65,77 +65,89 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="navButton navAddButton">
-                    <a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" style="cursor: pointer;"
-                        id="navAddButtonLink">
-                        <i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.add.knowledge") %>
-                    </a>
+                    <div class="btn-group">
+                        <a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" class="btn btn-success" id="navAddButtonLink">
+                            <i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.add.knowledge") %>
+                        </a>
+                        <a href="#" class="btn btn-success dropdown-toggle dropdown-toggle-split" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a class="dropdown-item" href="<%=request.getContextPath()%>/protect.draft/list">
+                                    <i class="fa fa-database"></i>&nbsp;<%=jspUtil.label("knowledge.draft.list.title")%>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="navButton navListButton">
-                    <a href="<%= request.getContextPath() %>/open.knowledge/list" style="cursor: pointer;"
-                    id="navListButtonLink">
-                        <i class="fa fa-list-alt"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.list.knowledge") %>
-                    </a>
+                    <div class="input-group">
+                        <a href="<%=request.getContextPath()%>/protect.stock/mylist" class="btn btn-secondary" id="navListButtonLink">
+                            <i class="fa fa-star-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.mystock")%>
+                        </a>
+                    </div>
                 </li>
                 
                 <% if (!jspUtil.logined()) { %>
-                <li class="dropdown navButton navMenuButton">
-                    <a href="#" class="dropdown-toggle"
-                    data-toggle="dropdown" role="button" aria-expanded="false" id="navMenuButtonLink">
-                        <img src="<%= request.getContextPath()%>/open.account/icon/"
-                            alt="icon" width="24" height="24"/>
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li >
-                            <a href="<%= request.getContextPath() %>/open.knowledge/search" >
-                                <i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a id="menuSignin" href="<%= request.getContextPath() %>/signin?page=<%= top %>" style="cursor: pointer;">
-                                <i class="fa fa-sign-in"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signin") %>
-                            </a>
-                        </li>
-                    </ul>
+                <li class="navButton navMenuButton">
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="24" height="24"/>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li >
+                                <a href="<%= request.getContextPath() %>/open.knowledge/search" >
+                                    <i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a id="menuSignin" href="<%= request.getContextPath() %>/signin?page=<%= top %>" style="cursor: pointer;">
+                                    <i class="fa fa-sign-in"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signin") %>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <% } else { %>
-                <li class="dropdown navButton navLoginedMenuButton">
-                    <a href="#" class="dropdown-toggle"
-                    data-toggle="dropdown" role="button" aria-expanded="false" id="navMenuButtonLink">
-                        <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>"
-                            alt="icon" width="24" height="24"/>
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li >
-                            <a href="<%= request.getContextPath() %>/open.knowledge/search" >
-                                <i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
-                            </a>
-                        </li>
-                        <% if (request.isUserInRole("admin")) { %>
-                        <li class="divider"></li>
-                        <li >
-                            <a href="<%= request.getContextPath() %>/admin.systemconfig/index" >
-                                <i class="fa fa-cogs" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system") %>
-                            </a>
-                        </li>
-                        <% } %>
-                        <% if (jspUtil.logined()) { %>
-                        <li class="divider"></li>
-                        <li >
-                            <a href="<%= request.getContextPath() %>/protect.config/index" >
-                                <i class="fa fa-cog" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config") %>
-                            </a>
-                        </li>
-                        <% } %>
-                        <li class="divider"></li>
-                        <li >
-                            <a id="menuSignout" href="<%= request.getContextPath() %>/signout" style="cursor: pointer;">
-                                <i class="fa fa-sign-out"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signout") %>
-                            </a>
-                        </li>
-                    </ul>
+                <li class="navButton navLoginedMenuButton">
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="24" height="24"/>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li >
+                                <a href="<%= request.getContextPath() %>/open.knowledge/search" >
+                                    <i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
+                                </a>
+                            </li>
+                            <% if (request.isUserInRole("admin")) { %>
+                            <li class="divider"></li>
+                            <li >
+                                <a href="<%= request.getContextPath() %>/admin.systemconfig/index" >
+                                    <i class="fa fa-cogs" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config.system") %>
+                                </a>
+                            </li>
+                            <% } %>
+                            <% if (jspUtil.logined()) { %>
+                            <li class="divider"></li>
+                            <li >
+                                <a href="<%= request.getContextPath() %>/protect.config/index" >
+                                    <i class="fa fa-cog" ></i>&nbsp;<%= jspUtil.label("knowledge.navbar.config") %>
+                                </a>
+                            </li>
+                            <% } %>
+                            <li class="divider"></li>
+                            <li >
+                                <a id="menuSignout" href="<%= request.getContextPath() %>/signout" style="cursor: pointer;">
+                                    <i class="fa fa-sign-out"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.signout") %>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <% } %>
             </ul>
