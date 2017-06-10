@@ -17,6 +17,9 @@ create table USER_ALIAS (
   , constraint USER_ALIAS_PKC primary key (USER_ID,AUTH_KEY)
 ) ;
 
+create unique index USER_ALIAS_IX1
+  on USER_ALIAS(AUTH_KEY,ALIAS_KEY);
+
 comment on table USER_ALIAS is 'ユーザのエイリアス';
 comment on column USER_ALIAS.USER_ID is 'ユーザID';
 comment on column USER_ALIAS.ALIAS_NO is '番号';

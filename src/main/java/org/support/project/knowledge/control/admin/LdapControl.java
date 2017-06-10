@@ -210,7 +210,8 @@ public class LdapControl extends Control {
             InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         String key = getParam("key");
         if (StringUtils.isEmpty(key)) {
-            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD_REQUEST");
+            addMsgWarn("knowledge.ldap.msg.connect.error");
+            return config();
         }
         LdapConfigsDao dao = LdapConfigsDao.get();
         LdapConfigsEntity entity = dao.selectOnKey(key);
