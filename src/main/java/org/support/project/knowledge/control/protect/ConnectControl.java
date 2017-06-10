@@ -131,10 +131,24 @@ public class ConnectControl extends Control {
         }
     }
 
-    @Delete
+    @Post
     public Boundary disconnect() {
-        
-        return config();
+        String key = getParam("key");
+        if (StringUtils.isEmpty(key)) {
+            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD_REQUEST");
+        }
+        LdapConfigsEntity config = LdapConfigsDao.get().selectOnKey(key);
+        if (config == null) {
+            return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD_REQUEST");
+        }
+        UserAliasEntity exists = UserAliasDao.get().selectOnKey(key, getLoginUserId());
+        if (exists == null) {
+            super.addMsgWarn("errors.noexist", getResource("knowledge.connect.label.account"));
+            return index();
+        }
+        UserAliasDao.get().physicalDelete(exists);
+        super.addMsgInfo("message.success.delete");
+        return index();
     }
     
     

@@ -16,6 +16,9 @@
     </c:param>
 
     <c:param name="PARAM_SCRIPTS">
+<!-- build:js(src/main/webapp) js/page-connect.js -->
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/connect.js"></script>
+<!-- endbuild -->
     </c:param>
 
     <c:param name="PARAM_CONTENT">
