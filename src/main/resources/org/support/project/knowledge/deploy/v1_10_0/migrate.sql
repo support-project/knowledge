@@ -22,13 +22,11 @@ create unique index USER_ALIAS_IX1
 
 comment on table USER_ALIAS is 'ユーザのエイリアス';
 comment on column USER_ALIAS.USER_ID is 'ユーザID';
-comment on column USER_ALIAS.ALIAS_NO is '番号';
+comment on column USER_ALIAS.AUTH_KEY is '認証設定キー';
 comment on column USER_ALIAS.ALIAS_KEY is 'エイリアスのキー';
 comment on column USER_ALIAS.ALIAS_NAME is 'エイリアスの表示名';
 comment on column USER_ALIAS.ALIAS_MAIL is 'メールアドレス';
-comment on column USER_ALIAS.MIAN_FLAG is 'メインかどうか';
-comment on column USER_ALIAS.AUTH_TYPE is '認証タイプ:1:Ldap,';
-comment on column USER_ALIAS.AUTH_KEY is '認証設定キー';
+comment on column USER_ALIAS.USER_INFO_UPDATE is 'アカウント情報更新フラグ';
 comment on column USER_ALIAS.ROW_ID is '行ID';
 comment on column USER_ALIAS.INSERT_USER is '登録ユーザ';
 comment on column USER_ALIAS.INSERT_DATETIME is '登録日時';
