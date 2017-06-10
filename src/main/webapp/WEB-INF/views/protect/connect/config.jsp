@@ -88,11 +88,11 @@
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="userInfoUpdate"> <%= jspUtil.label("knowledge.connect.update.me") %>
+                        <input type="checkbox" name="userInfoUpdate" value="1"> <%= jspUtil.label("knowledge.connect.update.me") %>
                     </label>
                 </div>
                 
-                <button type="button" class="btn btn-primary" id="connect">
+                <button type="button" class="btn btn-primary" id="update">
                     <i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.update") %>
                 </button>
                 
