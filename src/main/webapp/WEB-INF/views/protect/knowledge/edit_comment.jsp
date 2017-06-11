@@ -109,7 +109,7 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
         <c:forEach var="file" items="${comment_files}" >
             <div class="filediv" id="file-<%= jspUtil.out("file.fileNo") %>">
                 <div class="file-image"><img src="<%= jspUtil.out("file.thumbnailUrl") %>" /></div>
-                <div class="file-label"><a href="<%= jspUtil.out("file.url") %>"><%= jspUtil.out("file.name") %></a></div>
+                <div class="file-label"><a href="<%= jspUtil.out("file.url") %>&amp;attachment=true"><%= jspUtil.out("file.name") %></a></div>
                 <br class="fileLabelBr"/>
                 <input type="hidden" name="files" value="<%= jspUtil.out("file.fileNo") %>" />
                 &nbsp;&nbsp;&nbsp;
