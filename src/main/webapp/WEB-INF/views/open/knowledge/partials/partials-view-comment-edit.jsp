@@ -44,7 +44,7 @@
                         <img src="<%= jspUtil.out("file.thumbnailUrl") %>" />
                     </div>
                     <div class="file-label">
-                        <a href="<%= jspUtil.out("file.url") %>"><%= jspUtil.out("file.name") %></a>
+                        <a href="<%= jspUtil.out("file.url") %>&amp;attachment=true"><%= jspUtil.out("file.name") %></a>
                     </div>
                     <br class="fileLabelBr" /> <input type="hidden" name="files" value="<%= jspUtil.out("file.fileNo") %>" /> &nbsp;&nbsp;&nbsp;
                     <button type="button" class="btn btn-success"

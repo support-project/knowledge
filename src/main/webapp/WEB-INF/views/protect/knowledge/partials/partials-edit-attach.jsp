@@ -40,7 +40,7 @@
     <c:forEach var="file" items="${files}" >
         <div class="filediv row" id="file-<%= jspUtil.out("file.fileNo") %>">
             <div class="file-image col-xs-1"><img src="<%= jspUtil.out("file.thumbnailUrl") %>" width="20"/></div>
-            <div class="file-label col-xs-6"><a href="<%= jspUtil.out("file.url") %>"><%= jspUtil.out("file.name", jspUtil.ESCAPE_HTML, 20) %></a></div>
+            <div class="file-label col-xs-6"><a href="<%= jspUtil.out("file.url") %>&amp;attachment=true"><%= jspUtil.out("file.name", jspUtil.ESCAPE_HTML, 20) %></a></div>
             <input type="hidden" name="files" value="<%= jspUtil.out("file.fileNo") %>" />
             <div class="file-buttons col-xs-4">
             <% if (jspUtil.is("image", "file.type")) { %>
