@@ -8,7 +8,6 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.knowledge.config.AppConfig;
-import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.web.logic.DBConnenctionLogic;
 
 public abstract class AbstractBat {
@@ -27,11 +26,11 @@ public abstract class AbstractBat {
         TimeZone zone = TimeZone.getTimeZone("GMT");
         TimeZone.setDefault(zone);
         
-        AppConfig.initEnvKey(SystemConfig.KNOWLEDGE_ENV_KEY);
-        String envValue = System.getenv(SystemConfig.KNOWLEDGE_ENV_KEY);
+        AppConfig.get();
+        String envValue = System.getenv(AppConfig.getEnvKey());
         LOG.info(batName + " is start.");
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Env [" + SystemConfig.KNOWLEDGE_ENV_KEY + "] is [" + envValue + "].");
+            LOG.debug("Env [" + AppConfig.getEnvKey() + "] is [" + envValue + "].");
             LOG.debug("Config :" + PropertyUtil.reflectionToString(AppConfig.get()));
         }
     }

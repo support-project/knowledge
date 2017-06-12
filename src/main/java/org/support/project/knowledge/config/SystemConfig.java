@@ -15,7 +15,7 @@ public class SystemConfig {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(SystemConfig.class);
     
-    public static final String KNOWLEDGE_ENV_KEY = "KNOWLEDGE_HOME";
+    //public static final String KNOWLEDGE_ENV_KEY = "KNOWLEDGE_HOME";
     
     /** システム設定情報 */
     private static ServiceConfigsEntity serviceConfigsEntity = null;

@@ -18,10 +18,10 @@ public class GlobalInitializationListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent config) {
-        AppConfig.initEnvKey(SystemConfig.KNOWLEDGE_ENV_KEY);
-        String envValue = System.getenv(SystemConfig.KNOWLEDGE_ENV_KEY);
+        AppConfig.get();
+        String envValue = System.getenv(AppConfig.getEnvKey());
         if (StringUtils.isNotEmpty(envValue)) {
-            LOG.info("Env [" + SystemConfig.KNOWLEDGE_ENV_KEY + "] is [" + envValue + "].");
+            LOG.info("Env [" + AppConfig.getEnvKey() + "] is [" + envValue + "].");
         }
         String rootPath = AppConfig.get().getBasePath();
         System.setProperty("user.dir", rootPath);
