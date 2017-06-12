@@ -1,21 +1,33 @@
 $(document).ready(function() {
     $('#releasebutton').click(function() {
         var $form = $('#knowledgeForm');
-        // ページ遷移を禁止して、Ajaxで保存
         saveKnowledge($form, _CONTEXT + '/protect.knowledge/save');
     });
     
-    $('#knowledgeForm').submit(function(event) {
-        console.log('submit');
+    var saveDraft = function() {
         // 操作対象のフォーム要素を取得
-        var $form = $(this);
+        var $form = $('#knowledgeForm');
+        saveKnowledge($form, _CONTEXT + '/protect.knowledge/draft');
+        return false;
+    };
+    $('#knowledgeForm').submit(function(event) {
         // ページ遷移を禁止して、Ajaxで保存
         event.preventDefault();
-        saveKnowledge($form, _CONTEXT + '/protect.knowledge/draft');
-        // フォームのサブミットは禁止
-        return false;
+        return saveDraft();
     });
 
+    var titleValue = $("#input_title").val();
+    var contentValue = $("#content").val();
+    setInterval(function() {
+        if (titleValue !== $("#input_title").val() || contentValue !== $("#content").val()) {
+            titleValue = $("#input_title").val();
+            contentValue = $("#content").val();
+            $.notify('auto saving...', 'info');
+            saveDraft();
+        }
+    }, 1000 * 30); // 30秒に1回確認する
+    
+    
     // タイトル時にenterを押して保存されないようenterを無効化する
     $("#input_title").keypress(function(e) {
         return ! ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13));
@@ -28,8 +40,8 @@ $(document).ready(function() {
     $("#content").change(function() {
         $('#updateContent').val('true');
     });
-    // 下書き保存
-    $('#draftDeleteButton').click(function() {
+    // 下書き保存削除
+    var removeDraft = function() {
         var draftId = $('#draftId').val();
         console.log(draftId);
         if (draftId) {
@@ -63,6 +75,9 @@ $(document).ready(function() {
                 }
             }); 
         }
+    };
+    $('#draftDeleteButton').click(function() {
+        removeDraft();
     });
     // Auto complete
     setAutoComplete($("#content"));
