@@ -66,38 +66,36 @@ body {
 /*  navbar
 /*--------------------------------- */ 
 .nav .navButton {
-    margin: 5px;
-    height: 50px;
+    margin: 7.5px;
     vertical-align: middle;
     color: white;
 }
 #navAddButtonLink,#navListButtonLink,#navMenuButtonLink {
-    padding-top: 14px;
     color: white;
 }
 .navbar-default .navbar-nav > .navAddButton > a,
 .navbar-default .navbar-nav > .navAddButton > a:hover,
 .navbar-default .navbar-nav > .navAddButton > a:focus {
-    border-radius: 50px;
-    -webkit-border-radius: 50px;
-    -moz-border-radius: 50px;
-    height: 50px;
+    border-radius: 45px;
+    -webkit-border-radius: 45px;
+    -moz-border-radius: 45px;
+    height: 45px;
     background: #009900;
 }
 .navbar-default .navbar-nav > .navListButton > a,
 .navbar-default .navbar-nav > .navListButton > a:hover,
 .navbar-default .navbar-nav > .navListButton > a:focus {
-    border-radius: 50px;
-    -webkit-border-radius: 50px;
-    -moz-border-radius: 50px;
-    height: 50px;
+    border-radius: 45px;
+    -webkit-border-radius: 45px;
+    -moz-border-radius: 45px;
+    height: 45px;
     background: #999900;
 }
 .navbar-nav > .dropdown .dropdown-toggle {
-    border-radius: 50px;
-    -webkit-border-radius: 50px;
-    -moz-border-radius: 50px;
-    height: 50px;
+    border-radius: 45px;
+    -webkit-border-radius: 45px;
+    -moz-border-radius: 45px;
+    height: 45px;
 }
 .navbar-default .navbar-nav > .navMenuButton > a,
 .navbar-default .navbar-nav > .navMenuButton > a:hover,

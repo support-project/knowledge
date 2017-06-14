@@ -83,7 +83,7 @@
                 </li>
                 <li class="navButton navListButton">
                     <div class="input-group">
-                        <a href="<%=request.getContextPath()%>/protect.stock/mylist" class="btn btn-secondary" id="navListButtonLink">
+                        <a href="<%=request.getContextPath()%>/protect.stock/mylist" class="btn btn-success" id="navListButtonLink">
                             <i class="fa fa-star-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.mystock")%>
                         </a>
                     </div>
@@ -92,8 +92,8 @@
                 <% if (!jspUtil.logined()) { %>
                 <li class="navButton navMenuButton">
                     <div class="btn-group">
-                        <a href="#" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="24" height="24"/>
+                        <a href="#" class="btn btn-default dropdown-toggle dropdown-toggle-split" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="15" height="15"/>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
@@ -114,8 +114,8 @@
                 <% } else { %>
                 <li class="navButton navLoginedMenuButton">
                     <div class="btn-group">
-                        <a href="#" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="24" height="24"/>
+                        <a href="#" class="btn btn-success dropdown-toggle dropdown-toggle-split" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="15" height="15"/>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
