@@ -66,10 +66,11 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="navButton navAddButton">
                     <div class="btn-group">
-                        <a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" class="btn btn-success" id="navAddButtonLink">
-                            <i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.add.knowledge") %>
+                        <a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" class="btn btn-info" id="navAddButtonLink">
+                            <i class="fa fa-plus-circle"></i>&nbsp;
+                            <span class="navListButtonText"><%= jspUtil.label("knowledge.navbar.add.knowledge") %></span>
                         </a>
-                        <a href="#" class="btn btn-success dropdown-toggle dropdown-toggle-split" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
@@ -82,9 +83,10 @@
                     </div>
                 </li>
                 <li class="navButton navListButton">
-                    <div class="input-group">
-                        <a href="<%=request.getContextPath()%>/protect.stock/mylist" class="btn btn-success" id="navListButtonLink">
-                            <i class="fa fa-star-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.mystock")%>
+                    <div class="btn-group">
+                        <a href="<%=request.getContextPath()%>/protect.stock/mylist" class="btn btn-warning" id="navListButtonLink">
+                            <i class="fa fa-star-o"></i>&nbsp;
+                            <span class="navListButtonText"><%=jspUtil.label("knowledge.navbar.account.mystock")%></span>
                         </a>
                     </div>
                 </li>
@@ -92,11 +94,19 @@
                 <% if (!jspUtil.logined()) { %>
                 <li class="navButton navMenuButton">
                     <div class="btn-group">
-                        <a href="#" class="btn btn-default dropdown-toggle dropdown-toggle-split" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="btn btn-default" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="15" height="15"/>
+                        </a>
+                        <a href="#" class="btn btn-default dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
+                            <li >
+                                <a href="<%= request.getContextPath() %>/open.knowledge/list" >
+                                    <i class="fa fa-list"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.list.knowledge") %>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
                             <li >
                                 <a href="<%= request.getContextPath() %>/open.knowledge/search" >
                                     <i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>
@@ -114,11 +124,19 @@
                 <% } else { %>
                 <li class="navButton navLoginedMenuButton">
                     <div class="btn-group">
-                        <a href="#" class="btn btn-success dropdown-toggle dropdown-toggle-split" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="btn btn-success" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="15" height="15"/>
+                        </a>
+                        <a href="#" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
+                            <li >
+                                <a href="<%= request.getContextPath() %>/open.knowledge/list" >
+                                    <i class="fa fa-list"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.list.knowledge") %>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
                             <li >
                                 <a href="<%= request.getContextPath() %>/open.knowledge/search" >
                                     <i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.search") %>

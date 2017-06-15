@@ -112,7 +112,19 @@ body {
 .navbar-default .navbar-nav > .open > a:focus {
     background: #ff9966;
 }
-
+@media screen and (max-width: 767px) {
+    .nav, .nav .navButton, .nav .navButton .btn-group {
+        width:100%;
+    }
+    .nav .navButton .btn-group #navAddButtonLink, .nav .navButton .btn-group #navMenuButtonLink {
+        width:calc(100% - 30px);
+        text-align: left;
+    }
+    .nav .navButton .btn-group #navListButtonLink {
+        width:100%;
+        text-align: left;
+    }
+}
 @media screen and (min-width: 768px) and (max-width: 991px) {
     #navSearch {
         width: 200px;

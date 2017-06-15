@@ -14,6 +14,17 @@ $(document).ready(function() {
         return false;
     });
     
+    var $win = $(window);
+    $win.on('load resize', function() {  
+        if (window.matchMedia('(max-width:767px)').matches) {
+            $('.navListButtonText').show();
+        } else if (window.matchMedia('(max-width:1200px)').matches) {
+            $('.navListButtonText').hide();
+        } else {
+            $('.navListButtonText').show();
+        }
+    });
+    
     // セッションが切れないように、定期的にアクセスする(5分に1回)
     var accessInterval = function() {
         setInterval(function() {
