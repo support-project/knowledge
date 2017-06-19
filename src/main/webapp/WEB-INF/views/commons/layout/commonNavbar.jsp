@@ -75,6 +75,11 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li>
+                                <a class="dropdown-item" href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>">
+                                    <i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.add.knowledge") %>
+                                </a>
+                            </li>
+                            <li>
                                 <a class="dropdown-item" href="<%=request.getContextPath()%>/protect.draft/list">
                                     <i class="fa fa-database"></i>&nbsp;<%=jspUtil.label("knowledge.draft.list.title")%>
                                 </a>
