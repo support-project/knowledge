@@ -22,8 +22,10 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.dao.MailHookConditionsDao;
 import org.support.project.knowledge.dao.MailHooksDao;
+import org.support.project.knowledge.dao.MailPropertiesDao;
 import org.support.project.knowledge.entity.MailHookConditionsEntity;
 import org.support.project.knowledge.entity.MailHooksEntity;
+import org.support.project.knowledge.entity.MailPropertiesEntity;
 import org.support.project.knowledge.logic.MailhookLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.web.annotation.Auth;
@@ -44,8 +46,6 @@ public class MailhookControl extends Control {
     
     private static final String NO_CHANGE_PASSWORD = "NO_CHANGE_PASSWORD-GUHO-UIG-ZJ2E-HishaihTHY-YIOHA"; // パスワードを更新しなかったことを表すパスワード
     
-    private static final String[] MAIL_PROTOCOLS = {"imap"};
-    
     /**
      * MailHookの設定画面を表示
      * 
@@ -57,14 +57,24 @@ public class MailhookControl extends Control {
         MailHooksEntity entity = MailHooksDao.get().selectOnKey(MailhookLogic.MAIL_HOOK_ID);
         if (entity == null) {
             entity = new MailHooksEntity();
-            entity.setMailProtocol(MAIL_PROTOCOLS[0]);
+            
+            List<MailPropertiesEntity> properties = new ArrayList<>();
+            MailPropertiesEntity property = new MailPropertiesEntity(MailhookLogic.MAIL_HOOK_ID, "mail.store.protocol");
+            property.setPropertyValue("imaps");
+            properties.add(property);
+            property = new MailPropertiesEntity(MailhookLogic.MAIL_HOOK_ID, "mail.imaps.ssl.trust");
+            property.setPropertyValue("*");
+            properties.add(property);
+            setAttribute("properties", properties);
         } else {
             if (StringUtils.isNotEmpty(entity.getMailPass())) {
                 entity.setMailPass(NO_CHANGE_PASSWORD);
             }
-            
             List<MailHookConditionsEntity> mailHooks = MailHookConditionsDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
             setAttribute("mailHooks", mailHooks);
+            
+            List<MailPropertiesEntity> properties = MailPropertiesDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
+            setAttribute("properties", properties);
         }
         setAttributeOnProperty(entity);
         return forward("config.jsp");
@@ -84,6 +94,25 @@ public class MailhookControl extends Control {
     @Auth(roles = "admin")
     public Boundary save() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
         IllegalBlockSizeException, BadPaddingException {
+        // プロパティ取得
+        String[] keys = getParam("propertyKey", String[].class);
+        String[] vals = getParam("propertyValue", String[].class);
+        List<MailPropertiesEntity> properties = new ArrayList<>();
+        int count = 0;
+        if (keys != null) {
+            for (String key : keys) {
+                MailPropertiesEntity property = new MailPropertiesEntity(MailhookLogic.MAIL_HOOK_ID, key);
+                if (vals.length > count) {
+                    property.setPropertyValue(vals[count]);
+                } else {
+                    property.setPropertyValue("");
+                }
+                properties.add(property);
+                count++;
+            }
+        }
+        setAttribute("properties", properties);
+        
         List<ValidateError> errors = new ArrayList<>();
         errors.addAll(MailHooksEntity.get().validate(getParams()));
         if (!errors.isEmpty()) {
@@ -94,7 +123,7 @@ public class MailhookControl extends Control {
         entity.setHookId(MailhookLogic.MAIL_HOOK_ID);
         if (NO_CHANGE_PASSWORD.equals(entity.getMailPass())) {
             MailHooksEntity db = MailHooksDao.get().selectOnKey(MailhookLogic.MAIL_HOOK_ID);
-            if (StringUtils.isNotEmpty(db.getMailPass())) {
+            if (db != null && StringUtils.isNotEmpty(db.getMailPass())) {
                 entity.setMailPass(db.getMailPass());
                 entity.setMailPassSalt(db.getMailPassSalt());
             }
@@ -105,7 +134,8 @@ public class MailhookControl extends Control {
             entity.setMailPassSalt(salt);
         }
         entity.setHookId(MailhookLogic.MAIL_HOOK_ID);
-        MailHooksDao.get().save(entity);
+        
+        MailhookLogic.get().saveMailConfig(entity, properties);
         setAttributeOnProperty(entity);
         
         String successMsg = "message.success.save";

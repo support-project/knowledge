@@ -3,9 +3,11 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<%@page import="java.util.List"%>
 <%@page import="org.support.project.common.config.INT_FLAG"%>
-<%@page import="org.support.project.knowledge.vo.Roles"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
+<%@page import="org.support.project.knowledge.vo.Roles"%>
+<%@page import="org.support.project.knowledge.entity.MailPropertiesEntity"%>
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
@@ -15,6 +17,10 @@
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
+<!-- build:js(src/main/webapp) js/page-mailhook-config.js -->
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/mailhookconfig.js"></script>
+<!-- endbuild -->
+
 <script>
 function deleteMail() {
     bootbox.confirm('<%= jspUtil.label("message.confirm.delete") %>', function(result) {
@@ -24,6 +30,16 @@ function deleteMail() {
         }
     }); 
 };
+
+<% 
+List<MailPropertiesEntity> properties = (List<MailPropertiesEntity>) request.getAttribute("properties");
+for (MailPropertiesEntity prop: properties) {
+%>
+addProperty('<%= prop.getPropertyKey() %>', '<%= prop.getPropertyValue() %>');
+<%
+}
+%>
+
 </script>
 </c:param>
 
@@ -42,7 +58,6 @@ function deleteMail() {
 
 
 <form action="<%= request.getContextPath()%>/admin.mailhook/save" method="post" role="form" id="mailForm">
-    
     <h5 class="sub_title"><%= jspUtil.label("knowledge.mail.subtitle.param") %></h5>
     
     <div class="form-group">
@@ -56,15 +71,6 @@ function deleteMail() {
             placeholder="<%= jspUtil.label("knowledge.admin.mailhook.port") %>" value="<%= jspUtil.out("mailPort") %>" />
     </div>
     <div class="form-group">
-        <label for="authType_lock"><%= jspUtil.label("knowledge.admin.mailhook.protocol") %></label><br/>
-        <label class="radio-inline">
-            <input type="radio" value="imap" name="mailProtocol" 
-                id="mailProtocol_Imap" <%= jspUtil.checked("imap", "mailProtocol", true) %>/>
-            <i class="fa fa-lock"></i>&nbsp;
-            <%= jspUtil.label("knowledge.admin.mailhook.protocol.imap") %>
-        </label>
-    </div>
-    <div class="form-group">
         <label for="smtpId"><%= jspUtil.label("knowledge.admin.mailhook.user") %></label>
         <input type="text" class="form-control" name="mailUser" id="mailUser"
             placeholder="<%= jspUtil.label("knowledge.admin.mailhook.user") %>" value="<%= jspUtil.out("mailUser") %>" />
@@ -76,6 +82,24 @@ function deleteMail() {
     </div>
     
     <input type="hidden" name="hookId" value="1" />
+    <input type="hidden" name="mailProtocol" value="-" />
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <%=jspUtil.label("knowledge.admin.mailhook.title.properties") %>
+            <a href="#advancedOption" data-toggle="collapse"><i class="fa fa-chevron-circle-down"></i></a>
+        </div>
+        <div class="panel-body">
+            <div id="advancedOption" class="collapse">
+                <div class="text-right" style="width:100%;margin-bottom: 5px">
+                    <button class="btn btn-success" type="button" id="addProperty"><i class="fa fa-plus-square"></i>Add</button>
+                    <button class="btn btn-warning" type="button" id="removeProperty"><i class="fa fa-minus-square"></i>Remove</button>
+                </div>
+                <div id="properties">
+                </div>
+            </div>
+        </div>
+    </div>
     
     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
     <% if (jspUtil.is(1, "hookId")) { %>

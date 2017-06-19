@@ -1,0 +1,15 @@
+INFO  2017-06-19 16:23:35,346 [AbstractBat(31)] MailReadBat is start.
+INFO  2017-06-19 16:23:35,434 [DBConnenctionLogic(45)] Custom connection setting is exists.
+INFO  2017-06-19 16:23:35,713 [MailhookLogic(174)] Mail hook config conditions is undefined.
+INFO  2017-06-19 16:23:35,715 [AbstractBat(43)] Finished
+INFO  2017-06-19 16:30:51,088 [AbstractBat(31)] MailReadBat is start.
+INFO  2017-06-19 16:30:51,183 [DBConnenctionLogic(45)] Custom connection setting is exists.
+INFO  2017-06-19 16:30:51,539 [AppConfig(278)] Load key file: /data/project/red/data/key.txt
+INFO  2017-06-19 16:30:52,202 [MailhookLogic(184)] Read mail count: 1
+INFO  2017-06-19 16:30:52,308 [MailhookLogic(190)] Mail was readed. [テスト]  テスト
+INFO  2017-06-19 16:30:52,320 [AbstractBat(43)] Finished
+INFO  2017-06-19 16:33:02,359 [AbstractBat(31)] MailReadBat is start.
+INFO  2017-06-19 16:33:02,449 [DBConnenctionLogic(45)] Custom connection setting is exists.
+INFO  2017-06-19 16:33:02,752 [AppConfig(278)] Load key file: /data/project/red/data/key.txt
+INFO  2017-06-19 16:33:03,203 [MailhookLogic(184)] Read mail count: 0
+INFO  2017-06-19 16:33:03,218 [AbstractBat(43)] Finished

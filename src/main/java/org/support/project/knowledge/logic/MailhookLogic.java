@@ -44,6 +44,7 @@ import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.MailHookConditionsDao;
 import org.support.project.knowledge.dao.MailHooksDao;
 import org.support.project.knowledge.dao.MailPostsDao;
+import org.support.project.knowledge.dao.MailPropertiesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
@@ -51,6 +52,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.MailHookConditionsEntity;
 import org.support.project.knowledge.entity.MailHooksEntity;
 import org.support.project.knowledge.entity.MailPostsEntity;
+import org.support.project.knowledge.entity.MailPropertiesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
@@ -65,7 +67,8 @@ public class MailhookLogic {
     private static final Log LOG = LogFactory.getLog(MailhookLogic.class);
 
     /**
-     * MAIL HOOK のID DBとしては、MailHookは複数のメールアドレスで実行できる構成をとったが、 システムが受信するメールアドレスは1つと考えたほうが無難なのでIDを決め打ちする
+     * MAIL HOOK のID DBとしては、MailHookは複数のメールアドレスで実行できる構成をとったが、 
+     * システムが受信するメールアドレスは1つと考えたほうが無難なのでIDを決め打ちする
      */
     public static final Integer MAIL_HOOK_ID = 1;
 
@@ -74,7 +77,66 @@ public class MailhookLogic {
     public static MailhookLogic get() {
         return Container.getComp(MailhookLogic.class);
     }
-
+    
+    /**
+     * メールセッションのデバッグ出力を行うか
+     */
+    private static final boolean MAIL_SESSION_DEBUG = false;
+    /**
+     * メールを受信後、削除するか
+     */
+    private static final boolean DELETE_READED_MAIL = true;
+    
+    
+    /**
+     * メールサーバーと接続
+     * @param entity
+     * @return
+     * @throws MessagingException
+     * @throws InvalidKeyException
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchPaddingException
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     */
+    private Store getStore(MailHooksEntity entity) throws MessagingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+        // TODO MailHooksEntity の protocol は必要無かった（プロパティで設定する）ため、いずれ削除する
+        Properties props = new Properties();
+        
+        List<MailPropertiesEntity> properties = MailPropertiesDao.get().selectOnHookId(MAIL_HOOK_ID);
+        if (properties == null) {
+            // v1.10.0以前のデフォルト値
+          props.setProperty("mail.store.protocol", "imaps");
+          props.put("mail.imaps.ssl.trust", "*");
+          
+          /* IMAPS無しのサンプル
+          props.setProperty("mail.store.protocol", "imap");
+          String protocol = "mail.imap";
+          props.setProperty(protocol + ".starttls.enable", "false");
+          props.setProperty(protocol + ".ssl.enable", "false");
+          props.setProperty("mail.imap.auth.ntlm.disable", "true");
+          props.setProperty("mail.imap.auth.plain.disable", "true");
+          props.setProperty("mail.imap.auth.gssapi.disable", "true");
+          */
+        } else {
+            for (MailPropertiesEntity property : properties) {
+                props.setProperty(property.getPropertyKey(), property.getPropertyValue());
+            }
+        }
+        String host = entity.getMailHost();
+        int port = entity.getMailPort();
+        String user = entity.getMailUser();
+        String pass = PasswordUtil.decrypt(entity.getMailPass(), entity.getMailPassSalt());
+        Session session = Session.getInstance(props, null);
+        session.setDebug(MAIL_SESSION_DEBUG);
+        Store store = session.getStore();
+        store.connect(host, port, user, pass);
+        
+        return store;
+    }
+    
+    
+    
     /**
      * メール受信サーバーに接続できるかチェック
      * 
@@ -82,17 +144,8 @@ public class MailhookLogic {
      * @return
      */
     public boolean connect(MailHooksEntity entity) {
-        Properties props = new Properties();
-        props.setProperty("mail.store.protocol", "imaps");
-        props.put("mail.imaps.ssl.trust", "*");
         try {
-            String host = entity.getMailHost();
-            int port = entity.getMailPort();
-            String user = entity.getMailUser();
-            String pass = PasswordUtil.decrypt(entity.getMailPass(), entity.getMailPassSalt());
-            Session session = Session.getInstance(props, null);
-            Store store = session.getStore();
-            store.connect(host, port, user, pass);
+            Store store = getStore(entity);
             Folder inbox = store.getFolder(MAIL_FOLDER);
             inbox.open(Folder.READ_ONLY);
             LOG.info("[Mail Count] " + inbox.getMessageCount());
@@ -122,17 +175,8 @@ public class MailhookLogic {
             return;
         }
         
-        Properties props = new Properties();
-        props.setProperty("mail.store.protocol", "imaps");
-        props.put("mail.imaps.ssl.trust", "*");
         try {
-            String host = entity.getMailHost();
-            int port = entity.getMailPort();
-            String user = entity.getMailUser();
-            String pass = PasswordUtil.decrypt(entity.getMailPass(), entity.getMailPassSalt());
-            Session session = Session.getInstance(props, null);
-            Store store = session.getStore();
-            store.connect(host, port, user, pass);
+            Store store = getStore(entity);
             Folder inbox = store.getFolder(MAIL_FOLDER);
             inbox.open(Folder.READ_WRITE);
 
@@ -144,8 +188,11 @@ public class MailhookLogic {
                 for (Message msg : messages) {
                     checkConditionsAndPost(msg, conditions);
                 }
-                Flags deleted = new Flags(Flags.Flag.DELETED);
-                inbox.setFlags(messages, deleted, true);
+                if (DELETE_READED_MAIL) {
+                    LOG.info("Remove all readed mails.");
+                    Flags deleted = new Flags(Flags.Flag.DELETED);
+                    inbox.setFlags(messages, deleted, true);
+                }
             }
             inbox.close(true);
         } catch (Exception e) {
@@ -615,7 +662,11 @@ public class MailhookLogic {
         
         for (MailHookConditionsEntity condition : conditions) {
             if (checkCondition(msg, condition)) {
+                LOG.info("Post Knowledge from a mail. " + msg.getSubject());
                 addData(msg, condition);
+            } else {
+                LOG.warn("Receive mail is not target condition. " + msg.getSubject());
+                LOG.warn(getContent(msg));
             }
         }
     }
@@ -745,7 +796,28 @@ public class MailhookLogic {
         for (MailHookConditionsEntity mailHookConditionsEntity : conditions) {
             MailHookConditionsDao.get().physicalDelete(mailHookConditionsEntity);
         }
+        List<MailPropertiesEntity> now = MailPropertiesDao.get().selectOnHookId(MAIL_HOOK_ID);
+        for (MailPropertiesEntity mailPropertiesEntity : now) {
+            MailPropertiesDao.get().physicalDelete(mailPropertiesEntity);
+        }
         MailHooksDao.get().physicalDelete(mailHookId);
+    }
+
+    /**
+     * メール受信の設定を保存
+     * @param entity
+     * @param properties
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void saveMailConfig(MailHooksEntity entity, List<MailPropertiesEntity> properties) {
+        MailHooksDao.get().save(entity);
+        List<MailPropertiesEntity> now = MailPropertiesDao.get().selectOnHookId(MAIL_HOOK_ID);
+        for (MailPropertiesEntity mailPropertiesEntity : now) {
+            MailPropertiesDao.get().physicalDelete(mailPropertiesEntity);
+        }
+        for (MailPropertiesEntity mailPropertiesEntity : properties) {
+            MailPropertiesDao.get().save(mailPropertiesEntity);
+        }
     }
 
 }
