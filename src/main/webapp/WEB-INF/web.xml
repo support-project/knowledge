@@ -50,11 +50,16 @@
     </filter>
 
     <filter>
+        <filter-name>ApiFilter</filter-name>
+        <filter-class>org.support.project.knowledge.filter.ApiFilter</filter-class>
+    </filter>
+
+    <filter>
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>org.support.project.knowledge.listener.CloseAbleAuthenticationFilter</filter-class>
         <init-param>
             <param-name>ignore-regular-expression</param-name>
-            <param-value>^/index|^/open|^/template|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$</param-value>
+            <param-value>^/index|^/open|^/api|^/template|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$</param-value>
         </init-param>
         <init-param>
             <param-name>close-ignore-regular-expression</param-name>
@@ -127,6 +132,12 @@
 
     <filter-mapping>
         <filter-name>LoggingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>ApiFilter</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
