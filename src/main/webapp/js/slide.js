@@ -67,7 +67,7 @@ var showSlide = function(parent) {
                         var slidehtml = '<div class="slideshow-area" id="' + slideId + '">';
                         slidehtml += '<div class="slideshow-container">';
                         for (var i = 0; i < data.files.length; i++) {
-                            slidehtml += '<div class="mySlides fade in">';
+                            slidehtml += '<div class="mySlides slide-fade in">';
                             slidehtml += '<img src="' + _CONTEXT + '/images/loader.gif" lagy="' + _CONTEXT + '/open.file/slide/' + data.fileNo + '/';
                             slidehtml += data.files[i] + '" alt="slide-' + i + '" class="slide-image slide-image-' + fileNo + '" />';
                             slidehtml += '</div>';
@@ -115,10 +115,10 @@ function showSlides(n, slideId) {
     var slideArea = document.getElementById(slideId);
     var slides = slideArea.getElementsByClassName("mySlides");
     var dots = slideArea.getElementsByClassName("dot");
-    if (n > slides.length) {slideIndex = 1} 
+    if (n > slides.length) {slideIndex = 1}
     if (n < 1) {slideIndex = slides.length}
     for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none"; 
+        slides[i].style.display = "none";
     }
     for (i = 0; i < dots.length; i++) {
         if (dots[i]) {
@@ -128,11 +128,11 @@ function showSlides(n, slideId) {
     slides[slideIndex-1].style.display = "block";
     var slideimg = $(slides[slideIndex-1].getElementsByTagName('img')[0]);
     slideimg.attr('src', slideimg.attr('lagy'));
-    
+
     if (dots[slideIndex-1]) {
         dots[slideIndex-1].className += " active";
     }
-    
+
     $('#' + slideId).find('.current').html(slideIndex);
     indexMap[slideId] = slideIndex;
 }
