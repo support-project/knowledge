@@ -22,7 +22,7 @@
 }
 @media screen and (min-width: 992px) {
     #content .slideshow-area:-webkit-full-screen,
-    #content .slideshow-area:-moz-full-screen,
+    #content .slideshow-area:-moz-full-screen, 
     #content .slideshow-area:-ms-fullscreen,
     #content .slideshow-area:fullscreen {
         position : fixed ;
@@ -129,12 +129,12 @@
 }
 
 @-webkit-keyframes slide-fade {
-  from {opacity: .4}
+  from {opacity: .4} 
   to {opacity: 1}
 }
 
 @keyframes slide-fade {
-  from {opacity: .4}
+  from {opacity: .4} 
   to {opacity: 1}
 }
 
