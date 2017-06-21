@@ -121,19 +121,19 @@
 }
 
 /* Fading animation */
-.fade {
-  -webkit-animation-name: fade;
+.slide-fade {
+  -webkit-animation-name: slide-fade;
   -webkit-animation-duration: 1.5s;
-  animation-name: fade;
+  animation-name: slide-fade;
   animation-duration: 1.5s;
 }
 
-@-webkit-keyframes fade {
+@-webkit-keyframes slide-fade {
   from {opacity: .4} 
   to {opacity: 1}
 }
 
-@keyframes fade {
+@keyframes slide-fade {
   from {opacity: .4} 
   to {opacity: 1}
 }

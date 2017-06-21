@@ -67,7 +67,7 @@ var showSlide = function(parent) {
                         var slidehtml = '<div class="slideshow-area" id="' + slideId + '">';
                         slidehtml += '<div class="slideshow-container">';
                         for (var i = 0; i < data.files.length; i++) {
-                            slidehtml += '<div class="mySlides fade in">';
+                            slidehtml += '<div class="mySlides slide-fade in">';
                             slidehtml += '<img src="' + _CONTEXT + '/images/loader.gif" lagy="' + _CONTEXT + '/open.file/slide/' + data.fileNo + '/';
                             slidehtml += data.files[i] + '" alt="slide-' + i + '" class="slide-image slide-image-' + fileNo + '" />';
                             slidehtml += '</div>';
