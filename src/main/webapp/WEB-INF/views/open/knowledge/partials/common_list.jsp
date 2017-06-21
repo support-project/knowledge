@@ -1,3 +1,4 @@
+<%@page import="org.support.project.knowledge.logic.TemplateLogic"%>
 <%@page import="org.support.project.knowledge.logic.EventsLogic"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@page import="java.util.Map"%>
@@ -98,8 +99,14 @@
                     href="<%=request.getContextPath()%>/open.knowledge/view/<%=jspUtil.out("knowledge.knowledgeId")%><%=jspUtil.out("params")%>#comments">
                     <i class="fa fa-comments-o"></i>&nbsp;× <%=jspUtil.out("knowledge.commentCount")%>
                 </a> &nbsp;
-                <i class="fa <%= templates.get(knowledge.getTypeId()).getTypeIcon() %>"></i>
-                <%= templates.get(knowledge.getTypeId()).getTypeName() %>
+                <% 
+                TemplateMastersEntity template = templates.get(knowledge.getTypeId());
+                if (template == null) {
+                    template = templates.get(TemplateLogic.TYPE_ID_KNOWLEDGE);
+                }
+                %>
+                <i class="fa <%= template.getTypeIcon() %>"></i>
+                <%= template.getTypeName() %>
                 &nbsp;
                 <%=jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "knowledge.publicFlag", jspUtil.label("label.public.view"))%>
                 <%=jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "knowledge.publicFlag", jspUtil.label("label.private.view"))%>
