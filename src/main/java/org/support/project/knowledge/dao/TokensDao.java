@@ -5,6 +5,8 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 
 import org.support.project.knowledge.dao.gen.GenTokensDao;
+import org.support.project.knowledge.entity.TokensEntity;
+import org.support.project.ormapping.common.SQLManager;
 
 /**
  * 認証トークン
@@ -20,6 +22,16 @@ public class TokensDao extends GenTokensDao {
      */
     public static TokensDao get() {
         return Container.getComp(TokensDao.class);
+    }
+    /**
+     * ユーザのTokenを取得
+     * @param userId
+     * @return
+     */
+    public TokensEntity selectOnUserId(Integer userId) {
+        String sql = "SELECT * FROM TOKENS WHERE USER_ID = ? AND DELETE_FLAG = 0";
+        return executeQuerySingle(sql, TokensEntity.class, userId);
+        
     }
 
 

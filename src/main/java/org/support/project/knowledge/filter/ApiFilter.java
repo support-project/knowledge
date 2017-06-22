@@ -1,6 +1,7 @@
 package org.support.project.knowledge.filter;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,23 +64,29 @@ public class ApiFilter implements Filter {
             return;
         }
         // 認証
-        // Httpヘッダー「PRIVATE-TOKEN」か、リクエストパラメータ「private_token」の値で認証する（GitLab準拠）
+        // Httpヘッダー「PRIVATE-TOKEN」か、リクエストパラメータ「private_token」の値で認証することを検討（GitLab準拠）
+        // → クエリパラメータ指定だとアクセスログにtoken情報が表示されてしまい良くない気がするので、Httpヘッダー指定のみにする
         String token = req.getHeader("PRIVATE-TOKEN");
-        if (StringUtils.isEmpty(token)) {
-            token = req.getParameter("private_token");
-        }
+//        if (StringUtils.isEmpty(token)) {
+//            token = req.getParameter("private_token");
+//        }
         if (StringUtils.isEmpty(token)) {
             // Tokenが指定されていない
             res.sendError(HttpStatus.SC_403_FORBIDDEN);
             return;
         }
-        
         TokensEntity tokensEntity = TokensDao.get().selectOnKey(token);
         if (tokensEntity == null) {
             res.sendError(HttpStatus.SC_403_FORBIDDEN);
             return;
         }
-        
+        Date now = new Date();
+        if (now.getTime() > tokensEntity.getExpires().getTime()) {
+            res.sendError(HttpStatus.SC_403_FORBIDDEN);
+            return;
+        }
+        // APIを使う場合、Tokensテーブルの「更新日付」現在の日付でアップデートする（最終利用日時）
+        TokensDao.get().update(tokensEntity);
         // セッション生成
         UsersEntity user = UsersDao.get().selectOnKey(tokensEntity.getUserId());
         if (user == null) {
