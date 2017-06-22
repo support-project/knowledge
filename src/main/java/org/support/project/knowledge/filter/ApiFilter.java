@@ -29,6 +29,7 @@ import org.support.project.web.wrapper.HttpServletRequestWrapper;
 public class ApiFilter implements Filter {
     private String targetRegex = "(^/api)(.)*";
     private Pattern pattern;
+    private boolean enableAuthParameter = true; // TODO 後でfalseへ
 
     @Override
     public void init(final FilterConfig filterconfig) throws ServletException {
@@ -37,6 +38,13 @@ public class ApiFilter implements Filter {
             this.targetRegex = targetRegex;
         }
         this.pattern = Pattern.compile(this.targetRegex);
+        
+        String authParam = filterconfig.getInitParameter("enable-auth-parameter");
+        if (StringUtils.isNotEmpty(authParam)) {
+            if (authParam.toLowerCase().equals("true")) {
+                enableAuthParameter = true;
+            }
+        }
     }
     @Override
     public void destroy() {
@@ -65,11 +73,13 @@ public class ApiFilter implements Filter {
         }
         // 認証
         // Httpヘッダー「PRIVATE-TOKEN」か、リクエストパラメータ「private_token」の値で認証することを検討（GitLab準拠）
-        // → クエリパラメータ指定だとアクセスログにtoken情報が表示されてしまい良くない気がするので、Httpヘッダー指定のみにする
+        // → クエリパラメータ指定だとアクセスログにtoken情報が表示されてしまい良くない気がするので、デフォルトはHttpヘッダー指定のみにする（設定で有効にもできる）
         String token = req.getHeader("PRIVATE-TOKEN");
-//        if (StringUtils.isEmpty(token)) {
-//            token = req.getParameter("private_token");
-//        }
+        if (enableAuthParameter) {
+            if (StringUtils.isEmpty(token)) {
+                token = req.getParameter("private_token");
+            }
+        }
         if (StringUtils.isEmpty(token)) {
             // Tokenが指定されていない
             res.sendError(HttpStatus.SC_403_FORBIDDEN);

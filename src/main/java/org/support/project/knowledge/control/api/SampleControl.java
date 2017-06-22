@@ -12,7 +12,7 @@ public class SampleControl extends Control {
     /**
      * サンプル
      */
-    @Get
+    @Get(path="api/sample")
     public Boundary index() {
         Msg msg = new Msg("Hi, " + getLoginedUser().getLoginUser().getUserName()  + ", this is api sample.");
         return send(msg);
