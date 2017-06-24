@@ -2,15 +2,15 @@ package org.support.project.knowledge.vo.api;
 
 import java.sql.Timestamp;
 
-/**
- * APIで返すユーザ情報
- * @author koda
- */
-public class User {
-    /** ユーザID */
-    private Integer userId;
-    /** ユーザ名 */
-    private String userName;
+public class Comment {
+    /** コメント番号 */
+    private Long commentNo;
+    /** ナレッジID */
+    private Long knowledgeId;
+    /** コメント */
+    private String comment;
+    /** ステータス */
+    private Integer commentStatus;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -20,28 +20,52 @@ public class User {
     /** 更新日時 */
     private Timestamp updateDatetime;
     /**
-     * @return the userId
+     * @return the commentNo
      */
-    public Integer getUserId() {
-        return userId;
+    public Long getCommentNo() {
+        return commentNo;
     }
     /**
-     * @param userId the userId to set
+     * @param commentNo the commentNo to set
      */
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setCommentNo(Long commentNo) {
+        this.commentNo = commentNo;
     }
     /**
-     * @return the userName
+     * @return the knowledgeId
      */
-    public String getUserName() {
-        return userName;
+    public Long getKnowledgeId() {
+        return knowledgeId;
     }
     /**
-     * @param userName the userName to set
+     * @param knowledgeId the knowledgeId to set
      */
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setKnowledgeId(Long knowledgeId) {
+        this.knowledgeId = knowledgeId;
+    }
+    /**
+     * @return the comment
+     */
+    public String getComment() {
+        return comment;
+    }
+    /**
+     * @param comment the comment to set
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    /**
+     * @return the commentStatus
+     */
+    public Integer getCommentStatus() {
+        return commentStatus;
+    }
+    /**
+     * @param commentStatus the commentStatus to set
+     */
+    public void setCommentStatus(Integer commentStatus) {
+        this.commentStatus = commentStatus;
     }
     /**
      * @return the insertUser
@@ -92,4 +116,5 @@ public class User {
         this.updateDatetime = updateDatetime;
     }
 
+    
 }

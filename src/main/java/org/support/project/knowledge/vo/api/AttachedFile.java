@@ -2,15 +2,18 @@ package org.support.project.knowledge.vo.api;
 
 import java.sql.Timestamp;
 
-/**
- * APIで返すユーザ情報
- * @author koda
- */
-public class User {
-    /** ユーザID */
-    private Integer userId;
-    /** ユーザ名 */
-    private String userName;
+public class AttachedFile {
+
+    /** 添付ファイル番号 */
+    private Long fileNo;
+    /** ナレッジID */
+    private Long knowledgeId;
+    /** コメント番号 */
+    private Long commentNo;
+    /** ファイル名 */
+    private String fileName;
+    /** ファイルサイズ */
+    private Double fileSize;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -20,28 +23,64 @@ public class User {
     /** 更新日時 */
     private Timestamp updateDatetime;
     /**
-     * @return the userId
+     * @return the fileNo
      */
-    public Integer getUserId() {
-        return userId;
+    public Long getFileNo() {
+        return fileNo;
     }
     /**
-     * @param userId the userId to set
+     * @param fileNo the fileNo to set
      */
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setFileNo(Long fileNo) {
+        this.fileNo = fileNo;
     }
     /**
-     * @return the userName
+     * @return the knowledgeId
      */
-    public String getUserName() {
-        return userName;
+    public Long getKnowledgeId() {
+        return knowledgeId;
     }
     /**
-     * @param userName the userName to set
+     * @param knowledgeId the knowledgeId to set
      */
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setKnowledgeId(Long knowledgeId) {
+        this.knowledgeId = knowledgeId;
+    }
+    /**
+     * @return the commentNo
+     */
+    public Long getCommentNo() {
+        return commentNo;
+    }
+    /**
+     * @param commentNo the commentNo to set
+     */
+    public void setCommentNo(Long commentNo) {
+        this.commentNo = commentNo;
+    }
+    /**
+     * @return the fileName
+     */
+    public String getFileName() {
+        return fileName;
+    }
+    /**
+     * @param fileName the fileName to set
+     */
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+    /**
+     * @return the fileSize
+     */
+    public Double getFileSize() {
+        return fileSize;
+    }
+    /**
+     * @param fileSize the fileSize to set
+     */
+    public void setFileSize(Double fileSize) {
+        this.fileSize = fileSize;
     }
     /**
      * @return the insertUser
@@ -91,5 +130,8 @@ public class User {
     public void setUpdateDatetime(Timestamp updateDatetime) {
         this.updateDatetime = updateDatetime;
     }
-
+    
+    
+    
+    
 }
