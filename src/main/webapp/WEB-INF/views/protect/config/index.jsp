@@ -47,6 +47,9 @@
             <li><a class="" href="<%=request.getContextPath()%>/open.language" style="cursor: pointer;">
                 <i class="fa fa-language"></i>&nbsp;<%=jspUtil.label("knowledge.language.title")%>
             </a></li>
+            <li><a class="" href="<%=request.getContextPath()%>/protect.token" style="cursor: pointer;">
+                <i class="fa fa-id-card-o"></i>&nbsp;<%=jspUtil.label("knowledge.token.title")%>
+            </a></li>
         </ul>
 
         <h4 class="sub_title"><%=jspUtil.label("knowledge.config.list")%></h4>

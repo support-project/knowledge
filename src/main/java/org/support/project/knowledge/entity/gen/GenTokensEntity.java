@@ -17,10 +17,10 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 
 /**
- * イベント
+ * 認証トークン
  */
 @DI(instance = Instance.Prototype)
-public class GenEventsEntity implements Serializable {
+public class GenTokensEntity implements Serializable {
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
@@ -29,34 +29,32 @@ public class GenEventsEntity implements Serializable {
      * Get instance from DI container.
      * @return instance
      */
-    public static GenEventsEntity get() {
-        return Container.getComp(GenEventsEntity.class);
+    public static GenTokensEntity get() {
+        return Container.getComp(GenTokensEntity.class);
     }
 
     /**
      * Constructor.
      */
-    public GenEventsEntity() {
+    public GenTokensEntity() {
         super();
     }
 
     /**
      * Constructor
-     * @param knowledgeId ナレッジID
+     * @param token TOKEN
      */
 
-    public GenEventsEntity(Long knowledgeId) {
+    public GenTokensEntity(String token) {
         super();
-        this.knowledgeId = knowledgeId;
+        this.token = token;
     }
-    /** ナレッジID */
-    private Long knowledgeId;
-    /** 開催日	 UTC */
-    private Timestamp startDateTime;
-    /** タイムゾーン */
-    private String timeZone;
-    /** 通知ステータス */
-    private Integer notifyStatus;
+    /** TOKEN */
+    private String token;
+    /** ユーザID */
+    private Integer userId;
+    /** 有効期限 */
+    private Timestamp expires;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -69,66 +67,50 @@ public class GenEventsEntity implements Serializable {
     private Integer deleteFlag;
 
     /**
-     * Get ナレッジID.
-     * @return ナレッジID
+     * Get TOKEN.
+     * @return TOKEN
      */
-    public Long getKnowledgeId() {
-        return this.knowledgeId;
+    public String getToken() {
+        return this.token;
     }
     /**
-     * Set ナレッジID.
-     * @param knowledgeId ナレッジID
+     * Set TOKEN.
+     * @param token TOKEN
      * @return this object     */
-    public GenEventsEntity setKnowledgeId(Long knowledgeId) {
-        this.knowledgeId = knowledgeId;
+    public GenTokensEntity setToken(String token) {
+        this.token = token;
         return this;
     }
 
     /**
-     * Get 開催日	 UTC.
-     * @return 開催日	 UTC
+     * Get ユーザID.
+     * @return ユーザID
      */
-    public Timestamp getStartDateTime() {
-        return this.startDateTime;
+    public Integer getUserId() {
+        return this.userId;
     }
     /**
-     * Set 開催日	 UTC.
-     * @param startDateTime 開催日	 UTC
+     * Set ユーザID.
+     * @param userId ユーザID
      * @return this object     */
-    public GenEventsEntity setStartDateTime(Timestamp startDateTime) {
-        this.startDateTime = startDateTime;
+    public GenTokensEntity setUserId(Integer userId) {
+        this.userId = userId;
         return this;
     }
 
     /**
-     * Get タイムゾーン.
-     * @return タイムゾーン
+     * Get 有効期限.
+     * @return 有効期限
      */
-    public String getTimeZone() {
-        return this.timeZone;
+    public Timestamp getExpires() {
+        return this.expires;
     }
     /**
-     * Set タイムゾーン.
-     * @param timeZone タイムゾーン
+     * Set 有効期限.
+     * @param expires 有効期限
      * @return this object     */
-    public GenEventsEntity setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
-        return this;
-    }
-
-    /**
-     * Get 通知ステータス.
-     * @return 通知ステータス
-     */
-    public Integer getNotifyStatus() {
-        return this.notifyStatus;
-    }
-    /**
-     * Set 通知ステータス.
-     * @param notifyStatus 通知ステータス
-     * @return this object     */
-    public GenEventsEntity setNotifyStatus(Integer notifyStatus) {
-        this.notifyStatus = notifyStatus;
+    public GenTokensEntity setExpires(Timestamp expires) {
+        this.expires = expires;
         return this;
     }
 
@@ -143,7 +125,7 @@ public class GenEventsEntity implements Serializable {
      * Set 登録ユーザ.
      * @param insertUser 登録ユーザ
      * @return this object     */
-    public GenEventsEntity setInsertUser(Integer insertUser) {
+    public GenTokensEntity setInsertUser(Integer insertUser) {
         this.insertUser = insertUser;
         return this;
     }
@@ -159,7 +141,7 @@ public class GenEventsEntity implements Serializable {
      * Set 登録日時.
      * @param insertDatetime 登録日時
      * @return this object     */
-    public GenEventsEntity setInsertDatetime(Timestamp insertDatetime) {
+    public GenTokensEntity setInsertDatetime(Timestamp insertDatetime) {
         this.insertDatetime = insertDatetime;
         return this;
     }
@@ -175,7 +157,7 @@ public class GenEventsEntity implements Serializable {
      * Set 更新ユーザ.
      * @param updateUser 更新ユーザ
      * @return this object     */
-    public GenEventsEntity setUpdateUser(Integer updateUser) {
+    public GenTokensEntity setUpdateUser(Integer updateUser) {
         this.updateUser = updateUser;
         return this;
     }
@@ -191,7 +173,7 @@ public class GenEventsEntity implements Serializable {
      * Set 更新日時.
      * @param updateDatetime 更新日時
      * @return this object     */
-    public GenEventsEntity setUpdateDatetime(Timestamp updateDatetime) {
+    public GenTokensEntity setUpdateDatetime(Timestamp updateDatetime) {
         this.updateDatetime = updateDatetime;
         return this;
     }
@@ -207,7 +189,7 @@ public class GenEventsEntity implements Serializable {
      * Set 削除フラグ.
      * @param deleteFlag 削除フラグ
      * @return this object     */
-    public GenEventsEntity setDeleteFlag(Integer deleteFlag) {
+    public GenTokensEntity setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
         return this;
     }
@@ -218,22 +200,22 @@ public class GenEventsEntity implements Serializable {
      */
     public Object[] getKeyValues() {
         Object[] keyValues = new Object[1];
-        keyValues[0] = this.knowledgeId;
+        keyValues[0] = this.token;
         return keyValues;
     }
     /**
      * Set key values 
-     * @param knowledgeId ナレッジID
+     * @param token TOKEN
      */
-    public void setKeyValues(Long knowledgeId) {
-        this.knowledgeId = knowledgeId;
+    public void setKeyValues(String token) {
+        this.token = token;
     }
     /**
      * compare on key 
      * @param entity entity 
      * @return result 
      */
-    public boolean equalsOnKey(GenEventsEntity entity) {
+    public boolean equalsOnKey(GenTokensEntity entity) {
         Object[] keyValues1 = getKeyValues();
         Object[] keyValues2 = entity.getKeyValues();
         for (int i = 0; i < keyValues1.length; i++) {
@@ -260,10 +242,9 @@ public class GenEventsEntity implements Serializable {
      */
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("knowledgeId = ").append(knowledgeId).append("\n");
-        builder.append("startDateTime = ").append(startDateTime).append("\n");
-        builder.append("timeZone = ").append(timeZone).append("\n");
-        builder.append("notifyStatus = ").append(notifyStatus).append("\n");
+        builder.append("token = ").append(token).append("\n");
+        builder.append("userId = ").append(userId).append("\n");
+        builder.append("expires = ").append(expires).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -288,22 +269,27 @@ public class GenEventsEntity implements Serializable {
         Validator validator;
         ValidateError error;
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(this.knowledgeId, convLabelName("Knowledge Id"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(this.startDateTime, convLabelName("Start Date Time"));
+        error = validator.validate(this.token, convLabelName("Token"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(this.timeZone, convLabelName("Time Zone"), 64);
+        error = validator.validate(this.token, convLabelName("Token"), 128);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(this.userId, convLabelName("User Id"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(this.notifyStatus, convLabelName("Notify Status"));
+        error = validator.validate(this.userId, convLabelName("User Id"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(this.expires, convLabelName("Expires"));
         if (error != null) {
             errors.add(error);
         }
@@ -334,22 +320,27 @@ public class GenEventsEntity implements Serializable {
         Validator validator;
         ValidateError error;
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(values.get("knowledgeId"), convLabelName("Knowledge Id"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(values.get("startDateTime"), convLabelName("Start Date Time"));
+        error = validator.validate(values.get("token"), convLabelName("Token"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(values.get("timeZone"), convLabelName("Time Zone"), 64);
+        error = validator.validate(values.get("token"), convLabelName("Token"), 128);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(values.get("userId"), convLabelName("User Id"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(values.get("notifyStatus"), convLabelName("Notify Status"));
+        error = validator.validate(values.get("userId"), convLabelName("User Id"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(values.get("expires"), convLabelName("Expires"));
         if (error != null) {
             errors.add(error);
         }
