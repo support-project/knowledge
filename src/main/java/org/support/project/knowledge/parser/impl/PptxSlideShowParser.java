@@ -1,6 +1,8 @@
 package org.support.project.knowledge.parser.impl;
 
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +23,7 @@ public class PptxSlideShowParser extends AbstractSlideShowParser implements Slid
 
     @Override
     public void parse(File inputFile, File outputDir) throws ParseException {
-        try {
-            SlideShow<?, ?> ss = SlideShowFactory.create(inputFile, null, true);
+        try (SlideShow<?, ?> ss = SlideShowFactory.create(inputFile, null, true)) {
             List<? extends Slide<?, ?>> slides = ss.getSlides();
 
             Dimension pgsize = ss.getPageSize();
@@ -35,8 +36,16 @@ public class PptxSlideShowParser extends AbstractSlideShowParser implements Slid
                 System.out.println("Rendering slide " + slideNo + (title == null ? "" : ": " + title));
 
                 BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics = img.createGraphics();
+                graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+                slide.draw(graphics);
+                img.flush();
                 //ImageIOUtil.writeImage(img, outputDir.getAbsolutePath() + "/" + (slideNo) + ".png", 300);
                 super.writeImage(img, outputDir.getAbsolutePath() + "/" + (slideNo) + ".png");
+                graphics.dispose();
                 slideNo++;
             }
         } catch (EncryptedDocumentException | IOException e) {
