@@ -1,5 +1,6 @@
 package org.support.project.knowledge.vo.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.support.project.web.bean.NameId;
@@ -10,8 +11,8 @@ import org.support.project.web.bean.NameId;
  */
 public class Target {
 
-    private List<NameId> groups;
-    private List<NameId> users;
+    private List<NameId> groups = new ArrayList<>();
+    private List<NameId> users = new ArrayList<>();
     /**
      * @return the groups
      */

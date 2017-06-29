@@ -339,4 +339,12 @@ public class TemplateLogic {
         return templates;
     }
 
+    public TemplateMastersEntity selectOnName(String template) {
+        TemplateMastersEntity entity = TemplateMastersDao.get().selectOnName(template);
+        if (entity == null) {
+            return null;
+        }
+        return loadTemplate(entity.getTypeId());
+    }
+
 }
