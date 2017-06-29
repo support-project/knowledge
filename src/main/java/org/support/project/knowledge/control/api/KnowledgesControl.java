@@ -2,20 +2,33 @@ package org.support.project.knowledge.control.api;
 
 import java.util.List;
 
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.logic.KnowledgeDataEditLogic;
 import org.support.project.knowledge.logic.KnowledgeDataSelectLogic;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
 import org.support.project.knowledge.vo.api.Knowledge;
+import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.web.bean.ApiParams;
+import org.support.project.web.bean.NameId;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.ApiControl;
 import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
+import org.support.project.web.exception.InvalidParamException;
+import org.support.project.web.filter.ControlManagerFilter;
+
+import net.arnx.jsonic.JSONException;
 
 @DI(instance = Instance.Prototype)
 public class KnowledgesControl extends ApiControl {
+    /** ログ */
+    private static Log LOG = LogFactory.getLog(ControlManagerFilter.class);
+    
     /**
      * List knowledges
      */
@@ -55,5 +68,25 @@ public class KnowledgesControl extends ApiControl {
         return send(HttpStatus.SC_200_OK, result);
     }
     
+    /**
+     * List knowledges
+     */
+    @Post(path="api/knowledges",checkReferer=false)
+    public Boundary post() {
+        try {
+            KnowledgeDetail data = getJsonObject(KnowledgeDetail.class);
+            long id = KnowledgeDataEditLogic.get().insert(data, getLoginedUser());
+            return send(HttpStatus.SC_201_CREATED, new NameId(data.getTitle(), String.valueOf(id)));
+        } catch (JSONException e) {
+            LOG.debug("json parse error", e);
+            return sendError(HttpStatus.SC_400_BAD_REQUEST);
+        } catch (InvalidParamException e) {
+            return sendError(e);
+        } catch (Exception e) {
+            LOG.error("error", e);
+            return sendError(HttpStatus.SC_500_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     
 }

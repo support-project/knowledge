@@ -87,4 +87,14 @@ public class TemplateMastersDao extends GenTemplateMastersDao {
                 .getSql("/org/support/project/knowledge/dao/sql/TemplateMastersDao/TemplateMastersDao_alter_sequence.sql");
         executeUpdate(sql);
     }
+    
+    /**
+     * テンプレート名でテンプレートを取得
+     * @param template
+     * @return
+     */
+    public TemplateMastersEntity selectOnName(String template) {
+        String sql = "SELECT * FROM TEMPLATE_MASTERS WHERE TYPE_NAME = ? AND DELETE_FLAG = 0";
+        return executeQuerySingle(sql, TemplateMastersEntity.class, template);
+    }
 }
