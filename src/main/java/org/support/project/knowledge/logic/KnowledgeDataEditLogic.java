@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.PropertyUtil;
@@ -12,7 +13,7 @@ import org.support.project.common.util.StringJoinBuilder;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.dao.TemplateMastersDao;
+import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
@@ -58,7 +59,6 @@ public class KnowledgeDataEditLogic {
             throw new InvalidParamException(new MessageResult(
                     MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST, builder.join(","), ""));
         }
-        entity.setKnowledgeId(null);
         knowledge.setKnowledge(entity);
         
         // List<TagsEntity> tags
@@ -124,11 +124,37 @@ public class KnowledgeDataEditLogic {
      * @throws Exception 
      */
     public long insert(KnowledgeDetail data, LoginedUser loginedUser) throws Exception {
-        LOG.trace("save");
+        LOG.trace("insert");
         // 画面での登録と形をあわせる
         KnowledgeData knowledge = conv(data);
+        knowledge.getKnowledge().setKnowledgeId(null);
         KnowledgesEntity insertedEntity = KnowledgeLogic.get().insert(knowledge, loginedUser);
         return insertedEntity.getKnowledgeId();
+    }
+    /**
+     * WebAPIからの Knowledge更新
+     * @param data
+     * @param loginedUser
+     * @return
+     * @throws Exception 
+     */
+    public void update(KnowledgeDetail data, LoginedUser loginedUser) throws Exception {
+        LOG.trace("update");
+        KnowledgesEntity check = KnowledgesDao.get().selectOnKey(data.getKnowledgeId());
+        if (check == null) {
+            throw new InvalidParamException(new MessageResult(
+                    MessageStatus.Warning, HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND", ""));
+        }
+        // 画面での登録と形をあわせる
+        KnowledgeData knowledge = conv(data);
+        // 編集権限チェック
+        Resources resources = Resources.getInstance(Locale.ENGLISH);
+        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(data.getKnowledgeId());
+        if (!KnowledgeLogic.get().isEditor(loginedUser, check, editors)) {
+            throw new InvalidParamException(new MessageResult(
+                    MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.edit.noaccess"), ""));
+        }
+        KnowledgeLogic.get().update(knowledge, loginedUser);
     }
 
 

@@ -19,6 +19,7 @@ import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.ApiControl;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.control.service.Put;
 import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.filter.ControlManagerFilter;
 
@@ -29,9 +30,6 @@ public class KnowledgesControl extends ApiControl {
     /** ログ */
     private static Log LOG = LogFactory.getLog(ControlManagerFilter.class);
     
-    /**
-     * List knowledges
-     */
     @Get(path="api/knowledges")
     public Boundary index() {
         return get();
@@ -69,9 +67,9 @@ public class KnowledgesControl extends ApiControl {
     }
     
     /**
-     * List knowledges
+     * Post knowledges
      */
-    @Post(path="api/knowledges",checkReferer=false)
+    @Post(path="api/knowledges", checkReferer=false)
     public Boundary post() {
         try {
             KnowledgeDetail data = getJsonObject(KnowledgeDetail.class);
@@ -88,5 +86,26 @@ public class KnowledgesControl extends ApiControl {
         }
     }
 
+    /**
+     * Put knowledges
+     */
+    @Put(path="api/knowledges", checkReferer=false)
+    public Boundary put() {
+        try {
+            Long id = getPathLong();
+            KnowledgeDetail data = getJsonObject(KnowledgeDetail.class);
+            data.setKnowledgeId(id);
+            KnowledgeDataEditLogic.get().update(data, getLoginedUser());
+            return send(HttpStatus.SC_200_OK, new NameId(data.getTitle(), String.valueOf(id)));
+        } catch (JSONException e) {
+            LOG.debug("json parse error", e);
+            return sendError(HttpStatus.SC_400_BAD_REQUEST);
+        } catch (InvalidParamException e) {
+            return sendError(e);
+        } catch (Exception e) {
+            LOG.error("error", e);
+            return sendError(HttpStatus.SC_500_INTERNAL_SERVER_ERROR);
+        }
+    }
     
 }
