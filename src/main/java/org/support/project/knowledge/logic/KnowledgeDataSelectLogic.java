@@ -85,7 +85,7 @@ public class KnowledgeDataSelectLogic {
             
             // 添付ファイル
             List<AttachedFile> attachedFiles = getAttachedFiles(entity);
-            detail.setAttachedFiles(attachedFiles);
+            detail.setAttachments(attachedFiles);
             
             // 共同編集者
             Target editors = getEditors(entity);
