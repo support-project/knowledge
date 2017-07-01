@@ -10,7 +10,7 @@ public class KnowledgeDetail extends Knowledge {
     /** コメント */
     private List<Comment> comments;
     /** 添付ファイル */
-    private List<AttachedFile> attachedFiles;
+    private List<AttachedFile> attachments;
     
     /** 編集可能な対象（共同編集者） */
     private Target editors;
@@ -40,18 +40,6 @@ public class KnowledgeDetail extends Knowledge {
         this.comments = comments;
     }
     /**
-     * @return the attachedFiles
-     */
-    public List<AttachedFile> getAttachedFiles() {
-        return attachedFiles;
-    }
-    /**
-     * @param attachedFiles the attachedFiles to set
-     */
-    public void setAttachedFiles(List<AttachedFile> attachedFiles) {
-        this.attachedFiles = attachedFiles;
-    }
-    /**
      * @return the editors
      */
     public Target getEditors() {
@@ -63,14 +51,16 @@ public class KnowledgeDetail extends Knowledge {
     public void setEditors(Target editors) {
         this.editors = editors;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    /**
+     * @return the attachments
+     */
+    public List<AttachedFile> getAttachments() {
+        return attachments;
+    }
+    /**
+     * @param attachments the attachments to set
+     */
+    public void setAttachments(List<AttachedFile> attachments) {
+        this.attachments = attachments;
+    }
 }
