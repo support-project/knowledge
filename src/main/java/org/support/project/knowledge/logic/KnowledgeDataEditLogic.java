@@ -145,8 +145,6 @@ public class KnowledgeDataEditLogic {
             throw new InvalidParamException(new MessageResult(
                     MessageStatus.Warning, HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND", ""));
         }
-        // 画面での登録と形をあわせる
-        KnowledgeData knowledge = conv(data);
         // 編集権限チェック
         Resources resources = Resources.getInstance(Locale.ENGLISH);
         List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(data.getKnowledgeId());
@@ -154,7 +152,34 @@ public class KnowledgeDataEditLogic {
             throw new InvalidParamException(new MessageResult(
                     MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.edit.noaccess"), ""));
         }
+        // 画面での登録と形をあわせる
+        KnowledgeData knowledge = conv(data);
         KnowledgeLogic.get().update(knowledge, loginedUser);
+    }
+
+    /**
+     * WebAPIからの Knowledge削除
+     * @param data
+     * @param loginedUser
+     * @return
+     * @throws Exception 
+     */
+    public void delete(Long id, LoginedUser loginedUser) throws Exception {
+        LOG.trace("delete");
+        KnowledgesEntity check = KnowledgesDao.get().selectOnKey(id);
+        if (check == null) {
+            throw new InvalidParamException(new MessageResult(
+                    MessageStatus.Warning, HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND", ""));
+        }
+        // 編集権限チェック
+        Resources resources = Resources.getInstance(Locale.ENGLISH);
+        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(id);
+        if (!KnowledgeLogic.get().isEditor(loginedUser, check, editors)) {
+            throw new InvalidParamException(new MessageResult(
+                    MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.edit.noaccess"), ""));
+        }
+        KnowledgeLogic.get().delete(id);
+        
     }
 
 
