@@ -33,7 +33,7 @@
 <meta property="og:url" content="https://support-project.org/knowledge/index" />
 <meta property="og:site_name" content="Knowledge"/>
 
-<link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon" /> 
+<link rel="icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/vnd.microsoft.icon" /> 
 
 <% if (StringUtils.isNotEmpty(jspUtil.out("thema"))) { %>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootswatch/<%= jspUtil.out("thema") %>/bootstrap.min.css" />
