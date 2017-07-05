@@ -14,7 +14,7 @@ var initTimer = function() {
             $.notify('auto saving...', 'info');
             saveDraft();
         }
-    }, 1000 * 60 * 2); // ２分に1回確認する
+    }, 1000 * 60 * 1); // 1分に1回確認する
 };
 var saveDraft = function() {
     // 操作対象のフォーム要素を取得
