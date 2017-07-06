@@ -20,11 +20,13 @@ import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.IndexType;
+import org.support.project.knowledge.dao.DraftKnowledgesDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateItemsDao;
+import org.support.project.knowledge.entity.DraftKnowledgesEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
@@ -243,8 +245,16 @@ public class FileParseBat extends AbstractBat {
                 if (knowledgesEntity == null) {
                     // 紐づくナレッジが存在していないのであれば解析はしない（例えば、一度添付ファイル付きのナレッジを登録後、ナレッジを削除した場合）
                     // 理由：ナレッジに紐付いていないため、アクセス権が不定
-                    // ナレッジに紐づいていないファイルで、かつ更新日が24時間前のものは削除される
-                    filesDao.changeStatus(knowledgeFilesEntity.getFileNo(), PARSE_STATUS_NO_TARGET, UPDATE_USER_ID);
+                    // ナレッジに紐づいていないファイルで、かつ更新日が24時間前のものはステータスを更新する
+                    if (knowledgeFilesEntity.getDraftId() == null) {
+                        filesDao.changeStatus(knowledgeFilesEntity.getFileNo(), PARSE_STATUS_NO_TARGET, UPDATE_USER_ID);
+                    } else {
+                        DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKey(knowledgeFilesEntity.getDraftId());
+                        if (draft == null) {
+                            // 下書きが存在する場合は、削除対象にしないが、下書きも消えている場合はステータスを更新する
+                            filesDao.changeStatus(knowledgeFilesEntity.getFileNo(), PARSE_STATUS_NO_TARGET, UPDATE_USER_ID);
+                        }
+                    }
                     continue;
                 }
                 // タグを取得
