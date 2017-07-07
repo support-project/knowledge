@@ -10,6 +10,8 @@ import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.UserLogicEx;
@@ -22,9 +24,11 @@ import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.ProvisionalRegistrationsDao;
 import org.support.project.web.dao.RolesDao;
+import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.ProvisionalRegistrationsEntity;
 import org.support.project.web.entity.RolesEntity;
+import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
@@ -355,8 +359,14 @@ public class UsersControl extends Control {
             addMsgSuccess("message.success.accept");
 
             // 承認されたことを通知
+            SystemConfigsEntity config = SystemConfigsDao.get().selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
+            String url;
+            if (config == null) {
+                url = HttpUtil.getContextUrl(getRequest());
+            } else {
+                url = config.getConfigValue();
+            }
             MailLogic mailLogic = MailLogic.get();
-            String url = HttpUtil.getContextUrl(getRequest());
             mailLogic.sendAcceptedAddRequest(entity, url);
         } else {
             // 他の管理者がすでに承認していました

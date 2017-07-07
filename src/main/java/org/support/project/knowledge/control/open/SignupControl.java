@@ -95,7 +95,13 @@ public class SignupControl extends Control {
             // 仮登録を行う
             ProvisionalRegistrationsEntity entity = addProvisionalRegistration();
             // 招待のメールを送信
-            String url = HttpUtil.getContextUrl(getRequest());
+            SystemConfigsEntity config = SystemConfigsDao.get().selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
+            String url;
+            if (config == null) {
+                url = HttpUtil.getContextUrl(getRequest());
+            } else {
+                url = config.getConfigValue();
+            }
             MailLogic mailLogic = MailLogic.get();
             mailLogic.sendInvitation(entity, url, HttpUtil.getLocale(getRequest()));
             return forward("mail_sended.jsp");
