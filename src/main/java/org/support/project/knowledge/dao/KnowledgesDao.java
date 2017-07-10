@@ -311,4 +311,9 @@ public class KnowledgesDao extends GenKnowledgesDao {
         return executeQueryList(sql, KnowledgesEntity.class, params.toArray(new Object[0]));
     }
 
+    public void updateViewCount(Long count, Long knowledgeId) {
+        String sql = "UPDATE KNOWLEDGES SET VIEW_COUNT = ? WHERE KNOWLEDGE_ID = ?";
+        executeUpdate(sql, count, knowledgeId);
+    }
+
 }

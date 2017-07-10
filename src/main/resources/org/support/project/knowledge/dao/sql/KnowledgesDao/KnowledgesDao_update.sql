@@ -7,6 +7,7 @@ SET
  , TAG_NAMES = ?
  , LIKE_COUNT = ?
  , COMMENT_COUNT = ?
+ , VIEW_COUNT = ?
  , TYPE_ID = ?
  , NOTIFY_STATUS = ?
  , INSERT_USER = ?

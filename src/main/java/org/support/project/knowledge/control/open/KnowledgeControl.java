@@ -470,6 +470,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
     
             List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);
+            KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
             setAttribute("knowledges", stocks);
             LOG.trace("検索終了");
             
@@ -516,6 +517,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 Participations participations = EventsLogic.get().isParticipation(stock.getKnowledgeId(), getLoginUserId());
                 stock.setParticipations(participations);
             }
+            KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
             setAttribute("knowledges", stocks);
         } catch (java.text.ParseException e) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
