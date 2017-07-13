@@ -617,6 +617,12 @@ create table VIEW_HISTORIES (
 create index IDX_VIEW_HISTORIES_KNOWLEDGE_ID
   on VIEW_HISTORIES(KNOWLEDGE_ID);
 
+create index IDX_VIEW_HISTORIES_INSERT_USER
+  on VIEW_HISTORIES(INSERT_USER);
+
+create index IDX_VIEW_HISTORIES_KNOWLEDGE_ID_INSERT_USER
+  on VIEW_HISTORIES(KNOWLEDGE_ID,INSERT_USER);
+
 -- ストックしたナレッジ
 drop table if exists STOCK_KNOWLEDGES cascade;
 
@@ -723,6 +729,7 @@ create table KNOWLEDGES (
   , TAG_NAMES text
   , LIKE_COUNT bigint
   , COMMENT_COUNT integer
+  , VIEW_COUNT bigint
   , TYPE_ID integer
   , NOTIFY_STATUS integer
   , INSERT_USER integer
@@ -1218,6 +1225,7 @@ comment on column KNOWLEDGES.TAG_IDS is 'タグID一覧';
 comment on column KNOWLEDGES.TAG_NAMES is 'タグ名称一覧';
 comment on column KNOWLEDGES.LIKE_COUNT is 'いいね件数';
 comment on column KNOWLEDGES.COMMENT_COUNT is 'コメント件数';
+comment on column KNOWLEDGES.VIEW_COUNT is '参照件数';
 comment on column KNOWLEDGES.TYPE_ID is 'テンプレートの種類ID';
 comment on column KNOWLEDGES.NOTIFY_STATUS is '通知ステータス';
 comment on column KNOWLEDGES.INSERT_USER is '登録ユーザ';

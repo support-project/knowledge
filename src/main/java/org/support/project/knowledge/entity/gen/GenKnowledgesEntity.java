@@ -62,9 +62,11 @@ public class GenKnowledgesEntity implements Serializable {
     /** タグ名称一覧 */
     private String tagNames;
     /** いいね件数 */
-    private Long likeCount;
+    private Long likeCount = new Long(0);
     /** コメント件数 */
-    private Integer commentCount;
+    private Integer commentCount = 0;
+    /** 参照件数 */
+    private Long viewCount = new Long(0);
     /** テンプレートの種類ID */
     private Integer typeId;
     /** 通知ステータス */
@@ -205,6 +207,22 @@ public class GenKnowledgesEntity implements Serializable {
      * @return this object     */
     public GenKnowledgesEntity setCommentCount(Integer commentCount) {
         this.commentCount = commentCount;
+        return this;
+    }
+
+    /**
+     * Get 参照件数.
+     * @return 参照件数
+     */
+    public Long getViewCount() {
+        return this.viewCount;
+    }
+    /**
+     * Set 参照件数.
+     * @param viewCount 参照件数
+     * @return this object     */
+    public GenKnowledgesEntity setViewCount(Long viewCount) {
+        this.viewCount = viewCount;
         return this;
     }
 
@@ -376,6 +394,7 @@ public class GenKnowledgesEntity implements Serializable {
         builder.append("tagNames = ").append(tagNames).append("\n");
         builder.append("likeCount = ").append(likeCount).append("\n");
         builder.append("commentCount = ").append(commentCount).append("\n");
+        builder.append("viewCount = ").append(viewCount).append("\n");
         builder.append("typeId = ").append(typeId).append("\n");
         builder.append("notifyStatus = ").append(notifyStatus).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
