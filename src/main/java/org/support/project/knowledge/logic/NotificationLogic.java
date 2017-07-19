@@ -95,6 +95,22 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
         
     }
     
+    /**
+     * 通知の読み込み
+     * @param no
+     * @param loginedUser
+     * @return
+     */
+    public NotificationsEntity load(long no, LoginedUser loginedUser) {
+        UserNotificationsEntity userNotification = UserNotificationsDao.get().selectOnKey(no, loginedUser.getUserId());
+        if (userNotification == null) {
+            return null;
+        }
+        NotificationsEntity notification = NotificationsDao.get().selectOnKey(no);
+        convNotification(notification, loginedUser, TARGET.detail);
+        return notification;
+    }
+    
 
     
     

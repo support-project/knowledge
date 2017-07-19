@@ -10,6 +10,7 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-list.css" />
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
@@ -43,11 +44,19 @@
 
 <div class="list-group">
     <c:forEach var="notification" items="${notifications}">
-        <a class="list-group-item " 
-            href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %>" >
-            <%= jspUtil.out("notification.title") %>
-        </a>
-        
+        <c:if test="${notification.status == 0}">
+            <a class="list-group-item unread" 
+                href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %>" >
+                [<%= jspUtil.label("label.unread") %>]
+                <%= jspUtil.out("notification.title") %>
+            </a>
+        </c:if>
+        <c:if test="${notification.status != 0}">
+            <a class="list-group-item " 
+                href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %>" >
+                <%= jspUtil.out("notification.title") %>
+            </a>
+        </c:if>
     </c:forEach>
 </div>
 

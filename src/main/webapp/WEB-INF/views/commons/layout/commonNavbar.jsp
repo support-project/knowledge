@@ -100,12 +100,15 @@
                 <% if (!jspUtil.logined()) { %>
                 <li class="navButton navMenuButton">
                     <div class="btn-group">
-                        <a href="#" class="btn btn-default" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="btn btn-default dropdown-toggle" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="15" height="15"/>
+                            <span class="caret"></span>
                         </a>
+                        <!-- 
                         <a href="#" class="btn btn-default dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                         </a>
+                        -->
                         <ul class="dropdown-menu" role="menu">
                             <li >
                                 <a href="<%= request.getContextPath() %>/open.knowledge/list" >
@@ -130,13 +133,18 @@
                 <% } else { %>
                 <li class="navButton navLoginedMenuButton">
                     <div class="btn-group">
-                        <a href="#" class="btn btn-success" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="btn btn-success dropdown-toggle" id="navMenuButtonLink" data-toggle="dropdown">
                             <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="15" height="15"/>
-                            <span class="badge"><%= jspUtil.out(Control.NOTIFY_UNREAD_COUNT) %></span>
+                            <small>
+                            <span class="badge badge-pill"><%= jspUtil.out(Control.NOTIFY_UNREAD_COUNT) %></span>
+                            </small>
+                            <span class="caret"></span>
                         </a>
+                        <!--
                         <a href="#" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                         </a>
+                        -->
                         <ul class="dropdown-menu" role="menu">
                             <li >
                                 <a href="<%= request.getContextPath() %>/open.knowledge/list" >

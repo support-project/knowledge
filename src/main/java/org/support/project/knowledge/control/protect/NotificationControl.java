@@ -5,6 +5,7 @@ import java.util.List;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.web.boundary.Boundary;
+import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.entity.NotificationsEntity;
 import org.support.project.web.exception.InvalidParamException;
@@ -33,6 +34,17 @@ public class NotificationControl extends Control {
         return forward("list.jsp");
     }
 
+    @Get
+    public Boundary view() throws InvalidParamException {
+        long no = getPathLong(new Long(-1));
+        NotificationsEntity notification = NotificationLogic.get().load(no, getLoginedUser());
+        if (notification == null) {
+            sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+        }
+        NotificationLogic.get().setStatus(getLoginUserId(), no, NotificationLogic.STATUS_READED);
+        setAttributeOnProperty(notification);
+        return forward("view.jsp");
+    }
     
     
 }
