@@ -80,14 +80,17 @@ import org.support.project.web.config.WebConfig;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.SystemConfigsDao;
+import org.support.project.web.dao.UserNotificationsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.ConfirmMailChangesEntity;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.MailsEntity;
+import org.support.project.web.entity.NotificationsEntity;
 import org.support.project.web.entity.PasswordResetsEntity;
 import org.support.project.web.entity.ProvisionalRegistrationsEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
+import org.support.project.web.entity.UserNotificationsEntity;
 import org.support.project.web.entity.UsersEntity;
 
 import net.arnx.jsonic.JSON;
@@ -1037,14 +1040,6 @@ public class MailLogic {
      */
     private void notifyKnowledgeUpdateToUsers(NotifyQueuesEntity notifyQueuesEntity, KnowledgesEntity knowledge, List<UsersEntity> users)
             throws Exception {
-        MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-        MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
-        if (mailConfigsEntity == null) {
-            // メールの設定が登録されていなければ、送信処理は終了
-            LOG.info("mail config is not exists.");
-            return;
-        }
-        
         StringBuilder content = new StringBuilder();
         // テンプレートの種類をセット
         TemplateMastersEntity templateMaster = TemplateMastersDao.get().selectWithItems(knowledge.getTypeId());
@@ -1066,7 +1061,10 @@ public class MailLogic {
         }
         content.append(knowledge.getContent());
         
+        NotificationsEntity notification = NotificationLogic.get().insertNotificationOnKnowledgeUpdate(knowledge);
+        
         for (UsersEntity usersEntity : users) {
+            NotificationLogic.get().insertUserNotification(notification, usersEntity);
             if (!StringUtils.isEmailAddress(usersEntity.getMailAddress())) {
                 // 送信先のメールアドレスが不正なのでこのユーザにはメール送信しない
                 LOG.warn("mail targget [" + usersEntity.getMailAddress() + "] is wrong.");
@@ -1082,9 +1080,12 @@ public class MailLogic {
             } else {
                 template = load(locale, MailLogic.NOTIFY_UPDATE_KNOWLEDGE);
             }
+            // メール送信
             insertNotifyKnowledgeUpdateMailQue(knowledge, usersEntity, template, content.toString());
         }
     }
+
+
 
     /**
      * 記事の追加・更新のWebhookの登録を行う

@@ -1,3 +1,4 @@
+<%@page import="org.support.project.knowledge.control.Control"%>
 <%@page import="org.support.project.knowledge.entity.ServiceConfigsEntity"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 
@@ -131,6 +132,7 @@
                     <div class="btn-group">
                         <a href="#" class="btn btn-success" id="navMenuButtonLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="15" height="15"/>
+                            <span class="badge"><%= jspUtil.out(Control.NOTIFY_UNREAD_COUNT) %></span>
                         </a>
                         <a href="#" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
@@ -139,6 +141,12 @@
                             <li >
                                 <a href="<%= request.getContextPath() %>/open.knowledge/list" >
                                     <i class="fa fa-list"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.list.knowledge") %>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li >
+                                <a href="<%= request.getContextPath() %>/protect.notification/list" >
+                                    <i class="fa fa-bullhorn"></i>&nbsp;<%= jspUtil.label("knowledge.notification.title") %>
                                 </a>
                             </li>
                             <li class="divider"></li>
