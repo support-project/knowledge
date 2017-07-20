@@ -8,7 +8,6 @@ import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.NumberUtils;
-import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -24,21 +23,16 @@ import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.entity.KnowledgeUsersEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
-import org.support.project.knowledge.entity.MailLocaleTemplatesEntity;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.vo.Notify;
-import org.support.project.knowledge.vo.notification.KnowledgeUpdate;
 import org.support.project.knowledge.websocket.NotifyAction;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.GroupsEntity;
-import org.support.project.web.entity.NotificationsEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
-
-import net.arnx.jsonic.JSON;
 /**
  * 通知を処理するロジック
  * @author Koda

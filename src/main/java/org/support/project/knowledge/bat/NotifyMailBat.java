@@ -9,7 +9,9 @@ import org.support.project.di.Container;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.MailEventLogic;
-import org.support.project.knowledge.logic.MailLogic;
+import org.support.project.knowledge.logic.notification.CommentInsertNotification;
+import org.support.project.knowledge.logic.notification.KnowledgeUpdateNotification;
+import org.support.project.knowledge.logic.notification.LikeInsertNotification;
 import org.support.project.knowledge.vo.Notify;
 
 /**
@@ -52,11 +54,11 @@ public class NotifyMailBat extends AbstractBat {
         for (NotifyQueuesEntity notifyQueuesEntity : notifyQueuesEntities) {
             if (notifyQueuesEntity.getType() == Notify.TYPE_KNOWLEDGE_INSERT 
                     || notifyQueuesEntity.getType() == Notify.TYPE_KNOWLEDGE_UPDATE) {
-                MailLogic.get().notifyKnowledgeUpdate(notifyQueuesEntity);
+                KnowledgeUpdateNotification.get().notify(notifyQueuesEntity);
             } else if (notifyQueuesEntity.getType() == Notify.TYPE_KNOWLEDGE_COMMENT) {
-                MailLogic.get().notifyCommentInsert(notifyQueuesEntity);
+                CommentInsertNotification.get().notify(notifyQueuesEntity);
             } else if (notifyQueuesEntity.getType() == Notify.TYPE_KNOWLEDGE_LIKE) {
-                MailLogic.get().notifyLikeInsert(notifyQueuesEntity);
+                LikeInsertNotification.get().notify(notifyQueuesEntity);
             }
             // 通知のキューから削除
             //notifyQueuesDao.delete(notifyQueuesEntity);

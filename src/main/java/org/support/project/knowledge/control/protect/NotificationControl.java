@@ -15,11 +15,8 @@ public class NotificationControl extends Control {
     @Get
     public Boundary list() throws InvalidParamException {
         int offset = getPathInteger(0);
-        List<NotificationsEntity> notifications = NotificationLogic.get().getNotification(getLoginUserId(), offset);
+        List<NotificationsEntity> notifications = NotificationLogic.get().getNotification(getLoginedUser(), offset);
         
-        for (NotificationsEntity notificationsEntity : notifications) {
-            NotificationLogic.get().convNotification(notificationsEntity, getLoginedUser(), NotificationLogic.TARGET.list);
-        }
         
         setAttribute("notifications", notifications);
         

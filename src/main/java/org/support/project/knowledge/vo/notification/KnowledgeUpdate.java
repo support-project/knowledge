@@ -1,37 +1,39 @@
 package org.support.project.knowledge.vo.notification;
 
 public class KnowledgeUpdate {
-    private long KnowledgeId;
-    private String KnowledgeTitle;
+    private long knowledgeId;
+    private String knowledgeTitle;
     private String updateUser;
     /**
      * @return the knowledgeId
      */
     public long getKnowledgeId() {
-        return KnowledgeId;
+        return knowledgeId;
     }
     /**
      * @param knowledgeId the knowledgeId to set
      */
     public void setKnowledgeId(long knowledgeId) {
-        KnowledgeId = knowledgeId;
+        this.knowledgeId = knowledgeId;
     }
     /**
      * @return the knowledgeTitle
      */
     public String getKnowledgeTitle() {
-        return KnowledgeTitle;
+        if (knowledgeTitle == null) return "";
+        return knowledgeTitle;
     }
     /**
      * @param knowledgeTitle the knowledgeTitle to set
      */
     public void setKnowledgeTitle(String knowledgeTitle) {
-        KnowledgeTitle = knowledgeTitle;
+        this.knowledgeTitle = knowledgeTitle;
     }
     /**
      * @return the updateUser
      */
     public String getUpdateUser() {
+        if (updateUser == null) return "";
         return updateUser;
     }
     /**
