@@ -3,7 +3,9 @@ package org.support.project.knowledge.logic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.PropertyUtil;
@@ -248,9 +250,22 @@ public class KnowledgeDataSelectLogic {
                 param.getLoginedUser(),
                 param.getOffset(),
                 param.getLimit());
+        List<String> ids = new ArrayList<>();
         for (KnowledgesEntity entity : entities) {
             Knowledge result = conv(entity, LIST);
             results.add(result);
+            ids.add(String.valueOf(result.getKnowledgeId()));
+        }
+        List<KnowledgesEntity> dbs = KnowledgeLogic.get().getKnowledges(ids, param.getLoginedUser());
+        Map<Long, KnowledgesEntity> idMap = new HashedMap<>();
+        for (KnowledgesEntity knowledgesEntity : dbs) {
+            idMap.put(knowledgesEntity.getKnowledgeId(), knowledgesEntity);
+        }
+        for (Knowledge knowledge : results) {
+            if (idMap.containsKey(knowledge.getKnowledgeId())) {
+                // Titleのハイライトを消す
+                knowledge.setTitle(idMap.get(knowledge.getKnowledgeId()).getTitle());
+            }
         }
         return results;
     }
