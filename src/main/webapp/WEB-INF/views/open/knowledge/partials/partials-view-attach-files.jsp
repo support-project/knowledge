@@ -52,10 +52,10 @@
             %>
             <div class="downloadfile <%= hide %>">
                 <div class="col-xs-6">
-                    <a href="<%=jspUtil.out("file.url")%>">
+                    <a href="<%=jspUtil.out("file.url")%>&amp;attachment=true">
                     <img src="<%=jspUtil.out("file.thumbnailUrl")%>" width="20"/> 
                     </a>
-                    <a href="<%=jspUtil.out("file.url")%>"> <%=jspUtil.out("file.name", jspUtil.ESCAPE_HTML, 100)%></a>
+                    <a href="<%=jspUtil.out("file.url")%>&amp;attachment=true"> <%=jspUtil.out("file.name", jspUtil.ESCAPE_HTML, 100)%></a>
                 </div>
             </div>
             </c:if>

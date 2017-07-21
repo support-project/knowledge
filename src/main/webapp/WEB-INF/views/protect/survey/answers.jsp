@@ -15,18 +15,18 @@
 
 <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-survey-answers.css -->
-<link rel="stylesheet" href="bower/bootstrap-table/dist/bootstrap-table.min.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-table/dist/bootstrap-table.min.css" />
 <!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-survey-answers.js -->
-<script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
-<script type="text/javascript" src="bower/bootstrap-table/dist/bootstrap-table.min.js"></script>
-<script type="text/javascript" src="bower/bootstrap-table/dist/extensions/export/bootstrap-table-export.min.js"></script>
-<script type="text/javascript" src="bower/tableExport.jquery.plugin/tableExport.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-table/dist/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-table/dist/extensions/export/bootstrap-table-export.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/tableExport.jquery.plugin/tableExport.min.js"></script>
 
-<script type="text/javascript" src="js/survey-answers.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/survey-answers.js"></script>
 <!-- endbuild -->
 
 <script>

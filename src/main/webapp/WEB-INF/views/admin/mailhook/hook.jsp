@@ -14,15 +14,15 @@
 
 <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-mailhook.css -->
-<link rel="stylesheet" href="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
 <!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-mailhook.js -->
-<script type="text/javascript" src="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-<script type="text/javascript" src="js/mailhook.js"></script>
-<script type="text/javascript" src="js/targetselect.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/mailhook.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/targetselect.js"></script>
 <!-- endbuild -->
 
 <script>

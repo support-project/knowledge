@@ -53,7 +53,7 @@ $(document).ready(function() {
     $('#deletebutton').click(function(){
         bootbox.confirm("Are you sure delete this data?", function(result) {
             if (result) {
-                $('#templateForm').attr('action', '<%= request.getContextPath()%>/admin.template/delete');
+                $('#templateForm').attr('action', _CONTEXT + '/admin.template/delete');
                 $('#templateForm').submit();
             }
         }); 

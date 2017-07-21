@@ -70,7 +70,7 @@
             <li><a href="<%=request.getContextPath()%>/admin.mail/config" style="cursor: pointer;">
                 <i class="fa fa-envelope-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.config.system.mail")%>
             </a></li>
-            <li><a href="<%=request.getContextPath()%>/admin.ldap/config" style="cursor: pointer;">
+            <li><a href="<%=request.getContextPath()%>/admin.ldap/list" style="cursor: pointer;">
                 <i class="fa fa-user-plus"></i>&nbsp;<%=jspUtil.label("knowledge.ldap.title")%>
             </a></li>
             <li><a href="<%=request.getContextPath()%>/admin.proxy/config" style="cursor: pointer;">

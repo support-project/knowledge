@@ -46,6 +46,61 @@ SqlSeparator=0
 ShowTag=1
 ShowCommonAttributes=0
 
+[Entity]
+PName=TOKENS
+LName=認証トークン
+Comment=
+TableOption=
+Page=MAIN
+Left=1600
+Top=50
+Field="TOKEN","TOKEN","@VARCHAR(128)","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ユーザID","USER_ID","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="有効期限","EXPIRES","@DATETIME","NOT NULL",,"","",$FFFFFFFF,""
+Index==1,USER_ID
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170620125822
+Position="MAIN",1600,50
+
+[Relation]
+Entity1=MAIL_HOOKS
+Entity2=MAIL_PROPERTIES
+RelationType1=1
+RelationType2=3
+Fields1=HOOK_ID
+Fields2=HOOK_ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,1836,5081,4896,R,R
+Dependence=1
+Caption=
+PName=
+LineMode=0
+Bar1=184
+Bar2=508
+Bar3=490
+TermPos1=R
+TermPos2=R
+
+[Entity]
+PName=MAIL_PROPERTIES
+LName=メール受信設定
+Comment=
+TableOption=
+Page=MAIN
+Left=2950
+Top=50
+Field="HOOK_ID","HOOK_ID","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
+Field="PROPERTY_KEY","PROPERTY_KEY","@VARCHAR(128)","NOT NULL",1,"","",$FFFFFFFF,""
+Field="PROPERTY_VALUE","PROPERTY_VALUE","@VARCHAR(256)",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170616214751
+Position="MAIN",2950,50
+
 [Relation]
 Entity1=LOCALES
 Entity2=MAIL_LOCALE_TEMPLATES
@@ -55,14 +110,14 @@ Fields1=KEY
 Fields2=KEY
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,5226,5024,4040,R,R
+Position="MAIN",0,5226,5024,4720,R,R
 Dependence=1
 Caption=
 PName=
 LineMode=0
 Bar1=523
 Bar2=502
-Bar3=404
+Bar3=472
 TermPos1=R
 TermPos2=R
 
@@ -92,8 +147,8 @@ LName=ロケール毎のメールテンプレート
 Comment=
 TableOption=
 Page=MAIN
-Left=2950
-Top=250
+Left=3600
+Top=300
 Field="テンプレートID","TEMPLATE_ID","@VARCHAR(32)","NOT NULL",0,"","",$FFFFFFFF,""
 Field="キー","KEY","@VARCHAR(12)","NOT NULL",1,"","",$FFFFFFFF,""
 Field=" タイトル","TITLE","text","NOT NULL",,"","",$FFFFFFFF,""
@@ -102,7 +157,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170228163618
-Position="MAIN",2950,250
+Position="MAIN",3600,300
 
 [Entity]
 PName=LOCALES
@@ -110,7 +165,7 @@ LName=ロケール
 Comment=
 TableOption=
 Page=MAIN
-Left=3550
+Left=3600
 Top=50
 Field="キー","KEY","@VARCHAR(12)","NOT NULL",0,"","",$FFFFFFFF,""
 Field="言語","LANGUAGE","@VARCHAR(4)","NOT NULL",,"","",$FFFFFFFF,""
@@ -124,7 +179,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170228162957
-Position="MAIN",3550,50
+Position="MAIN",3600,50
 
 [Entity]
 PName=MAIL_TEMPLATES
@@ -133,7 +188,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=2950
-Top=50
+Top=200
 Field="テンプレートID","TEMPLATE_ID","@VARCHAR(32)","NOT NULL",0,"","",$FFFFFFFF,""
 Field="テンプレートタイトル","TEMPLATE_TITLE","@VARCHAR(128)","NOT NULL",,"","",$FFFFFFFF,""
 Field="説明文","DESCRIPTION","text",,,"","",$FFFFFFFF,""
@@ -141,7 +196,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170301131519
-Position="MAIN",2950,50
+Position="MAIN",2950,200
 
 [Relation]
 Entity1=SURVEY_ANSWERS
@@ -212,14 +267,14 @@ Fields1=KNOWLEDGE_ID
 Fields2=KNOWLEDGE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4662,4335,5401,R,R
+Position="MAIN",0,4662,4335,5351,R,R
 Dependence=0
 Caption=
 PName=
 LineMode=0
 Bar1=466
 Bar2=434
-Bar3=540
+Bar3=535
 TermPos1=R
 TermPos2=R
 
@@ -229,7 +284,7 @@ LName=アンケートの回答
 Comment=
 TableOption=
 Page=MAIN
-Left=1900
+Left=1950
 Top=1600
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="回答ID","ANSWER_ID","@INT","NOT NULL",1,"","",$FFFFFFFF,""
@@ -237,7 +292,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170222215330
-Position="MAIN",1900,1600
+Position="MAIN",1950,1600
 
 [Relation]
 Entity1=SURVEY_ITEMS
@@ -248,7 +303,7 @@ Fields1=KNOWLEDGE_ID,ITEM_NO
 Fields2=KNOWLEDGE_ID,ITEM_NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4139,4896,5178,R,R
+Position="MAIN",0,4139,4896,5177,R,R
 Dependence=1
 Caption=
 PName=
@@ -672,8 +727,8 @@ LName=メールから投稿
 Comment=
 TableOption=
 Page=MAIN
-Left=1800
-Top=50
+Left=2950
+Top=350
 Field="Message-ID","MESSAGE_ID","@VARCHAR(128)","NOT NULL",0,"","",$FFFFFFFF,""
 Field="投稿区分","POST_KIND","@INT","NOT NULL",,"","1: Knowledge 2:Comment",$FFFFFFFF,""
 Field="ID","ID","BIGINT","NOT NULL",,"","",$FFFFFFFF,""
@@ -682,7 +737,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20160611082117
-Position="MAIN",1800,50
+Position="MAIN",2950,350
 
 [Relation]
 Entity1=MAIL_HOOKS

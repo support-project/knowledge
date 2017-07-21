@@ -4,7 +4,7 @@
 
     <groupId>org.support-project</groupId>
     <artifactId>knowledge</artifactId>
-    <version>1.9.0</version>
+    <version>1.10.0</version>
     <packaging>war</packaging>
 
     <name>knowledge</name>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.support-project</groupId>
             <artifactId>web</artifactId>
-            <version>1.9.0</version>
+            <version>1.10.0</version>
         </dependency>
 
         <dependency>
@@ -137,8 +137,13 @@
 
         <dependency>
             <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.7</version>
+            <artifactId>javax.mail-api</artifactId>
+            <version>1.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.5.6</version>
         </dependency>
 
         <dependency>

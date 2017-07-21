@@ -1,3 +1,36 @@
+-- 認証トークン
+drop table if exists TOKENS cascade;
+
+create table TOKENS (
+  TOKEN character varying(128) not null
+  , USER_ID integer not null
+  , EXPIRES timestamp not null
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint TOKENS_PKC primary key (TOKEN)
+) ;
+
+create unique index TOKENS_IX1
+  on TOKENS(USER_ID);
+
+-- メール受信設定
+drop table if exists MAIL_PROPERTIES cascade;
+
+create table MAIL_PROPERTIES (
+  HOOK_ID INTEGER not null
+  , PROPERTY_KEY character varying(128) not null
+  , PROPERTY_VALUE character varying(256)
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint MAIL_PROPERTIES_PKC primary key (HOOK_ID,PROPERTY_KEY)
+) ;
+
 -- ロケール毎のメールテンプレート
 drop table if exists MAIL_LOCALE_TEMPLATES cascade;
 
@@ -700,6 +733,26 @@ create table KNOWLEDGES (
   , constraint KNOWLEDGES_PKC primary key (KNOWLEDGE_ID)
 ) ;
 
+comment on table TOKENS is '認証トークン';
+comment on column TOKENS.TOKEN is 'TOKEN';
+comment on column TOKENS.USER_ID is 'ユーザID';
+comment on column TOKENS.EXPIRES is '有効期限';
+comment on column TOKENS.INSERT_USER is '登録ユーザ';
+comment on column TOKENS.INSERT_DATETIME is '登録日時';
+comment on column TOKENS.UPDATE_USER is '更新ユーザ';
+comment on column TOKENS.UPDATE_DATETIME is '更新日時';
+comment on column TOKENS.DELETE_FLAG is '削除フラグ';
+
+comment on table MAIL_PROPERTIES is 'メール受信設定';
+comment on column MAIL_PROPERTIES.HOOK_ID is 'HOOK_ID';
+comment on column MAIL_PROPERTIES.PROPERTY_KEY is 'PROPERTY_KEY';
+comment on column MAIL_PROPERTIES.PROPERTY_VALUE is 'PROPERTY_VALUE';
+comment on column MAIL_PROPERTIES.INSERT_USER is '登録ユーザ';
+comment on column MAIL_PROPERTIES.INSERT_DATETIME is '登録日時';
+comment on column MAIL_PROPERTIES.UPDATE_USER is '更新ユーザ';
+comment on column MAIL_PROPERTIES.UPDATE_DATETIME is '更新日時';
+comment on column MAIL_PROPERTIES.DELETE_FLAG is '削除フラグ';
+
 comment on table MAIL_LOCALE_TEMPLATES is 'ロケール毎のメールテンプレート';
 comment on column MAIL_LOCALE_TEMPLATES.TEMPLATE_ID is 'テンプレートID';
 comment on column MAIL_LOCALE_TEMPLATES.KEY is 'キー';
@@ -777,7 +830,7 @@ comment on column SURVEYS.DELETE_FLAG is '削除フラグ';
 
 comment on table EVENTS is 'イベント';
 comment on column EVENTS.KNOWLEDGE_ID is 'ナレッジID';
-comment on column EVENTS.START_DATE_TIME is '開催日     UTC';
+comment on column EVENTS.START_DATE_TIME is '開催日	 UTC';
 comment on column EVENTS.TIME_ZONE is 'タイムゾーン';
 comment on column EVENTS.NOTIFY_STATUS is '通知ステータス';
 comment on column EVENTS.INSERT_USER is '登録ユーザ';
@@ -878,7 +931,7 @@ comment on column DRAFT_KNOWLEDGES.DELETE_FLAG is '削除フラグ';
 
 comment on table MAIL_POSTS is 'メールから投稿';
 comment on column MAIL_POSTS.MESSAGE_ID is 'Message-ID';
-comment on column MAIL_POSTS.POST_KIND is '投稿区分  1: Knowledge 2:Comment';
+comment on column MAIL_POSTS.POST_KIND is '投稿区分	 1: Knowledge 2:Comment';
 comment on column MAIL_POSTS.ID is 'ID';
 comment on column MAIL_POSTS.SENDER is 'SENDER';
 comment on column MAIL_POSTS.INSERT_USER is '登録ユーザ';
@@ -890,10 +943,10 @@ comment on column MAIL_POSTS.DELETE_FLAG is '削除フラグ';
 comment on table MAIL_HOOK_CONDITIONS is 'メールから投稿する条件';
 comment on column MAIL_HOOK_CONDITIONS.HOOK_ID is 'HOOK_ID';
 comment on column MAIL_HOOK_CONDITIONS.CONDITION_NO is 'CONDITION_NO';
-comment on column MAIL_HOOK_CONDITIONS.CONDITION_KIND is '条件の種類  1:宛先が「条件文字」であった場合';
+comment on column MAIL_HOOK_CONDITIONS.CONDITION_KIND is '条件の種類	 1:宛先が「条件文字」であった場合';
 comment on column MAIL_HOOK_CONDITIONS.CONDITION is '条件の文字';
 comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER is '投稿者';
-comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER_KIND is '投稿者の指定  1:送信者のメールアドレスから、2:常に固定';
+comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER_KIND is '投稿者の指定	 1:送信者のメールアドレスから、2:常に固定';
 comment on column MAIL_HOOK_CONDITIONS.PUBLIC_FLAG is '公開区分';
 comment on column MAIL_HOOK_CONDITIONS.TAGS is 'タグ';
 comment on column MAIL_HOOK_CONDITIONS.VIEWERS is '公開先';

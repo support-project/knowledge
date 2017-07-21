@@ -16,7 +16,7 @@
 
     <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-knowledge-histories.js -->
-    <script type="text/javascript" src="bower/echojs/dist/echo.min.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
 <!-- endbuild -->
     <script>
     echo.init();

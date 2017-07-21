@@ -61,7 +61,9 @@ public class ExUsersDao extends UsersDao {
     public AccountInfo selectAccountInfoOnKey(Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExUsersDao/selectAccountInfoOnKey.sql");
         AccountInfo info = executeQuerySingle(sql, AccountInfo.class, userId);
-
+        if (info == null) {
+            return null;
+        }
         sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExUsersDao/selectLikeCountOnAccount.sql");
         Integer likeCount = executeQuerySingle(sql, Integer.class, userId);
         info.setLikeCount(likeCount);

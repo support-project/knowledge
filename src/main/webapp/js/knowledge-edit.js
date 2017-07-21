@@ -1,76 +1,39 @@
-$(document).ready(function() {
-    $('#releasebutton').click(function() {
-        var $form = $('#knowledgeForm');
-        // ページ遷移を禁止して、Ajaxで保存
-        saveKnowledge($form, _CONTEXT + '/protect.knowledge/save');
-    });
-    
-    $('#knowledgeForm').submit(function(event) {
-        console.log('submit');
-        // 操作対象のフォーム要素を取得
-        var $form = $(this);
-        // ページ遷移を禁止して、Ajaxで保存
-        event.preventDefault();
-        saveKnowledge($form, _CONTEXT + '/protect.knowledge/draft');
-        // フォームのサブミットは禁止
-        return false;
-    });
-
-    // タイトル時にenterを押して保存されないようenterを無効化する
-    $("#input_title").keypress(function(e) {
-        return ! ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13));
-    });
-
-    // タイトル、コンテンツを変更した場合のみ、「記事の内容を更新した」と判定する
-    $("#input_title").change(function() {
-        $('#updateContent').val('true');
-    });
-    $("#content").change(function() {
-        $('#updateContent').val('true');
-    });
-    // 下書き保存
-    $('#draftDeleteButton').click(function() {
-        var draftId = $('#draftId').val();
-        console.log(draftId);
-        if (draftId) {
-            bootbox.confirm(_CONFIRM, function(result) {
-                if (result) {
-                    $.ajax({
-                        url: _CONTEXT + '/protect.draft/delete/' + draftId,
-                        type: 'DELETE',
-                        timeout: 10000,
-                    }).done(function(result, textStatus, xhr) {
-                        $.notify(result.message, 'info');
-                        $('#draftId').val('');
-                        $('#draft_flag').addClass('hide');
-                        $('#draftDeleteButton').addClass('hide');
-                    }).fail(function(xhr, textStatus, error) {
-                        // 入力値を初期化
-                        if (xhr.responseJSON) {
-                            console.log(xhr.responseJSON);
-                            var msg = xhr.responseJSON;
-                            if (msg.children) {
-                                for (var i = 0; i < msg.children.length; i++) {
-                                    var child = msg.children[i];
-                                    console.log(child);
-                                    $.notify(child.message, 'warn');
-                                }
-                            }
-                        } else {
-                            $.notify(xhr.statusText + ' [' + xhr.status + ']', 'warn');
-                        }
-                    });
-                }
-            }); 
+var timer;
+var titleValue = '';
+var contentValue = '';
+var initTimer = function() {
+    if (timer) {
+        clearInterval(timer);
+    }
+    titleValue = $("#input_title").val();
+    contentValue = $("#content").val();
+    timer = setInterval(function() {
+        if (titleValue !== $("#input_title").val() || contentValue !== $("#content").val()) {
+            titleValue = $("#input_title").val();
+            contentValue = $("#content").val();
+            $.notify('auto saving...', 'info');
+            saveDraft();
         }
-    });
-    // Auto complete
-    setAutoComplete($("#content"));
-});
-
-
+    }, 1000 * 60 * 1); // 1分に1回確認する
+};
+var saveDraft = function() {
+    // 操作対象のフォーム要素を取得
+    var $form = $('#knowledgeForm');
+    saveKnowledge($form, _CONTEXT + '/protect.knowledge/draft');
+    return false;
+};
+var deleteKnowledge = function() {
+    bootbox.confirm(_CONFIRM, function(result) {
+        if (result) {
+            $('#knowledgeDeleteForm').attr('action', _CONTEXT + '/protect.knowledge/delete');
+            $('#knowledgeDeleteForm').submit();
+        }
+    }); 
+};
 var saveKnowledge = function($form, url, notifyNone) {
     return new Promise(function(resolve, reject) {
+        // 下書き保存のタイマーは初期化する
+        initTimer();
         // 送信ボタンを取得
         var $button = $form.find('button');
         // ボタンを無効化し、二重送信を防止
@@ -140,14 +103,72 @@ var saveKnowledge = function($form, url, notifyNone) {
     });
 };
 
-var deleteKnowledge = function() {
-    bootbox.confirm(_CONFIRM, function(result) {
-        if (result) {
-            $('#knowledgeDeleteForm').attr('action', _CONTEXT + '/protect.knowledge/delete');
-            $('#knowledgeDeleteForm').submit();
-        }
-    }); 
-};
 
+$(document).ready(function() {
+    $('#releasebutton').click(function() {
+        var $form = $('#knowledgeForm');
+        saveKnowledge($form, _CONTEXT + '/protect.knowledge/save');
+    });
+    $('#knowledgeForm').submit(function(event) {
+        // ページ遷移を禁止して、Ajaxで保存
+        event.preventDefault();
+        return saveDraft();
+    });
+    // 自動保存のタイマーをセット
+    initTimer();
+    // タイトル時にenterを押して保存されないようenterを無効化する
+    $("#input_title").keypress(function(e) {
+        return ! ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13));
+    });
+
+    // タイトル、コンテンツを変更した場合のみ、「記事の内容を更新した」と判定する
+    $("#input_title").change(function() {
+        $('#updateContent').val('true');
+    });
+    $("#content").change(function() {
+        $('#updateContent').val('true');
+    });
+    // 下書き保存削除
+    var removeDraft = function() {
+        var draftId = $('#draftId').val();
+        console.log(draftId);
+        if (draftId) {
+            bootbox.confirm(_CONFIRM, function(result) {
+                if (result) {
+                    $.ajax({
+                        url: _CONTEXT + '/protect.draft/delete/' + draftId,
+                        type: 'DELETE',
+                        timeout: 10000,
+                    }).done(function(result, textStatus, xhr) {
+                        $.notify(result.message, 'info');
+                        $('#draftId').val('');
+                        $('#draft_flag').addClass('hide');
+                        $('#draftDeleteButton').addClass('hide');
+                    }).fail(function(xhr, textStatus, error) {
+                        // 入力値を初期化
+                        if (xhr.responseJSON) {
+                            console.log(xhr.responseJSON);
+                            var msg = xhr.responseJSON;
+                            if (msg.children) {
+                                for (var i = 0; i < msg.children.length; i++) {
+                                    var child = msg.children[i];
+                                    console.log(child);
+                                    $.notify(child.message, 'warn');
+                                }
+                            }
+                        } else {
+                            $.notify(xhr.statusText + ' [' + xhr.status + ']', 'warn');
+                        }
+                    });
+                }
+            }); 
+        }
+    };
+    $('#draftDeleteButton').click(function() {
+        removeDraft();
+    });
+    // Auto complete
+    setAutoComplete($("#content"));
+});
 
 

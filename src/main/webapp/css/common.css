@@ -66,38 +66,36 @@ body {
 /*  navbar
 /*--------------------------------- */ 
 .nav .navButton {
-    margin: 5px;
-    height: 50px;
+    margin: 7.5px;
     vertical-align: middle;
     color: white;
 }
 #navAddButtonLink,#navListButtonLink,#navMenuButtonLink {
-    padding-top: 14px;
     color: white;
 }
 .navbar-default .navbar-nav > .navAddButton > a,
 .navbar-default .navbar-nav > .navAddButton > a:hover,
 .navbar-default .navbar-nav > .navAddButton > a:focus {
-    border-radius: 50px;
-    -webkit-border-radius: 50px;
-    -moz-border-radius: 50px;
-    height: 50px;
+    border-radius: 45px;
+    -webkit-border-radius: 45px;
+    -moz-border-radius: 45px;
+    height: 45px;
     background: #009900;
 }
 .navbar-default .navbar-nav > .navListButton > a,
 .navbar-default .navbar-nav > .navListButton > a:hover,
 .navbar-default .navbar-nav > .navListButton > a:focus {
-    border-radius: 50px;
-    -webkit-border-radius: 50px;
-    -moz-border-radius: 50px;
-    height: 50px;
+    border-radius: 45px;
+    -webkit-border-radius: 45px;
+    -moz-border-radius: 45px;
+    height: 45px;
     background: #999900;
 }
 .navbar-nav > .dropdown .dropdown-toggle {
-    border-radius: 50px;
-    -webkit-border-radius: 50px;
-    -moz-border-radius: 50px;
-    height: 50px;
+    border-radius: 45px;
+    -webkit-border-radius: 45px;
+    -moz-border-radius: 45px;
+    height: 45px;
 }
 .navbar-default .navbar-nav > .navMenuButton > a,
 .navbar-default .navbar-nav > .navMenuButton > a:hover,
@@ -114,7 +112,19 @@ body {
 .navbar-default .navbar-nav > .open > a:focus {
     background: #ff9966;
 }
-
+@media screen and (max-width: 767px) {
+    .nav, .nav .navButton, .nav .navButton .btn-group {
+        width:100%;
+    }
+    .nav .navButton .btn-group #navAddButtonLink, .nav .navButton .btn-group #navMenuButtonLink {
+        width:calc(100% - 30px);
+        text-align: left;
+    }
+    .nav .navButton .btn-group #navListButtonLink {
+        width:100%;
+        text-align: left;
+    }
+}
 @media screen and (min-width: 768px) and (max-width: 991px) {
     #navSearch {
         width: 200px;
@@ -170,5 +180,7 @@ body {
     padding:15px 10px;
 }
 
-
+.navListButtonText {
+    display: none;
+}
 

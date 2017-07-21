@@ -5,6 +5,7 @@ import java.util.List;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.vo.api.GroupDetail;
 import org.support.project.ormapping.common.SQLManager;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.GroupsDao;
@@ -94,6 +95,25 @@ public class ExGroupsDao extends GroupsDao {
     public List<GroupsEntity> selectGroupsWithCount(int offset, int limit) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExGroupsDao/ExGroupsDao_selectGroupsWithCount.sql");
         return executeQueryList(sql, GroupsEntity.class, limit, offset);
+    }
+    
+    /**
+     * グループが宛先になっている投稿の件数を取得
+     * @param groupId
+     * @return
+     */
+    public Integer selectGroupKnowledgeCount(int groupId) {
+        String sql = "SELECT COUNT(*) FROM KNOWLEDGE_GROUPS WHERE GROUP_ID = ?";
+        return executeQuerySingle(sql, Integer.class, groupId);
+    }
+    /**
+     * グループに所属するユーザの件数を取得
+     * @param groupId
+     * @return
+     */
+    public Integer selectGroupUserCount(int groupId) {
+        String sql = "SELECT COUNT(*) FROM USER_GROUPS WHERE GROUP_ID = ?";
+        return executeQuerySingle(sql, Integer.class, groupId);
     }
 
 }

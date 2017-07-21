@@ -10,6 +10,10 @@ gulp.task('min', function() {
     return gulp.src([
         'src/main/webapp/WEB-INF/views/**/*.jsp'
     ])
+    .pipe(replace('href="<%= request.getContextPath() %>/bower', 'href="/bower'))
+    .pipe(replace('href="<%= request.getContextPath() %>/css', 'href="/css'))
+    .pipe(replace('src="<%= request.getContextPath() %>/bower', 'src="/bower'))
+    .pipe(replace('src="<%= request.getContextPath() %>/js', 'src="/js'))
     .pipe(usemin({
         css: [rev],
         htmlmin: [ function () {return minifyHtml({ empty: true });} ],
@@ -19,6 +23,14 @@ gulp.task('min', function() {
         outputRelativePath: '../../'
     }))
     .pipe(replace('var _LOGGING_NOTIFY_DESKTOP = true;', 'var _LOGGING_NOTIFY_DESKTOP = false;'))
+    .pipe(replace('href="/bower', 'href="<%= request.getContextPath() %>/bower'))
+    .pipe(replace('href="/css', 'href="<%= request.getContextPath() %>/css'))
+    .pipe(replace('src="/bower', 'src="<%= request.getContextPath() %>/bower'))
+    .pipe(replace('src="/js', 'src="<%= request.getContextPath() %>/js'))
+    .pipe(replace('href="bower', 'href="<%= request.getContextPath() %>/bower'))
+    .pipe(replace('href="css', 'href="<%= request.getContextPath() %>/css'))
+    .pipe(replace('src="bower', 'src="<%= request.getContextPath() %>/bower'))
+    .pipe(replace('src="js', 'src="<%= request.getContextPath() %>/js'))
     .pipe(gulp.dest('target/knowledge/WEB-INF/views/'));
 });
 

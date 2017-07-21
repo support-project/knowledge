@@ -37,6 +37,18 @@ public class FileControl extends Control {
             LOG.debug("File binary is null. [fileNo] " + fileNo);
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
         }
+        if (getParam("attachment").equals("")) {
+            // 画像（PNG, JPEG, GIF）を本文内に表示する場合は attachment パラメーターが付与されていない。
+            if (entity.getFileName().toLowerCase().endsWith(".png")) {
+                return download(entity.getFileName(), entity.getFileBinary(), entity.getFileSize().longValue(), "image/png");
+            }
+            if (entity.getFileName().toLowerCase().endsWith(".jpg") || entity.getFileName().toLowerCase().endsWith(".jpeg")) {
+                return download(entity.getFileName(), entity.getFileBinary(), entity.getFileSize().longValue(), "image/jpeg");
+            }
+            if (entity.getFileName().toLowerCase().endsWith(".gif")) {
+                return download(entity.getFileName(), entity.getFileBinary(), entity.getFileSize().longValue(), "image/gif");
+            }
+        }
         return download(entity.getFileName(), entity.getFileBinary(), entity.getFileSize().longValue());
     }
     

@@ -14,49 +14,49 @@ MathJax.Hub.Config({
   });
 </script>
 
-<script type="text/javascript" src="bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
-<script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
 
 <!-- build:js(src/main/webapp) js/page-knowledge-view.js -->
-<script type="text/javascript" src="bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-<script type="text/javascript" src="bower/echojs/dist/echo.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
 
-<script type="text/javascript" src="bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
-<script type="text/javascript" src="bower/jquery-file-upload/js/jquery.fileupload.js"></script>
-<script type="text/javascript" src="bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 
-<script type="text/javascript" src="bower/clipboard/dist/clipboard.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/clipboard/dist/clipboard.min.js"></script>
 
-<script type="text/javascript" src="bower/Caret.js/dist/jquery.caret.min.js"></script>
-<script type="text/javascript" src="bower/At.js/dist/js/jquery.atwho.min.js"></script>
-<script type="text/javascript" src="bower/moment/min/moment.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/Caret.js/dist/jquery.caret.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/At.js/dist/js/jquery.atwho.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
 
-<script type="text/javascript" src="bower/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-<script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"></script>
-<script type="text/javascript" src="bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
-<script type="text/javascript" src="bower/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
-<script type="text/javascript" src="bower/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
 
-<script type="text/javascript" src="js/slide.js"></script>
-<script type="text/javascript" src="js/knowledge-common.js"></script>
-<script type="text/javascript" src="js/knowledge-view.js"></script>
-<script type="text/javascript" src="js/knowledge-view-markdown.js"></script>
-<script type="text/javascript" src="js/knowledge-view-comment.js"></script>
-<script type="text/javascript" src="js/knowledge-view-emoji-select.js"></script>
-<script type="text/javascript" src="js/knowledge-view-preview.js"></script>
-<script type="text/javascript" src="js/knowledge-view-attachfile.js"></script>
-<script type="text/javascript" src="js/knowledge-view-stock.js"></script>
-<script type="text/javascript" src="js/knowledge-view-toc.js"></script>
-<script type="text/javascript" src="js/knowledge-view-event.js"></script>
-<script type="text/javascript" src="js/paste_image.js"></script>
-<script type="text/javascript" src="js/emojilist.js"></script>
-<script type="text/javascript" src="js/autocomplete.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/slide.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-common.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-markdown.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-comment.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-emoji-select.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-preview.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-attachfile.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-stock.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-toc.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-event.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/paste_image.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/emojilist.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/autocomplete.js"></script>
 
-<script type="text/javascript" src="js/template-item-view.js"></script>
-<script type="text/javascript" src="js/knowledge-view-template.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/template-item-view.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-template.js"></script>
 
-<script type="text/javascript" src="js/template-item-input.js"></script>
-<script type="text/javascript" src="js/knowledge-view-survey.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/template-item-input.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-survey.js"></script>
 
 <!-- endbuild -->
 

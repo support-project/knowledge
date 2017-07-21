@@ -77,7 +77,7 @@
                 <c:forEach var="file" items="${files}">
                     <c:if test="${file.commentNo == comment.commentNo}">
                         <div class="downloadfile">
-                            <img src="<%=jspUtil.out("file.thumbnailUrl")%>" /> <a href="<%=jspUtil.out("file.url")%>"> <%=jspUtil.out("file.name")%>
+                            <img src="<%=jspUtil.out("file.thumbnailUrl")%>" /> <a href="<%=jspUtil.out("file.url")%>&amp;attachment=true"> <%=jspUtil.out("file.name")%>
                             </a>
                         </div>
                     </c:if>
@@ -148,7 +148,7 @@
                 <c:forEach var="file" items="${files}">
                     <c:if test="${file.commentNo == comment.commentNo}">
                         <div class="downloadfile">
-                            <img src="<%=jspUtil.out("file.thumbnailUrl")%>" /> <a href="<%=jspUtil.out("file.url")%>"> <%=jspUtil.out("file.name")%>
+                            <img src="<%=jspUtil.out("file.thumbnailUrl")%>" /> <a href="<%=jspUtil.out("file.url")%>&amp;attachment=true"> <%=jspUtil.out("file.name")%>
                             </a>
                         </div>
                     </c:if>

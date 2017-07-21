@@ -12,13 +12,13 @@
 
 <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-comment.css -->
-<link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload.css" />
-<link rel="stylesheet" href="bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
-<link rel="stylesheet" href="bower/At.js/dist/css/jquery.atwho.min.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/jquery-file-upload/css/jquery.fileupload-ui.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/At.js/dist/css/jquery.atwho.min.css" />
 
-<link rel="stylesheet" href="css/knowledge-edit.css" />
-<link rel="stylesheet" href="css/markdown.css" />
-<link rel="stylesheet" href="css/slide.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-edit.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/markdown.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/slide.css" />
 <!-- endbuild -->
 </c:param>
 
@@ -41,23 +41,23 @@ var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
 var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 </script>
 
-<script type="text/javascript" src="bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
-<script type="text/javascript" src="bower/emoji-parser/main.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
 
 <!-- build:js(src/main/webapp) js/page-comment.js -->
-<script type="text/javascript" src="bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
-<script type="text/javascript" src="bower/jquery-file-upload/js/jquery.fileupload.js"></script>
-<script type="text/javascript" src="bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 
-<script type="text/javascript" src="bower/Caret.js/dist/jquery.caret.min.js"></script>
-<script type="text/javascript" src="bower/At.js/dist/js/jquery.atwho.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/Caret.js/dist/jquery.caret.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/At.js/dist/js/jquery.atwho.min.js"></script>
 
-<script type="text/javascript" src="js/knowledge-common.js"></script>
-<script type="text/javascript" src="js/comment.js"></script>
-<script type="text/javascript" src="js/slide.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-common.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/comment.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/slide.js"></script>
 
-<script type="text/javascript" src="js/emojilist.js"></script>
-<script type="text/javascript" src="js/autocomplete.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/emojilist.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/autocomplete.js"></script>
 <!-- endbuild -->
 
 </c:param>
@@ -109,7 +109,7 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
         <c:forEach var="file" items="${comment_files}" >
             <div class="filediv" id="file-<%= jspUtil.out("file.fileNo") %>">
                 <div class="file-image"><img src="<%= jspUtil.out("file.thumbnailUrl") %>" /></div>
-                <div class="file-label"><a href="<%= jspUtil.out("file.url") %>"><%= jspUtil.out("file.name") %></a></div>
+                <div class="file-label"><a href="<%= jspUtil.out("file.url") %>&amp;attachment=true"><%= jspUtil.out("file.name") %></a></div>
                 <br class="fileLabelBr"/>
                 <input type="hidden" name="files" value="<%= jspUtil.out("file.fileNo") %>" />
                 &nbsp;&nbsp;&nbsp;

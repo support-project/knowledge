@@ -19,7 +19,7 @@
 
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-mailtemplate.js -->
-<script type="text/javascript" src="js/mailtemplate.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/mailtemplate.js"></script>
 <!-- endbuild -->
 </c:param>
 

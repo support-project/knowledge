@@ -1,10 +1,11 @@
-<%@page import="org.support.project.common.config.INT_FLAG"%>
-<%@page import="org.support.project.knowledge.vo.Roles"%>
-<%@page import="org.support.project.web.util.JspUtil"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<%@page import="org.support.project.common.config.INT_FLAG"%>
+<%@page import="org.support.project.knowledge.vo.Roles"%>
+<%@page import="org.support.project.web.util.JspUtil"%>
 
 <%
     JspUtil jspUtil = new JspUtil(request, pageContext);
@@ -27,6 +28,13 @@
             <li><a href="<%=request.getContextPath()%>/protect.account" style="cursor: pointer;">
                 <i class="fa fa-smile-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.myaccount")%>
             </a></li>
+            
+            <% if (jspUtil.is(Boolean.TRUE, "ldapExists")) { %>
+            <li><a href="<%=request.getContextPath()%>/protect.connect" style="cursor: pointer;">
+                <i class="fa fa-link"></i>&nbsp;<%=jspUtil.label("knowledge.connect.title")%>
+            </a></li>
+            <% } %>
+            
             <li><a href="<%=request.getContextPath()%>/protect.notify" style="cursor: pointer;">
                 <i class="fa fa-bell-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.notify")%>
             </a></li>
@@ -38,6 +46,9 @@
             </a></li>
             <li><a class="" href="<%=request.getContextPath()%>/open.language" style="cursor: pointer;">
                 <i class="fa fa-language"></i>&nbsp;<%=jspUtil.label("knowledge.language.title")%>
+            </a></li>
+            <li><a class="" href="<%=request.getContextPath()%>/protect.token" style="cursor: pointer;">
+                <i class="fa fa-id-card-o"></i>&nbsp;<%=jspUtil.label("knowledge.token.title")%>
             </a></li>
         </ul>
 

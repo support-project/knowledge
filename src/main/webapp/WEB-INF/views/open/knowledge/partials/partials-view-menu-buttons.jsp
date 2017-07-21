@@ -84,7 +84,7 @@
                 <%=jspUtil.label("knowledge.view.label.nonparticipation")%>
             </button>
         <% } else { %>
-            <a href="protect.knowledge/view/<%=jspUtil.out("knowledgeId")%>" class="btn btn-info btn_col2">
+            <a href="<%= request.getContextPath() %>/protect.knowledge/view/<%=jspUtil.out("knowledgeId")%>" class="btn btn-info btn_col2">
                 <i class="fa fa-user-plus"></i>&nbsp;
                 <%=jspUtil.label("knowledge.view.label.participation")%>
             </a>
