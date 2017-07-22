@@ -534,13 +534,17 @@ public class GroupControl extends Control {
     
     /**
      * メールアドレスの一覧から、グループのユーザを一括登録
-     * （メールアドレスの存在チェックができてしまうので、いったん管理者だけの機能にする）
      * @return
      */
     @Post(subscribeToken = "knowledge")
-    @Auth(roles = "admin")
     public Boundary addUsersOnEmail() {
         Integer groupId = getParam("group", Integer.class);
+        GroupsEntity group = GroupLogic.get().getEditAbleGroup(groupId, getLoginedUser());
+        if (group == null) {
+            // 編集可能なグループが存在しない
+            return sendError(HttpStatus.SC_403_FORBIDDEN, "");
+        }
+        
         String emails = getParam("emails");
         String[] mails = emails.split("\n");
         MessageResult result = new MessageResult(MessageStatus.Success, HttpStatus.SC_200_OK, "", "");
@@ -570,11 +574,5 @@ public class GroupControl extends Control {
         result.setMessage(msg.toString());
         return send(result);
     }
-    
-    
-    
-    
-    
-    
     
 }

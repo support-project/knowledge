@@ -14,6 +14,7 @@ gulp.task('min', function() {
     .pipe(replace('href="<%= request.getContextPath() %>/css', 'href="/css'))
     .pipe(replace('src="<%= request.getContextPath() %>/bower', 'src="/bower'))
     .pipe(replace('src="<%= request.getContextPath() %>/js', 'src="/js'))
+    .pipe(replace('<%= request.getContextPath() %>/EasyWizard', '/EasyWizard'))
     .pipe(usemin({
         css: [rev],
         htmlmin: [ function () {return minifyHtml({ empty: true });} ],
