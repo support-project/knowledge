@@ -17,6 +17,8 @@ public class SystemConfig {
     
     //public static final String KNOWLEDGE_ENV_KEY = "KNOWLEDGE_HOME";
     
+    public static final int SYSTEM_USER_ID = -1;
+    
     /** システム設定情報 */
     private static ServiceConfigsEntity serviceConfigsEntity = null;
     /** 言語毎のシステム設定情報 */

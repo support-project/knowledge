@@ -470,6 +470,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
     
             List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);
+            KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
             setAttribute("knowledges", stocks);
             LOG.trace("検索終了");
             
@@ -489,7 +490,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     }
 
     /**
-     * 閲覧履歴の表示
+     * イベント一覧
      * 
      * @return
      * @throws InvalidParamException
@@ -516,6 +517,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 Participations participations = EventsLogic.get().isParticipation(stock.getKnowledgeId(), getLoginUserId());
                 stock.setParticipations(participations);
             }
+            KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
             setAttribute("knowledges", stocks);
         } catch (java.text.ParseException e) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
@@ -561,6 +563,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
         List<KnowledgesEntity> histories = knowledgeLogic.getKnowledges(historyIds, loginedUser);
         List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(histories, loginedUser);
+        KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         setAttribute("histories", stocks);
         LOG.trace("履歴取得完了");
 
@@ -585,6 +588,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
         List<KnowledgesEntity> list = knowledgeLogic.getPopularityKnowledges(loginedUser, 0, 20);
         List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(list, loginedUser);
+        KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         setAttribute("popularities", stocks);
         LOG.trace("取得完了");
         // ナレッジの公開先の情報を取得
@@ -623,7 +627,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
         List<KnowledgesEntity> list = knowledgeLogic.getStocks(loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT, stockid);
         List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(list, loginedUser);
-//        setAttribute("stocks", list);
+        KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         setAttribute("popularities", stocks);
         LOG.trace("取得完了");
         

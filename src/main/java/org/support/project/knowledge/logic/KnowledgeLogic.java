@@ -20,6 +20,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.config.IndexType;
+import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.DraftItemValuesDao;
 import org.support.project.knowledge.dao.DraftKnowledgesDao;
@@ -1078,6 +1079,7 @@ public class KnowledgeLogic {
      * @param knowledgeId
      * @param loginedUser
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void addViewHistory(Long knowledgeId, LoginedUser loginedUser) {
         ViewHistoriesDao historiesDao = ViewHistoriesDao.get();
         ViewHistoriesEntity historiesEntity = new ViewHistoriesEntity();
@@ -1085,8 +1087,20 @@ public class KnowledgeLogic {
         historiesEntity.setViewDateTime(new Timestamp(new Date().getTime()));
         if (loginedUser != null) {
             historiesEntity.setInsertUser(loginedUser.getUserId());
+        } else {
+            historiesEntity.setInsertUser(SystemConfig.SYSTEM_USER_ID);
         }
         historiesDao.insert(historiesEntity);
+        
+        KnowledgesEntity entity = KnowledgesDao.get().selectOnKey(knowledgeId);
+        if (entity != null) {
+            Long count = entity.getViewCount();
+            if (count == null) {
+                count = new Long(0);
+            }
+            count = count + 1;
+            KnowledgesDao.get().updateViewCount(count, knowledgeId);
+        }
     }
 
     /**
@@ -1559,7 +1573,28 @@ public class KnowledgeLogic {
         }
         return KnowledgesDao.get().selectAccessAbleKnowledgeOnIdPrefix(q, loginedUser, limit, offset);
     }
-
     
-    
+    /**
+     * 参照済かどうかをセットする
+     * @param stocks
+     * @param loginedUser
+     */
+    public void setViewed(List<StockKnowledge> stocks, LoginedUser loginedUser) {
+        if (stocks == null) {
+            return;
+        }
+        if (loginedUser == null) {
+            // 未ログインユーザは、未読かんりしないので、全て既読にする
+            for (StockKnowledge knowledge : stocks) {
+                knowledge.setViewed(true);
+            }
+            return;
+        }
+        List<Long> knowledgeIds = ViewHistoriesDao.get().selectViewdKnowledgeIds(stocks, loginedUser.getUserId());
+        for (StockKnowledge knowledge : stocks) {
+            if (knowledgeIds.contains(knowledge.getKnowledgeId())) {
+                knowledge.setViewed(true);
+            }
+        }
+    }
 }
