@@ -49,7 +49,7 @@ import net.arnx.jsonic.JSON;
  * @author koda
  */
 @DI(instance = Instance.Singleton)
-public class CommentInsertNotification extends AbstractNotification {
+public class CommentInsertNotification extends AbstractQueueNotification {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(CommentInsertNotification.class);
     /** インスタンス取得 */

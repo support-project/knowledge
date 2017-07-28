@@ -43,7 +43,7 @@ import net.arnx.jsonic.JSON;
  * @author koda
  */
 @DI(instance = Instance.Singleton)
-public class LikeInsertNotification extends AbstractNotification {
+public class LikeInsertNotification extends AbstractQueueNotification {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(LikeInsertNotification.class);
     /** インスタンス取得 */

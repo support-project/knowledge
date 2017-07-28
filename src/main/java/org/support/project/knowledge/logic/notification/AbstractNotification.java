@@ -5,12 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-public abstract class AbstractNotification implements Notification {
-    
+public abstract class AbstractNotification {
     /** date format */
     private static DateFormat getDayFormat() {
         return new SimpleDateFormat("yyyyMMddHHmmss");
     }
+
     /**
      * メール送信のIDを生成
      * @param string
@@ -25,7 +25,5 @@ public abstract class AbstractNotification implements Notification {
         builder.append(UUID.randomUUID().toString());
         return builder.toString();
     }
-    
-
 
 }

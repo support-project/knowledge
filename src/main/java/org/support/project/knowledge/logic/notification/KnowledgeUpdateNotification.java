@@ -57,7 +57,7 @@ import net.arnx.jsonic.JSON;
  * @author koda
  */
 @DI(instance = Instance.Singleton)
-public class KnowledgeUpdateNotification extends AbstractNotification {
+public class KnowledgeUpdateNotification extends AbstractQueueNotification {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(KnowledgeUpdateNotification.class);
     /** インスタンス取得 */

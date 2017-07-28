@@ -1,9 +1,11 @@
 package org.support.project.knowledge.logic;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.support.project.di.Container;
 import org.support.project.knowledge.logic.notification.CommentInsertNotification;
+import org.support.project.knowledge.logic.notification.EventNotificationByWeek;
 import org.support.project.knowledge.logic.notification.KnowledgeUpdateNotification;
 import org.support.project.knowledge.logic.notification.LikeInsertNotification;
 import org.support.project.knowledge.logic.notification.Notification;
@@ -42,6 +44,8 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
             return CommentInsertNotification.get();
         } else if (MailLogic.NOTIFY_INSERT_LIKE_MYITEM.equals(category)) {
             return LikeInsertNotification.get();
+        } else if (MailLogic.NOTIFY_EVENT.equals(category)) {
+            return EventNotificationByWeek.get();
         }
         return null;
     }
@@ -49,9 +53,14 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
     
     public List<NotificationsEntity> getNotification(LoginedUser loginedUser, int offset) {
         List<NotificationsEntity> notifications = super.getNotification(loginedUser.getUserId(), offset);
-        for (NotificationsEntity notificationsEntity : notifications) {
+        for (Iterator<NotificationsEntity> iterator = notifications.iterator(); iterator.hasNext();) {
+            NotificationsEntity notificationsEntity = (NotificationsEntity) iterator.next();
             Notification notification = getNotification(notificationsEntity.getTitle());
-            notification.convNotification(notificationsEntity, loginedUser, Notification.TARGET.list);
+            if (notification == null) {
+                iterator.remove();
+            } else {
+                notification.convNotification(notificationsEntity, loginedUser, Notification.TARGET.list);
+            }
         }
         return notifications;
     }
