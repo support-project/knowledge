@@ -5,6 +5,7 @@ $(document).ready(function() {
         dataType : 'json',
         autoUpload: true,
         maxFileSize: 5000000, // 5 MB
+        dropZone: '#drop_target',
     }).on('fileuploaddone', function (e, data) {
         uploadedFiles(data.result.files);
         setTimeout(function() {
@@ -47,7 +48,6 @@ $(document).ready(function() {
     });
     
 });
-
 
 var uploadedFiles = function(files) {
     console.log(files);
