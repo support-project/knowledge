@@ -61,6 +61,13 @@ $(document).ready(function() {
     };
     accessInterval();
 });
+
+// ファイルをドロップしたときのブラウザデフォルトの動作を抑止する。
+$(document).on('drop dragover', function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+});
+
 function logging(str, level) {
 //    console.log(str);
     if (_LOGGING_NOTIFY_DESKTOP) {
