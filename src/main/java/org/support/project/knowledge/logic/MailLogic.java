@@ -27,7 +27,6 @@ import javax.mail.internet.MimeMessage;
 import org.support.project.aop.Aspect;
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.config.LocaleConfigLoader;
-import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.DateUtils;
@@ -41,10 +40,8 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.MailConfig;
 import org.support.project.knowledge.config.SystemConfig;
-import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.MailLocaleTemplatesDao;
 import org.support.project.knowledge.dao.MailTemplatesDao;
-import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.MailLocaleTemplatesEntity;
 import org.support.project.knowledge.entity.MailTemplatesEntity;
 import org.support.project.knowledge.parser.Parser;
@@ -755,113 +752,4 @@ public class MailLogic {
         ja.setContent(jaConfig.getContents());
         MailLocaleTemplatesDao.get().save(ja);
     }
-    
-    /**
-     * 参加キャンセルがあったことを、開催者へ通知
-     * @param knowledgeId
-     * @param userId
-     */
-    public void notifyRemoveParticipateForSponsor(Long knowledgeId, Integer userId) {
-        MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-        MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
-        if (mailConfigsEntity == null) {
-            // メールの設定が登録されていなければ、送信処理は終了
-            LOG.info("mail config is not exists.");
-            return;
-        }
-        KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(knowledgeId);
-        if (knowledge == null) {
-            LOG.info("knowledge [" + knowledgeId + "] is not exists.");
-            return;
-        }
-        // 開催者
-        UsersEntity sponsor = UsersDao.get().selectOnKey(knowledge.getInsertUser());
-        // 参加者
-        UsersEntity participant = UsersDao.get().selectOnKey(userId);
-        if (sponsor == null || participant == null) {
-            LOG.warn("sponsor or participant is not exist.");
-            return;
-        }
-        if (!StringUtils.isEmailAddress(sponsor.getMailAddress())) {
-            // 送信先のメールアドレスが不正なので、送信処理は終了
-            LOG.warn("mail targget [" + sponsor.getMailAddress() + "] is wrong.");
-            return;
-        }
-
-        MailsEntity mailsEntity = new MailsEntity();
-        String mailId = idGenu("Notify");
-        mailsEntity.setMailId(mailId);
-        mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
-        mailsEntity.setToAddress(sponsor.getMailAddress());
-        mailsEntity.setToName(sponsor.getUserName());
-        
-        MailLocaleTemplatesEntity template = load(sponsor.getLocale(), NOTIFY_REMOVE_PARTICIPATE);
-        String title = template.getTitle();
-        title = title.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
-        title = title.replace("{KnowledgeTitle}", StringUtils.abbreviate(knowledge.getTitle(), 80));
-        mailsEntity.setTitle(title);
-        String contents = template.getContent();
-        contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
-        contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
-        contents = contents.replace("{Participant}", participant.getUserName());
-        contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
-
-        mailsEntity.setContent(contents);
-        MailsDao.get().insert(mailsEntity);
-    }
-    /**
-     * キャンセル待ちのユーザに、キャンセルがあったため参加になったことを通知
-     * @param knowledgeId
-     * @param userId
-     */
-    public void notifyChangeParticipateStatusForParticipant(Long knowledgeId, Integer userId) {
-        MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-        MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
-        if (mailConfigsEntity == null) {
-            // メールの設定が登録されていなければ、送信処理は終了
-            LOG.info("mail config is not exists.");
-            return;
-        }
-        KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(knowledgeId);
-        if (knowledge == null) {
-            LOG.info("knowledge [" + knowledgeId + "] is not exists.");
-            return;
-        }
-        // 参加者
-        UsersEntity participant = UsersDao.get().selectOnKey(userId);
-        if (participant == null) {
-            LOG.warn("sponsor or participant is not exist.");
-            return;
-        }
-        if (!StringUtils.isEmailAddress(participant.getMailAddress())) {
-            // 送信先のメールアドレスが不正なので、送信処理は終了
-            LOG.warn("mail targget [" + participant.getMailAddress() + "] is wrong.");
-            return;
-        }
-
-        MailsEntity mailsEntity = new MailsEntity();
-        String mailId = idGenu("Notify");
-        mailsEntity.setMailId(mailId);
-        mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
-        mailsEntity.setToAddress(participant.getMailAddress());
-        mailsEntity.setToName(participant.getUserName());
-        
-        MailLocaleTemplatesEntity template = load(participant.getLocale(), NOTIFY_CHANGE_EVENT_STATUS);
-        String title = template.getTitle();
-        title = title.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
-        title = title.replace("{KnowledgeTitle}", StringUtils.abbreviate(knowledge.getTitle(), 80));
-        mailsEntity.setTitle(title);
-        String contents = template.getContent();
-        contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
-        contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
-        StringBuilder builder = new StringBuilder();
-        Resources resources = Resources.getInstance(participant.getLocale());
-        builder.append(resources.getResource("knowledge.view.label.status.participation"));
-        contents = contents.replace("{Status}", builder.toString());
-        contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
-
-        mailsEntity.setContent(contents);
-        MailsDao.get().insert(mailsEntity);
-    }
-
 }

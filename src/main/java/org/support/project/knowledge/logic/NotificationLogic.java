@@ -10,8 +10,10 @@ import org.support.project.knowledge.logic.notification.KnowledgeUpdateNotificat
 import org.support.project.knowledge.logic.notification.LikeInsertNotification;
 import org.support.project.knowledge.logic.notification.Notification;
 import org.support.project.knowledge.logic.notification.Notification.TARGET;
+import org.support.project.knowledge.logic.notification.ParticipateChangeStatusForParticipantNotification;
 import org.support.project.knowledge.logic.notification.ParticipateForParticipantNotification;
 import org.support.project.knowledge.logic.notification.ParticipateForSponsorNotification;
+import org.support.project.knowledge.logic.notification.ParticipateRemoveForSponsorNotification;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.NotificationsDao;
 import org.support.project.web.dao.UserNotificationsDao;
@@ -52,6 +54,10 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
             return ParticipateForParticipantNotification.get();
         } else if (MailLogic.NOTIFY_ADD_PARTICIPATE.equals(category)) {
             return ParticipateForSponsorNotification.get();
+        } else if (MailLogic.NOTIFY_CHANGE_EVENT_STATUS.equals(category)) {
+            return ParticipateChangeStatusForParticipantNotification.get();
+        } else if (MailLogic.NOTIFY_REMOVE_PARTICIPATE.equals(category)) {
+            return ParticipateRemoveForSponsorNotification.get();
         }
         return null;
     }

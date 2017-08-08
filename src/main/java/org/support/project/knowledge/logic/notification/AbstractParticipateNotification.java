@@ -37,13 +37,13 @@ public abstract class AbstractParticipateNotification extends AbstractNotificati
         notification.setContent(JSON.encode(info));
         notification = NotificationsDao.get().insert(notification);
         
-        if (template.equals(MailLogic.NOTIFY_ADD_PARTICIPATE)) {
-            // 参加登録があったことを、開催者へ通知
+        if (template.equals(MailLogic.NOTIFY_ADD_PARTICIPATE) || template.equals(MailLogic.NOTIFY_REMOVE_PARTICIPATE)) {
+            // 参加登録があったことを、開催者へ通知 / 参加キャンセルを開催者へ通知
             UserNotificationsEntity userNotification = new UserNotificationsEntity(notification.getNo(), knowledge.getInsertUser());
             userNotification.setStatus(NotificationLogic.STATUS_UNREAD);
             UserNotificationsDao.get().insert(userNotification);
         } else {
-            // 参加登録したことを、参加者へ通知
+            // 参加登録したことを、参加者へ通知 / キャンセル待ちのユーザに、参加登録になったことを通知
             UserNotificationsEntity userNotification = new UserNotificationsEntity(notification.getNo(), participant);
             userNotification.setStatus(NotificationLogic.STATUS_UNREAD);
             UserNotificationsDao.get().insert(userNotification);
@@ -72,17 +72,20 @@ public abstract class AbstractParticipateNotification extends AbstractNotificati
                 Resources resources = Resources.getInstance(loginedUser.getLocale());
                 StringBuilder builder = new StringBuilder();
                 int status = info.getStatus();
-                if (MailLogic.NOTIFY_ADD_PARTICIPATE.equals(templateString)) {
-                    // 参加登録があったことを、開催者へ通知
+                if (MailLogic.NOTIFY_ADD_PARTICIPATE.equals(templateString) || MailLogic.NOTIFY_REMOVE_PARTICIPATE.equals(templateString)) {
+                    // 参加登録があったことを、開催者へ通知 || 参加キャンセルを開催者へ通知
                     builder.append(participant.getUserName());
-                    if (status == EventsLogic.STATUS_PARTICIPATION) {
-                        builder.append("[").append(resources.getResource("knowledge.view.label.status.participation")).append("]");
-                    } else {
-                        builder.append("[").append(resources.getResource("knowledge.view.label.status.wait.cansel")).append("]");
+                    if (MailLogic.NOTIFY_ADD_PARTICIPATE.equals(templateString)) {
+                        // 参加登録の場合、ステータスも表示
+                        if (status == EventsLogic.STATUS_PARTICIPATION) {
+                            builder.append("[").append(resources.getResource("knowledge.view.label.status.participation")).append("]");
+                        } else {
+                            builder.append("[").append(resources.getResource("knowledge.view.label.status.wait.cansel")).append("]");
+                        }
                     }
                     contents = contents.replace("{Participant}", builder.toString());
                 } else {
-                    // 参加登録したことを、参加者へ通知
+                    // 参加登録したことを参加者へ通知 // キャンセル待ちの本登録の通知
                     if (status == EventsLogic.STATUS_PARTICIPATION) {
                         builder.append(resources.getResource("knowledge.view.label.status.participation"));
                     } else {
