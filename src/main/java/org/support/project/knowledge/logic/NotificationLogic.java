@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.support.project.di.Container;
+import org.support.project.knowledge.logic.notification.AcceptCheckUserNotification;
+import org.support.project.knowledge.logic.notification.AddUserNotification;
 import org.support.project.knowledge.logic.notification.CommentInsertNotification;
 import org.support.project.knowledge.logic.notification.EventNotificationByWeek;
 import org.support.project.knowledge.logic.notification.KnowledgeUpdateNotification;
@@ -58,6 +60,10 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
             return ParticipateChangeStatusForParticipantNotification.get();
         } else if (MailLogic.NOTIFY_REMOVE_PARTICIPATE.equals(category)) {
             return ParticipateRemoveForSponsorNotification.get();
+        } else if (MailLogic.NOTIFY_ADD_USER.equals(category)) {
+            return AddUserNotification.get();
+        } else if (MailLogic.NOTIFY_ACCEPT_USER.equals(category)) {
+            return AcceptCheckUserNotification.get();
         }
         return null;
     }

@@ -1,29 +1,30 @@
 package org.support.project.knowledge.logic.notification;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
+import org.support.project.knowledge.logic.MailLogic;
+import org.support.project.knowledge.logic.NotificationLogic;
+import org.support.project.web.dao.UserNotificationsDao;
+import org.support.project.web.entity.NotificationsEntity;
+import org.support.project.web.entity.UserNotificationsEntity;
 
-public abstract class AbstractNotification {
-    /** date format */
-    private static DateFormat getDayFormat() {
-        return new SimpleDateFormat("yyyyMMddHHmmss");
-    }
-
+public abstract class AbstractNotification implements Notification {
     /**
      * メール送信のIDを生成
      * @param string
      * @return
      */
     protected String idGen(String label) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(label);
-        builder.append("-");
-        builder.append(getDayFormat().format(new Date()));
-        builder.append("-");
-        builder.append(UUID.randomUUID().toString());
-        return builder.toString();
+        return MailLogic.get().idGen(label);
     }
 
+    /**
+     * 指定の通知をユーザに紐付け
+     * @param notification
+     * @param userId
+     */
+    protected void insertUserNotification(NotificationsEntity notification, int userId) {
+        UserNotificationsEntity userNotification = new UserNotificationsEntity(notification.getNo(), userId);
+        userNotification.setStatus(NotificationLogic.STATUS_UNREAD);
+        UserNotificationsDao.get().insert(userNotification);
+    }
+    
 }

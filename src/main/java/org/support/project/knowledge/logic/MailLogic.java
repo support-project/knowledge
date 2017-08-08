@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -48,18 +46,15 @@ import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.parser.ParserFactory;
 import org.support.project.knowledge.vo.ParseResult;
 import org.support.project.web.bean.LoginedUser;
-import org.support.project.web.config.WebConfig;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.SystemConfigsDao;
-import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.ConfirmMailChangesEntity;
 import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.MailsEntity;
 import org.support.project.web.entity.PasswordResetsEntity;
 import org.support.project.web.entity.ProvisionalRegistrationsEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
-import org.support.project.web.entity.UsersEntity;
 
 @DI(instance = Instance.Singleton)
 public class MailLogic {
@@ -110,13 +105,6 @@ public class MailLogic {
     
     // private static final DateFormat DAY_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
     private static final String MAIL_CONFIG_DIR = "/org/support/project/knowledge/mail/";
-
-    
-    /** date format */
-    private static DateFormat getDayFormat() {
-        return new SimpleDateFormat("yyyyMMddHHmmss");
-    }
-    
     
     public static MailLogic get() {
         return Container.getComp(MailLogic.class);
@@ -328,7 +316,6 @@ public class MailLogic {
 
     /**
      * メール送信のIDを生成
-     * 
      * @param label 11桁まで
      * @return
      */
@@ -341,7 +328,6 @@ public class MailLogic {
         builder.append(UUID.randomUUID().toString());
         return builder.toString();
     }
-
 
     /**
      * URLを生成
@@ -448,102 +434,7 @@ public class MailLogic {
     }
 
     /**
-     * ユーザ登録通知
-     * 
-     * @param user
-     */
-    public void sendNotifyAddUser(UsersEntity user) {
-        MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-        MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.get().getSystemName());
-        if (mailConfigsEntity == null) {
-            // メールの設定が登録されていなければ、送信処理は終了
-            return;
-        }
-
-        LOG.trace("sendNotifyAddUser");
-        SystemConfigsDao configsDao = SystemConfigsDao.get();
-        SystemConfigsEntity configsEntity = configsDao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.get().getSystemName());
-        if (configsEntity != null && SystemConfig.USER_ADD_NOTIFY_ON.equals(configsEntity.getConfigValue())) {
-            // 管理者へのメール通知がONなので、メールを送信する
-            UsersDao usersDao = UsersDao.get();
-            List<UsersEntity> users = usersDao.selectOnRoleKey(WebConfig.ROLE_ADMIN);
-            for (UsersEntity entity : users) {
-                if (!StringUtils.isEmailAddress(entity.getMailAddress())) {
-                    // 送信先のメールアドレスが不正なので、送信処理は終了
-                    LOG.warn("mail targget [" + entity.getMailAddress() + "] is wrong.");
-                    continue;
-                }
-                Locale locale = entity.getLocale();
-                MailLocaleTemplatesEntity mailConfig = load(locale, NOTIFY_ADD_USER);
-
-                String contents = mailConfig.getContent();
-                contents = contents.replace("{UserId}", String.valueOf(user.getUserId()));
-                contents = contents.replace("{UserName}", user.getUserName());
-                contents = contents.replace("{UserMail}", user.getMailAddress());
-                String title = mailConfig.getTitle();
-
-                MailsDao mailsDao = MailsDao.get();
-                MailsEntity mailsEntity = new MailsEntity();
-                String mailId = idGen("Notify");
-                mailsEntity.setMailId(mailId);
-                mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
-                mailsEntity.setToAddress(entity.getMailAddress());
-                mailsEntity.setToName(entity.getUserName());
-                mailsEntity.setTitle(title);
-                mailsEntity.setContent(contents);
-                mailsDao.insert(mailsEntity);
-            }
-        }
-    }
-
-    /**
-     * ユーザの仮登録通知
-     * 
-     * @param entity
-     */
-    public void sendNotifyAcceptUser(ProvisionalRegistrationsEntity registrationsEntity) {
-        MailConfigsDao mailConfigsDao = MailConfigsDao.get();
-        MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.get().getSystemName());
-        if (mailConfigsEntity == null) {
-            // メールの設定が登録されていなければ、送信処理は終了
-            return;
-        }
-
-        LOG.trace("sendNotifyAcceptUser");
-        SystemConfigsDao configsDao = SystemConfigsDao.get();
-        SystemConfigsEntity configsEntity = configsDao.selectOnKey(SystemConfig.USER_ADD_NOTIFY, AppConfig.get().getSystemName());
-        if (configsEntity != null && SystemConfig.USER_ADD_NOTIFY_ON.equals(configsEntity.getConfigValue())) {
-            // 管理者へのメール通知がONなので、メールを送信する
-            UsersDao usersDao = UsersDao.get();
-            List<UsersEntity> users = usersDao.selectOnRoleKey(WebConfig.ROLE_ADMIN);
-            for (UsersEntity entity : users) {
-                if (!StringUtils.isEmailAddress(entity.getMailAddress())) {
-                    // 送信先のメールアドレスが不正なので、送信処理は終了
-                    LOG.warn("mail targget [" + entity.getMailAddress() + "] is wrong.");
-                    continue;
-                }
-                Locale locale = entity.getLocale();
-                MailLocaleTemplatesEntity mailConfig = load(locale, NOTIFY_ACCEPT_USER);
-
-                String contents = mailConfig.getContent();
-                String title = mailConfig.getTitle();
-
-                MailsDao mailsDao = MailsDao.get();
-                MailsEntity mailsEntity = new MailsEntity();
-                String mailId = idGen("Notify");
-                mailsEntity.setMailId(mailId);
-                mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
-                mailsEntity.setToAddress(entity.getMailAddress());
-                mailsEntity.setToName(entity.getUserName());
-                mailsEntity.setTitle(title);
-                mailsEntity.setContent(contents);
-                mailsDao.insert(mailsEntity);
-            }
-        }
-    }
-
-    /**
-     * メール変更のリクエストを受付
+     * パスワード変更のリクエストを受付
      * 
      * @param email
      * @param locale
@@ -650,22 +541,6 @@ public class MailLogic {
         }
         return content;
     }
-    
-    /**
-     * メール送信のIDを生成
-     * @param string
-     * @return
-     */
-    protected String idGenu(String label) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(label);
-        builder.append("-");
-        builder.append(getDayFormat().format(new Date()));
-        builder.append("-");
-        builder.append(UUID.randomUUID().toString());
-        return builder.toString();
-    }
-    
     
     
     /**
