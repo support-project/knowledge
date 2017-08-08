@@ -22,6 +22,8 @@ import org.support.project.knowledge.entity.EventsEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.ParticipantsEntity;
+import org.support.project.knowledge.logic.notification.ParticipateForParticipantNotification;
+import org.support.project.knowledge.logic.notification.ParticipateForSponsorNotification;
 import org.support.project.knowledge.vo.Participation;
 import org.support.project.knowledge.vo.Participations;
 import org.support.project.web.bean.LoginedUser;
@@ -154,10 +156,9 @@ public class EventsLogic {
         ParticipantsDao.get().insert(participant);
         
         // 開催者（＝登録者）へメール通知
-        MailLogic.get().notifyAddParticipateForSponsor(knowledgeId, userId, participant.getStatus());
-        
+        ParticipateForSponsorNotification.get().notify(knowledgeId, userId, participant.getStatus());
         // 参加者へメール通知
-        MailLogic.get().notifyAddParticipateForParticipant(knowledgeId, userId, participant.getStatus());
+        ParticipateForParticipantNotification.get().notify(knowledgeId, userId, participant.getStatus());
         
         return participant.getStatus().intValue() == STATUS_PARTICIPATION;
     }

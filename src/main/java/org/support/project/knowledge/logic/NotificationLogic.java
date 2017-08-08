@@ -10,6 +10,8 @@ import org.support.project.knowledge.logic.notification.KnowledgeUpdateNotificat
 import org.support.project.knowledge.logic.notification.LikeInsertNotification;
 import org.support.project.knowledge.logic.notification.Notification;
 import org.support.project.knowledge.logic.notification.Notification.TARGET;
+import org.support.project.knowledge.logic.notification.ParticipateForParticipantNotification;
+import org.support.project.knowledge.logic.notification.ParticipateForSponsorNotification;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.NotificationsDao;
 import org.support.project.web.dao.UserNotificationsDao;
@@ -46,6 +48,10 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
             return LikeInsertNotification.get();
         } else if (MailLogic.NOTIFY_EVENT.equals(category)) {
             return EventNotificationByWeek.get();
+        } else if (MailLogic.NOTIFY_REGISTRATION_EVENT.equals(category)) {
+            return ParticipateForParticipantNotification.get();
+        } else if (MailLogic.NOTIFY_ADD_PARTICIPATE.equals(category)) {
+            return ParticipateForSponsorNotification.get();
         }
         return null;
     }
