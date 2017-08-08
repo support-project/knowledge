@@ -16,6 +16,8 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.MailLogic;
+import org.support.project.knowledge.logic.notification.AcceptCheckUserNotification;
+import org.support.project.knowledge.logic.notification.AddUserNotification;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
@@ -116,8 +118,7 @@ public class SignupControl extends Control {
             // 仮登録を行う
             ProvisionalRegistrationsEntity entity = addProvisionalRegistration();
             // 管理者へメール通知
-            MailLogic mailLogic = MailLogic.get();
-            mailLogic.sendNotifyAcceptUser(entity);
+            AcceptCheckUserNotification.get().sendNotifyAcceptUser(entity);
 
             return forward("provisional_registration.jsp");
         }
@@ -154,9 +155,8 @@ public class SignupControl extends Control {
         user = UserLogic.get().insert(user, roles);
         setAttributeOnProperty(user);
 
-        // 管理者へユーザが追加されたことを通知
-        MailLogic mailLogic = MailLogic.get();
-        mailLogic.sendNotifyAddUser(user);
+        // 管理者にユーザが追加されたことを通知
+        AddUserNotification.get().sendNotifyAddUser(user);
 
         // ログイン処理
         AuthenticationLogic<LoginedUser> logic = Container.getComp(DefaultAuthenticationLogicImpl.class);
@@ -221,9 +221,8 @@ public class SignupControl extends Control {
         UsersEntity user = UserLogic.get().activate(entity);
         // 管理者へユーザが追加されたことを通知
         if (user != null) {
-            MailLogic mailLogic = MailLogic.get();
-            mailLogic.sendNotifyAddUser(user);
-
+            // 管理者にユーザが追加されたことを通知
+            AddUserNotification.get().sendNotifyAddUser(user);
         }
         // ログイン処理
         AuthenticationLogic<LoginedUser> logic = Container.getComp(DefaultAuthenticationLogicImpl.class);

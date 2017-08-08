@@ -76,8 +76,7 @@ public class ConfigControl extends Control {
         String type = getParam("userAddType");
         String notify = getParam("userAddNotify");
         // メール送信の場合、メールの設定が完了しているかチェック
-        if ((type != null && type.equals(SystemConfig.USER_ADD_TYPE_VALUE_MAIL))
-                || (notify != null && notify.equals(SystemConfig.USER_ADD_NOTIFY_ON))) {
+        if (type != null && type.equals(SystemConfig.USER_ADD_TYPE_VALUE_MAIL)) {
             MailConfigsDao mailConfigsDao = MailConfigsDao.get();
             MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
             if (mailConfigsEntity == null) {

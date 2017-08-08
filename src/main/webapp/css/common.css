@@ -116,11 +116,11 @@ body {
     .nav, .nav .navButton, .nav .navButton .btn-group {
         width:100%;
     }
-    .nav .navButton .btn-group #navAddButtonLink, .nav .navButton .btn-group #navMenuButtonLink {
+    .nav .navButton .btn-group #navAddButtonLink {
         width:calc(100% - 30px);
         text-align: left;
     }
-    .nav .navButton .btn-group #navListButtonLink {
+    .nav .navButton .btn-group #navListButtonLink, .nav .navButton .btn-group #navMenuButtonLink {
         width:100%;
         text-align: left;
     }

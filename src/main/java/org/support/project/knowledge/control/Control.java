@@ -19,6 +19,7 @@ import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.logic.NotificationLogic;
 import org.support.project.web.logic.SanitizingLogic;
 
 @DI(instance = Instance.Prototype)
@@ -30,6 +31,7 @@ public abstract class Control extends org.support.project.web.control.Control {
     public static final String MSG_SUCCESS = "NOTIFY_MSG_SUCCESS";
     public static final String MSG_WARN = "NOTIFY_MSG_WARN";
     public static final String MSG_ERROR = "NOTIFY_MSG_ERROR";
+    public static final String NOTIFY_UNREAD_COUNT = "NOTIFY_UNREAD_COUNT";
 
     private List<String> infos = null;
     private List<String> successes = null;
@@ -48,6 +50,12 @@ public abstract class Control extends org.support.project.web.control.Control {
         request.setAttribute(MSG_SUCCESS, successes);
         request.setAttribute(MSG_WARN, warns);
         request.setAttribute(MSG_ERROR, errors);
+        
+        // 通知の件数を取得
+        if (getLoginedUser() != null) {
+            int count = NotificationLogic.get().countUnRead(getLoginUserId());
+            request.setAttribute(NOTIFY_UNREAD_COUNT, count);
+        }
     }
 
     protected String getResource(String key) {
