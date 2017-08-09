@@ -27,7 +27,7 @@ comment on column LIKE_COMMENTS.UPDATE_DATETIME is '更新日時';
 comment on column LIKE_COMMENTS.DELETE_FLAG is '削除フラグ';
 
 ALTER TABLE LIKES DROP COLUMN IF EXISTS LIKE_CLASS;
-ALTER TABLE LIKES ADD COLUMN LIKE_CLASS integer default 1
+ALTER TABLE LIKES ADD COLUMN LIKE_CLASS integer default 1;
 
 comment on column LIKES.LIKE_CLASS is '種類';
 
