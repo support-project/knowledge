@@ -33,6 +33,7 @@ import org.support.project.knowledge.entity.DraftItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.LikeCommentsEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
@@ -782,8 +783,44 @@ public class KnowledgeControl extends KnowledgeControlBase {
     }
 
     
+    /**
+     * いいねを押したユーザを一覧表示（コメントに対し）
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary likecomments() throws InvalidParamException {
+        // 共通処理呼の表示条件の保持の呼び出し
+        setViewParam();
 
+        Long commentNo = super.getPathLong(Long.valueOf(-1));
+        CommentsEntity comment = CommentsDao.get().selectOnKey(commentNo);
+        if (comment == null) {
+            return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+        }
+        setAttribute("knowledgeId", comment.getKnowledgeId());
+        setAttribute("commentNo", comment.getKnowledgeId());
 
+        Integer page = 0;
+        String p = getParamWithDefault("page", "");
+        if (StringUtils.isInteger(p)) {
+            page = Integer.parseInt(p);
+        }
+
+        List<LikeCommentsEntity> likes = LikeCommentsDao.get().selectOnCommentNo(commentNo, page * PAGE_LIMIT, PAGE_LIMIT);
+        setAttribute("likes", likes);
+
+        int previous = page - 1;
+        if (previous < 0) {
+            previous = 0;
+        }
+        setAttribute("page", page);
+        setAttribute("previous", previous);
+        setAttribute("next", page + 1);
+        
+        return forward("likes.jsp");
+    }
     
     /**
      * 編集履歴の表示
