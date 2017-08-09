@@ -67,6 +67,16 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
     }
     
     /**
+     * Get 参照件数.(Safe null)
+     * @return 参照件数
+     */
+    public Long getViewCount() {
+        if (super.getViewCount() == null) return new Long(0);
+        return super.getViewCount();
+    }
+   
+    
+    /**
      * 開始日時を指定のタイムゾーンの日時として取得
      * @param locale
      * @param timezone
