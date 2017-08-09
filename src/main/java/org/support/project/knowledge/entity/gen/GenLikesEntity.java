@@ -53,6 +53,8 @@ public class GenLikesEntity implements Serializable {
     private Long no;
     /** ナレッジID */
     private Long knowledgeId;
+    /** 種類 */
+    private Integer likeClass;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -93,6 +95,22 @@ public class GenLikesEntity implements Serializable {
      * @return this object     */
     public GenLikesEntity setKnowledgeId(Long knowledgeId) {
         this.knowledgeId = knowledgeId;
+        return this;
+    }
+
+    /**
+     * Get 種類.
+     * @return 種類
+     */
+    public Integer getLikeClass() {
+        return this.likeClass;
+    }
+    /**
+     * Set 種類.
+     * @param likeClass 種類
+     * @return this object     */
+    public GenLikesEntity setLikeClass(Integer likeClass) {
+        this.likeClass = likeClass;
         return this;
     }
 
@@ -226,6 +244,7 @@ public class GenLikesEntity implements Serializable {
         StringBuilder builder = new StringBuilder();
         builder.append("no = ").append(no).append("\n");
         builder.append("knowledgeId = ").append(knowledgeId).append("\n");
+        builder.append("likeClass = ").append(likeClass).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -251,6 +270,11 @@ public class GenLikesEntity implements Serializable {
         ValidateError error;
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
         error = validator.validate(this.knowledgeId, convLabelName("Knowledge Id"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(this.likeClass, convLabelName("Like Class"));
         if (error != null) {
             errors.add(error);
         }
@@ -282,6 +306,11 @@ public class GenLikesEntity implements Serializable {
         ValidateError error;
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
         error = validator.validate(values.get("knowledgeId"), convLabelName("Knowledge Id"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(values.get("likeClass"), convLabelName("Like Class"));
         if (error != null) {
             errors.add(error);
         }

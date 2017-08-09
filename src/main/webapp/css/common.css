@@ -184,3 +184,35 @@ body {
     display: none;
 }
 
+/* circle button style */
+.btn-circle.btn-xs{width:22px;height:22px;font-size:10px;border-radius:11px;line-height:1.6;padding:3px 0;}
+.btn-circle.btn-sm{width:30px;height:30px;font-size:12px;border-radius:15px;line-height:1.6;padding:6px 0;}
+.btn-circle       {width:34px;height:34px;font-size:16px;border-radius:17px;line-height:1.33;padding:6px 4px;text-align:center;}
+.btn-circle.btn-lg{width:46px;height:46px;font-size:22px;border-radius:23px;line-height:1.2;}
+
+/* round button style */
+.btn-round.btn-xs{border-radius:11px;}
+.btn-round.btn-sm{border-radius:22.5px;}
+.btn-round       {border-radius:17px;}
+.btn-round.btn-lg{border-radius:23px;}
+
+
+.markdown .hrstyle01 {
+    border:none;
+    background: none;
+    height:1px;
+    border-top: 1px solid #8c8b8b;
+    text-align: center;
+    color: #8c8b8b;
+}
+.markdown .hrstyle01:after {
+    content: '\002729';
+    display: inline-block;
+    position: relative;
+    top: -15px;
+    padding: 0 10px;
+    background: white;
+    color: #8c8b8b;
+    font-size: 18px;
+}
+

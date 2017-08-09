@@ -14,7 +14,7 @@
 
     <%
         List commentList = jspUtil.getValue("comments", List.class);
-                if (commentList != null && !commentList.isEmpty()) {
+        if (commentList != null && !commentList.isEmpty()) {
     %>
     <hr />
     <h5>
@@ -23,8 +23,10 @@
     <c:forEach var="comment" items="${comments}" varStatus="status">
         <%
             CommentsEntity comment = jspUtil.getValue("comment", CommentsEntity.class);
-                            Integer knowledge = jspUtil.getValue("insertUser", Integer.class);
-                            if (!comment.getInsertUser().equals(knowledge)) {
+        %>
+        <%
+            Integer knowledge = jspUtil.getValue("insertUser", Integer.class);
+            if (!comment.getInsertUser().equals(knowledge)) {
         %>
         <div class="row">
             <div class="col-sm-12">
@@ -33,7 +35,7 @@
                 [<%=jspUtil.out("comment.insertUserName")%>]
                 <%
                 if (comment.isUpdate()) {
-            %>
+                %>
                 <br />[<%=jspUtil.label("label.update")%>]
                 <%=jspUtil.date("comment.updateDatetime")%>
                 [<%=jspUtil.out("comment.updateUserName")%>]
@@ -73,6 +75,9 @@
             </div>
             <div class="arrow_question markdown">
                 <%=jspUtil.out("comment.comment", JspUtil.ESCAPE_NONE)%>
+                
+                <hr class="hrstyle01"/>
+                
                 <!-- コメントに付けた添付ファイルの表示 -->
                 <c:forEach var="file" items="${files}">
                     <c:if test="${file.commentNo == comment.commentNo}">
@@ -82,6 +87,19 @@
                         </div>
                     </c:if>
                 </c:forEach>
+                
+                <a href="<%=request.getContextPath()%>/open.knowledge/likeComments/<%=jspUtil.out("comment.getCommentNo()")%><%=jspUtil.out("params")%>"
+                    class="text-primary btn-link">
+                    <i class="fa fa-thumbs-o-up"></i>&nbsp;<%=jspUtil.label("knowledge.view.like")%> × 
+                    <span id="like_comment_count_<%=comment.getCommentNo()%>">
+                    <%=comment.getLikeCount()%>
+                    </span>
+                </a>
+                &nbsp;
+                <button class="btn btn-info btn-circle" onclick="addlikeComment(<%=comment.getCommentNo()%>);">
+                    <i class="fa fa-thumbs-o-up"></i>&nbsp;
+                </button>
+                
             </div>
             <!-- /.arrow_question -->
         </div>
@@ -98,7 +116,6 @@
         %>
         <div class="row">
             <div class="col-sm-12" style="text-align: right;">
-
                 <%
                     if (jspUtil.isAdmin() || jspUtil.is(jspUtil.id(), "comment.insertUser") || (Boolean) request.getAttribute("edit")) {
                 %>
@@ -144,6 +161,9 @@
             </div>
             <div class="arrow_answer markdown">
                 <%=jspUtil.out("comment.comment", JspUtil.ESCAPE_NONE)%>
+                
+                <hr class="hrstyle01"/>
+                
                 <!-- コメントに付けた添付ファイルの表示 -->
                 <c:forEach var="file" items="${files}">
                     <c:if test="${file.commentNo == comment.commentNo}">
@@ -153,6 +173,19 @@
                         </div>
                     </c:if>
                 </c:forEach>
+                
+                <a href="<%=request.getContextPath()%>/open.knowledge/likeComments/<%=jspUtil.out("comment.getCommentNo()")%><%=jspUtil.out("params")%>"
+                    class="text-primary btn-link">
+                    <i class="fa fa-thumbs-o-up"></i>&nbsp;<%=jspUtil.label("knowledge.view.like")%> × 
+                    <span id="like_comment_count_<%=comment.getCommentNo()%>">
+                    <%=comment.getLikeCount()%>
+                    </span>
+                </a>
+                &nbsp;
+                <button class="btn btn-info btn-circle" onclick="addlikeComment(<%=comment.getCommentNo()%>);">
+                    <i class="fa fa-thumbs-o-up"></i>&nbsp;
+                </button>
+                
             </div>
             <!-- /.arrow_answer -->
         </div>
@@ -166,6 +199,7 @@
         <%
             }
         %>
+        
     </c:forEach>
     <br />
     <br />

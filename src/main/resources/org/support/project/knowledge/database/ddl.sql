@@ -1,3 +1,21 @@
+-- コメントのイイネ
+drop table if exists LIKE_COMMENTS cascade;
+
+create table LIKE_COMMENTS (
+  NO BIGSERIAL not null
+  , COMMENT_NO bigint not null
+  , LIKE_CLASS integer default 1
+  , INSERT_USER integer
+  , INSERT_DATETIME timestamp
+  , UPDATE_USER integer
+  , UPDATE_DATETIME timestamp
+  , DELETE_FLAG integer
+  , constraint LIKE_COMMENTS_PKC primary key (NO)
+) ;
+
+create index IDX_LIKE_COMMENTS_COMMENT_NO
+  on LIKE_COMMENTS(COMMENT_NO);
+
 -- 認証トークン
 drop table if exists TOKENS cascade;
 
@@ -551,6 +569,7 @@ drop table if exists LIKES cascade;
 create table LIKES (
   NO BIGSERIAL not null
   , KNOWLEDGE_ID bigint not null
+  , LIKE_CLASS integer default 1
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -740,6 +759,16 @@ create table KNOWLEDGES (
   , constraint KNOWLEDGES_PKC primary key (KNOWLEDGE_ID)
 ) ;
 
+comment on table LIKE_COMMENTS is 'コメントのイイネ';
+comment on column LIKE_COMMENTS.NO is 'NO';
+comment on column LIKE_COMMENTS.COMMENT_NO is 'コメント番号';
+comment on column LIKE_COMMENTS.LIKE_CLASS is '種類';
+comment on column LIKE_COMMENTS.INSERT_USER is '登録ユーザ';
+comment on column LIKE_COMMENTS.INSERT_DATETIME is '登録日時';
+comment on column LIKE_COMMENTS.UPDATE_USER is '更新ユーザ';
+comment on column LIKE_COMMENTS.UPDATE_DATETIME is '更新日時';
+comment on column LIKE_COMMENTS.DELETE_FLAG is '削除フラグ';
+
 comment on table TOKENS is '認証トークン';
 comment on column TOKENS.TOKEN is 'TOKEN';
 comment on column TOKENS.USER_ID is 'ユーザID';
@@ -837,7 +866,7 @@ comment on column SURVEYS.DELETE_FLAG is '削除フラグ';
 
 comment on table EVENTS is 'イベント';
 comment on column EVENTS.KNOWLEDGE_ID is 'ナレッジID';
-comment on column EVENTS.START_DATE_TIME is '開催日	 UTC';
+comment on column EVENTS.START_DATE_TIME is '開催日     UTC';
 comment on column EVENTS.TIME_ZONE is 'タイムゾーン';
 comment on column EVENTS.NOTIFY_STATUS is '通知ステータス';
 comment on column EVENTS.INSERT_USER is '登録ユーザ';
@@ -938,7 +967,7 @@ comment on column DRAFT_KNOWLEDGES.DELETE_FLAG is '削除フラグ';
 
 comment on table MAIL_POSTS is 'メールから投稿';
 comment on column MAIL_POSTS.MESSAGE_ID is 'Message-ID';
-comment on column MAIL_POSTS.POST_KIND is '投稿区分	 1: Knowledge 2:Comment';
+comment on column MAIL_POSTS.POST_KIND is '投稿区分  1: Knowledge 2:Comment';
 comment on column MAIL_POSTS.ID is 'ID';
 comment on column MAIL_POSTS.SENDER is 'SENDER';
 comment on column MAIL_POSTS.INSERT_USER is '登録ユーザ';
@@ -950,10 +979,10 @@ comment on column MAIL_POSTS.DELETE_FLAG is '削除フラグ';
 comment on table MAIL_HOOK_CONDITIONS is 'メールから投稿する条件';
 comment on column MAIL_HOOK_CONDITIONS.HOOK_ID is 'HOOK_ID';
 comment on column MAIL_HOOK_CONDITIONS.CONDITION_NO is 'CONDITION_NO';
-comment on column MAIL_HOOK_CONDITIONS.CONDITION_KIND is '条件の種類	 1:宛先が「条件文字」であった場合';
+comment on column MAIL_HOOK_CONDITIONS.CONDITION_KIND is '条件の種類  1:宛先が「条件文字」であった場合';
 comment on column MAIL_HOOK_CONDITIONS.CONDITION is '条件の文字';
 comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER is '投稿者';
-comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER_KIND is '投稿者の指定	 1:送信者のメールアドレスから、2:常に固定';
+comment on column MAIL_HOOK_CONDITIONS.PROCESS_USER_KIND is '投稿者の指定  1:送信者のメールアドレスから、2:常に固定';
 comment on column MAIL_HOOK_CONDITIONS.PUBLIC_FLAG is '公開区分';
 comment on column MAIL_HOOK_CONDITIONS.TAGS is 'タグ';
 comment on column MAIL_HOOK_CONDITIONS.VIEWERS is '公開先';
@@ -1118,6 +1147,7 @@ comment on column ACCOUNT_IMAGES.DELETE_FLAG is '削除フラグ';
 comment on table LIKES is 'いいね';
 comment on column LIKES.NO is 'NO';
 comment on column LIKES.KNOWLEDGE_ID is 'ナレッジID';
+comment on column LIKES.LIKE_CLASS is '種類';
 comment on column LIKES.INSERT_USER is '登録ユーザ';
 comment on column LIKES.INSERT_DATETIME is '登録日時';
 comment on column LIKES.UPDATE_USER is '更新ユーザ';
