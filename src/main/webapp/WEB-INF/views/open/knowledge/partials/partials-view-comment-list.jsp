@@ -88,7 +88,7 @@
                     </c:if>
                 </c:forEach>
                 
-                <a href="<%=request.getContextPath()%>/open.knowledge/likeComments/<%=jspUtil.out("comment.getCommentNo()")%><%=jspUtil.out("params")%>"
+                <a href="<%=request.getContextPath()%>/open.knowledge/likecomments/<%=jspUtil.out("comment.getCommentNo()")%><%=jspUtil.out("params")%>"
                     class="text-primary btn-link">
                     <i class="fa fa-thumbs-o-up"></i>&nbsp;<%=jspUtil.label("knowledge.view.like")%> × 
                     <span id="like_comment_count_<%=comment.getCommentNo()%>">
@@ -174,7 +174,7 @@
                     </c:if>
                 </c:forEach>
                 
-                <a href="<%=request.getContextPath()%>/open.knowledge/likeComments/<%=jspUtil.out("comment.getCommentNo()")%><%=jspUtil.out("params")%>"
+                <a href="<%=request.getContextPath()%>/open.knowledge/likecomments/<%=jspUtil.out("comment.getCommentNo()")%><%=jspUtil.out("params")%>"
                     class="text-primary btn-link">
                     <i class="fa fa-thumbs-o-up"></i>&nbsp;<%=jspUtil.label("knowledge.view.like")%> × 
                     <span id="like_comment_count_<%=comment.getCommentNo()%>">
