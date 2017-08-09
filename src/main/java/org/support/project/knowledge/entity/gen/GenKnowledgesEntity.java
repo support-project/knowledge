@@ -62,11 +62,11 @@ public class GenKnowledgesEntity implements Serializable {
     /** タグ名称一覧 */
     private String tagNames;
     /** いいね件数 */
-    private Long likeCount = new Long(0);
+    private Long likeCount;
     /** コメント件数 */
-    private Integer commentCount = 0;
+    private Integer commentCount;
     /** 参照件数 */
-    private Long viewCount = new Long(0);
+    private Long viewCount;
     /** テンプレートの種類ID */
     private Integer typeId;
     /** 通知ステータス */

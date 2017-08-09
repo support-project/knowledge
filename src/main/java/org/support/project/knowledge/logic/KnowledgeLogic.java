@@ -34,6 +34,7 @@ import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgeTagsDao;
 import org.support.project.knowledge.dao.KnowledgeUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
+import org.support.project.knowledge.dao.LikeCommentsDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.StockKnowledgesDao;
 import org.support.project.knowledge.dao.StocksDao;
@@ -52,6 +53,7 @@ import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgeTagsEntity;
 import org.support.project.knowledge.entity.KnowledgeUsersEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.LikeCommentsEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
@@ -1125,6 +1127,20 @@ public class KnowledgeLogic {
 
         return count;
     }
+    /**
+     * コメントにイイネを追加
+     * @param commentNo
+     * @param loginedUser
+     * @return
+     */
+    public Long addLikeComment(Long commentNo, LoginedUser loginedUser) {
+        LikeCommentsEntity like = new LikeCommentsEntity();
+        like.setCommentNo(commentNo);
+        LikeCommentsDao.get().insert(like);
+        Long count = LikeCommentsDao.get().selectOnCommentNo(commentNo);
+        return count;
+    }
+    
 
     /**
      * ナレッジテーブルの タグやイイネ件数、コメント件数などの付加情報を 更新する（一覧表示用）
@@ -1597,4 +1613,5 @@ public class KnowledgeLogic {
             }
         }
     }
+
 }

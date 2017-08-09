@@ -46,6 +46,44 @@ SqlSeparator=0
 ShowTag=1
 ShowCommonAttributes=0
 
+[Relation]
+Entity1=COMMENTS
+Entity2=LIKE_COMMENTS
+RelationType1=1
+RelationType2=3
+Fields1=COMMENT_NO
+Fields2=COMMENT_NO
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,3695,3149,4099,R,R
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=370
+Bar2=315
+Bar3=410
+TermPos1=R
+TermPos2=R
+
+[Entity]
+PName=LIKE_COMMENTS
+LName=コメントのイイネ
+Comment=
+TableOption=
+Page=Main
+Left=1600
+Top=1450
+Field="NO","NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
+Field="コメント番号","COMMENT_NO","bigint","NOT NULL",,"","",$FFFFFFFF,""
+Field="種類","LIKE_CLASS","@INT",,,"1","",$FFFFFFFF,""
+Index=IDX_LIKE_COMMENTS_COMMENT_NO=0,COMMENT_NO
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170809123907
+Position="Main",1600,1450
+
 [Entity]
 PName=TOKENS
 LName=認証トークン
@@ -228,7 +266,7 @@ Fields1=KNOWLEDGE_ID
 Fields2=ITEM_NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4194,5115,6199,R,R
+Position="MAIN",0,4194,5115,6198,R,R
 Dependence=0
 Caption=
 PName=
@@ -247,7 +285,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=2450
-Top=1600
+Top=1800
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="回答ID","ANSWER_ID","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 Field="項目NO","ITEM_NO","@INT","NOT NULL",2,"","",$FFFFFFFF,""
@@ -256,7 +294,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170222220138
-Position="MAIN",2450,1600
+Position="MAIN",2450,1800
 
 [Relation]
 Entity1=SURVEYS
@@ -285,14 +323,14 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1950
-Top=1600
+Top=1800
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="回答ID","ANSWER_ID","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170222215330
-Position="MAIN",1950,1600
+Position="MAIN",1950,1800
 
 [Relation]
 Entity1=SURVEY_ITEMS
@@ -303,7 +341,7 @@ Fields1=KNOWLEDGE_ID,ITEM_NO
 Fields2=KNOWLEDGE_ID,ITEM_NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4139,4896,5178,R,R
+Position="MAIN",0,4139,4896,5177,R,R
 Dependence=1
 Caption=
 PName=
@@ -322,7 +360,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=2450
-Top=1100
+Top=1300
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="項目NO","ITEM_NO","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 Field="選択肢番号","CHOICE_NO","@INT","NOT NULL",2,"","",$FFFFFFFF,""
@@ -332,7 +370,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170220203842
-Position="MAIN",2450,1100
+Position="MAIN",2450,1300
 
 [Relation]
 Entity1=SURVEYS
@@ -362,7 +400,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=2500
-Top=1350
+Top=1550
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="項目NO","ITEM_NO","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 Field="項目名","ITEM_NAME","@VARCHAR(32)","NOT NULL",,"","",$FFFFFFFF,""
@@ -372,7 +410,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170220203458
-Position="MAIN",2500,1350
+Position="MAIN",2500,1550
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -401,7 +439,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1950
-Top=1400
+Top=1600
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="タイトル","TITLE","@VARCHAR(256)","NOT NULL",,"","",$FFFFFFFF,""
 Field="説明","DESCRIPTION","text",,,"","",$FFFFFFFF,""
@@ -409,7 +447,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170220203309
-Position="MAIN",1950,1400
+Position="MAIN",1950,1600
 
 [Relation]
 Entity1=EVENTS
@@ -459,7 +497,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1350
-Top=1500
+Top=1700
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="開催日","START_DATE_TIME","@DATETIME","NOT NULL",,"","UTC",$FFFFFFFF,""
 Field="タイムゾーン","TIME_ZONE","@VARCHAR(64)",,,"","",$FFFFFFFF,""
@@ -468,7 +506,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170307155432
-Position="MAIN",1350,1500
+Position="MAIN",1350,1700
 
 [Entity]
 PName=PARTICIPANTS
@@ -477,7 +515,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1350
-Top=1750
+Top=1900
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ユーザID","USER_ID","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 Field="ステータス","STATUS","@INT","NOT NULL",,"","",$FFFFFFFF,""
@@ -485,7 +523,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170222215215
-Position="MAIN",1350,1750
+Position="MAIN",1350,1900
 
 [Relation]
 Entity1=SERVICE_CONFIGS
@@ -748,7 +786,7 @@ Fields1=HOOK_ID
 Fields2=HOOK_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4081,5073,3934,R,R
+Position="MAIN",0,4081,5073,4018,R,R
 Dependence=1
 Caption=
 PName=
@@ -756,7 +794,7 @@ ModifiedDateTime=20160603134957
 LineMode=0
 Bar1=408
 Bar2=507
-Bar3=393
+Bar3=402
 TermPos1=R
 TermPos2=R
 
@@ -1150,7 +1188,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=50
-Top=500
+Top=450
 Field="HASH","HASH","@VARCHAR(32)","NOT NULL",0,"","",$FFFFFFFF,""
 Field="種類","TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
 Field="通知する種類のID","ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
@@ -1158,7 +1196,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150331055404
-Position="MAIN",50,500
+Position="MAIN",50,450
 
 [Entity]
 PName=NOTIFY_CONFIGS
@@ -1167,7 +1205,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=50
-Top=140
+Top=100
 Field="ユーザID","USER_ID","@INT","NOT NULL",0,"","",$FFFFFFFF,""
 Field="メール通知する","NOTIFY_MAIL","@INT",,,"","",$FFFFFFFF,""
 Field="デスクトップ通知する","NOTIFY_DESKTOP","@INT",,,"","",$FFFFFFFF,""
@@ -1183,7 +1221,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150328062820
-Position="MAIN",50,140
+Position="MAIN",50,100
 
 [Relation]
 Entity1=COMMENTS
@@ -1254,15 +1292,16 @@ Comment=
 TableOption=
 Page=MAIN
 Left=50
-Top=650
+Top=600
 Field="NO","NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
+Field="種類","LIKE_CLASS","@INT",,,"1","",$FFFFFFFF,""
 Index=IDX_LIKES_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20150416233511
-Position="MAIN",50,650
+ModifiedDateTime=20170809123852
+Position="MAIN",50,600
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -1505,14 +1544,14 @@ Fields1=TAG_ID
 Fields2=TAG_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4552,5672,4659,R,R
+Position="MAIN",0,4552,5672,4574,R,R
 Dependence=1
 Caption=
 PName=
 LineMode=0
 Bar1=455
 Bar2=567
-Bar3=466
+Bar3=457
 TermPos1=R
 TermPos2=R
 

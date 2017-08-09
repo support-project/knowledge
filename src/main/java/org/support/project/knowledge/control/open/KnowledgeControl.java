@@ -23,6 +23,7 @@ import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
+import org.support.project.knowledge.dao.LikeCommentsDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.dao.TagsDao;
@@ -186,6 +187,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
         for (CommentsEntity commentsEntity : comments) {
             MarkDown markDown2 = MarkdownLogic.get().markdownToHtml(commentsEntity.getComment());
             commentsEntity.setComment(markDown2.getHtml());
+            
+            Long likeCount = LikeCommentsDao.get().selectOnCommentNo(commentsEntity.getCommentNo());
+            commentsEntity.setLikeCount(likeCount);
         }
         setAttribute("comments", comments);
 
@@ -639,11 +643,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
         return forward("stocks.jsp");
     }    
     
-    
-    
-    
-    
-
     /**
      * いいねを押下
      * 
@@ -657,6 +656,20 @@ public class KnowledgeControl extends KnowledgeControlBase {
         Long count = knowledgeLogic.addLike(knowledgeId, getLoginedUser());
         LikeCount likeCount = new LikeCount();
         likeCount.setKnowledgeId(knowledgeId);
+        likeCount.setCount(count);
+        return send(likeCount);
+    }
+    /**
+     * コメントにイイネを押下
+     * @return
+     * @throws InvalidParamException 
+     */
+    @Post
+    public Boundary likecomment() throws InvalidParamException {
+        Long commentNo = super.getPathLong(Long.valueOf(-1));
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+        Long count = knowledgeLogic.addLikeComment(commentNo, getLoginedUser());
+        LikeCount likeCount = new LikeCount();
         likeCount.setCount(count);
         return send(likeCount);
     }
@@ -768,6 +781,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
         return forward("likes.jsp");
     }
 
+    
+
+
+    
     /**
      * 編集履歴の表示
      * 
@@ -919,5 +936,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
         listdata.setItems(list);
         return super.send(listdata);
     }
+    
     
 }

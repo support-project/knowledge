@@ -47,6 +47,24 @@ var addlike = function(knowledgeId) {
     });
 };
 
+var addlikeComment = function(commentNo) {
+    console.log(commentNo);
+    var url = _CONTEXT + '/open.knowledge/likecomment/' + commentNo;
+    $.ajax({
+        type : 'POST',
+        url : url,
+        success : function(data, dataType) {
+            console.log(data);
+            $('#like_comment_count_' + commentNo).text(data.count);
+            $.notify(LABEL_LIKE, 'info');
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            console.log(textStatus);
+        }
+    });
+};
+
+
 /*
 var viewProtect = function(knowledgeId) {
     var url = _CONTEXT + '/protect.knowledge/view_targets/' + knowledgeId;

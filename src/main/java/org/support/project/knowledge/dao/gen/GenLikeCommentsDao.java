@@ -5,7 +5,7 @@ import java.util.List;
 import java.sql.Timestamp;
 
 
-import org.support.project.knowledge.entity.LikesEntity;
+import org.support.project.knowledge.entity.LikeCommentsEntity;
 import org.support.project.ormapping.dao.AbstractDao;
 import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
@@ -21,12 +21,12 @@ import org.support.project.di.Instance;
 import org.support.project.aop.Aspect;
 
 /**
- * いいね
+ * コメントのイイネ
  * this class is auto generate and not edit.
- * if modify dao method, you can edit LikesDao.
+ * if modify dao method, you can edit LikeCommentsDao.
  */
 @DI(instance = Instance.Singleton)
-public class GenLikesDao extends AbstractDao {
+public class GenLikeCommentsDao extends AbstractDao {
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
@@ -35,17 +35,17 @@ public class GenLikesDao extends AbstractDao {
      * Get instance from DI container.
      * @return instance
      */
-    public static GenLikesDao get() {
-        return Container.getComp(GenLikesDao.class);
+    public static GenLikeCommentsDao get() {
+        return Container.getComp(GenLikeCommentsDao.class);
     }
 
     /**
      * Select all data.
      * @return all data
      */
-    public List<LikesEntity> physicalSelectAll() { 
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_physical_select_all.sql");
-        return executeQueryList(sql, LikesEntity.class);
+    public List<LikeCommentsEntity> physicalSelectAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_physical_select_all.sql");
+        return executeQueryList(sql, LikeCommentsEntity.class);
     }
     /**
      * Select all data with pager.
@@ -53,26 +53,26 @@ public class GenLikesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
-    public List<LikesEntity> physicalSelectAllWithPager(int limit, int offset) { 
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_physical_select_all_with_pager.sql");
-        return executeQueryList(sql, LikesEntity.class, limit, offset);
+    public List<LikeCommentsEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_physical_select_all_with_pager.sql");
+        return executeQueryList(sql, LikeCommentsEntity.class, limit, offset);
     }
     /**
      * Select data on key.
      * @param  no no
      * @return data
      */
-    public LikesEntity physicalSelectOnKey(Long no) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_physical_select_on_key.sql");
-        return executeQuerySingle(sql, LikesEntity.class, no);
+    public LikeCommentsEntity physicalSelectOnKey(Long no) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_physical_select_on_key.sql");
+        return executeQuerySingle(sql, LikeCommentsEntity.class, no);
     }
     /**
      * Select all data that not deleted.
      * @return all data
      */
-    public List<LikesEntity> selectAll() { 
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_select_all.sql");
-        return executeQueryList(sql, LikesEntity.class);
+    public List<LikeCommentsEntity> selectAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_select_all.sql");
+        return executeQueryList(sql, LikeCommentsEntity.class);
     }
     /**
      * Select all data that not deleted with pager.
@@ -80,16 +80,16 @@ public class GenLikesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
-    public List<LikesEntity> selectAllWidthPager(int limit, int offset) { 
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_select_all_with_pager.sql");
-        return executeQueryList(sql, LikesEntity.class, limit, offset);
+    public List<LikeCommentsEntity> selectAllWidthPager(int limit, int offset) { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_select_all_with_pager.sql");
+        return executeQueryList(sql, LikeCommentsEntity.class, limit, offset);
     }
     /**
      * Select count that not deleted.
      * @return count
      */
     public Integer selectCountAll() { 
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_select_count_all.sql");
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
     }
     /**
@@ -97,16 +97,16 @@ public class GenLikesDao extends AbstractDao {
      * @param  no no
      * @return data
      */
-    public LikesEntity selectOnKey(Long no) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_select_on_key.sql");
-        return executeQuerySingle(sql, LikesEntity.class, no);
+    public LikeCommentsEntity selectOnKey(Long no) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_select_on_key.sql");
+        return executeQuerySingle(sql, LikeCommentsEntity.class, no);
     }
     /**
      * Count all data
      * @return count
      */
     public int physicalCountAll() {
-        String sql = "SELECT COUNT(*) FROM LIKES";
+        String sql = "SELECT COUNT(*) FROM LIKE_COMMENTS";
         return executeQuerySingle(sql, Integer.class);
     }
     /**
@@ -116,11 +116,11 @@ public class GenLikesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public LikesEntity rawPhysicalInsert(LikesEntity entity) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_raw_insert.sql");
+    public LikeCommentsEntity rawPhysicalInsert(LikeCommentsEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_raw_insert.sql");
         executeUpdate(sql, 
             entity.getNo(), 
-            entity.getKnowledgeId(), 
+            entity.getCommentNo(), 
             entity.getLikeClass(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
@@ -129,7 +129,7 @@ public class GenLikesDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('LIKES_NO_seq', (select max(NO) from LIKES));";
+            String setValSql = "select setval('LIKE_COMMENTS_NO_seq', (select max(NO) from LIKE_COMMENTS));";
             executeQuerySingle(setValSql, Long.class);
         }
         return entity;
@@ -141,11 +141,11 @@ public class GenLikesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public LikesEntity physicalInsert(LikesEntity entity) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_insert.sql");
+    public LikeCommentsEntity physicalInsert(LikeCommentsEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_insert.sql");
         Class<?> type = PropertyUtil.getPropertyType(entity, "no");
         Object key = executeInsert(sql, type, 
-            entity.getKnowledgeId(), 
+            entity.getCommentNo(), 
             entity.getLikeClass(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
@@ -163,7 +163,7 @@ public class GenLikesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public LikesEntity insert(Integer user, LikesEntity entity) {
+    public LikeCommentsEntity insert(Integer user, LikeCommentsEntity entity) {
         entity.setInsertUser(user);
         entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
         entity.setUpdateUser(user);
@@ -178,7 +178,7 @@ public class GenLikesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public LikesEntity insert(LikesEntity entity) {
+    public LikeCommentsEntity insert(LikeCommentsEntity entity) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer userId = (Integer) pool.getUser();
         return insert(userId, entity);
@@ -189,10 +189,10 @@ public class GenLikesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public LikesEntity physicalUpdate(LikesEntity entity) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_update.sql");
+    public LikeCommentsEntity physicalUpdate(LikeCommentsEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_update.sql");
         executeUpdate(sql, 
-            entity.getKnowledgeId(), 
+            entity.getCommentNo(), 
             entity.getLikeClass(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
@@ -210,8 +210,8 @@ public class GenLikesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public LikesEntity update(Integer user, LikesEntity entity) {
-        LikesEntity db = selectOnKey(entity.getNo());
+    public LikeCommentsEntity update(Integer user, LikeCommentsEntity entity) {
+        LikeCommentsEntity db = selectOnKey(entity.getNo());
         entity.setInsertUser(db.getInsertUser());
         entity.setInsertDatetime(db.getInsertDatetime());
         entity.setDeleteFlag(db.getDeleteFlag());
@@ -226,7 +226,7 @@ public class GenLikesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public LikesEntity update(LikesEntity entity) {
+    public LikeCommentsEntity update(LikeCommentsEntity entity) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer userId = (Integer) pool.getUser();
         return update(userId, entity);
@@ -240,8 +240,8 @@ public class GenLikesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public LikesEntity save(Integer user, LikesEntity entity) {
-        LikesEntity db = selectOnKey(entity.getNo());
+    public LikeCommentsEntity save(Integer user, LikeCommentsEntity entity) {
+        LikeCommentsEntity db = selectOnKey(entity.getNo());
         if (db == null) {
             return insert(user, entity);
         } else {
@@ -255,8 +255,8 @@ public class GenLikesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public LikesEntity save(LikesEntity entity) {
-        LikesEntity db = selectOnKey(entity.getNo());
+    public LikeCommentsEntity save(LikeCommentsEntity entity) {
+        LikeCommentsEntity db = selectOnKey(entity.getNo());
         if (db == null) {
             return insert(entity);
         } else {
@@ -269,7 +269,7 @@ public class GenLikesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void physicalDelete(Long no) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikesDao/LikesDao_delete.sql");
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_delete.sql");
         executeUpdate(sql, no);
     }
     /**
@@ -277,7 +277,7 @@ public class GenLikesDao extends AbstractDao {
      * @param entity entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void physicalDelete(LikesEntity entity) {
+    public void physicalDelete(LikeCommentsEntity entity) {
         physicalDelete(entity.getNo());
 
     }
@@ -290,7 +290,7 @@ public class GenLikesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void delete(Integer user, Long no) {
-        LikesEntity db = selectOnKey(no);
+        LikeCommentsEntity db = selectOnKey(no);
         db.setDeleteFlag(1);
         db.setUpdateUser(user);
         db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
@@ -315,7 +315,7 @@ public class GenLikesDao extends AbstractDao {
      * @param entity entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(Integer user, LikesEntity entity) {
+    public void delete(Integer user, LikeCommentsEntity entity) {
         delete(user, entity.getNo());
 
     }
@@ -326,7 +326,7 @@ public class GenLikesDao extends AbstractDao {
      * @param entity entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(LikesEntity entity) {
+    public void delete(LikeCommentsEntity entity) {
         delete(entity.getNo());
 
     }
@@ -339,7 +339,7 @@ public class GenLikesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void activation(Integer user, Long no) {
-        LikesEntity db = physicalSelectOnKey(no);
+        LikeCommentsEntity db = physicalSelectOnKey(no);
         db.setDeleteFlag(0);
         db.setUpdateUser(user);
         db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
@@ -364,7 +364,7 @@ public class GenLikesDao extends AbstractDao {
      * @param entity entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void activation(Integer user, LikesEntity entity) {
+    public void activation(Integer user, LikeCommentsEntity entity) {
         activation(user, entity.getNo());
 
     }
@@ -374,7 +374,7 @@ public class GenLikesDao extends AbstractDao {
      * @param entity entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void activation(LikesEntity entity) {
+    public void activation(LikeCommentsEntity entity) {
         activation(entity.getNo());
 
     }

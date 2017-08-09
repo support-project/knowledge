@@ -17,10 +17,10 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 
 /**
- * メールから投稿
+ * コメントのイイネ
  */
 @DI(instance = Instance.Prototype)
-public class GenMailPostsEntity implements Serializable {
+public class GenLikeCommentsEntity implements Serializable {
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
@@ -29,34 +29,32 @@ public class GenMailPostsEntity implements Serializable {
      * Get instance from DI container.
      * @return instance
      */
-    public static GenMailPostsEntity get() {
-        return Container.getComp(GenMailPostsEntity.class);
+    public static GenLikeCommentsEntity get() {
+        return Container.getComp(GenLikeCommentsEntity.class);
     }
 
     /**
      * Constructor.
      */
-    public GenMailPostsEntity() {
+    public GenLikeCommentsEntity() {
         super();
     }
 
     /**
      * Constructor
-     * @param messageId Message-ID
+     * @param no NO
      */
 
-    public GenMailPostsEntity(String messageId) {
+    public GenLikeCommentsEntity(Long no) {
         super();
-        this.messageId = messageId;
+        this.no = no;
     }
-    /** Message-ID */
-    private String messageId;
-    /** 投稿区分  1: Knowledge 2:Comment */
-    private Integer postKind;
-    /** ID */
-    private Long id;
-    /** SENDER */
-    private String sender;
+    /** NO */
+    private Long no;
+    /** コメント番号 */
+    private Long commentNo;
+    /** 種類 */
+    private Integer likeClass;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -69,66 +67,50 @@ public class GenMailPostsEntity implements Serializable {
     private Integer deleteFlag;
 
     /**
-     * Get Message-ID.
-     * @return Message-ID
+     * Get NO.
+     * @return NO
      */
-    public String getMessageId() {
-        return this.messageId;
+    public Long getNo() {
+        return this.no;
     }
     /**
-     * Set Message-ID.
-     * @param messageId Message-ID
+     * Set NO.
+     * @param no NO
      * @return this object     */
-    public GenMailPostsEntity setMessageId(String messageId) {
-        this.messageId = messageId;
+    public GenLikeCommentsEntity setNo(Long no) {
+        this.no = no;
         return this;
     }
 
     /**
-     * Get 投稿区分  1: Knowledge 2:Comment.
-     * @return 投稿区分  1: Knowledge 2:Comment
+     * Get コメント番号.
+     * @return コメント番号
      */
-    public Integer getPostKind() {
-        return this.postKind;
+    public Long getCommentNo() {
+        return this.commentNo;
     }
     /**
-     * Set 投稿区分  1: Knowledge 2:Comment.
-     * @param postKind 投稿区分  1: Knowledge 2:Comment
+     * Set コメント番号.
+     * @param commentNo コメント番号
      * @return this object     */
-    public GenMailPostsEntity setPostKind(Integer postKind) {
-        this.postKind = postKind;
+    public GenLikeCommentsEntity setCommentNo(Long commentNo) {
+        this.commentNo = commentNo;
         return this;
     }
 
     /**
-     * Get ID.
-     * @return ID
+     * Get 種類.
+     * @return 種類
      */
-    public Long getId() {
-        return this.id;
+    public Integer getLikeClass() {
+        return this.likeClass;
     }
     /**
-     * Set ID.
-     * @param id ID
+     * Set 種類.
+     * @param likeClass 種類
      * @return this object     */
-    public GenMailPostsEntity setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    /**
-     * Get SENDER.
-     * @return SENDER
-     */
-    public String getSender() {
-        return this.sender;
-    }
-    /**
-     * Set SENDER.
-     * @param sender SENDER
-     * @return this object     */
-    public GenMailPostsEntity setSender(String sender) {
-        this.sender = sender;
+    public GenLikeCommentsEntity setLikeClass(Integer likeClass) {
+        this.likeClass = likeClass;
         return this;
     }
 
@@ -143,7 +125,7 @@ public class GenMailPostsEntity implements Serializable {
      * Set 登録ユーザ.
      * @param insertUser 登録ユーザ
      * @return this object     */
-    public GenMailPostsEntity setInsertUser(Integer insertUser) {
+    public GenLikeCommentsEntity setInsertUser(Integer insertUser) {
         this.insertUser = insertUser;
         return this;
     }
@@ -159,7 +141,7 @@ public class GenMailPostsEntity implements Serializable {
      * Set 登録日時.
      * @param insertDatetime 登録日時
      * @return this object     */
-    public GenMailPostsEntity setInsertDatetime(Timestamp insertDatetime) {
+    public GenLikeCommentsEntity setInsertDatetime(Timestamp insertDatetime) {
         this.insertDatetime = insertDatetime;
         return this;
     }
@@ -175,7 +157,7 @@ public class GenMailPostsEntity implements Serializable {
      * Set 更新ユーザ.
      * @param updateUser 更新ユーザ
      * @return this object     */
-    public GenMailPostsEntity setUpdateUser(Integer updateUser) {
+    public GenLikeCommentsEntity setUpdateUser(Integer updateUser) {
         this.updateUser = updateUser;
         return this;
     }
@@ -191,7 +173,7 @@ public class GenMailPostsEntity implements Serializable {
      * Set 更新日時.
      * @param updateDatetime 更新日時
      * @return this object     */
-    public GenMailPostsEntity setUpdateDatetime(Timestamp updateDatetime) {
+    public GenLikeCommentsEntity setUpdateDatetime(Timestamp updateDatetime) {
         this.updateDatetime = updateDatetime;
         return this;
     }
@@ -207,7 +189,7 @@ public class GenMailPostsEntity implements Serializable {
      * Set 削除フラグ.
      * @param deleteFlag 削除フラグ
      * @return this object     */
-    public GenMailPostsEntity setDeleteFlag(Integer deleteFlag) {
+    public GenLikeCommentsEntity setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
         return this;
     }
@@ -218,22 +200,22 @@ public class GenMailPostsEntity implements Serializable {
      */
     public Object[] getKeyValues() {
         Object[] keyValues = new Object[1];
-        keyValues[0] = this.messageId;
+        keyValues[0] = this.no;
         return keyValues;
     }
     /**
      * Set key values 
-     * @param messageId Message-ID
+     * @param no NO
      */
-    public void setKeyValues(String messageId) {
-        this.messageId = messageId;
+    public void setKeyValues(Long no) {
+        this.no = no;
     }
     /**
      * compare on key 
      * @param entity entity 
      * @return result 
      */
-    public boolean equalsOnKey(GenMailPostsEntity entity) {
+    public boolean equalsOnKey(GenLikeCommentsEntity entity) {
         Object[] keyValues1 = getKeyValues();
         Object[] keyValues2 = entity.getKeyValues();
         for (int i = 0; i < keyValues1.length; i++) {
@@ -260,10 +242,9 @@ public class GenMailPostsEntity implements Serializable {
      */
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("messageId = ").append(messageId).append("\n");
-        builder.append("postKind = ").append(postKind).append("\n");
-        builder.append("id = ").append(id).append("\n");
-        builder.append("sender = ").append(sender).append("\n");
+        builder.append("no = ").append(no).append("\n");
+        builder.append("commentNo = ").append(commentNo).append("\n");
+        builder.append("likeClass = ").append(likeClass).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -288,27 +269,12 @@ public class GenMailPostsEntity implements Serializable {
         Validator validator;
         ValidateError error;
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(this.messageId, convLabelName("Message Id"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(this.messageId, convLabelName("Message Id"), 128);
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(this.postKind, convLabelName("Post Kind"));
+        error = validator.validate(this.commentNo, convLabelName("Comment No"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(this.postKind, convLabelName("Post Kind"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(this.id, convLabelName("Id"));
+        error = validator.validate(this.likeClass, convLabelName("Like Class"));
         if (error != null) {
             errors.add(error);
         }
@@ -339,27 +305,12 @@ public class GenMailPostsEntity implements Serializable {
         Validator validator;
         ValidateError error;
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(values.get("messageId"), convLabelName("Message Id"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(values.get("messageId"), convLabelName("Message Id"), 128);
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(values.get("postKind"), convLabelName("Post Kind"));
+        error = validator.validate(values.get("commentNo"), convLabelName("Comment No"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(values.get("postKind"), convLabelName("Post Kind"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(values.get("id"), convLabelName("Id"));
+        error = validator.validate(values.get("likeClass"), convLabelName("Like Class"));
         if (error != null) {
             errors.add(error);
         }
