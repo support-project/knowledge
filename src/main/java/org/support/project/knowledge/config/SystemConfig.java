@@ -61,6 +61,13 @@ public class SystemConfig {
     /** 全ての機能は、ログインしないとアクセス出来ない */
     public static final String SYSTEM_EXPOSE_TYPE_CLOSE = "CLOSE";
 
+    /** いいね！の登録制限の設定キー */
+    public static final String LIKE_CONFIG = "LIKE_CONFIG";
+    /** いいね！の登録制限の値：複数回押せる */
+    public static final String LIKE_CONFIG_MANY = "MANY";
+    /** いいね！の登録制限の値：１回のみ押せる（ログイン必須） */
+    public static final String LIKE_CONFIG_ONLY_ONE = "ONLY_ONE";
+    
     /** UIのテーマの設定のキー */
     public static final String CONFIG_KEY_THEMA = "THEMA";
     /** Cookieにセットする際のキー：参照履歴 */

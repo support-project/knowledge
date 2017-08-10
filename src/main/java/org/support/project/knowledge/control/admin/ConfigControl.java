@@ -134,6 +134,11 @@ public class ConfigControl extends Control {
             setAttribute("uploadMaxMBSize", "10"); // default
         }
 
+        config = dao.selectOnKey(SystemConfig.LIKE_CONFIG, AppConfig.get().getSystemName());
+        if (config != null) {
+            setAttribute("like_config", config.getConfigValue());
+        }
+        
         return forward("system.jsp");
     }
 
@@ -190,7 +195,14 @@ public class ConfigControl extends Control {
         config = new SystemConfigsEntity(SystemConfig.UPLOAD_MAX_MB_SIZE, AppConfig.get().getSystemName());
         config.setConfigValue(uploadMaxMBSize);
         dao.save(config);
-
+        
+        String like_config = getParam("like_config");
+        if (StringUtils.isNotEmpty(like_config)) {
+            config = new SystemConfigsEntity(SystemConfig.LIKE_CONFIG, AppConfig.get().getSystemName());
+            config.setConfigValue(like_config);
+            dao.save(config);
+        }
+        
         String successMsg = "message.success.save";
         setResult(successMsg, errors);
 

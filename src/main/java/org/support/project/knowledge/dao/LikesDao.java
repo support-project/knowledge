@@ -37,4 +37,9 @@ public class LikesDao extends GenLikesDao {
         return executeQueryList(sql, LikesEntity.class, knowledgeId, limit, offset);
     }
 
+    public LikesEntity selectExistsOnUser(Long knowledgeId, Integer userId) {
+        String sql = "SELECT * FROM LIKES WHERE KNOWLEDGE_ID = ? AND INSERT_USER = ? LIMIT 1 OFFSET 0";
+        return super.executeQuerySingle(sql, LikesEntity.class, knowledgeId, userId);
+    }
+
 }

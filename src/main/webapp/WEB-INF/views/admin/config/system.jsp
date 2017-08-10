@@ -38,11 +38,11 @@
     
     
     <div class="form-group">
-        <label for="authType_lock"><%= jspUtil.label("knowledge.config.system.open") %></label><br/>
+        <label for="authType_lock"><%= jspUtil.label("knowledge.config.system.open.title") %></label><br/>
         <label class="radio-inline radio_block">
             <input type="radio" value="<%=SystemConfig.SYSTEM_EXPOSE_TYPE_OPEN%>" name="system_open_type" 
                 id="system_open_type_open" <%=jspUtil.checked(SystemConfig.SYSTEM_EXPOSE_TYPE_OPEN, "system_open_type", true)%>/>
-            <i class="fa fa-gavel fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.system.open") %>
+            <i class="fa fa-unlock fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.system.open") %>
         </label>
         <br/>
         <label class="radio-inline radio_block">
@@ -59,6 +59,23 @@
             placeholder="<%= jspUtil.label("knowledge.config.system.label.limit.attach") %>"
             value="<%= jspUtil.out("uploadMaxMBSize") %>" />
     </div>
+    
+    <div class="form-group">
+        <label for="authType_lock"><%= jspUtil.label("knowledge.config.system.like") %></label><br/>
+        <label class="radio-inline radio_block">
+            <input type="radio" value="<%=SystemConfig.LIKE_CONFIG_MANY%>" name="like_config" 
+                id="like_config_many" <%=jspUtil.checked(SystemConfig.LIKE_CONFIG_MANY, "like_config", true)%>/>
+            <i class="fa fa-unlock fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.system.like.many") %>
+        </label>
+        <br/>
+        <label class="radio-inline radio_block">
+            <input type="radio" value="<%=SystemConfig.LIKE_CONFIG_ONLY_ONE%>" name="like_config" 
+                id="like_config_onlyone" <%=jspUtil.checked(SystemConfig.LIKE_CONFIG_ONLY_ONE, "like_config", false)%>/>
+            <i class="fa fa-lock fa-lg"></i>&nbsp;<%= jspUtil.label("knowledge.config.system.like.onlyone") %>
+        </label>
+    </div>
+    
+    
     
     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
 </form>
