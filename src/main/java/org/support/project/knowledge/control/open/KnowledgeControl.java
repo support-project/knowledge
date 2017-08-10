@@ -654,7 +654,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     public Boundary like() throws InvalidParamException {
         Long knowledgeId = super.getPathLong(Long.valueOf(-1));
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-        Long count = knowledgeLogic.addLike(knowledgeId, getLoginedUser());
+        Long count = knowledgeLogic.addLike(knowledgeId, getLoginedUser(), getLocale());
         LikeCount likeCount = new LikeCount();
         likeCount.setKnowledgeId(knowledgeId);
         likeCount.setCount(count);
@@ -669,7 +669,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     public Boundary likecomment() throws InvalidParamException {
         Long commentNo = super.getPathLong(Long.valueOf(-1));
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-        Long count = knowledgeLogic.addLikeComment(commentNo, getLoginedUser());
+        Long count = knowledgeLogic.addLikeComment(commentNo, getLoginedUser(), getLocale());
         LikeCount likeCount = new LikeCount();
         likeCount.setCount(count);
         return send(likeCount);

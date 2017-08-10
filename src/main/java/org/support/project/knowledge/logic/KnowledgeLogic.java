@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.support.project.aop.Aspect;
+import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.HtmlUtils;
@@ -19,6 +21,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.FileParseBat;
+import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.CommentsDao;
@@ -70,8 +73,14 @@ import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.MessageResult;
+import org.support.project.web.common.HttpStatus;
+import org.support.project.web.config.MessageStatus;
+import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.exception.AuthenticateException;
+import org.support.project.web.exception.InvalidParamException;
 
 /**
  * Logic class for knowledge data
@@ -1104,15 +1113,42 @@ public class KnowledgeLogic {
             KnowledgesDao.get().updateViewCount(count, knowledgeId);
         }
     }
-
+    
+    /**
+     * イイネの重複チェックを行うかをシステム設定情報から取得
+     * @return
+     */
+    private boolean getCheckOfLike() {
+        boolean check = false;
+        SystemConfigsEntity config = SystemConfigsDao.get().selectOnKey(SystemConfig.LIKE_CONFIG, AppConfig.get().getSystemName());
+        if (config != null) {
+            if (SystemConfig.LIKE_CONFIG_ONLY_ONE.equals(config.getConfigValue())) {
+                check = true;
+            }
+        }
+        return check;
+    }
     /**
      * いいね！を追加
      * 
      * @param knowledgeId
      * @param loginedUser
      * @return
+     * @throws InvalidParamException 
      */
-    public Long addLike(Long knowledgeId, LoginedUser loginedUser) {
+    public Long addLike(Long knowledgeId, LoginedUser loginedUser, Locale locale) throws InvalidParamException {
+        if (getCheckOfLike()) {
+            Resources resources = Resources.getInstance(locale);
+            if (loginedUser == null || loginedUser.getUserId().equals(Integer.MIN_VALUE)) {
+                throw new InvalidParamException(new MessageResult(
+                        MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.likes.required.signin"), ""));
+            }
+            LikesEntity likesEntity = LikesDao.get().selectExistsOnUser(knowledgeId, loginedUser.getUserId());
+            if (likesEntity != null) {
+                throw new InvalidParamException(new MessageResult(
+                        MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.likes.duplicate"), ""));
+            }
+        }
         LikesDao likesDao = LikesDao.get();
         LikesEntity likesEntity = new LikesEntity();
         likesEntity.setKnowledgeId(knowledgeId);
@@ -1132,8 +1168,21 @@ public class KnowledgeLogic {
      * @param commentNo
      * @param loginedUser
      * @return
+     * @throws InvalidParamException 
      */
-    public Long addLikeComment(Long commentNo, LoginedUser loginedUser) {
+    public Long addLikeComment(Long commentNo, LoginedUser loginedUser, Locale locale) throws InvalidParamException {
+        if (getCheckOfLike()) {
+            Resources resources = Resources.getInstance(locale);
+            if (loginedUser == null || loginedUser.getUserId().equals(Integer.MIN_VALUE)) {
+                throw new InvalidParamException(new MessageResult(
+                        MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.likes.required.signin"), ""));
+            }
+            LikeCommentsEntity like = LikeCommentsDao.get().selectExistsOnUser(commentNo, loginedUser.getUserId());
+            if (like != null) {
+                throw new InvalidParamException(new MessageResult(
+                        MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.likes.duplicate"), ""));
+            }
+        }
         LikeCommentsEntity like = new LikeCommentsEntity();
         like.setCommentNo(commentNo);
         LikeCommentsDao.get().insert(like);

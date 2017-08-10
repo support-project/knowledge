@@ -35,6 +35,11 @@ public class LikeCommentsDao extends GenLikeCommentsDao {
         return executeQueryList(sql, LikeCommentsEntity.class, commentNo, limit, offset);
     }
 
+    public LikeCommentsEntity selectExistsOnUser(Long commentNo, Integer userId) {
+        String sql = "SELECT * FROM LIKE_COMMENTS WHERE COMMENT_NO = ? AND INSERT_USER = ? LIMIT 1 OFFSET 0";
+        return super.executeQuerySingle(sql, LikeCommentsEntity.class, commentNo, userId);
+    }
+
 
 
 }

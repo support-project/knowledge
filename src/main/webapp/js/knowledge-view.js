@@ -42,7 +42,9 @@ var addlike = function(knowledgeId) {
             $.notify(LABEL_LIKE, 'info');
         },
         error: function(XMLHttpRequest, textStatus, errorThrown){
-            console.log(textStatus);
+            if (XMLHttpRequest.status === 403 && XMLHttpRequest.responseJSON) {
+                $.notify(XMLHttpRequest.responseJSON.message, 'warn');
+            }
         }
     });
 };
@@ -59,7 +61,9 @@ var addlikeComment = function(commentNo) {
             $.notify(LABEL_LIKE, 'info');
         },
         error: function(XMLHttpRequest, textStatus, errorThrown){
-            console.log(textStatus);
+            if (XMLHttpRequest.status === 403 && XMLHttpRequest.responseJSON) {
+                $.notify(XMLHttpRequest.responseJSON.message, 'warn');
+            }
         }
     });
 };
