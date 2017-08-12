@@ -28,10 +28,10 @@
     </div>
     <div>
         <button type="submit" class="btn btn-info btn_2" id="draftbutton">
-            <i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.draft") + jspUtil.label("label.save") %>
+            <i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save.draft") %>
         </button>
         <button type="button" class="btn btn-info btn_2 text-warning <%= draftDeleteHide %>" onclick="" id="draftDeleteButton">
-            <i class="fa fa-eraser"></i>&nbsp; <%= jspUtil.label("label.draft") + jspUtil.label("label.delete") %>
+            <i class="fa fa-eraser"></i>&nbsp; <%= jspUtil.label("label.delete.draft") %>
         </button>
     </div>
     <div>
