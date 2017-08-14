@@ -149,20 +149,21 @@ public class KnowledgeControl extends KnowledgeControlBase {
         if (draft != null) {
             super.setDraftInfo(draft);
         } else {
+            // 編集権限チェック
+            LoginedUser loginedUser = super.getLoginedUser();
+
             // ナレッジに紐づく添付ファイルを取得
             List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(knowledgeId, getRequest().getContextPath());
             setAttribute("files", files);
 
             // 表示するグループを取得
-            List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
+            List<LabelValue> groups = TargetLogic.get().selectTargetsViewOnKnowledgeId(knowledgeId, loginedUser);
             setAttribute("groups", groups);
 
             // 共同編集者
-            List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+            List<LabelValue> editors = TargetLogic.get().selectEditorsViewOnKnowledgeId(knowledgeId, loginedUser);
             setAttribute("editors", editors);
-            
-            // 編集権限チェック
-            LoginedUser loginedUser = super.getLoginedUser();
+
             boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
             if (!edit) {
                 setAttribute("edit", false);
