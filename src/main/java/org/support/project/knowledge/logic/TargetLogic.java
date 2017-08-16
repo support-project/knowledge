@@ -267,8 +267,10 @@ public class TargetLogic {
 
         for (UsersEntity usersEntity : users) {
             // 自分の場合はスキップ
-            if (usersEntity.getUserId().intValue() == loginedUser.getUserId().intValue()) {
-                continue;
+            if (loginedUser != null) {
+                if (usersEntity.getUserId().intValue() == loginedUser.getUserId().intValue()) {
+                    continue;
+                }
             }
 
             // グループに公開されていてかつそのグループに所属してる場合もスキップ
