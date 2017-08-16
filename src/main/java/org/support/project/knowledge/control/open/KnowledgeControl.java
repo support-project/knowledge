@@ -196,11 +196,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
         // 表示するグループを取得
         // List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
-        List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
+        List<LabelValue> groups = TargetLogic.get().selectTargetsViewOnKnowledgeId(knowledgeId, loginedUser);
         setAttribute("groups", groups);
 
         // 編集権限
-        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+        List<LabelValue> editors = TargetLogic.get().selectEditorsViewOnKnowledgeId(knowledgeId, loginedUser);
         setAttribute("editors", editors);
         boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
         setAttribute("edit", edit);
