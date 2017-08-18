@@ -279,8 +279,16 @@ public class KnowledgeControl extends KnowledgeControlBase {
             return sendValidateError(errors);
         }
         
+        // 明示的にユーザが、タイムラインの上にもっていきたくないと指定した
+        if ("true".equals(super.getAttribute("notUpdateTimeline", "false"))) {
+            data.setDonotUpdateTimeline(true);
+        }
         if (!StringUtils.isEmpty(getParam("updateContent")) && getParam("updateContent").toLowerCase().equals("true")) {
+            // コンテンツの内容が更新されている
             data.setUpdateContent(true);
+            if (!data.isDonotUpdateTimeline()) {
+                data.setNotifyUpdate(true);
+            }
             LOG.debug("コンテンツを更新した");
         } else {
             // メタデータのみ更新
@@ -290,12 +298,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 if (check.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PRIVATE &&
                         check.getPublicFlag().intValue() != data.getKnowledge().getPublicFlag().intValue()) {
                     // まだ通知を一度も出しておらず、かつ、「非公開」になっていたものを、それ以外の区分に変更した場合は、通知を出す
-                    data.setUpdateContent(true);
+                    data.setNotifyUpdate(true);
                     LOG.debug("メタデータのみ更新であったが、非公開から公開などへ変更した");
                 }
             }
         }
-        
         
         KnowledgesEntity updatedEntity = knowledgeLogic.update(data, super.getLoginedUser());
         

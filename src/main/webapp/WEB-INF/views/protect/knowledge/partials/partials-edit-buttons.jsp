@@ -21,6 +21,12 @@
     }
 %>
 <div class="article_buttons">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" name="notUpdateTimeline" value="true">
+            <%= jspUtil.label("knowledge.edit.do.not.update.timeline") %>
+        </label>
+    </div>
     <div>
         <button type="button" class="btn btn-primary btn_1" id="releasebutton">
             <i class="fa fa-rocket"></i>&nbsp;<%= jspUtil.label("label.release") %>

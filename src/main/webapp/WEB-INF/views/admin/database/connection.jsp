@@ -127,7 +127,11 @@
                 </label>
             </div>
             <div class="form-group">
-                <label for="uRL"><%=jspUtil.label("knowledge.connection.label.URL")%></label> <input type="text" class="form-control" name="uRL"
+                <label for="uRL">
+                    <%=jspUtil.label("knowledge.connection.label.URL")%>
+                    <span class="small">(<%=jspUtil.label("knowledge.connection.msg.info.url")%>)</span>
+                </label>
+                <input type="text" class="form-control" name="uRL"
                     id="uRL" placeholder="<%=jspUtil.label("knowledge.connection.msg.info.url")%>" value="<%=jspUtil.out("uRL")%>" />
             </div>
             <div class="form-group">
