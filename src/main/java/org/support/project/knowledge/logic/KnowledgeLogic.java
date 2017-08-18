@@ -284,14 +284,21 @@ public class KnowledgeLogic {
         if (data.isUpdateContent()) {
             // 履歴登録
             insertHistory(updatedEntity);
-            // 通知
-            NotifyLogic.get().notifyOnKnowledgeUpdate(updatedEntity);
         } else {
             // 更新ユーザ＆更新日付を戻す
             updatedEntity.setUpdateUser(db.getUpdateUser());
             updatedEntity.setUpdateDatetime(db.getUpdateDatetime());
             knowledgesDao.physicalUpdate(updatedEntity);
         }
+        if (data.isNotifyUpdate()) {
+            // 通知
+            NotifyLogic.get().notifyOnKnowledgeUpdate(updatedEntity);
+        }
+        if (data.isDonotUpdateTimeline()) {
+            // タイムラインの上に表示しないと明示的に指定があれば、全文検索エンジン上の更新日は更新しない（検索エンジンのインデックスでタイムラインを作っているため）
+            updatedEntity.setUpdateDatetime(db.getUpdateDatetime());
+        }
+        
         // 全文検索エンジンへ登録
         saveIndex(updatedEntity, data.getTags(), data.getViewers(), data.getTemplate(), updatedEntity.getInsertUser());
 

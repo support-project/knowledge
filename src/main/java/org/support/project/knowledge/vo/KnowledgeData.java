@@ -19,7 +19,10 @@ public class KnowledgeData {
     private List<Long> fileNos;
     private TemplateMastersEntity template;
     private Long draftId;
-    private boolean updateContent;
+    
+    private boolean updateContent = false;
+    private boolean notifyUpdate = false;
+    private boolean donotUpdateTimeline = false;
     
     private String viewersStr;
     private String editorsStr;
@@ -245,6 +248,26 @@ public class KnowledgeData {
      */
     public void setUpdateContent(boolean updateContent) {
         this.updateContent = updateContent;
+    }
+
+
+    public boolean isNotifyUpdate() {
+        return notifyUpdate;
+    }
+
+
+    public void setNotifyUpdate(boolean notifyUpdate) {
+        this.notifyUpdate = notifyUpdate;
+    }
+
+
+    public boolean isDonotUpdateTimeline() {
+        return donotUpdateTimeline;
+    }
+
+
+    public void setDonotUpdateTimeline(boolean donotUpdateTimeline) {
+        this.donotUpdateTimeline = donotUpdateTimeline;
     }
     
     
