@@ -35,12 +35,44 @@ public class NotificationControl extends Control {
         long no = getPathLong(new Long(-1));
         NotificationsEntity notification = NotificationLogic.get().load(no, getLoginedUser());
         if (notification == null) {
-            sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+            return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
         }
         NotificationLogic.get().setStatus(getLoginUserId(), no, NotificationLogic.STATUS_READED);
         setAttributeOnProperty(notification);
+        setAttribute("no", no);
         return forward("view.jsp");
     }
     
-    
+    @Get
+    public Boundary previous() throws InvalidParamException {
+        long no = getPathLong(new Long(-1));
+        boolean all = "true".equals(getAttribute("all", "false"));
+        NotificationsEntity notification = NotificationLogic.get().previous(no, getLoginedUser(), all);
+        if (notification == null) {
+            setAttribute("method", getResource("label.previous"));
+            setAttribute("no", no);
+            return forward("not_found.jsp");
+        }
+        no = notification.getNo();
+        NotificationLogic.get().setStatus(getLoginUserId(), no, NotificationLogic.STATUS_READED);
+        setAttributeOnProperty(notification);
+        setAttribute("no", no);
+        return forward("view.jsp");
+    }
+    @Get
+    public Boundary next() throws InvalidParamException {
+        long no = getPathLong(new Long(-1));
+        boolean all = "true".equals(getAttribute("all", "false"));
+        NotificationsEntity notification = NotificationLogic.get().next(no, getLoginedUser(), all);
+        if (notification == null) {
+            setAttribute("method", getResource("label.next"));
+            setAttribute("no", no);
+            return forward("not_found.jsp");
+        }
+        no = notification.getNo();
+        NotificationLogic.get().setStatus(getLoginUserId(), no, NotificationLogic.STATUS_READED);
+        setAttributeOnProperty(notification);
+        setAttribute("no", no);
+        return forward("view.jsp");
+    }
 }

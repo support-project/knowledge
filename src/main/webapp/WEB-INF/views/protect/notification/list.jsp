@@ -63,8 +63,9 @@
     <c:forEach var="notification" items="${notifications}">
         <c:if test="${notification.status == 0}">
             <a class="list-group-item unread" 
-                href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %>" >
+                href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %><c:if test="${!empty all}">?all=true</c:if>" >
                 <h4 class="list-group-item-heading">
+                    <span class="dispKnowledgeId">#<%= jspUtil.out("notification.no") %></span>
                     [<%= jspUtil.label("label.unread") %>]
                     <%= jspUtil.out("notification.title") %>
                 </h4>
@@ -73,8 +74,11 @@
         </c:if>
         <c:if test="${notification.status != 0}">
             <a class="list-group-item " 
-                href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %>" >
-                <h4 class="list-group-item-heading"><%= jspUtil.out("notification.title") %></h4>
+                href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %><c:if test="${!empty all}">?all=true</c:if>" >
+                <h4 class="list-group-item-heading">
+                    <span class="dispKnowledgeId">#<%= jspUtil.out("notification.no") %></span>
+                    <%= jspUtil.out("notification.title") %>
+                </h4>
                 <p class="list-group-item-text"><%= jspUtil.date("notification.insertDatetime") %></p>
             </a>
         </c:if>
