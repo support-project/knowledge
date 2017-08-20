@@ -69,8 +69,8 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
     }
     
     
-    public List<NotificationsEntity> getNotification(LoginedUser loginedUser, int offset) {
-        List<NotificationsEntity> notifications = super.getNotification(loginedUser.getUserId(), offset);
+    public List<NotificationsEntity> getNotification(LoginedUser loginedUser, int offset, boolean all) {
+        List<NotificationsEntity> notifications = super.getNotification(loginedUser.getUserId(), offset, all);
         for (Iterator<NotificationsEntity> iterator = notifications.iterator(); iterator.hasNext();) {
             NotificationsEntity notificationsEntity = (NotificationsEntity) iterator.next();
             Notification notification = getNotification(notificationsEntity.getTitle());
@@ -96,9 +96,36 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
             return null;
         }
         NotificationsEntity notificationsEntity = NotificationsDao.get().selectOnKey(no);
+        if (notificationsEntity == null) {
+            return null;
+        }
         Notification notification = getNotification(notificationsEntity.getTitle());
         notification.convNotification(notificationsEntity, loginedUser, TARGET.detail);
         return notificationsEntity;
     }
     
+    public NotificationsEntity previous(long no, LoginedUser loginedUser, boolean all) {
+        if (loginedUser == null) {
+            return null;
+        }
+        NotificationsEntity notificationsEntity = super.previous(no, loginedUser.getUserId(), all);
+        if (notificationsEntity == null) {
+            return null;
+        }
+        Notification notification = getNotification(notificationsEntity.getTitle());
+        notification.convNotification(notificationsEntity, loginedUser, TARGET.detail);
+        return notificationsEntity;
+    }
+    public NotificationsEntity next(long no, LoginedUser loginedUser, boolean all) {
+        if (loginedUser == null) {
+            return null;
+        }
+        NotificationsEntity notificationsEntity = super.next(no, loginedUser.getUserId(), all);
+        if (notificationsEntity == null) {
+            return null;
+        }
+        Notification notification = getNotification(notificationsEntity.getTitle());
+        notification.convNotification(notificationsEntity, loginedUser, TARGET.detail);
+        return notificationsEntity;
+    }
 }

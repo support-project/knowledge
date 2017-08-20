@@ -20,15 +20,32 @@
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.notification.title") %></h4>
 
+<c:if test="${empty all}">
+<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+<%= jspUtil.label("knowledge.notification.list.only.unread") %>
+<a href="<%= request.getContextPath() %>/protect.notification/list?all=true">
+<i class="fa fa-circle-o" aria-hidden="true"></i>
+<%= jspUtil.label("knowledge.notification.list.all") %>
+</a>
+</c:if>
+<c:if test="${!empty all}">
+<a href="<%= request.getContextPath() %>/protect.notification/list">
+<i class="fa fa-circle-o" aria-hidden="true"></i>
+<%= jspUtil.label("knowledge.notification.list.only.unread") %>
+</a>
+<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+<%= jspUtil.label("knowledge.notification.list.all") %>
+</c:if>
+
 <nav>
     <ul class="pager">
         <li class="previous">
-            <a href="<%= request.getContextPath() %>/protect.notification/list/<%= jspUtil.out("previous") %>">
+            <a href="<%= request.getContextPath() %>/protect.notification/list/<%= jspUtil.out("previous") %><c:if test="${!empty all}">?all=true</c:if>">
                 <span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
             </a>
         </li>
         <li class="next">
-            <a href="<%= request.getContextPath() %>/protect.notification/list/<%= jspUtil.out("next") %>">
+            <a href="<%= request.getContextPath() %>/protect.notification/list/<%= jspUtil.out("next") %><c:if test="${!empty all}">?all=true</c:if>">
                 <%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
             </a>
         </li>
@@ -46,15 +63,23 @@
     <c:forEach var="notification" items="${notifications}">
         <c:if test="${notification.status == 0}">
             <a class="list-group-item unread" 
-                href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %>" >
-                [<%= jspUtil.label("label.unread") %>]
-                <%= jspUtil.out("notification.title") %>
+                href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %><c:if test="${!empty all}">?all=true</c:if>" >
+                <h4 class="list-group-item-heading">
+                    <span class="dispKnowledgeId">#<%= jspUtil.out("notification.no") %></span>
+                    [<%= jspUtil.label("label.unread") %>]
+                    <%= jspUtil.out("notification.title") %>
+                </h4>
+                <p class="list-group-item-text"><%= jspUtil.date("notification.insertDatetime") %></p>
             </a>
         </c:if>
         <c:if test="${notification.status != 0}">
             <a class="list-group-item " 
-                href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %>" >
-                <%= jspUtil.out("notification.title") %>
+                href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %><c:if test="${!empty all}">?all=true</c:if>" >
+                <h4 class="list-group-item-heading">
+                    <span class="dispKnowledgeId">#<%= jspUtil.out("notification.no") %></span>
+                    <%= jspUtil.out("notification.title") %>
+                </h4>
+                <p class="list-group-item-text"><%= jspUtil.date("notification.insertDatetime") %></p>
             </a>
         </c:if>
     </c:forEach>
@@ -67,12 +92,12 @@
 <nav>
     <ul class="pager">
         <li class="previous">
-            <a href="<%= request.getContextPath() %>/protect.notification/list/<%= jspUtil.out("previous") %>">
+            <a href="<%= request.getContextPath() %>/protect.notification/list/<%= jspUtil.out("previous") %><c:if test="${!empty all}">?all=true</c:if>">
                 <span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
             </a>
         </li>
         <li class="next">
-            <a href="<%= request.getContextPath() %>/protect.notification/list/<%= jspUtil.out("next") %>">
+            <a href="<%= request.getContextPath() %>/protect.notification/list/<%= jspUtil.out("next") %><c:if test="${!empty all}">?all=true</c:if>">
                 <%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
             </a>
         </li>
