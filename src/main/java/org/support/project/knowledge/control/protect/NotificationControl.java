@@ -7,6 +7,7 @@ import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.service.Get;
+import org.support.project.web.control.service.Post;
 import org.support.project.web.entity.NotificationsEntity;
 import org.support.project.web.exception.InvalidParamException;
 
@@ -75,4 +76,13 @@ public class NotificationControl extends Control {
         setAttribute("no", no);
         return forward("view.jsp");
     }
+
+    @Post
+    public Boundary markread() {
+        String no = getAttribute("no", "");
+        NotificationLogic.get().markAllAsRead(no, getLoginUserId());
+        return send("OK");
+    }
+
+
 }

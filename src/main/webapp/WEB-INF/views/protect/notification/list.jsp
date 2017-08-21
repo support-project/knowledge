@@ -10,16 +10,27 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<!-- build:css(src/main/webapp) css/notification-list.css -->
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-list.css" />
+<!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
+<script>
+var UNREAD_LIST = [
+<c:forEach var="notification" items="${notifications}"><c:if test="${notification.status == 0}"><%= jspUtil.out("notification.no") %>,</c:if></c:forEach>
+];
+</script>
+<!-- build:js(src/main/webapp) js/page-notification-list.js -->
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/notification-list.js"></script>
+<!-- endbuild -->
 </c:param>
 
 
 <c:param name="PARAM_CONTENT">
 <h4 class="title"><%= jspUtil.label("knowledge.notification.title") %></h4>
 
+<div class="col-sm-6">
 <c:if test="${empty all}">
 <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
 <%= jspUtil.label("knowledge.notification.list.only.unread") %>
@@ -36,6 +47,13 @@
 <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
 <%= jspUtil.label("knowledge.notification.list.all") %>
 </c:if>
+</div>
+<div class="col-sm-6 text-right">
+<button class="btn btn-link" id="btnMarkAllAsRead">
+<i class="fa fa-check" aria-hidden="true"></i>
+<%= jspUtil.label("label.mark.all.as.read") %>
+</button>
+</div>
 
 <nav>
     <ul class="pager">
@@ -65,7 +83,7 @@
             <a class="list-group-item unread" 
                 href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %><c:if test="${!empty all}">?all=true</c:if>" >
                 <h4 class="list-group-item-heading">
-                    <span class="dispKnowledgeId">#<%= jspUtil.out("notification.no") %></span>
+                    <span class="dispKnowledgeId">@<%= jspUtil.out("notification.no") %></span>
                     [<%= jspUtil.label("label.unread") %>]
                     <%= jspUtil.out("notification.title") %>
                 </h4>
@@ -76,7 +94,7 @@
             <a class="list-group-item " 
                 href="<%= request.getContextPath() %>/protect.notification/view/<%= jspUtil.out("notification.no") %><c:if test="${!empty all}">?all=true</c:if>" >
                 <h4 class="list-group-item-heading">
-                    <span class="dispKnowledgeId">#<%= jspUtil.out("notification.no") %></span>
+                    <span class="dispKnowledgeId">@<%= jspUtil.out("notification.no") %></span>
                     <%= jspUtil.out("notification.title") %>
                 </h4>
                 <p class="list-group-item-text"><%= jspUtil.date("notification.insertDatetime") %></p>
