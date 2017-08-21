@@ -74,6 +74,14 @@
             <param-value>/WEB-INF/views/auth/form.jsp</param-value>
         </init-param>
         <init-param>
+            <param-name>initial-page</param-name>
+            <param-value>/open.knowledge/list</param-value>
+        </init-param>
+        <init-param>
+            <param-name>out-page</param-name>
+            <param-value>/open.knowledge/list</param-value>
+        </init-param>
+        <init-param>
             <param-name>auth-class-name</param-name>
             <param-value>org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl</param-value>
         </init-param>
@@ -85,11 +93,6 @@
             <param-name>cookie-secure</param-name>
             <param-value>false</param-value>
         </init-param>
-        <init-param>
-            <param-name>outPage</param-name>
-            <param-value>/open.knowledge/list</param-value>
-        </init-param>
-        
     </filter>
 
     <filter>
