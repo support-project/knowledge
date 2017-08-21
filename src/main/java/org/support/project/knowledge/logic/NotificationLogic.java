@@ -3,6 +3,8 @@ package org.support.project.knowledge.logic;
 import java.util.Iterator;
 import java.util.List;
 
+import org.support.project.aop.Aspect;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.knowledge.logic.notification.AcceptCheckUserNotification;
 import org.support.project.knowledge.logic.notification.AddUserNotification;
@@ -127,5 +129,16 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
         Notification notification = getNotification(notificationsEntity.getTitle());
         notification.convNotification(notificationsEntity, loginedUser, TARGET.detail);
         return notificationsEntity;
+    }
+    
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void markAllAsRead(String no, Integer userID) {
+        String[] nos = no.split(",");
+        for (String n : nos) {
+            if (StringUtils.isInteger(n)) {
+                int num = Integer.parseInt(n);
+                super.setStatus(userID, num, NotificationLogic.STATUS_READED);
+            }
+        }
     }
 }
