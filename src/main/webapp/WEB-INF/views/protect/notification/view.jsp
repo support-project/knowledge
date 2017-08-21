@@ -10,10 +10,15 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<!-- build:css(src/main/webapp) css/notification-detail.css -->
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-list.css" />
+<!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
+<!-- build:js(src/main/webapp) js/page-notification-detail.js -->
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/notification-detail.js"></script>
+<!-- endbuild -->
 </c:param>
 
 
@@ -43,7 +48,7 @@
     </ul>
 </nav>
 
-<pre>
+<pre id="content">
 <%= jspUtil.out("content") %>
 </pre>
 
