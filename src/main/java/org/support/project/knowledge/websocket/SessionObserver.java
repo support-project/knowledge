@@ -9,7 +9,7 @@ import javax.websocket.Session;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
-import org.support.project.knowledge.vo.Notify;
+import org.support.project.knowledge.logic.notification.DesktopNotification;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.websocket.EndpointConfigurator;
@@ -56,15 +56,15 @@ public class SessionObserver implements Observer {
                 }
             }
 
-            if (message instanceof Notify && loginuser != null) {
-                Notify notify = (Notify) message;
+            if (message instanceof DesktopNotification && loginuser != null) {
+                DesktopNotification notify = (DesktopNotification) message;
                 MessageResult result = notify.getMessage(loginuser, locale);
                 if (result != null) {
-                    if (LOG.isInfoEnabled()) {
+                    if (LOG.isDebugEnabled()) {
                         StringBuilder builder = new StringBuilder();
                         builder.append("[Notify] ").append("User id:    ").append(session.getUserPrincipal().getName()).append("  ");
                         builder.append("Session id: ").append(session.getId()).append("  ").append(result.getMessage());
-                        LOG.info(builder.toString());
+                        LOG.debug(builder.toString());
                     }
                     session.getBasicRemote().sendText(JSON.encode(result));
                 }

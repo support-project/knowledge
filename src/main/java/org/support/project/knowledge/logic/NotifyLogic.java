@@ -25,7 +25,11 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
-import org.support.project.knowledge.vo.Notify;
+import org.support.project.knowledge.logic.notification.CommentInsertNotification;
+import org.support.project.knowledge.logic.notification.DesktopNotification;
+import org.support.project.knowledge.logic.notification.KnowledgeUpdateNotification;
+import org.support.project.knowledge.logic.notification.LikeInsertNotification;
+import org.support.project.knowledge.logic.notification.QueueNotification;
 import org.support.project.knowledge.websocket.NotifyAction;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
@@ -78,31 +82,33 @@ public class NotifyLogic {
      * 
      * @param notify
      */
-    private void notify(Notify notify) {
+    private void notifyMail(QueueNotification notify) {
         // Mail通知
         NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
         NotifyQueuesEntity notifyQueuesEntity = notify.getQueue();
         // 重複チェックし
-        if (NumberUtils.is(notifyQueuesEntity.getType(), Notify.TYPE_KNOWLEDGE_INSERT)) {
+        if (NumberUtils.is(notifyQueuesEntity.getType(), QueueNotification.TYPE_KNOWLEDGE_INSERT)) {
             // ナレッジの新規登録は必ず通知のキューに入れる
             notifyQueuesDao.insert(notifyQueuesEntity);
-        } else if (NumberUtils.is(notifyQueuesEntity.getType(), Notify.TYPE_KNOWLEDGE_UPDATE)) {
+        } else if (NumberUtils.is(notifyQueuesEntity.getType(), QueueNotification.TYPE_KNOWLEDGE_UPDATE)) {
             // ナレッジが更新された場合、キューに「登録通知」もしくは「更新通知」が存在しているのであれば登録しない
             NotifyQueuesEntity exist = notifyQueuesDao.selectOnTypeAndId(notifyQueuesEntity.getType(), notifyQueuesEntity.getId());
             if (exist == null) {
-                exist = notifyQueuesDao.selectOnTypeAndId(Notify.TYPE_KNOWLEDGE_INSERT, notifyQueuesEntity.getId());
+                exist = notifyQueuesDao.selectOnTypeAndId(QueueNotification.TYPE_KNOWLEDGE_INSERT, notifyQueuesEntity.getId());
                 if (exist == null) {
                     notifyQueuesDao.insert(notifyQueuesEntity);
                 }
             }
-        } else if (NumberUtils.is(notifyQueuesEntity.getType(), Notify.TYPE_KNOWLEDGE_LIKE)
-                || NumberUtils.is(notifyQueuesEntity.getType(), Notify.TYPE_KNOWLEDGE_COMMENT)) {
+        } else if (NumberUtils.is(notifyQueuesEntity.getType(), QueueNotification.TYPE_KNOWLEDGE_LIKE)
+                || NumberUtils.is(notifyQueuesEntity.getType(), QueueNotification.TYPE_KNOWLEDGE_COMMENT)) {
             NotifyQueuesEntity exist = notifyQueuesDao.selectOnTypeAndId(notifyQueuesEntity.getType(), notifyQueuesEntity.getId());
             if (exist == null) {
                 notifyQueuesDao.insert(notifyQueuesEntity);
             }
         }
-
+    }
+    
+    private void notifyDeskTop(DesktopNotification notify) {
         // Desktop通知は、多数のユーザを処理するので、別スレッドで処理する
         Thread t = new Thread(new Runnable() {
             @Override
@@ -123,9 +129,11 @@ public class NotifyLogic {
      * @param knowledgesEntity
      */
     public void notifyOnKnowledgeInsert(KnowledgesEntity knowledgesEntity) {
-        Notify notify = new Notify();
-        notify.inserted(knowledgesEntity);
-        notify(notify);
+        KnowledgeUpdateNotification notify = KnowledgeUpdateNotification.get();
+        notify.setKnowledge(knowledgesEntity);
+        notify.setType(QueueNotification.TYPE_KNOWLEDGE_INSERT);
+        notifyMail(notify);
+        notifyDeskTop(notify);
     }
 
     /**
@@ -134,10 +142,11 @@ public class NotifyLogic {
      * @param knowledgesEntity
      */
     public void notifyOnKnowledgeUpdate(KnowledgesEntity knowledgesEntity) {
-        Notify notify = new Notify();
-        notify.updated(knowledgesEntity);
-
-        notify(notify);
+        KnowledgeUpdateNotification notify = KnowledgeUpdateNotification.get();
+        notify.setKnowledge(knowledgesEntity);
+        notify.setType(QueueNotification.TYPE_KNOWLEDGE_UPDATE);
+        notifyMail(notify);
+        notifyDeskTop(notify);
     }
 
     /**
@@ -146,10 +155,11 @@ public class NotifyLogic {
      * @param knowledgeId
      */
     public void notifyOnKnowledgeLiked(Long knowledgeId, LikesEntity likesEntity) {
-        Notify notify = new Notify();
-        notify.liked(likesEntity);
-
-        notify(notify);
+        LikeInsertNotification notify = LikeInsertNotification.get();
+        notify.setLike(likesEntity);
+        notify.setType(QueueNotification.TYPE_KNOWLEDGE_LIKE);
+        notifyMail(notify);
+        notifyDeskTop(notify);
     }
 
     /**
@@ -158,12 +168,12 @@ public class NotifyLogic {
      * @param knowledgeId
      */
     public void notifyOnKnowledgeComment(Long knowledgeId, CommentsEntity commentsEntity) {
-        Notify notify = new Notify();
-        notify.commented(commentsEntity);
-
-        notify(notify);
+        CommentInsertNotification notify = CommentInsertNotification.get();
+        notify.setComment(commentsEntity);
+        notify.setType(QueueNotification.TYPE_KNOWLEDGE_COMMENT);
+        notifyMail(notify);
+        notifyDeskTop(notify);
     }
-
     /**
      * 指定のナレッジは、自分宛てのナレッジかどうかを判定し、メッセージを取得する
      * 

@@ -76,7 +76,7 @@ public class MailLogic {
     public static final String NOTIFY_EVENT = "notify_event";
     
     
-    public static String[] TEMPLATE_IDS = {
+    public static final String[] TEMPLATE_IDS = {
         INVITATION, MAIL_CONFIRM, NOTIFY_ACCEPT_USER, NOTIFY_ADD_USER,
         NOTIFY_INSERT_COMMENT_MYITEM, NOTIFY_INSERT_COMMENT, NOTIFY_INSERT_KNOWLEDGE,
         NOTIFY_INSERT_LIKE_MYITEM, NOTIFY_UPDATE_KNOWLEDGE, PASSWORD_RESET, TEST_MAIL,
@@ -154,7 +154,8 @@ public class MailLogic {
      * @throws NoSuchAlgorithmException 
      * @throws InvalidKeyException 
      */
-    public void startSendMails() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+    public void startSendMails() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
+        IllegalBlockSizeException, BadPaddingException {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
         if (mailConfigsEntity == null) {
@@ -214,7 +215,8 @@ public class MailLogic {
      * @throws IllegalBlockSizeException
      * @throws BadPaddingException
      */
-    private Session getSession(MailConfigsEntity config) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+    private Session getSession(MailConfigsEntity config) throws InvalidKeyException, NoSuchAlgorithmException,
+        NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         String host = config.getHost();
         String port = String.valueOf(config.getPort());
         
@@ -279,7 +281,8 @@ public class MailLogic {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      */
-    private void mailSend(Session session, MailConfigsEntity config, MailsEntity entity) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
+    private void mailSend(Session session, MailConfigsEntity config, MailsEntity entity)
+            throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
             IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, MessagingException {
         String to = entity.getToAddress();
         String toName = entity.getToName();

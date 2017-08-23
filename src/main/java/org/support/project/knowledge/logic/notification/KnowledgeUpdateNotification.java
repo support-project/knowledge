@@ -10,6 +10,7 @@ import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -41,6 +42,7 @@ import org.support.project.knowledge.logic.WebhookLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.notification.KnowledgeUpdate;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.MessageResult;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.NotificationsDao;
@@ -56,14 +58,32 @@ import net.arnx.jsonic.JSON;
  * ナレッジを登録・更新した際の通知処理
  * @author koda
  */
-@DI(instance = Instance.Singleton)
-public class KnowledgeUpdateNotification extends AbstractQueueNotification {
+@DI(instance = Instance.Prototype)
+public class KnowledgeUpdateNotification extends AbstractQueueNotification implements DesktopNotification {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(KnowledgeUpdateNotification.class);
     /** インスタンス取得 */
     public static KnowledgeUpdateNotification get() {
         return Container.getComp(KnowledgeUpdateNotification.class);
     }
+    
+    /** Updated KnowledgesEntity */
+    private KnowledgesEntity knowledge;
+    public KnowledgesEntity getKnowledge() {
+        return knowledge;
+    }
+    public void setKnowledge(KnowledgesEntity knowledge) {
+        this.knowledge = knowledge;
+    }
+    @Override
+    public NotifyQueuesEntity getQueue() {
+        NotifyQueuesEntity entity = new NotifyQueuesEntity();
+        entity.setHash(RandomUtil.randamGen(30));
+        entity.setType(getType());
+        entity.setId(knowledge.getKnowledgeId());
+        return entity;
+    }
+    
     
     @Override
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
@@ -203,7 +223,8 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification {
      * @param config
      * @throws Exception 
      */
-    private void insertNotifyKnowledgeUpdateMailQue(KnowledgesEntity knowledge, UsersEntity usersEntity, MailLocaleTemplatesEntity template, String content) throws Exception {
+    private void insertNotifyKnowledgeUpdateMailQue(KnowledgesEntity knowledge, UsersEntity usersEntity,
+            MailLocaleTemplatesEntity template, String content) throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
         if (mailConfigsEntity == null) {
@@ -350,6 +371,9 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification {
             }
         }
     }
-    
+    @Override
+    public MessageResult getMessage(LoginedUser loginuser, Locale locale) {
+        return NotifyLogic.get().getInsertKnowledgeMessage(loginuser, locale, knowledge);
+    }
 
 }

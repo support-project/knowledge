@@ -26,7 +26,7 @@ import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
-import org.support.project.knowledge.vo.Notify;
+import org.support.project.knowledge.logic.notification.QueueNotification;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.ProxyConfigsEntity;
@@ -85,7 +85,7 @@ public class WebhookLogic extends HttpLogic {
         jsonObject.put("became_public", became_public);
 
         if (type != null) {
-            if (Notify.TYPE_KNOWLEDGE_INSERT == type) {
+            if (QueueNotification.TYPE_KNOWLEDGE_INSERT == type) {
                 jsonObject.put("status", "created");
             } else {
                 jsonObject.put("status", "updated");
