@@ -8,8 +8,10 @@ import java.util.Map;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
+import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.NumberUtils;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
@@ -18,14 +20,19 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.WebhookBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.ExUsersDao;
+import org.support.project.knowledge.dao.KnowledgeGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
+import org.support.project.knowledge.dao.KnowledgeUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
+import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.dao.WebhookConfigsDao;
 import org.support.project.knowledge.dao.WebhooksDao;
+import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
+import org.support.project.knowledge.entity.KnowledgeUsersEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.MailLocaleTemplatesEntity;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
@@ -76,12 +83,27 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
         this.knowledge = knowledge;
     }
     @Override
-    public NotifyQueuesEntity getQueue() {
+    public void insertNotifyQueue() {
         NotifyQueuesEntity entity = new NotifyQueuesEntity();
         entity.setHash(RandomUtil.randamGen(30));
         entity.setType(getType());
         entity.setId(knowledge.getKnowledgeId());
-        return entity;
+        
+        NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
+        // 重複チェックし
+        if (NumberUtils.is(entity.getType(), QueueNotification.TYPE_KNOWLEDGE_INSERT)) {
+            // ナレッジの新規登録は必ず通知のキューに入れる
+            notifyQueuesDao.insert(entity);
+        } else if (NumberUtils.is(entity.getType(), QueueNotification.TYPE_KNOWLEDGE_UPDATE)) {
+            // ナレッジが更新された場合、キューに「登録通知」もしくは「更新通知」が存在しているのであれば登録しない
+            NotifyQueuesEntity exist = notifyQueuesDao.selectOnTypeAndId(entity.getType(), entity.getId());
+            if (exist == null) {
+                exist = notifyQueuesDao.selectOnTypeAndId(QueueNotification.TYPE_KNOWLEDGE_INSERT, entity.getId());
+                if (exist == null) {
+                    notifyQueuesDao.insert(entity);
+                }
+            }
+        }
     }
     
     
@@ -373,7 +395,95 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
     }
     @Override
     public MessageResult getMessage(LoginedUser loginuser, Locale locale) {
-        return NotifyLogic.get().getInsertKnowledgeMessage(loginuser, locale, knowledge);
+        if (getType() == TYPE_KNOWLEDGE_UPDATE) {
+            return getUpdateKnowledgeMessage(loginuser, locale, "knowledge.notify.msg.desktop.to.update");
+        } else {
+            return getUpdateKnowledgeMessage(loginuser, locale, "knowledge.notify.msg.desktop.to.insert");
+        }
     }
 
+    /**
+     * 指定のナレッジは、自分宛てのナレッジかどうかを判定し、メッセージを取得する
+     * 
+     * @param loginuser
+     * @param knowledge
+     * @return
+     */
+    private MessageResult getUpdateKnowledgeMessage(LoginedUser loginuser, Locale locale, String title) {
+        // TODO ストック機能ができたら、ストックしたナレッジの更新かどうかを判定する
+        if (isToKnowledgeSave(loginuser, knowledge)) {
+            MessageResult messageResult = new MessageResult();
+            messageResult.setMessage(
+                    Resources.getInstance(locale).getResource(title, String.valueOf(knowledge.getKnowledgeId())));
+            messageResult.setResult(NotifyLogic.get().makeURL(knowledge.getKnowledgeId())); // Knowledgeへのリンク
+            return messageResult;
+        }
+        return null;
+    }
+
+    
+    /**
+     * 自分宛てのナレッジが登録／更新されたか判定する
+     * 
+     * @param loginuser
+     * @param knowledge
+     * @return
+     */
+    private boolean isToKnowledgeSave(LoginedUser loginuser, KnowledgesEntity knowledge) {
+        NotifyConfigsDao dao = NotifyConfigsDao.get();
+        NotifyConfigsEntity entity = dao.selectOnKey(loginuser.getUserId());
+        if (!NotifyLogic.get().flagCheck(entity.getNotifyDesktop())) {
+            // デスクトップ通知対象外
+            return false;
+        }
+//  自分が登録した場合は、通知する必要無し？いったんは通知する
+//        if (knowledge.getInsertUser().intValue() == loginuser.getUserId().intValue()) {
+//             return false;
+//        }
+        if (!NotifyLogic.get().flagCheck(entity.getToItemSave())) {
+            // 自分宛てのナレッジが登録／更新されたら通知するがOFF
+            return false;
+        }
+        return isToKnowledge(loginuser, knowledge, entity);
+    }
+
+    /**
+     * 指定のナレッジは、自分宛てのナレッジかどうかを判定する 自分宛ては以下の場合を言う ・公開区分が「公開」でかつ、「公開」でも通知する設定になっている場合 ・公開区分が「保護」でかつ、宛先に自分が入っている場合
+     * 
+     * @param loginuser
+     * @param knowledge
+     * @param entity
+     * @return
+     */
+    private boolean isToKnowledge(LoginedUser loginuser, KnowledgesEntity knowledge, NotifyConfigsEntity entity) {
+        if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
+            // 公開のナレッジ
+            if (!NotifyLogic.get().flagCheck(entity.getToItemIgnorePublic())) {
+                // 公開も除外しない
+                return true;
+            }
+        } else if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
+            // 保護のナレッジ
+            KnowledgeGroupsDao knowledgeGroupsDao = KnowledgeGroupsDao.get();
+            List<KnowledgeGroupsEntity> groupsEntities = knowledgeGroupsDao.selectOnKnowledgeId(knowledge.getKnowledgeId());
+            List<GroupsEntity> groups = loginuser.getGroups();
+            for (KnowledgeGroupsEntity knowledgeGroupsEntity : groupsEntities) {
+                for (GroupsEntity groupsEntity : groups) {
+                    if (knowledgeGroupsEntity.getGroupId().intValue() == groupsEntity.getGroupId().intValue()) {
+                        return true;
+                    }
+                }
+            }
+
+            KnowledgeUsersDao knowledgeUsersDao = KnowledgeUsersDao.get();
+            List<KnowledgeUsersEntity> usersEntities = knowledgeUsersDao.selectOnKnowledgeId(knowledge.getKnowledgeId());
+            for (KnowledgeUsersEntity knowledgeUsersEntity : usersEntities) {
+                if (knowledgeUsersEntity.getUserId().intValue() == loginuser.getUserId().intValue()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
 }

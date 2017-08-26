@@ -20,6 +20,7 @@ import org.support.project.knowledge.config.NotifyType;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
+import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.dao.WebhookConfigsDao;
 import org.support.project.knowledge.dao.WebhooksDao;
 import org.support.project.knowledge.entity.CommentsEntity;
@@ -75,12 +76,17 @@ public class CommentInsertNotification extends AbstractQueueNotification impleme
     private List<Long> sendedCommentKnowledgeIds = new ArrayList<>();
     
     @Override
-    public NotifyQueuesEntity getQueue() {
+    public void insertNotifyQueue() {
         NotifyQueuesEntity entity = new NotifyQueuesEntity();
         entity.setHash(RandomUtil.randamGen(30));
         entity.setType(TYPE_KNOWLEDGE_COMMENT);
         entity.setId(comment.getCommentNo());
-        return entity;
+        
+        NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
+        NotifyQueuesEntity exist = notifyQueuesDao.selectOnTypeAndId(entity.getType(), entity.getId());
+        if (exist == null) {
+            notifyQueuesDao.insert(entity);
+        }
     }
     
     

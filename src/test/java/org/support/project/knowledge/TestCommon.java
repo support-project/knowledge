@@ -20,6 +20,9 @@ import org.support.project.common.util.RandomUtil;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.InitDB;
+import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.ormapping.tool.config.ORmappingToolConfig;
@@ -196,4 +199,16 @@ public abstract class TestCommon {
         return rolesEntities;
     }
 
+    protected KnowledgesEntity insertKnowledge(String title, LoginedUser loginedUser) throws Exception {
+        KnowledgesEntity entity = new KnowledgesEntity();
+        entity.setTitle(title);
+        entity.setContent("contens of " + title);
+        entity.setTypeId(-100);
+        entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
+        KnowledgeData data = new KnowledgeData();
+        data.setKnowledge(entity);
+        entity = KnowledgeLogic.get().insert(data, loginedUser);
+        return entity;
+    }
+    
 }

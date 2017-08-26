@@ -13,11 +13,11 @@ public interface QueueNotification extends Notification {
     int TYPE_KNOWLEDGE_LIKE = 21;
     
     /**
-     * メール通知のキューを取得
+     * メール通知のキューを保存
      * 
      * @return
      */
-    NotifyQueuesEntity getQueue();
+    void insertNotifyQueue();
     /**
      * 通知キューに入っている、通知を処理する
      * @param notifyQueue

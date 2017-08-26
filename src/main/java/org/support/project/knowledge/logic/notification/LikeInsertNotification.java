@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
+import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.RandomUtil;
@@ -17,6 +18,7 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
+import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.MailLocaleTemplatesEntity;
@@ -66,12 +68,17 @@ public class LikeInsertNotification extends AbstractQueueNotification implements
     }
 
     @Override
-    public NotifyQueuesEntity getQueue() {
+    public void insertNotifyQueue() {
         NotifyQueuesEntity entity = new NotifyQueuesEntity();
         entity.setHash(RandomUtil.randamGen(30));
         entity.setType(TYPE_KNOWLEDGE_LIKE);
         entity.setId(like.getNo());
-        return entity;
+        
+        NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
+        NotifyQueuesEntity exist = notifyQueuesDao.selectOnTypeAndId(entity.getType(), entity.getId());
+        if (exist == null) {
+            notifyQueuesDao.insert(entity);
+        }
     }
     
     @Override
@@ -226,7 +233,25 @@ public class LikeInsertNotification extends AbstractQueueNotification implements
     }
     @Override
     public MessageResult getMessage(LoginedUser loginuser, Locale locale) {
-        return NotifyLogic.get().getSaveLikeMessage(loginuser, locale, like);
+        NotifyConfigsDao dao = NotifyConfigsDao.get();
+        NotifyConfigsEntity entity = dao.selectOnKey(loginuser.getUserId());
+        if (!NotifyLogic.get().flagCheck(entity.getNotifyDesktop())) {
+            // デスクトップ通知対象外
+            return null;
+        }
+        KnowledgesDao knowledgesDao = KnowledgesDao.get();
+        KnowledgesEntity knowledge = knowledgesDao.selectOnKey(like.getKnowledgeId());
+
+        if (NotifyLogic.get().flagCheck(entity.getMyItemLike()) && knowledge.getInsertUser().intValue() == loginuser.getUserId().intValue()) {
+            // 自分で投稿したナレッジにイイネが押されたので通知
+            MessageResult messageResult = new MessageResult();
+            messageResult.setMessage(Resources.getInstance(locale).getResource("knowledge.notify.msg.desktop.myitem.like",
+                    String.valueOf(knowledge.getKnowledgeId())));
+            messageResult.setResult(NotifyLogic.get().makeURL(knowledge.getKnowledgeId())); // Knowledgeへのリンク
+            return messageResult;
+        }
+
+        return null;
     }
 
 }
