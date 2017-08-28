@@ -10,9 +10,10 @@ import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.MailEventLogic;
 import org.support.project.knowledge.logic.notification.CommentInsertNotification;
+import org.support.project.knowledge.logic.notification.CommentLikedNotification;
 import org.support.project.knowledge.logic.notification.KnowledgeUpdateNotification;
 import org.support.project.knowledge.logic.notification.LikeInsertNotification;
-import org.support.project.knowledge.vo.Notify;
+import org.support.project.knowledge.logic.notification.QueueNotification;
 
 /**
  * メッセージ処理を処理する定期的なバッチプログラム
@@ -52,13 +53,15 @@ public class NotifyMailBat extends AbstractBat {
         NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
         List<NotifyQueuesEntity> notifyQueuesEntities = notifyQueuesDao.selectAll();
         for (NotifyQueuesEntity notifyQueuesEntity : notifyQueuesEntities) {
-            if (notifyQueuesEntity.getType() == Notify.TYPE_KNOWLEDGE_INSERT 
-                    || notifyQueuesEntity.getType() == Notify.TYPE_KNOWLEDGE_UPDATE) {
+            if (notifyQueuesEntity.getType() == QueueNotification.TYPE_KNOWLEDGE_INSERT 
+                    || notifyQueuesEntity.getType() == QueueNotification.TYPE_KNOWLEDGE_UPDATE) {
                 KnowledgeUpdateNotification.get().notify(notifyQueuesEntity);
-            } else if (notifyQueuesEntity.getType() == Notify.TYPE_KNOWLEDGE_COMMENT) {
+            } else if (notifyQueuesEntity.getType() == QueueNotification.TYPE_KNOWLEDGE_COMMENT) {
                 CommentInsertNotification.get().notify(notifyQueuesEntity);
-            } else if (notifyQueuesEntity.getType() == Notify.TYPE_KNOWLEDGE_LIKE) {
+            } else if (notifyQueuesEntity.getType() == QueueNotification.TYPE_KNOWLEDGE_LIKE) {
                 LikeInsertNotification.get().notify(notifyQueuesEntity);
+            } else if (notifyQueuesEntity.getType() == QueueNotification.TYPE_COMMENT_LIKE) {
+                CommentLikedNotification.get().notify(notifyQueuesEntity);
             }
             // 通知のキューから削除
             //notifyQueuesDao.delete(notifyQueuesEntity);

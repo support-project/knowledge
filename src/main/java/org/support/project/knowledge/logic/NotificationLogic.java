@@ -9,6 +9,7 @@ import org.support.project.di.Container;
 import org.support.project.knowledge.logic.notification.AcceptCheckUserNotification;
 import org.support.project.knowledge.logic.notification.AddUserNotification;
 import org.support.project.knowledge.logic.notification.CommentInsertNotification;
+import org.support.project.knowledge.logic.notification.CommentLikedNotification;
 import org.support.project.knowledge.logic.notification.EventNotificationByWeek;
 import org.support.project.knowledge.logic.notification.KnowledgeUpdateNotification;
 import org.support.project.knowledge.logic.notification.LikeInsertNotification;
@@ -52,6 +53,8 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
             return CommentInsertNotification.get();
         } else if (MailLogic.NOTIFY_INSERT_LIKE_MYITEM.equals(category)) {
             return LikeInsertNotification.get();
+        } else if (MailLogic.NOTIFY_INSERT_LIKE_COMMENT_MYITEM.equals(category)) {
+            return CommentLikedNotification.get();
         } else if (MailLogic.NOTIFY_EVENT.equals(category)) {
             return EventNotificationByWeek.get();
         } else if (MailLogic.NOTIFY_REGISTRATION_EVENT.equals(category)) {

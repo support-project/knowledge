@@ -1192,8 +1192,12 @@ public class KnowledgeLogic {
         }
         LikeCommentsEntity like = new LikeCommentsEntity();
         like.setCommentNo(commentNo);
-        LikeCommentsDao.get().insert(like);
+        like = LikeCommentsDao.get().insert(like);
         Long count = LikeCommentsDao.get().selectOnCommentNo(commentNo);
+        
+        // 通知
+        NotifyLogic.get().notifyOnCommentLiked(like);
+
         return count;
     }
     

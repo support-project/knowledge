@@ -6,8 +6,10 @@ import java.util.Locale;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
+import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -16,6 +18,7 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
+import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.MailLocaleTemplatesEntity;
@@ -27,6 +30,7 @@ import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
 import org.support.project.knowledge.vo.notification.LikeInsert;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.MessageResult;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.NotificationsDao;
@@ -42,8 +46,8 @@ import net.arnx.jsonic.JSON;
  * イイネが押されたことを通知
  * @author koda
  */
-@DI(instance = Instance.Singleton)
-public class LikeInsertNotification extends AbstractQueueNotification {
+@DI(instance = Instance.Prototype)
+public class LikeInsertNotification extends AbstractQueueNotification implements DesktopNotification {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(LikeInsertNotification.class);
     /** インスタンス取得 */
@@ -53,6 +57,29 @@ public class LikeInsertNotification extends AbstractQueueNotification {
 
     /** like id what is sended */
     private List<Long> sendedLikeKnowledgeIds = new ArrayList<>();
+    
+    /** Added LikesEntity */
+    private LikesEntity like;
+    public LikesEntity getLike() {
+        return like;
+    }
+    public void setLike(LikesEntity like) {
+        this.like = like;
+    }
+
+    @Override
+    public void insertNotifyQueue() {
+        NotifyQueuesEntity entity = new NotifyQueuesEntity();
+        entity.setHash(RandomUtil.randamGen(30));
+        entity.setType(TYPE_KNOWLEDGE_LIKE);
+        entity.setId(like.getNo());
+        
+        NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
+        NotifyQueuesEntity exist = notifyQueuesDao.selectOnTypeAndId(entity.getType(), entity.getId());
+        if (exist == null) {
+            notifyQueuesDao.insert(entity);
+        }
+    }
     
     @Override
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
@@ -98,7 +125,7 @@ public class LikeInsertNotification extends AbstractQueueNotification {
                 // メール送信
                 Locale locale = user.getLocale();
                 MailLocaleTemplatesEntity template = MailLogic.get().load(locale, MailLogic.NOTIFY_INSERT_LIKE_MYITEM);
-                sendLikeMail(like, knowledge, likeUser, user, template);
+                sendLikeMail(knowledge, likeUser, user, template);
             }
         }
     }
@@ -130,8 +157,8 @@ public class LikeInsertNotification extends AbstractQueueNotification {
      * @param template
      * @throws Exception 
      */
-    private void sendLikeMail(LikesEntity like, KnowledgesEntity knowledge, UsersEntity likeUser, UsersEntity user, MailLocaleTemplatesEntity template)
-            throws Exception {
+    public void sendLikeMail(KnowledgesEntity knowledge, UsersEntity likeUser, UsersEntity user,
+            MailLocaleTemplatesEntity template) throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
         if (mailConfigsEntity == null) {
@@ -201,8 +228,28 @@ public class LikeInsertNotification extends AbstractQueueNotification {
             contents = contents.replace("{LikeInsertUser}", info.getLikeInsertUser());
             notificationsEntity.setContent(contents);
         }
-        
+    }
+    @Override
+    public MessageResult getMessage(LoginedUser loginuser, Locale locale) {
+        NotifyConfigsDao dao = NotifyConfigsDao.get();
+        NotifyConfigsEntity entity = dao.selectOnKey(loginuser.getUserId());
+        if (!NotifyLogic.get().flagCheck(entity.getNotifyDesktop())) {
+            // デスクトップ通知対象外
+            return null;
+        }
+        KnowledgesDao knowledgesDao = KnowledgesDao.get();
+        KnowledgesEntity knowledge = knowledgesDao.selectOnKey(like.getKnowledgeId());
 
+        if (NotifyLogic.get().flagCheck(entity.getMyItemLike()) && knowledge.getInsertUser().intValue() == loginuser.getUserId().intValue()) {
+            // 自分で投稿したナレッジにイイネが押されたので通知
+            MessageResult messageResult = new MessageResult();
+            messageResult.setMessage(Resources.getInstance(locale).getResource("knowledge.notify.msg.desktop.myitem.like",
+                    String.valueOf(knowledge.getKnowledgeId())));
+            messageResult.setResult(NotifyLogic.get().makeURL(knowledge.getKnowledgeId())); // Knowledgeへのリンク
+            return messageResult;
+        }
+
+        return null;
     }
 
 }

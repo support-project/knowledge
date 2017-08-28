@@ -7,13 +7,14 @@ Comment was added：{KnowledgeId}
 {URL}
 
 ------------------------------------------
-{CommentInsertUser}
+User: {CommentInsertUser}
 
-{CommentContents}
+Comment: {CommentContents}
 
 ------------------------------------------
-{KnowledgeTitle}
+Title: {KnowledgeTitle}
 
+------------------------------------------
 {Contents}
 
 ------------------------------------------

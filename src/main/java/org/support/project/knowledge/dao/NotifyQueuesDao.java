@@ -1,5 +1,7 @@
 package org.support.project.knowledge.dao;
 
+import java.util.List;
+
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -24,6 +26,16 @@ public class NotifyQueuesDao extends GenNotifyQueuesDao {
         return Container.getComp(NotifyQueuesDao.class);
     }
 
+    /**
+     * Select all data that not deleted.
+     * @return all data
+     */
+    @Override
+    public List<NotifyQueuesEntity> selectAll() { 
+        String sql = "SELECT * FROM NOTIFY_QUEUES WHERE DELETE_FLAG = 0 ORDER BY INSERT_DATETIME ASC;";
+        return executeQueryList(sql, NotifyQueuesEntity.class);
+    }
+    
     /**
      * 通知キューに、同一の通知種類／IDの情報が無いか検索する
      * 

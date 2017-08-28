@@ -6,8 +6,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.support.project.aop.Aspect;
+import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -17,11 +19,14 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.NotifyType;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
+import org.support.project.knowledge.dao.NotifyConfigsDao;
+import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.dao.WebhookConfigsDao;
 import org.support.project.knowledge.dao.WebhooksDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.MailLocaleTemplatesEntity;
+import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
 import org.support.project.knowledge.entity.WebhooksEntity;
@@ -33,6 +38,7 @@ import org.support.project.knowledge.logic.NotifyLogic;
 import org.support.project.knowledge.logic.WebhookLogic;
 import org.support.project.knowledge.vo.notification.CommentInsert;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.MessageResult;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.NotificationsDao;
@@ -48,8 +54,8 @@ import net.arnx.jsonic.JSON;
  * ナレッジにコメントが登録された場合の通知
  * @author koda
  */
-@DI(instance = Instance.Singleton)
-public class CommentInsertNotification extends AbstractQueueNotification {
+@DI(instance = Instance.Prototype)
+public class CommentInsertNotification extends AbstractQueueNotification implements DesktopNotification {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(CommentInsertNotification.class);
     /** インスタンス取得 */
@@ -57,8 +63,32 @@ public class CommentInsertNotification extends AbstractQueueNotification {
         return Container.getComp(CommentInsertNotification.class);
     }
 
+    /** Added CommentsEntity */
+    private CommentsEntity comment;
+    public CommentsEntity getComment() {
+        return comment;
+    }
+    public void setComment(CommentsEntity comment) {
+        this.comment = comment;
+    }
+
     /** knowledge id what is sended */
     private List<Long> sendedCommentKnowledgeIds = new ArrayList<>();
+    
+    @Override
+    public void insertNotifyQueue() {
+        NotifyQueuesEntity entity = new NotifyQueuesEntity();
+        entity.setHash(RandomUtil.randamGen(30));
+        entity.setType(TYPE_KNOWLEDGE_COMMENT);
+        entity.setId(comment.getCommentNo());
+        
+        NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
+        NotifyQueuesEntity exist = notifyQueuesDao.selectOnTypeAndId(entity.getType(), entity.getId());
+        if (exist == null) {
+            notifyQueuesDao.insert(entity);
+        }
+    }
+    
     
     @Override
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
@@ -155,7 +185,8 @@ public class CommentInsertNotification extends AbstractQueueNotification {
      * @param user メールの送信先
      * @throws Exception 
      */
-    private void sendCommentMail(CommentsEntity comment, KnowledgesEntity knowledge, UsersEntity commentUser, UsersEntity user, MailLocaleTemplatesEntity template)
+    private void sendCommentMail(CommentsEntity comment, KnowledgesEntity knowledge, UsersEntity commentUser,
+            UsersEntity user, MailLocaleTemplatesEntity template)
             throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
@@ -255,6 +286,44 @@ public class CommentInsertNotification extends AbstractQueueNotification {
             
             notificationsEntity.setContent(contents);
         }
+    }
+    @Override
+    public MessageResult getMessage(LoginedUser loginuser, Locale locale) {
+        NotifyConfigsDao dao = NotifyConfigsDao.get();
+        NotifyConfigsEntity entity = dao.selectOnKey(loginuser.getUserId()); // ログインユーザのデスクトップ通知設定
+        if (!NotifyLogic.get().flagCheck(entity.getNotifyDesktop())) {
+            // デスクトップ通知対象外
+            return null;
+        }
+        
+        KnowledgesDao knowledgesDao = KnowledgesDao.get();
+        KnowledgesEntity knowledge = knowledgesDao.selectOnKey(comment.getKnowledgeId());
+        // 登録者に通知
+        UsersEntity user = NotifyCommentLogic.get().getInsertUserOnComment(NotifyType.Desktop, comment, knowledge);
+        if (user != null) {
+            if (user.getUserId().intValue() == loginuser.getUserId().intValue()) {
+                // ログインユーザはナレッジ登録者で、自分の登録したナレッジにコメントがついたら通知を希望
+                MessageResult messageResult = new MessageResult();
+                messageResult.setMessage(Resources.getInstance(locale).getResource("knowledge.notify.msg.desktop.myitem.comment",
+                        StringUtils.abbreviate(knowledge.getTitle(), 80)));
+                messageResult.setResult(NotifyLogic.get().makeURL(knowledge.getKnowledgeId())); // Knowledgeへのリンク
+                return messageResult;
+            }
+        }
+        // 宛先のナレッジにコメント追加で通知が欲しいユーザに通知
+        List<UsersEntity> users = NotifyCommentLogic.get().getTargetUsersOnComment(NotifyType.Desktop, comment, knowledge);
+        for (UsersEntity target : users) {
+            if (target.getUserId().intValue() == loginuser.getUserId().intValue()) {
+                // 自分宛てのナレッジにコメントがついたので通知
+                MessageResult messageResult = new MessageResult();
+                messageResult.setMessage(
+                        Resources.getInstance(locale).getResource("knowledge.notify.msg.desktop.to.comment",
+                                StringUtils.abbreviate(knowledge.getTitle(), 80)));
+                messageResult.setResult(NotifyLogic.get().makeURL(knowledge.getKnowledgeId())); // Knowledgeへのリンク
+                return messageResult;
+            }
+        }
+        return null;
     }
 
 }

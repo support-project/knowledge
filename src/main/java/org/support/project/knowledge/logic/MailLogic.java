@@ -67,6 +67,7 @@ public class MailLogic {
     public static final String NOTIFY_INSERT_KNOWLEDGE = "notify_insert_knowledge";
     public static final String NOTIFY_UPDATE_KNOWLEDGE = "notify_update_knowledge";
     public static final String NOTIFY_INSERT_LIKE_MYITEM = "notify_insert_like_myitem";
+    public static final String NOTIFY_INSERT_LIKE_COMMENT_MYITEM = "notify_insert_like_my_comment_item";
     public static final String NOTIFY_INSERT_COMMENT = "notify_insert_comment";
     public static final String NOTIFY_INSERT_COMMENT_MYITEM = "notify_insert_comment_myitem";
     public static final String NOTIFY_ADD_PARTICIPATE = "notify_add_participate";
@@ -76,7 +77,7 @@ public class MailLogic {
     public static final String NOTIFY_EVENT = "notify_event";
     
     
-    public static String[] TEMPLATE_IDS = {
+    public static final String[] TEMPLATE_IDS = {
         INVITATION, MAIL_CONFIRM, NOTIFY_ACCEPT_USER, NOTIFY_ADD_USER,
         NOTIFY_INSERT_COMMENT_MYITEM, NOTIFY_INSERT_COMMENT, NOTIFY_INSERT_KNOWLEDGE,
         NOTIFY_INSERT_LIKE_MYITEM, NOTIFY_UPDATE_KNOWLEDGE, PASSWORD_RESET, TEST_MAIL,
@@ -154,7 +155,8 @@ public class MailLogic {
      * @throws NoSuchAlgorithmException 
      * @throws InvalidKeyException 
      */
-    public void startSendMails() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+    public void startSendMails() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
+        IllegalBlockSizeException, BadPaddingException {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
         if (mailConfigsEntity == null) {
@@ -214,7 +216,8 @@ public class MailLogic {
      * @throws IllegalBlockSizeException
      * @throws BadPaddingException
      */
-    private Session getSession(MailConfigsEntity config) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+    private Session getSession(MailConfigsEntity config) throws InvalidKeyException, NoSuchAlgorithmException,
+        NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         String host = config.getHost();
         String port = String.valueOf(config.getPort());
         
@@ -279,7 +282,8 @@ public class MailLogic {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      */
-    private void mailSend(Session session, MailConfigsEntity config, MailsEntity entity) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
+    private void mailSend(Session session, MailConfigsEntity config, MailsEntity entity)
+            throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
             IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, MessagingException {
         String to = entity.getToAddress();
         String toName = entity.getToName();
