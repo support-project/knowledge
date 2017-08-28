@@ -67,6 +67,7 @@ public class MailLogic {
     public static final String NOTIFY_INSERT_KNOWLEDGE = "notify_insert_knowledge";
     public static final String NOTIFY_UPDATE_KNOWLEDGE = "notify_update_knowledge";
     public static final String NOTIFY_INSERT_LIKE_MYITEM = "notify_insert_like_myitem";
+    public static final String NOTIFY_INSERT_LIKE_COMMENT_MYITEM = "notify_insert_like_my_comment_item";
     public static final String NOTIFY_INSERT_COMMENT = "notify_insert_comment";
     public static final String NOTIFY_INSERT_COMMENT_MYITEM = "notify_insert_comment_myitem";
     public static final String NOTIFY_ADD_PARTICIPATE = "notify_add_participate";

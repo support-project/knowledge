@@ -12,8 +12,10 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.LikeCommentsEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.logic.notification.CommentInsertNotification;
+import org.support.project.knowledge.logic.notification.CommentLikedNotification;
 import org.support.project.knowledge.logic.notification.DesktopNotification;
 import org.support.project.knowledge.logic.notification.KnowledgeUpdateNotification;
 import org.support.project.knowledge.logic.notification.LikeInsertNotification;
@@ -155,6 +157,14 @@ public class NotifyLogic {
         CommentInsertNotification notify = CommentInsertNotification.get();
         notify.setComment(commentsEntity);
         notify.setType(QueueNotification.TYPE_KNOWLEDGE_COMMENT);
+        notify.insertNotifyQueue();
+        notifyDeskTop(notify);
+    }
+    
+    public void notifyOnCommentLiked(LikeCommentsEntity like) {
+        CommentLikedNotification notify = CommentLikedNotification.get();
+        notify.setLike(like);
+        notify.setType(QueueNotification.TYPE_COMMENT_LIKE);
         notify.insertNotifyQueue();
         notifyDeskTop(notify);
     }

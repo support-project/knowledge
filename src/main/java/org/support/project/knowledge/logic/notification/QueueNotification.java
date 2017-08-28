@@ -11,6 +11,8 @@ public interface QueueNotification extends Notification {
     int TYPE_KNOWLEDGE_COMMENT = 11;
     /** notify type: add like */
     int TYPE_KNOWLEDGE_LIKE = 21;
+    /** notify type: add like */
+    int TYPE_COMMENT_LIKE = 22;
     
     /**
      * メール通知のキューを保存

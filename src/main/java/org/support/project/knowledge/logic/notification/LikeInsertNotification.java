@@ -125,7 +125,7 @@ public class LikeInsertNotification extends AbstractQueueNotification implements
                 // メール送信
                 Locale locale = user.getLocale();
                 MailLocaleTemplatesEntity template = MailLogic.get().load(locale, MailLogic.NOTIFY_INSERT_LIKE_MYITEM);
-                sendLikeMail(like, knowledge, likeUser, user, template);
+                sendLikeMail(knowledge, likeUser, user, template);
             }
         }
     }
@@ -157,7 +157,7 @@ public class LikeInsertNotification extends AbstractQueueNotification implements
      * @param template
      * @throws Exception 
      */
-    private void sendLikeMail(LikesEntity like, KnowledgesEntity knowledge, UsersEntity likeUser, UsersEntity user,
+    public void sendLikeMail(KnowledgesEntity knowledge, UsersEntity likeUser, UsersEntity user,
             MailLocaleTemplatesEntity template) throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
@@ -228,8 +228,6 @@ public class LikeInsertNotification extends AbstractQueueNotification implements
             contents = contents.replace("{LikeInsertUser}", info.getLikeInsertUser());
             notificationsEntity.setContent(contents);
         }
-        
-
     }
     @Override
     public MessageResult getMessage(LoginedUser loginuser, Locale locale) {
