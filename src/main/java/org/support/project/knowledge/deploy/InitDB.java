@@ -7,6 +7,8 @@ import java.util.TimeZone;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.PropertyUtil;
+import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.deploy.v0_0_1.InitializeSystem;
 import org.support.project.knowledge.deploy.v0_4_4.Migrate_0_4_4;
 import org.support.project.knowledge.deploy.v0_5_0.Migrate_0_5_0;
@@ -22,6 +24,7 @@ import org.support.project.knowledge.deploy.v1_10_0.Migrate_1_10_1;
 import org.support.project.knowledge.deploy.v1_10_0.Migrate_1_10_2;
 import org.support.project.knowledge.deploy.v1_11_0.Migrate_1_11_0;
 import org.support.project.knowledge.deploy.v1_11_0.Migrate_1_11_1;
+import org.support.project.knowledge.deploy.v1_11_0.Migrate_1_11_2;
 import org.support.project.knowledge.deploy.v1_1_0pre1.Migrate_1_1_0pre1;
 import org.support.project.knowledge.deploy.v1_4_0.Migrate_1_4_0;
 import org.support.project.knowledge.deploy.v1_5_0.Migrate_1_5_0;
@@ -37,6 +40,7 @@ import org.support.project.knowledge.deploy.v1_8_0.Migrate_1_8_4;
 import org.support.project.knowledge.deploy.v1_8_0.Migrate_1_8_5;
 import org.support.project.web.dao.SystemsDao;
 import org.support.project.web.entity.SystemsEntity;
+import org.support.project.web.logic.DBConnenctionLogic;
 
 public class InitDB {
     /** ログ */
@@ -46,7 +50,7 @@ public class InitDB {
     private static final Map<String, Migrate> MAP = new LinkedHashMap<>();
 
     private static final Migrate INIT = InitializeSystem.get();
-    public static final String CURRENT = "1.11.1";
+    public static final String CURRENT = "1.11.2";
 
     public InitDB() {
         super();
@@ -78,6 +82,7 @@ public class InitDB {
         MAP.put("1.10.2", Migrate_1_10_2.get());
         MAP.put("1.11.0", Migrate_1_11_0.get());
         MAP.put("1.11.1", Migrate_1_11_1.get());
+        MAP.put("1.11.2", Migrate_1_11_2.get());
     }
 
     public static void main(String[] args) throws Exception {
@@ -85,8 +90,39 @@ public class InitDB {
         TimeZone zone = TimeZone.getTimeZone("GMT");
         TimeZone.setDefault(zone);
 
+        AppConfig.get();
+        String envValue = System.getenv(AppConfig.getEnvKey());
+        LOG.info("migrate is start.");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Env [" + AppConfig.getEnvKey() + "] is [" + envValue + "].");
+            LOG.debug("Config :" + PropertyUtil.reflectionToString(AppConfig.get()));
+        }
+        DBConnenctionLogic.get().connectCustomConnection();
+        
         InitDB init = new InitDB();
         init.start();
+    }
+    
+    private String doInit() throws Exception {
+        String version = CURRENT;
+        Migrate migrate = INIT;
+        doMigrate(migrate, version);
+        return CURRENT;
+    }
+    public String init() throws Exception {
+        SystemsDao dao = SystemsDao.get();
+        try {
+            SystemsEntity entity = dao.selectOnKey(SYSTEM_NAME);
+            if (entity != null) {
+                LOG.info("The database of this service is arleady inited. database version is " + entity.getVersion() + ".");
+                return entity.getVersion();
+            } else {
+                return doInit();
+            }
+        } catch (Exception e) {
+            // テーブルが存在しない（初めての起動）
+            return doInit();
+        }
     }
 
     public void start() throws Exception {

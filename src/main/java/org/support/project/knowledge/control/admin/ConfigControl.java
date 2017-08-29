@@ -21,10 +21,12 @@ import org.support.project.web.dao.LdapConfigsDao;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.SystemAttributesDao;
 import org.support.project.web.dao.SystemConfigsDao;
+import org.support.project.web.dao.SystemsDao;
 import org.support.project.web.entity.LdapConfigsEntity;
 import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.SystemAttributesEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
+import org.support.project.web.entity.SystemsEntity;
 
 @DI(instance = Instance.Prototype)
 public class ConfigControl extends Control {
@@ -137,6 +139,11 @@ public class ConfigControl extends Control {
         config = dao.selectOnKey(SystemConfig.LIKE_CONFIG, AppConfig.get().getSystemName());
         if (config != null) {
             setAttribute("like_config", config.getConfigValue());
+        }
+        
+        SystemsEntity entity = SystemsDao.get().selectOnKey(AppConfig.get().getSystemName());
+        if (entity != null) {
+            setAttribute("db_version", entity.getVersion());
         }
         
         return forward("system.jsp");

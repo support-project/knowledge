@@ -47,6 +47,165 @@ ShowTag=1
 ShowCommonAttributes=0
 
 [Relation]
+Entity1=BADGES
+Entity2=USER_BADGES
+RelationType1=2
+RelationType2=3
+Fields1=NO
+Fields2=NO
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,5330,5968,5735,R,R
+Dependence=1
+Caption=
+PName=
+ModifiedDateTime=20170829163644
+LineMode=0
+Bar1=533
+Bar2=597
+Bar3=574
+TermPos1=R
+TermPos2=R
+
+[Relation]
+Entity1=USERS
+Entity2=USER_BADGES
+RelationType1=1
+RelationType2=3
+Fields1=USER_ID
+Fields2=USER_ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,4363,5637,3229,R,R
+Dependence=1
+Caption=
+PName=
+LineMode=0
+Bar1=436
+Bar2=564
+Bar3=323
+TermPos1=R
+TermPos2=R
+
+[Entity]
+PName=USER_BADGES
+LName=ユーザの称号
+Comment=
+TableOption=
+Page=Main
+Left=2950
+Top=850
+Field="ユーザID","USER_ID","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
+Field="番号","NO","INTEGER","NOT NULL",1,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170829163555
+Position="Main",2950,850
+
+[Comment]
+Comment=種類 / ターゲット : 意味\n------------------------\n1 / knowledge_id : ナレッジを登録した [+]\n2 / knowledge_id : ナレッジを参照した [+]\n3 / knowledge_id : ナレッジにイイネを押した [+]\n4 / knowledge_id : ナレッジにイイネが押された\n5 / knowledge_id : イベントに参加登録した [+]\n6 / knowledge_id : イベント参加者が増えた\n7 / knowledge_id : ナレッジがストックされた [+]\n8 / knowledge_id : ナレッジのアンケートに回答した [+]\n9 / knowledge_id : ナレッジのアンケートに回答があった\n10 / knowledge_id : ナレッジにコメントが登録された [+]\n11 / knowledge_id : コメントにイイネが押された [+]\n\n101 / knowledge_id : 参加をやめた（マイナス）\n\n1002 / comment_no : コメントを登録した\n1003 / comment_no : コメントにイイネを押した\n1004 / comment_no : コメントにイイネが押された\n\nユーザのポイントは、USER_CONFIGSテーブルへ格納する\n\n\n\n
+FontName=Tahoma
+FontBold=0
+FontItalic=0
+FontUnderline=0
+FontSize=6
+FontColor=$000000
+LineColor=$000000
+BkColor=$FFFFFF
+Page=Main
+Left=3500
+Top=950
+Width=564
+Height=586
+
+[Relation]
+Entity1=USERS
+Entity2=ACTIVITIES
+RelationType1=2
+RelationType2=3
+Fields1=USER_ID
+Fields2=USER_ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,3081,6033,4726,R,R
+Dependence=1
+Caption=
+PName=
+ModifiedDateTime=20170829161626
+LineMode=0
+Bar1=308
+Bar2=603
+Bar3=473
+TermPos1=R
+TermPos2=R
+
+[Entity]
+PName=ACTIVITIES
+LName=アクティビティ
+Comment=
+TableOption=
+Page=Main
+Left=3500
+Top=800
+Field="番号","NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ユーザID","USER_ID","INTEGER","NOT NULL",,"","",$FFFFFFFF,""
+Field="種類","TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="ターゲットID","TARGET","BIGINT","NOT NULL",,"","",$FFFFFFFF,""
+Field="獲得ポイント","POINT","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Index=IDX_ACTIVITIES_USER_ID=0,USER_ID
+Index=IDX_ACTIVITIES_TYPE_TARGET=0,TYPE,TARGET
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170829163512
+Position="Main",3500,800
+
+[Entity]
+PName=USERS
+LName=ユーザ
+Comment=
+TableOption=
+Page=Main
+Left=3500
+Top=500
+Field="ユーザID","USER_ID","SERIAL","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ユーザKEY","USER_KEY","@VARCHAR(256)","NOT NULL",,"","ユニーク",$FFFFFFFF,""
+Field="ユーザ名","USER_NAME","@VARCHAR(256)","NOT NULL",,"","",$FFFFFFFF,""
+Field="パスワード","PASSWORD","@VARCHAR(1024)","NOT NULL",,"","ハッシュ(不可逆)",$FFFFFFFF,""
+Field="SALT","SALT","@VARCHAR(1024)",,,"","",$FFFFFFFF,""
+Field="ロケール","LOCALE_KEY","@VARCHAR(12)",,,"","",$FFFFFFFF,""
+Field="メールアドレス","MAIL_ADDRESS","@VARCHAR(256)",,,"","",$FFFFFFFF,""
+Field="LDAP認証ユーザかどうか","AUTH_LDAP","@INT",,,"","",$FFFFFFFF,""
+Index=IDX_USERS_USER_KEY=1,USER_KEY
+NoDDL=1
+UsingCommonColumns=0
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170829160846
+Position="Main",3500,500
+
+[Entity]
+PName=BADGES
+LName=称号
+Comment=
+TableOption=
+Page=Main
+Left=2900
+Top=600
+Field="番号","NO","SERIAL","NOT NULL",0,"","",$FFFFFFFF,""
+Field="名称","NAME","@VARCHAR(128)","NOT NULL",,"","",$FFFFFFFF,""
+Field="表示名","DISPLAY_TEXT","@VARCHAR(32)","NOT NULL",,"","",$FFFFFFFF,""
+Field="説明","DESCRIPTION","text",,,"","",$FFFFFFFF,""
+Field="画像の種類","IMAGE_CATEGORY","@INT",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170829161444
+Position="Main",2900,600
+
+[Relation]
 Entity1=COMMENTS
 Entity2=LIKE_COMMENTS
 RelationType1=1
@@ -71,7 +230,7 @@ PName=LIKE_COMMENTS
 LName=コメントのイイネ
 Comment=
 TableOption=
-Page=Main
+Page=MAIN
 Left=1600
 Top=1450
 Field="NO","NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
@@ -82,7 +241,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170809123907
-Position="Main",1600,1450
+Position="MAIN",1600,1450
 
 [Entity]
 PName=TOKENS
@@ -266,7 +425,7 @@ Fields1=KNOWLEDGE_ID
 Fields2=ITEM_NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4194,5115,6198,R,R
+Position="MAIN",0,4194,5115,6185,R,R
 Dependence=0
 Caption=
 PName=
@@ -274,7 +433,7 @@ ModifiedDateTime=20170220204434
 LineMode=0
 Bar1=419
 Bar2=512
-Bar3=620
+Bar3=618
 TermPos1=R
 TermPos2=R
 
@@ -305,7 +464,7 @@ Fields1=KNOWLEDGE_ID
 Fields2=KNOWLEDGE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4662,4335,5353,R,R
+Position="MAIN",0,4662,4335,5351,R,R
 Dependence=0
 Caption=
 PName=
@@ -458,7 +617,7 @@ Fields1=KNOWLEDGE_ID
 Fields2=KNOWLEDGE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4320,4611,5418,R,R
+Position="MAIN",0,4320,4611,5405,R,R
 Dependence=1
 Caption=
 PName=
@@ -466,7 +625,7 @@ ModifiedDateTime=20170222215225
 LineMode=0
 Bar1=432
 Bar2=461
-Bar3=542
+Bar3=540
 TermPos1=R
 TermPos2=R
 
@@ -608,7 +767,7 @@ Fields1=HOOK_ID
 Fields2=HOOK
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4124,4194,3043,R,R
+Position="MAIN",0,4124,4194,3050,R,R
 Dependence=0
 Caption=
 PName=
@@ -616,7 +775,7 @@ ModifiedDateTime=20161206104307
 LineMode=0
 Bar1=412
 Bar2=419
-Bar3=304
+Bar3=305
 TermPos1=R
 TermPos2=R
 
@@ -1432,7 +1591,7 @@ Fields1=KNOWLEDGE_ID
 Fields2=KNOWLEDGE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,2082,5725,4638,R,R
+Position="MAIN",0,2082,5725,4629,R,R
 Dependence=1
 Caption=
 PName=
@@ -1440,7 +1599,7 @@ ModifiedDateTime=20150910042925
 LineMode=0
 Bar1=208
 Bar2=572
-Bar3=464
+Bar3=463
 TermPos1=R
 TermPos2=R
 
@@ -1670,10 +1829,11 @@ Field="コメント件数","COMMENT_COUNT","@INT",,,"","",$FFFFFFFF,""
 Field="参照件数","VIEW_COUNT","bigint",,,"","",$FFFFFFFF,""
 Field="テンプレートの種類ID","TYPE_ID","@INT",,,"","",$FFFFFFFF,""
 Field="通知ステータス","NOTIFY_STATUS","@INT",,,"","",$FFFFFFFF,""
+Field="ポイント","POINT","@INT","NOT NULL",,"0","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170705135801
+ModifiedDateTime=20170829164715
 Position="MAIN",700,1100
 
 [Comment]
