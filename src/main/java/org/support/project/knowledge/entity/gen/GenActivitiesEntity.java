@@ -17,10 +17,10 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 
 /**
- * ナレッジ
+ * アクティビティ
  */
 @DI(instance = Instance.Prototype)
-public class GenKnowledgesEntity implements Serializable {
+public class GenActivitiesEntity implements Serializable {
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
@@ -29,49 +29,35 @@ public class GenKnowledgesEntity implements Serializable {
      * Get instance from DI container.
      * @return instance
      */
-    public static GenKnowledgesEntity get() {
-        return Container.getComp(GenKnowledgesEntity.class);
+    public static GenActivitiesEntity get() {
+        return Container.getComp(GenActivitiesEntity.class);
     }
 
     /**
      * Constructor.
      */
-    public GenKnowledgesEntity() {
+    public GenActivitiesEntity() {
         super();
     }
 
     /**
      * Constructor
-     * @param knowledgeId ナレッジID
+     * @param no 番号
      */
 
-    public GenKnowledgesEntity(Long knowledgeId) {
+    public GenActivitiesEntity(Long no) {
         super();
-        this.knowledgeId = knowledgeId;
+        this.no = no;
     }
-    /** ナレッジID */
-    private Long knowledgeId;
-    /** タイトル */
-    private String title;
-    /** 内容 */
-    private String content;
-    /** 公開区分 */
-    private Integer publicFlag;
-    /** タグID一覧 */
-    private String tagIds;
-    /** タグ名称一覧 */
-    private String tagNames;
-    /** いいね件数 */
-    private Long likeCount;
-    /** コメント件数 */
-    private Integer commentCount;
-    /** 参照件数 */
-    private Long viewCount;
-    /** テンプレートの種類ID */
-    private Integer typeId;
-    /** 通知ステータス */
-    private Integer notifyStatus;
-    /** ポイント */
+    /** 番号 */
+    private Long no;
+    /** ユーザID */
+    private Integer userId;
+    /** 種類 */
+    private Integer type;
+    /** ターゲットID */
+    private Long target;
+    /** 獲得ポイント */
     private Integer point;
     /** 登録ユーザ */
     private Integer insertUser;
@@ -85,193 +71,81 @@ public class GenKnowledgesEntity implements Serializable {
     private Integer deleteFlag;
 
     /**
-     * Get ナレッジID.
-     * @return ナレッジID
+     * Get 番号.
+     * @return 番号
      */
-    public Long getKnowledgeId() {
-        return this.knowledgeId;
+    public Long getNo() {
+        return this.no;
     }
     /**
-     * Set ナレッジID.
-     * @param knowledgeId ナレッジID
+     * Set 番号.
+     * @param no 番号
      * @return this object     */
-    public GenKnowledgesEntity setKnowledgeId(Long knowledgeId) {
-        this.knowledgeId = knowledgeId;
+    public GenActivitiesEntity setNo(Long no) {
+        this.no = no;
         return this;
     }
 
     /**
-     * Get タイトル.
-     * @return タイトル
+     * Get ユーザID.
+     * @return ユーザID
      */
-    public String getTitle() {
-        return this.title;
+    public Integer getUserId() {
+        return this.userId;
     }
     /**
-     * Set タイトル.
-     * @param title タイトル
+     * Set ユーザID.
+     * @param userId ユーザID
      * @return this object     */
-    public GenKnowledgesEntity setTitle(String title) {
-        this.title = title;
+    public GenActivitiesEntity setUserId(Integer userId) {
+        this.userId = userId;
         return this;
     }
 
     /**
-     * Get 内容.
-     * @return 内容
+     * Get 種類.
+     * @return 種類
      */
-    public String getContent() {
-        return this.content;
+    public Integer getType() {
+        return this.type;
     }
     /**
-     * Set 内容.
-     * @param content 内容
+     * Set 種類.
+     * @param type 種類
      * @return this object     */
-    public GenKnowledgesEntity setContent(String content) {
-        this.content = content;
+    public GenActivitiesEntity setType(Integer type) {
+        this.type = type;
         return this;
     }
 
     /**
-     * Get 公開区分.
-     * @return 公開区分
+     * Get ターゲットID.
+     * @return ターゲットID
      */
-    public Integer getPublicFlag() {
-        return this.publicFlag;
+    public Long getTarget() {
+        return this.target;
     }
     /**
-     * Set 公開区分.
-     * @param publicFlag 公開区分
+     * Set ターゲットID.
+     * @param target ターゲットID
      * @return this object     */
-    public GenKnowledgesEntity setPublicFlag(Integer publicFlag) {
-        this.publicFlag = publicFlag;
+    public GenActivitiesEntity setTarget(Long target) {
+        this.target = target;
         return this;
     }
 
     /**
-     * Get タグID一覧.
-     * @return タグID一覧
-     */
-    public String getTagIds() {
-        return this.tagIds;
-    }
-    /**
-     * Set タグID一覧.
-     * @param tagIds タグID一覧
-     * @return this object     */
-    public GenKnowledgesEntity setTagIds(String tagIds) {
-        this.tagIds = tagIds;
-        return this;
-    }
-
-    /**
-     * Get タグ名称一覧.
-     * @return タグ名称一覧
-     */
-    public String getTagNames() {
-        return this.tagNames;
-    }
-    /**
-     * Set タグ名称一覧.
-     * @param tagNames タグ名称一覧
-     * @return this object     */
-    public GenKnowledgesEntity setTagNames(String tagNames) {
-        this.tagNames = tagNames;
-        return this;
-    }
-
-    /**
-     * Get いいね件数.
-     * @return いいね件数
-     */
-    public Long getLikeCount() {
-        return this.likeCount;
-    }
-    /**
-     * Set いいね件数.
-     * @param likeCount いいね件数
-     * @return this object     */
-    public GenKnowledgesEntity setLikeCount(Long likeCount) {
-        this.likeCount = likeCount;
-        return this;
-    }
-
-    /**
-     * Get コメント件数.
-     * @return コメント件数
-     */
-    public Integer getCommentCount() {
-        return this.commentCount;
-    }
-    /**
-     * Set コメント件数.
-     * @param commentCount コメント件数
-     * @return this object     */
-    public GenKnowledgesEntity setCommentCount(Integer commentCount) {
-        this.commentCount = commentCount;
-        return this;
-    }
-
-    /**
-     * Get 参照件数.
-     * @return 参照件数
-     */
-    public Long getViewCount() {
-        return this.viewCount;
-    }
-    /**
-     * Set 参照件数.
-     * @param viewCount 参照件数
-     * @return this object     */
-    public GenKnowledgesEntity setViewCount(Long viewCount) {
-        this.viewCount = viewCount;
-        return this;
-    }
-
-    /**
-     * Get テンプレートの種類ID.
-     * @return テンプレートの種類ID
-     */
-    public Integer getTypeId() {
-        return this.typeId;
-    }
-    /**
-     * Set テンプレートの種類ID.
-     * @param typeId テンプレートの種類ID
-     * @return this object     */
-    public GenKnowledgesEntity setTypeId(Integer typeId) {
-        this.typeId = typeId;
-        return this;
-    }
-
-    /**
-     * Get 通知ステータス.
-     * @return 通知ステータス
-     */
-    public Integer getNotifyStatus() {
-        return this.notifyStatus;
-    }
-    /**
-     * Set 通知ステータス.
-     * @param notifyStatus 通知ステータス
-     * @return this object     */
-    public GenKnowledgesEntity setNotifyStatus(Integer notifyStatus) {
-        this.notifyStatus = notifyStatus;
-        return this;
-    }
-
-    /**
-     * Get ポイント.
-     * @return ポイント
+     * Get 獲得ポイント.
+     * @return 獲得ポイント
      */
     public Integer getPoint() {
         return this.point;
     }
     /**
-     * Set ポイント.
-     * @param point ポイント
+     * Set 獲得ポイント.
+     * @param point 獲得ポイント
      * @return this object     */
-    public GenKnowledgesEntity setPoint(Integer point) {
+    public GenActivitiesEntity setPoint(Integer point) {
         this.point = point;
         return this;
     }
@@ -287,7 +161,7 @@ public class GenKnowledgesEntity implements Serializable {
      * Set 登録ユーザ.
      * @param insertUser 登録ユーザ
      * @return this object     */
-    public GenKnowledgesEntity setInsertUser(Integer insertUser) {
+    public GenActivitiesEntity setInsertUser(Integer insertUser) {
         this.insertUser = insertUser;
         return this;
     }
@@ -303,7 +177,7 @@ public class GenKnowledgesEntity implements Serializable {
      * Set 登録日時.
      * @param insertDatetime 登録日時
      * @return this object     */
-    public GenKnowledgesEntity setInsertDatetime(Timestamp insertDatetime) {
+    public GenActivitiesEntity setInsertDatetime(Timestamp insertDatetime) {
         this.insertDatetime = insertDatetime;
         return this;
     }
@@ -319,7 +193,7 @@ public class GenKnowledgesEntity implements Serializable {
      * Set 更新ユーザ.
      * @param updateUser 更新ユーザ
      * @return this object     */
-    public GenKnowledgesEntity setUpdateUser(Integer updateUser) {
+    public GenActivitiesEntity setUpdateUser(Integer updateUser) {
         this.updateUser = updateUser;
         return this;
     }
@@ -335,7 +209,7 @@ public class GenKnowledgesEntity implements Serializable {
      * Set 更新日時.
      * @param updateDatetime 更新日時
      * @return this object     */
-    public GenKnowledgesEntity setUpdateDatetime(Timestamp updateDatetime) {
+    public GenActivitiesEntity setUpdateDatetime(Timestamp updateDatetime) {
         this.updateDatetime = updateDatetime;
         return this;
     }
@@ -351,7 +225,7 @@ public class GenKnowledgesEntity implements Serializable {
      * Set 削除フラグ.
      * @param deleteFlag 削除フラグ
      * @return this object     */
-    public GenKnowledgesEntity setDeleteFlag(Integer deleteFlag) {
+    public GenActivitiesEntity setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
         return this;
     }
@@ -362,22 +236,22 @@ public class GenKnowledgesEntity implements Serializable {
      */
     public Object[] getKeyValues() {
         Object[] keyValues = new Object[1];
-        keyValues[0] = this.knowledgeId;
+        keyValues[0] = this.no;
         return keyValues;
     }
     /**
      * Set key values 
-     * @param knowledgeId ナレッジID
+     * @param no 番号
      */
-    public void setKeyValues(Long knowledgeId) {
-        this.knowledgeId = knowledgeId;
+    public void setKeyValues(Long no) {
+        this.no = no;
     }
     /**
      * compare on key 
      * @param entity entity 
      * @return result 
      */
-    public boolean equalsOnKey(GenKnowledgesEntity entity) {
+    public boolean equalsOnKey(GenActivitiesEntity entity) {
         Object[] keyValues1 = getKeyValues();
         Object[] keyValues2 = entity.getKeyValues();
         for (int i = 0; i < keyValues1.length; i++) {
@@ -404,17 +278,10 @@ public class GenKnowledgesEntity implements Serializable {
      */
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("knowledgeId = ").append(knowledgeId).append("\n");
-        builder.append("title = ").append(title).append("\n");
-        builder.append("content = ").append(content).append("\n");
-        builder.append("publicFlag = ").append(publicFlag).append("\n");
-        builder.append("tagIds = ").append(tagIds).append("\n");
-        builder.append("tagNames = ").append(tagNames).append("\n");
-        builder.append("likeCount = ").append(likeCount).append("\n");
-        builder.append("commentCount = ").append(commentCount).append("\n");
-        builder.append("viewCount = ").append(viewCount).append("\n");
-        builder.append("typeId = ").append(typeId).append("\n");
-        builder.append("notifyStatus = ").append(notifyStatus).append("\n");
+        builder.append("no = ").append(no).append("\n");
+        builder.append("userId = ").append(userId).append("\n");
+        builder.append("type = ").append(type).append("\n");
+        builder.append("target = ").append(target).append("\n");
         builder.append("point = ").append(point).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
@@ -440,37 +307,27 @@ public class GenKnowledgesEntity implements Serializable {
         Validator validator;
         ValidateError error;
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(this.title, convLabelName("Title"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(this.title, convLabelName("Title"), 1024);
+        error = validator.validate(this.userId, convLabelName("User Id"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(this.publicFlag, convLabelName("Public Flag"));
+        error = validator.validate(this.userId, convLabelName("User Id"));
         if (error != null) {
             errors.add(error);
         }
-        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(this.tagIds, convLabelName("Tag Ids"), 1024);
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(this.commentCount, convLabelName("Comment Count"));
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(this.type, convLabelName("Type"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(this.typeId, convLabelName("Type Id"));
+        error = validator.validate(this.type, convLabelName("Type"));
         if (error != null) {
             errors.add(error);
         }
-        validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(this.notifyStatus, convLabelName("Notify Status"));
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(this.target, convLabelName("Target"));
         if (error != null) {
             errors.add(error);
         }
@@ -511,37 +368,27 @@ public class GenKnowledgesEntity implements Serializable {
         Validator validator;
         ValidateError error;
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(values.get("title"), convLabelName("Title"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(values.get("title"), convLabelName("Title"), 1024);
+        error = validator.validate(values.get("userId"), convLabelName("User Id"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(values.get("publicFlag"), convLabelName("Public Flag"));
+        error = validator.validate(values.get("userId"), convLabelName("User Id"));
         if (error != null) {
             errors.add(error);
         }
-        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(values.get("tagIds"), convLabelName("Tag Ids"), 1024);
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(values.get("commentCount"), convLabelName("Comment Count"));
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(values.get("type"), convLabelName("Type"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(values.get("typeId"), convLabelName("Type Id"));
+        error = validator.validate(values.get("type"), convLabelName("Type"));
         if (error != null) {
             errors.add(error);
         }
-        validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(values.get("notifyStatus"), convLabelName("Notify Status"));
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(values.get("target"), convLabelName("Target"));
         if (error != null) {
             errors.add(error);
         }

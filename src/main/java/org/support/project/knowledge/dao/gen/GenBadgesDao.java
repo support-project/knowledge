@@ -5,7 +5,7 @@ import java.util.List;
 import java.sql.Timestamp;
 
 
-import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.BadgesEntity;
 import org.support.project.ormapping.dao.AbstractDao;
 import org.support.project.ormapping.exception.ORMappingException;
 import org.support.project.ormapping.common.SQLManager;
@@ -21,12 +21,12 @@ import org.support.project.di.Instance;
 import org.support.project.aop.Aspect;
 
 /**
- * ナレッジ
+ * 称号
  * this class is auto generate and not edit.
- * if modify dao method, you can edit KnowledgesDao.
+ * if modify dao method, you can edit BadgesDao.
  */
 @DI(instance = Instance.Singleton)
-public class GenKnowledgesDao extends AbstractDao {
+public class GenBadgesDao extends AbstractDao {
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
@@ -35,17 +35,17 @@ public class GenKnowledgesDao extends AbstractDao {
      * Get instance from DI container.
      * @return instance
      */
-    public static GenKnowledgesDao get() {
-        return Container.getComp(GenKnowledgesDao.class);
+    public static GenBadgesDao get() {
+        return Container.getComp(GenBadgesDao.class);
     }
 
     /**
      * Select all data.
      * @return all data
      */
-    public List<KnowledgesEntity> physicalSelectAll() { 
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_physical_select_all.sql");
-        return executeQueryList(sql, KnowledgesEntity.class);
+    public List<BadgesEntity> physicalSelectAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/BadgesDao/BadgesDao_physical_select_all.sql");
+        return executeQueryList(sql, BadgesEntity.class);
     }
     /**
      * Select all data with pager.
@@ -53,26 +53,26 @@ public class GenKnowledgesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
-    public List<KnowledgesEntity> physicalSelectAllWithPager(int limit, int offset) { 
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_physical_select_all_with_pager.sql");
-        return executeQueryList(sql, KnowledgesEntity.class, limit, offset);
+    public List<BadgesEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/BadgesDao/BadgesDao_physical_select_all_with_pager.sql");
+        return executeQueryList(sql, BadgesEntity.class, limit, offset);
     }
     /**
      * Select data on key.
-     * @param  knowledgeId knowledgeId
+     * @param  no no
      * @return data
      */
-    public KnowledgesEntity physicalSelectOnKey(Long knowledgeId) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_physical_select_on_key.sql");
-        return executeQuerySingle(sql, KnowledgesEntity.class, knowledgeId);
+    public BadgesEntity physicalSelectOnKey(Integer no) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/BadgesDao/BadgesDao_physical_select_on_key.sql");
+        return executeQuerySingle(sql, BadgesEntity.class, no);
     }
     /**
      * Select all data that not deleted.
      * @return all data
      */
-    public List<KnowledgesEntity> selectAll() { 
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_select_all.sql");
-        return executeQueryList(sql, KnowledgesEntity.class);
+    public List<BadgesEntity> selectAll() { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/BadgesDao/BadgesDao_select_all.sql");
+        return executeQueryList(sql, BadgesEntity.class);
     }
     /**
      * Select all data that not deleted with pager.
@@ -80,33 +80,33 @@ public class GenKnowledgesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
-    public List<KnowledgesEntity> selectAllWidthPager(int limit, int offset) { 
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_select_all_with_pager.sql");
-        return executeQueryList(sql, KnowledgesEntity.class, limit, offset);
+    public List<BadgesEntity> selectAllWidthPager(int limit, int offset) { 
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/BadgesDao/BadgesDao_select_all_with_pager.sql");
+        return executeQueryList(sql, BadgesEntity.class, limit, offset);
     }
     /**
      * Select count that not deleted.
      * @return count
      */
     public Integer selectCountAll() { 
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_select_count_all.sql");
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/BadgesDao/BadgesDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
     }
     /**
      * Select data that not deleted on key.
-     * @param  knowledgeId knowledgeId
+     * @param  no no
      * @return data
      */
-    public KnowledgesEntity selectOnKey(Long knowledgeId) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_select_on_key.sql");
-        return executeQuerySingle(sql, KnowledgesEntity.class, knowledgeId);
+    public BadgesEntity selectOnKey(Integer no) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/BadgesDao/BadgesDao_select_on_key.sql");
+        return executeQuerySingle(sql, BadgesEntity.class, no);
     }
     /**
      * Count all data
      * @return count
      */
     public int physicalCountAll() {
-        String sql = "SELECT COUNT(*) FROM KNOWLEDGES";
+        String sql = "SELECT COUNT(*) FROM BADGES";
         return executeQuerySingle(sql, Integer.class);
     }
     /**
@@ -116,21 +116,14 @@ public class GenKnowledgesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity rawPhysicalInsert(KnowledgesEntity entity) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_raw_insert.sql");
+    public BadgesEntity rawPhysicalInsert(BadgesEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/BadgesDao/BadgesDao_raw_insert.sql");
         executeUpdate(sql, 
-            entity.getKnowledgeId(), 
-            entity.getTitle(), 
-            entity.getContent(), 
-            entity.getPublicFlag(), 
-            entity.getTagIds(), 
-            entity.getTagNames(), 
-            entity.getLikeCount(), 
-            entity.getCommentCount(), 
-            entity.getViewCount(), 
-            entity.getTypeId(), 
-            entity.getNotifyStatus(), 
-            entity.getPoint(), 
+            entity.getNo(), 
+            entity.getName(), 
+            entity.getDisplayText(), 
+            entity.getDescription(), 
+            entity.getImageCategory(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
             entity.getUpdateUser(), 
@@ -138,7 +131,7 @@ public class GenKnowledgesDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('KNOWLEDGES_KNOWLEDGE_ID_seq', (select max(KNOWLEDGE_ID) from KNOWLEDGES));";
+            String setValSql = "select setval('BADGES_NO_seq', (select max(NO) from BADGES));";
             executeQuerySingle(setValSql, Long.class);
         }
         return entity;
@@ -150,27 +143,20 @@ public class GenKnowledgesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity physicalInsert(KnowledgesEntity entity) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_insert.sql");
-        Class<?> type = PropertyUtil.getPropertyType(entity, "knowledgeId");
+    public BadgesEntity physicalInsert(BadgesEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/BadgesDao/BadgesDao_insert.sql");
+        Class<?> type = PropertyUtil.getPropertyType(entity, "no");
         Object key = executeInsert(sql, type, 
-            entity.getTitle(), 
-            entity.getContent(), 
-            entity.getPublicFlag(), 
-            entity.getTagIds(), 
-            entity.getTagNames(), 
-            entity.getLikeCount(), 
-            entity.getCommentCount(), 
-            entity.getViewCount(), 
-            entity.getTypeId(), 
-            entity.getNotifyStatus(), 
-            entity.getPoint(), 
+            entity.getName(), 
+            entity.getDisplayText(), 
+            entity.getDescription(), 
+            entity.getImageCategory(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
             entity.getUpdateUser(), 
             entity.getUpdateDatetime(), 
             entity.getDeleteFlag());
-        PropertyUtil.setPropertyValue(entity, "knowledgeId", key);
+        PropertyUtil.setPropertyValue(entity, "no", key);
         return entity;
     }
     /**
@@ -181,7 +167,7 @@ public class GenKnowledgesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity insert(Integer user, KnowledgesEntity entity) {
+    public BadgesEntity insert(Integer user, BadgesEntity entity) {
         entity.setInsertUser(user);
         entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
         entity.setUpdateUser(user);
@@ -196,7 +182,7 @@ public class GenKnowledgesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity insert(KnowledgesEntity entity) {
+    public BadgesEntity insert(BadgesEntity entity) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer userId = (Integer) pool.getUser();
         return insert(userId, entity);
@@ -207,26 +193,19 @@ public class GenKnowledgesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity physicalUpdate(KnowledgesEntity entity) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_update.sql");
+    public BadgesEntity physicalUpdate(BadgesEntity entity) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/BadgesDao/BadgesDao_update.sql");
         executeUpdate(sql, 
-            entity.getTitle(), 
-            entity.getContent(), 
-            entity.getPublicFlag(), 
-            entity.getTagIds(), 
-            entity.getTagNames(), 
-            entity.getLikeCount(), 
-            entity.getCommentCount(), 
-            entity.getViewCount(), 
-            entity.getTypeId(), 
-            entity.getNotifyStatus(), 
-            entity.getPoint(), 
+            entity.getName(), 
+            entity.getDisplayText(), 
+            entity.getDescription(), 
+            entity.getImageCategory(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
             entity.getUpdateUser(), 
             entity.getUpdateDatetime(), 
             entity.getDeleteFlag(), 
-            entity.getKnowledgeId());
+            entity.getNo());
         return entity;
     }
     /**
@@ -237,8 +216,8 @@ public class GenKnowledgesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity update(Integer user, KnowledgesEntity entity) {
-        KnowledgesEntity db = selectOnKey(entity.getKnowledgeId());
+    public BadgesEntity update(Integer user, BadgesEntity entity) {
+        BadgesEntity db = selectOnKey(entity.getNo());
         entity.setInsertUser(db.getInsertUser());
         entity.setInsertDatetime(db.getInsertDatetime());
         entity.setDeleteFlag(db.getDeleteFlag());
@@ -253,7 +232,7 @@ public class GenKnowledgesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity update(KnowledgesEntity entity) {
+    public BadgesEntity update(BadgesEntity entity) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer userId = (Integer) pool.getUser();
         return update(userId, entity);
@@ -267,8 +246,8 @@ public class GenKnowledgesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity save(Integer user, KnowledgesEntity entity) {
-        KnowledgesEntity db = selectOnKey(entity.getKnowledgeId());
+    public BadgesEntity save(Integer user, BadgesEntity entity) {
+        BadgesEntity db = selectOnKey(entity.getNo());
         if (db == null) {
             return insert(user, entity);
         } else {
@@ -282,8 +261,8 @@ public class GenKnowledgesDao extends AbstractDao {
      * @return saved entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity save(KnowledgesEntity entity) {
-        KnowledgesEntity db = selectOnKey(entity.getKnowledgeId());
+    public BadgesEntity save(BadgesEntity entity) {
+        BadgesEntity db = selectOnKey(entity.getNo());
         if (db == null) {
             return insert(entity);
         } else {
@@ -292,20 +271,20 @@ public class GenKnowledgesDao extends AbstractDao {
     }
     /**
      * Physical Delete.
-     * @param  knowledgeId knowledgeId
+     * @param  no no
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void physicalDelete(Long knowledgeId) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_delete.sql");
-        executeUpdate(sql, knowledgeId);
+    public void physicalDelete(Integer no) {
+        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/BadgesDao/BadgesDao_delete.sql");
+        executeUpdate(sql, no);
     }
     /**
      * Physical Delete.
      * @param entity entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void physicalDelete(KnowledgesEntity entity) {
-        physicalDelete(entity.getKnowledgeId());
+    public void physicalDelete(BadgesEntity entity) {
+        physicalDelete(entity.getNo());
 
     }
     /**
@@ -313,11 +292,11 @@ public class GenKnowledgesDao extends AbstractDao {
      * if delete flag is exists, the data is logical delete.
      * set saved user id.
      * @param user saved userid
-     * @param  knowledgeId knowledgeId
+     * @param  no no
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(Integer user, Long knowledgeId) {
-        KnowledgesEntity db = selectOnKey(knowledgeId);
+    public void delete(Integer user, Integer no) {
+        BadgesEntity db = selectOnKey(no);
         db.setDeleteFlag(1);
         db.setUpdateUser(user);
         db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
@@ -326,13 +305,13 @@ public class GenKnowledgesDao extends AbstractDao {
     /**
      * Delete.
      * if delete flag is exists, the data is logical delete.
-     * @param  knowledgeId knowledgeId
+     * @param  no no
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(Long knowledgeId) {
+    public void delete(Integer no) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer user = (Integer) pool.getUser();
-        delete(user, knowledgeId);
+        delete(user, no);
     }
     /**
      * Delete.
@@ -342,8 +321,8 @@ public class GenKnowledgesDao extends AbstractDao {
      * @param entity entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(Integer user, KnowledgesEntity entity) {
-        delete(user, entity.getKnowledgeId());
+    public void delete(Integer user, BadgesEntity entity) {
+        delete(user, entity.getNo());
 
     }
     /**
@@ -353,8 +332,8 @@ public class GenKnowledgesDao extends AbstractDao {
      * @param entity entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(KnowledgesEntity entity) {
-        delete(entity.getKnowledgeId());
+    public void delete(BadgesEntity entity) {
+        delete(entity.getNo());
 
     }
     /**
@@ -362,11 +341,11 @@ public class GenKnowledgesDao extends AbstractDao {
      * if delete flag is exists and delete flag is true, delete flug is false to activate.
      * set saved user id.
      * @param user saved userid
-     * @param  knowledgeId knowledgeId
+     * @param  no no
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void activation(Integer user, Long knowledgeId) {
-        KnowledgesEntity db = physicalSelectOnKey(knowledgeId);
+    public void activation(Integer user, Integer no) {
+        BadgesEntity db = physicalSelectOnKey(no);
         db.setDeleteFlag(0);
         db.setUpdateUser(user);
         db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
@@ -375,13 +354,13 @@ public class GenKnowledgesDao extends AbstractDao {
     /**
      * Ativation.
      * if delete flag is exists and delete flag is true, delete flug is false to activate.
-     * @param  knowledgeId knowledgeId
+     * @param  no no
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void activation(Long knowledgeId) {
+    public void activation(Integer no) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer user = (Integer) pool.getUser();
-        activation(user, knowledgeId);
+        activation(user, no);
     }
     /**
      * Ativation.
@@ -391,8 +370,8 @@ public class GenKnowledgesDao extends AbstractDao {
      * @param entity entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void activation(Integer user, KnowledgesEntity entity) {
-        activation(user, entity.getKnowledgeId());
+    public void activation(Integer user, BadgesEntity entity) {
+        activation(user, entity.getNo());
 
     }
     /**
@@ -401,8 +380,8 @@ public class GenKnowledgesDao extends AbstractDao {
      * @param entity entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void activation(KnowledgesEntity entity) {
-        activation(entity.getKnowledgeId());
+    public void activation(BadgesEntity entity) {
+        activation(entity.getNo());
 
     }
 

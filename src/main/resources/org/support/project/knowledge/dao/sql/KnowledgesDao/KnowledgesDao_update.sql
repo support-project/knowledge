@@ -10,6 +10,7 @@ SET
  , VIEW_COUNT = ?
  , TYPE_ID = ?
  , NOTIFY_STATUS = ?
+ , POINT = ?
  , INSERT_USER = ?
  , INSERT_DATETIME = ?
  , UPDATE_USER = ?
