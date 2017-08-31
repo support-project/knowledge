@@ -54,4 +54,9 @@ public class ViewHistoriesDao extends GenViewHistoriesDao {
         return executeQueryList(sql.toString(), Long.class, params.toArray(new Object[0]));
     }
 
+    public long selectCountOnKnowledgeId(Long knowledgeId) {
+        String sql = "SELECT COUNT(*) FROM VIEW_HISTORIES WHERE KNOWLEDGE_ID = ?";
+        return executeQuerySingle(sql, Long.class, knowledgeId);
+    }
+
 }

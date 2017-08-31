@@ -31,6 +31,9 @@ public interface ActivityProcessor {
      */
     public static final int TYPE_KNOWLEDGE_DO_INSERT = 11;
     public static final int TYPE_KNOWLEDGE_INSERTED = 12;
+    public static final int TYPE_KNOWLEDGE_DO_SHOW = 21;
+    public static final int TYPE_KNOWLEDGE_SHOWN_BY_OHER = 22;
+    public static final int TYPE_KNOWLEDGE_SHOWN = 23;
     
     void execute() throws Exception;
 }

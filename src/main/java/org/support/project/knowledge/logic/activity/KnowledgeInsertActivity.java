@@ -5,7 +5,6 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.entity.ActivitiesEntity;
 
 /**
  * ナレッジ登録時のポイント付与
@@ -21,43 +20,21 @@ public class KnowledgeInsertActivity extends AbstractAddPointForKnowledgeProcess
     public static KnowledgeInsertActivity get() {
         return Container.getComp(KnowledgeInsertActivity.class);
     }
-    
     @Override
-    public void execute() throws Exception {
-        if (getKnowledge() == null || getUser() == null) {
-            // ありえないけど念のため確認
-            return;
-        }
-        if (isExistsActivity(getUser().getUserId(), Activity.KNOWLEDGE_INSERT, String.valueOf(getKnowledge().getKnowledgeId()))) {
-            // 既に指定のKnowledge登録済
-            return;
-        }
-        //int point = RandomUtil.randamNum(30, 50);
-       int point = 50;
-       
-       LOG.debug("Add point by knowledge insert:" + point);
-       
-        // ポイント発行アクティビティを生成
-       ActivitiesEntity activity = addActivity(
-               getUser().getUserId(),
-               Activity.KNOWLEDGE_INSERT,
-               String.valueOf(getKnowledge().getKnowledgeId()),
-               getKnowledge().getInsertDatetime());
-        // 登録者のポイントをアップ
-        addPointForUser(
-                getUser().getUserId(),
-                getKnowledge().getInsertDatetime(),
-                getUser().getUserId(),
-                activity.getActivityNo(),
-                TYPE_KNOWLEDGE_DO_INSERT,
-                point);
-        // 記事のポイントアップ
-        addPointForKnowledge(
-                getUser().getUserId(),
-                getKnowledge().getInsertDatetime(),
-                getKnowledge().getKnowledgeId(),
-                activity.getActivityNo(),
-                TYPE_KNOWLEDGE_INSERTED,
-                point);
+    protected Activity getActivity() {
+        LOG.info("Start add point process on insert knowledge.");
+        return Activity.KNOWLEDGE_INSERT;
+    }
+    @Override
+    protected TypeAndPoint getTypeAndPointForActivityExecuter() {
+        return new TypeAndPoint(TYPE_KNOWLEDGE_DO_INSERT, 50);
+    }
+    @Override
+    protected TypeAndPoint getTypeAndPointForKnowledgeOwner() {
+        return null;
+    }
+    @Override
+    protected TypeAndPoint getTypeAndPointForKnowledge() {
+        return new TypeAndPoint(TYPE_KNOWLEDGE_INSERTED, 50);
     }
 }

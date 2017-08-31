@@ -40,6 +40,20 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
     public void setUser(LoginedUser user) {
         this.user = user;
     }
+    
+    /**
+     * ポイントと種類を保持する内部クラス
+     * @author koda
+     */
+    protected class TypeAndPoint {
+        int type;
+        int point;
+        TypeAndPoint(int type, int point) {
+            this.type = type;
+            this.point = point;
+        }
+    }
+    
     /**
      * 対象のactivityが既に登録されているかチェック
      * @param userId アクティビティを実行したユーザ
