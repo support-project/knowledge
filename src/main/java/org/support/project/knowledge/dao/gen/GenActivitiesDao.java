@@ -59,12 +59,12 @@ public class GenActivitiesDao extends AbstractDao {
     }
     /**
      * Select data on key.
-     * @param  no no
+     * @param  activityNo activityNo
      * @return data
      */
-    public ActivitiesEntity physicalSelectOnKey(Long no) {
+    public ActivitiesEntity physicalSelectOnKey(Long activityNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ActivitiesDao/ActivitiesDao_physical_select_on_key.sql");
-        return executeQuerySingle(sql, ActivitiesEntity.class, no);
+        return executeQuerySingle(sql, ActivitiesEntity.class, activityNo);
     }
     /**
      * Select all data that not deleted.
@@ -94,12 +94,12 @@ public class GenActivitiesDao extends AbstractDao {
     }
     /**
      * Select data that not deleted on key.
-     * @param  no no
+     * @param  activityNo activityNo
      * @return data
      */
-    public ActivitiesEntity selectOnKey(Long no) {
+    public ActivitiesEntity selectOnKey(Long activityNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ActivitiesDao/ActivitiesDao_select_on_key.sql");
-        return executeQuerySingle(sql, ActivitiesEntity.class, no);
+        return executeQuerySingle(sql, ActivitiesEntity.class, activityNo);
     }
     /**
      * Count all data
@@ -119,11 +119,10 @@ public class GenActivitiesDao extends AbstractDao {
     public ActivitiesEntity rawPhysicalInsert(ActivitiesEntity entity) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ActivitiesDao/ActivitiesDao_raw_insert.sql");
         executeUpdate(sql, 
-            entity.getNo(), 
+            entity.getActivityNo(), 
             entity.getUserId(), 
-            entity.getType(), 
+            entity.getKind(), 
             entity.getTarget(), 
-            entity.getPoint(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
             entity.getUpdateUser(), 
@@ -131,7 +130,7 @@ public class GenActivitiesDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('ACTIVITIES_NO_seq', (select max(NO) from ACTIVITIES));";
+            String setValSql = "select setval('ACTIVITIES_ACTIVITY_NO_seq', (select max(ACTIVITY_NO) from ACTIVITIES));";
             executeQuerySingle(setValSql, Long.class);
         }
         return entity;
@@ -145,18 +144,17 @@ public class GenActivitiesDao extends AbstractDao {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ActivitiesEntity physicalInsert(ActivitiesEntity entity) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ActivitiesDao/ActivitiesDao_insert.sql");
-        Class<?> type = PropertyUtil.getPropertyType(entity, "no");
+        Class<?> type = PropertyUtil.getPropertyType(entity, "activityNo");
         Object key = executeInsert(sql, type, 
             entity.getUserId(), 
-            entity.getType(), 
+            entity.getKind(), 
             entity.getTarget(), 
-            entity.getPoint(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
             entity.getUpdateUser(), 
             entity.getUpdateDatetime(), 
             entity.getDeleteFlag());
-        PropertyUtil.setPropertyValue(entity, "no", key);
+        PropertyUtil.setPropertyValue(entity, "activityNo", key);
         return entity;
     }
     /**
@@ -197,15 +195,14 @@ public class GenActivitiesDao extends AbstractDao {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ActivitiesDao/ActivitiesDao_update.sql");
         executeUpdate(sql, 
             entity.getUserId(), 
-            entity.getType(), 
+            entity.getKind(), 
             entity.getTarget(), 
-            entity.getPoint(), 
             entity.getInsertUser(), 
             entity.getInsertDatetime(), 
             entity.getUpdateUser(), 
             entity.getUpdateDatetime(), 
             entity.getDeleteFlag(), 
-            entity.getNo());
+            entity.getActivityNo());
         return entity;
     }
     /**
@@ -217,7 +214,7 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ActivitiesEntity update(Integer user, ActivitiesEntity entity) {
-        ActivitiesEntity db = selectOnKey(entity.getNo());
+        ActivitiesEntity db = selectOnKey(entity.getActivityNo());
         entity.setInsertUser(db.getInsertUser());
         entity.setInsertDatetime(db.getInsertDatetime());
         entity.setDeleteFlag(db.getDeleteFlag());
@@ -247,7 +244,7 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ActivitiesEntity save(Integer user, ActivitiesEntity entity) {
-        ActivitiesEntity db = selectOnKey(entity.getNo());
+        ActivitiesEntity db = selectOnKey(entity.getActivityNo());
         if (db == null) {
             return insert(user, entity);
         } else {
@@ -262,7 +259,7 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ActivitiesEntity save(ActivitiesEntity entity) {
-        ActivitiesEntity db = selectOnKey(entity.getNo());
+        ActivitiesEntity db = selectOnKey(entity.getActivityNo());
         if (db == null) {
             return insert(entity);
         } else {
@@ -271,12 +268,12 @@ public class GenActivitiesDao extends AbstractDao {
     }
     /**
      * Physical Delete.
-     * @param  no no
+     * @param  activityNo activityNo
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void physicalDelete(Long no) {
+    public void physicalDelete(Long activityNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ActivitiesDao/ActivitiesDao_delete.sql");
-        executeUpdate(sql, no);
+        executeUpdate(sql, activityNo);
     }
     /**
      * Physical Delete.
@@ -284,7 +281,7 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void physicalDelete(ActivitiesEntity entity) {
-        physicalDelete(entity.getNo());
+        physicalDelete(entity.getActivityNo());
 
     }
     /**
@@ -292,11 +289,11 @@ public class GenActivitiesDao extends AbstractDao {
      * if delete flag is exists, the data is logical delete.
      * set saved user id.
      * @param user saved userid
-     * @param  no no
+     * @param  activityNo activityNo
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(Integer user, Long no) {
-        ActivitiesEntity db = selectOnKey(no);
+    public void delete(Integer user, Long activityNo) {
+        ActivitiesEntity db = selectOnKey(activityNo);
         db.setDeleteFlag(1);
         db.setUpdateUser(user);
         db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
@@ -305,13 +302,13 @@ public class GenActivitiesDao extends AbstractDao {
     /**
      * Delete.
      * if delete flag is exists, the data is logical delete.
-     * @param  no no
+     * @param  activityNo activityNo
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(Long no) {
+    public void delete(Long activityNo) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer user = (Integer) pool.getUser();
-        delete(user, no);
+        delete(user, activityNo);
     }
     /**
      * Delete.
@@ -322,7 +319,7 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void delete(Integer user, ActivitiesEntity entity) {
-        delete(user, entity.getNo());
+        delete(user, entity.getActivityNo());
 
     }
     /**
@@ -333,7 +330,7 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void delete(ActivitiesEntity entity) {
-        delete(entity.getNo());
+        delete(entity.getActivityNo());
 
     }
     /**
@@ -341,11 +338,11 @@ public class GenActivitiesDao extends AbstractDao {
      * if delete flag is exists and delete flag is true, delete flug is false to activate.
      * set saved user id.
      * @param user saved userid
-     * @param  no no
+     * @param  activityNo activityNo
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void activation(Integer user, Long no) {
-        ActivitiesEntity db = physicalSelectOnKey(no);
+    public void activation(Integer user, Long activityNo) {
+        ActivitiesEntity db = physicalSelectOnKey(activityNo);
         db.setDeleteFlag(0);
         db.setUpdateUser(user);
         db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
@@ -354,13 +351,13 @@ public class GenActivitiesDao extends AbstractDao {
     /**
      * Ativation.
      * if delete flag is exists and delete flag is true, delete flug is false to activate.
-     * @param  no no
+     * @param  activityNo activityNo
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void activation(Long no) {
+    public void activation(Long activityNo) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer user = (Integer) pool.getUser();
-        activation(user, no);
+        activation(user, activityNo);
     }
     /**
      * Ativation.
@@ -371,7 +368,7 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void activation(Integer user, ActivitiesEntity entity) {
-        activation(user, entity.getNo());
+        activation(user, entity.getActivityNo());
 
     }
     /**
@@ -381,7 +378,7 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void activation(ActivitiesEntity entity) {
-        activation(entity.getNo());
+        activation(entity.getActivityNo());
 
     }
 

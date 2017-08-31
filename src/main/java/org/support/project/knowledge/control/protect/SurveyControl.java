@@ -12,6 +12,7 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.admin.TemplateControl;
+import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.SurveyAnswersEntity;
@@ -23,6 +24,8 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.SurveyLogic;
+import org.support.project.knowledge.logic.activity.Activity;
+import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.SurveyReport;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
@@ -222,6 +225,8 @@ public class SurveyControl extends TemplateControl {
             LOG.debug(PropertyUtil.reflectionToString(answer));
         }
         SurveyLogic.get().saveAnswer(answer, getLoginUserId());
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SURVEY, getLoginedUser(),
+                KnowledgesDao.get().selectOnKey(knowledgeId));
         
         // メッセージ送信
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, "saved", "message.success.save");

@@ -47,6 +47,127 @@ ShowTag=1
 ShowCommonAttributes=0
 
 [Relation]
+Entity1=ACTIVITIES
+Entity2=POINT_USER_HISTORIES
+RelationType1=1
+RelationType2=3
+Fields1=ACTIVITY_NO
+Fields2=ACTIVITY_NO
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,5105,3901,4800,R,R
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=510
+Bar2=390
+Bar3=480
+TermPos1=R
+TermPos2=R
+
+[Relation]
+Entity1=USERS
+Entity2=POINT_USER_HISTORIES
+RelationType1=4
+RelationType2=3
+Fields1=USER_ID
+Fields2=USER_ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,3441,6398,4308,R,R
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20170831112338
+LineMode=0
+Bar1=344
+Bar2=640
+Bar3=431
+TermPos1=R
+TermPos2=R
+
+[Entity]
+PName=POINT_USER_HISTORIES
+LName=ユーザのポイント獲得履歴
+Comment=
+TableOption=
+Page=MAIN
+Left=3500
+Top=850
+Field="ユーザID","USER_ID","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
+Field="履歴番号","HISTORY_NO","BIGINT","NOT NULL",1,"","",$FFFFFFFF,""
+Field="アクティビティ番号","ACTIVITY_NO","BIGINT","NOT NULL",,"","",$FFFFFFFF,""
+Field="獲得のタイプ","TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="獲得ポイント","POINT","@INT",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170831113951
+Position="MAIN",3500,850
+
+[Relation]
+Entity1=ACTIVITIES
+Entity2=POINT_KNOWLEDGE_HISTORIES
+RelationType1=4
+RelationType2=3
+Fields1=ACTIVITY_NO
+Fields2=ACTIVITY_NO
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,5388,4612,4310,R,R
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20170831112218
+LineMode=0
+Bar1=539
+Bar2=461
+Bar3=431
+TermPos1=R
+TermPos2=R
+
+[Relation]
+Entity1=KNOWLEDGES
+Entity2=POINT_KNOWLEDGE_HISTORIES
+RelationType1=4
+RelationType2=3
+Fields1=KNOWLEDGE_ID
+Fields2=KNOWLEDGE_ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,2911,5347,6275,R,R
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20170831112209
+LineMode=0
+Bar1=291
+Bar2=535
+Bar3=628
+TermPos1=R
+TermPos2=R
+
+[Entity]
+PName=POINT_KNOWLEDGE_HISTORIES
+LName=ナレッジのポイント獲得履歴
+Comment=
+TableOption=
+Page=MAIN
+Left=2450
+Top=1100
+Field="ナレッジID","KNOWLEDGE_ID","BIGINT","NOT NULL",0,"","",$FFFFFFFF,""
+Field="履歴番号","HISTORY_NO","BIGINT","NOT NULL",1,"","",$FFFFFFFF,""
+Field="アクティビティ番号","ACTIVITY_NO","BIGINT","NOT NULL",,"","",$FFFFFFFF,""
+Field="獲得のタイプ","TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="獲得ポイント","POINT","@INT","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20170831112825
+Position="MAIN",2450,1100
+
+[Relation]
 Entity1=BADGES
 Entity2=USER_BADGES
 RelationType1=2
@@ -55,15 +176,15 @@ Fields1=NO
 Fields2=NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,5330,5968,5735,R,R
+Position="MAIN",0,4598,5968,5732,R,R
 Dependence=1
 Caption=
 PName=
 ModifiedDateTime=20170829163644
 LineMode=0
-Bar1=533
+Bar1=460
 Bar2=597
-Bar3=574
+Bar3=573
 TermPos1=R
 TermPos2=R
 
@@ -76,13 +197,13 @@ Fields1=USER_ID
 Fields2=USER_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4363,5637,3229,R,R
+Position="MAIN",0,4363,7074,3229,R,R
 Dependence=1
 Caption=
 PName=
 LineMode=0
 Bar1=436
-Bar2=564
+Bar2=707
 Bar3=323
 TermPos1=R
 TermPos2=R
@@ -92,32 +213,16 @@ PName=USER_BADGES
 LName=ユーザの称号
 Comment=
 TableOption=
-Page=Main
-Left=2950
-Top=850
+Page=MAIN
+Left=2900
+Top=800
 Field="ユーザID","USER_ID","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
 Field="番号","NO","INTEGER","NOT NULL",1,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170829163555
-Position="Main",2950,850
-
-[Comment]
-Comment=種類 / ターゲット : 意味\n------------------------\n1 / knowledge_id : ナレッジを登録した [+]\n2 / knowledge_id : ナレッジを参照した [+]\n3 / knowledge_id : ナレッジにイイネを押した [+]\n4 / knowledge_id : ナレッジにイイネが押された\n5 / knowledge_id : イベントに参加登録した [+]\n6 / knowledge_id : イベント参加者が増えた\n7 / knowledge_id : ナレッジがストックされた [+]\n8 / knowledge_id : ナレッジのアンケートに回答した [+]\n9 / knowledge_id : ナレッジのアンケートに回答があった\n10 / knowledge_id : ナレッジにコメントが登録された [+]\n11 / knowledge_id : コメントにイイネが押された [+]\n\n101 / knowledge_id : 参加をやめた（マイナス）\n\n1002 / comment_no : コメントを登録した\n1003 / comment_no : コメントにイイネを押した\n1004 / comment_no : コメントにイイネが押された\n\nユーザのポイントは、USER_CONFIGSテーブルへ格納する\n\n\n\n
-FontName=Tahoma
-FontBold=0
-FontItalic=0
-FontUnderline=0
-FontSize=6
-FontColor=$000000
-LineColor=$000000
-BkColor=$FFFFFF
-Page=Main
-Left=3500
-Top=950
-Width=564
-Height=586
+Position="MAIN",2900,800
 
 [Relation]
 Entity1=USERS
@@ -128,15 +233,15 @@ Fields1=USER_ID
 Fields2=USER_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,3081,6033,4726,R,R
+Position="MAIN",3,9500,5578,9500,R,R
 Dependence=1
 Caption=
 PName=
-ModifiedDateTime=20170829161626
-LineMode=0
-Bar1=308
-Bar2=603
-Bar3=473
+ModifiedDateTime=20170831112359
+LineMode=3
+Bar1=950
+Bar2=558
+Bar3=950
 TermPos1=R
 TermPos2=R
 
@@ -145,28 +250,27 @@ PName=ACTIVITIES
 LName=アクティビティ
 Comment=
 TableOption=
-Page=Main
-Left=3500
-Top=800
-Field="番号","NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
-Field="ユーザID","USER_ID","INTEGER","NOT NULL",,"","",$FFFFFFFF,""
-Field="種類","TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
-Field="ターゲットID","TARGET","BIGINT","NOT NULL",,"","",$FFFFFFFF,""
-Field="獲得ポイント","POINT","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Page=MAIN
+Left=3450
+Top=1100
+Field="アクティビティ番号","ACTIVITY_NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
+Field="イベントをおこしたユーザ","USER_ID","INTEGER","NOT NULL",,"","",$FFFFFFFF,""
+Field="アクティビティの種類","KIND","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="ターゲットID","TARGET","@VARCHAR(64)","NOT NULL",,"","",$FFFFFFFF,""
 Index=IDX_ACTIVITIES_USER_ID=0,USER_ID
-Index=IDX_ACTIVITIES_TYPE_TARGET=0,TYPE,TARGET
+Index=IDX_ACTIVITIES_KIND_TARGET=0,KIND,TARGET
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170829163512
-Position="Main",3500,800
+ModifiedDateTime=20170831112153
+Position="MAIN",3450,1100
 
 [Entity]
 PName=USERS
 LName=ユーザ
 Comment=
 TableOption=
-Page=Main
+Page=MAIN
 Left=3500
 Top=500
 Field="ユーザID","USER_ID","SERIAL","NOT NULL",0,"","",$FFFFFFFF,""
@@ -184,26 +288,27 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170829160846
-Position="Main",3500,500
+Position="MAIN",3500,500
 
 [Entity]
 PName=BADGES
 LName=称号
 Comment=
 TableOption=
-Page=Main
+Page=MAIN
 Left=2900
-Top=600
+Top=550
 Field="番号","NO","SERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="名称","NAME","@VARCHAR(128)","NOT NULL",,"","",$FFFFFFFF,""
 Field="表示名","DISPLAY_TEXT","@VARCHAR(32)","NOT NULL",,"","",$FFFFFFFF,""
 Field="説明","DESCRIPTION","text",,,"","",$FFFFFFFF,""
-Field="画像の種類","IMAGE_CATEGORY","@INT",,,"","",$FFFFFFFF,""
+Field="画像","IMAGE","@VARCHAR(64)",,,"","",$FFFFFFFF,""
+Field="獲得ポイント","POINT","@INT",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170829161444
-Position="Main",2900,600
+ModifiedDateTime=20170831113107
+Position="MAIN",2900,550
 
 [Relation]
 Entity1=COMMENTS

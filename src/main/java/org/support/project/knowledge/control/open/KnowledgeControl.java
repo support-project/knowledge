@@ -50,6 +50,8 @@ import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.TimeZoneLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
+import org.support.project.knowledge.logic.activity.Activity;
+import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.ListData;
 import org.support.project.knowledge.vo.MarkDown;
@@ -214,6 +216,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
         //ストック情報を取得
         List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(entity, loginedUser);
         setAttribute("stocks", stocks);
+        
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, getLoginedUser(), entity);
         
         return forward("view.jsp");
     }
@@ -658,6 +662,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LikeCount likeCount = new LikeCount();
         likeCount.setKnowledgeId(knowledgeId);
         likeCount.setCount(count);
+        
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, getLoginedUser(),
+                KnowledgesDao.get().selectOnKey(knowledgeId));
         return send(likeCount);
     }
     /**
@@ -672,6 +679,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
         Long count = knowledgeLogic.addLikeComment(commentNo, getLoginedUser(), getLocale());
         LikeCount likeCount = new LikeCount();
         likeCount.setCount(count);
+        
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_COMMENT_LIKE, getLoginedUser(),
+                CommentsDao.get().selectOnKey(commentNo));
         return send(likeCount);
     }
 

@@ -315,5 +315,13 @@ public class KnowledgesDao extends GenKnowledgesDao {
         String sql = "UPDATE KNOWLEDGES SET VIEW_COUNT = ? WHERE KNOWLEDGE_ID = ?";
         executeUpdate(sql, count, knowledgeId);
     }
+    public int selectPoint(long knowledgeId) {
+        String sql = "SELECT POINT FROM KNOWLEDGES WHERE KNOWLEDGE_ID = ?";
+        return executeQuerySingle(sql, Integer.class, knowledgeId);
+    }
+    public void updatePoint(long knowledgeId, int point) {
+        String sql = "UPDATE KNOWLEDGES SET POINT = ? WHERE KNOWLEDGE_ID = ?";
+        executeUpdate(sql, point, knowledgeId);
+    }
 
 }

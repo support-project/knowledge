@@ -42,23 +42,21 @@ public class GenActivitiesEntity implements Serializable {
 
     /**
      * Constructor
-     * @param no 番号
+     * @param activityNo アクティビティ番号
      */
 
-    public GenActivitiesEntity(Long no) {
+    public GenActivitiesEntity(Long activityNo) {
         super();
-        this.no = no;
+        this.activityNo = activityNo;
     }
-    /** 番号 */
-    private Long no;
-    /** ユーザID */
+    /** アクティビティ番号 */
+    private Long activityNo;
+    /** イベントをおこしたユーザ */
     private Integer userId;
-    /** 種類 */
-    private Integer type;
+    /** アクティビティの種類 */
+    private Integer kind;
     /** ターゲットID */
-    private Long target;
-    /** 獲得ポイント */
-    private Integer point;
+    private String target;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -71,31 +69,31 @@ public class GenActivitiesEntity implements Serializable {
     private Integer deleteFlag;
 
     /**
-     * Get 番号.
-     * @return 番号
+     * Get アクティビティ番号.
+     * @return アクティビティ番号
      */
-    public Long getNo() {
-        return this.no;
+    public Long getActivityNo() {
+        return this.activityNo;
     }
     /**
-     * Set 番号.
-     * @param no 番号
+     * Set アクティビティ番号.
+     * @param activityNo アクティビティ番号
      * @return this object     */
-    public GenActivitiesEntity setNo(Long no) {
-        this.no = no;
+    public GenActivitiesEntity setActivityNo(Long activityNo) {
+        this.activityNo = activityNo;
         return this;
     }
 
     /**
-     * Get ユーザID.
-     * @return ユーザID
+     * Get イベントをおこしたユーザ.
+     * @return イベントをおこしたユーザ
      */
     public Integer getUserId() {
         return this.userId;
     }
     /**
-     * Set ユーザID.
-     * @param userId ユーザID
+     * Set イベントをおこしたユーザ.
+     * @param userId イベントをおこしたユーザ
      * @return this object     */
     public GenActivitiesEntity setUserId(Integer userId) {
         this.userId = userId;
@@ -103,18 +101,18 @@ public class GenActivitiesEntity implements Serializable {
     }
 
     /**
-     * Get 種類.
-     * @return 種類
+     * Get アクティビティの種類.
+     * @return アクティビティの種類
      */
-    public Integer getType() {
-        return this.type;
+    public Integer getKind() {
+        return this.kind;
     }
     /**
-     * Set 種類.
-     * @param type 種類
+     * Set アクティビティの種類.
+     * @param kind アクティビティの種類
      * @return this object     */
-    public GenActivitiesEntity setType(Integer type) {
-        this.type = type;
+    public GenActivitiesEntity setKind(Integer kind) {
+        this.kind = kind;
         return this;
     }
 
@@ -122,31 +120,15 @@ public class GenActivitiesEntity implements Serializable {
      * Get ターゲットID.
      * @return ターゲットID
      */
-    public Long getTarget() {
+    public String getTarget() {
         return this.target;
     }
     /**
      * Set ターゲットID.
      * @param target ターゲットID
      * @return this object     */
-    public GenActivitiesEntity setTarget(Long target) {
+    public GenActivitiesEntity setTarget(String target) {
         this.target = target;
-        return this;
-    }
-
-    /**
-     * Get 獲得ポイント.
-     * @return 獲得ポイント
-     */
-    public Integer getPoint() {
-        return this.point;
-    }
-    /**
-     * Set 獲得ポイント.
-     * @param point 獲得ポイント
-     * @return this object     */
-    public GenActivitiesEntity setPoint(Integer point) {
-        this.point = point;
         return this;
     }
 
@@ -236,15 +218,15 @@ public class GenActivitiesEntity implements Serializable {
      */
     public Object[] getKeyValues() {
         Object[] keyValues = new Object[1];
-        keyValues[0] = this.no;
+        keyValues[0] = this.activityNo;
         return keyValues;
     }
     /**
      * Set key values 
-     * @param no 番号
+     * @param activityNo アクティビティ番号
      */
-    public void setKeyValues(Long no) {
-        this.no = no;
+    public void setKeyValues(Long activityNo) {
+        this.activityNo = activityNo;
     }
     /**
      * compare on key 
@@ -278,11 +260,10 @@ public class GenActivitiesEntity implements Serializable {
      */
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("no = ").append(no).append("\n");
+        builder.append("activityNo = ").append(activityNo).append("\n");
         builder.append("userId = ").append(userId).append("\n");
-        builder.append("type = ").append(type).append("\n");
+        builder.append("kind = ").append(kind).append("\n");
         builder.append("target = ").append(target).append("\n");
-        builder.append("point = ").append(point).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -317,12 +298,12 @@ public class GenActivitiesEntity implements Serializable {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(this.type, convLabelName("Type"));
+        error = validator.validate(this.kind, convLabelName("Kind"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(this.type, convLabelName("Type"));
+        error = validator.validate(this.kind, convLabelName("Kind"));
         if (error != null) {
             errors.add(error);
         }
@@ -331,13 +312,8 @@ public class GenActivitiesEntity implements Serializable {
         if (error != null) {
             errors.add(error);
         }
-        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(this.point, convLabelName("Point"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(this.point, convLabelName("Point"));
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.target, convLabelName("Target"), 64);
         if (error != null) {
             errors.add(error);
         }
@@ -378,12 +354,12 @@ public class GenActivitiesEntity implements Serializable {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(values.get("type"), convLabelName("Type"));
+        error = validator.validate(values.get("kind"), convLabelName("Kind"));
         if (error != null) {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(values.get("type"), convLabelName("Type"));
+        error = validator.validate(values.get("kind"), convLabelName("Kind"));
         if (error != null) {
             errors.add(error);
         }
@@ -392,13 +368,8 @@ public class GenActivitiesEntity implements Serializable {
         if (error != null) {
             errors.add(error);
         }
-        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
-        error = validator.validate(values.get("point"), convLabelName("Point"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(values.get("point"), convLabelName("Point"));
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("target"), convLabelName("Target"), 64);
         if (error != null) {
             errors.add(error);
         }

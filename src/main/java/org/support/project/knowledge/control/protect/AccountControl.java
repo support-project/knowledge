@@ -16,6 +16,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
+import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.AccountLogic;
 import org.support.project.knowledge.logic.TargetLogic;
@@ -315,11 +316,11 @@ public class AccountControl extends Control {
     @Get(publishToken = "knowledge")
     public Boundary targets() {
         UserConfigsEntity publicFlag = UserConfigsDao.get().physicalSelectOnKey(
-                "DEFAULT_PUBLIC_FLAG", AppConfig.get().getSystemName(), getLoginUserId());
+                UserConfig.DEFAULT_PUBLIC_FLAG, AppConfig.get().getSystemName(), getLoginUserId());
         if (publicFlag != null) {
             setAttribute("publicFlag", publicFlag.getConfigValue());
             UserConfigsEntity targets = UserConfigsDao.get().physicalSelectOnKey(
-                    "DEFAULT_TARGET", AppConfig.get().getSystemName(), getLoginUserId());
+                    UserConfig.DEFAULT_TARGET, AppConfig.get().getSystemName(), getLoginUserId());
             if (targets != null) {
                 if (StringUtils.isNotEmpty(targets.getConfigValue())) {
                     String[] targetKeys = targets.getConfigValue().split(",");
@@ -336,11 +337,11 @@ public class AccountControl extends Control {
     public Boundary savetargets() {
         String publicFlag = getParam("publicFlag");
         String viewers = getParam("viewers");
-        UserConfigsEntity publicFlagEntiry = new UserConfigsEntity("DEFAULT_PUBLIC_FLAG", AppConfig.get().getSystemName(), getLoginUserId());
+        UserConfigsEntity publicFlagEntiry = new UserConfigsEntity(UserConfig.DEFAULT_PUBLIC_FLAG, AppConfig.get().getSystemName(), getLoginUserId());
         publicFlagEntiry.setConfigValue(publicFlag);
         UserConfigsDao.get().save(publicFlagEntiry);
         
-        UserConfigsEntity targetsEntity = new UserConfigsEntity("DEFAULT_TARGET", AppConfig.get().getSystemName(), getLoginUserId());
+        UserConfigsEntity targetsEntity = new UserConfigsEntity(UserConfig.DEFAULT_TARGET, AppConfig.get().getSystemName(), getLoginUserId());
         targetsEntity.setConfigValue(viewers);
         
         List<ValidateError> results = targetsEntity.validate();

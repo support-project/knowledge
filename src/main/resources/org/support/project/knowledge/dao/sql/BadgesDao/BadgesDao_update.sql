@@ -3,7 +3,8 @@ SET
    NAME = ?
  , DISPLAY_TEXT = ?
  , DESCRIPTION = ?
- , IMAGE_CATEGORY = ?
+ , IMAGE = ?
+ , POINT = ?
  , INSERT_USER = ?
  , INSERT_DATETIME = ?
  , UPDATE_USER = ?

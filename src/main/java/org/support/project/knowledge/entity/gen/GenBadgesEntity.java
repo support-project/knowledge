@@ -57,8 +57,10 @@ public class GenBadgesEntity implements Serializable {
     private String displayText;
     /** 説明 */
     private String description;
-    /** 画像の種類 */
-    private Integer imageCategory;
+    /** 画像 */
+    private String image;
+    /** 獲得ポイント */
+    private Integer point;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -135,18 +137,34 @@ public class GenBadgesEntity implements Serializable {
     }
 
     /**
-     * Get 画像の種類.
-     * @return 画像の種類
+     * Get 画像.
+     * @return 画像
      */
-    public Integer getImageCategory() {
-        return this.imageCategory;
+    public String getImage() {
+        return this.image;
     }
     /**
-     * Set 画像の種類.
-     * @param imageCategory 画像の種類
+     * Set 画像.
+     * @param image 画像
      * @return this object     */
-    public GenBadgesEntity setImageCategory(Integer imageCategory) {
-        this.imageCategory = imageCategory;
+    public GenBadgesEntity setImage(String image) {
+        this.image = image;
+        return this;
+    }
+
+    /**
+     * Get 獲得ポイント.
+     * @return 獲得ポイント
+     */
+    public Integer getPoint() {
+        return this.point;
+    }
+    /**
+     * Set 獲得ポイント.
+     * @param point 獲得ポイント
+     * @return this object     */
+    public GenBadgesEntity setPoint(Integer point) {
+        this.point = point;
         return this;
     }
 
@@ -282,7 +300,8 @@ public class GenBadgesEntity implements Serializable {
         builder.append("name = ").append(name).append("\n");
         builder.append("displayText = ").append(displayText).append("\n");
         builder.append("description = ").append(description).append("\n");
-        builder.append("imageCategory = ").append(imageCategory).append("\n");
+        builder.append("image = ").append(image).append("\n");
+        builder.append("point = ").append(point).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -331,8 +350,13 @@ public class GenBadgesEntity implements Serializable {
         if (error != null) {
             errors.add(error);
         }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.image, convLabelName("Image"), 64);
+        if (error != null) {
+            errors.add(error);
+        }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(this.imageCategory, convLabelName("Image Category"));
+        error = validator.validate(this.point, convLabelName("Point"));
         if (error != null) {
             errors.add(error);
         }
@@ -387,8 +411,13 @@ public class GenBadgesEntity implements Serializable {
         if (error != null) {
             errors.add(error);
         }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("image"), convLabelName("Image"), 64);
+        if (error != null) {
+            errors.add(error);
+        }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
-        error = validator.validate(values.get("imageCategory"), convLabelName("Image Category"));
+        error = validator.validate(values.get("point"), convLabelName("Point"));
         if (error != null) {
             errors.add(error);
         }
