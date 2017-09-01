@@ -34,6 +34,12 @@ public interface ActivityProcessor {
     public static final int TYPE_KNOWLEDGE_DO_SHOW = 21;
     public static final int TYPE_KNOWLEDGE_SHOWN_BY_OHER = 22;
     public static final int TYPE_KNOWLEDGE_SHOWN = 23;
+    public static final int TYPE_KNOWLEDGE_DO_LIKE = 31;
+    public static final int TYPE_KNOWLEDGE_LIKED_BY_OHER = 32;
+    public static final int TYPE_KNOWLEDGE_LIKED = 33;
+    public static final int TYPE_KNOWLEDGE_DO_STOCK = 41;
+    public static final int TYPE_KNOWLEDGE_STOCKED_BY_OHER = 42;
+    public static final int TYPE_KNOWLEDGE_STOCKED = 43;
     
     void execute() throws Exception;
 }

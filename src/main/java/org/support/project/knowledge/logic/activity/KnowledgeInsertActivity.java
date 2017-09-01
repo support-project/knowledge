@@ -22,7 +22,7 @@ public class KnowledgeInsertActivity extends AbstractAddPointForKnowledgeProcess
     }
     @Override
     protected Activity getActivity() {
-        LOG.info("Start add point process on insert knowledge.");
+        LOG.debug("Start add point process on insert knowledge.");
         return Activity.KNOWLEDGE_INSERT;
     }
     @Override

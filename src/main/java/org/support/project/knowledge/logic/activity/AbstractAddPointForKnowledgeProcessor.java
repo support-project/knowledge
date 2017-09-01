@@ -25,30 +25,24 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
     
     @Override
     public void execute() throws Exception {
-        if (getKnowledge() == null || getUser() == null) {
+        if (getKnowledge() == null || eventUser == null) {
             // ありえないけど念のため確認
             return;
         }
-        if (isExistsActivity(getUser().getUserId(), getActivity(), String.valueOf(getKnowledge().getKnowledgeId()))) {
+        if (isExistsActivity(eventUser.getUserId(), getActivity(), String.valueOf(getKnowledge().getKnowledgeId()))) {
             // 既に指定のKnowledge登録済
             return;
         }
          // ポイント発行アクティビティを生成
         ActivitiesEntity activity = addActivity(
-                getUser().getUserId(),
                 getActivity(),
-                String.valueOf(getKnowledge().getKnowledgeId()),
-                getKnowledge().getInsertDatetime());
-        
-        
+                String.valueOf(getKnowledge().getKnowledgeId()));
         
         // 実行したユーザのポイントアップ
         TypeAndPoint exec = getTypeAndPointForActivityExecuter();
         if (exec != null) {
             addPointForUser(
-                    getUser().getUserId(),
-                    getKnowledge().getInsertDatetime(),
-                    getUser().getUserId(), // ターゲットは、実行したユーザ
+                    eventUser.getUserId(), // ターゲットは、実行したユーザ
                     activity.getActivityNo(),
                     exec.type,
                     exec.point);
@@ -57,8 +51,6 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
         TypeAndPoint owner = getTypeAndPointForKnowledgeOwner();
         if (owner != null) {
             addPointForUser(
-                    getUser().getUserId(),
-                    getKnowledge().getInsertDatetime(),
                     getKnowledge().getInsertUser(), // ターゲットは登録者
                     activity.getActivityNo(),
                     exec.type,
@@ -68,8 +60,6 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
         TypeAndPoint knowledge = getTypeAndPointForKnowledge();
         if (knowledge != null) {
             addPointForKnowledge(
-                    getUser().getUserId(),
-                    getKnowledge().getInsertDatetime(),
                     getKnowledge().getKnowledgeId(),
                     activity.getActivityNo(),
                     exec.type,

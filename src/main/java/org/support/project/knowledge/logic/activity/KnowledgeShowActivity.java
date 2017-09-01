@@ -24,7 +24,7 @@ public class KnowledgeShowActivity extends AbstractAddPointForKnowledgeProcessor
     
     @Override
     protected Activity getActivity() {
-        LOG.info("Start add point process on show knowledge.");
+        LOG.debug("Start add point process on show knowledge.");
         return Activity.KNOWLEDGE_SHOW;
     }
     @Override

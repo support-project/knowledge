@@ -2,6 +2,7 @@ package org.support.project.knowledge.logic.activity;
 
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.util.StringUtils;
@@ -27,18 +28,19 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
     private static Object lockUser = new Object();
     private static Object lockKnowledge = new Object();
     
-    private LoginedUser user;
+    protected LoginedUser eventUser;
+    protected Date eventDateTime;
     /**
-     * @return the user
+     * @param eventUser the eventUser to set
      */
-    public LoginedUser getUser() {
-        return user;
+    public void setEventUser(LoginedUser eventUser) {
+        this.eventUser = eventUser;
     }
     /**
-     * @param user the user to set
+     * @param eventDateTime the eventDateTime to set
      */
-    public void setUser(LoginedUser user) {
-        this.user = user;
+    public void setEventDateTime(Date eventDateTime) {
+        this.eventDateTime = eventDateTime;
     }
     
     /**
@@ -71,18 +73,16 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
     
     /**
      * activity登録
-     * @param userId アクティビティを実行したユーザ
      * @param kind アクティビティの種類
      * @param target そのアクティビティでポイントを付与する対象
-     * @param eventTime そのアクティビティが実行されたタイミング
      */
-    protected ActivitiesEntity addActivity(int userId, Activity kind, String target, Timestamp eventTime) {
+    protected ActivitiesEntity addActivity(Activity kind, String target) {
         ActivitiesEntity entity = new ActivitiesEntity();
-        entity.setUserId(userId);
+        entity.setUserId(eventUser.getUserId());
         entity.setKind(kind.getValue());
         entity.setTarget(target);
-        entity.setInsertUser(userId);
-        entity.setInsertDatetime(eventTime);
+        entity.setInsertUser(eventUser.getUserId());
+        entity.setInsertDatetime(new Timestamp(eventDateTime.getTime()));
         entity.setDeleteFlag(INT_FLAG.OFF.getValue());
         entity = ActivitiesDao.get().physicalInsert(entity);
         return entity;
@@ -98,7 +98,7 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
      * @param point
      * @return
      */
-    protected int addPointForUser(int eventUser, Timestamp eventTime, int targetUser, long activityNo, int type, int point) {
+    protected int addPointForUser(int targetUser, long activityNo, int type, int point) {
         synchronized(lockUser) {
             long num = PointUserHistoriesDao.get().selectNumOnUser(targetUser);
             num++;
@@ -108,8 +108,8 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
             history.setActivityNo(activityNo);
             history.setType(type);
             history.setPoint(point);
-            history.setInsertUser(eventUser);
-            history.setInsertDatetime(eventTime);
+            history.setInsertUser(eventUser.getUserId());
+            history.setInsertDatetime(new Timestamp(eventDateTime.getTime()));
             history.setDeleteFlag(INT_FLAG.OFF.getValue());
             PointUserHistoriesDao.get().physicalInsert(history);
             
@@ -139,7 +139,7 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
      * @param point
      * @return
      */
-    protected int addPointForKnowledge(int eventUser, Timestamp eventTime, long knowledgeId, long activityNo, int type, int point) {
+    protected int addPointForKnowledge(long knowledgeId, long activityNo, int type, int point) {
         synchronized (lockKnowledge) {
             long num = PointKnowledgeHistoriesDao.get().selectNumOnKnowledge(knowledgeId);
             num++;
@@ -149,8 +149,8 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
             history.setActivityNo(activityNo);
             history.setType(type);
             history.setPoint(point);
-            history.setInsertUser(eventUser);
-            history.setInsertDatetime(eventTime);
+            history.setInsertUser(eventUser.getUserId());
+            history.setInsertDatetime(new Timestamp(eventDateTime.getTime()));
             history.setDeleteFlag(INT_FLAG.OFF.getValue());
             PointKnowledgeHistoriesDao.get().physicalInsert(history);
             
@@ -162,4 +162,5 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
             return now;
         }
     }
+
 }

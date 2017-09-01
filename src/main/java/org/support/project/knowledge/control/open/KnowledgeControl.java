@@ -217,7 +217,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(entity, loginedUser);
         setAttribute("stocks", stocks);
         
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, getLoginedUser(), entity);
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, getLoginedUser(), new Date(), entity);
         
         return forward("view.jsp");
     }
@@ -663,7 +663,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         likeCount.setKnowledgeId(knowledgeId);
         likeCount.setCount(count);
         
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, getLoginedUser(),
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, getLoginedUser(), new Date(),
                 KnowledgesDao.get().selectOnKey(knowledgeId));
         return send(likeCount);
     }
@@ -680,7 +680,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LikeCount likeCount = new LikeCount();
         likeCount.setCount(count);
         
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_COMMENT_LIKE, getLoginedUser(),
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_COMMENT_LIKE, getLoginedUser(), new Date(),
                 CommentsDao.get().selectOnKey(commentNo));
         return send(likeCount);
     }

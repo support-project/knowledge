@@ -1,0 +1,39 @@
+package org.support.project.knowledge.logic.activity;
+
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
+import org.support.project.di.Container;
+
+/**
+ * 
+ * 3    | 31          | 参照者       | 2        | 記事にイイネのアクションを行うと、参照者にポイント追加（一つの記事に付き1回のみ）
+ * 3    | 32          | 記事登録者    | 10       | 自分が登録された記事にイイネがついたら、登録者にポイント追加（一つの記事に対し、参照者毎に1回のみ）
+ * 3    | 33          | 記事         | 10       | 記事が参照されると、その記事のポイントが追加（一つの記事に対し、参照者毎に1回のみ）
+ * 
+ * @author koda
+ */
+public class KnowledgeLikeActivity extends AbstractAddPointForKnowledgeProcessor {
+    private static final Log LOG = LogFactory.getLog(KnowledgeLikeActivity.class);
+    public static KnowledgeLikeActivity get() {
+        return Container.getComp(KnowledgeLikeActivity.class);
+    }
+    
+    @Override
+    protected Activity getActivity() {
+        LOG.debug("Start add point process on like knowledge.");
+        return Activity.KNOWLEDGE_LIKE;
+    }
+    @Override
+    protected TypeAndPoint getTypeAndPointForActivityExecuter() {
+        return new TypeAndPoint(TYPE_KNOWLEDGE_DO_LIKE, 2);
+    }
+    @Override
+    protected TypeAndPoint getTypeAndPointForKnowledgeOwner() {
+        return new TypeAndPoint(TYPE_KNOWLEDGE_LIKED_BY_OHER, 10);
+    }
+    @Override
+    protected TypeAndPoint getTypeAndPointForKnowledge() {
+        return new TypeAndPoint(TYPE_KNOWLEDGE_LIKED, 10);
+    }
+
+}

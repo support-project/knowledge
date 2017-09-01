@@ -2,6 +2,7 @@ package org.support.project.knowledge.control.protect;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.support.project.common.bean.ValidateError;
@@ -225,7 +226,7 @@ public class SurveyControl extends TemplateControl {
             LOG.debug(PropertyUtil.reflectionToString(answer));
         }
         SurveyLogic.get().saveAnswer(answer, getLoginUserId());
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SURVEY, getLoginedUser(),
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SURVEY, getLoginedUser(), new Date(),
                 KnowledgesDao.get().selectOnKey(knowledgeId));
         
         // メッセージ送信

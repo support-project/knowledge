@@ -3,6 +3,7 @@ package org.support.project.knowledge.control.protect;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -213,7 +214,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LOG.trace("save");
 
         KnowledgesEntity insertedEntity = knowledgeLogic.insert(data, super.getLoginedUser());
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_INSERT, getLoginedUser(), insertedEntity);
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_INSERT, getLoginedUser(), new Date(), insertedEntity);
         
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
                 String.valueOf(insertedEntity.getKnowledgeId()), "message.success.insert");
@@ -489,7 +490,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
 
         CommentsEntity commentsEntity = KnowledgeLogic.get().saveComment(knowledgeId, comment, fileNos, getLoginedUser());
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_COMMENT_ADD, getLoginedUser(), commentsEntity);
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_COMMENT_ADD, getLoginedUser(), new Date(), commentsEntity);
 
         return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
     }
@@ -729,7 +730,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 dao.physicalDelete(entity);
             }
         }
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_STOCK, getLoginedUser(),
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_STOCK, getLoginedUser(), new Date(),
                 KnowledgesDao.get().selectOnKey(knowledgeId));
         
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, "saved", "message.success.save");

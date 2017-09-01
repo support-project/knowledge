@@ -1,6 +1,7 @@
 package org.support.project.knowledge.logic.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.support.project.aop.Aspect;
@@ -26,17 +27,24 @@ public class ActivityLogic {
         List<ActivityProcessor> array = new ArrayList<>();
         if (activity == Activity.KNOWLEDGE_INSERT) {
             array.add(KnowledgeInsertActivity.get());
+        } else if (activity == Activity.KNOWLEDGE_SHOW) {
+            array.add(KnowledgeShowActivity.get());
+        } else if (activity == Activity.KNOWLEDGE_LIKE) {
+            array.add(KnowledgeLikeActivity.get());
+        } else if (activity == Activity.KNOWLEDGE_STOCK) {
+            array.add(KnowledgeStockActivity.get());
         }
         
         
         return array;
     }
-    private void execute(Activity activity, LoginedUser user, KnowledgesEntity knowledge, CommentsEntity comment) {
+    private void execute(Activity activity, LoginedUser eventUser, Date eventDateTime, KnowledgesEntity knowledge, CommentsEntity comment) {
         List<ActivityProcessor> processors = this.getActivityProcessors(activity);
         for (ActivityProcessor activityProcessor : processors) {
             if (activityProcessor instanceof AbstractActivityProcessor) {
                 AbstractActivityProcessor processor = (AbstractActivityProcessor) activityProcessor;
-                processor.setUser(user);
+                processor.setEventUser(eventUser);
+                processor.setEventDateTime(eventDateTime);
             }
             if (activityProcessor instanceof AbstractAddPointForKnowledgeProcessor) {
                 if (knowledge == null) {
@@ -63,17 +71,17 @@ public class ActivityLogic {
     }
     
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void processActivity(Activity activity, LoginedUser user) {
-        execute(activity, user, null, null);
+    public void processActivity(Activity activity, LoginedUser eventUser, Date eventDateTime) {
+        execute(activity, eventUser, eventDateTime, null, null);
     }
     
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void processActivity(Activity activity, LoginedUser user, KnowledgesEntity knowledge) {
-        execute(activity, user, knowledge, null);
+    public void processActivity(Activity activity, LoginedUser eventUser, Date eventDateTime, KnowledgesEntity knowledge) {
+        execute(activity, eventUser, eventDateTime, knowledge, null);
     }
     
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void processActivity(Activity activity, LoginedUser user, CommentsEntity comment) {
-        execute(activity, user, null, comment);
+    public void processActivity(Activity activity, LoginedUser eventUser, Date eventDateTime, CommentsEntity comment) {
+        execute(activity, eventUser, eventDateTime, null, comment);
     }
 }
