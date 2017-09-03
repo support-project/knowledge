@@ -33,7 +33,10 @@ public class ActivityLogic {
             array.add(KnowledgeLikeActivity.get());
         } else if (activity == Activity.KNOWLEDGE_STOCK) {
             array.add(KnowledgeStockActivity.get());
+        } else if (activity == Activity.KNOWLEDGE_ANSWER) {
+            array.add(KnowledgeAnswerActivity.get());
         }
+        
         
         
         return array;

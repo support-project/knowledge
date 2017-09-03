@@ -53,8 +53,8 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
             addPointForUser(
                     getKnowledge().getInsertUser(), // ターゲットは登録者
                     activity.getActivityNo(),
-                    exec.type,
-                    exec.point);
+                    owner.type,
+                    owner.point);
         }
          // 記事のポイントアップ
         TypeAndPoint knowledge = getTypeAndPointForKnowledge();
@@ -62,8 +62,8 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
             addPointForKnowledge(
                     getKnowledge().getKnowledgeId(),
                     activity.getActivityNo(),
-                    exec.type,
-                    exec.point);
+                    knowledge.type,
+                    knowledge.point);
         }
     }
 

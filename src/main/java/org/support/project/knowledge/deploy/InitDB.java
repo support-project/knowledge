@@ -126,6 +126,8 @@ public class InitDB {
     }
 
     public void start() throws Exception {
+        LOG.info("Lastest database version is " + CURRENT + " now");
+
         String version = "";
 
         Migrate migrate;
@@ -151,6 +153,7 @@ public class InitDB {
                 doMigrate(migrate, version);
                 return;
             }
+            LOG.info("Current database version is " + version + " now");
 
             // バージョンアップ
             Iterator<String> versions = MAP.keySet().iterator();

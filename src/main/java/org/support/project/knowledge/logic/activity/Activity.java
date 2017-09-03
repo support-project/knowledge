@@ -47,6 +47,7 @@ package org.support.project.knowledge.logic.activity;
  * 
  * ユーザのポイントは、USER_CONFIGSテーブルへ格納する
  * ポイントはランダムで少し増減した方が面白い？？
+ * ポイントは、だいたいの定義で、各実装の処理内で拡張する（例えば、イイネは、件数が増える毎に、ナレッジに付くポイントは増加するとか）
  * 
  * @author koda
  */
@@ -56,7 +57,7 @@ public enum Activity {
     KNOWLEDGE_SHOW, // 記事参照
     KNOWLEDGE_LIKE, // イイネを押した
     KNOWLEDGE_STOCK, // ストックした
-    KNOWLEDGE_SURVEY, // アンケートに回答した
+    KNOWLEDGE_ANSWER, // アンケートに回答した
     KNOWLEDGE_EVENT_ADD, // イベントに参加した
     KNOWLEDGE_EVENT_DELETE, // イベント参加キャンセル
     KNOWLEDGE_COMMENT_ADD, // コメント追加
@@ -71,7 +72,7 @@ public enum Activity {
             return 3;
         } else if (this ==KNOWLEDGE_STOCK) {
             return 4;
-        } else if (this ==KNOWLEDGE_SURVEY) {
+        } else if (this ==KNOWLEDGE_ANSWER) {
             return 5;
         } else if (this ==KNOWLEDGE_EVENT_ADD) {
             return 6;
@@ -95,7 +96,7 @@ public enum Activity {
         } else if (type == 4) {
             return KNOWLEDGE_STOCK;
         } else if (type == 5) {
-            return KNOWLEDGE_SURVEY;
+            return KNOWLEDGE_ANSWER;
         } else if (type == 6) {
             return KNOWLEDGE_EVENT_ADD;
         } else if (type == -6) {

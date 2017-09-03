@@ -40,6 +40,9 @@ public interface ActivityProcessor {
     public static final int TYPE_KNOWLEDGE_DO_STOCK = 41;
     public static final int TYPE_KNOWLEDGE_STOCKED_BY_OHER = 42;
     public static final int TYPE_KNOWLEDGE_STOCKED = 43;
+    public static final int TYPE_KNOWLEDGE_DO_ANSWER = 51;
+    public static final int TYPE_KNOWLEDGE_ANSWERD_BY_OHER = 52;
+    public static final int TYPE_KNOWLEDGE_ANSWERD = 53;
     
     void execute() throws Exception;
 }

@@ -226,7 +226,7 @@ public class SurveyControl extends TemplateControl {
             LOG.debug(PropertyUtil.reflectionToString(answer));
         }
         SurveyLogic.get().saveAnswer(answer, getLoginUserId());
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SURVEY, getLoginedUser(), new Date(),
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_ANSWER, getLoginedUser(), new Date(),
                 KnowledgesDao.get().selectOnKey(knowledgeId));
         
         // メッセージ送信
