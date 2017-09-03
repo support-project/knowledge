@@ -9,12 +9,14 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
+import org.support.project.knowledge.dao.ParticipantsDao;
 import org.support.project.knowledge.dao.StockKnowledgesDao;
 import org.support.project.knowledge.dao.SurveyAnswersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.deploy.Migrate;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
+import org.support.project.knowledge.entity.ParticipantsEntity;
 import org.support.project.knowledge.entity.StockKnowledgesEntity;
 import org.support.project.knowledge.entity.SurveyAnswersEntity;
 import org.support.project.knowledge.entity.ViewHistoriesEntity;
@@ -59,12 +61,49 @@ public class Migrate_1_11_2 implements Migrate {
         doAddPointByKnowledgeStock();
         // Knowledgeのアンケートを回答したイベントによりポイント集計
         doAddPointByKnowledgeAnswer();
+        // Knowledgeイベント参加したイベントによりポイント集計
+        doAddPointByKnowledgeJoinEvent();
         
         
         return true;
     }
     
     
+    private void doAddPointByKnowledgeJoinEvent() throws InterruptedException {
+        List<ParticipantsEntity> list;
+        int offset = 0;
+        int limit = 50;
+        do {
+            list = doAddPointByKnowledgeJoinEvent(offset, limit);
+            offset = offset + limit;
+            synchronized (this) {
+                wait(200);
+            }
+        } while (list.size() > 0);
+    }
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    private List<ParticipantsEntity> doAddPointByKnowledgeJoinEvent(int offset, int limit) {
+        LOG.info("Aggregate point by knowledge join event");
+        List<ParticipantsEntity> list;
+        list = ParticipantsDao.get().selectAllWidthPager(limit, offset);
+        for (ParticipantsEntity item : list) {
+            KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
+            if (knowledge == null) {
+                LOG.info("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
+                continue;
+            }
+            LoginedUser user = new LoginedUser();
+            UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
+            if (account == null) {
+                LOG.info("    event user [" + knowledge.getInsertUser() + "] is not found. so skip add point by knowledge like.");
+                continue;
+            }
+            user.setLoginUser(account);
+            LOG.info("    knowledge [" + knowledge.getKnowledgeId() + "] ");
+            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_EVENT_ADD, user, item.getInsertDatetime(), knowledge);
+        }
+        return list;
+    }
 
     private void doAddPointByKnowledgeAnswer() throws InterruptedException {
         List<SurveyAnswersEntity> list;

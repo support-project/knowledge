@@ -43,6 +43,9 @@ public interface ActivityProcessor {
     public static final int TYPE_KNOWLEDGE_DO_ANSWER = 51;
     public static final int TYPE_KNOWLEDGE_ANSWERD_BY_OHER = 52;
     public static final int TYPE_KNOWLEDGE_ANSWERD = 53;
+    public static final int TYPE_KNOWLEDGE_DO_JOIN_EVENT = 61;
+    public static final int TYPE_KNOWLEDGE_JOINED_BY_OHER = 62;
+    public static final int TYPE_KNOWLEDGE_JOINED = 63;
     
     void execute() throws Exception;
 }

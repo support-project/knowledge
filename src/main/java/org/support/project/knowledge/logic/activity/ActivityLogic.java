@@ -35,6 +35,8 @@ public class ActivityLogic {
             array.add(KnowledgeStockActivity.get());
         } else if (activity == Activity.KNOWLEDGE_ANSWER) {
             array.add(KnowledgeAnswerActivity.get());
+        } else if (activity == Activity.KNOWLEDGE_EVENT_ADD) {
+            array.add(KnowledgeEventActivity.get());
         }
         
         
