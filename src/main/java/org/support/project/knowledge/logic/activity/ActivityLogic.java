@@ -37,12 +37,12 @@ public class ActivityLogic {
             array.add(KnowledgeAnswerActivity.get());
         } else if (activity == Activity.KNOWLEDGE_EVENT_ADD) {
             array.add(KnowledgeEventActivity.get());
+        } else if (activity == Activity.KNOWLEDGE_COMMENT_ADD) {
+            array.add(KnowledgeCommentActivity.get());
         }
-        
-        
-        
         return array;
     }
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     private void execute(Activity activity, LoginedUser eventUser, Date eventDateTime, KnowledgesEntity knowledge, CommentsEntity comment) {
         List<ActivityProcessor> processors = this.getActivityProcessors(activity);
         for (ActivityProcessor activityProcessor : processors) {
@@ -53,14 +53,14 @@ public class ActivityLogic {
             }
             if (activityProcessor instanceof AbstractAddPointForKnowledgeProcessor) {
                 if (knowledge == null) {
-                    LOG.warn("bad parameter [knowledge]");
+                    LOG.warn("bad parameter [knowledge], because it is null.");
                     continue;
                 }
                 AbstractAddPointForKnowledgeProcessor processor = (AbstractAddPointForKnowledgeProcessor) activityProcessor;
                 processor.setKnowledge(knowledge);
             } else if (activityProcessor instanceof AbstractAddPointForCommentProcessor) {
-                if (knowledge == null) {
-                    LOG.warn("bad parameter [comment]");
+                if (comment == null) {
+                    LOG.warn("bad parameter [comment], because it is null.");
                     continue;
                 }
                 AbstractAddPointForCommentProcessor processor = (AbstractAddPointForCommentProcessor) activityProcessor;

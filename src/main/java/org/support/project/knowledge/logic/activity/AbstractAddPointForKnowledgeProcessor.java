@@ -1,9 +1,13 @@
 package org.support.project.knowledge.logic.activity;
 
+import org.support.project.aop.Aspect;
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.entity.ActivitiesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 
 public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActivityProcessor {
+    private static final Log LOG = LogFactory.getLog(AbstractAddPointForKnowledgeProcessor.class);
     private KnowledgesEntity knowledge;
     /**
      * @return the knowledge
@@ -24,47 +28,61 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
     protected abstract TypeAndPoint getTypeAndPointForKnowledge();
     
     @Override
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void execute() throws Exception {
         if (getKnowledge() == null || eventUser == null) {
             // ありえないけど念のため確認
             return;
         }
         if (isExistsActivity(eventUser.getUserId(), getActivity(), String.valueOf(getKnowledge().getKnowledgeId()))) {
+            LOG.info("This activity is already exists. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
+                    + " [knowledge]" + getKnowledge().getKnowledgeId());
             // 既に指定のKnowledge登録済
             return;
         }
+        LOG.info("activity process started. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
+        + " [knowledge]" + getKnowledge().getKnowledgeId());
+        
+        StringBuilder logmsg = new StringBuilder();
+        logmsg.append("Activity : " + getActivity().toString());
+        
          // ポイント発行アクティビティを生成
         ActivitiesEntity activity = addActivity(
                 getActivity(),
                 String.valueOf(getKnowledge().getKnowledgeId()));
         
+        
         // 実行したユーザのポイントアップ
         TypeAndPoint exec = getTypeAndPointForActivityExecuter();
         if (exec != null) {
-            addPointForUser(
+            int point = addPointForUser(
                     eventUser.getUserId(), // ターゲットは、実行したユーザ
                     activity.getActivityNo(),
                     exec.type,
                     exec.point);
+            logmsg.append("\n\tAdd event user: [id]" + eventUser.getUserId() + " [type]" + exec.type + " [add]" + exec.point + " [result]" + point);
         }
          // 記事の登録者のポイントをアップ
         TypeAndPoint owner = getTypeAndPointForKnowledgeOwner();
         if (owner != null) {
-            addPointForUser(
+            int point = addPointForUser(
                     getKnowledge().getInsertUser(), // ターゲットは登録者
                     activity.getActivityNo(),
                     owner.type,
                     owner.point);
+            logmsg.append("\n\tAdd owner user: [id]" + getKnowledge().getInsertUser() + " [type]" + owner.type + " [add]" + owner.point + " [result]" + point);
         }
          // 記事のポイントアップ
         TypeAndPoint knowledge = getTypeAndPointForKnowledge();
         if (knowledge != null) {
-            addPointForKnowledge(
+            int point = addPointForKnowledge(
                     getKnowledge().getKnowledgeId(),
                     activity.getActivityNo(),
                     knowledge.type,
                     knowledge.point);
+            logmsg.append("\n\tAdd knowledge: [id]" + getKnowledge().getKnowledgeId() + " [type]" + knowledge.type + " [add]" + knowledge.point + " [result]" + point);
         }
+        LOG.info(logmsg.toString());
     }
 
 

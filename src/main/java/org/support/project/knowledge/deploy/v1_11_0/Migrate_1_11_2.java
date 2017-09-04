@@ -7,6 +7,7 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.UserConfig;
+import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.ParticipantsDao;
@@ -14,6 +15,7 @@ import org.support.project.knowledge.dao.StockKnowledgesDao;
 import org.support.project.knowledge.dao.SurveyAnswersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.deploy.Migrate;
+import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.ParticipantsEntity;
@@ -29,12 +31,14 @@ import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.UsersEntity;
 
 public class Migrate_1_11_2 implements Migrate {
+    private static final int _WAIT = 50;
     /** ログ */
     private static final Log LOG = LogFactory.getLog(Migrate_1_11_2.class);
 
     public static Migrate_1_11_2 get() {
         return org.support.project.di.Container.getComp(Migrate_1_11_2.class);
     }
+    private int limit = 1; // 1件毎にコミットいれないと、別コネクションで取得して結果をクリアしてしまう？
 
     @Override
     public boolean doMigrate() throws Exception {
@@ -48,12 +52,9 @@ public class Migrate_1_11_2 implements Migrate {
         doSetViewCountToKnowledge();
         // ユーザについているポイントをクリア
         clearUserPoint();
-        
         // Knowledgeを登録したイベントによりポイントを集計
         doAddPointByKnowledge();
         // Knowledgeを参照したイベントによりポイントを集計
-        doAddPointByKnowledgeShow();
-        // Knowledgeにイイネを押したイベントによりポイント集計
         doAddPointByKnowledgeShow();
         // Knowledgeにイイネを押したイベントによりポイント集計
         doAddPointByKnowledgeLike();
@@ -63,255 +64,278 @@ public class Migrate_1_11_2 implements Migrate {
         doAddPointByKnowledgeAnswer();
         // Knowledgeイベント参加したイベントによりポイント集計
         doAddPointByKnowledgeJoinEvent();
+        // コメントを登録したイベントによりポイント集計
+        doAddPointByKnowledgeComment();
         
         
         return true;
     }
     
     
-    private void doAddPointByKnowledgeJoinEvent() throws InterruptedException {
-        List<ParticipantsEntity> list;
+    private void doAddPointByKnowledgeComment() throws InterruptedException {
+        LOG.info("Aggregate point by comment");
+        List<CommentsEntity> list;
         int offset = 0;
-        int limit = 50;
         do {
-            list = doAddPointByKnowledgeJoinEvent(offset, limit);
+            list = doAddPointByKnowledgeComment(offset, limit);
             offset = offset + limit;
             synchronized (this) {
-                wait(200);
+                wait(_WAIT);
             }
         } while (list.size() > 0);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private List<ParticipantsEntity> doAddPointByKnowledgeJoinEvent(int offset, int limit) {
+    public List<CommentsEntity> doAddPointByKnowledgeComment(int offset, int limit) {
+        List<CommentsEntity> list;
+        list = CommentsDao.get().selectAllWidthPager(limit, offset);
+        for (CommentsEntity item : list) {
+            LoginedUser user = new LoginedUser();
+            UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
+            if (account == null) {
+                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge like.");
+                continue;
+            }
+            user.setLoginUser(account);
+            LOG.debug("    comment [" + item.getKnowledgeId() + "] ");
+            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_COMMENT_ADD, user, item.getInsertDatetime(), item);
+        }
+        return list;
+    }
+
+    private void doAddPointByKnowledgeJoinEvent() throws InterruptedException {
         LOG.info("Aggregate point by knowledge join event");
+        List<ParticipantsEntity> list;
+        int offset = 0;
+        do {
+            list = doAddPointByKnowledgeJoinEvent(offset, limit);
+            offset = offset + limit;
+            synchronized (this) {
+                wait(_WAIT);
+            }
+        } while (list.size() > 0);
+    }
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<ParticipantsEntity> doAddPointByKnowledgeJoinEvent(int offset, int limit) {
         List<ParticipantsEntity> list;
         list = ParticipantsDao.get().selectAllWidthPager(limit, offset);
         for (ParticipantsEntity item : list) {
             KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
-                LOG.info("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
                 continue;
             }
             LoginedUser user = new LoginedUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
-                LOG.info("    event user [" + knowledge.getInsertUser() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge like.");
                 continue;
             }
             user.setLoginUser(account);
-            LOG.info("    knowledge [" + knowledge.getKnowledgeId() + "] ");
+            LOG.debug("    knowledge [" + knowledge.getKnowledgeId() + "] ");
             ActivityLogic.get().processActivity(Activity.KNOWLEDGE_EVENT_ADD, user, item.getInsertDatetime(), knowledge);
         }
         return list;
     }
 
     private void doAddPointByKnowledgeAnswer() throws InterruptedException {
+        LOG.info("Aggregate point by knowledge answer");
         List<SurveyAnswersEntity> list;
         int offset = 0;
-        int limit = 50;
         do {
             list = doAddPointByKnowledgeAnswer(offset, limit);
             offset = offset + limit;
             synchronized (this) {
-                wait(200);
+                wait(_WAIT);
             }
         } while (list.size() > 0);
     }
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private List<SurveyAnswersEntity> doAddPointByKnowledgeAnswer(int offset, int limit) {
-        LOG.info("Aggregate point by knowledge answer");
+    public List<SurveyAnswersEntity> doAddPointByKnowledgeAnswer(int offset, int limit) {
         List<SurveyAnswersEntity> list;
         list = SurveyAnswersDao.get().selectAllWidthPager(limit, offset);
-        for (SurveyAnswersEntity answer : list) {
-            KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(answer.getKnowledgeId());
+        for (SurveyAnswersEntity item : list) {
+            KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
-                LOG.info("    knowledge [" + answer.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
                 continue;
             }
             LoginedUser user = new LoginedUser();
-            UsersEntity account = UsersDao.get().selectOnKey(answer.getInsertUser());
+            UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
-                LOG.info("    event user [" + knowledge.getInsertUser() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge like.");
                 continue;
             }
             user.setLoginUser(account);
-            LOG.info("    knowledge [" + knowledge.getKnowledgeId() + "] ");
-            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_ANSWER, user, answer.getInsertDatetime(), knowledge);
+            LOG.debug("    knowledge [" + knowledge.getKnowledgeId() + "] ");
+            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_ANSWER, user, item.getInsertDatetime(), knowledge);
         }
         return list;
     }
 
     private void doAddPointByKnowledgeStock() throws InterruptedException {
+        LOG.info("Aggregate point by knowledge stock");
         List<StockKnowledgesEntity> list;
         int offset = 0;
-        int limit = 50;
         do {
             list = doAddPointByKnowledgeStock(offset, limit);
             offset = offset + limit;
             synchronized (this) {
-                wait(200);
+                wait(_WAIT);
             }
         } while (list.size() > 0);
     }
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private List<StockKnowledgesEntity> doAddPointByKnowledgeStock(int offset, int limit) {
-        LOG.info("Aggregate point by knowledge stock");
+    public List<StockKnowledgesEntity> doAddPointByKnowledgeStock(int offset, int limit) {
         List<StockKnowledgesEntity> list;
         list = StockKnowledgesDao.get().selectAllWidthPager(limit, offset);
-        for (StockKnowledgesEntity stock : list) {
-            KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(stock.getKnowledgeId());
+        for (StockKnowledgesEntity item : list) {
+            KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
-                LOG.info("    knowledge [" + stock.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
                 continue;
             }
             LoginedUser user = new LoginedUser();
-            UsersEntity account = UsersDao.get().selectOnKey(stock.getInsertUser());
+            UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
-                LOG.info("    event user [" + knowledge.getInsertUser() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge like.");
                 continue;
             }
             user.setLoginUser(account);
-            LOG.info("    knowledge [" + knowledge.getKnowledgeId() + "] ");
-            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_STOCK, user, stock.getInsertDatetime(), knowledge);
+            LOG.debug("    knowledge [" + knowledge.getKnowledgeId() + "] ");
+            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_STOCK, user, item.getInsertDatetime(), knowledge);
         }
         return list;
     }
 
-    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     private void doAddPointByKnowledgeLike() throws InterruptedException {
+        LOG.info("Aggregate point by knowledge like");
         List<LikesEntity> list;
         int offset = 0;
-        int limit = 50;
         do {
             list = doAddPointByKnowledgeLike(offset, limit);
             offset = offset + limit;
             synchronized (this) {
-                wait(200);
+                wait(_WAIT);
             }
         } while (list.size() > 0);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private List<LikesEntity> doAddPointByKnowledgeLike(int offset, int limit) {
-        LOG.info("Aggregate point by knowledge like");
+    public List<LikesEntity> doAddPointByKnowledgeLike(int offset, int limit) {
         List<LikesEntity> list;
         list = LikesDao.get().selectAllWidthPager(limit, offset);
-        for (LikesEntity like : list) {
-            KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(like.getKnowledgeId());
+        for (LikesEntity item : list) {
+            KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
-                LOG.info("    knowledge [" + like.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
                 continue;
             }
             LoginedUser user = new LoginedUser();
-            UsersEntity account = UsersDao.get().selectOnKey(like.getInsertUser());
+            UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
-                LOG.info("    event user [" + knowledge.getInsertUser() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge like.");
                 continue;
             }
             user.setLoginUser(account);
-            LOG.info("    knowledge [" + knowledge.getKnowledgeId() + "] ");
-            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, user, like.getInsertDatetime(), knowledge);
+            LOG.debug("    knowledge [" + knowledge.getKnowledgeId() + "] ");
+            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, user, item.getInsertDatetime(), knowledge);
         }
         return list;
     }
     
     private void doAddPointByKnowledgeShow() throws InterruptedException {
+        LOG.info("Aggregate point by knowledge show");
         List<ViewHistoriesEntity> list;
         int offset = 0;
-        int limit = 50;
         do {
             list = doAddPointByKnowledgeShow(offset, limit);
             offset = offset + limit;
             synchronized (this) {
-                wait(200);
+                wait(_WAIT);
             }
         } while (list.size() > 0);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private List<ViewHistoriesEntity> doAddPointByKnowledgeShow(int offset, int limit) {
-        LOG.info("Aggregate point by knowledge show");
+    public List<ViewHistoriesEntity> doAddPointByKnowledgeShow(int offset, int limit) {
         List<ViewHistoriesEntity> list;
         list = ViewHistoriesDao.get().selectAllWidthPager(limit, offset);
-        for (ViewHistoriesEntity viewHistoriesEntity : list) {
-            KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(viewHistoriesEntity.getKnowledgeId());
+        for (ViewHistoriesEntity item : list) {
+            KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
-                LOG.info("    knowledge [" + viewHistoriesEntity.getKnowledgeId() + "] is not found. so skip add point by knowledge show.");
+                LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge show.");
                 continue;
             }
             LoginedUser user = new LoginedUser();
-            UsersEntity account = UsersDao.get().selectOnKey(viewHistoriesEntity.getInsertUser());
+            UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
-                LOG.info("    event user [" + knowledge.getInsertUser() + "] is not found. so skip add point by knowledge show.");
+                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge show.");
                 continue;
             }
             user.setLoginUser(account);
-            LOG.info("    knowledge [" + knowledge.getKnowledgeId() + "] ");
-            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, user, viewHistoriesEntity.getInsertDatetime(), knowledge);
+            LOG.debug("    knowledge [" + knowledge.getKnowledgeId() + "] ");
+            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, user, item.getInsertDatetime(), knowledge);
         }
         return list;
     }
 
     public void doAddPointByKnowledge() throws InterruptedException {
+        LOG.info("Aggregate point by knowledge insert");
         List<KnowledgesEntity> knowledges;
         int offset = 0;
-        int limit = 50;
         do {
             knowledges = doAddPointByKnowledge(offset, limit);
             offset = offset + limit;
             synchronized (this) {
-                wait(200);
+                wait(_WAIT);
             }
         } while (knowledges.size() > 0);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private List<KnowledgesEntity> doAddPointByKnowledge(int offset, int limit) {
-        LOG.info("Aggregate point by knowledge insert");
+    public List<KnowledgesEntity> doAddPointByKnowledge(int offset, int limit) {
         List<KnowledgesEntity> knowledges;
         knowledges = KnowledgesDao.get().selectAllWidthPager(limit, offset);
-        for (KnowledgesEntity knowledge : knowledges) {
+        for (KnowledgesEntity item : knowledges) {
             LoginedUser user = new LoginedUser();
-            UsersEntity account = UsersDao.get().selectOnKey(knowledge.getInsertUser());
+            UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
-                LOG.info("    insert user [" + knowledge.getInsertUser() + "] is not found. so skip add point by knowledge insert.");
+                LOG.debug("    insert user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge insert.");
                 continue;
             }
             user.setLoginUser(account);
-            LOG.info("    knowledge [" + knowledge.getKnowledgeId() + "] ");
-            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_INSERT, user, knowledge.getInsertDatetime(), knowledge);
+            LOG.debug("    knowledge [" + item.getKnowledgeId() + "] ");
+            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_INSERT, user, item.getInsertDatetime(), item);
         }
         return knowledges;
     }
     
     private void doSetViewCountToKnowledge() throws InterruptedException {
+        LOG.info("Set view count to Knowledge");
         List<KnowledgesEntity> knowledges;
         int offset = 0;
-        int limit = 50;
         do {
             knowledges = doSetViewCountToKnowledge(offset, limit);
             offset = offset + limit;
             synchronized (this) {
-                wait(200);
+                wait(_WAIT);
             }
         } while (knowledges.size() > 0);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private List<KnowledgesEntity> doSetViewCountToKnowledge(int offset, int limit) {
-        LOG.info("Set view count to Knowledge");
+    public List<KnowledgesEntity> doSetViewCountToKnowledge(int offset, int limit) {
         List<KnowledgesEntity> knowledges;
         knowledges = KnowledgesDao.get().selectAllWidthPager(limit, offset);
         for (KnowledgesEntity knowledge : knowledges) {
-            LOG.info("    knowledge [" + knowledge.getKnowledgeId() + "] ");
             long count = ViewHistoriesDao.get().selectCountOnKnowledgeId(knowledge.getKnowledgeId());
             KnowledgesDao.get().updateViewCount(count, knowledge.getKnowledgeId());
-            
             //ついでにポイントも初期化
             KnowledgesDao.get().updatePoint(knowledge.getKnowledgeId(), 0);
+            LOG.info("    knowledge [" + knowledge.getKnowledgeId() + "] is updated. view count : " + count);
         }
         return knowledges;
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private void clearUserPoint() {
+    public void clearUserPoint() {
         UserConfigsDao.get().removeAllUserConfig(AppConfig.get().getSystemName(), UserConfig.POINT);
     }
 }

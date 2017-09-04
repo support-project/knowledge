@@ -4,7 +4,10 @@ package org.support.project.knowledge.logic.activity;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.UserConfig;
@@ -25,6 +28,7 @@ import org.support.project.web.entity.UserConfigsEntity;
  * @author koda
  */
 public abstract class AbstractActivityProcessor implements ActivityProcessor {
+    private static final Log LOG = LogFactory.getLog(AbstractActivityProcessor.class);
     private static Object lockUser = new Object();
     private static Object lockKnowledge = new Object();
     
@@ -76,6 +80,7 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
      * @param kind アクティビティの種類
      * @param target そのアクティビティでポイントを付与する対象
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     protected ActivitiesEntity addActivity(Activity kind, String target) {
         ActivitiesEntity entity = new ActivitiesEntity();
         entity.setUserId(eventUser.getUserId());
@@ -98,6 +103,7 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
      * @param point
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     protected int addPointForUser(int targetUser, long activityNo, int type, int point) {
         synchronized(lockUser) {
             long num = PointUserHistoriesDao.get().selectNumOnUser(targetUser);
@@ -139,6 +145,7 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
      * @param point
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     protected int addPointForKnowledge(long knowledgeId, long activityNo, int type, int point) {
         synchronized (lockKnowledge) {
             long num = PointKnowledgeHistoriesDao.get().selectNumOnKnowledge(knowledgeId);
@@ -157,8 +164,9 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
             // Daoのupdateメソッドなどを使うと、「更新者」が更新されるので、ポイントのみを更新するメソッドを呼ぶ
             // なお、記事の存在チェックは行わない
             int now = KnowledgesDao.get().selectPoint(knowledgeId);
+            LOG.info("Add point [knowledge]" + knowledgeId + " [point]" + point + " [now]" + now);
             now = now + point;
-            KnowledgesDao.get().updatePoint(knowledgeId, point);
+            KnowledgesDao.get().updatePoint(knowledgeId, now);
             return now;
         }
     }
