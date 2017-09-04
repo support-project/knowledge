@@ -9,6 +9,7 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
+import org.support.project.knowledge.dao.LikeCommentsDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.ParticipantsDao;
 import org.support.project.knowledge.dao.StockKnowledgesDao;
@@ -17,6 +18,7 @@ import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.deploy.Migrate;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.LikeCommentsEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.ParticipantsEntity;
 import org.support.project.knowledge.entity.StockKnowledgesEntity;
@@ -66,15 +68,51 @@ public class Migrate_1_11_2 implements Migrate {
         // Knowledgeイベント参加したイベントによりポイント集計
         doAddPointByKnowledgeJoinEvent();
         // コメントを登録したイベントによりポイント集計
-        doAddPointByKnowledgeComment();
-        
+        doAddPointByCommentInsert();
+        // コメントへのイイネイベントによりポイント集計
+        doAddPointByCommentLike();
         
         return true;
     }
     
-    
-    private void doAddPointByKnowledgeComment() throws InterruptedException {
-        LOG.info("Aggregate point by comment");
+    private void doAddPointByCommentLike() throws InterruptedException {
+        LOG.info("Aggregate point by comment like");
+        List<LikeCommentsEntity> list;
+        int offset = 0;
+        do {
+            list = doAddPointByCommentLike(offset, limit);
+            offset = offset + limit;
+            synchronized (this) {
+                wait(_WAIT);
+            }
+        } while (list.size() > 0);
+    }
+
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    private List<LikeCommentsEntity> doAddPointByCommentLike(int offset, int limit2) {
+        List<LikeCommentsEntity> list;
+        list = LikeCommentsDao.get().selectAllWidthPager(limit, offset, Order.ASC);
+        for (LikeCommentsEntity item : list) {
+            CommentsEntity comment = CommentsDao.get().selectOnKey(item.getCommentNo());
+            if (comment == null) {
+                LOG.debug("    comment [" + item.getCommentNo() + "] is not found. so skip add point by comment like.");
+                continue;
+            }
+            LoginedUser user = new LoginedUser();
+            UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
+            if (account == null) {
+                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by comment like.");
+                continue;
+            }
+            user.setLoginUser(account);
+            LOG.debug("    comment [" + item.getCommentNo() + "], knowledge [ " + comment.getKnowledgeId() + "]");
+            ActivityLogic.get().processActivity(Activity.COMMENT_LIKE, user, item.getInsertDatetime(), comment);
+        }
+        return list;
+    }
+
+    private void doAddPointByCommentInsert() throws InterruptedException {
+        LOG.info("Aggregate point by comment insert");
         List<CommentsEntity> list;
         int offset = 0;
         do {
@@ -93,12 +131,12 @@ public class Migrate_1_11_2 implements Migrate {
             LoginedUser user = new LoginedUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
-                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by comment insert.");
                 continue;
             }
             user.setLoginUser(account);
-            LOG.debug("    comment [" + item.getKnowledgeId() + "] ");
-            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_COMMENT_ADD, user, item.getInsertDatetime(), item);
+            LOG.debug("    comment [" + item.getCommentNo() + "], knowledge [ " + item.getKnowledgeId() + "]");
+            ActivityLogic.get().processActivity(Activity.COMMENT_INSERT, user, item.getInsertDatetime(), item);
         }
         return list;
     }
@@ -122,13 +160,13 @@ public class Migrate_1_11_2 implements Migrate {
         for (ParticipantsEntity item : list) {
             KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
-                LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge event.");
                 continue;
             }
             LoginedUser user = new LoginedUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
-                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge event.");
                 continue;
             }
             user.setLoginUser(account);
@@ -158,13 +196,13 @@ public class Migrate_1_11_2 implements Migrate {
         for (SurveyAnswersEntity item : list) {
             KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
-                LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge survey answer.");
                 continue;
             }
             LoginedUser user = new LoginedUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
-                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge survey answer.");
                 continue;
             }
             user.setLoginUser(account);
@@ -194,13 +232,13 @@ public class Migrate_1_11_2 implements Migrate {
         for (StockKnowledgesEntity item : list) {
             KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
-                LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge stock.");
                 continue;
             }
             LoginedUser user = new LoginedUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
-                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge like.");
+                LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge stock.");
                 continue;
             }
             user.setLoginUser(account);

@@ -11,20 +11,20 @@ import org.support.project.di.Container;
  * 
  * @author koda
  */
-public class KnowledgeCommentActivity extends AbstractAddPointForCommentProcessor {
-    private static final Log LOG = LogFactory.getLog(KnowledgeCommentActivity.class);
-    public static KnowledgeCommentActivity get() {
-        return Container.getComp(KnowledgeCommentActivity.class);
+public class CommentInsertActivity extends AbstractAddPointForCommentProcessor {
+    private static final Log LOG = LogFactory.getLog(CommentInsertActivity.class);
+    public static CommentInsertActivity get() {
+        return Container.getComp(CommentInsertActivity.class);
     }
     
     @Override
     protected Activity getActivity() {
         LOG.debug("Start add point process on add comment knowledge.");
-        return Activity.KNOWLEDGE_COMMENT_ADD;
+        return Activity.COMMENT_INSERT;
     }
     @Override
     protected TypeAndPoint getTypeAndPointForActivityExecuter() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_DO_ADD_COMMENT, 20);
+        return new TypeAndPoint(TYPE_COMMENT_DO_INSERT, 20);
     }
     @Override
     protected TypeAndPoint getTypeAndPointForCommentOwner() {
@@ -32,7 +32,7 @@ public class KnowledgeCommentActivity extends AbstractAddPointForCommentProcesso
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledge() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_ADDED_COMMENT, 20);
+        return new TypeAndPoint(TYPE_COMMENT_INSERTED, 20);
     }
 
 }

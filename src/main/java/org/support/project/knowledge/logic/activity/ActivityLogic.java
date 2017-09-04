@@ -37,8 +37,10 @@ public class ActivityLogic {
             array.add(KnowledgeAnswerActivity.get());
         } else if (activity == Activity.KNOWLEDGE_EVENT_ADD) {
             array.add(KnowledgeEventActivity.get());
-        } else if (activity == Activity.KNOWLEDGE_COMMENT_ADD) {
-            array.add(KnowledgeCommentActivity.get());
+        } else if (activity == Activity.COMMENT_INSERT) {
+            array.add(CommentInsertActivity.get());
+        } else if (activity == Activity.COMMENT_LIKE) {
+            array.add(CommentLikeActivity.get());
         }
         return array;
     }

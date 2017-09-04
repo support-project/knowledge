@@ -493,7 +493,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
 
         CommentsEntity commentsEntity = KnowledgeLogic.get().saveComment(knowledgeId, comment, fileNos, getLoginedUser());
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_COMMENT_ADD, getLoginedUser(), new Date(), commentsEntity);
+        ActivityLogic.get().processActivity(Activity.COMMENT_INSERT, getLoginedUser(), new Date(), commentsEntity);
 
         return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
     }

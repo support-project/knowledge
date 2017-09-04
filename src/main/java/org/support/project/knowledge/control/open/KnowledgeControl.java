@@ -680,7 +680,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LikeCount likeCount = new LikeCount();
         likeCount.setCount(count);
         
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_COMMENT_LIKE, getLoginedUser(), new Date(),
+        ActivityLogic.get().processActivity(Activity.COMMENT_LIKE, getLoginedUser(), new Date(),
                 CommentsDao.get().selectOnKey(commentNo));
         return send(likeCount);
     }

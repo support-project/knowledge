@@ -11,7 +11,7 @@ package org.support.project.knowledge.logic.activity;
  * 5    | knowledge_id  | アンケート回答
  * 6    | knowledge_id  | イベント参加
  * 101  | comment_no    | コメント登録
- * 102  | comment_no    | コメントにイイネ登録
+ * 103  | comment_no    | コメントにイイネ登録
  * -6   | knowledge_id  | イベント参加の取り消し
  * 
  * ---------------------------------------------------------------------------
@@ -38,9 +38,9 @@ package org.support.project.knowledge.logic.activity;
  * 6    | 63          | 記事         | 5       | 記事のポイントが追加（一つの記事に対し、参照者毎に1回のみ）
  * 101  | 1011        | 登録者       | 20       | コメントを投稿すると、投稿者にポイント追加
  * 101  | 1013        | 記事         | 20       | 記事にコメントが付くと、その記事に対しポイント追加
- * 102  | 1021        | 参照者       | 2       | イイネを押すと、押した人にポイント追加
- * 102  | 1022        | 登録者       | 10       | コメントにイイネが付くと、そのコメントを登録したユーザにポイントが付く
- * 102  | 1023        | 記事         | 10       | コメントにイイネがつくと、そのコメントの記事に対しポイント追加
+ * 103  | 1031        | 参照者       | 2       | イイネを押すと、押した人にポイント追加
+ * 103  | 1032        | 登録者       | 10       | コメントにイイネが付くと、そのコメントを登録したユーザにポイントが付く
+ * 103  | 1033        | 記事         | 10       | コメントにイイネがつくと、そのコメントの記事に対しポイント追加
  * -6   | -61         | 参照者       | 5        | イベント参加者にポイント付与（取り消しなのでマイナス）
  * -6   | -62         | 記事登録者    | 5       | 記事の登録者にポイント追加（取り消しなのでマイナス）
  * -6   | -63         | 記事         | 5       | 記事のポイントが追加（取り消しなのでマイナス）
@@ -60,8 +60,8 @@ public enum Activity {
     KNOWLEDGE_ANSWER, // アンケートに回答した
     KNOWLEDGE_EVENT_ADD, // イベントに参加した
     KNOWLEDGE_EVENT_DELETE, // イベント参加キャンセル
-    KNOWLEDGE_COMMENT_ADD, // コメント追加
-    KNOWLEDGE_COMMENT_LIKE; // コメントにイイネを押した
+    COMMENT_INSERT, // コメント追加
+    COMMENT_LIKE; // コメントにイイネを押した
     
     public int getValue() {
         if (this == KNOWLEDGE_INSERT) {
@@ -78,9 +78,9 @@ public enum Activity {
             return 6;
         } else if (this ==KNOWLEDGE_EVENT_DELETE) {
             return -6;
-        } else if (this ==KNOWLEDGE_COMMENT_ADD) {
+        } else if (this ==COMMENT_INSERT) {
             return 101;
-        } else if (this ==KNOWLEDGE_COMMENT_LIKE) {
+        } else if (this ==COMMENT_LIKE) {
             return 102;
         }
         return Integer.MIN_VALUE;
@@ -102,9 +102,9 @@ public enum Activity {
         } else if (type == -6) {
             return KNOWLEDGE_EVENT_DELETE;
         } else if (type == 101) {
-            return KNOWLEDGE_COMMENT_ADD;
+            return COMMENT_INSERT;
         } else if (type == 102) {
-            return KNOWLEDGE_COMMENT_LIKE;
+            return COMMENT_LIKE;
         }
         return NONE;
     }
