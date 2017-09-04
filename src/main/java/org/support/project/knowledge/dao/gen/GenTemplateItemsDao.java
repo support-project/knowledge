@@ -43,6 +43,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<TemplateItemsEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_physical_select_all.sql");
         return executeQueryList(sql, TemplateItemsEntity.class);
@@ -53,6 +54,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<TemplateItemsEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, TemplateItemsEntity.class, limit, offset);
@@ -63,6 +65,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * @param  typeId typeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public TemplateItemsEntity physicalSelectOnKey(Integer itemNo, Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, TemplateItemsEntity.class, itemNo, typeId);
@@ -71,6 +74,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<TemplateItemsEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_select_all.sql");
         return executeQueryList(sql, TemplateItemsEntity.class);
@@ -81,6 +85,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<TemplateItemsEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_select_all_with_pager.sql");
         return executeQueryList(sql, TemplateItemsEntity.class, limit, offset);
@@ -89,6 +94,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -99,6 +105,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * @param  typeId typeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public TemplateItemsEntity selectOnKey(Integer itemNo, Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_select_on_key.sql");
         return executeQuerySingle(sql, TemplateItemsEntity.class, itemNo, typeId);
@@ -108,6 +115,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<TemplateItemsEntity> selectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_select_on_item_no.sql");
         return executeQueryList(sql, TemplateItemsEntity.class, itemNo);
@@ -117,6 +125,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * @param typeId typeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<TemplateItemsEntity> selectOnTypeId(Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_select_on_type_id.sql");
         return executeQueryList(sql, TemplateItemsEntity.class, typeId);
@@ -126,6 +135,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<TemplateItemsEntity> physicalSelectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_physical_select_on_item_no.sql");
         return executeQueryList(sql, TemplateItemsEntity.class, itemNo);
@@ -135,6 +145,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * @param typeId typeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<TemplateItemsEntity> physicalSelectOnTypeId(Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TemplateItemsDao/TemplateItemsDao_physical_select_on_type_id.sql");
         return executeQueryList(sql, TemplateItemsEntity.class, typeId);
@@ -143,6 +154,7 @@ public class GenTemplateItemsDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM TEMPLATE_ITEMS";
         return executeQuerySingle(sql, Integer.class);

@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -32,6 +33,7 @@ public class ParticipantsDao extends GenParticipantsDao {
      * @param knowledgeId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<Participation> selectParticipations(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ParticipantsDao/ParticipantsDao_selectParticipations.sql");
         return executeQueryList(sql, Participation.class, knowledgeId);

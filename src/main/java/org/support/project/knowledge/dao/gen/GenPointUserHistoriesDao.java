@@ -43,6 +43,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointUserHistoriesEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/PointUserHistoriesDao_physical_select_all.sql");
         return executeQueryList(sql, PointUserHistoriesEntity.class);
@@ -53,6 +54,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointUserHistoriesEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/PointUserHistoriesDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, PointUserHistoriesEntity.class, limit, offset);
@@ -63,6 +65,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * @param  userId userId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public PointUserHistoriesEntity physicalSelectOnKey(Long historyNo, Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/PointUserHistoriesDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, PointUserHistoriesEntity.class, historyNo, userId);
@@ -71,6 +74,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointUserHistoriesEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/PointUserHistoriesDao_select_all.sql");
         return executeQueryList(sql, PointUserHistoriesEntity.class);
@@ -81,6 +85,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointUserHistoriesEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/PointUserHistoriesDao_select_all_with_pager.sql");
         return executeQueryList(sql, PointUserHistoriesEntity.class, limit, offset);
@@ -89,6 +94,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/PointUserHistoriesDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -99,6 +105,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * @param  userId userId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public PointUserHistoriesEntity selectOnKey(Long historyNo, Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/PointUserHistoriesDao_select_on_key.sql");
         return executeQuerySingle(sql, PointUserHistoriesEntity.class, historyNo, userId);
@@ -108,6 +115,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * @param historyNo historyNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointUserHistoriesEntity> selectOnHistoryNo(Long historyNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/PointUserHistoriesDao_select_on_history_no.sql");
         return executeQueryList(sql, PointUserHistoriesEntity.class, historyNo);
@@ -117,6 +125,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * @param userId userId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointUserHistoriesEntity> selectOnUserId(Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/PointUserHistoriesDao_select_on_user_id.sql");
         return executeQueryList(sql, PointUserHistoriesEntity.class, userId);
@@ -126,6 +135,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * @param historyNo historyNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointUserHistoriesEntity> physicalSelectOnHistoryNo(Long historyNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/PointUserHistoriesDao_physical_select_on_history_no.sql");
         return executeQueryList(sql, PointUserHistoriesEntity.class, historyNo);
@@ -135,6 +145,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * @param userId userId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointUserHistoriesEntity> physicalSelectOnUserId(Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/PointUserHistoriesDao_physical_select_on_user_id.sql");
         return executeQueryList(sql, PointUserHistoriesEntity.class, userId);
@@ -143,6 +154,7 @@ public class GenPointUserHistoriesDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM POINT_USER_HISTORIES";
         return executeQuerySingle(sql, Integer.class);

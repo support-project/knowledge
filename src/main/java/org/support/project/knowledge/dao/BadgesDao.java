@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -32,6 +33,7 @@ public class BadgesDao extends GenBadgesDao {
      * Get Next id
      * @return next id
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer getNextId() {
         String sql = "SELECT MAX(NO) FROM BADGES;";
         Integer integer = executeQuerySingle(sql, Integer.class);

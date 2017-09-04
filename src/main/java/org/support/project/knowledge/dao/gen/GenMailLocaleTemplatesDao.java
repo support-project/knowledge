@@ -43,6 +43,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailLocaleTemplatesEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_physical_select_all.sql");
         return executeQueryList(sql, MailLocaleTemplatesEntity.class);
@@ -53,6 +54,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailLocaleTemplatesEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, MailLocaleTemplatesEntity.class, limit, offset);
@@ -63,6 +65,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * @param  templateId templateId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public MailLocaleTemplatesEntity physicalSelectOnKey(String key, String templateId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, MailLocaleTemplatesEntity.class, key, templateId);
@@ -71,6 +74,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailLocaleTemplatesEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_select_all.sql");
         return executeQueryList(sql, MailLocaleTemplatesEntity.class);
@@ -81,6 +85,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailLocaleTemplatesEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_select_all_with_pager.sql");
         return executeQueryList(sql, MailLocaleTemplatesEntity.class, limit, offset);
@@ -89,6 +94,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -99,6 +105,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * @param  templateId templateId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public MailLocaleTemplatesEntity selectOnKey(String key, String templateId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_select_on_key.sql");
         return executeQuerySingle(sql, MailLocaleTemplatesEntity.class, key, templateId);
@@ -108,6 +115,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * @param key key
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailLocaleTemplatesEntity> selectOnKey(String key) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_select_on_col_key.sql");
         return executeQueryList(sql, MailLocaleTemplatesEntity.class, key);
@@ -117,6 +125,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * @param templateId templateId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailLocaleTemplatesEntity> selectOnTemplateId(String templateId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_select_on_template_id.sql");
         return executeQueryList(sql, MailLocaleTemplatesEntity.class, templateId);
@@ -126,6 +135,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * @param key key
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailLocaleTemplatesEntity> physicalSelectOnKey(String key) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_physical_select_on_col_key.sql");
         return executeQueryList(sql, MailLocaleTemplatesEntity.class, key);
@@ -135,6 +145,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * @param templateId templateId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailLocaleTemplatesEntity> physicalSelectOnTemplateId(String templateId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailLocaleTemplatesDao/MailLocaleTemplatesDao_physical_select_on_template_id.sql");
         return executeQueryList(sql, MailLocaleTemplatesEntity.class, templateId);
@@ -143,6 +154,7 @@ public class GenMailLocaleTemplatesDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM MAIL_LOCALE_TEMPLATES";
         return executeQuerySingle(sql, Integer.class);

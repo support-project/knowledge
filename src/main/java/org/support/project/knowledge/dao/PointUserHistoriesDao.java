@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -21,6 +22,7 @@ public class PointUserHistoriesDao extends GenPointUserHistoriesDao {
         return Container.getComp(PointUserHistoriesDao.class);
     }
     
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public long selectNumOnUser(int user) {
         String sql = "SELECT MAX(HISTORY_NO) FROM POINT_USER_HISTORIES WHERE USER_ID = ?";
         return executeQuerySingle(sql, Long.class, user);

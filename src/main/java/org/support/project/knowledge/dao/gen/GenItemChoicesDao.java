@@ -43,6 +43,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ItemChoicesEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_physical_select_all.sql");
         return executeQueryList(sql, ItemChoicesEntity.class);
@@ -53,6 +54,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ItemChoicesEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, ItemChoicesEntity.class, limit, offset);
@@ -64,6 +66,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * @param  typeId typeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ItemChoicesEntity physicalSelectOnKey(Integer choiceNo, Integer itemNo, Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, ItemChoicesEntity.class, choiceNo, itemNo, typeId);
@@ -72,6 +75,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ItemChoicesEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_select_all.sql");
         return executeQueryList(sql, ItemChoicesEntity.class);
@@ -82,6 +86,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ItemChoicesEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_select_all_with_pager.sql");
         return executeQueryList(sql, ItemChoicesEntity.class, limit, offset);
@@ -90,6 +95,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -101,6 +107,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * @param  typeId typeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ItemChoicesEntity selectOnKey(Integer choiceNo, Integer itemNo, Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_select_on_key.sql");
         return executeQuerySingle(sql, ItemChoicesEntity.class, choiceNo, itemNo, typeId);
@@ -110,6 +117,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * @param choiceNo choiceNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ItemChoicesEntity> selectOnChoiceNo(Integer choiceNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_select_on_choice_no.sql");
         return executeQueryList(sql, ItemChoicesEntity.class, choiceNo);
@@ -119,6 +127,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ItemChoicesEntity> selectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_select_on_item_no.sql");
         return executeQueryList(sql, ItemChoicesEntity.class, itemNo);
@@ -128,6 +137,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * @param typeId typeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ItemChoicesEntity> selectOnTypeId(Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_select_on_type_id.sql");
         return executeQueryList(sql, ItemChoicesEntity.class, typeId);
@@ -137,6 +147,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * @param choiceNo choiceNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ItemChoicesEntity> physicalSelectOnChoiceNo(Integer choiceNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_physical_select_on_choice_no.sql");
         return executeQueryList(sql, ItemChoicesEntity.class, choiceNo);
@@ -146,6 +157,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ItemChoicesEntity> physicalSelectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_physical_select_on_item_no.sql");
         return executeQueryList(sql, ItemChoicesEntity.class, itemNo);
@@ -155,6 +167,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * @param typeId typeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ItemChoicesEntity> physicalSelectOnTypeId(Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ItemChoicesDao/ItemChoicesDao_physical_select_on_type_id.sql");
         return executeQueryList(sql, ItemChoicesEntity.class, typeId);
@@ -163,6 +176,7 @@ public class GenItemChoicesDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM ITEM_CHOICES";
         return executeQuerySingle(sql, Integer.class);

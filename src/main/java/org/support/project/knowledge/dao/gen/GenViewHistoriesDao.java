@@ -43,6 +43,7 @@ public class GenViewHistoriesDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ViewHistoriesEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_physical_select_all.sql");
         return executeQueryList(sql, ViewHistoriesEntity.class);
@@ -53,6 +54,7 @@ public class GenViewHistoriesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ViewHistoriesEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, ViewHistoriesEntity.class, limit, offset);
@@ -62,6 +64,7 @@ public class GenViewHistoriesDao extends AbstractDao {
      * @param  historyNo historyNo
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ViewHistoriesEntity physicalSelectOnKey(Long historyNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, ViewHistoriesEntity.class, historyNo);
@@ -70,6 +73,7 @@ public class GenViewHistoriesDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ViewHistoriesEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_select_all.sql");
         return executeQueryList(sql, ViewHistoriesEntity.class);
@@ -80,6 +84,7 @@ public class GenViewHistoriesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ViewHistoriesEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_select_all_with_pager.sql");
         return executeQueryList(sql, ViewHistoriesEntity.class, limit, offset);
@@ -88,6 +93,7 @@ public class GenViewHistoriesDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -97,6 +103,7 @@ public class GenViewHistoriesDao extends AbstractDao {
      * @param  historyNo historyNo
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ViewHistoriesEntity selectOnKey(Long historyNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ViewHistoriesDao/ViewHistoriesDao_select_on_key.sql");
         return executeQuerySingle(sql, ViewHistoriesEntity.class, historyNo);
@@ -105,6 +112,7 @@ public class GenViewHistoriesDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM VIEW_HISTORIES";
         return executeQuerySingle(sql, Integer.class);

@@ -43,6 +43,7 @@ public class GenCommentsDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<CommentsEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_physical_select_all.sql");
         return executeQueryList(sql, CommentsEntity.class);
@@ -53,6 +54,7 @@ public class GenCommentsDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<CommentsEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, CommentsEntity.class, limit, offset);
@@ -62,6 +64,7 @@ public class GenCommentsDao extends AbstractDao {
      * @param  commentNo commentNo
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public CommentsEntity physicalSelectOnKey(Long commentNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, CommentsEntity.class, commentNo);
@@ -70,6 +73,7 @@ public class GenCommentsDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<CommentsEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_select_all.sql");
         return executeQueryList(sql, CommentsEntity.class);
@@ -80,6 +84,7 @@ public class GenCommentsDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<CommentsEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_select_all_with_pager.sql");
         return executeQueryList(sql, CommentsEntity.class, limit, offset);
@@ -88,6 +93,7 @@ public class GenCommentsDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -97,6 +103,7 @@ public class GenCommentsDao extends AbstractDao {
      * @param  commentNo commentNo
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public CommentsEntity selectOnKey(Long commentNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/CommentsDao/CommentsDao_select_on_key.sql");
         return executeQuerySingle(sql, CommentsEntity.class, commentNo);
@@ -105,6 +112,7 @@ public class GenCommentsDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM COMMENTS";
         return executeQuerySingle(sql, Integer.class);

@@ -43,6 +43,7 @@ public class GenNotifyQueuesDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<NotifyQueuesEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_physical_select_all.sql");
         return executeQueryList(sql, NotifyQueuesEntity.class);
@@ -53,6 +54,7 @@ public class GenNotifyQueuesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<NotifyQueuesEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, NotifyQueuesEntity.class, limit, offset);
@@ -62,6 +64,7 @@ public class GenNotifyQueuesDao extends AbstractDao {
      * @param  hash hash
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public NotifyQueuesEntity physicalSelectOnKey(String hash) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, NotifyQueuesEntity.class, hash);
@@ -70,6 +73,7 @@ public class GenNotifyQueuesDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<NotifyQueuesEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_select_all.sql");
         return executeQueryList(sql, NotifyQueuesEntity.class);
@@ -80,6 +84,7 @@ public class GenNotifyQueuesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<NotifyQueuesEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_select_all_with_pager.sql");
         return executeQueryList(sql, NotifyQueuesEntity.class, limit, offset);
@@ -88,6 +93,7 @@ public class GenNotifyQueuesDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -97,6 +103,7 @@ public class GenNotifyQueuesDao extends AbstractDao {
      * @param  hash hash
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public NotifyQueuesEntity selectOnKey(String hash) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyQueuesDao/NotifyQueuesDao_select_on_key.sql");
         return executeQuerySingle(sql, NotifyQueuesEntity.class, hash);
@@ -105,6 +112,7 @@ public class GenNotifyQueuesDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM NOTIFY_QUEUES";
         return executeQuerySingle(sql, Integer.class);

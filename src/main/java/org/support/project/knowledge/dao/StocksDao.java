@@ -3,6 +3,7 @@ package org.support.project.knowledge.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -39,6 +40,7 @@ public class StocksDao extends GenStocksDao {
      * @param limit
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<StocksEntity> selectMyStocksWithKnowledgeCount(LoginedUser loginedUser, int offset, int limit) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_selectMyStocksWithKnowledgeCount.sql");
@@ -54,6 +56,7 @@ public class StocksDao extends GenStocksDao {
      * @param listLimit
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<Stock> selectMyStocksWithStocked(LoginedUser loginedUser, Long knowledgeId, int offset, int limit) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_selectMyStocksWithStocked.sql");
         return executeQueryList(sql, Stock.class, knowledgeId, loginedUser.getUserId(), limit, offset);
@@ -65,6 +68,7 @@ public class StocksDao extends GenStocksDao {
      * @param loginedUser
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<StocksEntity> selectStockOnKnowledge(KnowledgesEntity knowledgesEntity, LoginedUser loginedUser) {
         if (knowledgesEntity == null || loginedUser == null) {
             return new ArrayList<>();
@@ -80,6 +84,7 @@ public class StocksDao extends GenStocksDao {
      * @param limit
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<StocksEntity> selectMyStocks(LoginedUser loginedUser, int offset, int limit) {
         String sql = "SELECT * FROM STOCKS WHERE STOCKS.INSERT_USER = ? AND STOCKS.DELETE_FLAG = 0 ORDER BY STOCKS.INSERT_DATETIME LIMIT ? OFFSET ?";
         return executeQueryList(sql, StocksEntity.class, loginedUser.getUserId(), limit, offset);

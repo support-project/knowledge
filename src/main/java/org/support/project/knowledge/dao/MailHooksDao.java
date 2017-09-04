@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.sql.Timestamp;
 
+import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -36,6 +37,7 @@ public class MailHooksDao extends GenMailHooksDao {
      * Get Next id
      * @return next id
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer getNextId() {
         String sql = "SELECT MAX(HOOK_ID) FROM MAIL_HOOKS;";
         Integer integer = executeQuerySingle(sql, Integer.class);
@@ -52,6 +54,7 @@ public class MailHooksDao extends GenMailHooksDao {
      * @see org.support.project.knowledge.dao.gen.GenMailHooksDao#save(org.support.project.knowledge.entity.MailHooksEntity)
      */
     @Override
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public MailHooksEntity save(MailHooksEntity entity) {
         if (entity.getHookId() != null) {
             MailHooksEntity db = physicalSelectOnKey(entity.getHookId());

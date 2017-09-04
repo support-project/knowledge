@@ -43,6 +43,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointKnowledgeHistoriesEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointKnowledgeHistoriesDao/PointKnowledgeHistoriesDao_physical_select_all.sql");
         return executeQueryList(sql, PointKnowledgeHistoriesEntity.class);
@@ -53,6 +54,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointKnowledgeHistoriesEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointKnowledgeHistoriesDao/PointKnowledgeHistoriesDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, PointKnowledgeHistoriesEntity.class, limit, offset);
@@ -63,6 +65,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * @param  knowledgeId knowledgeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public PointKnowledgeHistoriesEntity physicalSelectOnKey(Long historyNo, Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointKnowledgeHistoriesDao/PointKnowledgeHistoriesDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, PointKnowledgeHistoriesEntity.class, historyNo, knowledgeId);
@@ -71,6 +74,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointKnowledgeHistoriesEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointKnowledgeHistoriesDao/PointKnowledgeHistoriesDao_select_all.sql");
         return executeQueryList(sql, PointKnowledgeHistoriesEntity.class);
@@ -81,6 +85,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointKnowledgeHistoriesEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointKnowledgeHistoriesDao/PointKnowledgeHistoriesDao_select_all_with_pager.sql");
         return executeQueryList(sql, PointKnowledgeHistoriesEntity.class, limit, offset);
@@ -89,6 +94,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointKnowledgeHistoriesDao/PointKnowledgeHistoriesDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -99,6 +105,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * @param  knowledgeId knowledgeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public PointKnowledgeHistoriesEntity selectOnKey(Long historyNo, Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointKnowledgeHistoriesDao/PointKnowledgeHistoriesDao_select_on_key.sql");
         return executeQuerySingle(sql, PointKnowledgeHistoriesEntity.class, historyNo, knowledgeId);
@@ -108,6 +115,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * @param historyNo historyNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointKnowledgeHistoriesEntity> selectOnHistoryNo(Long historyNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointKnowledgeHistoriesDao/PointKnowledgeHistoriesDao_select_on_history_no.sql");
         return executeQueryList(sql, PointKnowledgeHistoriesEntity.class, historyNo);
@@ -117,6 +125,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * @param knowledgeId knowledgeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointKnowledgeHistoriesEntity> selectOnKnowledgeId(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointKnowledgeHistoriesDao/PointKnowledgeHistoriesDao_select_on_knowledge_id.sql");
         return executeQueryList(sql, PointKnowledgeHistoriesEntity.class, knowledgeId);
@@ -126,6 +135,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * @param historyNo historyNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointKnowledgeHistoriesEntity> physicalSelectOnHistoryNo(Long historyNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointKnowledgeHistoriesDao/PointKnowledgeHistoriesDao_physical_select_on_history_no.sql");
         return executeQueryList(sql, PointKnowledgeHistoriesEntity.class, historyNo);
@@ -135,6 +145,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * @param knowledgeId knowledgeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<PointKnowledgeHistoriesEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointKnowledgeHistoriesDao/PointKnowledgeHistoriesDao_physical_select_on_knowledge_id.sql");
         return executeQueryList(sql, PointKnowledgeHistoriesEntity.class, knowledgeId);
@@ -143,6 +154,7 @@ public class GenPointKnowledgeHistoriesDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM POINT_KNOWLEDGE_HISTORIES";
         return executeQuerySingle(sql, Integer.class);

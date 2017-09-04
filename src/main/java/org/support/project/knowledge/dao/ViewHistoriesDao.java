@@ -3,6 +3,7 @@ package org.support.project.knowledge.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -33,6 +34,7 @@ public class ViewHistoriesDao extends GenViewHistoriesDao {
      * @param userId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<Long> selectViewdKnowledgeIds(List<StockKnowledge> stocks, Integer userId) {
         if (stocks == null || stocks.isEmpty()) {
             return new ArrayList<>();
@@ -54,6 +56,7 @@ public class ViewHistoriesDao extends GenViewHistoriesDao {
         return executeQueryList(sql.toString(), Long.class, params.toArray(new Object[0]));
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public long selectCountOnKnowledgeId(Long knowledgeId) {
         String sql = "SELECT COUNT(*) FROM VIEW_HISTORIES WHERE KNOWLEDGE_ID = ?";
         return executeQuerySingle(sql, Long.class, knowledgeId);

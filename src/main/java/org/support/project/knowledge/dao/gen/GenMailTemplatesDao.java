@@ -43,6 +43,7 @@ public class GenMailTemplatesDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailTemplatesEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailTemplatesDao/MailTemplatesDao_physical_select_all.sql");
         return executeQueryList(sql, MailTemplatesEntity.class);
@@ -53,6 +54,7 @@ public class GenMailTemplatesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailTemplatesEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailTemplatesDao/MailTemplatesDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, MailTemplatesEntity.class, limit, offset);
@@ -62,6 +64,7 @@ public class GenMailTemplatesDao extends AbstractDao {
      * @param  templateId templateId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public MailTemplatesEntity physicalSelectOnKey(String templateId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailTemplatesDao/MailTemplatesDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, MailTemplatesEntity.class, templateId);
@@ -70,6 +73,7 @@ public class GenMailTemplatesDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailTemplatesEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailTemplatesDao/MailTemplatesDao_select_all.sql");
         return executeQueryList(sql, MailTemplatesEntity.class);
@@ -80,6 +84,7 @@ public class GenMailTemplatesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailTemplatesEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailTemplatesDao/MailTemplatesDao_select_all_with_pager.sql");
         return executeQueryList(sql, MailTemplatesEntity.class, limit, offset);
@@ -88,6 +93,7 @@ public class GenMailTemplatesDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailTemplatesDao/MailTemplatesDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -97,6 +103,7 @@ public class GenMailTemplatesDao extends AbstractDao {
      * @param  templateId templateId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public MailTemplatesEntity selectOnKey(String templateId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailTemplatesDao/MailTemplatesDao_select_on_key.sql");
         return executeQuerySingle(sql, MailTemplatesEntity.class, templateId);
@@ -105,6 +112,7 @@ public class GenMailTemplatesDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM MAIL_TEMPLATES";
         return executeQuerySingle(sql, Integer.class);

@@ -43,6 +43,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_physical_select_all.sql");
         return executeQueryList(sql, SurveyItemsEntity.class);
@@ -53,6 +54,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, SurveyItemsEntity.class, limit, offset);
@@ -63,6 +65,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param  knowledgeId knowledgeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public SurveyItemsEntity physicalSelectOnKey(Integer itemNo, Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, SurveyItemsEntity.class, itemNo, knowledgeId);
@@ -71,6 +74,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_all.sql");
         return executeQueryList(sql, SurveyItemsEntity.class);
@@ -81,6 +85,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_all_with_pager.sql");
         return executeQueryList(sql, SurveyItemsEntity.class, limit, offset);
@@ -89,6 +94,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -99,6 +105,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param  knowledgeId knowledgeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public SurveyItemsEntity selectOnKey(Integer itemNo, Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_on_key.sql");
         return executeQuerySingle(sql, SurveyItemsEntity.class, itemNo, knowledgeId);
@@ -108,6 +115,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> selectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_on_item_no.sql");
         return executeQueryList(sql, SurveyItemsEntity.class, itemNo);
@@ -117,6 +125,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param knowledgeId knowledgeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> selectOnKnowledgeId(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_on_knowledge_id.sql");
         return executeQueryList(sql, SurveyItemsEntity.class, knowledgeId);
@@ -126,6 +135,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> physicalSelectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_physical_select_on_item_no.sql");
         return executeQueryList(sql, SurveyItemsEntity.class, itemNo);
@@ -135,6 +145,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param knowledgeId knowledgeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_physical_select_on_knowledge_id.sql");
         return executeQueryList(sql, SurveyItemsEntity.class, knowledgeId);
@@ -143,6 +154,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM SURVEY_ITEMS";
         return executeQuerySingle(sql, Integer.class);

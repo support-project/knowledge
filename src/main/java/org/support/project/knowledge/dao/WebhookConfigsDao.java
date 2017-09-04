@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -34,6 +35,7 @@ public class WebhookConfigsDao extends GenWebhookConfigsDao {
     /**
      * IDを採番 ※コミットしなくても次のIDを採番する為、保存しなければ欠番になる
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer getNextId() {
         String sql = "SELECT MAX(HOOK_ID) FROM WEBHOOK_CONFIGS;";
         Integer integer = executeQuerySingle(sql, Integer.class);
@@ -50,6 +52,7 @@ public class WebhookConfigsDao extends GenWebhookConfigsDao {
      * @param hook
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<WebhookConfigsEntity> selectOnHook(String hook) {
         String sql = "SELECT * FROM WEBHOOK_CONFIGS WHERE HOOK = ? AND DELETE_FLAG = 0";
         return executeQueryList(sql, WebhookConfigsEntity.class, hook);

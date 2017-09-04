@@ -43,6 +43,7 @@ public class GenLikeCommentsDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<LikeCommentsEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_physical_select_all.sql");
         return executeQueryList(sql, LikeCommentsEntity.class);
@@ -53,6 +54,7 @@ public class GenLikeCommentsDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<LikeCommentsEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, LikeCommentsEntity.class, limit, offset);
@@ -62,6 +64,7 @@ public class GenLikeCommentsDao extends AbstractDao {
      * @param  no no
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public LikeCommentsEntity physicalSelectOnKey(Long no) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, LikeCommentsEntity.class, no);
@@ -70,6 +73,7 @@ public class GenLikeCommentsDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<LikeCommentsEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_select_all.sql");
         return executeQueryList(sql, LikeCommentsEntity.class);
@@ -80,6 +84,7 @@ public class GenLikeCommentsDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<LikeCommentsEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_select_all_with_pager.sql");
         return executeQueryList(sql, LikeCommentsEntity.class, limit, offset);
@@ -88,6 +93,7 @@ public class GenLikeCommentsDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -97,6 +103,7 @@ public class GenLikeCommentsDao extends AbstractDao {
      * @param  no no
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public LikeCommentsEntity selectOnKey(Long no) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/LikeCommentsDao/LikeCommentsDao_select_on_key.sql");
         return executeQuerySingle(sql, LikeCommentsEntity.class, no);
@@ -105,6 +112,7 @@ public class GenLikeCommentsDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM LIKE_COMMENTS";
         return executeQuerySingle(sql, Integer.class);

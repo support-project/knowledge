@@ -43,6 +43,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeItemValuesEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_physical_select_all.sql");
         return executeQueryList(sql, KnowledgeItemValuesEntity.class);
@@ -53,6 +54,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeItemValuesEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, KnowledgeItemValuesEntity.class, limit, offset);
@@ -64,6 +66,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * @param  typeId typeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgeItemValuesEntity physicalSelectOnKey(Integer itemNo, Long knowledgeId, Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, KnowledgeItemValuesEntity.class, itemNo, knowledgeId, typeId);
@@ -72,6 +75,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeItemValuesEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_select_all.sql");
         return executeQueryList(sql, KnowledgeItemValuesEntity.class);
@@ -82,6 +86,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeItemValuesEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_select_all_with_pager.sql");
         return executeQueryList(sql, KnowledgeItemValuesEntity.class, limit, offset);
@@ -90,6 +95,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -101,6 +107,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * @param  typeId typeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgeItemValuesEntity selectOnKey(Integer itemNo, Long knowledgeId, Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_select_on_key.sql");
         return executeQuerySingle(sql, KnowledgeItemValuesEntity.class, itemNo, knowledgeId, typeId);
@@ -110,6 +117,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeItemValuesEntity> selectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_select_on_item_no.sql");
         return executeQueryList(sql, KnowledgeItemValuesEntity.class, itemNo);
@@ -119,6 +127,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * @param knowledgeId knowledgeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeItemValuesEntity> selectOnKnowledgeId(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_select_on_knowledge_id.sql");
         return executeQueryList(sql, KnowledgeItemValuesEntity.class, knowledgeId);
@@ -128,6 +137,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * @param typeId typeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeItemValuesEntity> selectOnTypeId(Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_select_on_type_id.sql");
         return executeQueryList(sql, KnowledgeItemValuesEntity.class, typeId);
@@ -137,6 +147,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeItemValuesEntity> physicalSelectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_physical_select_on_item_no.sql");
         return executeQueryList(sql, KnowledgeItemValuesEntity.class, itemNo);
@@ -146,6 +157,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * @param knowledgeId knowledgeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeItemValuesEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_physical_select_on_knowledge_id.sql");
         return executeQueryList(sql, KnowledgeItemValuesEntity.class, knowledgeId);
@@ -155,6 +167,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * @param typeId typeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeItemValuesEntity> physicalSelectOnTypeId(Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeItemValuesDao/KnowledgeItemValuesDao_physical_select_on_type_id.sql");
         return executeQueryList(sql, KnowledgeItemValuesEntity.class, typeId);
@@ -163,6 +176,7 @@ public class GenKnowledgeItemValuesDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM KNOWLEDGE_ITEM_VALUES";
         return executeQuerySingle(sql, Integer.class);

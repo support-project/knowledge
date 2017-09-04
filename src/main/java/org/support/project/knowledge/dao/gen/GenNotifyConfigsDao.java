@@ -43,6 +43,7 @@ public class GenNotifyConfigsDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<NotifyConfigsEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_physical_select_all.sql");
         return executeQueryList(sql, NotifyConfigsEntity.class);
@@ -53,6 +54,7 @@ public class GenNotifyConfigsDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<NotifyConfigsEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, NotifyConfigsEntity.class, limit, offset);
@@ -62,6 +64,7 @@ public class GenNotifyConfigsDao extends AbstractDao {
      * @param  userId userId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public NotifyConfigsEntity physicalSelectOnKey(Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, NotifyConfigsEntity.class, userId);
@@ -70,6 +73,7 @@ public class GenNotifyConfigsDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<NotifyConfigsEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_select_all.sql");
         return executeQueryList(sql, NotifyConfigsEntity.class);
@@ -80,6 +84,7 @@ public class GenNotifyConfigsDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<NotifyConfigsEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_select_all_with_pager.sql");
         return executeQueryList(sql, NotifyConfigsEntity.class, limit, offset);
@@ -88,6 +93,7 @@ public class GenNotifyConfigsDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -97,6 +103,7 @@ public class GenNotifyConfigsDao extends AbstractDao {
      * @param  userId userId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public NotifyConfigsEntity selectOnKey(Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/NotifyConfigsDao_select_on_key.sql");
         return executeQuerySingle(sql, NotifyConfigsEntity.class, userId);
@@ -105,6 +112,7 @@ public class GenNotifyConfigsDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM NOTIFY_CONFIGS";
         return executeQuerySingle(sql, Integer.class);

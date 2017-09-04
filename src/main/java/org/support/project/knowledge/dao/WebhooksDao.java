@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -32,6 +33,7 @@ public class WebhooksDao extends GenWebhooksDao {
      * @param status
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<WebhooksEntity> selectOnStatus(int status) {
         String sql = "SELECT * FROM WEBHOOKS WHERE STATUS = ? AND DELETE_FLAG = 0";
         return executeQueryList(sql, WebhooksEntity.class, status);

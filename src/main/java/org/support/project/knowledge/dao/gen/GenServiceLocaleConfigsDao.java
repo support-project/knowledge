@@ -43,6 +43,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ServiceLocaleConfigsEntity> physicalSelectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_physical_select_all.sql");
         return executeQueryList(sql, ServiceLocaleConfigsEntity.class);
@@ -53,6 +54,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ServiceLocaleConfigsEntity> physicalSelectAllWithPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_physical_select_all_with_pager.sql");
         return executeQueryList(sql, ServiceLocaleConfigsEntity.class, limit, offset);
@@ -63,6 +65,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * @param  serviceName serviceName
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ServiceLocaleConfigsEntity physicalSelectOnKey(String localeKey, String serviceName) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, ServiceLocaleConfigsEntity.class, localeKey, serviceName);
@@ -71,6 +74,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ServiceLocaleConfigsEntity> selectAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_select_all.sql");
         return executeQueryList(sql, ServiceLocaleConfigsEntity.class);
@@ -81,6 +85,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ServiceLocaleConfigsEntity> selectAllWidthPager(int limit, int offset) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_select_all_with_pager.sql");
         return executeQueryList(sql, ServiceLocaleConfigsEntity.class, limit, offset);
@@ -89,6 +94,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -99,6 +105,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * @param  serviceName serviceName
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public ServiceLocaleConfigsEntity selectOnKey(String localeKey, String serviceName) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_select_on_key.sql");
         return executeQuerySingle(sql, ServiceLocaleConfigsEntity.class, localeKey, serviceName);
@@ -108,6 +115,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * @param localeKey localeKey
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ServiceLocaleConfigsEntity> selectOnLocaleKey(String localeKey) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_select_on_locale_key.sql");
         return executeQueryList(sql, ServiceLocaleConfigsEntity.class, localeKey);
@@ -117,6 +125,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * @param serviceName serviceName
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ServiceLocaleConfigsEntity> selectOnServiceName(String serviceName) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_select_on_service_name.sql");
         return executeQueryList(sql, ServiceLocaleConfigsEntity.class, serviceName);
@@ -126,6 +135,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * @param localeKey localeKey
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ServiceLocaleConfigsEntity> physicalSelectOnLocaleKey(String localeKey) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_physical_select_on_locale_key.sql");
         return executeQueryList(sql, ServiceLocaleConfigsEntity.class, localeKey);
@@ -135,6 +145,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * @param serviceName serviceName
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ServiceLocaleConfigsEntity> physicalSelectOnServiceName(String serviceName) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ServiceLocaleConfigsDao/ServiceLocaleConfigsDao_physical_select_on_service_name.sql");
         return executeQueryList(sql, ServiceLocaleConfigsEntity.class, serviceName);
@@ -143,6 +154,7 @@ public class GenServiceLocaleConfigsDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM SERVICE_LOCALE_CONFIGS";
         return executeQuerySingle(sql, Integer.class);

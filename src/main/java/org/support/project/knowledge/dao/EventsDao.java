@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -31,6 +32,7 @@ public class EventsDao extends GenEventsDao {
         return Container.getComp(EventsDao.class);
     }
     
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<EventsEntity> selectAccessAbleEvents(Calendar start, Calendar end, LoginedUser loginedUser) {
         String sql;
         if (loginedUser != null && loginedUser.isAdmin()) {
@@ -49,6 +51,7 @@ public class EventsDao extends GenEventsDao {
         return executeQueryList(sql, EventsEntity.class, params.toArray(new Object[0]));
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     private String addAccessCondition(LoginedUser loginedUser, String sql, List<Object> params) {
         Integer loginuserId = Integer.MIN_VALUE;
         if (loginedUser != null) {
@@ -79,6 +82,7 @@ public class EventsDao extends GenEventsDao {
         return sql;
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> selectAccessAbleEvents(Calendar start, LoginedUser loginedUser, int limit, int offset) {
         String sql;
         if (loginedUser != null && loginedUser.isAdmin()) {
