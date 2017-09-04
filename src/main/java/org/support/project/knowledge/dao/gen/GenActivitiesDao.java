@@ -12,6 +12,7 @@ import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
 import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.config.Order;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
@@ -45,7 +46,17 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ActivitiesEntity> physicalSelectAll() { 
+        return physicalSelectAll(Order.DESC);
+    }
+    /**
+     * Select all data.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<ActivitiesEntity> physicalSelectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ActivitiesDao/ActivitiesDao_physical_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, ActivitiesEntity.class);
     }
     /**
@@ -56,7 +67,19 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ActivitiesEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        return physicalSelectAllWithPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data on limit and offset
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<ActivitiesEntity> physicalSelectAllWithPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ActivitiesDao/ActivitiesDao_physical_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, ActivitiesEntity.class, limit, offset);
     }
     /**
@@ -75,7 +98,17 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ActivitiesEntity> selectAll() { 
+        return selectAll(Order.DESC);
+    }
+    /**
+     * Select all data that not deleted.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<ActivitiesEntity> selectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ActivitiesDao/ActivitiesDao_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, ActivitiesEntity.class);
     }
     /**
@@ -86,7 +119,19 @@ public class GenActivitiesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ActivitiesEntity> selectAllWidthPager(int limit, int offset) { 
+        return selectAllWidthPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data that not deleted with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<ActivitiesEntity> selectAllWidthPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ActivitiesDao/ActivitiesDao_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, ActivitiesEntity.class, limit, offset);
     }
     /**

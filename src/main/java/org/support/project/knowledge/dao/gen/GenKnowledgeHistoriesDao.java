@@ -12,6 +12,7 @@ import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
 import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.config.Order;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
@@ -45,7 +46,17 @@ public class GenKnowledgeHistoriesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeHistoriesEntity> physicalSelectAll() { 
+        return physicalSelectAll(Order.DESC);
+    }
+    /**
+     * Select all data.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<KnowledgeHistoriesEntity> physicalSelectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_physical_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, KnowledgeHistoriesEntity.class);
     }
     /**
@@ -56,7 +67,19 @@ public class GenKnowledgeHistoriesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeHistoriesEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        return physicalSelectAllWithPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data on limit and offset
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<KnowledgeHistoriesEntity> physicalSelectAllWithPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_physical_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, KnowledgeHistoriesEntity.class, limit, offset);
     }
     /**
@@ -76,7 +99,17 @@ public class GenKnowledgeHistoriesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeHistoriesEntity> selectAll() { 
+        return selectAll(Order.DESC);
+    }
+    /**
+     * Select all data that not deleted.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<KnowledgeHistoriesEntity> selectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, KnowledgeHistoriesEntity.class);
     }
     /**
@@ -87,7 +120,19 @@ public class GenKnowledgeHistoriesDao extends AbstractDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeHistoriesEntity> selectAllWidthPager(int limit, int offset) { 
+        return selectAllWidthPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data that not deleted with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<KnowledgeHistoriesEntity> selectAllWidthPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, KnowledgeHistoriesEntity.class, limit, offset);
     }
     /**
