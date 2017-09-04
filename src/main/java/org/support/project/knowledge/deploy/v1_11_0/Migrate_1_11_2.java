@@ -24,6 +24,7 @@ import org.support.project.knowledge.entity.SurveyAnswersEntity;
 import org.support.project.knowledge.entity.ViewHistoriesEntity;
 import org.support.project.knowledge.logic.activity.Activity;
 import org.support.project.knowledge.logic.activity.ActivityLogic;
+import org.support.project.ormapping.config.Order;
 import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.UserConfigsDao;
@@ -87,7 +88,7 @@ public class Migrate_1_11_2 implements Migrate {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<CommentsEntity> doAddPointByKnowledgeComment(int offset, int limit) {
         List<CommentsEntity> list;
-        list = CommentsDao.get().selectAllWidthPager(limit, offset);
+        list = CommentsDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (CommentsEntity item : list) {
             LoginedUser user = new LoginedUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
@@ -117,7 +118,7 @@ public class Migrate_1_11_2 implements Migrate {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ParticipantsEntity> doAddPointByKnowledgeJoinEvent(int offset, int limit) {
         List<ParticipantsEntity> list;
-        list = ParticipantsDao.get().selectAllWidthPager(limit, offset);
+        list = ParticipantsDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (ParticipantsEntity item : list) {
             KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
@@ -153,7 +154,7 @@ public class Migrate_1_11_2 implements Migrate {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyAnswersEntity> doAddPointByKnowledgeAnswer(int offset, int limit) {
         List<SurveyAnswersEntity> list;
-        list = SurveyAnswersDao.get().selectAllWidthPager(limit, offset);
+        list = SurveyAnswersDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (SurveyAnswersEntity item : list) {
             KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
@@ -189,7 +190,7 @@ public class Migrate_1_11_2 implements Migrate {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<StockKnowledgesEntity> doAddPointByKnowledgeStock(int offset, int limit) {
         List<StockKnowledgesEntity> list;
-        list = StockKnowledgesDao.get().selectAllWidthPager(limit, offset);
+        list = StockKnowledgesDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (StockKnowledgesEntity item : list) {
             KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
@@ -224,7 +225,7 @@ public class Migrate_1_11_2 implements Migrate {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<LikesEntity> doAddPointByKnowledgeLike(int offset, int limit) {
         List<LikesEntity> list;
-        list = LikesDao.get().selectAllWidthPager(limit, offset);
+        list = LikesDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (LikesEntity item : list) {
             KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
@@ -259,7 +260,7 @@ public class Migrate_1_11_2 implements Migrate {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ViewHistoriesEntity> doAddPointByKnowledgeShow(int offset, int limit) {
         List<ViewHistoriesEntity> list;
-        list = ViewHistoriesDao.get().selectAllWidthPager(limit, offset);
+        list = ViewHistoriesDao.get().selectDistinctAllWidthPager(limit, offset);
         for (ViewHistoriesEntity item : list) {
             KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(item.getKnowledgeId());
             if (knowledge == null) {
@@ -294,7 +295,7 @@ public class Migrate_1_11_2 implements Migrate {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> doAddPointByKnowledge(int offset, int limit) {
         List<KnowledgesEntity> knowledges;
-        knowledges = KnowledgesDao.get().selectAllWidthPager(limit, offset);
+        knowledges = KnowledgesDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (KnowledgesEntity item : knowledges) {
             LoginedUser user = new LoginedUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
@@ -324,7 +325,7 @@ public class Migrate_1_11_2 implements Migrate {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> doSetViewCountToKnowledge(int offset, int limit) {
         List<KnowledgesEntity> knowledges;
-        knowledges = KnowledgesDao.get().selectAllWidthPager(limit, offset);
+        knowledges = KnowledgesDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (KnowledgesEntity knowledge : knowledges) {
             long count = ViewHistoriesDao.get().selectCountOnKnowledgeId(knowledge.getKnowledgeId());
             KnowledgesDao.get().updateViewCount(count, knowledge.getKnowledgeId());

@@ -8,6 +8,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenViewHistoriesDao;
+import org.support.project.knowledge.entity.ViewHistoriesEntity;
 import org.support.project.knowledge.vo.StockKnowledge;
 
 /**
@@ -60,6 +61,17 @@ public class ViewHistoriesDao extends GenViewHistoriesDao {
     public long selectCountOnKnowledgeId(Long knowledgeId) {
         String sql = "SELECT COUNT(*) FROM VIEW_HISTORIES WHERE KNOWLEDGE_ID = ?";
         return executeQuerySingle(sql, Long.class, knowledgeId);
+    }
+
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<ViewHistoriesEntity> selectDistinctAllWidthPager(int limit, int offset) {
+        String sql = "SELECT * FROM VIEW_HISTORIES AS M WHERE NOT EXISTS ("
+                + "SELECT 1 FROM VIEW_HISTORIES AS S WHERE M.KNOWLEDGE_ID = S.KNOWLEDGE_ID "
+                + "AND M.INSERT_USER = S.INSERT_USER "
+                + "AND M.INSERT_DATETIME > S.INSERT_DATETIME"
+                + ") AND M.INSERT_USER IS NOT NULL "
+                + "ORDER BY M.KNOWLEDGE_ID ASC LIMIT ? OFFSET ?;";
+        return executeQueryList(sql.toString(), ViewHistoriesEntity.class, limit, offset);
     }
 
 }
