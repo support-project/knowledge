@@ -2,6 +2,7 @@ package org.support.project.knowledge.logic.activity;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -25,9 +26,20 @@ public class KnowledgeInsertActivity extends AbstractAddPointForKnowledgeProcess
         LOG.debug("Start add point process on insert knowledge.");
         return Activity.KNOWLEDGE_INSERT;
     }
+    
+    private int getPoint() {
+        // 文章が多い力先はポイントが高いように調整
+        int point = 50;
+        if (StringUtils.isNotEmpty(getKnowledge().getContent()) && getKnowledge().getContent().length() > 700) {
+            int add = (getKnowledge().getContent().length() - 700) / 50;
+            point += add;
+        }
+        return point;
+    }
+    
     @Override
     protected TypeAndPoint getTypeAndPointForActivityExecuter() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_DO_INSERT, 50);
+        return new TypeAndPoint(TYPE_KNOWLEDGE_DO_INSERT, getPoint());
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledgeOwner() {
@@ -35,6 +47,6 @@ public class KnowledgeInsertActivity extends AbstractAddPointForKnowledgeProcess
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledge() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_INSERTED, 50);
+        return new TypeAndPoint(TYPE_KNOWLEDGE_INSERTED, getPoint());
     }
 }

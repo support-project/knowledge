@@ -62,6 +62,12 @@ public class ViewHistoriesDao extends GenViewHistoriesDao {
         String sql = "SELECT COUNT(*) FROM VIEW_HISTORIES WHERE KNOWLEDGE_ID = ?";
         return executeQuerySingle(sql, Long.class, knowledgeId);
     }
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public long selectUniqueUserCountOnKnowledgeId(Long knowledgeId) {
+        String sql = "SELECT COUNT(*) FROM ("
+                + "SELECT KNOWLEDGE_ID, INSERT_USER FROM VIEW_HISTORIES WHERE KNOWLEDGE_ID = ? GROUP BY KNOWLEDGE_ID, INSERT_USER) AS SUBQ";
+        return executeQuerySingle(sql, Long.class, knowledgeId);
+    }
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ViewHistoriesEntity> selectDistinctAllWidthPager(int limit, int offset) {

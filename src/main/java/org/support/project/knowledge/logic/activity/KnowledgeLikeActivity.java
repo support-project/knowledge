@@ -3,6 +3,7 @@ package org.support.project.knowledge.logic.activity;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
+import org.support.project.knowledge.dao.LikesDao;
 
 /**
  * 
@@ -18,6 +19,22 @@ public class KnowledgeLikeActivity extends AbstractAddPointForKnowledgeProcessor
         return Container.getComp(KnowledgeLikeActivity.class);
     }
     
+    private int getPoint() {
+        // ユニークユーザのイイネ件数によりポイントを増やす
+        int point = 10;
+        long count = LikesDao.get().selectUniqueUserCountOnKnowledgeId(getKnowledge().getKnowledgeId());
+        int add = 0;
+        if (count > 100) {
+            add = 1000;
+        } else if (count > 100){
+            add = ((int) count - 100 ) / 2; // 100人を超えると、2人毎に1ポイント増えるようになる
+        } else if (count > 10){
+            add = (int) count / 5; // 5人を超えると、ポイントが増える(5人毎に１ポイント）
+        }
+        point += add;
+        return point;
+    }
+    
     @Override
     protected Activity getActivity() {
         LOG.debug("Start add point process on like knowledge.");
@@ -29,11 +46,11 @@ public class KnowledgeLikeActivity extends AbstractAddPointForKnowledgeProcessor
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledgeOwner() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_LIKED_BY_OHER, 10);
+        return new TypeAndPoint(TYPE_KNOWLEDGE_LIKED_BY_OHER, getPoint());
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledge() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_LIKED, 10);
+        return new TypeAndPoint(TYPE_KNOWLEDGE_LIKED, getPoint());
     }
 
 }

@@ -5,6 +5,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.ViewHistoriesDao;
 
 /**
  * 
@@ -27,17 +28,32 @@ public class KnowledgeShowActivity extends AbstractAddPointForKnowledgeProcessor
         LOG.debug("Start add point process on show knowledge.");
         return Activity.KNOWLEDGE_SHOW;
     }
+    private int getPoint() {
+        // ユニークな参照者が多くなると、ポイントが増えるように調整(投稿数が少なくても、良い記事を書けばポイントが高くなる）
+        int point = 1;
+        long count = ViewHistoriesDao.get().selectUniqueUserCountOnKnowledgeId(getKnowledge().getKnowledgeId());
+        int add = 0;
+        if (count > 1000) {
+            add = 200;
+        } else if (count > 100){
+            add = ((int) count - 100 ) / 5; // 100人を超えると、5人毎に1ポイント増えるようになる
+        } else if (count > 10){
+            add = (int) count / 10; // 10人を超えると、ポイントが増える(10人毎に１ポイント）
+        }
+        point += add;
+        return point;
+    }
     @Override
     protected TypeAndPoint getTypeAndPointForActivityExecuter() {
         return new TypeAndPoint(TYPE_KNOWLEDGE_DO_SHOW, 1);
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledgeOwner() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_SHOWN_BY_OHER, 1);
+        return new TypeAndPoint(TYPE_KNOWLEDGE_SHOWN_BY_OHER, getPoint());
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledge() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_SHOWN, 1);
+        return new TypeAndPoint(TYPE_KNOWLEDGE_SHOWN, getPoint());
     }
 
 }
