@@ -3,6 +3,7 @@ SET
    ACTIVITY_NO = ?
  , TYPE = ?
  , POINT = ?
+ , TOTAL = ?
  , INSERT_USER = ?
  , INSERT_DATETIME = ?
  , UPDATE_USER = ?

@@ -6,7 +6,8 @@ create table POINT_USER_HISTORIES (
   , HISTORY_NO BIGINT not null
   , ACTIVITY_NO BIGINT not null
   , TYPE integer not null
-  , POINT integer
+  , POINT integer not null
+  , TOTAL integer not null
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -24,6 +25,7 @@ create table POINT_KNOWLEDGE_HISTORIES (
   , ACTIVITY_NO BIGINT not null
   , TYPE integer not null
   , POINT integer not null
+  , TOTAL integer not null
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -854,6 +856,7 @@ comment on column POINT_USER_HISTORIES.HISTORY_NO is '履歴番号';
 comment on column POINT_USER_HISTORIES.ACTIVITY_NO is 'アクティビティ番号';
 comment on column POINT_USER_HISTORIES.TYPE is '獲得のタイプ';
 comment on column POINT_USER_HISTORIES.POINT is '獲得ポイント';
+comment on column POINT_USER_HISTORIES.TOTAL is 'トータルポイント';
 comment on column POINT_USER_HISTORIES.INSERT_USER is '登録ユーザ';
 comment on column POINT_USER_HISTORIES.INSERT_DATETIME is '登録日時';
 comment on column POINT_USER_HISTORIES.UPDATE_USER is '更新ユーザ';
@@ -866,6 +869,7 @@ comment on column POINT_KNOWLEDGE_HISTORIES.HISTORY_NO is '履歴番号';
 comment on column POINT_KNOWLEDGE_HISTORIES.ACTIVITY_NO is 'アクティビティ番号';
 comment on column POINT_KNOWLEDGE_HISTORIES.TYPE is '獲得のタイプ';
 comment on column POINT_KNOWLEDGE_HISTORIES.POINT is '獲得ポイント';
+comment on column POINT_KNOWLEDGE_HISTORIES.TOTAL is 'トータルポイント';
 comment on column POINT_KNOWLEDGE_HISTORIES.INSERT_USER is '登録ユーザ';
 comment on column POINT_KNOWLEDGE_HISTORIES.INSERT_DATETIME is '登録日時';
 comment on column POINT_KNOWLEDGE_HISTORIES.UPDATE_USER is '更新ユーザ';

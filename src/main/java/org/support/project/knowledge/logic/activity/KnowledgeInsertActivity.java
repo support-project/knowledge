@@ -30,8 +30,11 @@ public class KnowledgeInsertActivity extends AbstractAddPointForKnowledgeProcess
     private int getPoint() {
         // 文章が多い力先はポイントが高いように調整
         int point = 50;
-        if (StringUtils.isNotEmpty(getKnowledge().getContent()) && getKnowledge().getContent().length() > 700) {
-            int add = (getKnowledge().getContent().length() - 700) / 50;
+        if (StringUtils.isNotEmpty(getKnowledge().getContent()) && getKnowledge().getContent().length() > 1000) {
+            int add = (getKnowledge().getContent().length() - 1000) / 100;
+            if (add > 100) {
+                add = 100;
+            }
             point += add;
         }
         return point;

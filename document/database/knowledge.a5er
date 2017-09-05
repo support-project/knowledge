@@ -99,11 +99,12 @@ Field="ユーザID","USER_ID","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
 Field="履歴番号","HISTORY_NO","BIGINT","NOT NULL",1,"","",$FFFFFFFF,""
 Field="アクティビティ番号","ACTIVITY_NO","BIGINT","NOT NULL",,"","",$FFFFFFFF,""
 Field="獲得のタイプ","TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
-Field="獲得ポイント","POINT","@INT",,,"","",$FFFFFFFF,""
+Field="獲得ポイント","POINT","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="トータルポイント","TOTAL","@INT","NOT NULL",,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170831113951
+ModifiedDateTime=20170905223847
 Position="MAIN",3500,850
 
 [Relation]
@@ -115,15 +116,15 @@ Fields1=ACTIVITY_NO
 Fields2=ACTIVITY_NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,5388,4612,4310,R,R
+Position="MAIN",0,6576,4612,4384,R,R
 Dependence=0
 Caption=
 PName=
 ModifiedDateTime=20170831112218
 LineMode=0
-Bar1=539
+Bar1=658
 Bar2=461
-Bar3=431
+Bar3=438
 TermPos1=R
 TermPos2=R
 
@@ -161,10 +162,11 @@ Field="履歴番号","HISTORY_NO","BIGINT","NOT NULL",1,"","",$FFFFFFFF,""
 Field="アクティビティ番号","ACTIVITY_NO","BIGINT","NOT NULL",,"","",$FFFFFFFF,""
 Field="獲得のタイプ","TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
 Field="獲得ポイント","POINT","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="トータルポイント","TOTAL","@INT","NOT NULL",,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170831112825
+ModifiedDateTime=20170905223840
 Position="MAIN",2450,1100
 
 [Relation]
@@ -605,7 +607,7 @@ Fields1=KNOWLEDGE_ID,ITEM_NO
 Fields2=KNOWLEDGE_ID,ITEM_NO
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4139,4896,5177,R,R
+Position="MAIN",0,4139,4896,5178,R,R
 Dependence=1
 Caption=
 PName=

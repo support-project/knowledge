@@ -109,19 +109,6 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     protected int addPointForUser(int targetUser, long activityNo, int type, int point) {
         synchronized(lockUser) {
-            long num = PointUserHistoriesDao.get().selectNumOnUser(targetUser);
-            num++;
-            PointUserHistoriesEntity history = new PointUserHistoriesEntity();
-            history.setUserId(targetUser);
-            history.setHistoryNo(num);
-            history.setActivityNo(activityNo);
-            history.setType(type);
-            history.setPoint(point);
-            history.setInsertUser(eventUser.getUserId());
-            history.setInsertDatetime(new Timestamp(eventDateTime.getTime()));
-            history.setDeleteFlag(INT_FLAG.OFF.getValue());
-            PointUserHistoriesDao.get().physicalInsert(history);
-            
             UserConfigsEntity config = UserConfigsDao.get().selectOnKey(UserConfig.POINT, AppConfig.get().getSystemName(), targetUser);
             if (config == null) {
                 config = new UserConfigsEntity(UserConfig.POINT, AppConfig.get().getSystemName(), targetUser);
@@ -135,6 +122,21 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
             now = now + point;
             config.setConfigValue(String.valueOf(now));
             UserConfigsDao.get().save(config);
+            
+            long num = PointUserHistoriesDao.get().selectNumOnUser(targetUser);
+            num++;
+            PointUserHistoriesEntity history = new PointUserHistoriesEntity();
+            history.setUserId(targetUser);
+            history.setHistoryNo(num);
+            history.setActivityNo(activityNo);
+            history.setType(type);
+            history.setPoint(point);
+            history.setTotal(now);
+            history.setInsertUser(eventUser.getUserId());
+            history.setInsertDatetime(new Timestamp(eventDateTime.getTime()));
+            history.setDeleteFlag(INT_FLAG.OFF.getValue());
+            PointUserHistoriesDao.get().physicalInsert(history);
+            
             return now;
         }
     }
@@ -151,6 +153,13 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     protected int addPointForKnowledge(long knowledgeId, long activityNo, int type, int point) {
         synchronized (lockKnowledge) {
+            // Daoのupdateメソッドなどを使うと、「更新者」が更新されるので、ポイントのみを更新するメソッドを呼ぶ
+            // なお、記事の存在チェックは行わない
+            int now = KnowledgesDao.get().selectPoint(knowledgeId);
+            LOG.info("Add point [knowledge]" + knowledgeId + " [point]" + point + " [now]" + now);
+            now = now + point;
+            KnowledgesDao.get().updatePoint(knowledgeId, now);
+            
             long num = PointKnowledgeHistoriesDao.get().selectNumOnKnowledge(knowledgeId);
             num++;
             PointKnowledgeHistoriesEntity history = new PointKnowledgeHistoriesEntity();
@@ -159,17 +168,12 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
             history.setActivityNo(activityNo);
             history.setType(type);
             history.setPoint(point);
+            history.setTotal(now);
             history.setInsertUser(eventUser.getUserId());
             history.setInsertDatetime(new Timestamp(eventDateTime.getTime()));
             history.setDeleteFlag(INT_FLAG.OFF.getValue());
             PointKnowledgeHistoriesDao.get().physicalInsert(history);
             
-            // Daoのupdateメソッドなどを使うと、「更新者」が更新されるので、ポイントのみを更新するメソッドを呼ぶ
-            // なお、記事の存在チェックは行わない
-            int now = KnowledgesDao.get().selectPoint(knowledgeId);
-            LOG.info("Add point [knowledge]" + knowledgeId + " [point]" + point + " [now]" + now);
-            now = now + point;
-            KnowledgesDao.get().updatePoint(knowledgeId, now);
             return now;
         }
     }

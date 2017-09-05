@@ -5,6 +5,7 @@ HISTORY_NO
  , ACTIVITY_NO
  , TYPE
  , POINT
+ , TOTAL
  , INSERT_USER
  , INSERT_DATETIME
  , UPDATE_USER
@@ -12,6 +13,7 @@ HISTORY_NO
  , DELETE_FLAG
 ) VALUES (
 ?
+ , ?
  , ?
  , ?
  , ?

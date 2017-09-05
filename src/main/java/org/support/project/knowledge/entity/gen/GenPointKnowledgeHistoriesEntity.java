@@ -61,6 +61,8 @@ public class GenPointKnowledgeHistoriesEntity implements Serializable {
     private Integer type;
     /** 獲得ポイント */
     private Integer point;
+    /** トータルポイント */
+    private Integer total;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -149,6 +151,22 @@ public class GenPointKnowledgeHistoriesEntity implements Serializable {
      * @return this object     */
     public GenPointKnowledgeHistoriesEntity setPoint(Integer point) {
         this.point = point;
+        return this;
+    }
+
+    /**
+     * Get トータルポイント.
+     * @return トータルポイント
+     */
+    public Integer getTotal() {
+        return this.total;
+    }
+    /**
+     * Set トータルポイント.
+     * @param total トータルポイント
+     * @return this object     */
+    public GenPointKnowledgeHistoriesEntity setTotal(Integer total) {
+        this.total = total;
         return this;
     }
 
@@ -288,6 +306,7 @@ public class GenPointKnowledgeHistoriesEntity implements Serializable {
         builder.append("activityNo = ").append(activityNo).append("\n");
         builder.append("type = ").append(type).append("\n");
         builder.append("point = ").append(point).append("\n");
+        builder.append("total = ").append(total).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -343,6 +362,16 @@ public class GenPointKnowledgeHistoriesEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(this.point, convLabelName("Point"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(this.total, convLabelName("Total"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(this.total, convLabelName("Total"));
         if (error != null) {
             errors.add(error);
         }
@@ -404,6 +433,16 @@ public class GenPointKnowledgeHistoriesEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(values.get("point"), convLabelName("Point"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(values.get("total"), convLabelName("Total"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(values.get("total"), convLabelName("Total"));
         if (error != null) {
             errors.add(error);
         }
