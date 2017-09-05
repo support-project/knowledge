@@ -247,6 +247,9 @@ $(document).ready(function(){
    - License: [BSD License] https://github.com/kpdecker/jsdiff/blob/master/LICENSE
    - project-url: https://github.com/kpdecker/jsdiff
    
+- Chart.js
+   - License: [MIT License] https://github.com/chartjs/Chart.js/blob/master/LICENSE.md
+   - project-url: https://github.com/chartjs/Chart.js
    
    
 

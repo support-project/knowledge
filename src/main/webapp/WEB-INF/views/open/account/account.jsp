@@ -21,7 +21,11 @@
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-open-account.js -->
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/locale/ja.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/chart.js/dist/Chart.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-list.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/account-page.js"></script>
 <!-- endbuild -->
 </c:param>
 
@@ -70,11 +74,9 @@
         
     </div>
     <div class="col-sm-6 col-md-6">
-        CPのグラフ
+        <canvas id="cpChart"></canvas>
     </div>
 </div>
-
-<br/>
 
 <div class="row">
     <ul class="nav nav-tabs">
