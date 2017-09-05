@@ -204,7 +204,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
         // 編集権限
         List<LabelValue> editors = TargetLogic.get().selectEditorsViewOnKnowledgeId(knowledgeId, loginedUser);
         setAttribute("editors", editors);
-        boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
+        List<LabelValue> editors2 = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+        boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors2);
         setAttribute("edit", edit);
 
         ArrayList<Long> knowledgeIds = new ArrayList<Long>();
@@ -218,6 +219,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setAttribute("stocks", stocks);
         
         ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, getLoginedUser(), new Date(), entity);
+        long point = KnowledgesDao.get().selectPoint(entity.getKnowledgeId());
+        setAttribute("point", point);
         
         return forward("view.jsp");
     }

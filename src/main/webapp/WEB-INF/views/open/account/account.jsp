@@ -34,8 +34,15 @@
         width="64" height="64" />&nbsp;
         <%= jspUtil.out("userName") %>
         </h4>
-    </div>
-    <div class="col-sm-6 col-md-6">
+        
+        <div class="row">
+            <div class="col-xs-6">
+            <i class="fa fa-heart-o" ></i>&nbsp;<%= jspUtil.label("knowledge.account.label.cp") %>
+            </div>
+            <div class="col-xs-6">
+            <i class="fa fa-times"></i>&nbsp;<%= jspUtil.out("point") %>
+            </div>
+        </div>
         <div class="row">
             <div class="col-xs-6">
             <i class="fa fa-book"></i>&nbsp;<%= jspUtil.label("knowledge.account.label.knowledge.count") %>
@@ -60,12 +67,33 @@
             <i class="fa fa-times"></i>&nbsp;<%= jspUtil.out("stockCount") %>
             </div>
         </div>
+        
+    </div>
+    <div class="col-sm-6 col-md-6">
+        CPのグラフ
     </div>
 </div>
 
 <br/>
+
+<div class="row">
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="<%=request.getContextPath()%>/open.account/info/<%= jspUtil.out("userId") %>">
+            <%= jspUtil.label("knowledge.account.label.knowledges") %>
+        </a></li>
+        <li role="presentation"><a href="<%=request.getContextPath()%>/open.account/like/<%= jspUtil.out("userId") %>">
+            <%=jspUtil.label("knowledge.account.label.like")%>
+        </a></li>
+        <li role="presentation"><a href="<%=request.getContextPath()%>/open.account/activity/<%= jspUtil.out("userId") %>">
+            <%=jspUtil.label("knowledge.account.label.activity")%>
+        </a></li>
+    </ul>
+</div>
+
+
+
 <div class="sub_title">
-<%= jspUtil.label("knowledge.account.label.knowledges") %>
+
 </div>
 
 <!-- リスト -->

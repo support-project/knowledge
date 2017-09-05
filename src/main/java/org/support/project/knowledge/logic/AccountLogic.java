@@ -19,6 +19,8 @@ import org.support.project.common.validate.ValidatorFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.dao.AccountImagesDao;
 import org.support.project.knowledge.entity.AccountImagesEntity;
 import org.support.project.knowledge.vo.UploadFile;
@@ -26,10 +28,12 @@ import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.ConfirmMailChangesDao;
 import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.RolesDao;
+import org.support.project.web.dao.UserConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.ConfirmMailChangesEntity;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.RolesEntity;
+import org.support.project.web.entity.UserConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
 @DI(instance = Instance.Singleton)
@@ -237,4 +241,22 @@ public class AccountLogic {
         return loginedUser;
     }
     
+    /**
+     * ユーザのポイント取得
+     * @param user ユーザ
+     * @return
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public int getPoint(int user) {
+        UserConfigsEntity config = UserConfigsDao.get().selectOnKey(UserConfig.POINT, AppConfig.get().getSystemName(), user);
+        if (config == null) {
+            config = new UserConfigsEntity(UserConfig.POINT, AppConfig.get().getSystemName(), user);
+            config.setConfigValue("0");
+        }
+        if (!StringUtils.isInteger(config.getConfigValue())) {
+            config.setConfigValue("0");
+        }
+        int now = Integer.parseInt(config.getConfigValue());
+        return now;
+    }
 }

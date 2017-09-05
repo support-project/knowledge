@@ -3,9 +3,12 @@ package org.support.project.knowledge.logic.activity;
 import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.ActivitiesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 
+@DI(instance = Instance.Prototype)
 public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActivityProcessor {
     private static final Log LOG = LogFactory.getLog(AbstractAddPointForKnowledgeProcessor.class);
     private KnowledgesEntity knowledge;

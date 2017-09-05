@@ -21,6 +21,7 @@ import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.AccountImagesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
+import org.support.project.knowledge.logic.AccountLogic;
 import org.support.project.knowledge.logic.IdenticonLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.vo.AccountInfo;
@@ -93,6 +94,7 @@ public class AccountControl extends Control {
         }
         List<KnowledgesEntity> knowledges = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
         List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, getLoginedUser());
+        KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         setAttribute("knowledges", stocks);
 
         int previous = offset - 1;
@@ -109,6 +111,10 @@ public class AccountControl extends Control {
             templates.put(templateMastersEntity.getTypeId(), templateMastersEntity);
         }
         setAttribute("templates", templates);
+        
+        long point = AccountLogic.get().getPoint(userId);
+        setAttribute("point", point);
+        
         
         return forward("account.jsp");
     }

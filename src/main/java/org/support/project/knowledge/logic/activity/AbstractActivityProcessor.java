@@ -9,6 +9,8 @@ import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.dao.ActivitiesDao;
@@ -27,6 +29,7 @@ import org.support.project.web.entity.UserConfigsEntity;
  * 
  * @author koda
  */
+@DI(instance = Instance.Prototype)
 public abstract class AbstractActivityProcessor implements ActivityProcessor {
     private static final Log LOG = LogFactory.getLog(AbstractActivityProcessor.class);
     private static Object lockUser = new Object();

@@ -50,4 +50,11 @@ public class CommentsDao extends GenCommentsDao {
         return super.executeQuerySingle(sql, Integer.class, knowledgeId);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public long selectUniqueUserCountOnKnowledgeId(Long knowledgeId) {
+        String sql = "SELECT COUNT(*) FROM ("
+                + "SELECT KNOWLEDGE_ID, INSERT_USER FROM COMMENTS WHERE KNOWLEDGE_ID = ? GROUP BY KNOWLEDGE_ID, INSERT_USER) AS SUBQ";
+        return super.executeQuerySingle(sql, Long.class, knowledgeId);
+    }
+
 }

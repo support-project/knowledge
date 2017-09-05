@@ -6,3 +6,4 @@ target
 .eclipse-pmd
 .checkstyle
 node
+.idea

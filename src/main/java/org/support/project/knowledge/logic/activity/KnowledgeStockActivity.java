@@ -2,7 +2,10 @@ package org.support.project.knowledge.logic.activity;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.RandomUtil;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 
 /**
  * 
@@ -12,11 +15,24 @@ import org.support.project.di.Container;
  * 
  * @author koda
  */
+@DI(instance = Instance.Prototype)
 public class KnowledgeStockActivity extends AbstractAddPointForKnowledgeProcessor {
     private static final Log LOG = LogFactory.getLog(KnowledgeStockActivity.class);
     public static KnowledgeStockActivity get() {
         return Container.getComp(KnowledgeStockActivity.class);
     }
+    
+    private int point = 0;
+    
+    private int getPoint() {
+        if (point != 0) {
+            return point;
+        }
+        int[] points = {1,1,1,1,1,2,2,2,2,3};
+        this.point = points[RandomUtil.randamNum(0, 10)]; // ランダムで値を増減してみた
+        return point;
+    }
+    
     
     @Override
     protected Activity getActivity() {
@@ -29,11 +45,11 @@ public class KnowledgeStockActivity extends AbstractAddPointForKnowledgeProcesso
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledgeOwner() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_STOCKED_BY_OHER, 2);
+        return new TypeAndPoint(TYPE_KNOWLEDGE_STOCKED_BY_OHER, getPoint());
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledge() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_STOCKED, 2);
+        return new TypeAndPoint(TYPE_KNOWLEDGE_STOCKED, getPoint());
     }
 
 }

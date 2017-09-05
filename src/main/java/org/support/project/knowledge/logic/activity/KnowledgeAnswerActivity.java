@@ -2,7 +2,10 @@ package org.support.project.knowledge.logic.activity;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.RandomUtil;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 
 /**
  * 
@@ -12,10 +15,21 @@ import org.support.project.di.Container;
  * 
  * @author koda
  */
+@DI(instance = Instance.Prototype)
 public class KnowledgeAnswerActivity extends AbstractAddPointForKnowledgeProcessor {
     private static final Log LOG = LogFactory.getLog(KnowledgeAnswerActivity.class);
     public static KnowledgeAnswerActivity get() {
         return Container.getComp(KnowledgeAnswerActivity.class);
+    }
+    
+    private int point = 0;
+    private int getPoint() {
+        if (point != 0) {
+            return point;
+        }
+        int[] points = {1,1,2,2,2,2,3,3,3,4};
+        this.point = points[RandomUtil.randamNum(0, 10)]; // ランダムで値を増減してみた
+        return point;
     }
     
     @Override
@@ -29,11 +43,11 @@ public class KnowledgeAnswerActivity extends AbstractAddPointForKnowledgeProcess
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledgeOwner() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_ANSWERD_BY_OHER, 3);
+        return new TypeAndPoint(TYPE_KNOWLEDGE_ANSWERD_BY_OHER, getPoint());
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledge() {
-        return new TypeAndPoint(TYPE_KNOWLEDGE_ANSWERD, 3);
+        return new TypeAndPoint(TYPE_KNOWLEDGE_ANSWERD, getPoint());
     }
 
 }

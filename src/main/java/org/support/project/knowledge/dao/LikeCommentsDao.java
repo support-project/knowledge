@@ -44,6 +44,13 @@ public class LikeCommentsDao extends GenLikeCommentsDao {
         return super.executeQuerySingle(sql, LikeCommentsEntity.class, commentNo, userId);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public long selectUniqueUserCountOnCommentNo(Long commentNo) {
+        String sql = "SELECT COUNT(*) FROM ("
+                + "SELECT COMMENT_NO, INSERT_USER FROM LIKE_COMMENTS WHERE COMMENT_NO = ? GROUP BY COMMENT_NO, INSERT_USER) AS SUBQ";
+        return super.executeQuerySingle(sql, Long.class, commentNo);
+    }
+
 
 
 }

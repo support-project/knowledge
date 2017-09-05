@@ -6,9 +6,7 @@ import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-
 import org.support.project.knowledge.dao.gen.GenParticipantsDao;
-import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.Participation;
 import org.support.project.ormapping.common.SQLManager;
 
@@ -37,6 +35,13 @@ public class ParticipantsDao extends GenParticipantsDao {
     public List<Participation> selectParticipations(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ParticipantsDao/ParticipantsDao_selectParticipations.sql");
         return executeQueryList(sql, Participation.class, knowledgeId);
+    }
+
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public long selectUniqueUserCountOnKnowledgeId(Long knowledgeId) {
+        String sql = "SELECT COUNT(*) FROM ("
+                + "SELECT KNOWLEDGE_ID, USER_ID FROM PARTICIPANTS WHERE KNOWLEDGE_ID = ? GROUP BY KNOWLEDGE_ID, USER_ID) AS SUBQ";
+        return super.executeQuerySingle(sql, Long.class, knowledgeId);
     }
 
 
