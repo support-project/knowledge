@@ -24,10 +24,14 @@ import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.AccountLogic;
 import org.support.project.knowledge.logic.IdenticonLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.AccountInfo;
+import org.support.project.knowledge.vo.ContributionPointHistory;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
+import org.support.project.web.dao.UsersDao;
+import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance = Instance.Prototype)
@@ -118,5 +122,18 @@ public class AccountControl extends Control {
         
         return forward("account.jsp");
     }
+    
+    @Get
+    public Boundary cp() throws Exception {
+        Integer userId = getPathInteger(-1);
+        UsersEntity account = UsersDao.get().selectOnKey(userId);
+        if (account == null) {
+            return send(HttpStatus.SC_NOT_FOUND, "NOT FOUND");
+        }
+        List<ContributionPointHistory> list = ActivityLogic.get().getUserPointHistoriesByDate(userId, getUserConfigs());
+        return send(list);
+    }
+
+    
 
 }

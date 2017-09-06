@@ -1,4 +1,4 @@
-package org.support.project.knowledge.listener;
+package org.support.project.knowledge.filter;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -16,14 +16,17 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
+import org.support.project.knowledge.config.UserConfig;
+import org.support.project.knowledge.logic.AccountLogic;
+import org.support.project.knowledge.logic.KnowledgeAuthenticationLogic;
 import org.support.project.knowledge.logic.SystemConfigLogic;
+import org.support.project.knowledge.vo.UserConfigs;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.filter.AuthenticationFilter;
 import org.support.project.web.logic.AuthenticationLogic;
-import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 
 public class CloseAbleAuthenticationFilter extends AuthenticationFilter {
 
@@ -62,9 +65,22 @@ public class CloseAbleAuthenticationFilter extends AuthenticationFilter {
         if (SystemConfigLogic.get().isClose()) {
             HttpServletRequest req = (HttpServletRequest) servletrequest;
             HttpServletResponse res = (HttpServletResponse) servletresponse;
+            
+            // ブラウザから必ず送られてくるCookie値でユーザ設定情報を作成
+            UserConfigs userConfig = new UserConfigs();
+            String timezone = HttpUtil.getCookie(req, AccountLogic.get().getCookieKeyTimezone());
+            if (StringUtils.isNotEmpty(timezone)) {
+                userConfig.setTimezone(timezone);
+            }
+            String offset = HttpUtil.getCookie(req, AccountLogic.get().getCookieKeyTimezoneOffset());
+            if (StringUtils.isInteger(offset)) {
+                userConfig.setTimezoneOffset(Integer.parseInt(offset));
+            }
+            req.setAttribute(UserConfig.REQUEST_USER_CONFIG_KEY, userConfig);
+            
             try {
                 if (!isLogin(req)) {
-                    AuthenticationLogic logic = Container.getComp(DefaultAuthenticationLogicImpl.class);
+                    AuthenticationLogic logic = Container.getComp(KnowledgeAuthenticationLogic.class);
                     logic.cookieLogin(req, res);
                 }
 

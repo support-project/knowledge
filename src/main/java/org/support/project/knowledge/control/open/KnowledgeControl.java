@@ -322,7 +322,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         // ログインユーザ情報を最新化
         // TODO 毎回最新化するのは、パフォーマンスが悪い？グループ情報が更新になった場合に、影響があるユーザの一覧を保持しておき、
         // そのユーザのみを更新した方が良いかも。いったんは、ナレッジの一覧を表示する際に、毎回更新してみる（それほど負荷が高くなさそうなので）
-        super.updateLoginInfo();
+        updateLoginInfo();
 
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();

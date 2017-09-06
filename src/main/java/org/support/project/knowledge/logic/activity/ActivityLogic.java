@@ -10,8 +10,11 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.PointUserHistoriesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.vo.ContributionPointHistory;
+import org.support.project.knowledge.vo.UserConfigs;
 import org.support.project.web.bean.LoginedUser;
 
 @DI(instance = Instance.Singleton)
@@ -90,5 +93,9 @@ public class ActivityLogic {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void processActivity(Activity activity, LoginedUser eventUser, Date eventDateTime, CommentsEntity comment) {
         execute(activity, eventUser, eventDateTime, null, comment);
+    }
+
+    public List<ContributionPointHistory> getUserPointHistoriesByDate(Integer userId, UserConfigs userConfigs) {
+        return PointUserHistoriesDao.get().selectPointHistoriesByDate(userId, userConfigs);
     }
 }

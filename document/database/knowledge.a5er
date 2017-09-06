@@ -101,10 +101,11 @@ Field="アクティビティ番号","ACTIVITY_NO","BIGINT","NOT NULL",,"","",$FF
 Field="獲得のタイプ","TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
 Field="獲得ポイント","POINT","@INT","NOT NULL",,"","",$FFFFFFFF,""
 Field="トータルポイント","TOTAL","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Index=IDX_POINT_USER_HISTORIES_INSERT_DATETIME=0,INSERT_DATETIME
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170905223847
+ModifiedDateTime=20170906092459
 Position="MAIN",3500,850
 
 [Relation]
@@ -163,10 +164,11 @@ Field="アクティビティ番号","ACTIVITY_NO","BIGINT","NOT NULL",,"","",$FF
 Field="獲得のタイプ","TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
 Field="獲得ポイント","POINT","@INT","NOT NULL",,"","",$FFFFFFFF,""
 Field="トータルポイント","TOTAL","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Index=IDX_POINT_KNOWLEDGE_HISTORIES_INSERT_DATETIME=0,INSERT_DATETIME
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170905223840
+ModifiedDateTime=20170906092323
 Position="MAIN",2450,1100
 
 [Relation]
@@ -1412,7 +1414,7 @@ Fields1=KNOWLEDGE_ID
 Fields2=KNOWLEDGE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,5026,7091,6143,R,R
+Position="MAIN",0,5026,7091,6103,R,R
 Dependence=1
 Caption=
 PName=
@@ -1420,7 +1422,7 @@ ModifiedDateTime=20150910041644
 LineMode=0
 Bar1=503
 Bar2=709
-Bar3=614
+Bar3=610
 TermPos1=R
 TermPos2=R
 

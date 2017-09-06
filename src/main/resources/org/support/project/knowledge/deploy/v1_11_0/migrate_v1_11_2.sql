@@ -16,6 +16,9 @@ create table POINT_USER_HISTORIES (
   , constraint POINT_USER_HISTORIES_PKC primary key (USER_ID,HISTORY_NO)
 ) ;
 
+create index IDX_POINT_USER_HISTORIES_INSERT_DATETIME
+  on POINT_USER_HISTORIES(INSERT_DATETIME);
+
 -- ナレッジのポイント獲得履歴
 drop table if exists POINT_KNOWLEDGE_HISTORIES cascade;
 
@@ -33,6 +36,9 @@ create table POINT_KNOWLEDGE_HISTORIES (
   , DELETE_FLAG integer
   , constraint POINT_KNOWLEDGE_HISTORIES_PKC primary key (KNOWLEDGE_ID,HISTORY_NO)
 ) ;
+
+create index IDX_POINT_KNOWLEDGE_HISTORIES_INSERT_DATETIME
+  on POINT_KNOWLEDGE_HISTORIES(INSERT_DATETIME);
 
 -- ユーザの称号
 drop table if exists USER_BADGES cascade;
@@ -87,6 +93,7 @@ create table BADGES (
   , DELETE_FLAG integer
   , constraint BADGES_PKC primary key (NO)
 ) ;
+
 
 comment on table POINT_USER_HISTORIES is 'ユーザのポイント獲得履歴';
 comment on column POINT_USER_HISTORIES.USER_ID is 'ユーザID';

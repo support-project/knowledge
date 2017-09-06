@@ -40,9 +40,49 @@ import org.support.project.web.entity.UsersEntity;
 public class AccountLogic {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(AccountLogic.class);
-
     public static AccountLogic get() {
         return Container.getComp(AccountLogic.class);
+    }
+    
+    private String cookieKeyTimezone = "";
+    private String cookieKeyTimezoneOffset = "";
+    private String cookieKeyThema = "";
+    private String cookieKeyHighlight = "";
+    /**
+     * @return the cookie_key_timezone
+     */
+    public String getCookieKeyTimezone() {
+        if (StringUtils.isEmpty(cookieKeyTimezone)) {
+            cookieKeyTimezone = AppConfig.get().getSystemName() + "_" + UserConfig.TIMEZONE;
+        }
+        return cookieKeyTimezone;
+    }
+    /**
+     * @return the cookie_key_timezone_offset
+     */
+    public String getCookieKeyTimezoneOffset() {
+        if (StringUtils.isEmpty(cookieKeyTimezoneOffset)) {
+            cookieKeyTimezoneOffset = AppConfig.get().getSystemName() + "_" + UserConfig.TIME_ZONE_OFFSET;
+        }
+        return cookieKeyTimezoneOffset;
+    }
+    /**
+     * @return the cookie_key_thema
+     */
+    public String getCookieKeyThema() {
+        if (StringUtils.isEmpty(cookieKeyThema)) {
+            cookieKeyThema = AppConfig.get().getSystemName() + "_" + UserConfig.THEMA;
+        }
+        return cookieKeyThema;
+    }
+    /**
+     * @return the cookie_key_highlight
+     */
+    public String getCookieKeyHighlight() {
+        if (StringUtils.isEmpty(cookieKeyHighlight)) {
+            cookieKeyHighlight = AppConfig.get().getSystemName() + "_" + UserConfig.HIGHLIGHT;
+        }
+        return cookieKeyHighlight;
     }
 
     /**
@@ -259,4 +299,40 @@ public class AccountLogic {
         int now = Integer.parseInt(config.getConfigValue());
         return now;
     }
+    
+    /**
+     * ユーザの設定を取得
+     * @param user ユーザ
+     * @param configKey 設定キー
+     * @return 設定値
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public String getConfig(int user, String configKey) {
+        UserConfigsEntity config = UserConfigsDao.get().selectOnKey(configKey, AppConfig.get().getSystemName(), user);
+        if (config == null) {
+            return "";
+        }
+        return config.getConfigValue();
+    }
+    /**
+     * ユーザの設定を取得
+     * @param user ユーザ
+     * @param configKey 設定キー
+     * @return 設定値
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void setConfig(int user, String configKey, String configValue) {
+        UserConfigsEntity config = UserConfigsDao.get().selectOnKey(configKey, AppConfig.get().getSystemName(), user);
+        if (config == null) {
+            config = new UserConfigsEntity(configKey, AppConfig.get().getSystemName(), user);
+        }
+        config.setConfigValue(configValue);
+        UserConfigsDao.get().save(config);
+    }
+
+
+
+
+
+
 }

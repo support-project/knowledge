@@ -19,6 +19,7 @@ import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.AccountLogic;
+import org.support.project.knowledge.logic.KnowledgeAuthenticationLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UserLogicEx;
 import org.support.project.knowledge.vo.UploadFile;
@@ -39,7 +40,6 @@ import org.support.project.web.entity.UserConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.logic.AuthenticationLogic;
-import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 
 @DI(instance = Instance.Prototype)
 public class AccountControl extends Control {
@@ -185,7 +185,7 @@ public class AccountControl extends Control {
         UserLogicEx.get().withdrawal(getLoginUserId(), knowledgeRemove, HttpUtil.getLocale(getRequest()));
 
         // セッションを破棄
-        AuthenticationLogic<LoginedUser> authenticationLogic = Container.getComp(DefaultAuthenticationLogicImpl.class);
+        AuthenticationLogic<LoginedUser> authenticationLogic = Container.getComp(KnowledgeAuthenticationLogic.class);
         authenticationLogic.clearSession(getRequest());
 
         addMsgInfo("knowledge.account.delete");
