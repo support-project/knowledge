@@ -82,9 +82,17 @@ var loadKnowledge = function(userId, offset) {
     });
 };
 
+var showKnowledge = function() {
+    $('#knowledgesArea').show();
+    $('#activityArea').hide();
+    $('#tabKnowledge').addClass('active');
+    $('#tabActivity').removeClass('active');
+};
 var loadAndShowActivity = function(userId, offset) {
     $('#knowledgesArea').hide();
     $('#activityArea').show();
+    $('#tabKnowledge').removeClass('active');
+    $('#tabActivity').addClass('active');
     var activities = [];
     var activityList = new Vue({
         el: '#activityList',
@@ -98,14 +106,13 @@ var loadAndShowActivity = function(userId, offset) {
         timeout: 10000,
     }).done(function(result, textStatus, xhr) {
         console.log(result);
-        result.list.forEach(function(item) {
+        result.forEach(function(item) {
             activityList.activities.push(item);
         });
     }).fail(function(xhr, textStatus, error) {
         handleErrorResponse(xhr, textStatus, error);
     });
 };
-
 
 $(document).ready(function() {
     var userId = $('#userId').val();
@@ -118,6 +125,7 @@ $(document).ready(function() {
         data: {},
         methods: {
             showKnowledge: function (event) {
+                showKnowledge();
             },
             showLike: function (event) {
             },

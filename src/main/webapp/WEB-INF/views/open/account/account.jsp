@@ -83,13 +83,15 @@
 
 <div class="row" id="tabArea">
     <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a v-on:click="showKnowledge">
+        <li role="presentation" class="active" id="tabKnowledge"><a v-on:click="showKnowledge">
             <%= jspUtil.label("knowledge.account.label.knowledges") %>
         </a></li>
-        <li role="presentation"><a v-on:click="showLike">
+        <%--
+        <li role="presentation" id="tabLike"><a v-on:click="showLike">
             <%=jspUtil.label("knowledge.account.label.like")%>
         </a></li>
-        <li role="presentation"><a v-on:click="showActivity">
+        --%>
+        <li role="presentation" id="tabActivity"><a v-on:click="showActivity">
             <%=jspUtil.label("knowledge.account.label.activity")%>
         </a></li>
     </ul>
@@ -124,11 +126,12 @@
 
 <div id="activityArea" style="display:none">
     <br/><br/>
-    <ul class="list-group" id="activityList">
-        <li class="list-group-item" v-for="activity in activities">
-        {{ activity }}
-        </li>
-    </ul>
+    <div class="list-group" id="activityList">
+        <a class="list-group-item" v-for="activity in activities">
+            <h4 class="list-group-item-heading">{{ activity.msg }}</h4>
+            <p class="list-group-item-text">{{ activity.dispDate }}</p>
+        </a>
+    </div>
 </div>
 
 </c:param>

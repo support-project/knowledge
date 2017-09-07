@@ -26,9 +26,9 @@ import org.support.project.knowledge.logic.IdenticonLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.AccountInfo;
+import org.support.project.knowledge.vo.ActivityHistory;
 import org.support.project.knowledge.vo.ContributionPointHistory;
 import org.support.project.knowledge.vo.StockKnowledge;
-import org.support.project.knowledge.vo.StringList;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.dao.UsersDao;
@@ -165,7 +165,7 @@ public class AccountControl extends Control {
         if (StringUtils.isInteger(getParam("offset"))) {
             offset = getParam("offset", Integer.class);
         }
-        StringList list = ActivityLogic.get().getUserPointHistoriese(userId, limit, offset, getUserConfigs());
+        List<ActivityHistory> list = ActivityLogic.get().getUserPointHistoriese(userId, limit, offset, getUserConfigs());
         return send(list);
     }
     

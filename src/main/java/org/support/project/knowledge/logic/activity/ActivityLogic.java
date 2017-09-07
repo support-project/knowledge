@@ -20,8 +20,8 @@ import org.support.project.knowledge.entity.ActivitiesEntity;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.PointUserHistoriesEntity;
+import org.support.project.knowledge.vo.ActivityHistory;
 import org.support.project.knowledge.vo.ContributionPointHistory;
-import org.support.project.knowledge.vo.StringList;
 import org.support.project.knowledge.vo.UserConfigs;
 import org.support.project.ormapping.config.Order;
 import org.support.project.web.bean.LoginedUser;
@@ -120,18 +120,15 @@ public class ActivityLogic {
             return "";
         }
         if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_DO_INSERT) {
-            return resources.getResource("knowledge.activity.type.11.do.insert",
-                    getDisplayDate(history.getInsertDatetime(), userConfigs), activity.getTarget());
+            return resources.getResource("knowledge.activity.type.11.do.insert", activity.getTarget());
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_DO_SHOW) {
-            return resources.getResource("knowledge.activity.type.21.do.show",
-                    getDisplayDate(history.getInsertDatetime(), userConfigs), activity.getTarget());
+            return resources.getResource("knowledge.activity.type.21.do.show", activity.getTarget());
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_SHOWN_BY_OHER) {
-            return resources.getResource("knowledge.activity.type.22.shown",
-                    getDisplayDate(history.getInsertDatetime(), userConfigs),activity.getTarget(), activity.getUserName());
+            return resources.getResource("knowledge.activity.type.22.shown", activity.getTarget(), activity.getUserName());
         }
-        return "なんかした";
+        return "";
     }
-    public StringList getUserPointHistoriese(Integer userId, int limit, int offset, UserConfigs userConfigs) {
+    public List<ActivityHistory> getUserPointHistoriese(Integer userId, int limit, int offset, UserConfigs userConfigs) {
         List<PointUserHistoriesEntity> histories = PointUserHistoriesDao.get().selectOnUser(userId, limit, offset, Order.DESC);
         List<Long> activityNos = new ArrayList<>();
         for (PointUserHistoriesEntity history : histories) {
@@ -142,16 +139,18 @@ public class ActivityLogic {
         for (ActivitiesEntity activitiesEntity : activityList) {
             activities.put(activitiesEntity.getActivityNo(), activitiesEntity);
         }
-        List<String> list = new ArrayList<>();
+        List<ActivityHistory> list = new ArrayList<>();
         for (PointUserHistoriesEntity history : histories) {
             String msg = getActivityMsg(history, activities, userConfigs);
             if (StringUtils.isNotEmpty(msg)) {
-                list.add(msg);
+                ActivityHistory activity = new ActivityHistory();
+                activity.setDate(history.getInsertDatetime());
+                activity.setDispDate(getDisplayDate(history.getInsertDatetime(), userConfigs));
+                activity.setMsg(msg);
+                list.add(activity);
             }
         }
-        StringList stringList = new StringList();
-        stringList.setList(list);
-        return stringList;
+        return list;
     }
 
 }
