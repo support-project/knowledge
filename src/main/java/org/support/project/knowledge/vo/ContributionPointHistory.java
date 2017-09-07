@@ -7,6 +7,7 @@ package org.support.project.knowledge.vo;
 public class ContributionPointHistory {
     private String ymd;
     private int total;
+    private int before;
     /**
      * @return the ymd
      */
@@ -30,6 +31,18 @@ public class ContributionPointHistory {
      */
     public void setTotal(int total) {
         this.total = total;
+    }
+    /**
+     * @return the before
+     */
+    public int getBefore() {
+        return before;
+    }
+    /**
+     * @param before the before to set
+     */
+    public void setBefore(int before) {
+        this.before = before;
     }
     
 }

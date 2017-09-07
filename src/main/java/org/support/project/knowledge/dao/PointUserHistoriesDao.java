@@ -12,9 +12,11 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenPointUserHistoriesDao;
+import org.support.project.knowledge.entity.PointUserHistoriesEntity;
 import org.support.project.knowledge.vo.ContributionPointHistory;
 import org.support.project.knowledge.vo.UserConfigs;
 import org.support.project.ormapping.common.SQLManager;
+import org.support.project.ormapping.config.Order;
 import org.support.project.ormapping.connection.ConnectionManager;
 
 /**
@@ -59,6 +61,7 @@ public class PointUserHistoriesDao extends GenPointUserHistoriesDao {
         return builder.toString();
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ContributionPointHistory> selectPointHistoriesByDate(Integer userId, UserConfigs userConfigs) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/PointUserHistoriesDao/select_point_history_by_date.sql");
         if (ConnectionManager.getInstance().getDriverClass().indexOf("postgresql") != -1) {
@@ -72,6 +75,13 @@ public class PointUserHistoriesDao extends GenPointUserHistoriesDao {
         } else {
             return executeQueryList(sql, ContributionPointHistory.class, userConfigs.getTimezoneOffset(), userId);
         }
+    }
+
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<PointUserHistoriesEntity> selectOnUser(Integer userId, int limit, int offset, Order order) {
+        String sql = "SELECT * FROM POINT_USER_HISTORIES WHERE USER_ID = ? ORDER BY INSERT_DATETIME %S LIMIT ? OFFSET ?;";
+        sql = String.format(sql, order.toString());
+        return executeQueryList(sql, PointUserHistoriesEntity.class, userId, limit, offset);
     }
 
 

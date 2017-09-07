@@ -118,8 +118,11 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
                 config.setConfigValue("0");
             }
             
-            int now = Integer.parseInt(config.getConfigValue());
-            now = now + point;
+            int before = Integer.parseInt(config.getConfigValue());
+            int now = before + point;
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Add point [user]" + targetUser + " [point]" + point + " [before]" + before + " [now]" + now);
+            }
             config.setConfigValue(String.valueOf(now));
             UserConfigsDao.get().save(config);
             
@@ -131,6 +134,7 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
             history.setActivityNo(activityNo);
             history.setType(type);
             history.setPoint(point);
+            history.setBeforeTotal(before);
             history.setTotal(now);
             history.setInsertUser(eventUser.getUserId());
             history.setInsertDatetime(new Timestamp(eventDateTime.getTime()));
@@ -155,9 +159,11 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
         synchronized (lockKnowledge) {
             // Daoのupdateメソッドなどを使うと、「更新者」が更新されるので、ポイントのみを更新するメソッドを呼ぶ
             // なお、記事の存在チェックは行わない
-            int now = KnowledgesDao.get().selectPoint(knowledgeId);
-            LOG.info("Add point [knowledge]" + knowledgeId + " [point]" + point + " [now]" + now);
-            now = now + point;
+            int before = KnowledgesDao.get().selectPoint(knowledgeId);
+            int now = before + point;
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Add point [knowledge]" + knowledgeId + " [point]" + point + " [before]" + before + " [now]" + now);
+            }
             KnowledgesDao.get().updatePoint(knowledgeId, now);
             
             long num = PointKnowledgeHistoriesDao.get().selectNumOnKnowledge(knowledgeId);
@@ -168,6 +174,7 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
             history.setActivityNo(activityNo);
             history.setType(type);
             history.setPoint(point);
+            history.setBeforeTotal(before);
             history.setTotal(now);
             history.setInsertUser(eventUser.getUserId());
             history.setInsertDatetime(new Timestamp(eventDateTime.getTime()));

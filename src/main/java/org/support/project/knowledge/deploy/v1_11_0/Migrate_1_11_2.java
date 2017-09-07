@@ -5,6 +5,7 @@ import java.util.List;
 import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.dao.CommentsDao;
@@ -12,6 +13,7 @@ import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikeCommentsDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.ParticipantsDao;
+import org.support.project.knowledge.dao.PointUserHistoriesDao;
 import org.support.project.knowledge.dao.StockKnowledgesDao;
 import org.support.project.knowledge.dao.SurveyAnswersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
@@ -21,6 +23,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikeCommentsEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.ParticipantsEntity;
+import org.support.project.knowledge.entity.PointUserHistoriesEntity;
 import org.support.project.knowledge.entity.StockKnowledgesEntity;
 import org.support.project.knowledge.entity.SurveyAnswersEntity;
 import org.support.project.knowledge.entity.ViewHistoriesEntity;
@@ -42,7 +45,9 @@ public class Migrate_1_11_2 implements Migrate {
         return org.support.project.di.Container.getComp(Migrate_1_11_2.class);
     }
     private int limit = 1; // 1件毎にコミットいれないと、別コネクションで取得して結果をクリアしてしまう？
-
+    
+    private int calcTotal = 0; // トータルポイントの再計算に使う内部保持変数（シーケンシャルに1件づつ処理をすること）
+    
     @Override
     public boolean doMigrate() throws Exception {
         InitializeDao initializeDao = InitializeDao.get();
@@ -72,15 +77,62 @@ public class Migrate_1_11_2 implements Migrate {
         // コメントへのイイネイベントによりポイント集計
         doAddPointByCommentLike();
         
+        // ポイント集計は、今後は時系列になり問題は無いが、このマイグレーションの中では、時系列にはならんでいないので、履歴のトータルを再構築
+        reCalcPointUserHistory();
+        
+        
         return true;
     }
     
+    private void reCalcPointUserHistory() throws InterruptedException {
+        List<UsersEntity> list;
+        int offset = 0;
+        do {
+            list = reCalcPointUserHistory(offset);
+            offset = offset + limit;
+            synchronized (this) {
+                wait(_WAIT);
+            }
+        } while (list.size() > 0);
+    }
+    private List<UsersEntity> reCalcPointUserHistory(int offset) throws InterruptedException {
+        List<UsersEntity> list;
+        list = UsersDao.get().selectAllWidthPager(limit, offset, Order.ASC);
+        for (UsersEntity item : list) {
+            LOG.info("Recalculation total point. [user]" + item.getUserId());
+            int offset2 = 0;
+            calcTotal = 0; // ユーザ毎にトータルポイントを初期化
+            List<PointUserHistoriesEntity> histories;
+            do {
+                histories = reCalcPointUserHistoryOnUser(item.getUserId(), offset2);
+                offset2 = offset2 + limit;
+                synchronized (this) {
+                    wait(_WAIT);
+                }
+            } while (histories.size() > 0);
+        }
+        return list;
+    }
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    private List<PointUserHistoriesEntity> reCalcPointUserHistoryOnUser(Integer userId, int offset2) {
+        List<PointUserHistoriesEntity> list;
+        list = PointUserHistoriesDao.get().selectOnUser(userId, limit, offset2, Order.ASC);
+        for (PointUserHistoriesEntity item : list) {
+            item.setBeforeTotal(calcTotal);
+            calcTotal += item.getPoint();
+            item.setTotal(calcTotal); // 日付毎に処理してトータルを再計算
+            LOG.info("\t" + DateUtils.getSimpleFormat().format(item.getInsertDatetime()) + " [total]" + calcTotal);
+            PointUserHistoriesDao.get().physicalUpdate(item);
+        }
+        return list;
+    }
+
     private void doAddPointByCommentLike() throws InterruptedException {
         LOG.info("Aggregate point by comment like");
         List<LikeCommentsEntity> list;
         int offset = 0;
         do {
-            list = doAddPointByCommentLike(offset, limit);
+            list = doAddPointByCommentLike(offset);
             offset = offset + limit;
             synchronized (this) {
                 wait(_WAIT);
@@ -89,7 +141,7 @@ public class Migrate_1_11_2 implements Migrate {
     }
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private List<LikeCommentsEntity> doAddPointByCommentLike(int offset, int limit2) {
+    private List<LikeCommentsEntity> doAddPointByCommentLike(int offset) {
         List<LikeCommentsEntity> list;
         list = LikeCommentsDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (LikeCommentsEntity item : list) {
@@ -116,7 +168,7 @@ public class Migrate_1_11_2 implements Migrate {
         List<CommentsEntity> list;
         int offset = 0;
         do {
-            list = doAddPointByKnowledgeComment(offset, limit);
+            list = doAddPointByKnowledgeComment(offset);
             offset = offset + limit;
             synchronized (this) {
                 wait(_WAIT);
@@ -124,7 +176,7 @@ public class Migrate_1_11_2 implements Migrate {
         } while (list.size() > 0);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<CommentsEntity> doAddPointByKnowledgeComment(int offset, int limit) {
+    public List<CommentsEntity> doAddPointByKnowledgeComment(int offset) {
         List<CommentsEntity> list;
         list = CommentsDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (CommentsEntity item : list) {
@@ -146,7 +198,7 @@ public class Migrate_1_11_2 implements Migrate {
         List<ParticipantsEntity> list;
         int offset = 0;
         do {
-            list = doAddPointByKnowledgeJoinEvent(offset, limit);
+            list = doAddPointByKnowledgeJoinEvent(offset);
             offset = offset + limit;
             synchronized (this) {
                 wait(_WAIT);
@@ -154,7 +206,7 @@ public class Migrate_1_11_2 implements Migrate {
         } while (list.size() > 0);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<ParticipantsEntity> doAddPointByKnowledgeJoinEvent(int offset, int limit) {
+    public List<ParticipantsEntity> doAddPointByKnowledgeJoinEvent(int offset) {
         List<ParticipantsEntity> list;
         list = ParticipantsDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (ParticipantsEntity item : list) {
@@ -181,7 +233,7 @@ public class Migrate_1_11_2 implements Migrate {
         List<SurveyAnswersEntity> list;
         int offset = 0;
         do {
-            list = doAddPointByKnowledgeAnswer(offset, limit);
+            list = doAddPointByKnowledgeAnswer(offset);
             offset = offset + limit;
             synchronized (this) {
                 wait(_WAIT);
@@ -190,7 +242,7 @@ public class Migrate_1_11_2 implements Migrate {
     }
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<SurveyAnswersEntity> doAddPointByKnowledgeAnswer(int offset, int limit) {
+    public List<SurveyAnswersEntity> doAddPointByKnowledgeAnswer(int offset) {
         List<SurveyAnswersEntity> list;
         list = SurveyAnswersDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (SurveyAnswersEntity item : list) {
@@ -217,7 +269,7 @@ public class Migrate_1_11_2 implements Migrate {
         List<StockKnowledgesEntity> list;
         int offset = 0;
         do {
-            list = doAddPointByKnowledgeStock(offset, limit);
+            list = doAddPointByKnowledgeStock(offset);
             offset = offset + limit;
             synchronized (this) {
                 wait(_WAIT);
@@ -226,7 +278,7 @@ public class Migrate_1_11_2 implements Migrate {
     }
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<StockKnowledgesEntity> doAddPointByKnowledgeStock(int offset, int limit) {
+    public List<StockKnowledgesEntity> doAddPointByKnowledgeStock(int offset) {
         List<StockKnowledgesEntity> list;
         list = StockKnowledgesDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (StockKnowledgesEntity item : list) {
@@ -253,7 +305,7 @@ public class Migrate_1_11_2 implements Migrate {
         List<LikesEntity> list;
         int offset = 0;
         do {
-            list = doAddPointByKnowledgeLike(offset, limit);
+            list = doAddPointByKnowledgeLike(offset);
             offset = offset + limit;
             synchronized (this) {
                 wait(_WAIT);
@@ -261,7 +313,7 @@ public class Migrate_1_11_2 implements Migrate {
         } while (list.size() > 0);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<LikesEntity> doAddPointByKnowledgeLike(int offset, int limit) {
+    public List<LikesEntity> doAddPointByKnowledgeLike(int offset) {
         List<LikesEntity> list;
         list = LikesDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (LikesEntity item : list) {
@@ -288,7 +340,7 @@ public class Migrate_1_11_2 implements Migrate {
         List<ViewHistoriesEntity> list;
         int offset = 0;
         do {
-            list = doAddPointByKnowledgeShow(offset, limit);
+            list = doAddPointByKnowledgeShow(offset);
             offset = offset + limit;
             synchronized (this) {
                 wait(_WAIT);
@@ -296,7 +348,7 @@ public class Migrate_1_11_2 implements Migrate {
         } while (list.size() > 0);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<ViewHistoriesEntity> doAddPointByKnowledgeShow(int offset, int limit) {
+    public List<ViewHistoriesEntity> doAddPointByKnowledgeShow(int offset) {
         List<ViewHistoriesEntity> list;
         list = ViewHistoriesDao.get().selectDistinctAllWidthPager(limit, offset);
         for (ViewHistoriesEntity item : list) {
@@ -323,7 +375,7 @@ public class Migrate_1_11_2 implements Migrate {
         List<KnowledgesEntity> knowledges;
         int offset = 0;
         do {
-            knowledges = doAddPointByKnowledge(offset, limit);
+            knowledges = doAddPointByKnowledge(offset);
             offset = offset + limit;
             synchronized (this) {
                 wait(_WAIT);
@@ -331,7 +383,7 @@ public class Migrate_1_11_2 implements Migrate {
         } while (knowledges.size() > 0);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<KnowledgesEntity> doAddPointByKnowledge(int offset, int limit) {
+    public List<KnowledgesEntity> doAddPointByKnowledge(int offset) {
         List<KnowledgesEntity> knowledges;
         knowledges = KnowledgesDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (KnowledgesEntity item : knowledges) {
@@ -353,7 +405,7 @@ public class Migrate_1_11_2 implements Migrate {
         List<KnowledgesEntity> knowledges;
         int offset = 0;
         do {
-            knowledges = doSetViewCountToKnowledge(offset, limit);
+            knowledges = doSetViewCountToKnowledge(offset);
             offset = offset + limit;
             synchronized (this) {
                 wait(_WAIT);
@@ -361,7 +413,7 @@ public class Migrate_1_11_2 implements Migrate {
         } while (knowledges.size() > 0);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<KnowledgesEntity> doSetViewCountToKnowledge(int offset, int limit) {
+    public List<KnowledgesEntity> doSetViewCountToKnowledge(int offset) {
         List<KnowledgesEntity> knowledges;
         knowledges = KnowledgesDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (KnowledgesEntity knowledge : knowledges) {

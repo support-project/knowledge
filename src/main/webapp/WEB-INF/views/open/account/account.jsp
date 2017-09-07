@@ -31,6 +31,8 @@
 
 
 <c:param name="PARAM_CONTENT">
+<input type="hidden" id="userId" value="<%= jspUtil.out("userId") %>" />
+<input type="hidden" id="point" value="<%= jspUtil.out("point") %>" />
 <div class="row">
     <div class="col-sm-6 col-md-6">
         <h4 class="title">

@@ -1,6 +1,7 @@
 SELECT
         YMD
         ,MAX(TOTAL) AS TOTAL
+        ,MIN(BEFORE_TOTAL) AS BEFORE
     FROM
         (
             SELECT
@@ -10,6 +11,7 @@ SELECT
                         ,INSERT_DATETIME
                     ), 'YYYYMMDD') AS YMD
                     ,TOTAL
+                    ,BEFORE_TOTAL
                 FROM
                     POINT_USER_HISTORIES
                 WHERE

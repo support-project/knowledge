@@ -61,6 +61,8 @@ public class GenPointUserHistoriesEntity implements Serializable {
     private Integer type;
     /** 獲得ポイント */
     private Integer point;
+    /** 獲得前ポイント */
+    private Integer beforeTotal;
     /** トータルポイント */
     private Integer total;
     /** 登録ユーザ */
@@ -151,6 +153,22 @@ public class GenPointUserHistoriesEntity implements Serializable {
      * @return this object     */
     public GenPointUserHistoriesEntity setPoint(Integer point) {
         this.point = point;
+        return this;
+    }
+
+    /**
+     * Get 獲得前ポイント.
+     * @return 獲得前ポイント
+     */
+    public Integer getBeforeTotal() {
+        return this.beforeTotal;
+    }
+    /**
+     * Set 獲得前ポイント.
+     * @param beforeTotal 獲得前ポイント
+     * @return this object     */
+    public GenPointUserHistoriesEntity setBeforeTotal(Integer beforeTotal) {
+        this.beforeTotal = beforeTotal;
         return this;
     }
 
@@ -306,6 +324,7 @@ public class GenPointUserHistoriesEntity implements Serializable {
         builder.append("activityNo = ").append(activityNo).append("\n");
         builder.append("type = ").append(type).append("\n");
         builder.append("point = ").append(point).append("\n");
+        builder.append("beforeTotal = ").append(beforeTotal).append("\n");
         builder.append("total = ").append(total).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
@@ -367,6 +386,16 @@ public class GenPointUserHistoriesEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(this.point, convLabelName("Point"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(this.beforeTotal, convLabelName("Before Total"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(this.beforeTotal, convLabelName("Before Total"));
         if (error != null) {
             errors.add(error);
         }
@@ -443,6 +472,16 @@ public class GenPointUserHistoriesEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(values.get("point"), convLabelName("Point"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(values.get("beforeTotal"), convLabelName("Before Total"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(values.get("beforeTotal"), convLabelName("Before Total"));
         if (error != null) {
             errors.add(error);
         }
