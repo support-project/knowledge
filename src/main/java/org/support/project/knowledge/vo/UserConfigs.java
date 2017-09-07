@@ -1,10 +1,12 @@
 package org.support.project.knowledge.vo;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 public class UserConfigs implements Serializable {
     /** serialVersion */
     private static final long serialVersionUID = 1L;
+    private Locale locale = Locale.getDefault();
     /** タイムゾーン */
     private String timezone = "UTC";
     /** タイムゾーンオフセット（分） */
@@ -60,6 +62,18 @@ public class UserConfigs implements Serializable {
      */
     public void setHighlight(int highlight) {
         this.highlight = highlight;
+    }
+    /**
+     * @return the locale
+     */
+    public Locale getLocale() {
+        return locale;
+    }
+    /**
+     * @param locale the locale to set
+     */
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
     
     

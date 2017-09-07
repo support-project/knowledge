@@ -28,6 +28,7 @@ import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.AccountInfo;
 import org.support.project.knowledge.vo.ContributionPointHistory;
 import org.support.project.knowledge.vo.StockKnowledge;
+import org.support.project.knowledge.vo.StringList;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.dao.UsersDao;
@@ -133,7 +134,40 @@ public class AccountControl extends Control {
         List<ContributionPointHistory> list = ActivityLogic.get().getUserPointHistoriesByDate(userId, getUserConfigs());
         return send(list);
     }
-
+    
+    @Get
+    public Boundary knowledge() throws Exception {
+        Integer userId = getPathInteger(-1);
+        UsersEntity account = UsersDao.get().selectOnKey(userId);
+        if (account == null) {
+            return send(HttpStatus.SC_NOT_FOUND, "NOT FOUND");
+        }
+        // そのユーザが登録したナレッジを取得
+        int offset = 0;
+        if (StringUtils.isInteger(getParam("offset"))) {
+            offset = getParam("offset", Integer.class);
+        }
+        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
+        List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, getLoginedUser());
+        KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
+        return send(stocks);
+    }
+    
+    @Get
+    public Boundary activity() throws Exception {
+        Integer userId = getPathInteger(-1);
+        UsersEntity account = UsersDao.get().selectOnKey(userId);
+        if (account == null) {
+            return send(HttpStatus.SC_NOT_FOUND, "NOT FOUND");
+        }
+        int limit = 20;
+        int offset = 0;
+        if (StringUtils.isInteger(getParam("offset"))) {
+            offset = getParam("offset", Integer.class);
+        }
+        StringList list = ActivityLogic.get().getUserPointHistoriese(userId, limit, offset, getUserConfigs());
+        return send(list);
+    }
     
 
 }

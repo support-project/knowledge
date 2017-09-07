@@ -24,6 +24,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/locale/ja.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/chart.js/dist/Chart.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/vue/dist/vue.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-list.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/account-page.js"></script>
 <!-- endbuild -->
@@ -80,33 +81,29 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row" id="tabArea">
     <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="<%=request.getContextPath()%>/open.account/info/<%= jspUtil.out("userId") %>">
+        <li role="presentation" class="active"><a v-on:click="showKnowledge">
             <%= jspUtil.label("knowledge.account.label.knowledges") %>
         </a></li>
-        <li role="presentation"><a href="<%=request.getContextPath()%>/open.account/like/<%= jspUtil.out("userId") %>">
+        <li role="presentation"><a v-on:click="showLike">
             <%=jspUtil.label("knowledge.account.label.like")%>
         </a></li>
-        <li role="presentation"><a href="<%=request.getContextPath()%>/open.account/activity/<%= jspUtil.out("userId") %>">
+        <li role="presentation"><a v-on:click="showActivity">
             <%=jspUtil.label("knowledge.account.label.activity")%>
         </a></li>
     </ul>
 </div>
 
 
-
-<div class="sub_title">
-
-</div>
-
-<!-- リスト -->
-<div class="row" id="knowledgeList">
-    <% request.setAttribute("list_data", jspUtil.getValue("knowledges", List.class)); %>
-    <c:import url="/WEB-INF/views/open/knowledge/partials/common_list.jsp" />
-</div>
-
-
+<div id="knowledgesArea">
+    <div class="sub_title">
+    </div>
+    <!-- リスト -->
+    <div class="row" id="knowledgeList">
+        <% request.setAttribute("list_data", jspUtil.getValue("knowledges", List.class)); %>
+        <c:import url="/WEB-INF/views/open/knowledge/partials/common_list.jsp" />
+    </div>
     <!-- Pager -->
     <nav>
         <ul class="pager">
@@ -122,8 +119,17 @@
             </li>
         </ul>
     </nav>
+</div>
 
 
+<div id="activityArea" style="display:none">
+    <br/><br/>
+    <ul class="list-group" id="activityList">
+        <li class="list-group-item" v-for="activity in activities">
+        {{ activity }}
+        </li>
+    </ul>
+</div>
 
 </c:param>
 

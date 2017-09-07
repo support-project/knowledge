@@ -1,6 +1,4 @@
-$(document).ready(function() {
-    var userId = $('#userId').val();
-    
+var loadCPGGraph = function(userId, before) {
     // 軸を作成
     moment.locale(_LANG);
     var m = moment();
@@ -19,7 +17,6 @@ $(document).ready(function() {
         timeout: 10000,  // 単位はミリ秒
     }).done(function(result, textStatus, xhr) {
         //console.log(result);
-        var before = $('#point').val();
         var valmap = {};
         if (result.length > 0) {
             var hit = false;
@@ -59,8 +56,74 @@ $(document).ready(function() {
             }]
           }
         });
-        
     }).fail(function(xhr, textStatus, error) {
         handleErrorResponse(xhr, textStatus, error);
+    });
+};
+
+var loadKnowledge = function(userId, offset) {
+    var list = [];
+    var knowledgeList = new Vue({
+        el: '#knowledgeList',
+        data: {
+            list: list
+        }
+    });
+    $.ajax({
+        url: _CONTEXT + '/open.account/knowledge/' + userId,
+        type: 'GET',
+        timeout: 10000,
+    }).done(function(result, textStatus, xhr) {
+        result.forEach(function(item) {
+            knowledgeList.list.push(item);
+        });
+    }).fail(function(xhr, textStatus, error) {
+        handleErrorResponse(xhr, textStatus, error);
+    });
+};
+
+var loadAndShowActivity = function(userId, offset) {
+    $('#knowledgesArea').hide();
+    $('#activityArea').show();
+    var activities = [];
+    var activityList = new Vue({
+        el: '#activityList',
+        data: {
+            activities: activities
+        }
+    });
+    $.ajax({
+        url: _CONTEXT + '/open.account/activity/' + userId,
+        type: 'GET',
+        timeout: 10000,
+    }).done(function(result, textStatus, xhr) {
+        console.log(result);
+        result.list.forEach(function(item) {
+            activityList.activities.push(item);
+        });
+    }).fail(function(xhr, textStatus, error) {
+        handleErrorResponse(xhr, textStatus, error);
+    });
+};
+
+
+$(document).ready(function() {
+    var userId = $('#userId').val();
+    var before = $('#point').val();
+    // グラフをロード
+    loadCPGGraph(userId, before);
+    
+    var tab = new Vue({
+        el: '#tabArea',
+        data: {},
+        methods: {
+            showKnowledge: function (event) {
+            },
+            showLike: function (event) {
+            },
+            showActivity: function (event) {
+                loadAndShowActivity(userId);
+            }
+        }
     });
 });

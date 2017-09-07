@@ -21,6 +21,8 @@ public class ActivitiesEntity extends GenActivitiesEntity {
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
+    
+    private String userName = "";
 
     /**
      * Get instance from DI container.
@@ -44,6 +46,20 @@ public class ActivitiesEntity extends GenActivitiesEntity {
 
     public ActivitiesEntity(Long no) {
         super( no);
+    }
+
+    /**
+     * @return the userName
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * @param userName the userName to set
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 }
