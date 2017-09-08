@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -40,6 +41,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
     /**
      * IDを採番 ※コミットしなくても次のIDを採番する為、保存しなければ欠番になる
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer getNextId() {
         String sql = "SELECT MAX(KNOWLEDGE_ID) FROM KNOWLEDGES;";
         Integer integer = executeQuerySingle(sql, Integer.class);
@@ -50,6 +52,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
         return currentId;
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> selectKnowledge(int offset, int limit, Integer userId) {
         // String sql = "SELECT * FROM KNOWLEDGES WHERE DELETE_FLAG = 0 ORDER BY UPDATE_DATETIME DESC Limit ? offset ?;";
         String sql = SQLManager.getInstance()
@@ -63,6 +66,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
      * @param knowledgeIds
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> selectKnowledges(List<Long> knowledgeIds) {
         if (knowledgeIds == null || knowledgeIds.isEmpty()) {
             return new ArrayList<KnowledgesEntity>();
@@ -97,6 +101,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
      * @param knowledgeId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgesEntity selectOnKeyWithUserName(Long knowledgeId) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectOnKeyWithUserName.sql");
@@ -109,6 +114,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
      * @param userId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<Long> selectOnUser(Integer userId) {
         String sql = "SELECT KNOWLEDGE_ID FROM KNOWLEDGES WHERE INSERT_USER = ? ORDER BY KNOWLEDGE_ID DESC";
         return executeQueryList(sql, Long.class, userId);
@@ -119,6 +125,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
      * 
      * @param loginUserId
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void deleteOnUser(Integer loginUserId) {
         String sql = "UPDATE KNOWLEDGES SET DELETE_FLAG = 1 , UPDATE_USER = ? , UPDATE_DATETIME = ? WHERE INSERT_USER = ?";
         super.executeUpdate(sql, loginUserId, new Timestamp(new Date().getTime()), loginUserId);
@@ -131,6 +138,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
      * @param end
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> selectBetween(Long start, Long end) {
         String sql = "SELECT * FROM knowledges WHERE knowledge_id BETWEEN ? AND ? AND DELETE_FLAG = 0 ORDER BY knowledge_id";
         return executeQueryList(sql, KnowledgesEntity.class, start, end);
@@ -145,6 +153,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
      * @param limit
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> selectPopularity(Timestamp start, Timestamp end, int offset, int limit) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectPopularity.sql");
         return executeQueryList(sql, KnowledgesEntity.class, start, end, limit, offset);
@@ -160,6 +169,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
      * @param limit
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> selectPopularityWithAccessControl(LoginedUser loginedUser, Timestamp start, Timestamp end, int offset, int limit) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectPopularityWithAccessControl.sql");
@@ -198,6 +208,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
         return executeQueryList(sql, KnowledgesEntity.class, params.toArray(new Object[0]));
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> selectStocks(LoginedUser loginedUser, int offset, int limit, Long stockid) {
         if (loginedUser == null) {
             // ログインしていないのであれば、ストックは無し
@@ -263,6 +274,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
      * @param q
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> selectKnowledgeOnIdPrefix(String q, int limit, int offset) {
         String sql = "SELECT KNOWLEDGE_ID, TITLE FROM KNOWLEDGES "
                 + "WHERE CAST(KNOWLEDGE_ID AS VARCHAR(20)) LIKE ? || '%' ORDER BY KNOWLEDGES.KNOWLEDGE_ID DESC LIMIT ? OFFSET ?;";
@@ -274,6 +286,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
      * @param q
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> selectAccessAbleKnowledgeOnIdPrefix(String q, LoginedUser loginedUser, int limit, int offset) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectAccessAbleKnowledgeOnIdPrefix.sql");
@@ -311,9 +324,20 @@ public class KnowledgesDao extends GenKnowledgesDao {
         return executeQueryList(sql, KnowledgesEntity.class, params.toArray(new Object[0]));
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void updateViewCount(Long count, Long knowledgeId) {
         String sql = "UPDATE KNOWLEDGES SET VIEW_COUNT = ? WHERE KNOWLEDGE_ID = ?";
         executeUpdate(sql, count, knowledgeId);
+    }
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public int selectPoint(long knowledgeId) {
+        String sql = "SELECT POINT FROM KNOWLEDGES WHERE KNOWLEDGE_ID = ?";
+        return executeQuerySingle(sql, Integer.class, knowledgeId);
+    }
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void updatePoint(long knowledgeId, int point) {
+        String sql = "UPDATE KNOWLEDGES SET POINT = ? WHERE KNOWLEDGE_ID = ?";
+        executeUpdate(sql, point, knowledgeId);
     }
 
 }

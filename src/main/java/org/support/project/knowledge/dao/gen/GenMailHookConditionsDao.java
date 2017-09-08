@@ -12,6 +12,7 @@ import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
 import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.config.Order;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
 
@@ -43,8 +44,19 @@ public class GenMailHookConditionsDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailHookConditionsEntity> physicalSelectAll() { 
+        return physicalSelectAll(Order.DESC);
+    }
+    /**
+     * Select all data.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<MailHookConditionsEntity> physicalSelectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailHookConditionsDao/MailHookConditionsDao_physical_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, MailHookConditionsEntity.class);
     }
     /**
@@ -53,8 +65,21 @@ public class GenMailHookConditionsDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailHookConditionsEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        return physicalSelectAllWithPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data on limit and offset
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<MailHookConditionsEntity> physicalSelectAllWithPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailHookConditionsDao/MailHookConditionsDao_physical_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, MailHookConditionsEntity.class, limit, offset);
     }
     /**
@@ -63,6 +88,7 @@ public class GenMailHookConditionsDao extends AbstractDao {
      * @param  hookId hookId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public MailHookConditionsEntity physicalSelectOnKey(Integer conditionNo, Integer hookId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailHookConditionsDao/MailHookConditionsDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, MailHookConditionsEntity.class, conditionNo, hookId);
@@ -71,8 +97,19 @@ public class GenMailHookConditionsDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailHookConditionsEntity> selectAll() { 
+        return selectAll(Order.DESC);
+    }
+    /**
+     * Select all data that not deleted.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<MailHookConditionsEntity> selectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailHookConditionsDao/MailHookConditionsDao_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, MailHookConditionsEntity.class);
     }
     /**
@@ -81,14 +118,28 @@ public class GenMailHookConditionsDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailHookConditionsEntity> selectAllWidthPager(int limit, int offset) { 
+        return selectAllWidthPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data that not deleted with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<MailHookConditionsEntity> selectAllWidthPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailHookConditionsDao/MailHookConditionsDao_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, MailHookConditionsEntity.class, limit, offset);
     }
     /**
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailHookConditionsDao/MailHookConditionsDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -99,6 +150,7 @@ public class GenMailHookConditionsDao extends AbstractDao {
      * @param  hookId hookId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public MailHookConditionsEntity selectOnKey(Integer conditionNo, Integer hookId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailHookConditionsDao/MailHookConditionsDao_select_on_key.sql");
         return executeQuerySingle(sql, MailHookConditionsEntity.class, conditionNo, hookId);
@@ -108,6 +160,7 @@ public class GenMailHookConditionsDao extends AbstractDao {
      * @param conditionNo conditionNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailHookConditionsEntity> selectOnConditionNo(Integer conditionNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailHookConditionsDao/MailHookConditionsDao_select_on_condition_no.sql");
         return executeQueryList(sql, MailHookConditionsEntity.class, conditionNo);
@@ -117,6 +170,7 @@ public class GenMailHookConditionsDao extends AbstractDao {
      * @param hookId hookId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailHookConditionsEntity> selectOnHookId(Integer hookId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailHookConditionsDao/MailHookConditionsDao_select_on_hook_id.sql");
         return executeQueryList(sql, MailHookConditionsEntity.class, hookId);
@@ -126,6 +180,7 @@ public class GenMailHookConditionsDao extends AbstractDao {
      * @param conditionNo conditionNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailHookConditionsEntity> physicalSelectOnConditionNo(Integer conditionNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailHookConditionsDao/MailHookConditionsDao_physical_select_on_condition_no.sql");
         return executeQueryList(sql, MailHookConditionsEntity.class, conditionNo);
@@ -135,6 +190,7 @@ public class GenMailHookConditionsDao extends AbstractDao {
      * @param hookId hookId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailHookConditionsEntity> physicalSelectOnHookId(Integer hookId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailHookConditionsDao/MailHookConditionsDao_physical_select_on_hook_id.sql");
         return executeQueryList(sql, MailHookConditionsEntity.class, hookId);
@@ -143,6 +199,7 @@ public class GenMailHookConditionsDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM MAIL_HOOK_CONDITIONS";
         return executeQuerySingle(sql, Integer.class);

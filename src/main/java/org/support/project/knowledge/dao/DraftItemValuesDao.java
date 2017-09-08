@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -27,6 +28,7 @@ public class DraftItemValuesDao extends GenDraftItemValuesDao {
      * @param draftId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int deleteOnDraftId(Long draftId) {
         String sql = "DELETE FROM DRAFT_ITEM_VALUES WHERE DRAFT_ID = ?";
         return super.executeUpdate(sql, draftId);

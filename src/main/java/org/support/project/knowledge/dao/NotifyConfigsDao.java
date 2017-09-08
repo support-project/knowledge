@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -35,6 +36,7 @@ public class NotifyConfigsDao extends GenNotifyConfigsDao {
     /**
      * IDを採番 ※コミットしなくても次のIDを採番する為、保存しなければ欠番になる
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer getNextId() {
         String sql = "SELECT MAX(USER_ID) FROM NOTIFY_CONFIGS;";
         Integer integer = executeQuerySingle(sql, Integer.class);
@@ -52,6 +54,7 @@ public class NotifyConfigsDao extends GenNotifyConfigsDao {
      * @param offset
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<UsersEntity> getNotifyDesktopUsersOnPublicComment(int limit, int offset) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/GetNotifyDesktopUsersOnPublicComment.sql");
@@ -65,6 +68,7 @@ public class NotifyConfigsDao extends GenNotifyConfigsDao {
      * @param offset
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<UsersEntity> getNotifyMailUsersOnPublicComment(int limit, int offset) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/NotifyConfigsDao/GetNotifyMailUsersOnPublicComment.sql");
         return executeQueryList(sql, UsersEntity.class, limit, offset);

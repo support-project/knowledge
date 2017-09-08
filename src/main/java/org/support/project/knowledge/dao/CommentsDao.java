@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -26,6 +27,7 @@ public class CommentsDao extends GenCommentsDao {
         return Container.getComp(CommentsDao.class);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<CommentsEntity> selectOnKnowledgeId(Long knowledgeId) {
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT COMMENTS.*, UPDATE_USER.USER_NAME AS UPDATE_USER_NAME, INSERT_USER.USER_NAME AS INSERT_USER_NAME FROM COMMENTS ");
@@ -42,9 +44,17 @@ public class CommentsDao extends GenCommentsDao {
      * @param knowledgeId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer countOnKnowledgeId(Long knowledgeId) {
         String sql = "SELECT COUNT(*) FROM COMMENTS WHERE KNOWLEDGE_ID = ?  AND DELETE_FLAG = 0 ";
         return super.executeQuerySingle(sql, Integer.class, knowledgeId);
+    }
+
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public long selectUniqueUserCountOnKnowledgeId(Long knowledgeId) {
+        String sql = "SELECT COUNT(*) FROM ("
+                + "SELECT KNOWLEDGE_ID, INSERT_USER FROM COMMENTS WHERE KNOWLEDGE_ID = ? GROUP BY KNOWLEDGE_ID, INSERT_USER) AS SUBQ";
+        return super.executeQuerySingle(sql, Long.class, knowledgeId);
     }
 
 }

@@ -71,6 +71,8 @@ public class GenKnowledgesEntity implements Serializable {
     private Integer typeId;
     /** 通知ステータス */
     private Integer notifyStatus;
+    /** ポイント */
+    private Integer point;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -259,6 +261,22 @@ public class GenKnowledgesEntity implements Serializable {
     }
 
     /**
+     * Get ポイント.
+     * @return ポイント
+     */
+    public Integer getPoint() {
+        return this.point;
+    }
+    /**
+     * Set ポイント.
+     * @param point ポイント
+     * @return this object     */
+    public GenKnowledgesEntity setPoint(Integer point) {
+        this.point = point;
+        return this;
+    }
+
+    /**
      * Get 登録ユーザ.
      * @return 登録ユーザ
      */
@@ -397,6 +415,7 @@ public class GenKnowledgesEntity implements Serializable {
         builder.append("viewCount = ").append(viewCount).append("\n");
         builder.append("typeId = ").append(typeId).append("\n");
         builder.append("notifyStatus = ").append(notifyStatus).append("\n");
+        builder.append("point = ").append(point).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -452,6 +471,16 @@ public class GenKnowledgesEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(this.notifyStatus, convLabelName("Notify Status"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(this.point, convLabelName("Point"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(this.point, convLabelName("Point"));
         if (error != null) {
             errors.add(error);
         }
@@ -513,6 +542,16 @@ public class GenKnowledgesEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(values.get("notifyStatus"), convLabelName("Notify Status"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(values.get("point"), convLabelName("Point"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(values.get("point"), convLabelName("Point"));
         if (error != null) {
             errors.add(error);
         }

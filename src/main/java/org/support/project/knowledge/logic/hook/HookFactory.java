@@ -22,6 +22,7 @@ public class HookFactory {
                 hooks.add(Container.getComp(BeforeSaveOldEventRemoveHook.class));
             }
         }
+        hooks.add(Container.getComp(BeforeSavePointHook.class));
         return hooks;
     }
     

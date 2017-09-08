@@ -50,6 +50,8 @@ import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.TimeZoneLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
+import org.support.project.knowledge.logic.activity.Activity;
+import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.ListData;
 import org.support.project.knowledge.vo.MarkDown;
@@ -202,7 +204,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
         // 編集権限
         List<LabelValue> editors = TargetLogic.get().selectEditorsViewOnKnowledgeId(knowledgeId, loginedUser);
         setAttribute("editors", editors);
-        boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
+        List<LabelValue> editors2 = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+        boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors2);
         setAttribute("edit", edit);
 
         ArrayList<Long> knowledgeIds = new ArrayList<Long>();
@@ -214,6 +217,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
         //ストック情報を取得
         List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(entity, loginedUser);
         setAttribute("stocks", stocks);
+        
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, getLoginedUser(), new Date(), entity);
+        long point = KnowledgesDao.get().selectPoint(entity.getKnowledgeId());
+        setAttribute("point", point);
         
         return forward("view.jsp");
     }
@@ -315,7 +322,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         // ログインユーザ情報を最新化
         // TODO 毎回最新化するのは、パフォーマンスが悪い？グループ情報が更新になった場合に、影響があるユーザの一覧を保持しておき、
         // そのユーザのみを更新した方が良いかも。いったんは、ナレッジの一覧を表示する際に、毎回更新してみる（それほど負荷が高くなさそうなので）
-        super.updateLoginInfo();
+        updateLoginInfo();
 
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
@@ -658,6 +665,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LikeCount likeCount = new LikeCount();
         likeCount.setKnowledgeId(knowledgeId);
         likeCount.setCount(count);
+        
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, getLoginedUser(), new Date(),
+                KnowledgesDao.get().selectOnKey(knowledgeId));
         return send(likeCount);
     }
     /**
@@ -672,6 +682,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
         Long count = knowledgeLogic.addLikeComment(commentNo, getLoginedUser(), getLocale());
         LikeCount likeCount = new LikeCount();
         likeCount.setCount(count);
+        
+        ActivityLogic.get().processActivity(Activity.COMMENT_LIKE, getLoginedUser(), new Date(),
+                CommentsDao.get().selectOnKey(commentNo));
         return send(likeCount);
     }
 

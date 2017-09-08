@@ -15,6 +15,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.logic.KnowledgeAuthenticationLogic;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.notification.AcceptCheckUserNotification;
 import org.support.project.knowledge.logic.notification.AddUserNotification;
@@ -34,7 +35,6 @@ import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.logic.AuthenticationLogic;
 import org.support.project.web.logic.UserLogic;
-import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 
 @DI(instance = Instance.Prototype)
 public class SignupControl extends Control {
@@ -159,8 +159,8 @@ public class SignupControl extends Control {
         AddUserNotification.get().sendNotifyAddUser(user);
 
         // ログイン処理
-        AuthenticationLogic<LoginedUser> logic = Container.getComp(DefaultAuthenticationLogicImpl.class);
-        logic.setSession(user.getUserKey(), getRequest());
+        AuthenticationLogic<LoginedUser> logic = Container.getComp(KnowledgeAuthenticationLogic.class);
+        logic.setSession(user.getUserKey(), getRequest(), getResponse());
     }
 
     /**
@@ -225,8 +225,8 @@ public class SignupControl extends Control {
             AddUserNotification.get().sendNotifyAddUser(user);
         }
         // ログイン処理
-        AuthenticationLogic<LoginedUser> logic = Container.getComp(DefaultAuthenticationLogicImpl.class);
-        logic.setSession(entity.getUserKey(), getRequest());
+        AuthenticationLogic<LoginedUser> logic = Container.getComp(KnowledgeAuthenticationLogic.class);
+        logic.setSession(entity.getUserKey(), getRequest(), getResponse());
 
         addMsgInfo("knowledge.signup.done");
         return devolution(HttpMethod.get, "Index/index");

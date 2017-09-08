@@ -3,6 +3,7 @@ package org.support.project.knowledge.control.protect;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.DraftKnowledgesDao;
@@ -37,6 +39,8 @@ import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
+import org.support.project.knowledge.logic.activity.Activity;
+import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.Stock;
 import org.support.project.knowledge.vo.UploadFile;
@@ -100,11 +104,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
         
         if (getAttribute("publicFlag") == null) {
             UserConfigsEntity publicFlag = UserConfigsDao.get().physicalSelectOnKey(
-                    "DEFAULT_PUBLIC_FLAG", AppConfig.get().getSystemName(), getLoginUserId());
+                    UserConfig.DEFAULT_PUBLIC_FLAG, AppConfig.get().getSystemName(), getLoginUserId());
             if (publicFlag != null) {
                 setAttribute("publicFlag", publicFlag.getConfigValue());
                 UserConfigsEntity targets = UserConfigsDao.get().physicalSelectOnKey(
-                        "DEFAULT_TARGET", AppConfig.get().getSystemName(), getLoginUserId());
+                        UserConfig.DEFAULT_TARGET, AppConfig.get().getSystemName(), getLoginUserId());
                 if (targets != null) {
                     if (StringUtils.isNotEmpty(targets.getConfigValue())) {
                         String[] targetKeys = targets.getConfigValue().split(",");
@@ -210,7 +214,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LOG.trace("save");
 
         KnowledgesEntity insertedEntity = knowledgeLogic.insert(data, super.getLoginedUser());
-
+        ActivityLogic.get().processKnowledgeSaveActivity(getLoginedUser(), new Date(), insertedEntity);
+        
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
                 String.valueOf(insertedEntity.getKnowledgeId()), "message.success.insert");
     }
@@ -305,6 +310,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
         
         KnowledgesEntity updatedEntity = knowledgeLogic.update(data, super.getLoginedUser());
+        ActivityLogic.get().processKnowledgeSaveActivity(getLoginedUser(), new Date(), updatedEntity);
         
         if (data.isUpdateContent()) {
             return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
@@ -324,6 +330,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
     @Post(subscribeToken = "knowledge", checkReqToken = true)
     public Boundary save(KnowledgesEntity entity) throws Exception {
         try {
+            if (entity.getPoint() == null) {
+                entity.setPoint(0); // 初期値
+            }
             if (entity.getKnowledgeId() != null && entity.getKnowledgeId() >= 1) {
                 return update(entity);
             } else {
@@ -484,7 +493,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
             return super.devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
         }
 
-        KnowledgeLogic.get().saveComment(knowledgeId, comment, fileNos, getLoginedUser());
+        CommentsEntity commentsEntity = KnowledgeLogic.get().saveComment(knowledgeId, comment, fileNos, getLoginedUser());
+        ActivityLogic.get().processActivity(Activity.COMMENT_INSERT, getLoginedUser(), new Date(), commentsEntity);
 
         return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
     }
@@ -667,6 +677,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
 
         KnowledgeLogic.get().deleteComment(db, getLoginedUser());
+        
         addMsgSuccess("message.success.delete.target", getResource("label.comment"));
         setAttribute("comment", null);
         return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(db.getKnowledgeId()));
@@ -723,6 +734,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 dao.physicalDelete(entity);
             }
         }
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_STOCK, getLoginedUser(), new Date(),
+                KnowledgesDao.get().selectOnKey(knowledgeId));
+        
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, "saved", "message.success.save");
     };
 

@@ -9,6 +9,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.support.project.common.bat.JobResult;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.bat.CreateExportDataBat;
@@ -43,5 +44,9 @@ public class DataExportEndpoint extends CallBatchEndpoint {
         if (LOG.isDebugEnabled()) {
             LOG.warn("websocket error -> ", t);
         }
+    }
+
+    @Override
+    protected void finishJob(JobResult result, Session session) {
     }
 }

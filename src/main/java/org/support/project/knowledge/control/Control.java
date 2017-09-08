@@ -15,8 +15,10 @@ import org.support.project.common.log.LogLevel;
 import org.support.project.common.util.HtmlUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
+import org.support.project.knowledge.vo.UserConfigs;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.common.HttpUtil;
 import org.support.project.web.logic.NotificationLogic;
@@ -175,6 +177,14 @@ public abstract class Control extends org.support.project.web.control.Control {
             return true;
         }
         return false;
+    }
+    
+    protected UserConfigs getUserConfigs() {
+        UserConfigs userConfigs =  (UserConfigs) getRequest().getAttribute(UserConfig.REQUEST_USER_CONFIG_KEY);
+        if (userConfigs == null) {
+            userConfigs = new UserConfigs();
+        }
+        return userConfigs;
     }
 
 }

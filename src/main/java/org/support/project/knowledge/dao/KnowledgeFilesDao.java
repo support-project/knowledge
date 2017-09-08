@@ -37,6 +37,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
      * @param knowledgeId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeFilesEntity> selectOnKnowledgeId(Long knowledgeId) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, DRAFT_ID, FILE_NAME, FILE_SIZE, PARSE_STATUS, ");
@@ -50,6 +51,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
      * @param draftId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeFilesEntity> selectOnDraftId(Long draftId) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, DRAFT_ID, FILE_NAME, FILE_SIZE, PARSE_STATUS, ");
@@ -63,6 +65,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
     /**
      * キーで1件取得 （ファイルのバイナリは取得しない）
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgeFilesEntity selectOnKeyWithoutBinary(Long fileNo) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, DRAFT_ID, FILE_NAME, FILE_SIZE, PARSE_STATUS, ");
@@ -79,6 +82,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
      * @param commentNo Nullがありえる
      * @param loginedUser
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void connectKnowledge(Long fileNo, Long knowledgeId, Long commentNo, LoginedUser loginedUser) {
         StringBuilder sql = new StringBuilder();
         sql.append("UPDATE KNOWLEDGE_FILES ");
@@ -104,6 +108,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
      * 
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeFilesEntity> selectWaitStateFiles() {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT FILE_NO, KNOWLEDGE_ID, COMMENT_NO, FILE_NAME, DRAFT_ID, FILE_SIZE, INSERT_USER, ");
@@ -133,6 +138,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
      * @param entity ファイルEntity
      * @param updateUserId 更新者
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void updateDraftId(KnowledgeFilesEntity entity, Integer updateUserId) {
         StringBuilder sql = new StringBuilder();
         sql.append("UPDATE KNOWLEDGE_FILES ");

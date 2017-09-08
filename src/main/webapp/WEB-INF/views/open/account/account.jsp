@@ -21,12 +21,19 @@
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-open-account.js -->
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/echojs/dist/echo.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/locale/ja.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/chart.js/dist/Chart.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/vue/dist/vue.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-list.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/account-page.js"></script>
 <!-- endbuild -->
 </c:param>
 
 
 <c:param name="PARAM_CONTENT">
+<input type="hidden" id="userId" value="<%= jspUtil.out("userId") %>" />
+<input type="hidden" id="point" value="<%= jspUtil.out("point") %>" />
 <div class="row">
     <div class="col-sm-6 col-md-6">
         <h4 class="title">
@@ -34,8 +41,15 @@
         width="64" height="64" />&nbsp;
         <%= jspUtil.out("userName") %>
         </h4>
-    </div>
-    <div class="col-sm-6 col-md-6">
+        
+        <div class="row">
+            <div class="col-xs-6">
+            <i class="fa fa-heart-o" ></i>&nbsp;<%= jspUtil.label("knowledge.account.label.cp") %>
+            </div>
+            <div class="col-xs-6">
+            <i class="fa fa-times"></i>&nbsp;<%= jspUtil.out("point") %>
+            </div>
+        </div>
         <div class="row">
             <div class="col-xs-6">
             <i class="fa fa-book"></i>&nbsp;<%= jspUtil.label("knowledge.account.label.knowledge.count") %>
@@ -60,21 +74,38 @@
             <i class="fa fa-times"></i>&nbsp;<%= jspUtil.out("stockCount") %>
             </div>
         </div>
+        
+    </div>
+    <div class="col-sm-6 col-md-6">
+        <canvas id="cpChart"></canvas>
     </div>
 </div>
 
-<br/>
-<div class="sub_title">
-<%= jspUtil.label("knowledge.account.label.knowledges") %>
+<div class="row" id="tabArea">
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active" id="tabKnowledge"><a v-on:click="showKnowledge">
+            <%= jspUtil.label("knowledge.account.label.knowledges") %>
+        </a></li>
+        <%--
+        <li role="presentation" id="tabLike"><a v-on:click="showLike">
+            <%=jspUtil.label("knowledge.account.label.like")%>
+        </a></li>
+        --%>
+        <li role="presentation" id="tabActivity"><a v-on:click="showActivity">
+            <%=jspUtil.label("knowledge.account.label.activity")%>
+        </a></li>
+    </ul>
 </div>
 
-<!-- リスト -->
-<div class="row" id="knowledgeList">
-    <% request.setAttribute("list_data", jspUtil.getValue("knowledges", List.class)); %>
-    <c:import url="/WEB-INF/views/open/knowledge/partials/common_list.jsp" />
-</div>
 
-
+<div id="knowledgesArea">
+    <div class="sub_title">
+    </div>
+    <!-- リスト -->
+    <div class="row" id="knowledgeList">
+        <% request.setAttribute("list_data", jspUtil.getValue("knowledges", List.class)); %>
+        <c:import url="/WEB-INF/views/open/knowledge/partials/common_list.jsp" />
+    </div>
     <!-- Pager -->
     <nav>
         <ul class="pager">
@@ -90,8 +121,18 @@
             </li>
         </ul>
     </nav>
+</div>
 
 
+<div id="activityArea" style="display:none">
+    <br/><br/>
+    <div class="list-group" id="activityList">
+        <a class="list-group-item" v-for="activity in activities">
+            <h4 class="list-group-item-heading">{{ activity.msg }}</h4>
+            <p class="list-group-item-text">{{ activity.dispDate }}</p>
+        </a>
+    </div>
+</div>
 
 </c:param>
 

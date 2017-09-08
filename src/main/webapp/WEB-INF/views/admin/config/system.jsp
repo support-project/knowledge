@@ -75,10 +75,11 @@
         </label>
     </div>
     
-    
-    
     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
 </form>
+
+<hr/>
+Database version: <%= jspUtil.out("db_version") %><br/>
 
 
 </c:param>

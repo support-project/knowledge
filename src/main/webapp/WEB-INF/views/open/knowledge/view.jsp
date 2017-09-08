@@ -36,10 +36,6 @@
                 <jsp:include page="partials/partials-view-count.jsp"></jsp:include>
             </div>
             <div class="meta-info">
-                <%-- 更新者情報 --%>
-                <jsp:include page="partials/partials-view-editor.jsp"></jsp:include>
-            </div>
-            <div class="meta-info">
                 <%-- テンプレートの種類表示 --%>
                 <jsp:include page="partials/partials-view-template.jsp"></jsp:include>
                 <%-- タグ --%>
@@ -48,6 +44,10 @@
                 <jsp:include page="partials/partials-view-stock.jsp"></jsp:include>
                 <%-- 公開区分 --%>
                 <jsp:include page="partials/partials-view-public-flag.jsp"></jsp:include>
+            </div>
+            <div class="meta-info">
+                <%-- 更新者情報 --%>
+                <jsp:include page="partials/partials-view-editor.jsp"></jsp:include>
             </div>
         </div>
 

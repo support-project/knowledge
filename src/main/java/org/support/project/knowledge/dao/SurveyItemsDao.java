@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -21,6 +22,7 @@ public class SurveyItemsDao extends GenSurveyItemsDao {
         return Container.getComp(SurveyItemsDao.class);
     }
     
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void deleteOnKnowledgeId(Long knowledgeId) {
         String sql = "DELETE FROM SURVEY_ITEMS WHERE KNOWLEDGE_ID = ?";
         executeUpdate(sql, knowledgeId);

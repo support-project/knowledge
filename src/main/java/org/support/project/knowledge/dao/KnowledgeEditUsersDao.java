@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -23,6 +24,7 @@ public class KnowledgeEditUsersDao extends GenKnowledgeEditUsersDao {
         return Container.getComp(KnowledgeEditUsersDao.class);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void deleteOnKnowledgeId(Long knowledgeId) {
         String sql = "DELETE FROM KNOWLEDGE_EDIT_USERS WHERE KNOWLEDGE_ID = ?";
         super.executeUpdate(sql, knowledgeId);
