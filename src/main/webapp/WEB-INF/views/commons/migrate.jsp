@@ -75,9 +75,11 @@ latest database version: <%= InitDB.CURRENT %><br/>
 
 <a href="<%= request.getContextPath() %>/"><i class="fa fa-home" aria-hidden="true"></i>Back to knowledge top</a>
 
+<!-- build:js(src/main/webapp) js/page-migrate.js -->
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap/dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bluebird/js/browser/bluebird.min.js"></script>
+<!-- endbuild -->
 
 <script>
 $('#startMigrate').click(function() {
