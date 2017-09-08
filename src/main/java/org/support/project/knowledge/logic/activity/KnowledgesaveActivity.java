@@ -78,6 +78,26 @@ public class KnowledgesaveActivity extends AbstractAddPointForKnowledgeProcessor
         this.point = point;
         return point;
     }
+    private int getTypeForExecuter() {
+        if (getActivity() == Activity.KNOWLEDGE_POST_PUBLIC) {
+            return TYPE_KNOWLEDGE_DO_POST_PUBLIC;
+        } else if (getActivity() == Activity.KNOWLEDGE_POST_PROTECTED) {
+            return TYPE_KNOWLEDGE_DO_POST_PROTECT;
+        } else if (getActivity() == Activity.KNOWLEDGE_POST_PRIVATE) {
+            return TYPE_KNOWLEDGE_DO_POST_PRIVATE;
+        }
+        return -1;
+    }
+    private int getTypeForKnowledge() {
+        if (getActivity() == Activity.KNOWLEDGE_POST_PUBLIC) {
+            return TYPE_KNOWLEDGE_POSTED_PUBLIC;
+        } else if (getActivity() == Activity.KNOWLEDGE_POST_PROTECTED) {
+            return TYPE_KNOWLEDGE_POSTED_PROTECT;
+        } else if (getActivity() == Activity.KNOWLEDGE_POST_PRIVATE) {
+            return TYPE_KNOWLEDGE_POSTED_PRIVATE;
+        }
+        return -1;
+    }
     
     @Override
     protected TypeAndPoint getTypeAndPointForActivityExecuter() {
@@ -85,7 +105,7 @@ public class KnowledgesaveActivity extends AbstractAddPointForKnowledgeProcessor
         if (point == 0) {
             return null;
         }
-        return new TypeAndPoint(TYPE_KNOWLEDGE_DO_INSERT, point);
+        return new TypeAndPoint(getTypeForExecuter(), point);
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledgeOwner() {
@@ -97,6 +117,6 @@ public class KnowledgesaveActivity extends AbstractAddPointForKnowledgeProcessor
         if (point == 0) {
             return null;
         }
-        return new TypeAndPoint(TYPE_KNOWLEDGE_INSERTED, point);
+        return new TypeAndPoint(getTypeForKnowledge(), point);
     }
 }

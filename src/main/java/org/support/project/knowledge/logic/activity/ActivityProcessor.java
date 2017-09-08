@@ -18,6 +18,14 @@ public interface ActivityProcessor {
     public static final int TYPE_KNOWLEDGE_DO_JOIN_EVENT = 61;
     public static final int TYPE_KNOWLEDGE_JOINED_BY_OHER = 62;
     public static final int TYPE_KNOWLEDGE_JOINED = 63;
+    
+    public static final int TYPE_KNOWLEDGE_DO_POST_PUBLIC = 101;
+    public static final int TYPE_KNOWLEDGE_POSTED_PUBLIC = 103;
+    public static final int TYPE_KNOWLEDGE_DO_POST_PROTECT = 111;
+    public static final int TYPE_KNOWLEDGE_POSTED_PROTECT = 113;
+    public static final int TYPE_KNOWLEDGE_DO_POST_PRIVATE = 121;
+    public static final int TYPE_KNOWLEDGE_POSTED_PRIVATE = 123;
+    
     public static final int TYPE_COMMENT_DO_INSERT = 1011;
     public static final int TYPE_COMMENT_INSERTED = 1013;
     public static final int TYPE_COMMENT_DO_LIKE = 1031;

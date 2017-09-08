@@ -7,6 +7,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.logic.KnowledgeLogic;
 
 /**
  * 
@@ -24,12 +25,30 @@ public class CommentInsertActivity extends AbstractAddPointForCommentProcessor {
     
     private int point = 0;
     
+    private int getKnowledgePoint() {
+        if (getParentKnowledge().getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PRIVATE) {
+            // 非公開の記事にポイントをつけてもポイントにはならない
+            return 0;
+        }
+        int point = 0;
+        if (getParentKnowledge().getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
+            point = 20;
+        } else if (getParentKnowledge().getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
+            point = 10;
+        }
+        return point;
+    }
+    
     private int getPoint() {
         if (point != 0) {
             return point;
         }
+        if (getParentKnowledge().getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PRIVATE) {
+            // 非公開の記事にポイントをつけてもポイントにはならない
+            return 0;
+        }
         // 指定の記事に登録した、ユニークなユーザ数によりポイントを変える
-        int point = 20;
+        int point = getKnowledgePoint();
         long count = CommentsDao.get().selectUniqueUserCountOnKnowledgeId(getComment().getKnowledgeId());
         int add = 0;
         if (count > 100) {
@@ -54,7 +73,11 @@ public class CommentInsertActivity extends AbstractAddPointForCommentProcessor {
     }
     @Override
     protected TypeAndPoint getTypeAndPointForActivityExecuter() {
-        return new TypeAndPoint(TYPE_COMMENT_DO_INSERT, 20);
+        int point = getKnowledgePoint();
+        if (point == 0) {
+            return null;
+        }
+        return new TypeAndPoint(TYPE_COMMENT_DO_INSERT, point);
     }
     @Override
     protected TypeAndPoint getTypeAndPointForCommentOwner() {
@@ -62,7 +85,11 @@ public class CommentInsertActivity extends AbstractAddPointForCommentProcessor {
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledge() {
-        return new TypeAndPoint(TYPE_COMMENT_INSERTED, getPoint());
+        int point = getPoint();
+        if (point == 0) {
+            return null;
+        }
+        return new TypeAndPoint(TYPE_COMMENT_INSERTED, point);
     }
 
 }

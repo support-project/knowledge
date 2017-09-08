@@ -45,14 +45,23 @@ public class KnowledgeShowActivity extends AbstractAddPointForKnowledgeProcessor
     }
     @Override
     protected TypeAndPoint getTypeAndPointForActivityExecuter() {
+        if (eventUser.getUserId().intValue() == getKnowledge().getInsertUser().intValue()) {
+            return null;
+        }
         return new TypeAndPoint(TYPE_KNOWLEDGE_DO_SHOW, 1);
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledgeOwner() {
+        if (eventUser.getUserId().intValue() == getKnowledge().getInsertUser().intValue()) {
+            return null;
+        }
         return new TypeAndPoint(TYPE_KNOWLEDGE_SHOWN_BY_OHER, getPoint());
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledge() {
+        if (eventUser.getUserId().intValue() == getKnowledge().getInsertUser().intValue()) {
+            return null;
+        }
         return new TypeAndPoint(TYPE_KNOWLEDGE_SHOWN, getPoint());
     }
 

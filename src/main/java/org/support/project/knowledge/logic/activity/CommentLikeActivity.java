@@ -55,14 +55,23 @@ public class CommentLikeActivity extends AbstractAddPointForCommentProcessor {
     }
     @Override
     protected TypeAndPoint getTypeAndPointForActivityExecuter() {
+        if (eventUser.getUserId().intValue() == getComment().getInsertUser().intValue()) {
+            return null;
+        }
         return new TypeAndPoint(TYPE_COMMENT_DO_LIKE, 2);
     }
     @Override
     protected TypeAndPoint getTypeAndPointForCommentOwner() {
+        if (eventUser.getUserId().intValue() == getComment().getInsertUser().intValue()) {
+            return null;
+        }
         return new TypeAndPoint(TYPE_COMMENT_LIKED_BY_OHER, getPoint());
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledge() {
+        if (eventUser.getUserId().intValue() == getParentKnowledge().getInsertUser().intValue()) {
+            return null;
+        }
         return new TypeAndPoint(TYPE_COMMENT_LIKED, getPoint());
     }
 
