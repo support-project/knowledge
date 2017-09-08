@@ -19,6 +19,7 @@ import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.vo.UserConfigs;
+import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.common.HttpUtil;
 import org.support.project.web.logic.NotificationLogic;
@@ -183,6 +184,12 @@ public abstract class Control extends org.support.project.web.control.Control {
         UserConfigs userConfigs =  (UserConfigs) getRequest().getAttribute(UserConfig.REQUEST_USER_CONFIG_KEY);
         if (userConfigs == null) {
             userConfigs = new UserConfigs();
+        }
+        LoginedUser login = getLoginedUser();
+        if (login != null) {
+            userConfigs.setLocale(login.getLocale());
+        } else {
+            userConfigs.setLocale(getLocale());
         }
         return userConfigs;
     }

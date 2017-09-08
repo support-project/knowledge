@@ -76,7 +76,6 @@ public class CloseAbleAuthenticationFilter extends AuthenticationFilter {
             if (StringUtils.isInteger(offset)) {
                 userConfig.setTimezoneOffset(Integer.parseInt(offset));
             }
-            userConfig.setLocale(HttpUtil.getLocale(req));
             req.setAttribute(UserConfig.REQUEST_USER_CONFIG_KEY, userConfig);
             
             try {

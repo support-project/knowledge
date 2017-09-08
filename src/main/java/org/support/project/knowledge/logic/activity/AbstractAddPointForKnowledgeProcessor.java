@@ -1,6 +1,5 @@
 package org.support.project.knowledge.logic.activity;
 
-import org.bouncycastle.jcajce.provider.asymmetric.dsa.DSASigner.noneDSA;
 import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;

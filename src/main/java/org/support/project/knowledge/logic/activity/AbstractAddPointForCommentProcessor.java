@@ -14,6 +14,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 public abstract class AbstractAddPointForCommentProcessor extends AbstractActivityProcessor {
     private static final Log LOG = LogFactory.getLog(AbstractAddPointForCommentProcessor.class);
     private CommentsEntity comment;
+    private KnowledgesEntity parentKnowledge;
     /**
      * @return the comment
      */
@@ -25,8 +26,12 @@ public abstract class AbstractAddPointForCommentProcessor extends AbstractActivi
      */
     public void setComment(CommentsEntity comment) {
         this.comment = comment;
+        this.parentKnowledge = KnowledgesDao.get().selectOnKey(getComment().getKnowledgeId());
     }
-    
+    public KnowledgesEntity getParentKnowledge() {
+        return parentKnowledge;
+    }
+
     protected abstract Activity getActivity();
     protected abstract TypeAndPoint getTypeAndPointForActivityExecuter();
     protected abstract TypeAndPoint getTypeAndPointForCommentOwner();
@@ -44,11 +49,21 @@ public abstract class AbstractAddPointForCommentProcessor extends AbstractActivi
                     + " [comment]" + getComment().getCommentNo());
             return;
         }
-        KnowledgesEntity parentKnowledge = KnowledgesDao.get().selectOnKey(getComment().getKnowledgeId());
         if (parentKnowledge == null) {
             LOG.info("Knowledge is not found. [comment] " + getComment().getCommentNo() + " [knowledge]" + getComment().getKnowledgeId());
             return;
         }
+        
+        TypeAndPoint exec = getTypeAndPointForActivityExecuter();
+        TypeAndPoint owner = getTypeAndPointForCommentOwner();
+        TypeAndPoint knowledge = getTypeAndPointForKnowledge();
+        if (exec == null && owner == null && knowledge == null) {
+            // ポイントをつける対象が無いので、処理終了
+            LOG.info("This activity is not add point. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
+            + " [comment]" + getComment().getCommentNo());
+            return;
+        }
+
         
         LOG.info("activity process started. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
         + " [comment]" + getComment().getCommentNo());
@@ -62,7 +77,6 @@ public abstract class AbstractAddPointForCommentProcessor extends AbstractActivi
                 String.valueOf(getComment().getCommentNo()));
         
         // 実行したユーザのポイントアップ
-        TypeAndPoint exec = getTypeAndPointForActivityExecuter();
         if (exec != null) {
             int point = addPointForUser(
                     eventUser.getUserId(), // ターゲットは、実行したユーザ
@@ -72,7 +86,6 @@ public abstract class AbstractAddPointForCommentProcessor extends AbstractActivi
             logmsg.append("\n\tAdd event user: [id]" + eventUser.getUserId() + " [type]" + exec.type + " [add]" + exec.point + " [result]" + point);
         }
          // コメントの登録者のポイントをアップ
-        TypeAndPoint owner = getTypeAndPointForCommentOwner();
         if (owner != null) {
             int point = addPointForUser(
                     getComment().getInsertUser(), // ターゲットは登録者
@@ -82,7 +95,6 @@ public abstract class AbstractAddPointForCommentProcessor extends AbstractActivi
             logmsg.append("\n\tAdd owner user: [id]" + getComment().getInsertUser() + " [type]" + owner.type + " [add]" + owner.point + " [result]" + point);
         }
          // 記事のポイントアップ（コメントにはポイントをもっていないので、親のナレッジのポイントをアップ）
-        TypeAndPoint knowledge = getTypeAndPointForKnowledge();
         if (knowledge != null) {
             int point = addPointForKnowledge(
                     parentKnowledge.getKnowledgeId(),

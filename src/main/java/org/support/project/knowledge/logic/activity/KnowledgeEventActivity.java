@@ -59,10 +59,16 @@ public class KnowledgeEventActivity extends AbstractAddPointForKnowledgeProcesso
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledgeOwner() {
+        if (eventUser.getUserId().intValue() == getKnowledge().getInsertUser().intValue()) {
+            return null;
+        }
         return new TypeAndPoint(TYPE_KNOWLEDGE_JOINED_BY_OHER, getPoint());
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledge() {
+        if (eventUser.getUserId().intValue() == getKnowledge().getInsertUser().intValue()) {
+            return null;
+        }
         return new TypeAndPoint(TYPE_KNOWLEDGE_JOINED, getPoint());
     }
 

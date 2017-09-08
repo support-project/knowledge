@@ -151,6 +151,15 @@ public class ActivityLogic {
             return resources.getResource("knowledge.activity.type.21.do.show", activity.getTarget());
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_SHOWN_BY_OHER) {
             return resources.getResource("knowledge.activity.type.22.shown", activity.getTarget(), activity.getUserName());
+        
+        } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_DO_LIKE) {
+            return resources.getResource("knowledge.activity.type.31.do.like", activity.getTarget(), activity.getUserName());
+        } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_LIKED_BY_OHER) {
+            return resources.getResource("knowledge.activity.type.32.liked", activity.getTarget(), activity.getUserName());
+        } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_DO_STOCK) {
+            return resources.getResource("knowledge.activity.type.41.do.stock", activity.getTarget(), activity.getUserName());
+        } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_STOCKED_BY_OHER) {
+            return resources.getResource("knowledge.activity.type.42.stocked", activity.getTarget(), activity.getUserName());
         }
         return "";
     }
