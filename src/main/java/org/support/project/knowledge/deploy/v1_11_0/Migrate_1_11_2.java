@@ -395,7 +395,7 @@ public class Migrate_1_11_2 implements Migrate {
             }
             user.setLoginUser(account);
             LOG.debug("    knowledge [" + item.getKnowledgeId() + "] ");
-            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_INSERT, user, item.getInsertDatetime(), item);
+            ActivityLogic.get().processKnowledgeSaveActivity(user, item.getInsertDatetime(), item);
         }
         return knowledges;
     }

@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.support.project.aop.Aspect;
@@ -32,8 +33,8 @@ public class ActivitiesDao extends GenActivitiesDao {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<ActivitiesEntity> selectOnNos(List<Long> activityNos) {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT *, USERS.USER_NAME FROM ACTIVITIES INNER JOIN USERS ON (ACTIVITIES.user_id = users.user_id) ");
-        sql.append("WHERE activity_no IN (");
+        sql.append("SELECT *, USERS.USER_NAME FROM ACTIVITIES INNER JOIN USERS ON (ACTIVITIES.USER_ID = USERS.USER_ID) ");
+        sql.append("WHERE ACTIVITY_NO IN (");
         boolean appended = false;
         for (Long no : activityNos) {
             if (appended) {
@@ -44,7 +45,30 @@ public class ActivitiesDao extends GenActivitiesDao {
             appended = true;
         }
         sql.append(");");
-        return executeQueryList(sql.toString(), ActivitiesEntity.class, activityNos.toArray(new Long[0]));
+        return executeQueryList(sql.toString(), ActivitiesEntity.class, activityNos.toArray(new Object[0]));
+    }
+    
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public ActivitiesEntity selectBefore(Integer userId, String target, int... kinds) {
+        StringBuilder sql = new StringBuilder();
+        List<Object> params = new ArrayList<>();
+        params.add(userId);
+        params.add(target);
+        sql.append("SELECT * FROM ACTIVITIES ");
+        sql.append("WHERE USER_ID = ? AND TARGET = ? AND ");
+        sql.append("KIND IN (");
+        boolean appended = false;
+        for (int i : kinds) {
+            if (appended) {
+                sql.append(", ");
+                
+            }
+            sql.append("?");
+            appended = true;
+            params.add(i);
+        }
+        sql.append(") ORDER BY INSERT_DATETIME DESC LIMIT 1 OFFSET 0");
+        return executeQuerySingle(sql.toString(), ActivitiesEntity.class, params.toArray(new Object[0]));
     }
 
 

@@ -214,7 +214,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LOG.trace("save");
 
         KnowledgesEntity insertedEntity = knowledgeLogic.insert(data, super.getLoginedUser());
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_INSERT, getLoginedUser(), new Date(), insertedEntity);
+        ActivityLogic.get().processKnowledgeSaveActivity(getLoginedUser(), new Date(), insertedEntity);
         
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
                 String.valueOf(insertedEntity.getKnowledgeId()), "message.success.insert");
@@ -310,6 +310,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
         
         KnowledgesEntity updatedEntity = knowledgeLogic.update(data, super.getLoginedUser());
+        ActivityLogic.get().processKnowledgeSaveActivity(getLoginedUser(), new Date(), updatedEntity);
         
         if (data.isUpdateContent()) {
             return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,

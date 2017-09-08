@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.activity;
 
+import org.bouncycastle.jcajce.provider.asymmetric.dsa.DSASigner.noneDSA;
 import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -43,20 +44,26 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
             // 既に指定のKnowledge登録済
             return;
         }
+        TypeAndPoint exec = getTypeAndPointForActivityExecuter();
+        TypeAndPoint owner = getTypeAndPointForKnowledgeOwner();
+        TypeAndPoint knowledge = getTypeAndPointForKnowledge();
+        if (exec == null && owner == null && knowledge == null) {
+            // ポイントをつける対象が無いので、処理終了
+            LOG.info("This activity is not add point. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
+            + " [knowledge]" + getKnowledge().getKnowledgeId());
+            return;
+        }
         LOG.info("activity process started. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
         + " [knowledge]" + getKnowledge().getKnowledgeId());
         
         StringBuilder logmsg = new StringBuilder();
         logmsg.append("Activity : " + getActivity().toString());
-        
          // ポイント発行アクティビティを生成
         ActivitiesEntity activity = addActivity(
                 getActivity(),
                 String.valueOf(getKnowledge().getKnowledgeId()));
         
-        
         // 実行したユーザのポイントアップ
-        TypeAndPoint exec = getTypeAndPointForActivityExecuter();
         if (exec != null) {
             int point = addPointForUser(
                     eventUser.getUserId(), // ターゲットは、実行したユーザ
@@ -66,7 +73,6 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
             logmsg.append("\n\tAdd event user: [id]" + eventUser.getUserId() + " [type]" + exec.type + " [add]" + exec.point + " [result]" + point);
         }
          // 記事の登録者のポイントをアップ
-        TypeAndPoint owner = getTypeAndPointForKnowledgeOwner();
         if (owner != null) {
             int point = addPointForUser(
                     getKnowledge().getInsertUser(), // ターゲットは登録者
@@ -76,7 +82,6 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
             logmsg.append("\n\tAdd owner user: [id]" + getKnowledge().getInsertUser() + " [type]" + owner.type + " [add]" + owner.point + " [result]" + point);
         }
          // 記事のポイントアップ
-        TypeAndPoint knowledge = getTypeAndPointForKnowledge();
         if (knowledge != null) {
             int point = addPointForKnowledge(
                     getKnowledge().getKnowledgeId(),

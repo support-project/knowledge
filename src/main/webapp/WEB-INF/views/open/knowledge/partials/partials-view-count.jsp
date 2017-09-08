@@ -13,9 +13,12 @@
 
 <div class="row">
     <div class="col-xs-4">
+        <%-- 
         <a href="<%=request.getContextPath()%>/open.knowledge/activities/<%=jspUtil.out("knowledgeId")%><%=jspUtil.out("params")%>" class="text-primary btn-link">
         <i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;CP × <%= jspUtil.out("point") %>
         </a>
+        --%>
+        <i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;CP × <%= jspUtil.out("point") %>
     </div>
     <div class="col-xs-4">
         <a href="<%=request.getContextPath()%>/open.knowledge/likes/<%=jspUtil.out("knowledgeId")%><%=jspUtil.out("params")%>" class="text-primary btn-link">

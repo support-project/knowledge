@@ -20,6 +20,7 @@ import org.support.project.knowledge.entity.ActivitiesEntity;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.PointUserHistoriesEntity;
+import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.vo.ActivityHistory;
 import org.support.project.knowledge.vo.ContributionPointHistory;
 import org.support.project.knowledge.vo.UserConfigs;
@@ -38,8 +39,10 @@ public class ActivityLogic {
     
     private List<ActivityProcessor> getActivityProcessors(Activity activity) {
         List<ActivityProcessor> array = new ArrayList<>();
-        if (activity == Activity.KNOWLEDGE_INSERT) {
-            array.add(KnowledgeInsertActivity.get());
+        if (activity == Activity.KNOWLEDGE_POST_PUBLIC
+                || activity == Activity.KNOWLEDGE_POST_PROTECTED
+                || activity == Activity.KNOWLEDGE_POST_PRIVATE) {
+            array.add(KnowledgesaveActivity.get());
         } else if (activity == Activity.KNOWLEDGE_SHOW) {
             array.add(KnowledgeShowActivity.get());
         } else if (activity == Activity.KNOWLEDGE_LIKE) {
@@ -81,6 +84,15 @@ public class ActivityLogic {
                 AbstractAddPointForCommentProcessor processor = (AbstractAddPointForCommentProcessor) activityProcessor;
                 processor.setComment(comment);
             }
+            if (activityProcessor instanceof AbstractActivityProcessor) {
+                AbstractActivityProcessor processor = (AbstractActivityProcessor) activityProcessor;
+                processor.setEventUser(eventUser);
+                processor.setEventDateTime(eventDateTime);
+            }
+            if (activityProcessor instanceof MultiActivityProcessor) {
+                MultiActivityProcessor processor = (MultiActivityProcessor) activityProcessor;
+                processor.setActivity(activity);
+            }
             try {
                 activityProcessor.execute();
             } catch (Exception e) {
@@ -94,15 +106,29 @@ public class ActivityLogic {
     public void processActivity(Activity activity, LoginedUser eventUser, Date eventDateTime) {
         execute(activity, eventUser, eventDateTime, null, null);
     }
-    
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void processActivity(Activity activity, LoginedUser eventUser, Date eventDateTime, KnowledgesEntity knowledge) {
         execute(activity, eventUser, eventDateTime, knowledge, null);
     }
-    
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void processActivity(Activity activity, LoginedUser eventUser, Date eventDateTime, CommentsEntity comment) {
         execute(activity, eventUser, eventDateTime, null, comment);
+    }
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void processKnowledgeSaveActivity(LoginedUser eventUser, Date eventDateTime, KnowledgesEntity knowledge) {
+        Activity activity = null;
+        if (knowledge.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
+            activity = Activity.KNOWLEDGE_POST_PUBLIC;
+        } else if (knowledge.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
+            activity = Activity.KNOWLEDGE_POST_PROTECTED;
+        } else if (knowledge.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PRIVATE) {
+            activity = Activity.KNOWLEDGE_POST_PRIVATE;
+        }
+        if (activity == null) {
+            LOG.warn("invalid public flag. knowledge[]" + knowledge.getKnowledgeId());
+            return;
+        }
+        execute(activity, eventUser, eventDateTime, knowledge, null);
     }
 
     public List<ContributionPointHistory> getUserPointHistoriesByDate(Integer userId, UserConfigs userConfigs) {
