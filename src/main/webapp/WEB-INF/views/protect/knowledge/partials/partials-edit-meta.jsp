@@ -1,3 +1,4 @@
+<%@page import="org.support.project.common.util.HtmlUtils"%>
 <%@page pageEncoding="UTF-8" isELIgnored="false" session="false" errorPage="/WEB-INF/views/commons/errors/jsp_error.jsp"%>
 <%@page import="java.io.PrintWriter"%>
 <%@page import="org.support.project.common.util.StringUtils"%>
@@ -40,11 +41,11 @@
                         }
                         builder.append(" />");
                         if (!StringUtils.isEmpty(template.getTypeIcon())) {
-                            builder.append("<i class=\"fa ").append(template.getTypeIcon()).append("\" ></i>&nbsp;");
+                            builder.append("<i class=\"fa ").append(HtmlUtils.escapeHTML(template.getTypeIcon())).append("\" ></i>&nbsp;");
                         } else {
                             builder.append("<i class=\"fa fa-edit\"></i>&nbsp;");
                         }
-                        builder.append(template.getTypeName());
+                        builder.append(HtmlUtils.escapeHTML(template.getTypeName()));
                         %>
                         <%= builder.toString() %>
                     </label>
