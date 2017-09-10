@@ -23,6 +23,10 @@
     <c:forEach var="comment" items="${comments}" varStatus="status">
         <%
             CommentsEntity comment = jspUtil.getValue("comment", CommentsEntity.class);
+            String insertLink = "<a href=\"" + request.getContextPath() + "/open.account/info/" + jspUtil.out("comment.insertUser") + "\" class=\"text-primary btn-link\" >"
+                            + jspUtil.out("comment.insertUserName", JspUtil.ESCAPE_CLEAR) + "</a>";
+            String updateLink = "<a href=\"" + request.getContextPath() + "/open.account/info/" + jspUtil.out("comment.updateUser") + "\" class=\"text-primary btn-link\">"
+                            + jspUtil.out("comment.updateUserName", JspUtil.ESCAPE_CLEAR) + "</a>";
         %>
         <%
             Integer knowledge = jspUtil.getValue("insertUser", Integer.class);
@@ -31,14 +35,14 @@
         <div class="row">
             <div class="col-sm-12">
                 [<%=jspUtil.label("label.registration")%>]
-                <%=jspUtil.date("comment.updateDatetime")%>
-                [<%=jspUtil.out("comment.insertUserName")%>]
+                <%=jspUtil.date("comment.insertDatetime")%>
+                [<%=insertLink%>]
                 <%
                 if (comment.isUpdate()) {
                 %>
                 <br />[<%=jspUtil.label("label.update")%>]
                 <%=jspUtil.date("comment.updateDatetime")%>
-                [<%=jspUtil.out("comment.updateUserName")%>]
+                [<%=updateLink%>]
                 <%
                     }
                 %>
@@ -139,14 +143,14 @@
                 %>
 
                 [<%=jspUtil.label("label.registration")%>]
-                <%=jspUtil.date("comment.updateDatetime")%>
-                [<%=jspUtil.out("comment.insertUserName")%>]
+                <%=jspUtil.date("comment.insertDatetime")%>
+                [<%=insertLink%>]
                 <%
                     if (comment.isUpdate()) {
                 %>
                 <br />[<%=jspUtil.label("label.update")%>]
                 <%=jspUtil.date("comment.updateDatetime")%>
-                [<%=jspUtil.out("comment.updateUserName")%>]
+                [<%=updateLink%>]
                 <%
                     }
                 %>

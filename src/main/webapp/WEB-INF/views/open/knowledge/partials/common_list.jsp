@@ -100,9 +100,10 @@
             </div>
         
             <div class="item-info">
+                <i class="fa fa-heart-o" style="margin-left: 5px;"></i>&nbsp;× <%=jspUtil.out("knowledge.point")%>
                 <a class="text-primary btn-link"
                     href="<%=request.getContextPath()%>/open.knowledge/likes/<%=jspUtil.out("knowledge.knowledgeId")%><%=jspUtil.out("params")%>">
-                    <i class="fa fa-thumbs-o-up" style="margin-left: 5px;"></i>&nbsp;× <span id="like_count"><%=jspUtil.out("knowledge.likeCount")%></span>
+                    <i class="fa fa-thumbs-o-up"></i>&nbsp;× <span id="like_count"><%=jspUtil.out("knowledge.likeCount")%></span>
                 </a> &nbsp;
                 <a class="text-primary btn-link"
                     href="<%=request.getContextPath()%>/open.knowledge/view/<%=jspUtil.out("knowledge.knowledgeId")%><%=jspUtil.out("params")%>#comments">

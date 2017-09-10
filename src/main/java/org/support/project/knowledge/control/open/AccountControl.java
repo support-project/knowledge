@@ -166,6 +166,7 @@ public class AccountControl extends Control {
             offset = getParam("offset", Integer.class);
         }
         List<ActivityHistory> list = ActivityLogic.get().getUserPointHistoriese(userId, limit, offset, getUserConfigs());
+        setSendEscapeHtml(false);
         return send(list);
     }
     
