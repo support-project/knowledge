@@ -12,7 +12,7 @@
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
 <div class="row">
-    <div class="col-xs-4">
+    <div class="col-xs-6 col-sm-3">
         <%-- 
         <a href="<%=request.getContextPath()%>/open.knowledge/activities/<%=jspUtil.out("knowledgeId")%><%=jspUtil.out("params")%>" class="text-primary btn-link">
         <i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;CP × <%= jspUtil.out("point") %>
@@ -20,20 +20,18 @@
         --%>
         <i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;CP × <%= jspUtil.out("point") %>
     </div>
-    <div class="col-xs-4">
+    <div class="col-xs-6 col-sm-3">
         <a href="<%=request.getContextPath()%>/open.knowledge/likes/<%=jspUtil.out("knowledgeId")%><%=jspUtil.out("params")%>" class="text-primary btn-link">
             <i class="fa fa-thumbs-o-up"></i>&nbsp;<%=jspUtil.label("knowledge.view.like")%> × <span id="like_count"><%=jspUtil.out("like_count")%></span>
         </a>
     </div>
-    <div class="col-xs-4">
+    <div class="col-xs-6 col-sm-3">
         <a href="#comments" id="commentsLink" class="text-primary btn-link inner-page-link">
             <i class="fa fa-comments-o"></i>&nbsp;<%=jspUtil.label("knowledge.view.comment.label")%>
             × <%=jspUtil.out("comments.size()")%>
         </a>
     </div>
-</div>
-<div class="row">
-    <div class="col-xs-4">
+    <div class="col-xs-6 col-sm-3">
         <%
             int num = 0;
             List<UploadFile> attachs = jspUtil.getValue("files", List.class);
@@ -56,8 +54,6 @@
             <span id="eventStatus"></span>
         </a>
         <% } %>
-    </div>
-    <div class="col-xs-4">
     </div>
 </div>
 
