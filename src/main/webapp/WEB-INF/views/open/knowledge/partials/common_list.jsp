@@ -100,7 +100,10 @@
             </div>
         
             <div class="item-info">
-                <i class="fa fa-heart-o" style="margin-left: 5px;"></i>&nbsp;× <%=jspUtil.out("knowledge.point")%>
+                <i class="fa fa-heart-o" style="margin-left: 5px;"></i>&nbsp;× <%=jspUtil.out("knowledge.point")%> &nbsp;
+                <% if (knowledge.getPointOnTerm() != null && knowledge.getPointOnTerm().intValue() > 0) {  %>
+                (<i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp;× <%=jspUtil.out("knowledge.pointOnTerm")%>) &nbsp;
+                <% } %>
                 <a class="text-primary btn-link"
                     href="<%=request.getContextPath()%>/open.knowledge/likes/<%=jspUtil.out("knowledge.knowledgeId")%><%=jspUtil.out("params")%>">
                     <i class="fa fa-thumbs-o-up"></i>&nbsp;× <span id="like_count"><%=jspUtil.out("knowledge.likeCount")%></span>
