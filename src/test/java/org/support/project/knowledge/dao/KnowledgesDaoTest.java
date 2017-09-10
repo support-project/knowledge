@@ -86,7 +86,7 @@ public class KnowledgesDaoTest extends TestCommon {
         List<KnowledgesEntity> list = KnowledgesDao.get().selectPopularity(start, end, 0, 20);
 
         for (KnowledgesEntity knowledgesEntity : list) {
-            LOG.info(knowledgesEntity.getTitle() + ":" + knowledgesEntity.getLikeCountOnTerm());
+            LOG.info(knowledgesEntity.getTitle() + ":" + knowledgesEntity.getPointOnTerm());
         }
         Assert.assertEquals("Test-29", list.get(0).getTitle());
     }
@@ -128,7 +128,7 @@ public class KnowledgesDaoTest extends TestCommon {
         List<KnowledgesEntity> list = KnowledgesDao.get().selectPopularityWithAccessControl(loginedUser, start, end, 0, 20);
 
         for (KnowledgesEntity knowledgesEntity : list) {
-            LOG.info(knowledgesEntity.getTitle() + ":" + knowledgesEntity.getLikeCountOnTerm());
+            LOG.info(knowledgesEntity.getTitle() + ":" + knowledgesEntity.getPointOnTerm());
         }
         Assert.assertEquals("Test-29", list.get(0).getTitle());
     }
