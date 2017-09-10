@@ -128,7 +128,7 @@
     <br/><br/>
     <div class="list-group" id="activityList">
         <a class="list-group-item" v-for="activity in activities">
-            <h4 class="list-group-item-heading">{{ activity.msg }}</h4>
+            <h4 class="list-group-item-heading" v-html="activity.msg"></h4>
             <p class="list-group-item-text">{{ activity.dispDate }}</p>
         </a>
     </div>

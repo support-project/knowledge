@@ -109,6 +109,15 @@ var loadAndShowActivity = function(userId, offset) {
         result.forEach(function(item) {
             activityList.activities.push(item);
         });
+        var target = $('.internallink');
+        target.each(function(i, block) {
+            var knowledgeNo = $(this).text().substring(1);
+            console.log(knowledgeNo);
+            var link = '<a href="' + _CONTEXT + '/open.knowledge/view/' + knowledgeNo + '">';
+            link += '#' + knowledgeNo;
+            link += '</a>';
+            $(this).html(link);
+        });
     }).fail(function(xhr, textStatus, error) {
         handleErrorResponse(xhr, textStatus, error);
     });
