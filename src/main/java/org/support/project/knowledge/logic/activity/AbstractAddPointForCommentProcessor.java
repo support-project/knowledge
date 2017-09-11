@@ -45,12 +45,12 @@ public abstract class AbstractAddPointForCommentProcessor extends AbstractActivi
             return;
         }
         if (isExistsActivity(eventUser.getUserId(), getActivity(), String.valueOf(getComment().getCommentNo()))) {
-            LOG.info("This activity is already exists. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
+            LOG.debug("This activity is already exists. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
                     + " [comment]" + getComment().getCommentNo());
             return;
         }
         if (parentKnowledge == null) {
-            LOG.info("Knowledge is not found. [comment] " + getComment().getCommentNo() + " [knowledge]" + getComment().getKnowledgeId());
+            LOG.debug("Knowledge is not found. [comment] " + getComment().getCommentNo() + " [knowledge]" + getComment().getKnowledgeId());
             return;
         }
         
@@ -59,13 +59,13 @@ public abstract class AbstractAddPointForCommentProcessor extends AbstractActivi
         TypeAndPoint knowledge = getTypeAndPointForKnowledge();
         if (exec == null && owner == null && knowledge == null) {
             // ポイントをつける対象が無いので、処理終了
-            LOG.info("This activity is not add point. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
+            LOG.debug("This activity is not add point. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
             + " [comment]" + getComment().getCommentNo());
             return;
         }
 
         
-        LOG.info("activity process started. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
+        LOG.debug("activity process started. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
         + " [comment]" + getComment().getCommentNo());
         
         StringBuilder logmsg = new StringBuilder();
@@ -103,7 +103,7 @@ public abstract class AbstractAddPointForCommentProcessor extends AbstractActivi
                     knowledge.point);
             logmsg.append("\n\tAdd knowledge: [id]" + parentKnowledge.getKnowledgeId() + " [type]" + knowledge.type + " [add]" + knowledge.point + " [result]" + point);
         }
-        LOG.info(logmsg.toString());
+        LOG.debug(logmsg.toString());
     }
     
     

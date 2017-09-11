@@ -34,7 +34,7 @@ public class KnowledgesaveActivity extends AbstractAddPointForKnowledgeProcessor
     }
     @Override
     protected Activity getActivity() {
-        LOG.info("Activity process start. " + activity.toString());
+        LOG.debug("Activity process start. " + activity.toString());
         return activity;
     }
     private int point = 0;

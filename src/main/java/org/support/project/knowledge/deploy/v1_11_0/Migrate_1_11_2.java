@@ -37,7 +37,7 @@ import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.UsersEntity;
 
 public class Migrate_1_11_2 implements Migrate {
-    private static final int _WAIT = 50;
+    private static final int _WAIT = 100;
     /** ログ */
     private static final Log LOG = LogFactory.getLog(Migrate_1_11_2.class);
 
@@ -47,6 +47,9 @@ public class Migrate_1_11_2 implements Migrate {
     private int limit = 1; // 1件毎にコミットいれないと、別コネクションで取得して結果をクリアしてしまう？
     
     private int calcTotal = 0; // トータルポイントの再計算に使う内部保持変数（シーケンシャルに1件づつ処理をすること）
+    
+    private int processCount = 0;
+    
     
     @Override
     public boolean doMigrate() throws Exception {
@@ -85,9 +88,12 @@ public class Migrate_1_11_2 implements Migrate {
     }
     
     private void reCalcPointUserHistory() throws InterruptedException {
+        LOG.info("Recalc user cp");
+        processCount = 0;
         List<UsersEntity> list;
         int offset = 0;
         do {
+            logging("Recalc user cp");
             list = reCalcPointUserHistory(offset);
             offset = offset + limit;
             synchronized (this) {
@@ -99,7 +105,7 @@ public class Migrate_1_11_2 implements Migrate {
         List<UsersEntity> list;
         list = UsersDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (UsersEntity item : list) {
-            LOG.info("Recalculation total point. [user]" + item.getUserId());
+            LOG.debug("Recalculation total point. [user]" + item.getUserId());
             int offset2 = 0;
             calcTotal = 0; // ユーザ毎にトータルポイントを初期化
             List<PointUserHistoriesEntity> histories;
@@ -121,7 +127,7 @@ public class Migrate_1_11_2 implements Migrate {
             item.setBeforeTotal(calcTotal);
             calcTotal += item.getPoint();
             item.setTotal(calcTotal); // 日付毎に処理してトータルを再計算
-            LOG.info("\t" + DateUtils.getSimpleFormat().format(item.getInsertDatetime()) + " [total]" + calcTotal);
+            LOG.debug("\t" + DateUtils.getSimpleFormat().format(item.getInsertDatetime()) + " [total]" + calcTotal);
             PointUserHistoriesDao.get().physicalUpdate(item);
         }
         return list;
@@ -129,9 +135,11 @@ public class Migrate_1_11_2 implements Migrate {
 
     private void doAddPointByCommentLike() throws InterruptedException {
         LOG.info("Aggregate point by comment like");
+        processCount = 0;
         List<LikeCommentsEntity> list;
         int offset = 0;
         do {
+            logging("Aggregate point by comment like");
             list = doAddPointByCommentLike(offset);
             offset = offset + limit;
             synchronized (this) {
@@ -165,9 +173,11 @@ public class Migrate_1_11_2 implements Migrate {
 
     private void doAddPointByCommentInsert() throws InterruptedException {
         LOG.info("Aggregate point by comment insert");
+        processCount = 0;
         List<CommentsEntity> list;
         int offset = 0;
         do {
+            logging("Aggregate point by comment insert");
             list = doAddPointByKnowledgeComment(offset);
             offset = offset + limit;
             synchronized (this) {
@@ -195,9 +205,11 @@ public class Migrate_1_11_2 implements Migrate {
 
     private void doAddPointByKnowledgeJoinEvent() throws InterruptedException {
         LOG.info("Aggregate point by knowledge join event");
+        processCount = 0;
         List<ParticipantsEntity> list;
         int offset = 0;
         do {
+            logging("Aggregate point by knowledge join event");
             list = doAddPointByKnowledgeJoinEvent(offset);
             offset = offset + limit;
             synchronized (this) {
@@ -230,9 +242,11 @@ public class Migrate_1_11_2 implements Migrate {
 
     private void doAddPointByKnowledgeAnswer() throws InterruptedException {
         LOG.info("Aggregate point by knowledge answer");
+        processCount = 0;
         List<SurveyAnswersEntity> list;
         int offset = 0;
         do {
+            logging("Aggregate point by knowledge answer");
             list = doAddPointByKnowledgeAnswer(offset);
             offset = offset + limit;
             synchronized (this) {
@@ -266,9 +280,11 @@ public class Migrate_1_11_2 implements Migrate {
 
     private void doAddPointByKnowledgeStock() throws InterruptedException {
         LOG.info("Aggregate point by knowledge stock");
+        processCount = 0;
         List<StockKnowledgesEntity> list;
         int offset = 0;
         do {
+            logging("Aggregate point by knowledge stock");
             list = doAddPointByKnowledgeStock(offset);
             offset = offset + limit;
             synchronized (this) {
@@ -302,9 +318,11 @@ public class Migrate_1_11_2 implements Migrate {
 
     private void doAddPointByKnowledgeLike() throws InterruptedException {
         LOG.info("Aggregate point by knowledge like");
+        processCount = 0;
         List<LikesEntity> list;
         int offset = 0;
         do {
+            logging("Aggregate point by knowledge like");
             list = doAddPointByKnowledgeLike(offset);
             offset = offset + limit;
             synchronized (this) {
@@ -337,9 +355,11 @@ public class Migrate_1_11_2 implements Migrate {
     
     private void doAddPointByKnowledgeShow() throws InterruptedException {
         LOG.info("Aggregate point by knowledge show");
+        processCount = 0;
         List<ViewHistoriesEntity> list;
         int offset = 0;
         do {
+            logging("Aggregate point by knowledge show");
             list = doAddPointByKnowledgeShow(offset);
             offset = offset + limit;
             synchronized (this) {
@@ -372,9 +392,11 @@ public class Migrate_1_11_2 implements Migrate {
 
     public void doAddPointByKnowledge() throws InterruptedException {
         LOG.info("Aggregate point by knowledge insert");
+        processCount = 0;
         List<KnowledgesEntity> knowledges;
         int offset = 0;
         do {
+            logging("Aggregate point by knowledge insert");
             knowledges = doAddPointByKnowledge(offset);
             offset = offset + limit;
             synchronized (this) {
@@ -402,9 +424,11 @@ public class Migrate_1_11_2 implements Migrate {
     
     private void doSetViewCountToKnowledge() throws InterruptedException {
         LOG.info("Set view count to Knowledge");
+        processCount = 0;
         List<KnowledgesEntity> knowledges;
         int offset = 0;
         do {
+            logging("Set view count to Knowledge");
             knowledges = doSetViewCountToKnowledge(offset);
             offset = offset + limit;
             synchronized (this) {
@@ -412,6 +436,7 @@ public class Migrate_1_11_2 implements Migrate {
             }
         } while (knowledges.size() > 0);
     }
+
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgesEntity> doSetViewCountToKnowledge(int offset) {
         List<KnowledgesEntity> knowledges;
@@ -421,7 +446,7 @@ public class Migrate_1_11_2 implements Migrate {
             KnowledgesDao.get().updateViewCount(count, knowledge.getKnowledgeId());
             //ついでにポイントも初期化
             KnowledgesDao.get().updatePoint(knowledge.getKnowledgeId(), 0);
-            LOG.info("    knowledge [" + knowledge.getKnowledgeId() + "] is updated. view count : " + count);
+            LOG.debug("    knowledge [" + knowledge.getKnowledgeId() + "] is updated. view count : " + count);
         }
         return knowledges;
     }
@@ -429,4 +454,12 @@ public class Migrate_1_11_2 implements Migrate {
     public void clearUserPoint() {
         UserConfigsDao.get().removeAllUserConfig(AppConfig.get().getSystemName(), UserConfig.POINT);
     }
+    
+    private void logging(String string) {
+        processCount++;
+        if (processCount % 100 == 0) {
+            LOG.info("\t During execution of the " + string + ". [count]" + processCount);
+        }
+    }
+
 }
