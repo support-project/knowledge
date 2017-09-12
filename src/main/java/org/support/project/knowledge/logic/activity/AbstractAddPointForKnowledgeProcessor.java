@@ -38,7 +38,7 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
             return;
         }
         if (isExistsActivity(eventUser.getUserId(), getActivity(), String.valueOf(getKnowledge().getKnowledgeId()))) {
-            LOG.info("This activity is already exists. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
+            LOG.debug("This activity is already exists. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
                     + " [knowledge]" + getKnowledge().getKnowledgeId());
             // 既に指定のKnowledge登録済
             return;
@@ -48,11 +48,11 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
         TypeAndPoint knowledge = getTypeAndPointForKnowledge();
         if (exec == null && owner == null && knowledge == null) {
             // ポイントをつける対象が無いので、処理終了
-            LOG.info("This activity is not add point. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
+            LOG.debug("This activity is not add point. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
             + " [knowledge]" + getKnowledge().getKnowledgeId());
             return;
         }
-        LOG.info("activity process started. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
+        LOG.debug("activity process started. [Activity]" + getActivity().toString() + " [user]" + eventUser.getUserId()
         + " [knowledge]" + getKnowledge().getKnowledgeId());
         
         StringBuilder logmsg = new StringBuilder();
@@ -89,7 +89,7 @@ public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActi
                     knowledge.point);
             logmsg.append("\n\tAdd knowledge: [id]" + getKnowledge().getKnowledgeId() + " [type]" + knowledge.type + " [add]" + knowledge.point + " [result]" + point);
         }
-        LOG.info(logmsg.toString());
+        LOG.debug(logmsg.toString());
     }
 
 

@@ -1,6 +1,7 @@
 package org.support.project.knowledge.websocket;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -25,22 +26,29 @@ import net.arnx.jsonic.JSONException;
 public class MigrateEndpoint extends CallBatchEndpoint {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(ReindexingEndpoint.class);
-
+    
     @OnOpen
     public void onOpen(Session session) throws IOException {
-        if (super.isAdmin(session)) {
-            this.setSendPlefix("");
-            call(session, InitDB.class);
+        LOG.info("Endpoint instance: " + this.hashCode());
+        if (!super.isAdmin(session)) {
+            session.close();
         }
     }
     
     @OnClose
     public void onClose(Session session) {
+        super.onClose(session);
     }
 
     @OnMessage
-    public void onMessage(String text) throws JSONException, IOException {
+    public void onMessage(String text, Session session) throws JSONException, IOException {
+        LOG.info(text);
+        if (text.equals("START_MIGRATE") && super.isAdmin(session)) {
+            setSendPlefix("");
+            call(session, InitDB.class);
+        }
     }
+
 
     @OnError
     public void onError(Throwable t) {
@@ -51,17 +59,23 @@ public class MigrateEndpoint extends CallBatchEndpoint {
     }
 
     @Override
-    protected void finishJob(JobResult result, Session session) {
+    public void finishJob(JobResult result, Class<?> batch, List<Session> sessions) {
+        super.finishJob(result, batch, sessions);
         SystemsEntity entity = SystemsDao.get().selectOnKey(AppConfig.get().getSystemName());
         if (entity != null) {
             if (InitDB.CURRENT.equals(entity.getVersion())) {
                 AppConfig.get().setMaintenanceMode(false);
             }
         }
-        try {
-            session.close();
-        } catch (IOException e) {
-            LOG.warn("websocket on error." + e.getClass().getName() + " : " + e.getMessage());
+        for (Session session : sessions) {
+            if (!super.isAdmin(session)) {
+                return;
+            }
+            try {
+                session.close();
+            } catch (IOException e) {
+                LOG.warn("websocket on error." + e.getClass().getName() + " : " + e.getMessage());
+            }
         }
     }
 }

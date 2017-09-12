@@ -1,6 +1,7 @@
 package org.support.project.knowledge.websocket;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -35,7 +36,7 @@ public class DataExportEndpoint extends CallBatchEndpoint {
     }
 
     @OnMessage
-    public void onMessage(String text) throws JSONException, IOException {
+    public void onMessage(String text, Session session) throws JSONException, IOException {
     }
 
     @OnError
@@ -47,6 +48,6 @@ public class DataExportEndpoint extends CallBatchEndpoint {
     }
 
     @Override
-    protected void finishJob(JobResult result, Session session) {
+    public void finishJob(JobResult result, Class<?> batch, List<Session> sessions) {
     }
 }

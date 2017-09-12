@@ -82,30 +82,42 @@ latest database version: <%= InitDB.CURRENT %><br/>
 <!-- endbuild -->
 
 <script>
+$('#log').val('');
+var msgs = [];
+var appendMsg = function(msg) {
+    msgs.push(msg);
+    if (msgs.length > 100) {
+        msgs.shift();
+    }
+    $('#log').val(msgs.join("\n"));
+    var psconsole = $('#log');
+    psconsole.scrollTop(
+        psconsole[0].scrollHeight - psconsole.height()
+    );
+};
+
+var forRtoA = document.createElement('a');
+forRtoA.href = '<%= request.getContextPath() %>/migrate';
+console.log(forRtoA.href.replace("http://", "ws://").replace("https://", "wss://"));
+webSocket = new WebSocket(forRtoA.href.replace("http://", "ws://").replace("https://", "wss://"));
+webSocket.onopen = function() {
+    console.log('onopen');
+    appendMsg('start websocket.');
+}
+webSocket.onclose = function() {
+    console.log('onclose');
+}
+webSocket.onmessage = function(message) {
+    console.log(message);
+    var obj = JSON.parse(message.data);
+    console.log(obj.message);
+    appendMsg(obj.message);
+}
+webSocket.onerror = function(message) {
+    console.log(message);
+}
 $('#startMigrate').click(function() {
-    $('#log').val('');
-    var forRtoA = document.createElement('a');
-    forRtoA.href = '<%= request.getContextPath() %>/migrate';
-    console.log(forRtoA.href.replace("http://", "ws://").replace("https://", "wss://"));
-    webSocket = new WebSocket(forRtoA.href.replace("http://", "ws://").replace("https://", "wss://"));
-    webSocket.onopen = function() {
-        console.log('onopen');
-    }
-    webSocket.onclose = function() {
-        console.log('onclose');
-    }
-    webSocket.onmessage = function(message) {
-        var result = JSON.parse(message.data);
-        console.log(result);
-        $('#log').val($('#log').val() + result.message + "\n");
-        var psconsole = $('#log');
-        psconsole.scrollTop(
-            psconsole[0].scrollHeight - psconsole.height()
-        );
-    }
-    webSocket.onerror = function(message) {
-        console.log(message);
-    }
+    webSocket.send('START_MIGRATE');
 });
 
 </script>
