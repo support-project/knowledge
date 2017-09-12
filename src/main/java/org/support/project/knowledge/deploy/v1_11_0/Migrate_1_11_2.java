@@ -89,11 +89,9 @@ public class Migrate_1_11_2 implements Migrate {
     
     private void reCalcPointUserHistory() throws InterruptedException {
         LOG.info("Recalc user cp");
-        processCount = 0;
         List<UsersEntity> list;
         int offset = 0;
         do {
-            logging("Recalc user cp");
             list = reCalcPointUserHistory(offset);
             offset = offset + limit;
             synchronized (this) {
@@ -105,11 +103,13 @@ public class Migrate_1_11_2 implements Migrate {
         List<UsersEntity> list;
         list = UsersDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (UsersEntity item : list) {
-            LOG.debug("Recalculation total point. [user]" + item.getUserId());
+            processCount = 0;
+            LOG.info("  Recalculation total point. [user]" + item.getUserId());
             int offset2 = 0;
             calcTotal = 0; // ユーザ毎にトータルポイントを初期化
             List<PointUserHistoriesEntity> histories;
             do {
+                logging(" Recalculation... ");
                 histories = reCalcPointUserHistoryOnUser(item.getUserId(), offset2);
                 offset2 = offset2 + limit;
                 synchronized (this) {

@@ -37,6 +37,7 @@ public class MigrateEndpoint extends CallBatchEndpoint {
     
     @OnClose
     public void onClose(Session session) {
+        super.onClose(session);
     }
 
     @OnMessage
@@ -60,15 +61,15 @@ public class MigrateEndpoint extends CallBatchEndpoint {
     @Override
     public void finishJob(JobResult result, Class<?> batch, List<Session> sessions) {
         super.finishJob(result, batch, sessions);
+        SystemsEntity entity = SystemsDao.get().selectOnKey(AppConfig.get().getSystemName());
+        if (entity != null) {
+            if (InitDB.CURRENT.equals(entity.getVersion())) {
+                AppConfig.get().setMaintenanceMode(false);
+            }
+        }
         for (Session session : sessions) {
             if (!super.isAdmin(session)) {
                 return;
-            }
-            SystemsEntity entity = SystemsDao.get().selectOnKey(AppConfig.get().getSystemName());
-            if (entity != null) {
-                if (InitDB.CURRENT.equals(entity.getVersion())) {
-                    AppConfig.get().setMaintenanceMode(false);
-                }
             }
             try {
                 session.close();
