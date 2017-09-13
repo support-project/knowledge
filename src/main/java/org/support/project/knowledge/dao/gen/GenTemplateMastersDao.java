@@ -183,8 +183,13 @@ public class GenTemplateMastersDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('TEMPLATE_MASTERS_TYPE_ID_seq', (select max(TYPE_ID) from TEMPLATE_MASTERS));";
-            executeQuerySingle(setValSql, Long.class);
+            String maxSql = "SELECT MAX(TYPE_ID) from TEMPLATE_MASTERS;";
+            long max = executeQuerySingle(maxSql, Long.class);
+            if (max < 1) {
+                max = 1;
+            }
+            String setValSql = "SELECT SETVAL('TEMPLATE_MASTERS_TYPE_ID_seq', ?);";
+            executeQuerySingle(setValSql, Long.class, max);
         }
         return entity;
     }

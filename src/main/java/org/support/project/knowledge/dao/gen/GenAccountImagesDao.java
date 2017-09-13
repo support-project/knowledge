@@ -187,8 +187,13 @@ public class GenAccountImagesDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('ACCOUNT_IMAGES_IMAGE_ID_seq', (select max(IMAGE_ID) from ACCOUNT_IMAGES));";
-            executeQuerySingle(setValSql, Long.class);
+            String maxSql = "SELECT MAX(IMAGE_ID) from ACCOUNT_IMAGES;";
+            long max = executeQuerySingle(maxSql, Long.class);
+            if (max < 1) {
+                max = 1;
+            }
+            String setValSql = "SELECT SETVAL('ACCOUNT_IMAGES_IMAGE_ID_seq', ?);";
+            executeQuerySingle(setValSql, Long.class, max);
         }
         return entity;
     }

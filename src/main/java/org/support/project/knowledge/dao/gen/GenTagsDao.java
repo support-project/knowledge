@@ -181,8 +181,13 @@ public class GenTagsDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('TAGS_TAG_ID_seq', (select max(TAG_ID) from TAGS));";
-            executeQuerySingle(setValSql, Long.class);
+            String maxSql = "SELECT MAX(TAG_ID) from TAGS;";
+            long max = executeQuerySingle(maxSql, Long.class);
+            if (max < 1) {
+                max = 1;
+            }
+            String setValSql = "SELECT SETVAL('TAGS_TAG_ID_seq', ?);";
+            executeQuerySingle(setValSql, Long.class, max);
         }
         return entity;
     }

@@ -182,8 +182,13 @@ public class GenVotesDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('VOTES_VOTE_NO_seq', (select max(VOTE_NO) from VOTES));";
-            executeQuerySingle(setValSql, Long.class);
+            String maxSql = "SELECT MAX(VOTE_NO) from VOTES;";
+            long max = executeQuerySingle(maxSql, Long.class);
+            if (max < 1) {
+                max = 1;
+            }
+            String setValSql = "SELECT SETVAL('VOTES_VOTE_NO_seq', ?);";
+            executeQuerySingle(setValSql, Long.class, max);
         }
         return entity;
     }

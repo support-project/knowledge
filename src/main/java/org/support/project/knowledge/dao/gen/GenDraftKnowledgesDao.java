@@ -188,8 +188,13 @@ public class GenDraftKnowledgesDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('DRAFT_KNOWLEDGES_DRAFT_ID_seq', (select max(DRAFT_ID) from DRAFT_KNOWLEDGES));";
-            executeQuerySingle(setValSql, Long.class);
+            String maxSql = "SELECT MAX(DRAFT_ID) from DRAFT_KNOWLEDGES;";
+            long max = executeQuerySingle(maxSql, Long.class);
+            if (max < 1) {
+                max = 1;
+            }
+            String setValSql = "SELECT SETVAL('DRAFT_KNOWLEDGES_DRAFT_ID_seq', ?);";
+            executeQuerySingle(setValSql, Long.class, max);
         }
         return entity;
     }

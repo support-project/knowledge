@@ -182,8 +182,13 @@ public class GenLikesDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('LIKES_NO_seq', (select max(NO) from LIKES));";
-            executeQuerySingle(setValSql, Long.class);
+            String maxSql = "SELECT MAX(NO) from LIKES;";
+            long max = executeQuerySingle(maxSql, Long.class);
+            if (max < 1) {
+                max = 1;
+            }
+            String setValSql = "SELECT SETVAL('LIKES_NO_seq', ?);";
+            executeQuerySingle(setValSql, Long.class, max);
         }
         return entity;
     }
