@@ -113,6 +113,17 @@ function unescapeHTML(str) {
     return div.textContent || div.innerText;
 };
 
+function escapeLink(url) {
+    if (url.toLowerCase().indexOf('javascript:') != -1) {
+        var conv = '';
+        conv += url.substring(0, url.toLowerCase().indexOf('javascript:'));
+        conv += encodeURIComponent(url.substring(url.toLowerCase().indexOf('javascript:')));
+        return conv;
+    } else {
+        return url;
+    }
+}
+
 var handleErrorResponse = function(xhr, textStatus, error) {
     console.log(error);
     console.log(xhr);
