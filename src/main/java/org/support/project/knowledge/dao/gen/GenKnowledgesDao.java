@@ -191,8 +191,13 @@ public class GenKnowledgesDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('KNOWLEDGES_KNOWLEDGE_ID_seq', (select max(KNOWLEDGE_ID) from KNOWLEDGES));";
-            executeQuerySingle(setValSql, Long.class);
+            String maxSql = "SELECT MAX(KNOWLEDGE_ID) from KNOWLEDGES;";
+            long max = executeQuerySingle(maxSql, Long.class);
+            if (max < 1) {
+                max = 1;
+            }
+            String setValSql = "SELECT SETVAL('KNOWLEDGES_KNOWLEDGE_ID_seq', ?);";
+            executeQuerySingle(setValSql, Long.class, max);
         }
         return entity;
     }

@@ -182,8 +182,13 @@ public class GenViewHistoriesDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('VIEW_HISTORIES_HISTORY_NO_seq', (select max(HISTORY_NO) from VIEW_HISTORIES));";
-            executeQuerySingle(setValSql, Long.class);
+            String maxSql = "SELECT MAX(HISTORY_NO) from VIEW_HISTORIES;";
+            long max = executeQuerySingle(maxSql, Long.class);
+            if (max < 1) {
+                max = 1;
+            }
+            String setValSql = "SELECT SETVAL('VIEW_HISTORIES_HISTORY_NO_seq', ?);";
+            executeQuerySingle(setValSql, Long.class, max);
         }
         return entity;
     }
