@@ -251,8 +251,10 @@ $(document).ready(function(){
    - License: [MIT License] https://github.com/chartjs/Chart.js/blob/master/LICENSE.md
    - project-url: https://github.com/chartjs/Chart.js
    
+- Vue.js
+   - License: [MIT License] https://github.com/vuejs/vue/blob/master/LICENSE
+   - project-url: https://jp.vuejs.org/index.html
    
-
    
 </div>
 
