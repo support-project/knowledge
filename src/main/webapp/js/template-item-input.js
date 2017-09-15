@@ -122,11 +122,21 @@ $(document).ready(function() {
         tag += '</div>';
         return tag;
     };
-
+    
+    var initialValue = '';
     var addTemplateItem = function(template) {
         $('#template_msg').text(template.description);
         $('#template_info').removeClass('hide');
         $('#template_info').addClass('show');
+        
+        if (!$('#content').val()) {
+            $('#content').val(template.initialValue);
+            initialValue = template.initialValue;
+        } else if (initialValue === $('#content').val()) {
+            // 初期値を指定してから変更していない
+            $('#content').val(template.initialValue);
+            initialValue = template.initialValue;
+        }
         
         $('#template_items').html('');
         var exists_date = false;

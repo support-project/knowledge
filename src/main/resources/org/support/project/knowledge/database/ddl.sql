@@ -527,6 +527,7 @@ create table TEMPLATE_MASTERS (
   , TYPE_NAME character varying(256) not null
   , TYPE_ICON character varying(64)
   , DESCRIPTION character varying(1024)
+  , INITIAL_VALUE text
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -544,6 +545,7 @@ create table TEMPLATE_ITEMS (
   , ITEM_NAME character varying(32) not null
   , ITEM_TYPE integer not null
   , DESCRIPTION character varying(1024)
+  , INITIAL_VALUE text
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -1210,6 +1212,7 @@ comment on column TEMPLATE_MASTERS.TYPE_ID is 'テンプレートの種類ID';
 comment on column TEMPLATE_MASTERS.TYPE_NAME is 'テンプレート名';
 comment on column TEMPLATE_MASTERS.TYPE_ICON is 'アイコン';
 comment on column TEMPLATE_MASTERS.DESCRIPTION is '説明';
+comment on column TEMPLATE_MASTERS.INITIAL_VALUE is '本文の初期値';
 comment on column TEMPLATE_MASTERS.INSERT_USER is '登録ユーザ';
 comment on column TEMPLATE_MASTERS.INSERT_DATETIME is '登録日時';
 comment on column TEMPLATE_MASTERS.UPDATE_USER is '更新ユーザ';
@@ -1222,6 +1225,7 @@ comment on column TEMPLATE_ITEMS.ITEM_NO is '項目NO';
 comment on column TEMPLATE_ITEMS.ITEM_NAME is '項目名';
 comment on column TEMPLATE_ITEMS.ITEM_TYPE is '項目の種類';
 comment on column TEMPLATE_ITEMS.DESCRIPTION is '説明';
+comment on column TEMPLATE_ITEMS.INITIAL_VALUE is '初期値';
 comment on column TEMPLATE_ITEMS.INSERT_USER is '登録ユーザ';
 comment on column TEMPLATE_ITEMS.INSERT_DATETIME is '登録日時';
 comment on column TEMPLATE_ITEMS.UPDATE_USER is '更新ユーザ';

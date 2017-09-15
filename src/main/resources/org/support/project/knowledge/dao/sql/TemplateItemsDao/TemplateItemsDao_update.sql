@@ -3,6 +3,7 @@ SET
    ITEM_NAME = ?
  , ITEM_TYPE = ?
  , DESCRIPTION = ?
+ , INITIAL_VALUE = ?
  , INSERT_USER = ?
  , INSERT_DATETIME = ?
  , UPDATE_USER = ?

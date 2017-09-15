@@ -155,6 +155,7 @@ public class TemplateLogic {
         db.setTypeName(template.getTypeName());
         db.setTypeIcon(template.getTypeIcon());
         db.setDescription(template.getDescription());
+        db.setInitialValue(template.getInitialValue());
         templateDao.update(db);
 
         Integer typeId = template.getTypeId();

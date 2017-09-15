@@ -57,6 +57,8 @@ public class GenTemplateMastersEntity implements Serializable {
     private String typeIcon;
     /** 説明 */
     private String description;
+    /** 本文の初期値 */
+    private String initialValue;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -129,6 +131,22 @@ public class GenTemplateMastersEntity implements Serializable {
      * @return this object     */
     public GenTemplateMastersEntity setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    /**
+     * Get 本文の初期値.
+     * @return 本文の初期値
+     */
+    public String getInitialValue() {
+        return this.initialValue;
+    }
+    /**
+     * Set 本文の初期値.
+     * @param initialValue 本文の初期値
+     * @return this object     */
+    public GenTemplateMastersEntity setInitialValue(String initialValue) {
+        this.initialValue = initialValue;
         return this;
     }
 
@@ -264,6 +282,7 @@ public class GenTemplateMastersEntity implements Serializable {
         builder.append("typeName = ").append(typeName).append("\n");
         builder.append("typeIcon = ").append(typeIcon).append("\n");
         builder.append("description = ").append(description).append("\n");
+        builder.append("initialValue = ").append(initialValue).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
