@@ -360,8 +360,8 @@ LName=認証トークン
 Comment=
 TableOption=
 Page=MAIN
-Left=1600
-Top=50
+Left=3050
+Top=900
 Field="TOKEN","TOKEN","@VARCHAR(128)","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ユーザID","USER_ID","@INT","NOT NULL",,"","",$FFFFFFFF,""
 Field="有効期限","EXPIRES","@DATETIME","NOT NULL",,"","",$FFFFFFFF,""
@@ -370,7 +370,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170620125822
-Position="MAIN",1600,50
+Position="MAIN",3050,900
 
 [Relation]
 Entity1=MAIL_HOOKS
@@ -823,7 +823,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1600
-Top=400
+Top=350
 Field="サービス名","SERVICE_NAME","@VARCHAR(64)","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ロケールキー","LOCALE_KEY","@VARCHAR(12)","NOT NULL",1,"","",$FFFFFFFF,""
 Field="トップページのHTML","PAGE_HTML","text",,,"","",$FFFFFFFF,""
@@ -831,7 +831,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170130131057
-Position="MAIN",1600,400
+Position="MAIN",1600,350
 
 [Entity]
 PName=SERVICE_CONFIGS
@@ -840,7 +840,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1600
-Top=200
+Top=100
 Field="サービス名","SERVICE_NAME","@VARCHAR(64)","NOT NULL",0,"","",$FFFFFFFF,""
 Field="表示名","SERVICE_LABEL","@VARCHAR(24)","NOT NULL",,"","",$FFFFFFFF,""
 Field="アイコン文字列","SERVICE_ICON","@VARCHAR(24)","NOT NULL",,"","",$FFFFFFFF,""
@@ -849,7 +849,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170131001923
-Position="MAIN",1600,200
+Position="MAIN",1600,100
 
 [Entity]
 PName=PINS
@@ -1243,7 +1243,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=950
-Top=300
+Top=200
 Field="テンプレートの種類ID","TYPE_ID","@INT","NOT NULL",0,"","",$FFFFFFFF,""
 Field="項目NO","ITEM_NO","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 Field="選択肢番号","CHOICE_NO","@INT","NOT NULL",2,"","",$FFFFFFFF,""
@@ -1253,7 +1253,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150910041119
-Position="MAIN",950,300,542,135
+Position="MAIN",950,200,542,135
 
 [Relation]
 Entity1=TEMPLATE_MASTERS
@@ -1264,7 +1264,7 @@ Fields1=TYPE_ID
 Fields2=TYPE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,4460,6903,3568,R,R
+Position="MAIN",0,4460,6903,3717,R,R
 Dependence=1
 Caption=
 PName=
@@ -1272,7 +1272,7 @@ ModifiedDateTime=20150910034230
 LineMode=0
 Bar1=446
 Bar2=690
-Bar3=357
+Bar3=372
 TermPos1=R
 TermPos2=R
 
@@ -1285,14 +1285,14 @@ Fields1=TYPE_ID
 Fields2=TYPE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,3334,5475,2219,R,R
+Position="MAIN",0,3334,5475,2295,R,R
 Dependence=0
 Caption=
 PName=
 LineMode=0
 Bar1=333
 Bar2=548
-Bar3=222
+Bar3=230
 TermPos1=R
 TermPos2=R
 
@@ -1308,10 +1308,11 @@ Field="テンプレートの種類ID","TYPE_ID","serial","NOT NULL",0,"","",$FFF
 Field="テンプレート名","TYPE_NAME","@VARCHAR(256)","NOT NULL",,"","",$FFFFFFFF,""
 Field="アイコン","TYPE_ICON","@VARCHAR(64)",,,"","",$FFFFFFFF,""
 Field="説明","DESCRIPTION","@VARCHAR(1024)",,,"","",$FFFFFFFF,""
+Field="本文の初期値","INITIAL_VALUE","text",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20150912014311
+ModifiedDateTime=20170915171119
 Position="MAIN",650,550
 
 [Entity]
@@ -1321,17 +1322,18 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1350
-Top=550
+Top=500
 Field="テンプレートの種類ID","TYPE_ID","@INT","NOT NULL",0,"","",$FFFFFFFF,""
 Field="項目NO","ITEM_NO","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 Field="項目名","ITEM_NAME","@VARCHAR(32)","NOT NULL",,"","",$FFFFFFFF,""
 Field="項目の種類","ITEM_TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
 Field="説明","DESCRIPTION","@VARCHAR(1024)",,,"","",$FFFFFFFF,""
+Field="初期値","INITIAL_VALUE","text",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20151027035632
-Position="MAIN",1350,550
+ModifiedDateTime=20170915171315
+Position="MAIN",1350,500
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -1519,8 +1521,8 @@ LName=アカウントの画像
 Comment=
 TableOption=
 Page=MAIN
-Left=900
-Top=50
+Left=3550
+Top=1250
 Field="IMAGE_ID","IMAGE_ID","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ユーザID","USER_ID","@INT",,,"","",$FFFFFFFF,""
 Field="ファイル名","FILE_NAME","@VARCHAR(256)",,,"","",$FFFFFFFF,""
@@ -1533,7 +1535,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20150416234339
-Position="MAIN",900,50
+Position="MAIN",3550,1250
 
 [Relation]
 Entity1=KNOWLEDGES
