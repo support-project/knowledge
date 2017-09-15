@@ -129,13 +129,16 @@ $(document).ready(function() {
         $('#template_info').removeClass('hide');
         $('#template_info').addClass('show');
         
-        if (!$('#content').val()) {
+        var contentStr = $('#content').val();
+        if (!contentStr) {
             $('#content').val(template.initialValue);
             initialValue = template.initialValue;
-        } else if (initialValue === $('#content').val()) {
-            // 初期値を指定してから変更していない
-            $('#content').val(template.initialValue);
-            initialValue = template.initialValue;
+        } else {
+            if (initialValue.replace(/\r?\n/g,"") == contentStr.replace(/\r?\n/g,"")) {
+                // 初期値を指定してから変更していない
+                $('#content').val(template.initialValue ? template.initialValue : '');
+                initialValue = template.initialValue;
+            }
         }
         
         $('#template_items').html('');
