@@ -266,18 +266,10 @@ public class TargetLogic {
         }
 
         for (UsersEntity usersEntity : users) {
-            // 自分の場合はスキップ
-            if (loginedUser != null) {
-                if (usersEntity.getUserId().intValue() == loginedUser.getUserId().intValue()) {
-                    continue;
-                }
-            }
-
-            // グループに公開されていてかつそのグループに所属してる場合もスキップ
+            // グループに公開されていてかつそのグループに所属してる場合はスキップ
             if (groupUserIds.contains(usersEntity.getUserId())) {
                 continue;
             }
-
             LabelValue labelValue = new LabelValue();
             labelValue.setLabel(NAME_PREFIX_USER + usersEntity.getUserName());
             labelValue.setValue(ID_PREFIX_USER + usersEntity.getUserId());
