@@ -313,7 +313,7 @@ public class DataTransferLogic {
         AppConfig appConfig = AppConfig.get();
         Path source = Paths.get(appConfig.getDatabasePath());
         if (Files.exists(source)) {
-            Path target = Paths.get(appConfig.getBasePath() + "/db_" + DateUtils.getTransferDateFormat().format(new Date()));
+            Path target = Paths.get(appConfig.getBasePath() + "/db_" + DateUtils.getTransferDateFormat().format(DateUtils.now()));
             Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
         }
     }

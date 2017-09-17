@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.support.project.aop.Aspect;
+import org.support.project.common.util.DateUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -64,7 +65,7 @@ public class StockKnowledgesDao extends GenStockKnowledgesDao {
     public void deleteOnKnowledgeId(Long knowledgeId) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer user = (Integer) pool.getUser();
-        Date now = new Date();
+        Date now = DateUtils.now();
         String sql = "UPDATE stock_knowledges SET delete_flag = 1, update_user = ?, update_datetime = ? WHERE knowledge_id = ?";
         executeUpdate(sql, user, now, knowledgeId);
     }
