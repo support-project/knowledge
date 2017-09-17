@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.support.project.common.config.ConfigLoader;
+import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.exception.SerializeException;
 import org.support.project.common.logic.H2DBServerLogic;
 import org.support.project.common.serialize.SerializeUtils;
@@ -22,8 +23,10 @@ import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.UserLogicEx;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
+import org.support.project.ormapping.common.IDGen;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.ormapping.tool.config.ORmappingToolConfig;
 import org.support.project.web.bean.LoginedUser;
@@ -172,12 +175,14 @@ public abstract class TestCommon {
     
     /**
      * テストユーザの情報を生成
+     * 直接ユーザテーブルにデータを入れているため、通知設定などが設定されない
+     * 古いテスト用（現在は使わないこと）
      * @param user
      * @param userName
      * @param roleIds
      * @return
      */
-    protected static List<RolesEntity> addUser(LoginedUser user, String userName, Integer[] roleIds) {
+    private static List<RolesEntity> addUser(LoginedUser user, String userName, Integer[] roleIds) {
         // テスト用のユーザを登録
         UsersEntity entity = new UsersEntity();
         entity.setUserKey(RandomUtil.randamGen(64));
@@ -198,7 +203,13 @@ public abstract class TestCommon {
         user.setRoles(rolesEntities);
         return rolesEntities;
     }
-
+    /**
+     * ナレッジを登録
+     * @param title
+     * @param loginedUser
+     * @return
+     * @throws Exception
+     */
     protected KnowledgesEntity insertKnowledge(String title, LoginedUser loginedUser) throws Exception {
         KnowledgesEntity entity = new KnowledgesEntity();
         entity.setTitle(title);
@@ -211,4 +222,43 @@ public abstract class TestCommon {
         return entity;
     }
     
+    /**
+     * ユーザの登録
+     * @param userKey
+     * @return
+     */
+    protected UsersEntity addUser(String userKey) {
+        UsersEntity user = new UsersEntity();
+        user.setAuthLdap(INT_FLAG.OFF.getValue());
+        user.setEncrypted(false);
+        user.setUserKey(userKey);
+        user.setLocaleKey(Locale.JAPAN.toString());
+        user.setMailAddress("test@example.com");
+        user.setUserName("Integration Test User 01");
+        user.setPassword(IDGen.get().gen("hoge"));
+        String[] roles = {"user"};
+        return UserLogicEx.get().insert(user, roles);
+    }
+    /**
+     * 登録されているユーザのログインユーザ情報を取得
+     * @param userKey
+     * @return
+     */
+    protected LoginedUser getLoginUser(String userKey) {
+        UsersDao usersDao = UsersDao.get();
+        UsersEntity usersEntity = usersDao.selectOnUserKey(userKey);
+        RolesDao rolesDao = RolesDao.get();
+        List<RolesEntity> rolesEntities = rolesDao.selectOnUserKey(userKey);
+
+        LoginedUser loginedUser = new LoginedUser();
+        loginedUser.setLoginUser(usersEntity);
+        loginedUser.setRoles(rolesEntities);
+        loginedUser.setLocale(usersEntity.getLocale());
+
+        // グループ
+        GroupsDao groupsDao = GroupsDao.get();
+        List<GroupsEntity> groups = groupsDao.selectMyGroup(loginedUser, 0, Integer.MAX_VALUE);
+        loginedUser.setGroups(groups);
+        return loginedUser;
+   }
 }
