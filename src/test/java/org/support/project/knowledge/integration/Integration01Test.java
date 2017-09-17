@@ -1,5 +1,7 @@
 package org.support.project.knowledge.integration;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,7 @@ import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
+import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.notification.QueueNotification;
 import org.support.project.ormapping.common.DBUserPool;
@@ -27,7 +30,6 @@ import org.support.project.web.dao.NotificationsDao;
 import org.support.project.web.dao.UserNotificationsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.MailConfigsEntity;
-import org.support.project.web.entity.MailsEntity;
 import org.support.project.web.entity.NotificationsEntity;
 import org.support.project.web.entity.UserNotificationsEntity;
 import org.support.project.web.entity.UsersEntity;
@@ -150,7 +152,7 @@ public class Integration01Test extends TestCommon {
      */
     @Test
     @Order(order = 6)
-    public void tesCheckUserNotification() throws Exception {
+    public void testCheckUserNotification() throws Exception {
         LOG.info("通知確認");
         NotificationsEntity notification = NotificationsDao.get().selectOnKey(new Long(1)); // 1件だけ通知が登録されているはず
         Assert.assertNotNull(notification);
@@ -167,7 +169,30 @@ public class Integration01Test extends TestCommon {
         Assert.assertEquals(2, count);
     }
     
-    
+    /**
+     * 記事を参照できる
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 7)
+    public void testKnowledgeView() throws Exception {
+        LOG.info("通知確認");
+        LoginedUser user = getLoginUser("integration-test-user-01");
+        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100);
+        Assert.assertEquals(1, knowledges.size());
+        
+        KnowledgesEntity knowledge = KnowledgeLogic.get().select(knowledges.get(0).getKnowledgeId(), user);
+        Assert.assertNotNull(knowledge);
+        Assert.assertEquals(knowledgeId, knowledge.getKnowledgeId().intValue());
+        
+        user = getLoginUser("integration-test-user-02");
+        knowledges = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100);
+        Assert.assertEquals(1, knowledges.size());
+        
+        knowledge = KnowledgeLogic.get().select(knowledges.get(0).getKnowledgeId(), user);
+        Assert.assertNotNull(knowledge);
+        Assert.assertEquals(knowledgeId, knowledge.getKnowledgeId().intValue());
+    }
     
     
 }
