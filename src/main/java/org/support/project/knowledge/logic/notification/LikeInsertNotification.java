@@ -139,8 +139,11 @@ public class LikeInsertNotification extends AbstractQueueNotification implements
         info.setKnowledgeId(knowledge.getKnowledgeId());
         info.setKnowledgeTitle(knowledge.getTitle());
         info.setUpdateUser(knowledge.getUpdateUserName());
-        
-        info.setLikeInsertUser(likeUser.getUserName());
+        if (likeUser != null) {
+            info.setLikeInsertUser(likeUser.getUserName());
+        } else {
+            info.setLikeInsertUser("anonymous");
+        }
         
         notification.setContent(JSON.encode(info));
         notification = NotificationsDao.get().insert(notification);
