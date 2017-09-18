@@ -13,6 +13,7 @@ import org.support.project.aop.Aspect;
 import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.HtmlUtils;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringJoinBuilder;
@@ -1102,7 +1103,7 @@ public class KnowledgeLogic {
         ViewHistoriesDao historiesDao = ViewHistoriesDao.get();
         ViewHistoriesEntity historiesEntity = new ViewHistoriesEntity();
         historiesEntity.setKnowledgeId(knowledgeId);
-        historiesEntity.setViewDateTime(new Timestamp(new Date().getTime()));
+        historiesEntity.setViewDateTime(new Timestamp(DateUtils.now().getTime()));
         if (loginedUser != null) {
             historiesEntity.setInsertUser(loginedUser.getUserId());
         } else {
@@ -1491,7 +1492,7 @@ public class KnowledgeLogic {
      * @return
      */
     public List<KnowledgesEntity> getPopularityKnowledges(LoginedUser loginedUser, int offset, int limit) {
-        long now = new Date().getTime();
+        long now = DateUtils.now().getTime();
         LOG.trace(now);
 
         long term = 1000L * 60L * 60L * 24L * 30L;

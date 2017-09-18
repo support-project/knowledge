@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.knowledge.config.AppConfig;
@@ -60,7 +61,7 @@ public class LogManageLogic {
             long term = 1000 * 60 * 60 * 24 * days;
             File[] logs = logFiles();
 
-            Date now = new Date();
+            Date now = DateUtils.now();
             if (logs != null) {
                 for (File file : logs) {
                     if (now.getTime() - file.lastModified() > term) {

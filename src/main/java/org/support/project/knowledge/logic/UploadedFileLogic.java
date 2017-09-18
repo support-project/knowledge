@@ -84,7 +84,7 @@ public class UploadedFileLogic {
     public UploadFile saveFile(byte[] img, LoginedUser loginedUser, String context) {
         LOG.trace("saveFile()");
         KnowledgeFilesEntity entity = new KnowledgeFilesEntity();
-        entity.setFileName("image-" + DateUtils.formatTransferDateTime(new Date()) + ".png");
+        entity.setFileName("image-" + DateUtils.formatTransferDateTime(DateUtils.now()) + ".png");
         entity.setFileSize(new Double(img.length));
         entity.setFileBinary(new ByteArrayInputStream(img));
         entity.setParseStatus(0);

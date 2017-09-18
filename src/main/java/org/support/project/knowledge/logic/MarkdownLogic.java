@@ -20,6 +20,7 @@ import org.pegdown.ast.AnchorLinkNode;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -107,7 +108,7 @@ public class MarkdownLogic {
      * @param result
      */
     private void markdownToHtmlOnMarkedJ(String markdown, MarkDown result) {
-        Date start = new Date();
+        Date start = DateUtils.now();
 
         Options options = new Options();
         options.setBreaks(true);
@@ -121,7 +122,7 @@ public class MarkdownLogic {
         result.setMarkdown(markdown);
 
         if (LOG.isDebugEnabled()) {
-            Date end = new Date();
+            Date end = DateUtils.now();
             // 以前、別のMarkdownパーサーのパースが凄く時間がかかったので、パース時間を出力している
             LOG.debug("Parse time (MarkedJ): " + (end.getTime() - start.getTime()) + " [ms]");
         }

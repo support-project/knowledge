@@ -8,6 +8,7 @@ import java.util.List;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
@@ -226,7 +227,7 @@ public class SurveyControl extends TemplateControl {
             LOG.debug(PropertyUtil.reflectionToString(answer));
         }
         SurveyLogic.get().saveAnswer(answer, getLoginUserId());
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_ANSWER, getLoginedUser(), new Date(),
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_ANSWER, getLoginedUser(), DateUtils.now(),
                 KnowledgesDao.get().selectOnKey(knowledgeId));
         
         // メッセージ送信

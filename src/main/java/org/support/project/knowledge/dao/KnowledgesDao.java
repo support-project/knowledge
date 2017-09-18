@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.support.project.aop.Aspect;
+import org.support.project.common.util.DateUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -128,7 +129,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void deleteOnUser(Integer loginUserId) {
         String sql = "UPDATE KNOWLEDGES SET DELETE_FLAG = 1 , UPDATE_USER = ? , UPDATE_DATETIME = ? WHERE INSERT_USER = ?";
-        super.executeUpdate(sql, loginUserId, new Timestamp(new Date().getTime()), loginUserId);
+        super.executeUpdate(sql, loginUserId, new Timestamp(DateUtils.now().getTime()), loginUserId);
     }
 
     /**

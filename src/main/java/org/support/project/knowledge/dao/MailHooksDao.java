@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
+import org.support.project.common.util.DateUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -63,7 +64,7 @@ public class MailHooksDao extends GenMailHooksDao {
             }
             entity.setDeleteFlag(INT_FLAG.OFF.getValue());
             entity.setInsertUser((Integer) DBUserPool.get().getUser());
-            entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
+            entity.setInsertDatetime(new Timestamp(DateUtils.now().getTime()));
             return rawPhysicalInsert(entity);
         } else {
             return super.save(entity);
