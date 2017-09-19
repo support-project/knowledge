@@ -20,29 +20,26 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
-import org.support.project.knowledge.logic.MailLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.notification.QueueNotification;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.MailConfigsDao;
-import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.NotificationsDao;
-import org.support.project.web.dao.UserNotificationsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.NotificationsEntity;
-import org.support.project.web.entity.UserNotificationsEntity;
 import org.support.project.web.entity.UsersEntity;
 
-
 /**
- * ユーザを2つ追加し、片方のユーザで公開のKnowledgeを登録し、通知や記事が参照できることを確認する
+ * ユーザを2つ追加し、片方のユーザで非公開のKnowledgeを登録し、通知や記事が参照できることを確認する
  * @author koda
+ *
  */
 @RunWith(OrderedRunner.class)
-public class Integration01Test extends TestCommon {
+public class Integration02Test extends TestCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(Integration01Test.class);
+    private static final Log LOG = LogFactory.getLog(Integration02Test.class);
     
     private static long knowledgeId; // テストメソッド単位にインスタンスが歳生成されるようなので、staticで保持する
     
@@ -110,7 +107,8 @@ public class Integration01Test extends TestCommon {
         LoginedUser loginUser = getLoginUser("integration-test-user-01");
         DBUserPool.get().setUser(loginUser.getUserId()); // 操作ユーザのIDを指定
         
-        KnowledgesEntity knowledge = super.insertKnowledge("integration-test-knowledge-01", loginUser);
+        KnowledgesEntity knowledge = super.insertKnowledge("integration-test-knowledge-01", loginUser,
+                TemplateLogic.TYPE_ID_KNOWLEDGE, KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
         
         KnowledgesEntity check = KnowledgesDao.get().selectOnKey(knowledge.getKnowledgeId());
         Assert.assertNotNull(check);
@@ -159,19 +157,8 @@ public class Integration01Test extends TestCommon {
     @Order(order = 6)
     public void testCheckUserNotification() throws Exception {
         LOG.info("通知確認");
-        NotificationsEntity notification = NotificationsDao.get().selectOnKey(new Long(1)); // 1件だけ通知が登録されているはず
-        Assert.assertNotNull(notification);
-        Assert.assertEquals(MailLogic.NOTIFY_INSERT_KNOWLEDGE, notification.getTitle());
-        
-        UsersEntity user = UsersDao.get().selectOnUserKey("integration-test-user-01");
-        UserNotificationsEntity userNotification = UserNotificationsDao.get().selectOnKey(notification.getNo(), user.getUserId());
-        Assert.assertNotNull(userNotification);
-        user = UsersDao.get().selectOnUserKey("integration-test-user-02");
-        userNotification = UserNotificationsDao.get().selectOnKey(notification.getNo(), user.getUserId());
-        Assert.assertNotNull(userNotification);
-        
-        int count = MailsDao.get().selectCountAll();
-        Assert.assertEquals(2, count);
+        NotificationsEntity notification = NotificationsDao.get().selectOnKey(new Long(1)); // 1件も通知がないはず
+        Assert.assertNull(notification);
     }
     
     /**
@@ -192,11 +179,7 @@ public class Integration01Test extends TestCommon {
         
         user = getLoginUser("integration-test-user-02");
         knowledges = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100);
-        Assert.assertEquals(1, knowledges.size());
-        
-        knowledge = KnowledgeLogic.get().select(knowledges.get(0).getKnowledgeId(), user);
-        Assert.assertNotNull(knowledge);
-        Assert.assertEquals(knowledgeId, knowledge.getKnowledgeId().intValue());
+        Assert.assertEquals(0, knowledges.size()); // 登録者以外は参照できない
     }
     
     

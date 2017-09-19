@@ -72,6 +72,7 @@ public class LuceneIndexer implements Indexer {
             try {
                 writer = new IndexWriter(dir, iwc);
                 addDoc(writer, indexingValue);
+                writer.commit();
             } finally {
                 if (writer != null) {
                     writer.close();
