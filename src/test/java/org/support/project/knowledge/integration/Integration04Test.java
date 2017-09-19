@@ -1,5 +1,6 @@
 package org.support.project.knowledge.integration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -13,11 +14,9 @@ import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.bat.NotifyMailBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.AuthType;
-import org.support.project.knowledge.dao.KnowledgesDao;
-import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
+import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
-import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MailLogic;
@@ -36,13 +35,13 @@ import org.support.project.web.entity.UsersEntity;
 
 
 /**
- * ユーザを2つ追加し、片方のユーザで公開のKnowledgeを登録し、通知や記事が参照できることを確認する
+ * 記事登録後に、コメントを登録
  * @author koda
  */
 @RunWith(OrderedRunner.class)
-public class Integration01Test extends TestCommon {
+public class Integration04Test extends TestCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(Integration01Test.class);
+    private static final Log LOG = LogFactory.getLog(Integration04Test.class);
     
     private static long knowledgeId; // テストメソッド単位にインスタンスが歳生成されるようなので、staticで保持する
     
@@ -54,51 +53,16 @@ public class Integration01Test extends TestCommon {
     @Order(order = 1)
     public void testUserInsert() throws Exception {
         LOG.info("ユーザ登録");
-        UsersEntity user = addUser("integration-test-user-01");
-        UsersEntity check = UsersDao.get().selectOnUserKey(user.getUserKey());
-        Assert.assertNotNull(check);
-        Assert.assertEquals(user.getUserKey(), check.getUserKey());
-        Assert.assertEquals(user.getLocaleKey(), check.getLocaleKey());
-        Assert.assertEquals(user.getMailAddress(), check.getMailAddress());
-        Assert.assertEquals(user.getUserName(), check.getUserName());
-        
-        UsersEntity user2 = addUser("integration-test-user-02");
-        check = UsersDao.get().selectOnUserKey(user2.getUserKey());
-        Assert.assertNotNull(check);
-        Assert.assertEquals(user2.getUserKey(), check.getUserKey());
-        Assert.assertEquals(user2.getLocaleKey(), check.getLocaleKey());
-        Assert.assertEquals(user2.getMailAddress(), check.getMailAddress());
-        Assert.assertEquals(user2.getUserName(), check.getUserName());
+        MailConfigsEntity mailConfig = new MailConfigsEntity(AppConfig.get().getSystemName());
+        mailConfig.setHost("example.com");
+        mailConfig.setPort(25);
+        mailConfig.setAuthType(AuthType.None.getValue());
+        MailConfigsDao.get().insert(mailConfig); // メール送信設定
+
+        addUser("integration-test-user-01");
+        addUser("integration-test-user-02");
     }
     
-    /**
-     * 登録されたユーザの通知設定を参照
-     * @throws Exception
-     */
-    @Test
-    @Order(order = 2)
-    public void testCheckNotify() throws Exception {
-        LOG.info("通知設定確認");
-        testCheckNotify("integration-test-user-01");
-        testCheckNotify("integration-test-user-02");
-    }
-    private void testCheckNotify(String key) {
-        UsersEntity user = UsersDao.get().selectOnUserKey(key);
-        NotifyConfigsEntity notify = NotifyConfigsDao.get().selectOnKey(user.getUserId());
-        //LOG.info(notify.toString());
-        Assert.assertNotNull(notify);
-        Assert.assertEquals(1, notify.getNotifyMail().intValue());
-        Assert.assertEquals(0, notify.getNotifyDesktop().intValue());
-        Assert.assertEquals(1, notify.getMyItemComment().intValue());
-        Assert.assertEquals(1, notify.getMyItemLike().intValue());
-        Assert.assertEquals(1, notify.getMyItemStock().intValue());
-        Assert.assertEquals(1, notify.getToItemSave().intValue());
-        Assert.assertEquals(1, notify.getToItemComment().intValue());
-        Assert.assertEquals(0, notify.getToItemIgnorePublic().intValue());
-        Assert.assertEquals(0, notify.getStockItemSave().intValue());
-        Assert.assertEquals(0, notify.getStokeItemComment().intValue());
-    }
-
     /**
      * 記事を登録
      * @throws Exception
@@ -111,57 +75,16 @@ public class Integration01Test extends TestCommon {
         DBUserPool.get().setUser(loginUser.getUserId()); // 操作ユーザのIDを指定
         
         KnowledgesEntity knowledge = super.insertKnowledge("integration-test-knowledge-01", loginUser);
-        
-        KnowledgesEntity check = KnowledgesDao.get().selectOnKey(knowledge.getKnowledgeId());
-        Assert.assertNotNull(check);
-        Assert.assertEquals(knowledge.getKnowledgeId(), check.getKnowledgeId());
-        Assert.assertEquals("integration-test-knowledge-01", check.getTitle());
-        Assert.assertEquals(loginUser.getUserId(), check.getInsertUser());
         knowledgeId = knowledge.getKnowledgeId();
-    }
-    
-    /**
-     * 通知情報が登録されていることを確認
-     * @throws Exception
-     */
-    @Test
-    @Order(order = 4)
-    public void testCheckNotifyQueue() throws Exception {
-        LOG.info("通知キュー確認");
+        
         NotifyQueuesEntity notify = NotifyQueuesDao.get().selectOnTypeAndId(QueueNotification.TYPE_KNOWLEDGE_INSERT, knowledgeId);
         Assert.assertNotNull(notify);
-    }
-    
-    /**
-     * 通知を処理
-     * @throws Exception
-     */
-    @Test
-    @Order(order = 5)
-    public void testExecNotifyQueue() throws Exception {
-        LOG.info("通知キューを処理");
-        MailConfigsEntity mailConfig = new MailConfigsEntity(AppConfig.get().getSystemName());
-        mailConfig.setHost("example.com");
-        mailConfig.setPort(25);
-        mailConfig.setAuthType(AuthType.None.getValue());
-        MailConfigsDao.get().insert(mailConfig); // メール送信設定
-        
         NotifyMailBat.main(null);
-        NotifyQueuesEntity notify = NotifyQueuesDao.get().selectOnTypeAndId(QueueNotification.TYPE_KNOWLEDGE_INSERT, knowledgeId);
+        notify = NotifyQueuesDao.get().selectOnTypeAndId(QueueNotification.TYPE_KNOWLEDGE_INSERT, knowledgeId);
         Assert.assertNull(notify);
-    }
-    
-    /**
-     * ユーザに通知が届いていることを確認
-     * @throws Exception
-     */
-    @Test
-    @Order(order = 6)
-    public void testCheckUserNotification() throws Exception {
-        LOG.info("通知確認");
+
         NotificationsEntity notification = NotificationsDao.get().selectOnKey(new Long(1)); // 1件だけ通知が登録されているはず
         Assert.assertNotNull(notification);
-        Assert.assertEquals(MailLogic.NOTIFY_INSERT_KNOWLEDGE, notification.getTitle());
         
         UsersEntity user = UsersDao.get().selectOnUserKey("integration-test-user-01");
         UserNotificationsEntity userNotification = UserNotificationsDao.get().selectOnKey(notification.getNo(), user.getUserId());
@@ -198,6 +121,42 @@ public class Integration01Test extends TestCommon {
         Assert.assertNotNull(knowledge);
         Assert.assertEquals(knowledgeId, knowledge.getKnowledgeId().intValue());
     }
+    
+    /**
+     * コメント追加
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 8)
+    public void testInsertComment() throws Exception {
+        LoginedUser user = getLoginUser("integration-test-user-02");
+        CommentsEntity comment = KnowledgeLogic.get().saveComment(knowledgeId, "コメント", new ArrayList<>(), user);
+        
+        NotifyQueuesEntity notify = NotifyQueuesDao.get().selectOnTypeAndId(QueueNotification.TYPE_KNOWLEDGE_COMMENT, comment.getCommentNo());
+        Assert.assertNotNull(notify);
+        NotifyMailBat.main(null);
+        notify = NotifyQueuesDao.get().selectOnTypeAndId(QueueNotification.TYPE_KNOWLEDGE_COMMENT, comment.getCommentNo());
+        Assert.assertNull(notify);
+        
+        NotificationsEntity notification = NotificationsDao.get().selectOnKey(new Long(2));
+        Assert.assertNotNull(notification);
+        Assert.assertEquals(MailLogic.NOTIFY_INSERT_COMMENT_MYITEM, notification.getTitle());
+        
+        user = getLoginUser("integration-test-user-01");
+        UserNotificationsEntity userNotification = UserNotificationsDao.get().selectOnKey(notification.getNo(), user.getUserId());
+        Assert.assertNotNull(userNotification);
+
+        notification = NotificationsDao.get().selectOnKey(new Long(3));
+        Assert.assertNotNull(notification);
+        Assert.assertEquals(MailLogic.NOTIFY_INSERT_COMMENT, notification.getTitle());
+        
+        user = getLoginUser("integration-test-user-02");
+        userNotification = UserNotificationsDao.get().selectOnKey(notification.getNo(), user.getUserId());
+        Assert.assertNotNull(userNotification);
+    }
+    
+    
+
     
     
 }
