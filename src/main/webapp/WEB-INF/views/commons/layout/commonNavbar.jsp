@@ -67,10 +67,10 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="navButton navAddButton">
                     <div class="btn-group">
-                        <a href="<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>" class="btn btn-info" id="navAddButtonLink">
+                        <button type="button" onclick="location.href='<%= request.getContextPath() %>/protect.knowledge/view_add<%= jspUtil.out("params") %>'" class="btn btn-info" id="navAddButtonLink" tabindex="-1">
                             <i class="fa fa-plus-circle"></i>&nbsp;
                             <span class="navListButtonText"><%= jspUtil.label("knowledge.navbar.add.knowledge") %></span>
-                        </a>
+                        </button>
                         <a href="#" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                         </a>
