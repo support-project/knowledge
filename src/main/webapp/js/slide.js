@@ -140,7 +140,7 @@ function showSlides(n, slideId) {
 $(document).on({
 	'mouseenter': function () {
 		var id = $(this).attr('id');
-		$(window).on('keypress', function (e) {
+		$(window).on('keydown', function (e) {
 			e.preventDefault();
 
 			if (37 == e.keyCode) {
@@ -153,6 +153,6 @@ $(document).on({
 		});
 	},
 	'mouseleave': function () {
-		$(window).off('keypress');
+		$(window).off('keydown');
 	}
 }, '.slideshow-area');
