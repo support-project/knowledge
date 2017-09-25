@@ -1,4 +1,4 @@
-package org.support.project.knowledge.integration;
+package org.support.project.knowledge.logic.integration;
 
 import java.util.List;
 
@@ -37,9 +37,9 @@ import org.support.project.web.entity.UsersEntity;
  *
  */
 @RunWith(OrderedRunner.class)
-public class Integration02Test extends TestCommon {
+public class PostPrivateLogicIntegrationTest extends TestCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(Integration02Test.class);
+    private static final Log LOG = LogFactory.getLog(PostPrivateLogicIntegrationTest.class);
     
     private static long knowledgeId; // テストメソッド単位にインスタンスが歳生成されるようなので、staticで保持する
     
