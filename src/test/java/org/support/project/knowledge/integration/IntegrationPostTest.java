@@ -27,11 +27,11 @@ import org.support.project.web.test.stub.StubHttpServletResponse;
  */
 public class IntegrationPostTest extends IntegrationCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(IntegrationCommon.class);
+    private static final Log LOG = LogFactory.getLog(IntegrationPostTest.class);
     
-    private static final String INTEGRATION_TEST_USER_01 = "integration-test-user-01";
-    private static final String INTEGRATION_TEST_USER_02 = "integration-test-user-02";
-    private static final String INTEGRATION_TEST_USER_03 = "integration-test-user-03";
+    private static final String COMMENT_POST_USER = "integration-test-user-01";
+    private static final String KNOWLEDGE_POST_USER = "integration-test-user-02";
+    private static final String READ_USER = "integration-test-user-03";
     
     private static long knowledgeId; // テストメソッド単位にインスタンスが歳生成されるようなので、staticで保持する
     
@@ -44,9 +44,9 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Order(order = 1)
     public void testUserInsert() throws Exception {
         LOG.info("ユーザ登録");
-        addUser(INTEGRATION_TEST_USER_01);
-        addUser(INTEGRATION_TEST_USER_02);
-        addUser(INTEGRATION_TEST_USER_03);
+        addUser(COMMENT_POST_USER);
+        addUser(KNOWLEDGE_POST_USER);
+        addUser(READ_USER);
     }
 
     /**
@@ -71,7 +71,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 3)
     public void testAccessListByLoginedUser() throws Exception {
-        StubHttpServletRequest request = openKnowledges(INTEGRATION_TEST_USER_01);
+        StubHttpServletRequest request = openKnowledges(COMMENT_POST_USER);
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         Assert.assertNotNull(knowledges);
         Assert.assertEquals(0, knowledges.size());
@@ -89,7 +89,7 @@ public class IntegrationPostTest extends IntegrationCommon {
         request.setServletPath("protect.notification/list");
         request.setMethod("get");
         DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
-        auth.setSession(INTEGRATION_TEST_USER_01, request, response);
+        auth.setSession(COMMENT_POST_USER, request, response);
         
         ForwardBoundary boundary = invoke(request, response, ForwardBoundary.class);
         Assert.assertEquals("/WEB-INF/views/protect/notification/list.jsp", PropertyUtil.getPrivateFeildOnReflection(String.class, boundary, "path"));
@@ -106,8 +106,8 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 5)
     public void testInitCPByLoginedUser() throws Exception {
-        assertCP(INTEGRATION_TEST_USER_01, 0);
-        assertCP(INTEGRATION_TEST_USER_02, 0);
+        assertCP(COMMENT_POST_USER, 0);
+        assertCP(KNOWLEDGE_POST_USER, 0);
     }
     
     /**
@@ -124,7 +124,7 @@ public class IntegrationPostTest extends IntegrationCommon {
         request.setServletPath("protect.knowledge/view_add");
         request.setMethod("get");
         DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
-        auth.setSession(INTEGRATION_TEST_USER_02, request, response);
+        auth.setSession(KNOWLEDGE_POST_USER, request, response);
         
         ForwardBoundary boundary = invoke(request, response, ForwardBoundary.class);
         Assert.assertEquals("/WEB-INF/views/protect/knowledge/edit.jsp", PropertyUtil.getPrivateFeildOnReflection(String.class, boundary, "path"));
@@ -162,8 +162,8 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 101)
     public void testCPAfterPost() throws Exception {
-        assertCP(INTEGRATION_TEST_USER_01, 0);
-        assertCP(INTEGRATION_TEST_USER_02, 50);
+        assertCP(COMMENT_POST_USER, 0);
+        assertCP(KNOWLEDGE_POST_USER, 50);
         assertKnowledgeCP(null, knowledgeId, 50);
     }
     
@@ -201,7 +201,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Order(order = 103)
     public void testAccessListByLoginedUser2() throws Exception {
         // 一覧表示画面を開き、
-        StubHttpServletRequest request = openKnowledges(INTEGRATION_TEST_USER_01);
+        StubHttpServletRequest request = openKnowledges(COMMENT_POST_USER);
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         Assert.assertNotNull(knowledges);
         Assert.assertEquals(1, knowledges.size());
@@ -211,7 +211,7 @@ public class IntegrationPostTest extends IntegrationCommon {
         Assert.assertEquals(KnowledgeLogic.PUBLIC_FLAG_PUBLIC, knowledge.getPublicFlag().intValue());
         
         // 詳細表示
-        request = openKnowledge(INTEGRATION_TEST_USER_01, knowledgeId);
+        request = openKnowledge(COMMENT_POST_USER, knowledgeId);
         Assert.assertEquals("タイトル", request.getAttribute("title"));
         Assert.assertEquals("<p>内容</p>\n", request.getAttribute("content")); // Markdownが処理されている
         Assert.assertEquals(KnowledgeLogic.PUBLIC_FLAG_PUBLIC, request.getAttribute("publicFlag"));
@@ -224,9 +224,9 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 104)
     public void testCPAfterRead() throws Exception {
-        assertCP(INTEGRATION_TEST_USER_01, 1);
-        assertCP(INTEGRATION_TEST_USER_02, 1);
-        assertKnowledgeCP(INTEGRATION_TEST_USER_01, knowledgeId, 1);
+        assertCP(COMMENT_POST_USER, 1);
+        assertCP(KNOWLEDGE_POST_USER, 1);
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 1);
     }
     
     /**
@@ -237,7 +237,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Order(order = 105)
     public void testReAccessListByLoginedUser2() throws Exception {
         // 一覧表示画面を開き、
-        StubHttpServletRequest request = openKnowledges(INTEGRATION_TEST_USER_01);
+        StubHttpServletRequest request = openKnowledges(COMMENT_POST_USER);
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         Assert.assertNotNull(knowledges);
         Assert.assertEquals(1, knowledges.size());
@@ -247,7 +247,7 @@ public class IntegrationPostTest extends IntegrationCommon {
         Assert.assertEquals(KnowledgeLogic.PUBLIC_FLAG_PUBLIC, knowledge.getPublicFlag().intValue());
         
         // 詳細表示
-        request = openKnowledge(INTEGRATION_TEST_USER_01, knowledgeId);
+        request = openKnowledge(COMMENT_POST_USER, knowledgeId);
         Assert.assertEquals("タイトル", request.getAttribute("title"));
         Assert.assertEquals("<p>内容</p>\n", request.getAttribute("content")); // Markdownが処理されている
         Assert.assertEquals(KnowledgeLogic.PUBLIC_FLAG_PUBLIC, request.getAttribute("publicFlag"));
@@ -261,9 +261,9 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 106)
     public void testCPAfterReRead() throws Exception {
-        assertCP(INTEGRATION_TEST_USER_01, 0); // 変化無し
-        assertCP(INTEGRATION_TEST_USER_02, 0); // 変化無し
-        assertKnowledgeCP(INTEGRATION_TEST_USER_01, knowledgeId, 0);
+        assertCP(COMMENT_POST_USER, 0); // 変化無し
+        assertCP(KNOWLEDGE_POST_USER, 0); // 変化無し
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0);
     }
     
     
@@ -274,7 +274,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 200)
     public void testNothingNotificationByLoginedUser1() throws Exception {
-        assertNotificationCount(INTEGRATION_TEST_USER_01, 0);
+        assertNotificationCount(COMMENT_POST_USER, 0);
     }
     /**
      * ログインユーザ2で、通知の確認(未だ何も届いていない）
@@ -283,7 +283,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 201)
     public void testNothingNotificationByLoginedUser2() throws Exception {
-        assertNotificationCount(INTEGRATION_TEST_USER_02, 0);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 0);
     }
     
     /**
@@ -303,7 +303,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 203)
     public void testNotificationByLoginedUser1() throws Exception {
-        assertNotificationCount(INTEGRATION_TEST_USER_01, 1);
+        assertNotificationCount(COMMENT_POST_USER, 1);
     }
 
     /**
@@ -314,7 +314,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 204)
     public void testNotificationByLoginedUser2() throws Exception {
-        assertNotificationCount(INTEGRATION_TEST_USER_02, 1);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
     }
     
     /**
@@ -324,8 +324,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 300)
     public void testLikeByNoLoginUser() throws Exception {
-        LikeCount like = like(null, knowledgeId);
-        Assert.assertEquals((long) 1, like.getCount().longValue());
+        addLike(null, knowledgeId);
     }
     /**
      * CPの確認（ユーザ1と2）
@@ -334,9 +333,9 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 301)
     public void testCPAfterLikeNotLogin() throws Exception {
-        assertCP(INTEGRATION_TEST_USER_01, 0); // 変化無し
-        assertCP(INTEGRATION_TEST_USER_02, 0); // 変化無し
-        assertKnowledgeCP(INTEGRATION_TEST_USER_01, knowledgeId, 0);
+        assertCP(COMMENT_POST_USER, 0); // 変化無し
+        assertCP(KNOWLEDGE_POST_USER, 0); // 変化無し
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0);
     }
     
     /**
@@ -347,8 +346,8 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Order(order = 302)
     public void testNotificationAfterLikeByAnonymous() throws Exception {
         execNotificationQueue();
-        assertNotificationCount(INTEGRATION_TEST_USER_01, 0);
-        assertNotificationCount(INTEGRATION_TEST_USER_02, 1);
+        assertNotificationCount(COMMENT_POST_USER, 0);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
     }
     
     
@@ -359,8 +358,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 303)
     public void testLikeByLoginUser1() throws Exception {
-        LikeCount like = like(INTEGRATION_TEST_USER_01, knowledgeId);
-        Assert.assertEquals((long) 2, like.getCount().longValue());
+        addLike(COMMENT_POST_USER, knowledgeId);
     }
     
     /**
@@ -370,9 +368,9 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 304)
     public void testCPAfterLikeLogined() throws Exception {
-        assertCP(INTEGRATION_TEST_USER_01, 2); // +2
-        assertCP(INTEGRATION_TEST_USER_02, 10); // +10
-        assertKnowledgeCP(INTEGRATION_TEST_USER_01, knowledgeId, 10);
+        assertCP(COMMENT_POST_USER, 2); // +2
+        assertCP(KNOWLEDGE_POST_USER, 10); // +10
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 10);
     }
     
     
@@ -384,8 +382,8 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Order(order = 305)
     public void testNotificationAfterLikeByUser1() throws Exception {
         execNotificationQueue();
-        assertNotificationCount(INTEGRATION_TEST_USER_01, 0);
-        assertNotificationCount(INTEGRATION_TEST_USER_02, 1);
+        assertNotificationCount(COMMENT_POST_USER, 0);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
     }
     
     
@@ -396,8 +394,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 306)
     public void testLikeByLoginUser2() throws Exception {
-        LikeCount like = like(INTEGRATION_TEST_USER_02, knowledgeId);
-        Assert.assertEquals((long) 3, like.getCount().longValue());
+        addLike(KNOWLEDGE_POST_USER, knowledgeId);
     }
     
     /**
@@ -407,9 +404,9 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 307)
     public void testCPAfterLikeLogined2() throws Exception {
-        assertCP(INTEGRATION_TEST_USER_01, 0); // 変化無し
-        assertCP(INTEGRATION_TEST_USER_02, 2); // 自分で押しても +10 はつかない / アクション起こした +2 はつく
-        assertKnowledgeCP(INTEGRATION_TEST_USER_01, knowledgeId, 0);
+        assertCP(COMMENT_POST_USER, 0); // 変化無し
+        assertCP(KNOWLEDGE_POST_USER, 2); // 自分で押しても +10 はつかない / アクション起こした +2 はつく
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0);
     }
     
     /**
@@ -420,8 +417,8 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Order(order = 308)
     public void testNotificationAfterLikeByUser2() throws Exception {
         execNotificationQueue();
-        assertNotificationCount(INTEGRATION_TEST_USER_01, 0);
-        assertNotificationCount(INTEGRATION_TEST_USER_02, 1);
+        assertNotificationCount(COMMENT_POST_USER, 0);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
     }
     
     /**
@@ -435,101 +432,90 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 309)
     public void testReLikeByLoginUser1() throws Exception {
-        LikeCount like = like(INTEGRATION_TEST_USER_01, knowledgeId);
-        Assert.assertEquals((long) 4, like.getCount().longValue());
+        addLike(COMMENT_POST_USER, knowledgeId);
         
-        assertCP(INTEGRATION_TEST_USER_01, 0); // 変化無し
-        assertCP(INTEGRATION_TEST_USER_02, 0); // 変化無し
-        assertKnowledgeCP(INTEGRATION_TEST_USER_01, knowledgeId, 0); // 変化無し
+        assertCP(COMMENT_POST_USER, 0); // 変化無し
+        assertCP(KNOWLEDGE_POST_USER, 0); // 変化無し
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0); // 変化無し
 
         execNotificationQueue();
-        assertNotificationCount(INTEGRATION_TEST_USER_01, 0);
-        assertNotificationCount(INTEGRATION_TEST_USER_02, 1);
+        assertNotificationCount(COMMENT_POST_USER, 0);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
     }
     
     
     /**
-     * ログインユーザ1にて、コメント追加
+     * コメント登録者でコメント登録
      * @throws Exception
      */
     @Test
     @Order(order = 400)
     public void testPostCommentByLoginUser1() throws Exception {
         // コメントが登録されていないこと
-        StubHttpServletRequest request = openKnowledge(INTEGRATION_TEST_USER_01, knowledgeId);
+        StubHttpServletRequest request = openKnowledge(COMMENT_POST_USER, knowledgeId);
         List<CommentsEntity> comments = (List<CommentsEntity>) request.getAttribute("comments");
         Assert.assertEquals(0, comments.size()); // 閲覧者にもデフォルト通知（初期設定）
         
         // コメントが登録できること
-        comment(INTEGRATION_TEST_USER_01, knowledgeId, "コメント");
+        comment(COMMENT_POST_USER, knowledgeId, "コメント");
         
         // CP確認
-        assertCP(INTEGRATION_TEST_USER_01, 20); // コメント追加者 +20
-        assertCP(INTEGRATION_TEST_USER_02, 0); // コメントを追加した記事の作者は変化無し
-        assertKnowledgeCP(INTEGRATION_TEST_USER_01, knowledgeId, 20); // +20
+        assertCP(COMMENT_POST_USER, 20); // コメント追加者 +20
+        assertCP(KNOWLEDGE_POST_USER, 0); // コメントを追加した記事の作者は変化無し
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 20); // +20
         
         // 通知の確認
         execNotificationQueue();
-        assertNotificationCount(INTEGRATION_TEST_USER_01, 1);
-        assertNotificationCount(INTEGRATION_TEST_USER_02, 1);
+        assertNotificationCount(COMMENT_POST_USER, 1);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
         
         // コメントが登録されていないこと
-        request = openKnowledge(INTEGRATION_TEST_USER_01, knowledgeId);
+        request = openKnowledge(COMMENT_POST_USER, knowledgeId);
         comments = (List<CommentsEntity>) request.getAttribute("comments");
         Assert.assertEquals(1, comments.size()); // 閲覧者にもデフォルト通知（初期設定）
     }
 
     
     /**
-     * ログインユーザ2でコメントにいいね
+     * コメント登録者のコメントに、記事登録者がイイネを押す
      * @throws Exception
      */
     @Test
     @Order(order = 401)
     public void testLikeCommentByLoginUser2() throws Exception {
-        StubHttpServletRequest request = openKnowledge(INTEGRATION_TEST_USER_02, knowledgeId);
-        List<CommentsEntity> comments = (List<CommentsEntity>) request.getAttribute("comments");
-        CommentsEntity comment = comments.get(0);
+        addLatestLikeComment(KNOWLEDGE_POST_USER, knowledgeId);
         
-        LikeCount like = likeComment(INTEGRATION_TEST_USER_02, knowledgeId, comment.getCommentNo());
-        Assert.assertEquals((long) 1, like.getCount().longValue());
-        
-        assertCP(INTEGRATION_TEST_USER_01, 10); // +10
-        assertCP(INTEGRATION_TEST_USER_02, 2); // +2(押した)
-        assertKnowledgeCP(INTEGRATION_TEST_USER_01, knowledgeId, 0); // ユーザ2は記事の作者なので、作者が押してもポイントは増えない（コメントであっても）
+        assertCP(COMMENT_POST_USER, 10); // +10
+        assertCP(KNOWLEDGE_POST_USER, 2); // +2(押した)
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0); // ユーザ2は記事の作者なので、作者が押してもポイントは増えない（コメントであっても）
 
         execNotificationQueue();
-        assertNotificationCount(INTEGRATION_TEST_USER_01, 1); // コメント登録者に通知
-        assertNotificationCount(INTEGRATION_TEST_USER_02, 0);
+        assertNotificationCount(COMMENT_POST_USER, 1); // コメント登録者に通知
+        assertNotificationCount(KNOWLEDGE_POST_USER, 0);
     }
 
 
     /**
-     * ログインユーザ3でコメントにいいね
+     * コメント登録者のコメントに、参照ユーザがイイネを押す
      * @throws Exception
      */
     @Test
     @Order(order = 402)
     public void testLikeCommentByLoginUser3() throws Exception {
-        StubHttpServletRequest request = openKnowledge(INTEGRATION_TEST_USER_03, knowledgeId);
-        List<CommentsEntity> comments = (List<CommentsEntity>) request.getAttribute("comments");
-        CommentsEntity comment = comments.get(0);
+        addLatestLikeComment(READ_USER, knowledgeId);
         
-        LikeCount like = likeComment(INTEGRATION_TEST_USER_03, knowledgeId, comment.getCommentNo());
-        Assert.assertEquals((long) 2, like.getCount().longValue());
-        
-        assertCP(INTEGRATION_TEST_USER_01, 10); // +10
-        assertCP(INTEGRATION_TEST_USER_02, 1); // 参照
-        assertKnowledgeCP(INTEGRATION_TEST_USER_01, knowledgeId, 11); // イイネ + ユーザ3での参照
+        assertCP(COMMENT_POST_USER, 10); // +10
+        assertCP(KNOWLEDGE_POST_USER, 1); // 参照
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 11); // イイネ + ユーザ3での参照
 
         execNotificationQueue();
-        assertNotificationCount(INTEGRATION_TEST_USER_01, 1); // コメント登録者に通知
-        assertNotificationCount(INTEGRATION_TEST_USER_02, 0);
+        assertNotificationCount(COMMENT_POST_USER, 1); // コメント登録者に通知
+        assertNotificationCount(KNOWLEDGE_POST_USER, 0);
     }
 
 
     /**
-     * ログインユーザ1でコメントにいいね(登録者)
+     * コメント登録者のコメントに、自分自身でイイネを押す
      * 
      * TODO コメントの場合、いいねを作者が押すと、アクションポイント(+2)がつかない？
      * TODO 自分のコメントであっても、記事の作者と違うので、記事にポイント(+10)がつくがおかしくない？
@@ -540,48 +526,128 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Test
     @Order(order = 403)
     public void testLikeCommentByLoginUser1() throws Exception {
-        StubHttpServletRequest request = openKnowledge(INTEGRATION_TEST_USER_01, knowledgeId);
-        List<CommentsEntity> comments = (List<CommentsEntity>) request.getAttribute("comments");
-        CommentsEntity comment = comments.get(0);
+        addLatestLikeComment(COMMENT_POST_USER, knowledgeId);
         
-        LikeCount like = likeComment(INTEGRATION_TEST_USER_01, knowledgeId, comment.getCommentNo());
-        Assert.assertEquals((long) 3, like.getCount().longValue());
-        
-        assertCP(INTEGRATION_TEST_USER_01, 0); // ポイントつかない？
-        assertCP(INTEGRATION_TEST_USER_02, 0); 
-        assertKnowledgeCP(INTEGRATION_TEST_USER_01, knowledgeId, 10);
+        assertCP(COMMENT_POST_USER, 0); // ポイントつかない？
+        assertCP(KNOWLEDGE_POST_USER, 0); 
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 10);
 
         execNotificationQueue();
-        assertNotificationCount(INTEGRATION_TEST_USER_01, 1); // コメント登録者に通知
-        assertNotificationCount(INTEGRATION_TEST_USER_02, 0);
+        assertNotificationCount(COMMENT_POST_USER, 1); // コメント登録者に通知
+        assertNotificationCount(KNOWLEDGE_POST_USER, 0);
     }
     
 
     /**
-     * 未ログインユーザでコメントにいいね
-     * 
+     * コメント登録者のコメントに、未ログインユーザがイイネを押す
      * 未ログインユーザの場合ポイントつかない
-     * 
      * @throws Exception
      */
     @Test
     @Order(order = 404)
     public void testLikeCommentByAnonymous() throws Exception {
-        StubHttpServletRequest request = openKnowledge(null, knowledgeId);
-        List<CommentsEntity> comments = (List<CommentsEntity>) request.getAttribute("comments");
-        CommentsEntity comment = comments.get(0);
-        LikeCount like = likeComment(null, knowledgeId, comment.getCommentNo());
-        Assert.assertEquals((long) 4, like.getCount().longValue());
+        addLatestLikeComment(null, knowledgeId);
         
-        assertCP(INTEGRATION_TEST_USER_01, 0);
-        assertCP(INTEGRATION_TEST_USER_02, 0); 
-        assertKnowledgeCP(INTEGRATION_TEST_USER_01, knowledgeId, 0);
+        assertCP(COMMENT_POST_USER, 0);
+        assertCP(KNOWLEDGE_POST_USER, 0); 
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0);
 
         execNotificationQueue();
-        assertNotificationCount(INTEGRATION_TEST_USER_01, 1); // コメント登録者に通知
-        assertNotificationCount(INTEGRATION_TEST_USER_02, 0);
+        assertNotificationCount(COMMENT_POST_USER, 1); // コメント登録者に通知
+        assertNotificationCount(KNOWLEDGE_POST_USER, 0);
     }
     
+    /**
+     * 記事登録者が自分自身の記事にコメント追加
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 500)
+    public void testPostCommentByLoginUser2() throws Exception {
+        // コメントが登録できること
+        comment(KNOWLEDGE_POST_USER, knowledgeId, "コメント");
+        
+        // CP確認
+        assertCP(COMMENT_POST_USER, 0);
+        assertCP(KNOWLEDGE_POST_USER, 20);
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 20); // +20
+        
+        // 通知の確認
+        execNotificationQueue();
+        assertNotificationCount(COMMENT_POST_USER, 1);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
+    }
+    
+    /**
+     * 記事登録者が登録したコメントに、コメント登録者がイイネを押す
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 501)
+    public void testLikeCommentByCommentUserToKnowledgeUser() throws Exception {
+        addLatestLikeComment(COMMENT_POST_USER, knowledgeId);
+        
+        assertCP(COMMENT_POST_USER, 2);
+        assertCP(KNOWLEDGE_POST_USER, 10); 
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 10);
+
+        execNotificationQueue();
+        assertNotificationCount(COMMENT_POST_USER, 0);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
+    }
+    /**
+     * 記事登録者が登録したコメントに、自分自身でイイネを押す
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 502)
+    public void testLikeCommentByKnowledgeUserToKnowledgeUser() throws Exception {
+        addLatestLikeComment(KNOWLEDGE_POST_USER, knowledgeId);
+        
+        assertCP(COMMENT_POST_USER, 0);
+        assertCP(KNOWLEDGE_POST_USER, 0); // アクションポイントもつかない？
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0);
+
+        execNotificationQueue();
+        assertNotificationCount(COMMENT_POST_USER, 0);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
+    }
+
+    /**
+     * 記事登録者が登録したコメントに、参照ユーザでイイネを押す
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 503)
+    public void testLikeCommentByReadUserToKnowledgeUser() throws Exception {
+        addLatestLikeComment(READ_USER, knowledgeId);
+        
+        assertCP(COMMENT_POST_USER, 0);
+        assertCP(KNOWLEDGE_POST_USER, 10);
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 10);
+
+        execNotificationQueue();
+        assertNotificationCount(COMMENT_POST_USER, 0);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
+    }
+    
+    /**
+     * 記事登録者が登録したコメントに、未ログインユーザでイイネを押す
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 504)
+    public void testLikeCommentByNotLoginToKnowledgeUser() throws Exception {
+        addLatestLikeComment(null, knowledgeId);
+        
+        assertCP(COMMENT_POST_USER, 0);
+        assertCP(KNOWLEDGE_POST_USER, 0);
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0);
+
+        execNotificationQueue();
+        assertNotificationCount(COMMENT_POST_USER, 0);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
+    }
     
 
 }

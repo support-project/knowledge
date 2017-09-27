@@ -32,7 +32,7 @@ public class KnowledgesControl extends ApiControl {
     /** ログ */
     private static Log LOG = LogFactory.getLog(ControlManagerFilter.class);
     
-    @Get(path="api/knowledges")
+    @Get(path="api/knowledges", publishToken="")
     public Boundary index() {
         return get();
     }
@@ -71,7 +71,7 @@ public class KnowledgesControl extends ApiControl {
     /**
      * Post knowledges
      */
-    @Post(path="api/knowledges", checkReferer=false)
+    @Post(path="api/knowledges", checkReferer=false, subscribeToken="")
     public Boundary post() {
         try {
             KnowledgeDetail data = getJsonObject(KnowledgeDetail.class);
@@ -91,7 +91,7 @@ public class KnowledgesControl extends ApiControl {
     /**
      * Put knowledges
      */
-    @Put(path="api/knowledges", checkReferer=false)
+    @Put(path="api/knowledges", checkReferer=false, subscribeToken="")
     public Boundary put() {
         try {
             Long id = getPathLong();
@@ -114,7 +114,7 @@ public class KnowledgesControl extends ApiControl {
     /**
      * Delete knowledges
      */
-    @Delete(path="api/knowledges", checkReferer=false)
+    @Delete(path="api/knowledges", checkReferer=false, subscribeToken="")
     public Boundary delete() {
         try {
             Long id = getPathLong();

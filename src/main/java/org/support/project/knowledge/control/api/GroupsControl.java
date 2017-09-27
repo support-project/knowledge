@@ -22,14 +22,13 @@ import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.ApiControl;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.entity.GroupsEntity;
-import org.support.project.web.entity.UsersEntity;
 
 @DI(instance = Instance.Prototype)
 public class GroupsControl extends ApiControl {
     /**
      * List groups
      */
-    @Get(path="api/groups")
+    @Get(path="api/groups", publishToken="")
     public Boundary index() {
         return get();
     }
