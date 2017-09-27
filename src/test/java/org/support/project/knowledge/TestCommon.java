@@ -5,25 +5,42 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.ja.JapaneseAnalyzer;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.support.project.common.config.ConfigLoader;
+import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.exception.SerializeException;
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
 import org.support.project.common.logic.H2DBServerLogic;
 import org.support.project.common.serialize.SerializeUtils;
 import org.support.project.common.test.OrderedRunner;
-import org.support.project.common.util.FileUtil;
+import org.support.project.common.test.TestWatcher;
 import org.support.project.common.util.RandomUtil;
+import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
+import org.support.project.knowledge.logic.UserLogicEx;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
+import org.support.project.ormapping.common.IDGen;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.ormapping.tool.config.ORmappingToolConfig;
 import org.support.project.web.bean.LoginedUser;
@@ -45,6 +62,9 @@ import org.support.project.web.entity.UsersEntity;
  */
 @RunWith(OrderedRunner.class)
 public abstract class TestCommon {
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(TestCommon.class);
+
     public static final String KNOWLEDGE_TEST_HOME = "KNOWLEDGE_TEST_HOME";
     /** login user for test */
     public static LoginedUser loginedUser = null;
@@ -62,6 +82,8 @@ public abstract class TestCommon {
     /** login user for test */
     public static LoginedUser groupuser2 = null;
     
+    @Rule
+    public TestWatcher watchman = new TestWatcher();
     
     /**
      * @BeforeClass
@@ -118,6 +140,7 @@ public abstract class TestCommon {
      * @throws Exception
      */
     public static void initData() throws Exception {
+        LOG.info("init data");
         loginedUser = new LoginedUser();
         loginedUser2 = new LoginedUser();
         loginedUser3 = new LoginedUser();
@@ -140,9 +163,22 @@ public abstract class TestCommon {
         InitDB.main(new String[0]);
         
         // 全文検索エンジンのインデックスの消去
+        Analyzer analyzer = new JapaneseAnalyzer();
         AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
         File indexDir = new File(appConfig.getIndexPath());
-        FileUtil.delete(indexDir);
+        Directory dir = FSDirectory.open(indexDir);
+        IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_2, analyzer);
+        iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
+        IndexWriter writer = null;
+        try {
+            writer = new IndexWriter(dir, iwc);
+            writer.deleteAll();
+            writer.commit();
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
+        }
         
         Integer[] rolesAdmin = {1}; // 2はユーザ、1はAdmin
         Integer[] roles = {2}; // 2はユーザ、1はAdmin
@@ -172,12 +208,14 @@ public abstract class TestCommon {
     
     /**
      * テストユーザの情報を生成
+     * 直接ユーザテーブルにデータを入れているため、通知設定などが設定されない
+     * 古いテスト用（現在は使わないこと）
      * @param user
      * @param userName
      * @param roleIds
      * @return
      */
-    protected static List<RolesEntity> addUser(LoginedUser user, String userName, Integer[] roleIds) {
+    private static List<RolesEntity> addUser(LoginedUser user, String userName, Integer[] roleIds) {
         // テスト用のユーザを登録
         UsersEntity entity = new UsersEntity();
         entity.setUserKey(RandomUtil.randamGen(64));
@@ -198,17 +236,83 @@ public abstract class TestCommon {
         user.setRoles(rolesEntities);
         return rolesEntities;
     }
-
+    /**
+     * ナレッジを登録
+     * @param title
+     * @param loginedUser
+     * @return
+     * @throws Exception
+     */
     protected KnowledgesEntity insertKnowledge(String title, LoginedUser loginedUser) throws Exception {
+        int publicFlag = KnowledgeLogic.PUBLIC_FLAG_PUBLIC;
+        int typeId = TemplateLogic.TYPE_ID_KNOWLEDGE;
+        return insertKnowledge(title, loginedUser, typeId, publicFlag);
+    }
+    protected KnowledgesEntity insertKnowledge(String title, LoginedUser loginedUser, int typeId, int publicFlag) throws Exception {
+        String viewersStr = "";
+        return insertKnowledge(title, loginedUser, typeId, publicFlag, viewersStr);
+    }
+    protected KnowledgesEntity insertKnowledge(String title, LoginedUser loginedUser, int typeId, int publicFlag, String viewersStr) throws Exception {
         KnowledgesEntity entity = new KnowledgesEntity();
         entity.setTitle(title);
         entity.setContent("contens of " + title);
-        entity.setTypeId(-100);
-        entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
+        entity.setTypeId(typeId);
+        entity.setPublicFlag(publicFlag);
         KnowledgeData data = new KnowledgeData();
         data.setKnowledge(entity);
+        if (StringUtils.isNotEmpty(viewersStr)) {
+            data.setViewers(viewersStr);
+        }
         entity = KnowledgeLogic.get().insert(data, loginedUser);
         return entity;
     }
     
+    /**
+     * ユーザの登録
+     * @param userKey
+     * @return
+     */
+    protected UsersEntity addUser(String userKey) {
+        UsersEntity user = new UsersEntity();
+        user.setAuthLdap(INT_FLAG.OFF.getValue());
+        user.setEncrypted(false);
+        user.setUserKey(userKey);
+        user.setLocaleKey(Locale.JAPAN.toString());
+        user.setMailAddress("test@example.com");
+        user.setUserName("Integration Test User 01");
+        user.setPassword(IDGen.get().gen("hoge"));
+        String[] roles = {"user"};
+        user = UserLogicEx.get().insert(user, roles);
+        
+        UsersEntity check = UsersDao.get().selectOnUserKey(user.getUserKey());
+        Assert.assertNotNull(check);
+        Assert.assertEquals(user.getUserKey(), check.getUserKey());
+        Assert.assertEquals(user.getLocaleKey(), check.getLocaleKey());
+        Assert.assertEquals(user.getMailAddress(), check.getMailAddress());
+        Assert.assertEquals(user.getUserName(), check.getUserName());
+        
+        return user;
+    }
+    /**
+     * 登録されているユーザのログインユーザ情報を取得
+     * @param userKey
+     * @return
+     */
+    protected LoginedUser getLoginUser(String userKey) {
+        UsersDao usersDao = UsersDao.get();
+        UsersEntity usersEntity = usersDao.selectOnUserKey(userKey);
+        RolesDao rolesDao = RolesDao.get();
+        List<RolesEntity> rolesEntities = rolesDao.selectOnUserKey(userKey);
+
+        LoginedUser loginedUser = new LoginedUser();
+        loginedUser.setLoginUser(usersEntity);
+        loginedUser.setRoles(rolesEntities);
+        loginedUser.setLocale(usersEntity.getLocale());
+
+        // グループ
+        GroupsDao groupsDao = GroupsDao.get();
+        List<GroupsEntity> groups = groupsDao.selectMyGroup(loginedUser, 0, Integer.MAX_VALUE);
+        loginedUser.setGroups(groups);
+        return loginedUser;
+   }
 }

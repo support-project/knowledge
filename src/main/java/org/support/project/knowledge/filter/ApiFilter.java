@@ -14,6 +14,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.knowledge.dao.TokensDao;
@@ -90,7 +91,7 @@ public class ApiFilter implements Filter {
             res.sendError(HttpStatus.SC_403_FORBIDDEN);
             return;
         }
-        Date now = new Date();
+        Date now = DateUtils.now();
         if (now.getTime() > tokensEntity.getExpires().getTime()) {
             res.sendError(HttpStatus.SC_403_FORBIDDEN);
             return;

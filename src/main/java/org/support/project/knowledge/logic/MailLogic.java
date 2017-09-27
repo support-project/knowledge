@@ -312,7 +312,7 @@ public class MailLogic {
         // メールの形式を指定
         // mimeMessage.setHeader( "Content-Type", "text/html" );
         // 送信日付を指定
-        mimeMessage.setSentDate(new Date());
+        mimeMessage.setSentDate(DateUtils.now());
 
         Transport.send(mimeMessage);
         LOG.debug("Mail sended.");
@@ -327,7 +327,7 @@ public class MailLogic {
         StringBuilder builder = new StringBuilder();
         builder.append(label);
         builder.append("-");
-        builder.append(DateUtils.getSimpleFormat().format(new Date()));
+        builder.append(DateUtils.getSimpleFormat().format(DateUtils.now()));
         builder.append("-");
         builder.append(UUID.randomUUID().toString());
         return builder.toString();

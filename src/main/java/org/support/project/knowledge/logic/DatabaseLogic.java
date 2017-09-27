@@ -44,7 +44,7 @@ public class DatabaseLogic {
     public FileInputStreamWithDeleteWrapper getData() throws IOException {
         AppConfig config = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
         File tmpDir = new File(config.getTmpPath());
-        String name = "knowledge-" + DateUtils.formatTransferDateTime(new Date()) + ".zip";
+        String name = "knowledge-" + DateUtils.formatTransferDateTime(DateUtils.now()) + ".zip";
         File tmp = new File(tmpDir, name);
 
         BufferedOutputStream output = null;
@@ -81,7 +81,7 @@ public class DatabaseLogic {
         List<ValidateError> errors = new ArrayList<ValidateError>();
         AppConfig config = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
         File tmpDir = new File(config.getTmpPath());
-        String name = "knowledge-restore-" + DateUtils.formatTransferDateTime(new Date()) + "";
+        String name = "knowledge-restore-" + DateUtils.formatTransferDateTime(DateUtils.now()) + "";
         File tmp = new File(tmpDir, name);
         if (tmp.exists() && !tmp.isDirectory()) {
             errors.add(new ValidateError("knowledge.data.label.msg.fail"));

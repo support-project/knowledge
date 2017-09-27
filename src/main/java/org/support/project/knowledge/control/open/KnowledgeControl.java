@@ -11,6 +11,7 @@ import java.util.Map;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -218,7 +219,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(entity, loginedUser);
         setAttribute("stocks", stocks);
         
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, getLoginedUser(), new Date(), entity);
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, getLoginedUser(), DateUtils.now(), entity);
         long point = KnowledgesDao.get().selectPoint(entity.getKnowledgeId());
         setAttribute("point", point);
         
@@ -657,7 +658,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException
      */
-    @Post
+    @Post(subscribeToken="knowledge")
     public Boundary like() throws InvalidParamException {
         Long knowledgeId = super.getPathLong(Long.valueOf(-1));
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
@@ -666,7 +667,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         likeCount.setKnowledgeId(knowledgeId);
         likeCount.setCount(count);
         
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, getLoginedUser(), new Date(),
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, getLoginedUser(), DateUtils.now(),
                 KnowledgesDao.get().selectOnKey(knowledgeId));
         return send(likeCount);
     }
@@ -675,7 +676,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws InvalidParamException 
      */
-    @Post
+    @Post(subscribeToken="knowledge")
     public Boundary likecomment() throws InvalidParamException {
         Long commentNo = super.getPathLong(Long.valueOf(-1));
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
@@ -683,7 +684,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LikeCount likeCount = new LikeCount();
         likeCount.setCount(count);
         
-        ActivityLogic.get().processActivity(Activity.COMMENT_LIKE, getLoginedUser(), new Date(),
+        ActivityLogic.get().processActivity(Activity.COMMENT_LIKE, getLoginedUser(), DateUtils.now(),
                 CommentsDao.get().selectOnKey(commentNo));
         return send(likeCount);
     }

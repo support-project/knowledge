@@ -14,7 +14,7 @@ public class AttachControl extends ApiControl {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(AttachControl.class);
 
-    @Get(path="api/attachments")
+    @Get(path="api/attachments", publishToken="")
     public Boundary index() {
         return get();
     }

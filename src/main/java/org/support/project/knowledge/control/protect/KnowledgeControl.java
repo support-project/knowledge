@@ -3,7 +3,6 @@ package org.support.project.knowledge.control.protect;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +12,7 @@ import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
@@ -214,7 +214,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LOG.trace("save");
 
         KnowledgesEntity insertedEntity = knowledgeLogic.insert(data, super.getLoginedUser());
-        ActivityLogic.get().processKnowledgeSaveActivity(getLoginedUser(), new Date(), insertedEntity);
+        ActivityLogic.get().processKnowledgeSaveActivity(getLoginedUser(), DateUtils.now(), insertedEntity);
         
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
                 String.valueOf(insertedEntity.getKnowledgeId()), "message.success.insert");
@@ -310,7 +310,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
         
         KnowledgesEntity updatedEntity = knowledgeLogic.update(data, super.getLoginedUser());
-        ActivityLogic.get().processKnowledgeSaveActivity(getLoginedUser(), new Date(), updatedEntity);
+        ActivityLogic.get().processKnowledgeSaveActivity(getLoginedUser(), DateUtils.now(), updatedEntity);
         
         if (data.isUpdateContent()) {
             return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
@@ -494,7 +494,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
 
         CommentsEntity commentsEntity = KnowledgeLogic.get().saveComment(knowledgeId, comment, fileNos, getLoginedUser());
-        ActivityLogic.get().processActivity(Activity.COMMENT_INSERT, getLoginedUser(), new Date(), commentsEntity);
+        ActivityLogic.get().processActivity(Activity.COMMENT_INSERT, getLoginedUser(), DateUtils.now(), commentsEntity);
 
         return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
     }
@@ -734,7 +734,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 dao.physicalDelete(entity);
             }
         }
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_STOCK, getLoginedUser(), new Date(),
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_STOCK, getLoginedUser(), DateUtils.now(),
                 KnowledgesDao.get().selectOnKey(knowledgeId));
         
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, "saved", "message.success.save");

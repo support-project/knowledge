@@ -3,7 +3,6 @@ package org.support.project.knowledge.logic;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -141,7 +140,7 @@ public class AccountLogic {
         UploadFile file = new UploadFile();
         file.setFileNo(new Long(entity.getUserId()));
         file.setUrl(context + "/open.account/icon/" + entity.getUserId());
-        file.setThumbnailUrl(context + "/open.account/icon/" + entity.getUserId() + "?t=" + new Date().getTime());
+        file.setThumbnailUrl(context + "/open.account/icon/" + entity.getUserId() + "?t=" + DateUtils.now().getTime());
         file.setName(entity.getFileName());
         file.setType("-");
         file.setSize(entity.getFileSize());
@@ -203,7 +202,7 @@ public class AccountLogic {
         StringBuilder builder = new StringBuilder();
         builder.append(label);
         builder.append("-");
-        builder.append(DateUtils.getTransferDateFormat().format(new Date()));
+        builder.append(DateUtils.getTransferDateFormat().format(DateUtils.now()));
         builder.append("-");
         builder.append(UUID.randomUUID().toString());
         builder.append("-");

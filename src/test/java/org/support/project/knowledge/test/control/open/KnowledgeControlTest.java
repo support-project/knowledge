@@ -1,4 +1,4 @@
-package org.support.project.knowledge.control.open;
+package org.support.project.knowledge.test.control.open;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ import org.support.project.common.test.Order;
 import org.support.project.common.test.TestCase;
 import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.control.open.KnowledgeControl;
 import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.test.stub.ControlContainer;
 import org.support.project.web.test.stub.StubCookie;

@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.common.validate.Validator;
 import org.support.project.common.validate.ValidatorFactory;
@@ -83,7 +84,7 @@ public class SignupControl extends Control {
             ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
             List<ProvisionalRegistrationsEntity> check = dao.selectOnUserKey(getParam("userKey"));
             if (!check.isEmpty()) {
-                long now = new Date().getTime();
+                long now = DateUtils.now().getTime();
                 for (ProvisionalRegistrationsEntity entity : check) {
                     if (now - entity.getInsertDatetime().getTime() > 1000 * 60 * 60) {
                         // 無効なものなので、削除
@@ -134,7 +135,7 @@ public class SignupControl extends Control {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     private ProvisionalRegistrationsEntity addProvisionalRegistration() {
         ProvisionalRegistrationsEntity entity = super.getParams(ProvisionalRegistrationsEntity.class);
-        String id = UUID.randomUUID().toString() + "-" + new Date().getTime() + "-" + UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString() + "-" + DateUtils.now() + "-" + UUID.randomUUID().toString();
         entity.setId(id);
         ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
         // 既に仮登録が行われたユーザ(メールアドレス)でも、再度仮登録できる
@@ -212,7 +213,7 @@ public class SignupControl extends Control {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
         }
 
-        long now = new Date().getTime();
+        long now = DateUtils.now().getTime();
         if (now - entity.getInsertDatetime().getTime() > 1000 * 60 * 60) {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
         }

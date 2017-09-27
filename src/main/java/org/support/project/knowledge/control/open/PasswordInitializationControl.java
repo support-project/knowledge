@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.common.validate.Validator;
 import org.support.project.common.validate.ValidatorFactory;
@@ -91,7 +92,7 @@ public class PasswordInitializationControl extends Control {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
         }
 
-        long now = new Date().getTime();
+        long now = DateUtils.now().getTime();
         if (now - resetsEntity.getInsertDatetime().getTime() > 1000 * 60 * 60) {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
         }
@@ -113,7 +114,7 @@ public class PasswordInitializationControl extends Control {
         if (resetsEntity == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
         }
-        long now = new Date().getTime();
+        long now = DateUtils.now().getTime();
         if (now - resetsEntity.getInsertDatetime().getTime() > 1000 * 60 * 60) {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
         }
