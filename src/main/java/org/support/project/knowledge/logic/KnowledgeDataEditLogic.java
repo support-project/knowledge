@@ -50,6 +50,9 @@ public class KnowledgeDataEditLogic {
         KnowledgesEntity entity = new KnowledgesEntity();
         PropertyUtil.copyPropertyValue(data, entity);
         
+        // 必須チェックエラーになるので、初期値をセット（更新時は、KnowledgeLogicのupdateの中でDBに保存されている値を保持するようにセットしなおしている）
+        entity.setPoint(0);
+        
         List<ValidateError> errors = entity.validate();
         if (errors != null && !errors.isEmpty()) {
             StringJoinBuilder<String> builder = new StringJoinBuilder<>();
@@ -100,6 +103,9 @@ public class KnowledgeDataEditLogic {
     }
     
     private String convTargets(Target viewers) {
+        if (viewers == null) {
+            return "";
+        }
         StringJoinBuilder<String> builder = new StringJoinBuilder<>();
         List<NameId> groups = viewers.getGroups();
         if (groups != null) {

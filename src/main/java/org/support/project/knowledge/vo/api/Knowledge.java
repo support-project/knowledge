@@ -1,6 +1,7 @@
 package org.support.project.knowledge.vo.api;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Knowledge {
@@ -26,7 +27,7 @@ public class Knowledge {
     private Timestamp updateDatetime;
     
     /** タグ */
-    private List<String> tags;
+    private List<String> tags = new ArrayList<>();
     
     /** テンプレート名 */
     private String template;

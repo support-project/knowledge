@@ -15,8 +15,10 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.config.INT_FLAG;
@@ -26,6 +28,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.logic.H2DBServerLogic;
 import org.support.project.common.serialize.SerializeUtils;
 import org.support.project.common.test.OrderedRunner;
+import org.support.project.common.test.TestWatcher;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
@@ -79,6 +82,8 @@ public abstract class TestCommon {
     /** login user for test */
     public static LoginedUser groupuser2 = null;
     
+    @Rule
+    public TestWatcher watchman = new TestWatcher();
     
     /**
      * @BeforeClass
@@ -277,7 +282,16 @@ public abstract class TestCommon {
         user.setUserName("Integration Test User 01");
         user.setPassword(IDGen.get().gen("hoge"));
         String[] roles = {"user"};
-        return UserLogicEx.get().insert(user, roles);
+        user = UserLogicEx.get().insert(user, roles);
+        
+        UsersEntity check = UsersDao.get().selectOnUserKey(user.getUserKey());
+        Assert.assertNotNull(check);
+        Assert.assertEquals(user.getUserKey(), check.getUserKey());
+        Assert.assertEquals(user.getLocaleKey(), check.getLocaleKey());
+        Assert.assertEquals(user.getMailAddress(), check.getMailAddress());
+        Assert.assertEquals(user.getUserName(), check.getUserName());
+        
+        return user;
     }
     /**
      * 登録されているユーザのログインユーザ情報を取得
