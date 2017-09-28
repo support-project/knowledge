@@ -30,7 +30,7 @@ public class KnowledgeEventActivity extends AbstractAddPointForKnowledgeProcesso
             return point;
         }
         // 参加者人数により増減
-        int point = 10;
+        int point = 5;
         long count = ParticipantsDao.get().selectUniqueUserCountOnKnowledgeId(getKnowledge().getKnowledgeId());
         int add = 0;
         if (count > 100) {
@@ -50,8 +50,8 @@ public class KnowledgeEventActivity extends AbstractAddPointForKnowledgeProcesso
 
     @Override
     protected Activity getActivity() {
-        LOG.debug("Start add point process on answer knowledge.");
-        return Activity.KNOWLEDGE_ANSWER;
+        LOG.debug("Start add point process on event knowledge.");
+        return Activity.KNOWLEDGE_EVENT_ADD;
     }
     @Override
     protected TypeAndPoint getTypeAndPointForActivityExecuter() {
@@ -66,9 +66,6 @@ public class KnowledgeEventActivity extends AbstractAddPointForKnowledgeProcesso
     }
     @Override
     protected TypeAndPoint getTypeAndPointForKnowledge() {
-        if (eventUser.getUserId().intValue() == getKnowledge().getInsertUser().intValue()) {
-            return null;
-        }
         return new TypeAndPoint(TYPE_KNOWLEDGE_JOINED, getPoint());
     }
 

@@ -3,7 +3,6 @@ package org.support.project.knowledge.logic;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -65,6 +64,8 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.entity.ViewHistoriesEntity;
 import org.support.project.knowledge.indexer.IndexingValue;
+import org.support.project.knowledge.logic.activity.Activity;
+import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.logic.hook.AfterSaveHook;
 import org.support.project.knowledge.logic.hook.BeforeSaveHook;
 import org.support.project.knowledge.logic.hook.HookFactory;
@@ -230,6 +231,10 @@ public class KnowledgeLogic {
         for (AfterSaveHook afterSaveHook : afterSaveHooks) {
             afterSaveHook.afterSave(data, loginedUser);
         }
+        
+        // CPの処理
+        ActivityLogic.get().processKnowledgeSaveActivity(loginedUser, DateUtils.now(), insertedEntity);
+        
         return insertedEntity;
     }
 
@@ -311,6 +316,10 @@ public class KnowledgeLogic {
         for (AfterSaveHook afterSaveHook : afterSaveHooks) {
             afterSaveHook.afterSave(data, loginedUser);
         }
+        
+        // CP
+        ActivityLogic.get().processKnowledgeSaveActivity(loginedUser, DateUtils.now(), updatedEntity);
+        
         return updatedEntity;
     }
 
@@ -1274,6 +1283,9 @@ public class KnowledgeLogic {
 
         // 通知
         NotifyLogic.get().notifyOnKnowledgeComment(knowledgeId, commentsEntity);
+        
+        //ポイント
+        ActivityLogic.get().processActivity(Activity.COMMENT_INSERT, loginedUser, DateUtils.now(), commentsEntity);
         
         return commentsEntity;
     }

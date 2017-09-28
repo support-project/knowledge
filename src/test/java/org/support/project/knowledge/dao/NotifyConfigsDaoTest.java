@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.util.List;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.test.AssertEx;
@@ -17,6 +18,18 @@ import org.support.project.web.entity.UsersEntity;
 public class NotifyConfigsDaoTest extends TestCommon {
     private static final int LIMIT = 100;
     private static final int OFFSET = 0;
+    
+    /**
+     * @BeforeClass
+     * @throws Exception
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        synchronized (KNOWLEDGE_TEST_HOME) {
+            Thread.sleep(500);
+        }
+        TestCommon.setUpBeforeClass();
+    }
     
     @Test
     @Order(order = 1)

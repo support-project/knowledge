@@ -155,12 +155,25 @@ public abstract class TestCommon {
         groupuser1.setLocale(Locale.ENGLISH);
         groupuser2.setLocale(Locale.ENGLISH);
 
+        synchronized (KNOWLEDGE_TEST_HOME) {
+            Thread.sleep(100);
+        }
+        
         // DBを完全初期化
         DatabaseControlDao dao1 = new DatabaseControlDao();
         dao1.dropAllTable();
         org.support.project.web.dao.gen.DatabaseControlDao dao2 = new org.support.project.web.dao.gen.DatabaseControlDao();
         dao2.dropAllTable();
+        
+        synchronized (KNOWLEDGE_TEST_HOME) {
+            Thread.sleep(100);
+        }
+        
         InitDB.main(new String[0]);
+        
+        synchronized (KNOWLEDGE_TEST_HOME) {
+            Thread.sleep(100);
+        }
         
         // 全文検索エンジンのインデックスの消去
         Analyzer analyzer = new JapaneseAnalyzer();
@@ -273,6 +286,13 @@ public abstract class TestCommon {
      * @return
      */
     protected UsersEntity addUser(String userKey) {
+        synchronized (this) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+            }
+        }
+        
         UsersEntity user = new UsersEntity();
         user.setAuthLdap(INT_FLAG.OFF.getValue());
         user.setEncrypted(false);

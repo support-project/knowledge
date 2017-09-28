@@ -60,6 +60,12 @@ public abstract class IntegrationCommon extends TestCommon {
     public static void setUpBeforeClass() throws Exception {
         TestCommon.setUpBeforeClass();
         
+        userPointMap = new HashMap<>();
+        knowledgePointMap = new HashMap<>();
+        userNotificationCountMap = new HashMap<>();
+        knowledgeLikeMap = new HashMap<>();
+        commentLikeMap = new HashMap<>();
+        
         MailConfigsEntity mailConfig = new MailConfigsEntity(AppConfig.get().getSystemName());
         mailConfig.setHost("example.com");
         mailConfig.setPort(25);
@@ -84,9 +90,12 @@ public abstract class IntegrationCommon extends TestCommon {
      */
     protected <T> T invoke(HttpServletRequest request, HttpServletResponse response, Class<T> clazz) throws Exception {
         InvokeTarget invoke = CallControlLogic.get().searchInvokeTarget(request, response);
+        if (invoke == null) {
+            LOG.error("InvokeTarget is not find. [Method]" + request.getMethod() + " [Path]" + request.getServletPath());
+        }
         Assert.assertNotNull(invoke);
         Object result = invoke.invoke();
-        LOG.info(result);
+        LOG.trace(result);
         Assert.assertNotNull(result);
         if (!result.getClass().isAssignableFrom(clazz)) {
             Assert.fail("Result is not " + clazz.getSimpleName() + ". actual: " + result.getClass().getSimpleName());
@@ -151,6 +160,7 @@ public abstract class IntegrationCommon extends TestCommon {
         userNotificationCountMap.put(userKey, now);
         Assert.assertEquals(now, notifications.size());
     }
+    
     
     
     /**

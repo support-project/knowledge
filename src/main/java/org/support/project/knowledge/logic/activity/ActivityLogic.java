@@ -123,11 +123,15 @@ public class ActivityLogic {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void processKnowledgeSaveActivity(LoginedUser eventUser, Date eventDateTime, KnowledgesEntity knowledge) {
         Activity activity = null;
-        if (knowledge.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
+        int publicFlag = KnowledgeLogic.PUBLIC_FLAG_PRIVATE;
+        if (knowledge.getPublicFlag() != null) {
+            publicFlag = knowledge.getPublicFlag();
+        }
+        if (publicFlag == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
             activity = Activity.KNOWLEDGE_POST_PUBLIC;
-        } else if (knowledge.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
+        } else if (publicFlag == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
             activity = Activity.KNOWLEDGE_POST_PROTECTED;
-        } else if (knowledge.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PRIVATE) {
+        } else if (publicFlag == KnowledgeLogic.PUBLIC_FLAG_PRIVATE) {
             activity = Activity.KNOWLEDGE_POST_PRIVATE;
         }
         if (activity == null) {

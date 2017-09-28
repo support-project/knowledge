@@ -11,7 +11,6 @@ import org.support.project.common.util.PropertyUtil;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
-import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.boundary.JsonBoundary;

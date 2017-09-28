@@ -214,7 +214,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LOG.trace("save");
 
         KnowledgesEntity insertedEntity = knowledgeLogic.insert(data, super.getLoginedUser());
-        ActivityLogic.get().processKnowledgeSaveActivity(getLoginedUser(), DateUtils.now(), insertedEntity);
         
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
                 String.valueOf(insertedEntity.getKnowledgeId()), "message.success.insert");
@@ -308,9 +307,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 }
             }
         }
-        
+        // 更新実行
         KnowledgesEntity updatedEntity = knowledgeLogic.update(data, super.getLoginedUser());
-        ActivityLogic.get().processKnowledgeSaveActivity(getLoginedUser(), DateUtils.now(), updatedEntity);
         
         if (data.isUpdateContent()) {
             return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
@@ -494,7 +492,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
 
         CommentsEntity commentsEntity = KnowledgeLogic.get().saveComment(knowledgeId, comment, fileNos, getLoginedUser());
-        ActivityLogic.get().processActivity(Activity.COMMENT_INSERT, getLoginedUser(), DateUtils.now(), commentsEntity);
 
         return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
     }
