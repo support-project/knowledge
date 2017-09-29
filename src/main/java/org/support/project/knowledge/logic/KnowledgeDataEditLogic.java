@@ -160,6 +160,10 @@ public class KnowledgeDataEditLogic {
         }
         // 画面での登録と形をあわせる
         KnowledgeData knowledge = conv(data);
+        // APIからデータ更新した場合、つねに「更新した」と判定する
+        // TODO この辺の判定処理は、後で共有化すること（KnowledgeControlで、ロジックを実装しすぎている）
+        knowledge.setUpdateContent(true);
+        knowledge.setNotifyUpdate(true);
         KnowledgeLogic.get().update(knowledge, loginedUser);
     }
 

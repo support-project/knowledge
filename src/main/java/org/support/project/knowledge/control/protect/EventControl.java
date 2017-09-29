@@ -1,7 +1,5 @@
 package org.support.project.knowledge.control.protect;
 
-import java.util.Date;
-
 import org.support.project.common.util.DateUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -24,7 +22,7 @@ public class EventControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Put
+    @Put(subscribeToken = "knowledge")
     public Boundary participation() throws InvalidParamException {
         Long knowledgeId = getPathLong();
         Boolean result = EventsLogic.get().participation(knowledgeId, getLoginUserId());
@@ -46,7 +44,7 @@ public class EventControl extends Control {
      * @return
      * @throws InvalidParamException
      */
-    @Delete
+    @Delete(subscribeToken = "knowledge")
     public Boundary nonparticipation() throws InvalidParamException {
         Long knowledgeId = getPathLong();
         EventsLogic.get().removeParticipation(knowledgeId, getLoginUserId());

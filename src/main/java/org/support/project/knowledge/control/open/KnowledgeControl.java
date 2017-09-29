@@ -666,9 +666,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LikeCount likeCount = new LikeCount();
         likeCount.setKnowledgeId(knowledgeId);
         likeCount.setCount(count);
-        
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, getLoginedUser(), DateUtils.now(),
-                KnowledgesDao.get().selectOnKey(knowledgeId));
         return send(likeCount);
     }
     /**
@@ -684,8 +681,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LikeCount likeCount = new LikeCount();
         likeCount.setCount(count);
         
-        ActivityLogic.get().processActivity(Activity.COMMENT_LIKE, getLoginedUser(), DateUtils.now(),
-                CommentsDao.get().selectOnKey(commentNo));
         return send(likeCount);
     }
 

@@ -646,7 +646,7 @@ public class MailhookLogic {
      * @return
      * @throws Exception 
      */
-    private void checkConditionsAndPost(Message msg, List<MailHookConditionsEntity> conditions)
+    public void checkConditionsAndPost(Message msg, List<MailHookConditionsEntity> conditions)
             throws Exception {
         if (LOG.isDebugEnabled()) {
             Address[] in = msg.getFrom();

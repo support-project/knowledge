@@ -1,13 +1,18 @@
 package org.support.project.knowledge.integration;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.test.Order;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.knowledge.dao.NotifyQueuesDao;
+import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.web.boundary.ForwardBoundary;
+import org.support.project.web.common.HttpStatus;
 import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 import org.support.project.web.test.stub.StubHttpServletRequest;
 import org.support.project.web.test.stub.StubHttpServletResponse;
@@ -74,6 +79,20 @@ public class IntegrationAPITest extends IntegrationCommon {
     }
     
     /**
+     * 登録後の状態を確認
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 12)
+    public void testCheckDataAfterPost() throws Exception {
+        assertCP(USER_01, 50);
+        assertKnowledgeCP(USER_01, 1, 50);
+
+        execNotificationQueue();
+        assertNotificationCount(USER_01, 1);
+    }
+    
+    /**
      * KnowledgeをPut
      * @throws Exception
      */
@@ -95,6 +114,20 @@ public class IntegrationAPITest extends IntegrationCommon {
         Assert.assertEquals("タイトル更新", result.getTitle());
         Assert.assertEquals("コンテンツ更新", result.getContent());
     }
+
+    /**
+     * 更新後の状態を確認
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 22)
+    public void testCheckDataAfterPut() throws Exception {
+        assertCP(USER_01, 0);
+        assertKnowledgeCP(USER_01, 1, 0);
+
+        execNotificationQueue();
+        assertNotificationCount(USER_01, 1);
+    }
     
     /**
      * KnowledgeをPut
@@ -115,4 +148,21 @@ public class IntegrationAPITest extends IntegrationCommon {
     public void testViewAfterDelete() throws Exception {
         knowledgeGetOnAPI(USER_01, 0);
     }
+    
+    /**
+     * 削除後の状態を確認
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 32)
+    public void testCheckDataAfterDelete() throws Exception {
+        assertCP(USER_01, 0);
+        assertNotAccessAble(USER_01, 1, HttpStatus.SC_404_NOT_FOUND);
+        
+        // 削除後には通知はでない
+        List<NotifyQueuesEntity> list = NotifyQueuesDao.get().selectAll();
+        Assert.assertEquals(0, list.size());
+        assertNotificationCount(USER_01, 0);
+    }
+    
 }

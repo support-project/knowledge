@@ -56,8 +56,15 @@ public abstract class Control extends org.support.project.web.control.Control {
         
         // 通知の件数を取得
         if (getLoginedUser() != null) {
-            int count = NotificationLogic.get().countUnRead(getLoginUserId());
-            request.setAttribute(NOTIFY_UNREAD_COUNT, count);
+            try {
+                Integer count = NotificationLogic.get().countUnRead(getLoginUserId());
+                if (count == null) {
+                    count = 0;
+                }
+                request.setAttribute(NOTIFY_UNREAD_COUNT, count);
+            } catch (Exception e) {
+                LOG.warn("Error on get user notification count. " + e.getClass().getSimpleName());
+            }
         }
     }
 

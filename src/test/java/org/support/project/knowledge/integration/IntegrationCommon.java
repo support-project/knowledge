@@ -30,6 +30,8 @@ import org.support.project.web.bean.NameId;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.boundary.JsonBoundary;
 import org.support.project.web.boundary.RedirectBoundary;
+import org.support.project.web.boundary.SendMessageBoundary;
+import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.InvokeTarget;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.entity.MailConfigsEntity;
@@ -60,6 +62,12 @@ public abstract class IntegrationCommon extends TestCommon {
     public static void setUpBeforeClass() throws Exception {
         TestCommon.setUpBeforeClass();
         
+        userPointMap = new HashMap<>();
+        knowledgePointMap = new HashMap<>();
+        userNotificationCountMap = new HashMap<>();
+        knowledgeLikeMap = new HashMap<>();
+        commentLikeMap = new HashMap<>();
+        
         MailConfigsEntity mailConfig = new MailConfigsEntity(AppConfig.get().getSystemName());
         mailConfig.setHost("example.com");
         mailConfig.setPort(25);
@@ -84,9 +92,12 @@ public abstract class IntegrationCommon extends TestCommon {
      */
     protected <T> T invoke(HttpServletRequest request, HttpServletResponse response, Class<T> clazz) throws Exception {
         InvokeTarget invoke = CallControlLogic.get().searchInvokeTarget(request, response);
+        if (invoke == null) {
+            LOG.error("InvokeTarget is not find. [Method]" + request.getMethod() + " [Path]" + request.getServletPath());
+        }
         Assert.assertNotNull(invoke);
         Object result = invoke.invoke();
-        LOG.info(result);
+        LOG.trace(result);
         Assert.assertNotNull(result);
         if (!result.getClass().isAssignableFrom(clazz)) {
             Assert.fail("Result is not " + clazz.getSimpleName() + ". actual: " + result.getClass().getSimpleName());
@@ -153,6 +164,7 @@ public abstract class IntegrationCommon extends TestCommon {
     }
     
     
+    
     /**
      * 通知を取得
      * @param userKey
@@ -212,6 +224,25 @@ public abstract class IntegrationCommon extends TestCommon {
         Assert.assertEquals("/WEB-INF/views/open/knowledge/view.jsp", PropertyUtil.getPrivateFeildOnReflection(String.class, boundary, "path"));
         return request;
     }
+    /**
+     * 指定の記事にアクセスできないことを確認する
+     * @param userKey
+     * @param knowledgeId
+     * @throws Exception
+     */
+    protected void assertNotAccessAble(String userKey, long knowledgeId, int httpStatus) throws Exception {
+        StubHttpServletRequest request = new StubHttpServletRequest();
+        StubHttpServletResponse response = new StubHttpServletResponse(request);
+        request.setServletPath("open.knowledge/view/" + knowledgeId);
+        request.setMethod("get");
+        if (StringUtils.isNotEmpty(userKey)) {
+            DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
+            auth.setSession(userKey, request, response);
+        }
+        SendMessageBoundary boundary = invoke(request, response, SendMessageBoundary.class);
+        Assert.assertEquals(httpStatus, boundary.getStatus());
+    }
+    
     /**
      * いいねを押下
      * @param userKey
