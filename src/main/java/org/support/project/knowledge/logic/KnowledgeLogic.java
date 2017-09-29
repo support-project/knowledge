@@ -1179,6 +1179,9 @@ public class KnowledgeLogic {
         // 通知
         NotifyLogic.get().notifyOnKnowledgeLiked(knowledgeId, likesEntity);
 
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, loginedUser, DateUtils.now(),
+                KnowledgesDao.get().selectOnKey(knowledgeId));
+
         return count;
     }
     /**
@@ -1208,6 +1211,9 @@ public class KnowledgeLogic {
         
         // 通知
         NotifyLogic.get().notifyOnCommentLiked(like);
+
+        ActivityLogic.get().processActivity(Activity.COMMENT_LIKE, loginedUser, DateUtils.now(),
+                CommentsDao.get().selectOnKey(commentNo));
 
         return count;
     }

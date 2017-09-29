@@ -298,8 +298,8 @@ public abstract class TestCommon {
         user.setEncrypted(false);
         user.setUserKey(userKey);
         user.setLocaleKey(Locale.JAPAN.toString());
-        user.setMailAddress("test@example.com");
-        user.setUserName("Integration Test User 01");
+        user.setMailAddress(RandomUtil.randamGen(8) + "@example.com");
+        user.setUserName("Test-" + RandomUtil.randamGen(8));
         user.setPassword(IDGen.get().gen("hoge"));
         String[] roles = {"user"};
         user = UserLogicEx.get().insert(user, roles);

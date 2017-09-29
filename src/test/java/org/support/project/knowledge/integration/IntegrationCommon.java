@@ -30,6 +30,8 @@ import org.support.project.web.bean.NameId;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.boundary.JsonBoundary;
 import org.support.project.web.boundary.RedirectBoundary;
+import org.support.project.web.boundary.SendMessageBoundary;
+import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.InvokeTarget;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.entity.MailConfigsEntity;
@@ -222,6 +224,25 @@ public abstract class IntegrationCommon extends TestCommon {
         Assert.assertEquals("/WEB-INF/views/open/knowledge/view.jsp", PropertyUtil.getPrivateFeildOnReflection(String.class, boundary, "path"));
         return request;
     }
+    /**
+     * 指定の記事にアクセスできないことを確認する
+     * @param userKey
+     * @param knowledgeId
+     * @throws Exception
+     */
+    protected void assertNotAccessAble(String userKey, long knowledgeId, int httpStatus) throws Exception {
+        StubHttpServletRequest request = new StubHttpServletRequest();
+        StubHttpServletResponse response = new StubHttpServletResponse(request);
+        request.setServletPath("open.knowledge/view/" + knowledgeId);
+        request.setMethod("get");
+        if (StringUtils.isNotEmpty(userKey)) {
+            DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
+            auth.setSession(userKey, request, response);
+        }
+        SendMessageBoundary boundary = invoke(request, response, SendMessageBoundary.class);
+        Assert.assertEquals(httpStatus, boundary.getStatus());
+    }
+    
     /**
      * いいねを押下
      * @param userKey

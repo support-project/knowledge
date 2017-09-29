@@ -453,7 +453,7 @@ public class IntegrationPostTest extends IntegrationCommon {
         // コメントが登録されていないこと
         StubHttpServletRequest request = openKnowledge(COMMENT_POST_USER, knowledgeId);
         List<CommentsEntity> comments = (List<CommentsEntity>) request.getAttribute("comments");
-        Assert.assertEquals(0, comments.size()); // 閲覧者にもデフォルト通知（初期設定）
+        Assert.assertEquals(0, comments.size());
         
         // コメントが登録できること
         comment(COMMENT_POST_USER, knowledgeId, "コメント");
@@ -471,7 +471,7 @@ public class IntegrationPostTest extends IntegrationCommon {
         // コメントが登録されていないこと
         request = openKnowledge(COMMENT_POST_USER, knowledgeId);
         comments = (List<CommentsEntity>) request.getAttribute("comments");
-        Assert.assertEquals(1, comments.size()); // 閲覧者にもデフォルト通知（初期設定）
+        Assert.assertEquals(1, comments.size());
     }
 
     
