@@ -25,7 +25,7 @@ import org.support.project.web.test.stub.StubHttpServletRequest;
 import org.support.project.web.test.stub.StubHttpServletResponse;
 
 /**
- * 
+ * 保護の記事の操作のテスト
  * @author koda
  */
 public class IntegrationProtectTest extends IntegrationCommon {

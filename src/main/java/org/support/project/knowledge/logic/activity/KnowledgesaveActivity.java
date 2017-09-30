@@ -2,12 +2,10 @@ package org.support.project.knowledge.logic.activity;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
-import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.dao.ActivitiesDao;
-import org.support.project.knowledge.entity.ActivitiesEntity;
+import org.support.project.knowledge.dao.PointKnowledgeHistoriesDao;
 
 /**
  * ナレッジ投稿時のポイント付与
@@ -50,32 +48,11 @@ public class KnowledgesaveActivity extends AbstractAddPointForKnowledgeProcessor
         if (point != 0) {
             return point;
         }
-        // 過去に登録した情報があるか検索
-        ActivitiesEntity before = ActivitiesDao.get().selectBefore(
-                super.eventUser.getUserId(),
-                String.valueOf(getKnowledge().getKnowledgeId()),
-                Activity.KNOWLEDGE_POST_PUBLIC.getValue(),
-                Activity.KNOWLEDGE_POST_PROTECTED.getValue(),
-                Activity.KNOWLEDGE_POST_PRIVATE.getValue()
-                );
-        int point = getKindPoint(getActivity().getValue());
-        if (before == null) {
-            if (getActivity() == Activity.KNOWLEDGE_POST_PRIVATE) {
-                // 過去に登録した履歴が無く、今回が非公開ならポイント付けない
-                return 0;
-            }
-            // 文章が多い力先はポイントが高いように調整(初めの一回なので、初めの一回を超えて
-            if (StringUtils.isNotEmpty(getKnowledge().getContent()) && getKnowledge().getContent().length() > 1000) {
-                int add = (getKnowledge().getContent().length() - 1000) / 100;
-                if (add > 100) {
-                    add = 100;
-                }
-                point += add;
-            }
-        } else {
-            point = point - getKindPoint(before.getKind());
-        }
-        this.point = point;
+        int beforePoint = PointKnowledgeHistoriesDao.get().selectBeforePoint(
+                getKnowledge().getKnowledgeId(), TYPE_KNOWLEDGE_POSTED_PUBLIC, TYPE_KNOWLEDGE_POSTED_PROTECT, TYPE_KNOWLEDGE_POSTED_PRIVATE);
+        int nowPoint = getKindPoint(getActivity().getValue());
+        point = nowPoint - beforePoint;
+        LOG.error("[POINT NOW]" + nowPoint + "  [POINT BEFORE]" + beforePoint + " [ADD RESULT]" + point);
         return point;
     }
     private int getTypeForExecuter() {
