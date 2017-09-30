@@ -52,7 +52,9 @@ public class KnowledgesaveActivity extends AbstractAddPointForKnowledgeProcessor
                 getKnowledge().getKnowledgeId(), TYPE_KNOWLEDGE_POSTED_PUBLIC, TYPE_KNOWLEDGE_POSTED_PROTECT, TYPE_KNOWLEDGE_POSTED_PRIVATE);
         int nowPoint = getKindPoint(getActivity().getValue());
         point = nowPoint - beforePoint;
-        LOG.error("[POINT NOW]" + nowPoint + "  [POINT BEFORE]" + beforePoint + " [ADD RESULT]" + point);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("[ID]" + getKnowledge().getKnowledgeId() + "[POINT NOW]" + nowPoint + "  [POINT BEFORE]" + beforePoint + " [ADD RESULT]" + point);
+        }
         return point;
     }
     private int getTypeForExecuter() {

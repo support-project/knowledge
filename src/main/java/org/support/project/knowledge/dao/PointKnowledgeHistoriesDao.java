@@ -33,7 +33,9 @@ public class PointKnowledgeHistoriesDao extends GenPointKnowledgeHistoriesDao {
         StringBuilder sql = new StringBuilder();
         List<Object> params = new ArrayList<>();
         sql.append("SELECT SUM(POINT) FROM POINT_KNOWLEDGE_HISTORIES ");
-        sql.append("WHERE TYPE IN (");
+        sql.append("WHERE KNOWLEDGE_ID = ? ");
+        params.add(knowledgeId);
+        sql.append("AND TYPE IN (");
         boolean appended = false;
         for (int i : types) {
             if (appended) {
