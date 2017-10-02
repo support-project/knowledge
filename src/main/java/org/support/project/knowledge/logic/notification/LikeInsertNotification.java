@@ -90,6 +90,11 @@ public class LikeInsertNotification extends AbstractQueueNotification implements
             LOG.warn("Like record not found. id: " + notifyQueue.getId());
             return;
         }
+        
+        // 同一ユーザでは、イイネの通知は１回きりにする
+        
+        
+        
 
         KnowledgesDao knowledgesDao = KnowledgesDao.get();
         KnowledgesEntity knowledge = knowledgesDao.selectOnKey(like.getKnowledgeId());

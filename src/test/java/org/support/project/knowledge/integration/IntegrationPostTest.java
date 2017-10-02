@@ -445,7 +445,7 @@ public class IntegrationPostTest extends IntegrationCommon {
 
         execNotificationQueue();
         assertNotificationCount(COMMENT_POST_USER, 0);
-        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 0);
     }
     
     
