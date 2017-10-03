@@ -2,7 +2,6 @@ package org.support.project.knowledge.logic.activity;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
-import org.support.project.common.util.RandomUtil;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -27,9 +26,10 @@ public class KnowledgeAnswerActivity extends AbstractAddPointForKnowledgeProcess
         if (point != 0) {
             return point;
         }
-        int[] points = {1,1,2,2,2,2,3,3,3,4};
-        this.point = points[RandomUtil.randamNum(0, 10)]; // ランダムで値を増減してみた
-        return point;
+        //int[] points = {1,1,2,2,2,2,3,3,3,4};
+        //this.point = points[RandomUtil.randamNum(0, 10)]; // ランダムで値を増減してみた
+        //return point;
+        return 3;
     }
     
     @Override

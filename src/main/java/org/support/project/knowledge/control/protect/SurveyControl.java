@@ -2,7 +2,6 @@ package org.support.project.knowledge.control.protect;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.support.project.common.bean.ValidateError;
@@ -29,6 +28,7 @@ import org.support.project.knowledge.logic.SurveyLogic;
 import org.support.project.knowledge.logic.activity.Activity;
 import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.SurveyReport;
+import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.MessageStatus;
@@ -138,12 +138,12 @@ public class SurveyControl extends TemplateControl {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "survey")
     public Boundary load() throws InvalidParamException {
         Long id = super.getPathLong(new Long(-1));
         SurveysEntity entity = SurveyLogic.get().loadSurvey(id, getLoginUserId());
         if (entity == null) {
-            return sendError(404, null);
+            return send(new Msg("survey data is not exists."));
         }
         return send(entity);
     }
@@ -153,7 +153,7 @@ public class SurveyControl extends TemplateControl {
      * @return
      * @throws InvalidParamException
      */
-    @Delete
+    @Delete(subscribeToken = "survey")
     public Boundary delete() throws InvalidParamException {
         Long id = super.getPathLong(new Long(-1));
         SurveyLogic.get().deleteSurvey(id);
@@ -172,7 +172,7 @@ public class SurveyControl extends TemplateControl {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    @Post(subscribeToken = "knowledge", checkReqToken = true)
+    @Post(subscribeToken = "survey", checkReqToken = true)
     public Boundary answer() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
         String id = getParam("knowledgeId");
         if (!StringUtils.isLong(id)) {
