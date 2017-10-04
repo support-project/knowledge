@@ -487,12 +487,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 }
             }
             setAttribute("comment_files", files);
-
             return super.devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
         }
-
-        CommentsEntity commentsEntity = KnowledgeLogic.get().saveComment(knowledgeId, comment, fileNos, getLoginedUser());
-
+        KnowledgeLogic.get().saveComment(knowledgeId, comment, fileNos, getLoginedUser());
         return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
     }
 

@@ -41,6 +41,7 @@ public class IntegrationNotificationTest extends IntegrationCommon {
         ForwardBoundary boundary = invoke(request, response, ForwardBoundary.class);
         Assert.assertEquals("/WEB-INF/views/protect/notification/list.jsp", PropertyUtil.getPrivateFeildOnReflection(String.class, boundary, "path"));
         
+        @SuppressWarnings("unchecked")
         List<NotificationsEntity> notifications = (List<NotificationsEntity>) request.getAttribute("notifications");
         return notifications;
     }

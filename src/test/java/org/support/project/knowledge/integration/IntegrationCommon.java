@@ -25,8 +25,8 @@ import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.EventsLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
-import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
+import org.support.project.knowledge.vo.ActivityHistory;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.web.bean.LoginedUser;
@@ -95,6 +95,7 @@ public abstract class IntegrationCommon extends TestCommon {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     protected <T> T invoke(HttpServletRequest request, HttpServletResponse response, Class<T> clazz) throws Exception {
         InvokeTarget invoke = CallControlLogic.get().searchInvokeTarget(request, response);
         if (invoke == null) {
@@ -232,6 +233,7 @@ public abstract class IntegrationCommon extends TestCommon {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     protected List<NotificationsEntity> getNotification(String userKey) throws Exception {
         StubHttpServletRequest request = new StubHttpServletRequest();
         StubHttpServletResponse response = new StubHttpServletResponse(request);
@@ -400,6 +402,7 @@ public abstract class IntegrationCommon extends TestCommon {
      * @param comment
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     protected void comment(String userKey, long knowledgeId, String comment) throws Exception {
         if (userKey == null) {
             Assert.fail("post comment must be logined");
@@ -433,6 +436,7 @@ public abstract class IntegrationCommon extends TestCommon {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     protected CommentsEntity getLatestComment(String userKey, long knowledgeId) throws Exception {
         StubHttpServletRequest request = openKnowledge(userKey, knowledgeId);
         List<CommentsEntity> comments = (List<CommentsEntity>) request.getAttribute("comments");
@@ -541,6 +545,7 @@ public abstract class IntegrationCommon extends TestCommon {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     protected Knowledge knowledgeGetOnAPI(String userKey, int count) throws Exception {
         StubHttpServletRequest request = new StubHttpServletRequest();
         StubHttpServletResponse response = new StubHttpServletResponse(request);
@@ -576,6 +581,24 @@ public abstract class IntegrationCommon extends TestCommon {
         return null;
     }
     
-    
+    /**
+     * CPの獲得履歴の件数確認
+     * @param userKey
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    protected void assertPointHistoryCount(String userKey, int count) throws Exception {
+        StubHttpServletRequest request = new StubHttpServletRequest();
+        StubHttpServletResponse response = new StubHttpServletResponse(request);
+        DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
+        auth.setSession(userKey, request, response);
+        
+        LoginedUser user = getLoginUser(userKey);
+        request.setServletPath("open.account/activity/" + user.getUserId());
+        request.setMethod("get");
+        JsonBoundary jsonBoundary = invoke(request, response, JsonBoundary.class);
+        List<ActivityHistory> list = (List<ActivityHistory>) jsonBoundary.getObj();
+        Assert.assertEquals(count, list.size());
+    }
 
 }

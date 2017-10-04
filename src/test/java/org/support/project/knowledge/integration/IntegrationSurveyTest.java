@@ -204,6 +204,15 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         assertNotificationCount(ANSWER_USER, 0);
     }
 
-    
+    /**
+     * CP獲得履歴
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 600)
+    public void testActivityHistory() throws Exception {
+        assertPointHistoryCount(POST_USER, 3);
+        assertPointHistoryCount(ANSWER_USER, 2);
+    }
     
 }

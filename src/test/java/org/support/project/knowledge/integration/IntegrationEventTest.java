@@ -117,6 +117,7 @@ public class IntegrationEventTest extends IntegrationCommon {
     public void testJoinByJoinUser() throws Exception {
         StubHttpServletRequest request = openKnowledges(JOIN_USER);
         StubHttpServletResponse response = new StubHttpServletResponse(request);
+        @SuppressWarnings("unchecked")
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         long knowledgeId = knowledges.get(0).getKnowledgeId();
         request = openKnowledge(JOIN_USER, knowledgeId);
@@ -153,6 +154,7 @@ public class IntegrationEventTest extends IntegrationCommon {
     public void testReaveByJoinUser() throws Exception {
         StubHttpServletRequest request = openKnowledges(JOIN_USER);
         StubHttpServletResponse response = new StubHttpServletResponse(request);
+        @SuppressWarnings("unchecked")
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         long knowledgeId = knowledges.get(0).getKnowledgeId();
         request = openKnowledge(JOIN_USER, knowledgeId);
@@ -190,6 +192,7 @@ public class IntegrationEventTest extends IntegrationCommon {
     public void testReJoinByJoinUser() throws Exception {
         StubHttpServletRequest request = openKnowledges(JOIN_USER);
         StubHttpServletResponse response = new StubHttpServletResponse(request);
+        @SuppressWarnings("unchecked")
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         long knowledgeId = knowledges.get(0).getKnowledgeId();
         request = openKnowledge(JOIN_USER, knowledgeId);
@@ -226,6 +229,7 @@ public class IntegrationEventTest extends IntegrationCommon {
     public void testJoinByPostUser() throws Exception {
         StubHttpServletRequest request = openKnowledges(POST_USER);
         StubHttpServletResponse response = new StubHttpServletResponse(request);
+        @SuppressWarnings("unchecked")
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         long knowledgeId = knowledges.get(0).getKnowledgeId();
         request = openKnowledge(POST_USER, knowledgeId);
@@ -252,5 +256,17 @@ public class IntegrationEventTest extends IntegrationCommon {
         assertNotificationCount(POST_USER, 2);
         assertNotificationCount(JOIN_USER, 0);
     }
-
+    
+    
+    
+    /**
+     * CP獲得履歴
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 600)
+    public void testActivityHistory() throws Exception {
+        assertPointHistoryCount(POST_USER, 4);
+        assertPointHistoryCount(JOIN_USER, 2);
+    }
 }
