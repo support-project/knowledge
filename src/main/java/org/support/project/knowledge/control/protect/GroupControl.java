@@ -16,7 +16,6 @@ import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.StringList;
-import org.support.project.web.annotation.Auth;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;

@@ -57,6 +57,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Order(order = 2)
     public void testAccessListByNoLoginUser() throws Exception {
         StubHttpServletRequest request = openKnowledges(null);
+        @SuppressWarnings("unchecked")
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         Assert.assertNotNull(knowledges);
         Assert.assertEquals(0, knowledges.size());
@@ -71,6 +72,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Order(order = 3)
     public void testAccessListByLoginedUser() throws Exception {
         StubHttpServletRequest request = openKnowledges(COMMENT_POST_USER);
+        @SuppressWarnings("unchecked")
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         Assert.assertNotNull(knowledges);
         Assert.assertEquals(0, knowledges.size());
@@ -93,6 +95,7 @@ public class IntegrationPostTest extends IntegrationCommon {
         ForwardBoundary boundary = invoke(request, response, ForwardBoundary.class);
         Assert.assertEquals("/WEB-INF/views/protect/notification/list.jsp", PropertyUtil.getPrivateFeildOnReflection(String.class, boundary, "path"));
         
+        @SuppressWarnings("unchecked")
         List<NotificationsEntity> notifications = (List<NotificationsEntity>) request.getAttribute("notifications");
         Assert.assertNotNull(notifications);
         Assert.assertEquals(0, notifications.size());
@@ -177,6 +180,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     public void testAccessListByNoLoginUser2() throws Exception {
         // 一覧表示画面を開き、
         StubHttpServletRequest request = openKnowledges(null);
+        @SuppressWarnings("unchecked")
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         Assert.assertNotNull(knowledges);
         Assert.assertEquals(1, knowledges.size());
@@ -201,6 +205,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     public void testAccessListByLoginedUser2() throws Exception {
         // 一覧表示画面を開き、
         StubHttpServletRequest request = openKnowledges(COMMENT_POST_USER);
+        @SuppressWarnings("unchecked")
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         Assert.assertNotNull(knowledges);
         Assert.assertEquals(1, knowledges.size());
@@ -237,6 +242,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     public void testReAccessListByLoginedUser2() throws Exception {
         // 一覧表示画面を開き、
         StubHttpServletRequest request = openKnowledges(COMMENT_POST_USER);
+        @SuppressWarnings("unchecked")
         List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
         Assert.assertNotNull(knowledges);
         Assert.assertEquals(1, knowledges.size());
@@ -447,6 +453,7 @@ public class IntegrationPostTest extends IntegrationCommon {
      * コメント登録者でコメント登録
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     @Test
     @Order(order = 400)
     public void testPostCommentByLoginUser1() throws Exception {
@@ -648,5 +655,15 @@ public class IntegrationPostTest extends IntegrationCommon {
         assertNotificationCount(KNOWLEDGE_POST_USER, 1);
     }
     
+    /**
+     * CP獲得履歴
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 600)
+    public void testActivityHistory() throws Exception {
+        assertPointHistoryCount(KNOWLEDGE_POST_USER, 9);
+        assertPointHistoryCount(COMMENT_POST_USER, 6);
+    }
 
 }

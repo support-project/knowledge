@@ -20,18 +20,23 @@ import org.support.project.knowledge.bat.NotifyMailBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.AuthType;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
+import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
+import org.support.project.knowledge.logic.EventsLogic;
+import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
+import org.support.project.knowledge.vo.ActivityHistory;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.MessageResult;
 import org.support.project.web.bean.Msg;
 import org.support.project.web.bean.NameId;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.boundary.JsonBoundary;
 import org.support.project.web.boundary.RedirectBoundary;
 import org.support.project.web.boundary.SendMessageBoundary;
-import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.InvokeTarget;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.entity.MailConfigsEntity;
@@ -90,6 +95,7 @@ public abstract class IntegrationCommon extends TestCommon {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     protected <T> T invoke(HttpServletRequest request, HttpServletResponse response, Class<T> clazz) throws Exception {
         InvokeTarget invoke = CallControlLogic.get().searchInvokeTarget(request, response);
         if (invoke == null) {
@@ -104,6 +110,62 @@ public abstract class IntegrationCommon extends TestCommon {
         }
         return (T) result;
     }
+    
+    
+    /**
+     * 投稿
+     * @return
+     * @throws Exception
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    protected MessageResult postKnowledge(String userKey, int publicFlag, int typeId, String viewers) throws Exception, NoSuchFieldException, IllegalAccessException {
+        // 登録画面へアクセスできること(パスのルーティングのみ確認）
+        StubHttpServletRequest request = new StubHttpServletRequest();
+        StubHttpServletResponse response = new StubHttpServletResponse(request);
+        request.setServletPath("protect.knowledge/view_add");
+        request.setMethod("get");
+        DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
+        auth.setSession(userKey, request, response);
+        
+        ForwardBoundary boundary = invoke(request, response, ForwardBoundary.class);
+        Assert.assertEquals("/WEB-INF/views/protect/knowledge/edit.jsp", PropertyUtil.getPrivateFeildOnReflection(String.class, boundary, "path"));
+
+        String csrfToken = (String) request.getAttribute(HttpRequestCheckLogic.REQ_ID_KEY);
+        Assert.assertNotNull(csrfToken);
+
+        // 保存
+        request.setServletPath("protect.knowledge/save");
+        request.setMethod("post");
+        request.addParameter(HttpRequestCheckLogic.REQ_ID_KEY, csrfToken);
+        request.addParameter("title", "タイトル");
+        request.addParameter("content", "内容");
+        request.addParameter("publicFlag", String.valueOf(publicFlag));
+        request.addParameter("typeId", String.valueOf(typeId));
+        
+        if (typeId == TemplateLogic.TYPE_ID_BOOKMARK) {
+            request.addParameter("item_" + TemplateItemsDao.ITEM_ID_BOOKMARK_URL, "https://information-supportproject.org/");
+        } else if (typeId == TemplateLogic.TYPE_ID_EVENT) {
+            request.addParameter("item_" + EventsLogic.ITEM_NO_DATE, "2017-10-01");
+            request.addParameter("item_" + EventsLogic.ITEM_NO_START, "10:00");
+            request.addParameter("item_" + EventsLogic.ITEM_NO_END, "12:00");
+            request.addParameter("item_" + EventsLogic.ITEM_NO_TIMEZONE, "Asia/Tokyo");
+            request.addParameter("item_" + EventsLogic.ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED, "10");
+        }
+        
+        if (publicFlag == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
+            if (StringUtils.isNotEmpty(viewers)) {
+                request.addParameter("groups", viewers);
+            }
+        }
+        
+        JsonBoundary jsonBoundary = invoke(request, response, JsonBoundary.class);
+        MessageResult sendObject = (MessageResult) jsonBoundary.getObj();
+        LOG.info(sendObject);
+        Assert.assertEquals(200, sendObject.getCode().intValue());
+        return sendObject;
+    }        
+    
     /**
      * CP確認
      * @param userKey
@@ -171,6 +233,7 @@ public abstract class IntegrationCommon extends TestCommon {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     protected List<NotificationsEntity> getNotification(String userKey) throws Exception {
         StubHttpServletRequest request = new StubHttpServletRequest();
         StubHttpServletResponse response = new StubHttpServletResponse(request);
@@ -339,6 +402,7 @@ public abstract class IntegrationCommon extends TestCommon {
      * @param comment
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     protected void comment(String userKey, long knowledgeId, String comment) throws Exception {
         if (userKey == null) {
             Assert.fail("post comment must be logined");
@@ -372,6 +436,7 @@ public abstract class IntegrationCommon extends TestCommon {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     protected CommentsEntity getLatestComment(String userKey, long knowledgeId) throws Exception {
         StubHttpServletRequest request = openKnowledge(userKey, knowledgeId);
         List<CommentsEntity> comments = (List<CommentsEntity>) request.getAttribute("comments");
@@ -386,7 +451,7 @@ public abstract class IntegrationCommon extends TestCommon {
      */
     protected void execNotificationQueue() throws Exception {
         List<NotifyQueuesEntity> list = NotifyQueuesDao.get().selectAll();
-        Assert.assertEquals(1, list.size());
+        Assert.assertTrue(0 < list.size());
         NotifyMailBat.main(null);
         list = NotifyQueuesDao.get().selectAll();
         Assert.assertEquals(0, list.size());
@@ -480,6 +545,7 @@ public abstract class IntegrationCommon extends TestCommon {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     protected Knowledge knowledgeGetOnAPI(String userKey, int count) throws Exception {
         StubHttpServletRequest request = new StubHttpServletRequest();
         StubHttpServletResponse response = new StubHttpServletResponse(request);
@@ -515,6 +581,24 @@ public abstract class IntegrationCommon extends TestCommon {
         return null;
     }
     
-    
+    /**
+     * CPの獲得履歴の件数確認
+     * @param userKey
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    protected void assertPointHistoryCount(String userKey, int count) throws Exception {
+        StubHttpServletRequest request = new StubHttpServletRequest();
+        StubHttpServletResponse response = new StubHttpServletResponse(request);
+        DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
+        auth.setSession(userKey, request, response);
+        
+        LoginedUser user = getLoginUser(userKey);
+        request.setServletPath("open.account/activity/" + user.getUserId());
+        request.setMethod("get");
+        JsonBoundary jsonBoundary = invoke(request, response, JsonBoundary.class);
+        List<ActivityHistory> list = (List<ActivityHistory>) jsonBoundary.getObj();
+        Assert.assertEquals(count, list.size());
+    }
 
 }

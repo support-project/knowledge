@@ -9,6 +9,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.test.Order;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
+import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
@@ -41,7 +42,7 @@ public class IntegrationUpdateTest extends IntegrationCommon {
         // 編集画面を開く
         StubHttpServletRequest request = new StubHttpServletRequest();
         StubHttpServletResponse response = new StubHttpServletResponse(request);
-        request.setServletPath("protect.knowledge/view_add");
+        request.setServletPath("protect.knowledge/view_edit/" + knowledgeId);
         request.setMethod("get");
         DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
         auth.setSession(POST_USER, request, response);
@@ -51,6 +52,8 @@ public class IntegrationUpdateTest extends IntegrationCommon {
         Assert.assertNotNull(csrfToken);
 
         // 保存
+        request = new StubHttpServletRequest(request);
+        response = new StubHttpServletResponse(request);
         request.setServletPath("protect.knowledge/save");
         request.setMethod("post");
         request.addParameter("knowledgeId", String.valueOf(1));
@@ -273,4 +276,52 @@ public class IntegrationUpdateTest extends IntegrationCommon {
         assertNotificationCount(POST_USER, 0);
         assertNotificationCount(USER1, 0);
     }
+    
+    
+    /**
+     * 記事を削除
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 900)
+    public void testDelete() throws Exception {
+        // 編集画面を開く
+        StubHttpServletRequest request = new StubHttpServletRequest();
+        StubHttpServletResponse response = new StubHttpServletResponse(request);
+        request.setServletPath("protect.knowledge/view_edit/" + knowledgeId);
+        request.setMethod("get");
+        DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
+        auth.setSession(POST_USER, request, response);
+        ForwardBoundary boundary = invoke(request, response, ForwardBoundary.class);
+        Assert.assertEquals("/WEB-INF/views/protect/knowledge/edit.jsp", PropertyUtil.getPrivateFeildOnReflection(String.class, boundary, "path"));
+        String csrfToken = (String) request.getAttribute(HttpRequestCheckLogic.REQ_ID_KEY);
+        Assert.assertNotNull(csrfToken);
+
+        // 削除
+        request = new StubHttpServletRequest(request);
+        response = new StubHttpServletResponse(request);
+        request.setServletPath("protect.knowledge/delete");
+        request.setMethod("post");
+        request.addParameter("knowledgeId", String.valueOf(1));
+        request.addParameter(HttpRequestCheckLogic.REQ_ID_KEY, csrfToken);
+        boundary = invoke(request, response, ForwardBoundary.class);
+        Assert.assertEquals("/WEB-INF/views/open/knowledge/list.jsp", PropertyUtil.getPrivateFeildOnReflection(String.class, boundary, "path"));
+        @SuppressWarnings("unchecked")
+        List<KnowledgesEntity> knowledges = (List<KnowledgesEntity>) request.getAttribute("knowledges");
+        Assert.assertNotNull(knowledges);
+        Assert.assertEquals(0, knowledges.size());
+    }
+    
+    
+    /**
+     * CP獲得履歴
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 1000)
+    public void testActivityHistory() throws Exception {
+        assertPointHistoryCount(POST_USER, 6);
+        assertPointHistoryCount(USER1, 1);
+    }
+    
 }

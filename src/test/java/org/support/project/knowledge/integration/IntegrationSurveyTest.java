@@ -16,7 +16,6 @@ import org.support.project.web.bean.MessageResult;
 import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.boundary.JsonBoundary;
-import org.support.project.web.boundary.SendMessageBoundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.logic.HttpRequestCheckLogic;
 import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
@@ -55,7 +54,7 @@ public class IntegrationSurveyTest extends IntegrationCommon {
      */
     @Test
     @Order(order = 100)
-    public void testPostEventPublic() throws Exception {
+    public void testPostPublic() throws Exception {
         // 登録画面へアクセスできること(パスのルーティングのみ確認）
         StubHttpServletRequest request = new StubHttpServletRequest();
         StubHttpServletResponse response = new StubHttpServletResponse(request);
@@ -205,6 +204,15 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         assertNotificationCount(ANSWER_USER, 0);
     }
 
-    
+    /**
+     * CP獲得履歴
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 600)
+    public void testActivityHistory() throws Exception {
+        assertPointHistoryCount(POST_USER, 3);
+        assertPointHistoryCount(ANSWER_USER, 2);
+    }
     
 }

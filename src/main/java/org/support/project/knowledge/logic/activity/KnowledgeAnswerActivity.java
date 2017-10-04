@@ -28,8 +28,8 @@ public class KnowledgeAnswerActivity extends AbstractAddPointForKnowledgeProcess
         }
         //int[] points = {1,1,2,2,2,2,3,3,3,4};
         //this.point = points[RandomUtil.randamNum(0, 10)]; // ランダムで値を増減してみた
-        //return point;
-        return 3;
+        this.point = 3;
+        return point;
     }
     
     @Override

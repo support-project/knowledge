@@ -13,7 +13,7 @@ import org.support.project.web.exception.InvalidParamException;
 
 public class NotificationControl extends Control {
 
-    @Get
+    @Get(publishToken = "knowledge")
     public Boundary list() throws InvalidParamException {
         int offset = getPathInteger(0);
         boolean all = "true".equals(getAttribute("all", "false"));
@@ -39,6 +39,7 @@ public class NotificationControl extends Control {
             return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
         }
         NotificationLogic.get().setStatus(getLoginUserId(), no, NotificationLogic.STATUS_READED);
+        notification.setStatus(NotificationLogic.STATUS_READED);
         setAttributeOnProperty(notification);
         setAttribute("no", no);
         return forward("view.jsp");
@@ -56,6 +57,7 @@ public class NotificationControl extends Control {
         }
         no = notification.getNo();
         NotificationLogic.get().setStatus(getLoginUserId(), no, NotificationLogic.STATUS_READED);
+        notification.setStatus(NotificationLogic.STATUS_READED);
         setAttributeOnProperty(notification);
         setAttribute("no", no);
         return forward("view.jsp");
@@ -72,12 +74,13 @@ public class NotificationControl extends Control {
         }
         no = notification.getNo();
         NotificationLogic.get().setStatus(getLoginUserId(), no, NotificationLogic.STATUS_READED);
+        notification.setStatus(NotificationLogic.STATUS_READED);
         setAttributeOnProperty(notification);
         setAttribute("no", no);
         return forward("view.jsp");
     }
 
-    @Post
+    @Post(subscribeToken = "knowledge")
     public Boundary markread() {
         String no = getAttribute("no", "");
         NotificationLogic.get().markAllAsRead(no, getLoginUserId());
