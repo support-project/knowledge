@@ -691,7 +691,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws ParseException
      */
-    @Post
+    @Post(subscribeToken = "")
     public Boundary escape(KnowledgesEntity entity) throws ParseException {
         super.setSendEscapeHtml(false);
         entity.setTitle(sanitize(entity.getTitle()));
@@ -706,7 +706,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws ParseException
      */
-    @Post
+    @Post(subscribeToken = "")
     public Boundary marked(KnowledgesEntity entity) throws ParseException {
         super.setSendEscapeHtml(false);
         entity.setTitle(sanitize(entity.getTitle()));
