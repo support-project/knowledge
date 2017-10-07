@@ -7,27 +7,17 @@ import javax.servlet.http.Cookie;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.test.Order;
-import org.support.project.common.test.TestCase;
 import org.support.project.knowledge.TestCommon;
-import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.control.open.KnowledgeControl;
 import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.test.stub.ControlContainer;
 import org.support.project.web.test.stub.StubCookie;
 
-public class KnowledgeControlTest extends TestCase {
+public class KnowledgeControlTest extends TestCommon {
     private ControlContainer container;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        AppConfig.initEnvKey(TestCommon.KNOWLEDGE_TEST_HOME);
-        TestCase.setUpBeforeClass();
-    }
-    
     
     
     @Before
