@@ -3,12 +3,9 @@ sudo: required
 services:
   - docker
 
-env:
-  DOCKER_COMPOSE_VERSION: 1.14.0
-
 before_install:
     - docker -v
     - docker-compose -v
 
-script: docker-compose run --rm dev mvn clean
+script: docker-compose run --rm dev mvn clean test
 

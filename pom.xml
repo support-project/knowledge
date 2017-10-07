@@ -308,7 +308,6 @@
                 <version>2.6</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <!-- jspはminify後のものを使うので除外 -->
                     <warSourceExcludes>
                         WEB-INF/views/**/*.jsp,bower/**/*
                     </warSourceExcludes>
