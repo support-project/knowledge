@@ -15,7 +15,9 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringUtils;
+import org.support.project.common.util.SystemUtils;
 import org.support.project.knowledge.TestCommon;
+import org.support.project.knowledge.bat.MailSendBat;
 import org.support.project.knowledge.bat.NotifyMailBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.AuthType;
@@ -52,6 +54,7 @@ public abstract class IntegrationCommon extends TestCommon {
     private static final Log LOG = LogFactory.getLog(IntegrationCommon.class);
     
     private static boolean isInitCallControlLogic = false;
+    private static boolean isMailSend = false;
     
     private static Map<String, Long> userPointMap = new HashMap<>();
     private static Map<Long, Long> knowledgePointMap = new HashMap<>();
@@ -73,11 +76,6 @@ public abstract class IntegrationCommon extends TestCommon {
         knowledgeLikeMap = new HashMap<>();
         commentLikeMap = new HashMap<>();
         
-        MailConfigsEntity mailConfig = new MailConfigsEntity(AppConfig.get().getSystemName());
-        mailConfig.setHost("example.com");
-        mailConfig.setPort(25);
-        mailConfig.setAuthType(AuthType.None.getValue());
-        MailConfigsDao.get().insert(mailConfig); // メール送信設定
 
         if (!isInitCallControlLogic) {
             String controlPackage = "org.support.project.knowledge.control,org.support.project.web.control";
@@ -85,6 +83,17 @@ public abstract class IntegrationCommon extends TestCommon {
             String ignoreRegularExpression = "^/ws|^/template|^/bower|css$|js$|ico$|html$";
             CallControlLogic.get().init(controlPackage, classSuffix, true, ignoreRegularExpression);
             isInitCallControlLogic = true;
+        }
+        
+        MailConfigsEntity mailConfig = new MailConfigsEntity(AppConfig.get().getSystemName());
+        mailConfig.setHost("localhost");
+        mailConfig.setPort(1025);
+        mailConfig.setAuthType(AuthType.None.getValue());
+        MailConfigsDao.get().insert(mailConfig); // メール送信設定
+        String testMailSend = SystemUtils.getenv("KNOWLEDGE_TEST_MAIL");
+        if (StringUtils.isNotEmpty(testMailSend) && testMailSend.toLowerCase().equals("true")) {
+            // テスト用のメールサーバーが存在するので送信まで実施する
+            isMailSend = true;
         }
     }
     /**
@@ -455,6 +464,9 @@ public abstract class IntegrationCommon extends TestCommon {
         NotifyMailBat.main(null);
         list = NotifyQueuesDao.get().selectAll();
         Assert.assertEquals(0, list.size());
+        if (isMailSend) {
+            MailSendBat.main(null);
+        }
     }
     
     /**

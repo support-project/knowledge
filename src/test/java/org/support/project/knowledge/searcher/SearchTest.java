@@ -3,7 +3,6 @@ package org.support.project.knowledge.searcher;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.After;

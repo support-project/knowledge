@@ -1,6 +1,11 @@
-language: java
-jdk: oraclejdk8
-  
-install: mvn install -DskipTests=true
-script: mvn test site
+sudo: required
+
+services:
+  - docker
+
+before_install:
+    - docker -v
+    - docker-compose -v
+
+script: docker-compose run --rm dev mvn clean test
 
