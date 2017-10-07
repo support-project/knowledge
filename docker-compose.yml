@@ -1,0 +1,25 @@
+version: '2.1'
+
+services:
+  dev:
+    image: knowledge-maven
+    build:
+      context: .
+      args:
+        - https_proxy
+        - http_proxy
+    links:
+        - mailcatcher
+    environment:
+      KNOWLEDGE_TEST_MAIL: 'false'
+    volumes:
+      - $PWD:/usr/src/mymaven
+      - $PWD/.m2:/root/.m2
+      
+  mailcatcher:
+    image: "zolweb/docker-mailcatcher"
+    ports:
+      - "1025:1025"
+      - "1080:1080"
+    expose:
+      - "1080"

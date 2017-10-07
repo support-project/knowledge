@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -169,31 +168,8 @@ public class MailLogic {
         Session session = getSession(mailConfigsEntity);
         int count = 0;
         for (MailsEntity mailsEntity : entities) {
-            if (mailsEntity.getToAddress().matches(MAIL_FORMAT)) {
-                try {
-                    MailLogic.get().mailSend(session, mailConfigsEntity, mailsEntity);
-                    // ステータス更新
-                    // mailsEntity.setStatus(MAIL_STATUS_SENDED);
-                    // MailsDao.get().save(mailsEntity);
-                    // 送信処理が終われば、物理削除
-                    dao.physicalDelete(mailsEntity);
-                } catch (Exception e) {
-                    LOG.error("mail send error", e);
-                    //メール送信失敗（3回リトライする）
-                    int status = MAIL_STATUS_UNSENT;
-                    if (mailsEntity.getStatus() != null) {
-                        status = mailsEntity.getStatus();
-                    }
-                    status++;
-                    mailsEntity.setStatus(status);
-                    MailsDao.get().save(mailsEntity);
-                }
-            } else {
-                mailsEntity.setStatus(MAIL_STATUS_FORMAT_ERROR);
-                dao.save(mailsEntity);
-            }
+            startSendMail(session, mailConfigsEntity, mailsEntity);
             count++;
-            
             // 一気に大量に送信しようとするとエラーになることがあるため、少し待機
             synchronized (this) {
                 try {
@@ -204,6 +180,39 @@ public class MailLogic {
             }
         }
         LOG.info("MAIL sended. count: " + count);
+    }
+    /**
+     * 1件のメールを送信
+     * @param mailConfigsEntity
+     * @param dao
+     * @param session
+     * @param mailsEntity
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void startSendMail(Session session, MailConfigsEntity mailConfigsEntity, MailsEntity mailsEntity) {
+        if (mailsEntity.getToAddress().matches(MAIL_FORMAT)) {
+            try {
+                MailLogic.get().mailSend(session, mailConfigsEntity, mailsEntity);
+                // ステータス更新
+                mailsEntity.setStatus(MAIL_STATUS_SENDED);
+                MailsDao.get().save(mailsEntity);
+                // 送信処理が終われば削除
+                MailsDao.get().delete(mailsEntity);
+            } catch (Exception e) {
+                LOG.error("mail send error", e);
+                //メール送信失敗（3回リトライする）
+                int status = MAIL_STATUS_UNSENT;
+                if (mailsEntity.getStatus() != null) {
+                    status = mailsEntity.getStatus();
+                }
+                status++;
+                mailsEntity.setStatus(status);
+                MailsDao.get().save(mailsEntity);
+            }
+        } else {
+            mailsEntity.setStatus(MAIL_STATUS_FORMAT_ERROR);
+            MailsDao.get().save(mailsEntity);
+        }
     }
     
     /**

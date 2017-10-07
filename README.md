@@ -6,6 +6,9 @@
 ## About
 - Free Knowledge Management System
 
+**日本語での質問は、以下のサイトに登録してください(海外からのアクセスが多くなったため)**
+**For questions in Japanese, please register below**
+- https://service-knowledge.support-project.org/
 
 ## Live Demo
 - [https://test-knowledge.support-project.org](https://test-knowledge.support-project.org)
