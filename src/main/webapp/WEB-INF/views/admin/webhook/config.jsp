@@ -60,14 +60,14 @@ function testConfig(hookId) {
 			<div>
 				<input type="checkbox" class="pull-left" name="hooks[]" id="knowledges" value="knowledges" checked/>
 				<div class="prepend-left-20">
-					<label class="list-label"><strong><%= jspUtil.label("knowledge.webhook.event.knowledge.title") %></strong></label>
+					<label for="knowledges" class="list-label"><strong><%= jspUtil.label("knowledge.webhook.event.knowledge.title") %></strong></label>
 					<p class="light"><%= jspUtil.label("knowledge.webhook.event.knowledge.description") %></p>
 				</div>
 			</div>
 			<div>
 				<input type="checkbox" class="pull-left" name="hooks[]" id="comments" value="comments" />
 				<div class="prepend-left-20">
-					<label class="list-label"><strong><%= jspUtil.label("knowledge.webhook.event.comment.title") %></strong></label>
+					<label for="comments" class="list-label"><strong><%= jspUtil.label("knowledge.webhook.event.comment.title") %></strong></label>
 					<p class="light"><%= jspUtil.label("knowledge.webhook.event.comment.description") %></p>
 				</div>
 			</div>
