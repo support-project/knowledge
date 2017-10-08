@@ -5,9 +5,11 @@
 
 ## About
 - Free Knowledge Management System
+- [landing page and Online manual](https://information-knowledge.support-project.org/)
 
-**日本語での質問は、以下のサイトに登録してください(海外からのアクセスが多くなったため)**
-**For questions in Japanese, please register below**
+## Support
+- **日本語での質問は、以下のサイトに登録してください(海外からのアクセスが多くなったため)**
+- **For questions in Japanese, please register below**
 - https://service-knowledge.support-project.org/
 
 ## Live Demo
@@ -25,14 +27,4 @@
 
 ## How to initial set up
 - Please show the [wiki page](https://github.com/support-project/knowledge/wiki)
-
-
-## Project website (more info)
-- [landing page and Online manual](https://information-knowledge.support-project.org/)
-
-
-
-
-
-
 
