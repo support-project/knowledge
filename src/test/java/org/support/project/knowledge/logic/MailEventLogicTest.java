@@ -179,7 +179,7 @@ public class MailEventLogicTest extends TestCommon{
         
         TimeZone timezone = TimeZone.getTimeZone("GMT");
         Calendar now = Calendar.getInstance(timezone);
-        now.add(Calendar.MINUTE, 180);
+        now.add(Calendar.DATE, 20);
         
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat timeFormat = new SimpleDateFormat("HH:mm");
