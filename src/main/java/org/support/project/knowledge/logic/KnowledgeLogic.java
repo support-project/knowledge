@@ -5,11 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.support.project.aop.Aspect;
-import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.DateUtils;
@@ -21,7 +19,6 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.FileParseBat;
-import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.CommentsDao;
@@ -37,7 +34,6 @@ import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgeTagsDao;
 import org.support.project.knowledge.dao.KnowledgeUsersDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
-import org.support.project.knowledge.dao.LikeCommentsDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.StockKnowledgesDao;
 import org.support.project.knowledge.dao.StocksDao;
@@ -56,8 +52,6 @@ import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgeTagsEntity;
 import org.support.project.knowledge.entity.KnowledgeUsersEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
-import org.support.project.knowledge.entity.LikeCommentsEntity;
-import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
@@ -75,14 +69,8 @@ import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
-import org.support.project.web.bean.MessageResult;
-import org.support.project.web.common.HttpStatus;
-import org.support.project.web.config.MessageStatus;
-import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.GroupsEntity;
-import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.exception.AuthenticateException;
-import org.support.project.web.exception.InvalidParamException;
 
 /**
  * Logic class for knowledge data
@@ -1131,93 +1119,6 @@ public class KnowledgeLogic {
             KnowledgesDao.get().updateViewCount(count, knowledgeId);
         }
     }
-    
-    /**
-     * イイネの重複チェックを行うかをシステム設定情報から取得
-     * @return
-     */
-    private boolean getCheckOfLike() {
-        boolean check = false;
-        SystemConfigsEntity config = SystemConfigsDao.get().selectOnKey(SystemConfig.LIKE_CONFIG, AppConfig.get().getSystemName());
-        if (config != null) {
-            if (SystemConfig.LIKE_CONFIG_ONLY_ONE.equals(config.getConfigValue())) {
-                check = true;
-            }
-        }
-        return check;
-    }
-    /**
-     * いいね！を追加
-     * 
-     * @param knowledgeId
-     * @param loginedUser
-     * @return
-     * @throws InvalidParamException 
-     */
-    public Long addLike(Long knowledgeId, LoginedUser loginedUser, Locale locale) throws InvalidParamException {
-        if (getCheckOfLike()) {
-            Resources resources = Resources.getInstance(locale);
-            if (loginedUser == null || loginedUser.getUserId().equals(Integer.MIN_VALUE)) {
-                throw new InvalidParamException(new MessageResult(
-                        MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.likes.required.signin"), ""));
-            }
-            LikesEntity likesEntity = LikesDao.get().selectExistsOnUser(knowledgeId, loginedUser.getUserId());
-            if (likesEntity != null) {
-                throw new InvalidParamException(new MessageResult(
-                        MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.likes.duplicate"), ""));
-            }
-        }
-        LikesDao likesDao = LikesDao.get();
-        LikesEntity likesEntity = new LikesEntity();
-        likesEntity.setKnowledgeId(knowledgeId);
-        likesDao.insert(likesEntity);
-
-        updateKnowledgeExInfo(knowledgeId);
-
-        Long count = likesDao.countOnKnowledgeId(knowledgeId);
-
-        // 通知
-        NotifyLogic.get().notifyOnKnowledgeLiked(knowledgeId, likesEntity);
-
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, loginedUser, DateUtils.now(),
-                KnowledgesDao.get().selectOnKey(knowledgeId));
-
-        return count;
-    }
-    /**
-     * コメントにイイネを追加
-     * @param commentNo
-     * @param loginedUser
-     * @return
-     * @throws InvalidParamException 
-     */
-    public Long addLikeComment(Long commentNo, LoginedUser loginedUser, Locale locale) throws InvalidParamException {
-        if (getCheckOfLike()) {
-            Resources resources = Resources.getInstance(locale);
-            if (loginedUser == null || loginedUser.getUserId().equals(Integer.MIN_VALUE)) {
-                throw new InvalidParamException(new MessageResult(
-                        MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.likes.required.signin"), ""));
-            }
-            LikeCommentsEntity like = LikeCommentsDao.get().selectExistsOnUser(commentNo, loginedUser.getUserId());
-            if (like != null) {
-                throw new InvalidParamException(new MessageResult(
-                        MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.likes.duplicate"), ""));
-            }
-        }
-        LikeCommentsEntity like = new LikeCommentsEntity();
-        like.setCommentNo(commentNo);
-        like = LikeCommentsDao.get().insert(like);
-        Long count = LikeCommentsDao.get().selectOnCommentNo(commentNo);
-        
-        // 通知
-        NotifyLogic.get().notifyOnCommentLiked(like);
-
-        ActivityLogic.get().processActivity(Activity.COMMENT_LIKE, loginedUser, DateUtils.now(),
-                CommentsDao.get().selectOnKey(commentNo));
-
-        return count;
-    }
-    
 
     /**
      * ナレッジテーブルの タグやイイネ件数、コメント件数などの付加情報を 更新する（一覧表示用）

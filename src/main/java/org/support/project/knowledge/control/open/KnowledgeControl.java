@@ -45,6 +45,7 @@ import org.support.project.knowledge.logic.EventsLogic;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KeywordLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.LikeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
@@ -661,8 +662,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     @Post(subscribeToken="knowledge")
     public Boundary like() throws InvalidParamException {
         Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-        Long count = knowledgeLogic.addLike(knowledgeId, getLoginedUser(), getLocale());
+        Long count = LikeLogic.get().addLike(knowledgeId, getLoginedUser(), getLocale());
         LikeCount likeCount = new LikeCount();
         likeCount.setKnowledgeId(knowledgeId);
         likeCount.setCount(count);
@@ -676,11 +676,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
     @Post(subscribeToken="knowledge")
     public Boundary likecomment() throws InvalidParamException {
         Long commentNo = super.getPathLong(Long.valueOf(-1));
-        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-        Long count = knowledgeLogic.addLikeComment(commentNo, getLoginedUser(), getLocale());
+        Long count = LikeLogic.get().addLikeComment(commentNo, getLoginedUser(), getLocale());
         LikeCount likeCount = new LikeCount();
         likeCount.setCount(count);
-        
         return send(likeCount);
     }
 

@@ -8,8 +8,10 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.test.Order;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.boundary.ForwardBoundary;
@@ -428,10 +430,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     
     /**
      * ログインユーザ1にて、イイネを押下（再実行)
-     * 
-     * TODO 再度実行してもポイントなどはつかないが、通知は押した回数分送っている
-     * 一度送った場合は、そのユーザが何回いいねを押しても通知しない方がよさげ
-     * 
+     * 再度実行してもポイントなどはつかず、通知も送らないないように
      * @throws Exception
      */
     @Test
@@ -443,9 +442,10 @@ public class IntegrationPostTest extends IntegrationCommon {
         assertCP(KNOWLEDGE_POST_USER, 0); // 変化無し
         assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0); // 変化無し
 
-        execNotificationQueue();
+        List<NotifyQueuesEntity> list = NotifyQueuesDao.get().selectAll();
+        Assert.assertEquals(0, list.size());
         assertNotificationCount(COMMENT_POST_USER, 0);
-        assertNotificationCount(KNOWLEDGE_POST_USER, 1);
+        assertNotificationCount(KNOWLEDGE_POST_USER, 0);
     }
     
     
