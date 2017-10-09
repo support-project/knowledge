@@ -13,8 +13,10 @@ import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikeCommentsDao;
 import org.support.project.knowledge.dao.LikesDao;
+import org.support.project.knowledge.dao.NotificationStatusDao;
 import org.support.project.knowledge.entity.LikeCommentsEntity;
 import org.support.project.knowledge.entity.LikesEntity;
+import org.support.project.knowledge.entity.NotificationStatusEntity;
 import org.support.project.knowledge.logic.activity.Activity;
 import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.web.bean.LoginedUser;
@@ -32,6 +34,9 @@ public class LikeLogic {
     public static LikeLogic get() {
         return Container.getComp(LikeLogic.class);
     }
+    
+    private static final int TYPE_KNOWLEDGE = 1;
+    private static final int TYPE_COMMENT = 2;
 
     
     /**
@@ -50,14 +55,31 @@ public class LikeLogic {
     }
 
     private boolean duplicateLike(Long knowledgeId, Integer userId) {
-        // TODO Auto-generated method stub
-        return false;
+        NotificationStatusEntity status = NotificationStatusDao.get().selectOnKey(knowledgeId, TYPE_KNOWLEDGE, userId);
+        if (status == null) {
+            return false;
+        }
+        return true;
     }
     private boolean duplicateLikeComment(Long commentNo, Integer userId) {
-        // TODO Auto-generated method stub
-        return false;
+        NotificationStatusEntity status = NotificationStatusDao.get().selectOnKey(commentNo, TYPE_COMMENT, userId);
+        if (status == null) {
+            return false;
+        }
+        return true;
     }
 
+    private void saveNotifyStatusLike(Long knowledgeId, Integer userId) {
+        NotificationStatusEntity status = new NotificationStatusEntity(knowledgeId, TYPE_KNOWLEDGE, userId);
+        status.setStatus(0);
+        NotificationStatusDao.get().save(status);
+    }
+    private void saveNotifyStatusLikeComment(Long commentNo, Integer userId) {
+        NotificationStatusEntity status = new NotificationStatusEntity(commentNo, TYPE_COMMENT, userId);
+        status.setStatus(0);
+        NotificationStatusDao.get().save(status);
+    }
+    
     
     /**
      * いいね！を追加
@@ -91,8 +113,13 @@ public class LikeLogic {
         Long count = likesDao.countOnKnowledgeId(knowledgeId);
 
         // 通知
-        if (!duplicateLike(knowledgeId, loginedUser.getUserId())) {
+        int userId = Integer.MIN_VALUE;
+        if (loginedUser != null) {
+            userId = loginedUser.getUserId();
+        }
+        if (!duplicateLike(knowledgeId, userId)) {
             NotifyLogic.get().notifyOnKnowledgeLiked(knowledgeId, likesEntity);
+            saveNotifyStatusLike(knowledgeId, userId);
         }
 
         ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, loginedUser, DateUtils.now(),
@@ -100,7 +127,6 @@ public class LikeLogic {
 
         return count;
     }
-
 
     /**
      * コメントにイイネを追加
@@ -129,8 +155,13 @@ public class LikeLogic {
         Long count = LikeCommentsDao.get().selectOnCommentNo(commentNo);
         
         // 通知
-        if (!duplicateLikeComment(commentNo, loginedUser.getUserId())) {
+        int userId = Integer.MIN_VALUE;
+        if (loginedUser != null) {
+            userId = loginedUser.getUserId();
+        }
+        if (!duplicateLikeComment(commentNo, userId)) {
             NotifyLogic.get().notifyOnCommentLiked(like);
+            saveNotifyStatusLikeComment(commentNo, userId);
         }
 
         ActivityLogic.get().processActivity(Activity.COMMENT_LIKE, loginedUser, DateUtils.now(),
@@ -138,7 +169,4 @@ public class LikeLogic {
 
         return count;
     }
-
-
-    
 }

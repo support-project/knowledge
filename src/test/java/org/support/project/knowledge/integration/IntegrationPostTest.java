@@ -8,8 +8,10 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.test.Order;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.boundary.ForwardBoundary;
@@ -440,7 +442,8 @@ public class IntegrationPostTest extends IntegrationCommon {
         assertCP(KNOWLEDGE_POST_USER, 0); // 変化無し
         assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0); // 変化無し
 
-        execNotificationQueue();
+        List<NotifyQueuesEntity> list = NotifyQueuesDao.get().selectAll();
+        Assert.assertEquals(0, list.size());
         assertNotificationCount(COMMENT_POST_USER, 0);
         assertNotificationCount(KNOWLEDGE_POST_USER, 0);
     }
