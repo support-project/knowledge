@@ -13,6 +13,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikeCommentsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.LikeLogic;
 import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.knowledge.logic.notification.Notification.TARGET;
 import org.support.project.web.bean.MessageResult;
@@ -25,7 +26,7 @@ public class CommentLikedNotificationTest extends NotificationTestCommon {
         // Knowledgeを登録し、そこにコメント登録し、それにいいねを押した
         KnowledgesEntity knowledge = super.insertKnowledge("テスト", loginedUser2);
         CommentsEntity comment = KnowledgeLogic.get().saveComment(knowledge.getKnowledgeId(), "コメント", new ArrayList<>(), loginedUser);
-        KnowledgeLogic.get().addLikeComment(comment.getCommentNo(), loginedUser2, loginedUser.getLocale());
+        LikeLogic.get().addLikeComment(comment.getCommentNo(), loginedUser2, loginedUser.getLocale());
 
         List<NotifyQueuesEntity> list = NotifyQueuesDao.get().selectAll();
         LOG.info(list);

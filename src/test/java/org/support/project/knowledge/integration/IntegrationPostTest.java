@@ -428,10 +428,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     
     /**
      * ログインユーザ1にて、イイネを押下（再実行)
-     * 
-     * TODO 再度実行してもポイントなどはつかないが、通知は押した回数分送っている
-     * 一度送った場合は、そのユーザが何回いいねを押しても通知しない方がよさげ
-     * 
+     * 再度実行してもポイントなどはつかず、通知も送らないないように
      * @throws Exception
      */
     @Test
