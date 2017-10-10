@@ -55,7 +55,8 @@ public class MailSendBat extends AbstractBat {
     public void start() throws UnsupportedEncodingException, MessagingException, InvalidKeyException, NoSuchAlgorithmException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         MailLogic.get().startSendMails();
-        MailsDao.get().physicalDeleteOnOldData();
+        int deletecount = MailsDao.get().physicalDeleteOnOldData();
+        LOG.info("delete old mails. [count]" + deletecount);
     }
 
 }

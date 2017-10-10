@@ -197,7 +197,7 @@ public class MailLogic {
                 mailsEntity.setStatus(MAIL_STATUS_SENDED);
                 MailsDao.get().save(mailsEntity);
                 // 送信処理が終われば削除
-                MailsDao.get().delete(mailsEntity);
+                // MailsDao.get().delete(mailsEntity);
             } catch (Exception e) {
                 LOG.error("mail send error", e);
                 //メール送信失敗（3回リトライする）
