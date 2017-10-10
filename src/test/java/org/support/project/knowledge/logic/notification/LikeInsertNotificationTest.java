@@ -12,7 +12,7 @@ import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
-import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.LikeLogic;
 import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.knowledge.logic.notification.Notification.TARGET;
 import org.support.project.web.bean.MessageResult;
@@ -25,7 +25,7 @@ public class LikeInsertNotificationTest extends NotificationTestCommon {
     public void testNotification() throws Exception {
         // Knowledgeを登録し、それにいいねを押した
         KnowledgesEntity knowledge = super.insertKnowledge("テスト", loginedUser);
-        KnowledgeLogic.get().addLike(knowledge.getKnowledgeId(), loginedUser2, loginedUser.getLocale());
+        LikeLogic.get().addLike(knowledge.getKnowledgeId(), loginedUser2, loginedUser.getLocale());
         
         List<NotifyQueuesEntity> list = NotifyQueuesDao.get().selectAll();
         LOG.info(list);

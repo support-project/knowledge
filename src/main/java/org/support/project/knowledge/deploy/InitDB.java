@@ -26,6 +26,7 @@ import org.support.project.knowledge.deploy.v1_11_0.Migrate_1_11_0;
 import org.support.project.knowledge.deploy.v1_11_0.Migrate_1_11_1;
 import org.support.project.knowledge.deploy.v1_11_0.Migrate_1_11_2;
 import org.support.project.knowledge.deploy.v1_11_0.Migrate_1_11_3;
+import org.support.project.knowledge.deploy.v1_11_0.Migrate_1_11_4;
 import org.support.project.knowledge.deploy.v1_1_0pre1.Migrate_1_1_0pre1;
 import org.support.project.knowledge.deploy.v1_4_0.Migrate_1_4_0;
 import org.support.project.knowledge.deploy.v1_5_0.Migrate_1_5_0;
@@ -51,7 +52,7 @@ public class InitDB {
     private static final Map<String, Migrate> MAP = new LinkedHashMap<>();
 
     private static final Migrate INIT = InitializeSystem.get();
-    public static final String CURRENT = "1.11.3";
+    public static final String CURRENT = "1.11.4";
 
     public InitDB() {
         super();
@@ -85,6 +86,7 @@ public class InitDB {
         MAP.put("1.11.1", Migrate_1_11_1.get());
         MAP.put("1.11.2", Migrate_1_11_2.get());
         MAP.put("1.11.3", Migrate_1_11_3.get());
+        MAP.put("1.11.4", Migrate_1_11_4.get());
     }
 
     public static void main(String[] args) throws Exception {

@@ -21,10 +21,10 @@ import org.support.project.knowledge.dao.PointKnowledgeHistoriesDao;
  * @author koda
  */
 @DI(instance = Instance.Prototype)
-public class KnowledgesaveActivity extends AbstractAddPointForKnowledgeProcessor implements MultiActivityProcessor {
-    private static final Log LOG = LogFactory.getLog(KnowledgesaveActivity.class);
-    public static KnowledgesaveActivity get() {
-        return Container.getComp(KnowledgesaveActivity.class);
+public class KnowledgeSaveActivity extends AbstractAddPointForKnowledgeProcessor implements MultiActivityProcessor {
+    private static final Log LOG = LogFactory.getLog(KnowledgeSaveActivity.class);
+    public static KnowledgeSaveActivity get() {
+        return Container.getComp(KnowledgeSaveActivity.class);
     }
     private Activity activity;
     public void setActivity(Activity activity) {

@@ -84,6 +84,13 @@ public class PointUserHistoriesDao extends GenPointUserHistoriesDao {
         return executeQueryList(sql, PointUserHistoriesEntity.class, userId, limit, offset);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void removeAll() {
+        LOG.warn("Remove all point user histories");
+        String sql = "DELETE FROM POINT_USER_HISTORIES";
+        executeUpdate(sql);
+    }
+
 
 
 }

@@ -13,7 +13,7 @@ public class Migrate_1_11_3 implements Migrate {
     public boolean doMigrate() throws Exception {
         InitializeDao initializeDao = InitializeDao.get();
         String[] sqlpaths = {
-            "/org/support/project/knowledge/deploy/v1_12/migrate_v1_12_0.sql",
+            "/org/support/project/knowledge/deploy/v1_11_0/migrate_v1_11_3.sql",
         };
         initializeDao.initializeDatabase(sqlpaths);
         return true;

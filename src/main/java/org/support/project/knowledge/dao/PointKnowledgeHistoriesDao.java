@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.support.project.aop.Aspect;
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -14,6 +16,8 @@ import org.support.project.knowledge.dao.gen.GenPointKnowledgeHistoriesDao;
  */
 @DI(instance = Instance.Singleton)
 public class PointKnowledgeHistoriesDao extends GenPointKnowledgeHistoriesDao {
+    /** LOG */
+    private static final Log LOG = LogFactory.getLog(PointKnowledgeHistoriesDao.class);
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
@@ -52,6 +56,13 @@ public class PointKnowledgeHistoriesDao extends GenPointKnowledgeHistoriesDao {
             point = 0;
         }
         return point;
+    }
+    
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void removeAll() {
+        LOG.warn("Remove all point knowledge histories");
+        String sql = "DELETE FROM POINT_KNOWLEDGE_HISTORIES";
+        executeUpdate(sql);
     }
 
 

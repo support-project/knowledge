@@ -5,7 +5,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.dao.ViewHistoriesDao;
+import org.support.project.knowledge.dao.ActivitiesDao;
 
 /**
  * 
@@ -31,14 +31,18 @@ public class KnowledgeShowActivity extends AbstractAddPointForKnowledgeProcessor
     private int getPoint() {
         // ユニークな参照者が多くなると、ポイントが増えるように調整(投稿数が少なくても、良い記事を書けばポイントが高くなる）
         int point = 1;
-        long count = ViewHistoriesDao.get().selectUniqueUserCountOnKnowledgeId(getKnowledge().getKnowledgeId());
+        long count = ActivitiesDao.get().selectCountByTarget(
+                getActivity().getValue(), getKnowledge().getKnowledgeId());
         int add = 0;
         if (count > 1000) {
-            add = 200;
+            add = 100; // 1000 人以上だと100固定
         } else if (count > 100){
-            add = ((int) count - 100 ) / 5; // 100人を超えると、5人毎に1ポイント増えるようになる
+            add = 10 + ((int) count - 100) / 15; // 100人を超えると、20人毎に1ポイント増えるようになる
         } else if (count > 10){
-            add = (int) count / 10; // 10人を超えると、ポイントが増える(10人毎に１ポイント）
+            add = ((int) count) / 10; // 10人を超えると、ポイントが増える(10人毎に１ポイント）
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("[Bonus point]: " + add + " [COUNT]:" + count);
         }
         point += add;
         return point;

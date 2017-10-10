@@ -14,6 +14,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.LikeLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
 
@@ -68,7 +69,7 @@ public class KnowledgesDaoTest extends TestCommon {
             knowledge.add(entity);
 
             if (i == 29) {
-                KnowledgeLogic.get().addLike(entity.getKnowledgeId(), loginedUser2, Locale.JAPAN);
+                LikeLogic.get().addLike(entity.getKnowledgeId(), loginedUser2, Locale.JAPAN);
             }
             entity = KnowledgesDao.get().selectOnKey(entity.getKnowledgeId());
             LOG.info("[" + i + "]" + entity.getPoint());
@@ -109,7 +110,7 @@ public class KnowledgesDaoTest extends TestCommon {
             entity = logic.insert(data, loginedUser);
             knowledge.add(entity);
             if (i == 29) {
-                KnowledgeLogic.get().addLike(entity.getKnowledgeId(), loginedUser2, Locale.JAPAN);
+                LikeLogic.get().addLike(entity.getKnowledgeId(), loginedUser2, Locale.JAPAN);
             }
         }
 
