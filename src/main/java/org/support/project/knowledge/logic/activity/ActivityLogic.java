@@ -48,7 +48,7 @@ public class ActivityLogic {
         if (activity == Activity.KNOWLEDGE_POST_PUBLIC
                 || activity == Activity.KNOWLEDGE_POST_PROTECTED
                 || activity == Activity.KNOWLEDGE_POST_PRIVATE) {
-            array.add(KnowledgesaveActivity.get());
+            array.add(KnowledgeSaveActivity.get());
         } else if (activity == Activity.KNOWLEDGE_SHOW) {
             array.add(KnowledgeShowActivity.get());
         } else if (activity == Activity.KNOWLEDGE_LIKE) {

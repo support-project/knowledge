@@ -79,8 +79,8 @@
 </form>
 
 <hr/>
-Database version: <%= jspUtil.out("db_version") %><br/>
-
+Application version: <%= jspUtil.label("label.version") %><br/>
+Database schema version: <%= jspUtil.out("db_version") %><br/>
 
 </c:param>
 

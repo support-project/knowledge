@@ -6,7 +6,7 @@ import org.support.project.common.util.RandomUtil;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.dao.ParticipantsDao;
+import org.support.project.knowledge.dao.ActivitiesDao;
 
 /**
  * 
@@ -31,7 +31,8 @@ public class KnowledgeEventActivity extends AbstractAddPointForKnowledgeProcesso
         }
         // 参加者人数により増減
         int point = 5;
-        long count = ParticipantsDao.get().selectUniqueUserCountOnKnowledgeId(getKnowledge().getKnowledgeId());
+        long count = ActivitiesDao.get().selectCountByTarget(
+                getActivity().getValue(), getKnowledge().getKnowledgeId());
         int add = 0;
         if (count > 100) {
             add = 1000;
@@ -41,6 +42,9 @@ public class KnowledgeEventActivity extends AbstractAddPointForKnowledgeProcesso
             add = (int) count / 5; // 5人を超えると、ポイントが増える(5人毎に１ポイント）
             int[] points = {1,1,1,1,1,2,2,2,2,3};
             add += points[RandomUtil.randamNum(0, 10)]; // ランダムで値が増減するボーナスポイント
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("[Bonus point]: " + add + " [COUNT]:" + count);
         }
         point += add;
         this.point = point;
