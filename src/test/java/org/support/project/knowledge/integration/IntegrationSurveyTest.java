@@ -11,7 +11,9 @@ import org.support.project.common.util.PropertyUtil;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
+import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.ForwardBoundary;
@@ -214,5 +216,66 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         assertPointHistoryCount(POST_USER, 3);
         assertPointHistoryCount(ANSWER_USER, 2);
     }
+    
+    /**
+     * アンケートの編集権限の確認
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 700)
+    public void testEditAble() throws Exception {
+        // 登録
+        StubHttpServletRequest request = new StubHttpServletRequest();
+        StubHttpServletResponse response = new StubHttpServletResponse(request);
+        request.setServletPath("protect.knowledge/view_add");
+        request.setMethod("get");
+        DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
+        auth.setSession(POST_USER, request, response);
+        ForwardBoundary boundary = invoke(request, response, ForwardBoundary.class);
+        Assert.assertEquals("/WEB-INF/views/protect/knowledge/edit.jsp", PropertyUtil.getPrivateFeildOnReflection(String.class, boundary, "path"));
+        String csrfToken = (String) request.getAttribute(HttpRequestCheckLogic.REQ_ID_KEY);
+        Assert.assertNotNull(csrfToken);
+        request.setServletPath("protect.knowledge/save");
+        request.setMethod("post");
+        request.addParameter(HttpRequestCheckLogic.REQ_ID_KEY, csrfToken);
+        request.addParameter("title", "タイトル");
+        request.addParameter("content", "内容");
+        request.addParameter("publicFlag", String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT));
+        request.addParameter("typeId", String.valueOf(TemplateLogic.TYPE_ID_KNOWLEDGE));
+        LoginedUser answerUser = super.getLoginUser(ANSWER_USER);
+        request.addParameter("groups", TargetLogic.ID_PREFIX_USER + answerUser.getUserId());
+        request.addParameter("editors", TargetLogic.ID_PREFIX_USER + answerUser.getUserId());
+        JsonBoundary jsonBoundary = invoke(request, response, JsonBoundary.class);
+        MessageResult sendObject = (MessageResult) jsonBoundary.getObj();
+        LOG.info(sendObject);
+        Assert.assertEquals(200, sendObject.getCode().intValue());
+        
+        Long knowledgeId = new Long(sendObject.getResult());
+        
+        // アンケート登録
+        request = new StubHttpServletRequest();
+        response = new StubHttpServletResponse(request);
+        request.setServletPath("protect.survey/load/" + knowledgeId);
+        request.setMethod("get");
+        JsonBoundary msg = invoke(request, response, JsonBoundary.class);
+        Msg result = (Msg) msg.getObj();
+        Assert.assertEquals("survey data is not exists.", result.getMsg());
+        request.setServletPath("protect.survey/save");
+        request.setMethod("post");
+        auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
+        auth.setSession(ANSWER_USER, request, response);
+        csrfToken = (String) request.getAttribute(HttpRequestCheckLogic.REQ_ID_KEY);
+        request.addParameter(HttpRequestCheckLogic.REQ_ID_KEY, csrfToken);
+        request.addParameter("knowledgeId", String.valueOf(knowledgeId));
+        request.addParameter("typeName", "アンケート");
+        request.addParameter("itemType", "text_item0");
+        request.addParameter("title_item0", "入力項目1");
+        jsonBoundary = invoke(request, response, JsonBoundary.class);
+        MessageResult messageResult = (MessageResult) jsonBoundary.getObj();
+        LOG.info(messageResult);
+        Assert.assertEquals(HttpStatus.SC_200_OK, messageResult.getCode().intValue());
+    }
+    
+    
     
 }

@@ -25,9 +25,11 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.SurveyLogic;
+import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.activity.Activity;
 import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.SurveyReport;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
@@ -73,7 +75,8 @@ public class SurveyControl extends TemplateControl {
             return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD_REQUEST");
         }
         KnowledgesEntity knowledge = KnowledgeLogic.get().select(knowledgeId, getLoginedUser());
-        if (knowledge == null || !KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledge, null)) {
+        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+        if (knowledge == null || !KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledge, editors)) {
             return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
         }
         // テンプレートと同じ構造にしているが、アンケートに変換して保存する
