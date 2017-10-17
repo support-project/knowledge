@@ -185,51 +185,54 @@ public class ActivityLogic {
                     convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_DO_LIKE) {
             return resources.getResource("knowledge.activity.type.31.do.like", convKnowledgeLink(systemUrl, activity.getTarget()),
-                    activity.getUserName());
+                    convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_LIKED_BY_OHER) {
             return resources.getResource("knowledge.activity.type.32.liked", convKnowledgeLink(systemUrl, activity.getTarget()),
-                    activity.getUserName());
+                    convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_DO_STOCK) {
             return resources.getResource("knowledge.activity.type.41.do.stock", convKnowledgeLink(systemUrl, activity.getTarget()),
-                    activity.getUserName());
+                    convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_STOCKED_BY_OHER) {
             return resources.getResource("knowledge.activity.type.42.stocked", convKnowledgeLink(systemUrl, activity.getTarget()),
-                    activity.getUserName());
+                    convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_DO_ANSWER) {
             return resources.getResource("knowledge.activity.type.51.do.ansewer", convKnowledgeLink(systemUrl, activity.getTarget()),
-                    activity.getUserName());
+                    convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_ANSWERD_BY_OHER) {
             return resources.getResource("knowledge.activity.type.52.answered", convKnowledgeLink(systemUrl, activity.getTarget()),
-                    activity.getUserName());
+                    convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_DO_JOIN_EVENT) {
             return resources.getResource("knowledge.activity.type.61.do.join", convKnowledgeLink(systemUrl, activity.getTarget()),
-                    activity.getUserName());
+                    convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_JOINED_BY_OHER) {
             return resources.getResource("knowledge.activity.type.62.joined", convKnowledgeLink(systemUrl, activity.getTarget()),
-                    activity.getUserName());
+                    convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
 
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_DO_POST_PUBLIC) {
             return resources.getResource("knowledge.activity.type.101.do.post.public", convKnowledgeLink(systemUrl, activity.getTarget()),
-                    activity.getUserName());
+                    convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_DO_POST_PROTECT) {
             return resources.getResource("knowledge.activity.type.111.do.post.protect", convKnowledgeLink(systemUrl, activity.getTarget()),
-                    activity.getUserName());
+                    convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
         } else if (history.getType() == ActivityProcessor.TYPE_KNOWLEDGE_DO_POST_PRIVATE) {
             return resources.getResource("knowledge.activity.type.121.do.post.private", convKnowledgeLink(systemUrl, activity.getTarget()),
-                    activity.getUserName());
+                    convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
 
         } else if (history.getType() >= ActivityProcessor.TYPE_COMMENT_DO_INSERT) {
             CommentsEntity comment = CommentsDao.get().selectOnKey(new Long(activity.getTarget()));
             if (comment != null) {
                 if (history.getType() == ActivityProcessor.TYPE_COMMENT_DO_INSERT) {
                     return resources.getResource("knowledge.activity.type.1011.do.comment.insert",
-                            convKnowledgeLink(systemUrl, String.valueOf(comment.getKnowledgeId())), activity.getUserName());
+                            convKnowledgeLink(systemUrl, String.valueOf(comment.getKnowledgeId())),
+                            convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
                 } else if (history.getType() == ActivityProcessor.TYPE_COMMENT_DO_LIKE) {
                     return resources.getResource("knowledge.activity.type.1031.do.comment.like",
-                            convKnowledgeLink(systemUrl, String.valueOf(comment.getKnowledgeId())), activity.getUserName());
+                            convKnowledgeLink(systemUrl, String.valueOf(comment.getKnowledgeId())),
+                            convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
                 } else if (history.getType() == ActivityProcessor.TYPE_COMMENT_LIKED_BY_OHER) {
                     return resources.getResource("knowledge.activity.type.1032.comment.liked",
-                            convKnowledgeLink(systemUrl, String.valueOf(comment.getKnowledgeId())), activity.getUserName());
+                            convKnowledgeLink(systemUrl, String.valueOf(comment.getKnowledgeId())),
+                            convUserLink(systemUrl, activity.getInsertUser(), activity.getUserName()));
                 }
             }
         }
