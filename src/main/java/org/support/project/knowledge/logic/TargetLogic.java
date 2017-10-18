@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
@@ -138,6 +139,10 @@ public class TargetLogic {
 
         List<GroupsEntity> groups = targetsDao.selectGroupsOnKnowledgeIds(knowledgeIds);
         for (GroupsEntity groupsEntity : groups) {
+            if (groupsEntity.getDeleteFlag() != null && groupsEntity.getDeleteFlag().intValue() == INT_FLAG.ON.getValue()) {
+                // 削除済のユーザは表示しない
+                continue;
+            }
             LabelValue labelValue = new LabelValue();
             labelValue.setLabel(NAME_PREFIX_GROUP + groupsEntity.getGroupName());
             labelValue.setValue(ID_PREFIX_GROUP + groupsEntity.getGroupId());
@@ -166,9 +171,13 @@ public class TargetLogic {
             for (Integer groupId : groupIdMaps.get(usersEntity.getKnowledgeId())) {
                 if (groupUserIds.get(groupId).contains(usersEntity.getUserId())) {
                     continue;
-                }            		
+                }
             }
-
+            
+            if (usersEntity.getDeleteFlag() != null && usersEntity.getDeleteFlag().intValue() == INT_FLAG.ON.getValue()) {
+                // 削除済のユーザは表示しない
+                continue;
+            }
             LabelValue labelValue = new LabelValue();
             labelValue.setLabel(NAME_PREFIX_USER + usersEntity.getUserName());
             labelValue.setValue(ID_PREFIX_USER + usersEntity.getUserId());
