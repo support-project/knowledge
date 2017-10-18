@@ -146,7 +146,7 @@ public class ActivityLogic {
     }
 
     private String getDisplayDate(Date date, UserConfigs userConfigs) {
-        return DateConvertLogic.get().convertDate(date, userConfigs.getLocale(), String.valueOf(userConfigs.getTimezoneOffset()));
+        return DateConvertLogic.get().convertDate(date, userConfigs.getLocale(), userConfigs.getTimezoneOffset());
     }
     private String convKnowledgeLink(String systemUrl, String target) {
         StringBuilder builder = new StringBuilder();
