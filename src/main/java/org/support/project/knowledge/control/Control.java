@@ -2,6 +2,7 @@ package org.support.project.knowledge.control;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +14,7 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.log.LogLevel;
 import org.support.project.common.util.HtmlUtils;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.UserConfig;
@@ -22,8 +24,10 @@ import org.support.project.knowledge.vo.UserConfigs;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.logic.DateConvertLogic;
 import org.support.project.web.logic.NotificationLogic;
 import org.support.project.web.logic.SanitizingLogic;
+import org.support.project.web.util.JspUtil;
 
 @DI(instance = Instance.Prototype)
 public abstract class Control extends org.support.project.web.control.Control {
@@ -197,6 +201,16 @@ public abstract class Control extends org.support.project.web.control.Control {
             userConfigs.setLocale(login.getLocale());
         } else {
             userConfigs.setLocale(getLocale());
+        }
+        
+        if (userConfigs.getTimezone().equals("UTC")) {
+            String offset = HttpUtil.getCookie(getRequest(), JspUtil.TIME_ZONE_OFFSET);
+            if (StringUtils.isInteger(offset)) {
+                int off = Integer.parseInt(offset);
+                userConfigs.setTimezoneOffset(off);
+                TimeZone zone = DateConvertLogic.get().getTimezone(getLocale(), off);
+                userConfigs.setTimezone(zone.getDisplayName());
+            }
         }
         return userConfigs;
     }
