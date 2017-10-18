@@ -742,7 +742,7 @@ public class MailhookLogic {
             for (Address address : to) {
                 if (address instanceof InternetAddress) {
                     InternetAddress a = (InternetAddress) address;
-                    if (a.getAddress().equals(condition.getCondition())) {
+                    if (a.getAddress().indexOf(condition.getCondition())  != -1) {
                         return true;
                     }
                 } else {

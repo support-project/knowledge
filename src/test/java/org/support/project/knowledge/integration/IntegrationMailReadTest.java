@@ -167,4 +167,133 @@ public class IntegrationMailReadTest extends IntegrationCommon {
         assertNotificationCount(COMMENT_USER, 1);
     }
     
+    
+    
+    /**
+     * メールアドレスで投稿
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 300)
+    public void testPostOnRecipient1() throws Exception {
+        // データ完全初期化
+        setUpBeforeClass();
+        
+        // テストユーザ追加
+        addUser(CONFIG_USER);
+        addUser(POST_USER);
+        LoginedUser user = super.getLoginUser(CONFIG_USER);
+        
+        // メールから投稿設定（受信メールアドレスの一部で）
+        MailHookConditionsEntity condition = new MailHookConditionsEntity();
+        condition.setHookId(MailhookLogic.MAIL_HOOK_ID);
+        condition.setConditionNo(-1);
+        condition.setConditionKind(MailHookCondition.Recipient.getValue());
+        condition.setCondition("hoge@example.com");
+        condition.setProcessUser(user.getUserId());
+        condition.setProcessUserKind(1);
+        condition.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
+        condition.setTags("メールの宛先の一部で投稿");
+        MailhookLogic.get().saveCondition(condition);
+        
+        // メールから投稿
+        user = super.getLoginUser(POST_USER);
+        List<MailHookConditionsEntity> conditions = MailHookConditionsDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
+        StubMessage msg = new StubMessage();
+        Address[] addresses = {new StubAddress(user.getLoginUser().getMailAddress())};
+        msg.addFrom(addresses);
+        Address[] recipients = {new StubAddress("hoge@example.com")};
+        msg.setAllRecipients(recipients);
+        msg.setContent("投稿の本文になる");
+        msg.setSubject("メールアドレスの部分一致で投稿");
+        msg.addHeader("Message-ID", "MailHookTest-02");
+        
+        MailhookLogic.get().checkConditionsAndPost(msg, conditions);
+        Knowledge result = knowledgeGetOnAPI(POST_USER, 1);
+        Assert.assertEquals((long) 1, result.getKnowledgeId().longValue());
+        Assert.assertEquals("メールアドレスの部分一致で投稿", result.getTitle());
+
+        // メールから投稿
+        user = super.getLoginUser(POST_USER);
+        conditions = MailHookConditionsDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
+        msg = new StubMessage();
+        addresses[0] = new StubAddress(user.getLoginUser().getMailAddress());
+        msg.addFrom(addresses);
+        recipients[0] = new StubAddress("hoge_info@example.com");
+        msg.setAllRecipients(recipients);
+        msg.setContent("投稿の本文になる");
+        msg.setSubject("これは対象外になる");
+        msg.addHeader("Message-ID", "MailHookTest-03");
+        
+        MailhookLogic.get().checkConditionsAndPost(msg, conditions);
+        result = knowledgeGetOnAPI(POST_USER, 1);
+        Assert.assertEquals((long) 1, result.getKnowledgeId().longValue());
+        Assert.assertEquals("メールアドレスの部分一致で投稿", result.getTitle());
+    }
+    
+    /**
+     * メールアドレスの一部で投稿
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 301)
+    public void testPostOnRecipient2() throws Exception {
+        // データ完全初期化
+        setUpBeforeClass();
+        
+        // テストユーザ追加
+        addUser(CONFIG_USER);
+        addUser(POST_USER);
+        LoginedUser user = super.getLoginUser(CONFIG_USER);
+        
+        // メールから投稿設定（受信メールアドレスの一部で）
+        MailHookConditionsEntity condition = new MailHookConditionsEntity();
+        condition.setHookId(MailhookLogic.MAIL_HOOK_ID);
+        condition.setConditionNo(-1);
+        condition.setConditionKind(MailHookCondition.Recipient.getValue());
+        condition.setCondition("hoge");
+        condition.setProcessUser(user.getUserId());
+        condition.setProcessUserKind(1);
+        condition.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
+        condition.setTags("メールの宛先の一部で投稿");
+        MailhookLogic.get().saveCondition(condition);
+        
+        // メールから投稿
+        user = super.getLoginUser(POST_USER);
+        List<MailHookConditionsEntity> conditions = MailHookConditionsDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
+        StubMessage msg = new StubMessage();
+        Address[] addresses = {new StubAddress(user.getLoginUser().getMailAddress())};
+        msg.addFrom(addresses);
+        Address[] recipients = {new StubAddress("hoge@example.com")};
+        msg.setAllRecipients(recipients);
+        msg.setContent("投稿の本文になる");
+        msg.setSubject("メールアドレスの部分一致で投稿");
+        msg.addHeader("Message-ID", "MailHookTest-02");
+        
+        MailhookLogic.get().checkConditionsAndPost(msg, conditions);
+        Knowledge result = knowledgeGetOnAPI(POST_USER, 1);
+        Assert.assertEquals((long) 1, result.getKnowledgeId().longValue());
+        Assert.assertEquals("メールアドレスの部分一致で投稿", result.getTitle());
+        
+        // メールから投稿
+        user = super.getLoginUser(POST_USER);
+        conditions = MailHookConditionsDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
+        msg = new StubMessage();
+        addresses[0] = new StubAddress(user.getLoginUser().getMailAddress());
+        msg.addFrom(addresses);
+        recipients[0] = new StubAddress("hoge_info@example.com");
+        msg.setAllRecipients(recipients);
+        msg.setContent("投稿の本文になる");
+        msg.setSubject("こんどは投稿する");
+        msg.addHeader("Message-ID", "MailHookTest-03");
+        
+        MailhookLogic.get().checkConditionsAndPost(msg, conditions);
+        result = knowledgeGetOnAPI(POST_USER, 2);
+        Assert.assertEquals((long) 2, result.getKnowledgeId().longValue());
+        Assert.assertEquals("こんどは投稿する", result.getTitle());
+    }
+    
+    
+    
+    
 }
