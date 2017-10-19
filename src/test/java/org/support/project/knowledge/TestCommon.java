@@ -288,7 +288,7 @@ public abstract class TestCommon {
     protected UsersEntity addUser(String userKey) {
         synchronized (this) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
             }
         }
