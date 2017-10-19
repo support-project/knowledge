@@ -1,0 +1,4 @@
+SELECT * FROM CLOB_TABLE
+ WHERE 
+NO = ?
+;

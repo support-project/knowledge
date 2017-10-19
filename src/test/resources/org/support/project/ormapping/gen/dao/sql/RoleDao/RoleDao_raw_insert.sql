@@ -1,0 +1,16 @@
+INSERT INTO ROLE
+( 
+ROLE_ID
+ , ROLE_NAME
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);
