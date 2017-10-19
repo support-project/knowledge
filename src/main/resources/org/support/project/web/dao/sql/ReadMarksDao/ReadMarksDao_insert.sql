@@ -1,0 +1,22 @@
+INSERT INTO READ_MARKS
+( 
+NO
+ , USER_ID
+ , SHOW_NEXT_TIME
+ , ROW_ID
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

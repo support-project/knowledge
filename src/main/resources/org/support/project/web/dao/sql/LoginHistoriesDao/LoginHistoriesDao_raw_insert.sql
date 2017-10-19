@@ -1,0 +1,26 @@
+INSERT INTO LOGIN_HISTORIES
+( 
+LOGIN_COUNT
+ , USER_ID
+ , LODIN_DATE_TIME
+ , IP_ADDRESS
+ , USER_AGENT
+ , ROW_ID
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

@@ -1,0 +1,9 @@
+SELECT
+        USERS.*
+    FROM
+        USERS INNER JOIN USER_GROUPS
+            ON USER_GROUPS.USER_ID = USERS.USER_ID
+WHERE
+    USER_GROUPS.GROUP_ID = ?;
+    
+    
