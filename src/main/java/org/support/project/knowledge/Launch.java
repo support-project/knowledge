@@ -6,6 +6,7 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
+import org.apache.tomcat.util.scan.StandardJarScanner;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 
@@ -35,6 +36,10 @@ public class Launch {
 
         StandardContext ctx = (StandardContext) tomcat.addWebapp("/", new File(webappDirLocation).getAbsolutePath());
         System.out.println("configuring app with basedir: " + new File("./" + webappDirLocation).getAbsolutePath());
+
+        // Class の Scan のときの警告ログを表示しない
+        StandardJarScanner jarScanner = (StandardJarScanner) ctx.getJarScanner();
+        jarScanner.setScanManifest(false);
 
         // Declare an alternative location for your "WEB-INF/classes" dir
         // Servlet 3.0 annotation will work
