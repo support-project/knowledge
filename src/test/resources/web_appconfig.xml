@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app>
+    <systemName>web</systemName>
+    <systemVersion>0.0.1</systemVersion>
+    <envKey>APP_HOME</envKey>
+    <time_zone>Asia/Tokyo</time_zone>
+    <basePath>{user.home}/.web</basePath>
+    <tmpPath>{base.path}/tmp/</tmpPath>
+    <databasePath>{base.path}/db/</databasePath>
+    <logsPath>{base.path}/logs/</logsPath>
+    <uploadMaxMBSize>500</uploadMaxMBSize>
+    <hashIterations>100</hashIterations>
+    <migratePackage>blankapp.migrate</migratePackage>
+    <batchs>
+        <batch>
+            <name>BatchSample</name>
+            <type>Java</type>
+            <command>org.support.project.web.batch.TestBatch</command>
+            <term>5</term>
+            <timeUnit>SECONDS</timeUnit>
+        </batch>
+        <batch>
+            <name>FileList</name>
+            <type>Normal</type>
+            <command>ls -la</command>
+            <term>10</term>
+        </batch>
+    </batchs>
+    <languages>
+        <language>
+            <label>jp</label>
+            <value>ja</value>
+        </language>
+        <language>
+            <label>us</label>
+            <value>en</value>
+        </language>
+    </languages>
+</app>
+
+

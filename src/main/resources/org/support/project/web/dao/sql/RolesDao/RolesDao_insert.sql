@@ -1,0 +1,22 @@
+INSERT INTO ROLES
+( 
+ROLE_ID
+ , ROLE_KEY
+ , ROLE_NAME
+ , ROW_ID
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+DEFAULT
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

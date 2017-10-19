@@ -1,0 +1,14 @@
+UPDATE ACCESS_LOGS
+SET 
+   PATH = ?
+ , IP_ADDRESS = ?
+ , USER_AGENT = ?
+ , ROW_ID = ?
+ , INSERT_USER = ?
+ , INSERT_DATETIME = ?
+ , UPDATE_USER = ?
+ , UPDATE_DATETIME = ?
+ , DELETE_FLAG = ?
+WHERE 
+NO = ?
+;
