@@ -11,3 +11,4 @@ tomcat.8080
 .checkstyle
 .idea
 .m2
+out.txt

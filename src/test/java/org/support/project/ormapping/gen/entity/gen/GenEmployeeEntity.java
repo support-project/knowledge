@@ -1,0 +1,372 @@
+package org.support.project.ormapping.gen.entity.gen;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+
+import java.sql.Timestamp;
+
+import org.support.project.common.bean.ValidateError;
+import org.support.project.common.validate.Validator;
+import org.support.project.common.validate.ValidatorFactory;
+import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
+
+/**
+ * 従業員
+ */
+@DI(instance = Instance.Prototype)
+public class GenEmployeeEntity implements Serializable {
+
+    /** SerialVersion */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * インスタンス取得 AOPに対応
+     * 
+     * @return インスタンス
+     */
+    public static GenEmployeeEntity get() {
+        return Container.getComp(GenEmployeeEntity.class);
+    }
+
+    /**
+     * コンストラクタ
+     */
+    public GenEmployeeEntity() {
+        super();
+    }
+
+    /**
+     * コンストラクタ
+     * 
+     * @param employeeId
+     *            従業員ID
+     */
+
+    public GenEmployeeEntity(String employeeId) {
+        super();
+        this.employeeId = employeeId;
+    }
+
+    /** 従業員ID */
+    private String employeeId;
+    /** 従業員名 */
+    private String employeeName;
+    /** パスワード */
+    private String password;
+    /** メールアドレス */
+    private String mailAdress;
+    /** 登録ユーザ */
+    private String insertUser;
+    /** 登録日時 */
+    private Timestamp insertDatetime;
+    /** 更新ユーザ */
+    private String updateUser;
+    /** 更新日時 */
+    private Timestamp updateDatetime;
+
+    /**
+     * 従業員ID を取得する
+     */
+    public String getEmployeeId() {
+        return this.employeeId;
+    }
+
+    /**
+     * 従業員ID を設定する
+     * 
+     * @param employeeId
+     *            従業員ID
+     */
+    public GenEmployeeEntity setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+        return this;
+    }
+
+    /**
+     * 従業員名 を取得する
+     */
+    public String getEmployeeName() {
+        return this.employeeName;
+    }
+
+    /**
+     * 従業員名 を設定する
+     * 
+     * @param employeeName
+     *            従業員名
+     */
+    public GenEmployeeEntity setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+        return this;
+    }
+
+    /**
+     * パスワード を取得する
+     */
+    public String getPassword() {
+        return this.password;
+    }
+
+    /**
+     * パスワード を設定する
+     * 
+     * @param password
+     *            パスワード
+     */
+    public GenEmployeeEntity setPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    /**
+     * メールアドレス を取得する
+     */
+    public String getMailAdress() {
+        return this.mailAdress;
+    }
+
+    /**
+     * メールアドレス を設定する
+     * 
+     * @param mailAdress
+     *            メールアドレス
+     */
+    public GenEmployeeEntity setMailAdress(String mailAdress) {
+        this.mailAdress = mailAdress;
+        return this;
+    }
+
+    /**
+     * 登録ユーザ を取得する
+     */
+    public String getInsertUser() {
+        return this.insertUser;
+    }
+
+    /**
+     * 登録ユーザ を設定する
+     * 
+     * @param insertUser
+     *            登録ユーザ
+     */
+    public GenEmployeeEntity setInsertUser(String insertUser) {
+        this.insertUser = insertUser;
+        return this;
+    }
+
+    /**
+     * 登録日時 を取得する
+     */
+    public Timestamp getInsertDatetime() {
+        return this.insertDatetime;
+    }
+
+    /**
+     * 登録日時 を設定する
+     * 
+     * @param insertDatetime
+     *            登録日時
+     */
+    public GenEmployeeEntity setInsertDatetime(Timestamp insertDatetime) {
+        this.insertDatetime = insertDatetime;
+        return this;
+    }
+
+    /**
+     * 更新ユーザ を取得する
+     */
+    public String getUpdateUser() {
+        return this.updateUser;
+    }
+
+    /**
+     * 更新ユーザ を設定する
+     * 
+     * @param updateUser
+     *            更新ユーザ
+     */
+    public GenEmployeeEntity setUpdateUser(String updateUser) {
+        this.updateUser = updateUser;
+        return this;
+    }
+
+    /**
+     * 更新日時 を取得する
+     */
+    public Timestamp getUpdateDatetime() {
+        return this.updateDatetime;
+    }
+
+    /**
+     * 更新日時 を設定する
+     * 
+     * @param updateDatetime
+     *            更新日時
+     */
+    public GenEmployeeEntity setUpdateDatetime(Timestamp updateDatetime) {
+        this.updateDatetime = updateDatetime;
+        return this;
+    }
+
+    /**
+     * キーの値を取得
+     */
+    public Object[] getKeyValues() {
+        Object[] keyValues = new Object[1];
+        keyValues[0] = this.employeeId;
+        return keyValues;
+    }
+
+    /**
+     * キーの値を設定
+     * 
+     * @param employeeId
+     *            従業員ID
+     */
+    public void setKeyValues(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    /**
+     * キーで比較
+     */
+    public boolean equalsOnKey(GenEmployeeEntity entity) {
+        Object[] keyValues1 = getKeyValues();
+        Object[] keyValues2 = entity.getKeyValues();
+        for (int i = 0; i < keyValues1.length; i++) {
+            Object val1 = keyValues1[i];
+            Object val2 = keyValues2[i];
+            if (val1 == null && val2 != null) {
+                return false;
+            }
+            if (val1 != null && val2 == null) {
+                return false;
+            }
+            if (val1 != null && val2 != null) {
+                if (!val1.equals(val2)) {
+                    return false;
+                }
+            }
+
+        }
+        return true;
+    }
+
+    /**
+     * ToString
+     */
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("employeeId = ").append(employeeId).append("\n");
+        builder.append("employeeName = ").append(employeeName).append("\n");
+        builder.append("password = ").append(password).append("\n");
+        builder.append("mailAdress = ").append(mailAdress).append("\n");
+        builder.append("insertUser = ").append(insertUser).append("\n");
+        builder.append("insertDatetime = ").append(insertDatetime).append("\n");
+        builder.append("updateUser = ").append(updateUser).append("\n");
+        builder.append("updateDatetime = ").append(updateDatetime).append("\n");
+        return builder.toString();
+    }
+
+    /**
+     * 表示用の名称を変換
+     */
+    protected String convLabelName(String label) {
+        return label;
+    }
+
+    /**
+     * validate
+     */
+    public List<ValidateError> validate() {
+        List<ValidateError> errors = new ArrayList<>();
+        Validator validator;
+        ValidateError error;
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(this.employeeId, convLabelName("Employee Id"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.employeeId, convLabelName("Employee Id"), 15);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.employeeName, convLabelName("Employee Name"), 50);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.password, convLabelName("Password"), 124);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.mailAdress, convLabelName("Mail Adress"), 256);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.insertUser, convLabelName("Insert User"), 15);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(this.updateUser, convLabelName("Update User"), 15);
+        if (error != null) {
+            errors.add(error);
+        }
+        return errors;
+    }
+
+    /**
+     * validate
+     */
+    public List<ValidateError> validate(Map<String, String> values) {
+        List<ValidateError> errors = new ArrayList<>();
+        Validator validator;
+        ValidateError error;
+        validator = ValidatorFactory.getInstance(Validator.REQUIRED);
+        error = validator.validate(values.get("employeeId"), convLabelName("Employee Id"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("employeeId"), convLabelName("Employee Id"), 15);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("employeeName"), convLabelName("Employee Name"), 50);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("password"), convLabelName("Password"), 124);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("mailAdress"), convLabelName("Mail Adress"), 256);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("insertUser"), convLabelName("Insert User"), 15);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
+        error = validator.validate(values.get("updateUser"), convLabelName("Update User"), 15);
+        if (error != null) {
+            errors.add(error);
+        }
+        return errors;
+    }
+
+}

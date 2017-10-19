@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	
+	<!-- ConsoleAppender -->
+	<appender name="APP_STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p [%t] %d [%c{1}]  %m%n" />
+		</layout>
+	</appender>
+
+	<!-- FileAppender -->
+	<appender name="APP_FILEOUT" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="applog.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p [%t] %d [%c{1}]  %m%n" />
+		</layout>
+	</appender>
+
+	<!-- 特定のログのレベルの指定 -->
+	<category name="org.support.project.common">
+		<level value="INFO" />
+	</category>
+
+	
+	<!-- Root Logger: Other -->
+	<root>
+		<priority value="DEBUG" />
+		<appender-ref ref="APP_STDOUT" />
+	</root>
+
+</log4j:configuration>
+
+
+
+	<!--
+		レイアウトパターン 概要 
+		%c カテゴリー名。 %c{1} と記述した場合、一番「下の」 レベルのみ出力できる。
+		  「sample.pg.LoggerSample」の場合、「LoggerSample」となる。 
+		%C ログを生成したクラス名。カテゴリ名では無くクラス名。 %C{1} と記述した場合、一番「下の」 レベルのみ出力できる。
+		  「sample.pg.LoggerSample」の場合、「LoggerSample」となる。 
+		%d 日付。 %d{yyyy-MMM-dd HH:mm:ss,SSS} の様に詳細に指定できる。 
+		%l %F、%L、%Mを纏めた情報。※性能に問題あり。 
+		%F ログを生成したソースファイル名。※性能に問題あり 
+		%L ログを生成した箇所のソースの行番号。※性能に問題あり 
+		%M ログを生成したメソッドの名前。※性能に問題あり 
+		%m ログメッセージ %x NDC でpushした値 
+		%X{key} MDC に保存されたkey の値 
+		%n 改行コードを生成する。 
+		%p ログレベル（FATALやINFOなど） 
+		%r アプリケーションが開始してからの通算時間（ミリ秒） 
+		%t ログを生成したスレッド名
+	-->
