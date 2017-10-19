@@ -39,7 +39,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>8.0.39</tomcat.version>
+        <tomcat.version>8.5.23</tomcat.version>
     </properties>
 
     <repositories>
@@ -76,11 +76,6 @@
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-logging-juli</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
             <version>${tomcat.version}</version>
         </dependency>
@@ -103,6 +98,11 @@
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-websocket</artifactId>
             <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-logging-juli</artifactId>
+            <version>8.5.2</version>
         </dependency>
 
         <dependency>
@@ -307,7 +307,6 @@
                             <arguments>install</arguments>
                         </configuration>
                     </execution>
-                    <!-- 
                     <execution>
                         <id>gulp</id>
                         <phase>package</phase>
@@ -318,7 +317,6 @@
                             <arguments>default</arguments>
                         </configuration>
                     </execution>
-                     -->
                 </executions>
             </plugin>
             -->
