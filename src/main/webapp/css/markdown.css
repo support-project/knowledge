@@ -1,6 +1,7 @@
 .markdown a {
     /* color: #4183C4; */
     /* color: #18bc9c; */
+    word-wrap: break-word;
 }
 
 .markdown a.absent {
