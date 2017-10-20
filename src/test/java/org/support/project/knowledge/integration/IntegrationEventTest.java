@@ -10,6 +10,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.test.Order;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.logic.AggregateLogic;
 import org.support.project.knowledge.logic.EventsLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
@@ -269,4 +270,21 @@ public class IntegrationEventTest extends IntegrationCommon {
         assertPointHistoryCount(POST_USER, 4);
         assertPointHistoryCount(JOIN_USER, 2);
     }
+
+
+    /**
+     * 再集計を実行
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 1000)
+    public void testAggregate() throws Exception {
+        AggregateLogic.get().startAggregate();
+        // CPは変化しない
+        assertCP(POST_USER, 0);
+        assertCP(JOIN_USER, 0);
+        assertKnowledgeCP(POST_USER, knowledgeId, 0);
+    }
+
+
 }

@@ -229,6 +229,12 @@ public abstract class TestCommon {
      * @return
      */
     private static List<RolesEntity> addUser(LoginedUser user, String userName, Integer[] roleIds) {
+        synchronized (user) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+            }
+        }
         // テスト用のユーザを登録
         UsersEntity entity = new UsersEntity();
         entity.setUserKey(RandomUtil.randamGen(64));
@@ -237,6 +243,13 @@ public abstract class TestCommon {
         entity.setMailAddress("sample@example.com");
         entity = UsersDao.get().insert(entity);
         user.setLoginUser(entity);
+
+        synchronized (user) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+            }
+        }
 
         RolesDao rolesDao = RolesDao.get();
         for (Integer roleId : roleIds) {
@@ -249,6 +262,12 @@ public abstract class TestCommon {
         user.setRoles(rolesEntities);
         return rolesEntities;
     }
+
+
+
+
+
+
     /**
      * ナレッジを登録
      * @param title
@@ -286,13 +305,36 @@ public abstract class TestCommon {
      * @return
      */
     protected UsersEntity addUser(String userKey) {
+        UsersEntity user = null;
+        int count = 0;
+        while (user == null) {
+            try {
+                user = doAddUser(userKey);
+            } catch (Exception e) {
+                count++;
+                if (count > 10) {
+                    throw e;
+                }
+                LOG.warn("insert user error. " + e.getMessage() + " retry add User");
+            }
+        }
+        UsersEntity check = UsersDao.get().selectOnUserKey(user.getUserKey());
+        Assert.assertNotNull(check);
+        Assert.assertEquals(user.getUserKey(), check.getUserKey());
+        Assert.assertEquals(user.getLocaleKey(), check.getLocaleKey());
+        Assert.assertEquals(user.getMailAddress(), check.getMailAddress());
+        Assert.assertEquals(user.getUserName(), check.getUserName());
+        
+        return user;
+    }
+
+    private UsersEntity doAddUser(String userKey) {
         synchronized (this) {
             try {
                 Thread.sleep(300);
             } catch (InterruptedException e) {
             }
         }
-        
         UsersEntity user = new UsersEntity();
         user.setAuthLdap(INT_FLAG.OFF.getValue());
         user.setEncrypted(false);
@@ -303,16 +345,10 @@ public abstract class TestCommon {
         user.setPassword(IDGen.get().gen("hoge"));
         String[] roles = {"user"};
         user = UserLogicEx.get().insert(user, roles);
-        
-        UsersEntity check = UsersDao.get().selectOnUserKey(user.getUserKey());
-        Assert.assertNotNull(check);
-        Assert.assertEquals(user.getUserKey(), check.getUserKey());
-        Assert.assertEquals(user.getLocaleKey(), check.getLocaleKey());
-        Assert.assertEquals(user.getMailAddress(), check.getMailAddress());
-        Assert.assertEquals(user.getUserName(), check.getUserName());
-        
         return user;
     }
+
+
     /**
      * 登録されているユーザのログインユーザ情報を取得
      * @param userKey

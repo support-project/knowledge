@@ -11,6 +11,7 @@ import org.support.project.common.util.PropertyUtil;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
+import org.support.project.knowledge.logic.AggregateLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
@@ -228,7 +229,23 @@ public class IntegrationProtectTest extends IntegrationCommon {
         assertNotificationCount(POST_USER, 0);
         assertNotificationCount(USER1, 0);
     }
-    
-    
-    
+
+
+
+    /**
+     * 再集計を実行
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 1000)
+    public void testAggregate() throws Exception {
+        AggregateLogic.get().startAggregate();
+        // CPは変化しない
+        assertCP(POST_USER, 0);
+        assertCP(USER1, 0);
+        assertKnowledgeCP(POST_USER, knowledgeId, 0);
+    }
+
+
+
 }

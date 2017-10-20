@@ -12,6 +12,7 @@ import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
+import org.support.project.knowledge.logic.AggregateLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.boundary.ForwardBoundary;
@@ -665,5 +666,23 @@ public class IntegrationPostTest extends IntegrationCommon {
         assertPointHistoryCount(KNOWLEDGE_POST_USER, 9);
         assertPointHistoryCount(COMMENT_POST_USER, 6);
     }
+
+
+
+
+    /**
+     * 再集計を実行
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 1000)
+    public void testAggregate() throws Exception {
+        AggregateLogic.get().startAggregate();
+        // CPは変化しない
+        assertCP(COMMENT_POST_USER, 0);
+        assertCP(KNOWLEDGE_POST_USER, 0);
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0);
+    }
+
 
 }
