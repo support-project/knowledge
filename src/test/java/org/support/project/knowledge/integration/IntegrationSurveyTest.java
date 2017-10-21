@@ -10,12 +10,12 @@ import org.support.project.common.test.Order;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
+import org.support.project.knowledge.entity.SurveysEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
-import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.boundary.JsonBoundary;
 import org.support.project.web.common.HttpStatus;
@@ -34,6 +34,7 @@ public class IntegrationSurveyTest extends IntegrationCommon {
     
     private static final String POST_USER = "integration-test-user-01";
     private static final String ANSWER_USER = "integration-test-user-02";
+    private static final String OTHER_USER = "integration-test-user-03";
     
     private static long knowledgeId;
     
@@ -48,6 +49,7 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         LOG.info("ユーザ登録");
         addUser(POST_USER);
         addUser(ANSWER_USER);
+        addUser(OTHER_USER);
     }
     
     /**
@@ -114,14 +116,15 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         
         request.setServletPath("protect.survey/load/" + knowledgeId);
         request.setMethod("get");
+        DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
+        auth.setSession(POST_USER, request, response);
         JsonBoundary msg = invoke(request, response, JsonBoundary.class);
-        Msg result = (Msg) msg.getObj();
-        Assert.assertEquals("survey data is not exists.", result.getMsg());
+        SurveysEntity result = (SurveysEntity) msg.getObj();
+        Assert.assertEquals("", result.getDescription());
+        Assert.assertEquals(true, result.isEditable());
         
         request.setServletPath("protect.survey/save");
         request.setMethod("post");
-        DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
-        auth.setSession(POST_USER, request, response);
         
         String csrfToken = (String) request.getAttribute(HttpRequestCheckLogic.REQ_ID_KEY);
         request.addParameter(HttpRequestCheckLogic.REQ_ID_KEY, csrfToken);
@@ -257,9 +260,24 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         response = new StubHttpServletResponse(request);
         request.setServletPath("protect.survey/load/" + knowledgeId);
         request.setMethod("get");
+        auth.setSession(POST_USER, request, response);
         JsonBoundary msg = invoke(request, response, JsonBoundary.class);
-        Msg result = (Msg) msg.getObj();
-        Assert.assertEquals("survey data is not exists.", result.getMsg());
+        SurveysEntity result = (SurveysEntity) msg.getObj();
+        Assert.assertEquals("", result.getDescription());
+        Assert.assertEquals(true, result.isEditable());
+        Assert.assertEquals(false, result.isExist());
+        
+        request = new StubHttpServletRequest();
+        response = new StubHttpServletResponse(request);
+        request.setServletPath("protect.survey/load/" + knowledgeId);
+        request.setMethod("get");
+        auth.setSession(OTHER_USER, request, response);
+        msg = invoke(request, response, JsonBoundary.class);
+        result = (SurveysEntity) msg.getObj();
+        Assert.assertEquals("", result.getDescription());
+        Assert.assertEquals(false, result.isEditable());
+        Assert.assertEquals(false, result.isExist());
+        
         request.setServletPath("protect.survey/save");
         request.setMethod("post");
         auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
@@ -274,6 +292,17 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         MessageResult messageResult = (MessageResult) jsonBoundary.getObj();
         LOG.info(messageResult);
         Assert.assertEquals(HttpStatus.SC_200_OK, messageResult.getCode().intValue());
+        
+        request = new StubHttpServletRequest();
+        response = new StubHttpServletResponse(request);
+        request.setServletPath("protect.survey/load/" + knowledgeId);
+        request.setMethod("get");
+        auth.setSession(OTHER_USER, request, response);
+        msg = invoke(request, response, JsonBoundary.class);
+        result = (SurveysEntity) msg.getObj();
+        Assert.assertEquals(null, result.getDescription());
+        Assert.assertEquals(false, result.isEditable());
+        Assert.assertEquals(true, result.isExist());
     }
     
     
