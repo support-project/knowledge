@@ -30,7 +30,6 @@ import org.support.project.knowledge.logic.activity.Activity;
 import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.SurveyReport;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.MessageStatus;
@@ -146,7 +145,19 @@ public class SurveyControl extends TemplateControl {
         Long id = super.getPathLong(new Long(-1));
         SurveysEntity entity = SurveyLogic.get().loadSurvey(id, getLoginUserId());
         if (entity == null) {
-            return send(new Msg("survey data is not exists."));
+            entity = new SurveysEntity();
+            entity.setDescription("");
+            entity.setItems(new ArrayList<>());
+            entity.setExist(false);
+        } else {
+            entity.setExist(true);
+        }
+        KnowledgesEntity knowledge = KnowledgeLogic.get().select(id, getLoginedUser());
+        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(id);
+        if (knowledge != null && KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledge, editors)) {
+            entity.setEditable(true);
+        } else {
+            entity.setEditable(false);
         }
         return send(entity);
     }
