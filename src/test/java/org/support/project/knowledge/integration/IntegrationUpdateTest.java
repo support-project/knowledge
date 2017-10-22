@@ -11,6 +11,7 @@ import org.support.project.common.util.PropertyUtil;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
+import org.support.project.knowledge.logic.AggregateLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.web.bean.MessageResult;
@@ -276,7 +277,7 @@ public class IntegrationUpdateTest extends IntegrationCommon {
         assertNotificationCount(POST_USER, 0);
         assertNotificationCount(USER1, 0);
     }
-    
+
     
     /**
      * 記事を削除
@@ -323,5 +324,9 @@ public class IntegrationUpdateTest extends IntegrationCommon {
         assertPointHistoryCount(POST_USER, 6);
         assertPointHistoryCount(USER1, 1);
     }
-    
+
+
+
+
+
 }

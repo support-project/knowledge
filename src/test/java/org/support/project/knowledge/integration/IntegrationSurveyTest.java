@@ -10,6 +10,7 @@ import org.support.project.common.test.Order;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
+import org.support.project.knowledge.logic.AggregateLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
@@ -190,7 +191,7 @@ public class IntegrationSurveyTest extends IntegrationCommon {
     }
 
     /**
-     * アンケート作成後の確認
+     * アンケート回答後の確認
      * @throws Exception
      */
     @Test
@@ -216,7 +217,23 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         assertPointHistoryCount(POST_USER, 3);
         assertPointHistoryCount(ANSWER_USER, 2);
     }
-    
+
+
+    /**
+     * 再集計を実行
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 699)
+    public void testAggregate() throws Exception {
+        AggregateLogic.get().startAggregate();
+        // CPは変化しない
+        assertCP(POST_USER, 0);
+        assertCP(ANSWER_USER, 0);
+        assertKnowledgeCP(POST_USER, knowledgeId, 0);
+    }
+
+
     /**
      * アンケートの編集権限の確認
      * @throws Exception
@@ -252,7 +269,7 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         
         Long knowledgeId = new Long(sendObject.getResult());
         
-        // アンケート登録
+        // アンケート保存
         request = new StubHttpServletRequest();
         response = new StubHttpServletResponse(request);
         request.setServletPath("protect.survey/load/" + knowledgeId);
@@ -275,7 +292,9 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         LOG.info(messageResult);
         Assert.assertEquals(HttpStatus.SC_200_OK, messageResult.getCode().intValue());
     }
-    
+
+
+
     
     
 }

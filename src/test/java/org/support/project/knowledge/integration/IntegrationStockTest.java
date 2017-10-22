@@ -13,6 +13,7 @@ import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.entity.StockKnowledgesEntity;
 import org.support.project.knowledge.entity.StocksEntity;
+import org.support.project.knowledge.logic.AggregateLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.vo.Stock;
@@ -212,7 +213,6 @@ public class IntegrationStockTest extends IntegrationCommon {
         DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
         auth.setSession(STOCK_USER, request, response);
         
-        // ストック一覧は無い
         request.setServletPath("protect.stock/knowledge");
         request.setMethod("get");
         request.setAttribute("stockId", String.valueOf(stockId));
@@ -239,9 +239,24 @@ public class IntegrationStockTest extends IntegrationCommon {
         assertNotificationCount(POST_USER, 0);
         assertNotificationCount(STOCK_USER, 0);
     }
-    
 
-    
+
+    /**
+     * 再集計を実行
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 302)
+    public void testAggregate() throws Exception {
+        AggregateLogic.get().startAggregate();
+        // CPは変化しない
+        assertCP(POST_USER, 0);
+        assertCP(STOCK_USER, 0);
+        assertKnowledgeCP(POST_USER, knowledgeId, 0);
+    }
+
+
+
     /**
      * ストックから外す
      * @throws Exception
@@ -275,7 +290,7 @@ public class IntegrationStockTest extends IntegrationCommon {
     }   
     
     /**
-     * ストックに入ったことを確認
+     * ストックから解除されたことを確認
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -300,6 +315,7 @@ public class IntegrationStockTest extends IntegrationCommon {
     
     /**
      * ストックから削除後の状態確認
+     * （ストックから削除しても原点していないため、CPはそのまま）
      * @throws Exception
      */
     @Test
@@ -352,7 +368,7 @@ public class IntegrationStockTest extends IntegrationCommon {
     }
     
     /**
-     * ストックを更新
+     * ストックを削除
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -394,5 +410,22 @@ public class IntegrationStockTest extends IntegrationCommon {
         assertPointHistoryCount(POST_USER, 3);
         assertPointHistoryCount(STOCK_USER, 1);
     }
-    
+
+
+    /**
+     * 再集計を実行
+     * ストックを解除後に再実行しており、削除したポイント分、ポイントが下がる
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 1000)
+    public void testAggregate2() throws Exception {
+        AggregateLogic.get().startAggregate();
+        // CPは変化しない
+        assertCP(POST_USER, -2);
+        assertCP(STOCK_USER, 0);
+        assertKnowledgeCP(POST_USER, knowledgeId, -2);
+    }
+
+
 }
