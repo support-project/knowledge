@@ -7,10 +7,10 @@ import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.web.bean.ApiParams;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
-import org.support.project.web.control.ApiControl;
+import org.support.project.web.control.GetApiControl;
 import org.support.project.web.control.service.Get;
 
-public class AttachControl extends ApiControl {
+public class AttachControl extends GetApiControl {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(AttachControl.class);
 
