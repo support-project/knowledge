@@ -15,18 +15,20 @@ public class SearchingValue {
 
     /** データのタイプ */
     private Integer type;
-    /** テンプレートのタイプ */
-    private Integer template;
 
-    /** コンテンツの文字列 */
+    /** 検索のキーワード */
     private String keyword;
 
-    /** ユーザの文字列 */
-    private List<Integer> users = new ArrayList<Integer>();
-    /** グループの文字列 */
-    private List<Integer> groups = new ArrayList<Integer>();
-    /** タグの文字列 */
+    /** タグの文字列(AND条件) */
     private List<Integer> tags = new ArrayList<Integer>();
+
+    /** アクセス可能なユーザ（ログインユーザのユーザIDの + 公開先ユーザ指定) (OR条件)*/
+    private List<Integer> users = new ArrayList<Integer>();
+    /** アクセス可能なグループ(ログインユーザの所属しているグループ + 公開先グループ指定) (OR条件) */
+    private List<Integer> groups = new ArrayList<Integer>();
+
+    /** テンプレート(OR条件) */
+    private List<Integer> templates = new ArrayList<Integer>();
 
     /** 読み出し開始 */
     private int offset;
@@ -113,6 +115,22 @@ public class SearchingValue {
     }
 
     /**
+     * Get templates
+     * @return templates
+     */
+    public List<Integer> getTemplates() {
+        return templates;
+    }
+
+    /**
+     * Add template
+     * @param templateId template
+     */
+    public void addTemplate(Integer templateId) {
+        this.templates.add(templateId);
+    }
+
+    /**
      * @param type the type to set
      */
     public void setType(Integer type) {
@@ -167,7 +185,6 @@ public class SearchingValue {
     public void setLimit(int limit) {
         this.limit = limit;
     }
-
     /**
      * @return the creator
      */
@@ -177,7 +194,6 @@ public class SearchingValue {
         }
         return "";
     }
-
     /**
      * @param creator the creator to set
      */
@@ -185,18 +201,5 @@ public class SearchingValue {
         this.creator = creator;
     }
 
-    /**
-     * @return the template
-     */
-    public Integer getTemplate() {
-        return template;
-    }
-
-    /**
-     * @param template the template to set
-     */
-    public void setTemplate(Integer template) {
-        this.template = template;
-    }
 
 }

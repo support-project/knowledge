@@ -255,7 +255,7 @@ public class SearchTest {
         assertEquals(2, results.size());
 
         searchingValue = new SearchingValue();
-        searchingValue.setTemplate(1);
+        searchingValue.addTemplate(1);
         results = searcher.search(searchingValue, 1);
         assertEquals(1, results.size());
     }

@@ -549,7 +549,7 @@ public class KnowledgeLogic {
         }
         // テンプレート指定もユーザに関係なく条件追加
         if (StringUtils.isNotEmpty(template) && StringUtils.isInteger(template)) {
-            searchingValue.setTemplate(new Integer(template));
+            searchingValue.addTemplate(new Integer(template));
         }
         // ログインしてない場合はグループ検索ができないので公開記事のみを対象にして検索する
         if (loginedUser == null) {
