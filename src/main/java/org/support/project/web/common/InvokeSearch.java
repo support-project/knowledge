@@ -159,8 +159,17 @@ public class InvokeSearch {
         }
         InvokeTarget invokeTarget = new InvokeTarget(class1, method, targetPackageName, classSuffix, new LinkedHashMap<>());
         if (invokeTargets.containsKey(key)) {
+            InvokeTarget exists =  invokeTargets.get(key);
+            if (exists.getTargetClass().getName().equals(invokeTarget.getTargetClass().getName())
+                    && exists.getTargetMethod().getName().equals(invokeTarget.getTargetMethod().getName())) {
+                //なぜか、同じクラスの同じメソッドが二回登録されることがあるのでスキップ
+                LOG.info("same target duplicate add. [" + key + "]");
+                return;
+            }
             // 既に指定のパスが使われている
             LOG.error("Target duplicated. [" + key + "]");
+            LOG.error("class:" + invokeTarget.getTargetClass().getName() + "  method:" + invokeTarget.getTargetMethod().getName());
+            LOG.error("class:" + exists.getTargetClass().getName() + "  method:" + exists.getTargetMethod().getName());
             throw new SystemException("Target duplicated. [" + key + "]");
         }
         // 大文字／小文字は判定しない

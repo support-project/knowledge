@@ -4,6 +4,7 @@ node
 node_modules
 knowledge.iml
 tomcat.8080
+out.txt
 .classpath
 .project
 .settings
@@ -11,4 +12,7 @@ tomcat.8080
 .checkstyle
 .idea
 .m2
-out.txt
+.postgres
+.env
+.es_data
+.knowledge

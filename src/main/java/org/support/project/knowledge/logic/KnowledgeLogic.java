@@ -534,7 +534,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, String template, LoginedUser loginedUser,
+    public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, String[] templates, LoginedUser loginedUser,
             Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setKeyword(keyword);
@@ -548,8 +548,12 @@ public class KnowledgeLogic {
             }
         }
         // テンプレート指定もユーザに関係なく条件追加
-        if (StringUtils.isNotEmpty(template) && StringUtils.isInteger(template)) {
-            searchingValue.setTemplate(new Integer(template));
+        if (templates != null) {
+            for (String template: templates) {
+                if (StringUtils.isNotEmpty(template) && StringUtils.isInteger(template)) {
+                    searchingValue.addTemplate(new Integer(template));
+                }
+            }
         }
         // ログインしてない場合はグループ検索ができないので公開記事のみを対象にして検索する
         if (loginedUser == null) {
@@ -690,11 +694,10 @@ public class KnowledgeLogic {
 
     /**
      * 指定ユーザのナレッジを取得
-     * 
-     * @param userId
+     * @param targetUser
      * @param loginedUser
-     * @param i
-     * @param pageLimit
+     * @param offset
+     * @param limit
      * @return
      * @throws Exception
      */

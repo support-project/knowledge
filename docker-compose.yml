@@ -2,24 +2,76 @@ version: '2.1'
 
 services:
   dev:
-    image: knowledge-maven
+    image: knowledge
     build:
       context: .
       args:
         - https_proxy
         - http_proxy
+    ports:
+      - 8080:8080
+      - 8009:8009
+    expose:
+      - 8080
     links:
-        - mailcatcher
+      - mailcatcher
+      - postgres
+      - elasticsearch
+      - kibana
     environment:
       KNOWLEDGE_TEST_MAIL: 'false'
+      https_proxy: ${https_proxy}
+      http_proxy: ${http_proxy}
     volumes:
       - $PWD:/usr/src/mymaven
       - $PWD/.m2:/root/.m2
-      
+      - $PWD/.knowledge:/root/.knowledge
+      - $PWD/target/knowledge.war:/usr/local/tomcat/webapps/knowledge.war
+
   mailcatcher:
-    image: "zolweb/docker-mailcatcher"
+    image: zolweb/docker-mailcatcher
     ports:
-      - "1025:1025"
-      - "1080:1080"
+      - 1025:1025
+      - 1080:1080
     expose:
-      - "1080"
+      - 1080
+
+  postgres:
+    image: postgres:9.6.5
+    ports:
+      - 15432:5432
+    expose:
+      - 5432
+    environment:
+      POSTGRES_PASSWORD: '1qazxsw2'
+    volumes:
+      - $PWD/.postgres:/var/lib/postgresql/data
+
+  elasticsearch:
+    image: elasticsearch:5.5.2-alpine
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      transport.host: '0.0.0.0'
+      discovery.zen.minimum_master_nodes: '1'
+      xpack.security.enabled: 'false'
+      xpack.monitoring.enabled: 'true'
+      xpack.watcher.enabled: 'false'
+      xpack.graph.enabled: 'false'
+      xpack.monitoring.history.duration: '1d'
+      ES_JAVA_OPTS: '-Xms512m -Xmx512m'
+    volumes:
+      - $PWD/.es_data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: kibana:5.5.2
+    links:
+      - elasticsearch
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+      XPACK_MONITORING_ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+      XPACK_SECURITY_ENABLED: 'false'
+

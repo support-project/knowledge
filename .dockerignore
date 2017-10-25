@@ -7,3 +7,8 @@ docker-compose.yml
 
 target/
 
+.idea/
+.postgres/
+.settings/
+.es_data/
+

@@ -18,6 +18,7 @@ import org.support.project.web.bean.NameId;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.ApiControl;
+import org.support.project.web.control.GetApiControl;
 import org.support.project.web.control.service.Delete;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
@@ -28,7 +29,7 @@ import org.support.project.web.filter.ControlManagerFilter;
 import net.arnx.jsonic.JSONException;
 
 @DI(instance = Instance.Prototype)
-public class KnowledgesControl extends ApiControl {
+public class KnowledgesControl extends GetApiControl {
     /** ログ */
     private static Log LOG = LogFactory.getLog(ControlManagerFilter.class);
     
