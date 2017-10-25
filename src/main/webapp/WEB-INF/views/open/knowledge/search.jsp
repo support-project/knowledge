@@ -54,7 +54,6 @@ _GROUPS.push(groupname);
     
     <form role="form" action="<%=request.getContextPath()%><%=top%>">
     
-
         <div class="form-group">
             <label for="input_tag">
             <%= jspUtil.label("knowledge.search.keyword") %>
@@ -66,9 +65,9 @@ _GROUPS.push(groupname);
             <label for="input_tag">
             <%= jspUtil.label("knowledge.add.label.type") %>
             </label><br/>
-            <input type="radio" name="template" value="" checked="checked">ALL &nbsp;
+            <!-- <input type="checkbox" name="" value="all" checked="checked">ALL &nbsp; -->
             <c:forEach var="template" items="${templates}" varStatus="status">
-                <label><input type="radio" name="template" value="<%= jspUtil.out("template.typeId") %>">
+                <label><input type="checkbox" name="template" value="<%= jspUtil.out("template.typeId") %>" checked>
                 <i class="fa <%= jspUtil.out("template.typeIcon") %>"></i>
                 <%= jspUtil.out("template.typeName") %>&nbsp;
                 </label>
