@@ -154,8 +154,9 @@ public class LdapLogic {
             SearchScope scope = SearchScope.SUBTREE;
             cursor = conn.search(base, filter, scope);
             String dn = null;
+            Entry entry = null;
             while (cursor.next()) {
-                Entry entry = cursor.get();
+                entry = cursor.get();
                 dn = entry.getDn().toString();
                 break;
             }
@@ -166,15 +167,8 @@ public class LdapLogic {
             // 認証
             conn2 = new LdapNetworkConnection(config);
             conn2.bind(dn, password); // Bind DN //Bind Password (接続確認用）
-            
-            cursor = conn2.search(base, filter, scope);
-            LdapInfo info = null;
-            while (cursor.next()) {
-                Entry entry = cursor.get();
-                info = loadLdapInfo(entity, entry);
-                break;
-            }
-            return info;
+
+            return loadLdapInfo(entity, entry);
         } catch (LdapException | CursorException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException
                 | BadPaddingException e) {
             // 認証失敗
