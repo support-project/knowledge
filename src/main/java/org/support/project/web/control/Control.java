@@ -786,7 +786,27 @@ public abstract class Control {
         }
         return map;
     }
-
+    
+    /**
+     * 数値の情報を取得
+     * @param param パラメータ名
+     * @param defaultVal デフォルト
+     * @param maxVal 最大値
+     * @return 数値
+     */
+    protected int getParamInt(String param, int defaultVal, int maxVal) {
+        int num = defaultVal;
+        String str = getParam(param);
+        if (StringUtils.isInteger(str)) {
+            num = Integer.parseInt(str);
+        }
+        if(num > maxVal) {
+            num = maxVal;
+        }
+        return num;
+    }
+    
+    
     /**
      * @return the sendEscapeHtml
      */

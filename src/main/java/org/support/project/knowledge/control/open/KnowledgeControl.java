@@ -1,5 +1,13 @@
 package org.support.project.knowledge.control.open;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -11,12 +19,48 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
-import org.support.project.knowledge.dao.*;
-import org.support.project.knowledge.entity.*;
-import org.support.project.knowledge.logic.*;
+import org.support.project.knowledge.dao.CommentsDao;
+import org.support.project.knowledge.dao.DraftItemValuesDao;
+import org.support.project.knowledge.dao.ExGroupsDao;
+import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
+import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
+import org.support.project.knowledge.dao.KnowledgesDao;
+import org.support.project.knowledge.dao.LikeCommentsDao;
+import org.support.project.knowledge.dao.LikesDao;
+import org.support.project.knowledge.dao.StocksDao;
+import org.support.project.knowledge.dao.TagsDao;
+import org.support.project.knowledge.dao.TemplateMastersDao;
+import org.support.project.knowledge.entity.CommentsEntity;
+import org.support.project.knowledge.entity.DraftItemValuesEntity;
+import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
+import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
+import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.LikeCommentsEntity;
+import org.support.project.knowledge.entity.LikesEntity;
+import org.support.project.knowledge.entity.StocksEntity;
+import org.support.project.knowledge.entity.TagsEntity;
+import org.support.project.knowledge.entity.TemplateItemsEntity;
+import org.support.project.knowledge.entity.TemplateMastersEntity;
+import org.support.project.knowledge.logic.DiffLogic;
+import org.support.project.knowledge.logic.EventsLogic;
+import org.support.project.knowledge.logic.GroupLogic;
+import org.support.project.knowledge.logic.KeywordLogic;
+import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.LikeLogic;
+import org.support.project.knowledge.logic.MarkdownLogic;
+import org.support.project.knowledge.logic.TagLogic;
+import org.support.project.knowledge.logic.TargetLogic;
+import org.support.project.knowledge.logic.TemplateLogic;
+import org.support.project.knowledge.logic.TimeZoneLogic;
+import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.knowledge.logic.activity.Activity;
 import org.support.project.knowledge.logic.activity.ActivityLogic;
-import org.support.project.knowledge.vo.*;
+import org.support.project.knowledge.vo.LikeCount;
+import org.support.project.knowledge.vo.ListData;
+import org.support.project.knowledge.vo.MarkDown;
+import org.support.project.knowledge.vo.Participations;
+import org.support.project.knowledge.vo.StockKnowledge;
+import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
@@ -32,10 +76,7 @@ import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UserConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import org.support.project.web.logic.UserLogic;
 
 /**
  * ナレッジ操作のコントロール
@@ -303,6 +344,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         String user = getParam("user");
         String tagNames = getParam("tagNames");
         String groupNames = getParam("groupNames");
+        String creators = getParam("creators");
         String[] templates = getParam("template", String[].class);
 
         boolean hiddenFilter = false;
@@ -439,7 +481,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 setAttribute("selectedGroupIds", groupIds);
                 setAttribute("searchKeyword", searchKeyword + keyword);
     
-                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, null, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
             } else {
                 // その他(キーワード検索)
                 LOG.trace("search");
@@ -481,7 +523,16 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 keyword = keywordLogic.parseKeyword(keyword);
     
                 setAttribute("keyword", keyword);
-                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                
+                List <UsersEntity> creatorUserEntities = new ArrayList<>();
+                if (StringUtils.isNotEmpty(creators)) {
+                    String[] creatorsArray = creators.split(",");
+                    for (String userName : creatorsArray) {
+                        List<UsersEntity> users = UserLogic.get().getUser(userName.trim(), offset, 20);
+                        creatorUserEntities.addAll(users);
+                    }
+                }
+                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, creatorUserEntities, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
             }
     
             List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);
@@ -497,7 +548,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
                         templateItems.add(templateMastersEntity);
                     }
                 }
-                LOG.info(templateItems);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(templateItems);
+                }
                 if (!hiddenFilter) {
                     setAttribute("types", templateItems);
                 }

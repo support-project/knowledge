@@ -104,7 +104,7 @@ public class NoticesControl extends Control {
     }
     
     
-    @Get(path = "open.api/mynotices")
+    @Get(path = "open.api/mynotices", publishToken = "csrf")
     public Boundary getMyNotices() {
         LOG.trace("getMyNotices");
         String all = getParam("all");
@@ -120,7 +120,7 @@ public class NoticesControl extends Control {
         return send(sendlist);
     }
     
-    @Put(path = "open.api/readmark")
+    @Put(path = "open.api/readmark", subscribeToken = "csrf")
     public Boundary readMark() throws InvalidParamException {
         LOG.trace("readMark");
         LoginedUser loginedUser = getLoginedUser();

@@ -30,13 +30,14 @@ public class SearchingValue {
     /** テンプレート(OR条件) */
     private List<Integer> templates = new ArrayList<Integer>();
 
+    /** 作成者(OR条件) */
+    private List<Integer> creators = new ArrayList<Integer>();
+
     /** 読み出し開始 */
     private int offset;
     /** 読み出し件数 */
     private int limit = LIMIT;
 
-    /** 作成者 */
-    private Integer creator;
 
     /**
      * コンストラクタ
@@ -64,6 +65,12 @@ public class SearchingValue {
      */
     public void addTag(Integer tag) {
         tags.add(tag);
+    }
+    /**
+     * @param creator the creator to set
+     */
+    public void addCreator(Integer creator) {
+        this.creators.add(creator);
     }
 
     /**
@@ -109,6 +116,22 @@ public class SearchingValue {
                 builder.append(SEPARATE);
             }
             builder.append(StringUtils.zeroPadding(integer, ID_ZEROPADDING_DIGIT));
+            count++;
+        }
+        return builder.toString();
+    }
+
+    /**
+     * @return the creator
+     */
+    public String getCreators() {
+        StringBuilder builder = new StringBuilder();
+        int count = 0;
+        for (Integer creator : creators) {
+            if (count > 0) {
+                builder.append(SEPARATE);
+            }
+            builder.append(StringUtils.zeroPadding(creator, ID_ZEROPADDING_DIGIT));
             count++;
         }
         return builder.toString();
@@ -184,21 +207,6 @@ public class SearchingValue {
      */
     public void setLimit(int limit) {
         this.limit = limit;
-    }
-    /**
-     * @return the creator
-     */
-    public String getCreator() {
-        if (creator != null) {
-            return StringUtils.zeroPadding(creator, ID_ZEROPADDING_DIGIT);
-        }
-        return "";
-    }
-    /**
-     * @param creator the creator to set
-     */
-    public void setCreator(Integer creator) {
-        this.creator = creator;
     }
 
 

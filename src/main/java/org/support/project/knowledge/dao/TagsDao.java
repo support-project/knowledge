@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.util.StringJoinBuilder;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -152,10 +153,15 @@ public class TagsDao extends GenTagsDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<TagsEntity> selectWithKnowledgeCountOnTagName(String keyword, int offset, int limit) {
-        String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectWithKnowledgeCountOnTagName.sql");
-        StringBuilder builder = new StringBuilder();
-        builder.append("%").append(keyword).append("%");
-        return executeQueryList(sql, TagsEntity.class, builder.toString(), limit, offset);
+        if (StringUtils.isEmpty(keyword)) {
+            String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectWithKnowledgeCountByNoCondition.sql");
+            return executeQueryList(sql, TagsEntity.class, limit, offset);
+        } else {
+            String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/TagsDao/TagsDao_selectWithKnowledgeCountByTagName.sql");
+            StringBuilder builder = new StringBuilder();
+            builder.append("%").append(keyword).append("%");
+            return executeQueryList(sql, TagsEntity.class, builder.toString(), limit, offset);
+        }
     }
 
 }

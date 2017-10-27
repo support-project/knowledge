@@ -159,7 +159,7 @@ public class UsersDao extends GenUsersDao {
         List<Object> params = new ArrayList<Object>();
         sql.append("SELECT * FROM USERS WHERE DELETE_FLAG = 0 ");
         if (!StringUtils.isEmpty(keyword)) {
-            sql.append("AND USER_NAME LIKE ? ");
+            sql.append("AND USER_NAME ILIKE ? ");
             params.add("%" + keyword + "%");
         }
         sql.append("ORDER BY USER_ID ASC Limit ? offset ?;");
