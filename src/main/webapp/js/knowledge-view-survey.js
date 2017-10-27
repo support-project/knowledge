@@ -6,7 +6,7 @@ $(document).ready(function() {
             url : _CONTEXT + '/protect.survey/load/' + knowledgeId
         }).done(function(data) {
             console.log(data);
-            if (data.msg) {
+            if (data.msg || !data.exist) {
                 return;
             }
             $('#btnAnswerSurvey').removeClass('hide');

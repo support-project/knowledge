@@ -21,6 +21,8 @@ public class SurveysEntity extends GenSurveysEntity {
     
     private String knowledgeTitle;
     
+    private boolean exist = false;
+    
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
 
@@ -88,6 +90,20 @@ public class SurveysEntity extends GenSurveysEntity {
      */
     public void setKnowledgeTitle(String knowledgeTitle) {
         this.knowledgeTitle = knowledgeTitle;
+    }
+
+    /**
+     * @return the exist
+     */
+    public boolean isExist() {
+        return exist;
+    }
+
+    /**
+     * @param exist the exist to set
+     */
+    public void setExist(boolean exist) {
+        this.exist = exist;
     }
 
 }
