@@ -49,6 +49,7 @@ public class Launch {
                 additionWebInfClasses.getAbsolutePath(), "/"));
         ctx.setResources(resources);
 
+        LOG.info("server in started. listen : " + PORT);
         tomcat.start();
         tomcat.getServer().await();
     }

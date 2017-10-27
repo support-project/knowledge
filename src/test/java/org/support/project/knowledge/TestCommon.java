@@ -156,7 +156,7 @@ public abstract class TestCommon {
         groupuser2.setLocale(Locale.ENGLISH);
 
         synchronized (KNOWLEDGE_TEST_HOME) {
-            Thread.sleep(100);
+            Thread.sleep(50);
         }
         
         // DBを完全初期化
@@ -166,13 +166,13 @@ public abstract class TestCommon {
         dao2.dropAllTable();
         
         synchronized (KNOWLEDGE_TEST_HOME) {
-            Thread.sleep(100);
+            Thread.sleep(50);
         }
         
         InitDB.main(new String[0]);
         
         synchronized (KNOWLEDGE_TEST_HOME) {
-            Thread.sleep(100);
+            Thread.sleep(50);
         }
         
         // 全文検索エンジンのインデックスの消去

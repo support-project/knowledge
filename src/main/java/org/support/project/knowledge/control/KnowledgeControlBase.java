@@ -3,6 +3,7 @@ package org.support.project.knowledge.control;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
@@ -27,21 +28,36 @@ import org.support.project.web.entity.SystemConfigsEntity;
 @DI(instance = Instance.Prototype)
 public class KnowledgeControlBase extends Control {
     private static final String MARKDOWN_SAMPLE = "/org/support/project/knowledge/markdown/sample_markdown.md";
-
+    
     protected String setViewParam() {
+            List<LabelValue> paramsArray = new ArrayList<>();
+            paramsArray.add(new LabelValue("offset", getParamWithDefault("offset", "")));
+            paramsArray.add(new LabelValue("keyword", getParamWithDefault("keyword", "")));
+            paramsArray.add(new LabelValue("tag", getParamWithDefault("tag", "")));
+            paramsArray.add(new LabelValue("tagNames", getParamWithDefault("tagNames", "")));
+            paramsArray.add(new LabelValue("group", getParamWithDefault("group", "")));
+            paramsArray.add(new LabelValue("groupNames", getParamWithDefault("groupNames", "")));
+            paramsArray.add(new LabelValue("user", getParamWithDefault("user", "")));
+            paramsArray.add(new LabelValue("creators", getParamWithDefault("creators", "")));
+            String[] templates = getParam("template", String[].class);
+            if (templates != null) {
+                for (String template : templates) {
+                    paramsArray.add(new LabelValue("template", template));
+            }
+            }
         StringBuilder params = new StringBuilder();
-        params.append("?keyword=").append(getParamWithDefault("keyword", ""));
-        params.append("&tag=").append(getParamWithDefault("tag", ""));
-        params.append("&tagNames=").append(getParamWithDefault("tagNames", ""));
-        params.append("&template=").append(getParamWithDefault("template", ""));
-        params.append("&user=").append(getParamWithDefault("user", ""));
-        params.append("&offset=").append(getParamWithDefault("offset", ""));
-
-        if (super.getLoginedUser() != null) {
-            params.append("&group=").append(getParamWithDefault("group", ""));
-            params.append("&groupNames=").append(getParamWithDefault("groupNames", ""));
+        boolean append = false;
+        for (LabelValue labelValue : paramsArray) {
+            if (StringUtils.isNotEmpty(labelValue.getValue())) {
+                if (!append) {
+                    params.append('?');
+                    append = true;
+                } else {
+                    params.append('&');
+                }
+                params.append(labelValue.getLabel()).append("=").append(labelValue.getValue());
+            }
         }
-
         setAttribute("params", params.toString());
         return params.toString();
     }

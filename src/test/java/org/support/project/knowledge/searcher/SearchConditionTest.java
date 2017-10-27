@@ -120,7 +120,7 @@ public class SearchConditionTest {
         Searcher searcher = Container.getComp(Searcher.class);
 
         SearchingValue searchingValue = new SearchingValue();
-        searchingValue.setCreator(100);
+        searchingValue.addCreator(100);
         List<SearchResultValue> results = searcher.search(searchingValue, 1);
         for (SearchResultValue searchResultValue : results) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));

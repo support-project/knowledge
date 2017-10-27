@@ -248,6 +248,7 @@ public class KnowledgeDataSelectLogic {
                 param.getKeyword(),
                 param.getTags(),
                 param.getGroups(),
+                null,
                 templates,
                 param.getLoginedUser(),
                 param.getOffset(),

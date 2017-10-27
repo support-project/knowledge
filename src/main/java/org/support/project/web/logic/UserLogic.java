@@ -240,5 +240,20 @@ public class UserLogic {
             userGroupsDao.insert(userGroupsEntity);
         }
     }
+    
+    /**
+     * ユーザの一覧を取得
+     * @param keyword keyword
+     * @param offset offset
+     * @param limit limit
+     * @return ユーザの一覧
+     */
+    public List<UsersEntity> getUser(String keyword, int offset, int limit) {
+        List<UsersEntity> list = UsersDao.get().selectOnKeyword(offset, limit, keyword);
+        for (UsersEntity usersEntity : list) {
+            usersEntity.setPassword(null); // パスワードは返さない
+        }
+        return list;
+    }
 
 }

@@ -28,7 +28,4 @@ public abstract class ApiControl extends Control {
             return this.sendError(HttpStatus.SC_400_BAD_REQUEST);
         }
     }
-    
-
-    
 }
