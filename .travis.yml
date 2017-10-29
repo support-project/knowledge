@@ -1,11 +1,5 @@
-sudo: required
+language: java
+jdk: oraclejdk8
 
-services:
-  - docker
-
-before_install:
-    - docker -v
-    - docker-compose -v
-
-script: docker-compose run --rm dev mvn clean test
-
+install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dmaven.exec.skip=true -B -V
+script: mvn clean test

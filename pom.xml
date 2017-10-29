@@ -384,6 +384,9 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <skip>${maven.exec.skip}</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <id>npm</id>
