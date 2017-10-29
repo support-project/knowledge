@@ -6,30 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.support.project.common.logic.H2DBServerLogic;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.knowledge.TestCommon;
-import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.entity.AccountImagesEntity;
 
-public class AccountImagesDaoTest {
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        AppConfig.initEnvKey(TestCommon.KNOWLEDGE_TEST_HOME);
-        if (!H2DBServerLogic.get().isActive()) {
-            H2DBServerLogic.get().start();
-        }
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-//        H2DBServerLogic.get().stop();
-    }
+public class AccountImagesDaoTest extends TestCommon {
 
     @Before
     public void setUp() throws Exception {

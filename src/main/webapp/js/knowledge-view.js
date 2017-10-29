@@ -42,10 +42,32 @@ var addlike = function(knowledgeId) {
             $.notify(LABEL_LIKE, 'info');
         },
         error: function(XMLHttpRequest, textStatus, errorThrown){
-            console.log(textStatus);
+            if (XMLHttpRequest.status === 403 && XMLHttpRequest.responseJSON) {
+                $.notify(XMLHttpRequest.responseJSON.message, 'warn');
+            }
         }
     });
 };
+
+var addlikeComment = function(commentNo) {
+    console.log(commentNo);
+    var url = _CONTEXT + '/open.knowledge/likecomment/' + commentNo;
+    $.ajax({
+        type : 'POST',
+        url : url,
+        success : function(data, dataType) {
+            console.log(data);
+            $('#like_comment_count_' + commentNo).text(data.count);
+            $.notify(LABEL_LIKE, 'info');
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            if (XMLHttpRequest.status === 403 && XMLHttpRequest.responseJSON) {
+                $.notify(XMLHttpRequest.responseJSON.message, 'warn');
+            }
+        }
+    });
+};
+
 
 /*
 var viewProtect = function(knowledgeId) {

@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -33,17 +34,20 @@ public class KnowledgeHistoriesDao extends GenKnowledgeHistoriesDao {
      * @param knowledgeId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int selectMaxHistoryNo(Long knowledgeId) {
         String sql = "SELECT MAX(HISTORY_NO) FROM KNOWLEDGE_HISTORIES WHERE KNOWLEDGE_ID = ? ";
         return executeQuerySingle(sql, Integer.class, knowledgeId);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeHistoriesEntity> selectOnKnowledge(Long knowledgeId, int offset, int limit) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_selectOnKnowledge.sql");
         return executeQueryList(sql, KnowledgeHistoriesEntity.class, knowledgeId, limit, offset);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgeHistoriesEntity selectOnKeyWithName(Integer historyNo, Long knowledgeId) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/KnowledgeHistoriesDao/KnowledgeHistoriesDao_selectOnKeyWithName.sql");

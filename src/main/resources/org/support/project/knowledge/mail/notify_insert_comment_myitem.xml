@@ -7,16 +7,18 @@ Comment has been registered to your registered knowledge：{KnowledgeId}
 {URL}
 
 ------------------------------------------
-{CommentInsertUser}
+User: {CommentInsertUser}
 
-{CommentContents}
+Comment: {CommentContents}
 
 ------------------------------------------
-{KnowledgeTitle}
+Title: {KnowledgeTitle}
 
+------------------------------------------
 {Contents}
 
 ------------------------------------------
+
  This e-mail has been sent automatically from the system.
  Please understand that it can not reply to this email.
 </contents>

@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.test.Order;
+import org.support.project.common.util.DateUtils;
 import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
@@ -178,7 +179,7 @@ public class MailEventLogicTest extends TestCommon{
         
         TimeZone timezone = TimeZone.getTimeZone("GMT");
         Calendar now = Calendar.getInstance(timezone);
-        now.add(Calendar.MINUTE, 180);
+        now.add(Calendar.DATE, 20);
         
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat timeFormat = new SimpleDateFormat("HH:mm");
@@ -274,14 +275,14 @@ public class MailEventLogicTest extends TestCommon{
         stock.setStockId(new Long(1));
         stock.setKnowledgeId(knowledge.getKnowledgeId());
         stock.setInsertUser(loginedUser.getUserId());
-        stock.setInsertDatetime(new Timestamp(new Date().getTime()));
+        stock.setInsertDatetime(new Timestamp(DateUtils.now().getTime()));
         stock.setDeleteFlag(0);
         StockKnowledgesDao.get().rawPhysicalInsert(stock);
         stock = new StockKnowledgesEntity();
         stock.setStockId(new Long(2));
         stock.setKnowledgeId(knowledge.getKnowledgeId());
         stock.setInsertUser(loginedUser.getUserId());
-        stock.setInsertDatetime(new Timestamp(new Date().getTime()));
+        stock.setInsertDatetime(new Timestamp(DateUtils.now().getTime()));
         stock.setDeleteFlag(0);
         StockKnowledgesDao.get().rawPhysicalInsert(stock);
         

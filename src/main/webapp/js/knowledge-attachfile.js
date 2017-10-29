@@ -5,6 +5,7 @@ $(document).ready(function() {
         dataType : 'json',
         autoUpload: true,
         maxFileSize: 5000000, // 5 MB
+        dropZone: '#drop_target',
     }).on('fileuploaddone', function (e, data) {
         //$('#files').show();
         uploadedFiles(data.result.files);

@@ -39,6 +39,7 @@ var _REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.delete.upload") %>';
 var _FAIL_REMOVE_FILE = '<%= jspUtil.label("knowledge.edit.label.fail.delete.upload") %>';
 var _CONFIRM = '<%= jspUtil.label("knowledge.edit.label.confirm.delete") %>';
 var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
+var _SET_SLIDE_LABEL= '<%= jspUtil.label("knowledge.edit.set.slide.path") %>';
 </script>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
@@ -54,6 +55,7 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-common.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/comment.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-attachfile.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/slide.js"></script>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/emojilist.js"></script>
@@ -107,18 +109,26 @@ var _SET_IMAGE_LABEL= '<%= jspUtil.label("knowledge.edit.set.image.path") %>';
         </div>
         <div class="form-group" id="files">
         <c:forEach var="file" items="${comment_files}" >
-            <div class="filediv" id="file-<%= jspUtil.out("file.fileNo") %>">
-                <div class="file-image"><img src="<%= jspUtil.out("file.thumbnailUrl") %>" /></div>
-                <div class="file-label"><a href="<%= jspUtil.out("file.url") %>&amp;attachment=true"><%= jspUtil.out("file.name") %></a></div>
-                <br class="fileLabelBr"/>
+            <div class="filediv row" id="file-<%= jspUtil.out("file.fileNo") %>">
+                <div class="file-image col-xs-1"><img src="<%= jspUtil.out("file.thumbnailUrl") %>" /></div>
+                <div class="file-label col-xs-6"><a href="<%= jspUtil.out("file.url") %>&amp;attachment=true"><%= jspUtil.out("file.name") %></a></div>
                 <input type="hidden" name="files" value="<%= jspUtil.out("file.fileNo") %>" />
-                &nbsp;&nbsp;&nbsp;
-                <button type="button" class="btn btn-success" onclick="setImagePath('<%= jspUtil.out("file.url") %>', '<%= jspUtil.out("file.name") %>')">
+                <div class="col-xs-4">
+                <% if (jspUtil.is("image", "file.type")) { %>
+                <button type="button" class="btn btn-success btn-xs" onclick="setImagePath('<%= jspUtil.out("file.url") %>', '<%= jspUtil.out("file.name") %>')">
                     <i class="fa fa-file-image-o"></i>&nbsp;<%= jspUtil.label("knowledge.edit.set.image.path") %>
                 </button>
-                <button type="button" class="btn btn-danger" onclick="removeAddedFile(<%= jspUtil.out("file.fileNo") %>)">
+                <br/>
+                <% } else if (jspUtil.is("slide", "file.type")) { %>
+                <button type="button" class="btn btn-success btn-xs" onclick="setSlidePath('<%= jspUtil.out("file.fileNo") %>', '<%= jspUtil.out("file.name") %>')">
+                    <i class="fa fa-television"></i>&nbsp;<%= jspUtil.label("knowledge.edit.set.slide.path") %>
+                </button>
+                <br/>
+                <% } %>
+                <button type="button" class="btn btn-danger btn-xs" onclick="removeAddedFile(<%= jspUtil.out("file.fileNo") %>)">
                     <i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %>
                 </button>
+                </div>
             </div>
         </c:forEach>
         </div>

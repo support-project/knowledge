@@ -3,6 +3,7 @@ package org.support.project.knowledge.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -35,6 +36,7 @@ public class SurveysDao extends GenSurveysDao {
      * @param offset
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveysEntity> selectWithKnowledgeTitle(String idPrefix, int limit, int offset) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveysDao/SurveysDao_select_with_knowledge_title.sql");
         return executeQueryList(sql, SurveysEntity.class, idPrefix, limit, offset);
@@ -49,6 +51,7 @@ public class SurveysDao extends GenSurveysDao {
      * @param offset
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveysEntity> selectWithKnowledgeTitleOnlyAccessAble(LoginedUser loginedUser, String idPrefix, int limit, int offset) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveysDao/SurveysDao_select_on_accessable.sql");
         List<Object> params = new ArrayList<>();

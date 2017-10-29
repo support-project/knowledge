@@ -12,7 +12,7 @@
 <div class="insert_info">
     <img src="<%=request.getContextPath()%>/images/loader.gif"
         data-echo="<%=request.getContextPath()%>/open.account/icon/<%=jspUtil.out("insertUser")%>" alt="icon" width="24"
-        height="24" style="float: left" />
+        height="24" />
     <%
         String insertLink = "<a href=\"" + request.getContextPath() + "/open.account/info/" + jspUtil.out("insertUser") + "\" class=\"text-primary btn-link\" >"
                         + jspUtil.out("insertUserName", JspUtil.ESCAPE_CLEAR) + "</a>";

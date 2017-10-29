@@ -61,6 +61,13 @@ $(document).ready(function() {
     };
     accessInterval();
 });
+
+// ファイルをドロップしたときのブラウザデフォルトの動作を抑止する。
+$(document).on('drop dragover', function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+});
+
 function logging(str, level) {
 //    console.log(str);
     if (_LOGGING_NOTIFY_DESKTOP) {
@@ -97,14 +104,20 @@ function isString(obj) {
 };
 
 function unescapeHTML(str) {
-    var div = document.createElement("div");
-    div.innerHTML = str.replace(/</g,"&lt;")
-                       .replace(/>/g,"&gt;")
-                       .replace(/ /g, "&nbsp;")
-                       .replace(/\r/g, "&#13;")
-                       .replace(/\n/g, "&#10;");
-    return div.textContent || div.innerText;
+    // エスケープしない
+    return str;
 };
+
+function escapeLink(url) {
+    if (url.toLowerCase().indexOf('javascript:') != -1) {
+        var conv = '';
+        conv += url.substring(0, url.toLowerCase().indexOf('javascript:'));
+        conv += encodeURIComponent(url.substring(url.toLowerCase().indexOf('javascript:')));
+        return conv;
+    } else {
+        return url;
+    }
+}
 
 var handleErrorResponse = function(xhr, textStatus, error) {
     console.log(error);

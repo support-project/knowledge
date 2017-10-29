@@ -10,7 +10,6 @@
     padding-right: 5px;
     border-bottom: 1px solid #cccccc;
 }
-
 .knowledge_item:hover {
     border: 1px solid #ccc;
     color:black;
@@ -25,6 +24,7 @@
     text-decoration: none;
     outline: 0;
 }
+
 .list-title {
     font-size: 20px;
     padding-top: 10px;

@@ -3,6 +3,8 @@ package org.support.project.knowledge.dao;
 import java.util.Date;
 import java.util.List;
 
+import org.support.project.aop.Aspect;
+import org.support.project.common.util.DateUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -37,6 +39,7 @@ public class StockKnowledgesDao extends GenStockKnowledgesDao {
      * @param limit
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<StockKnowledgesEntity> selectOnStockIdWithKnowledgeInfo(Long stockId, int offset, int limit) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_selectOnStockIdWithKnowledgeInfo.sql");
@@ -47,6 +50,7 @@ public class StockKnowledgesDao extends GenStockKnowledgesDao {
      * @param stockId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<StockKnowledgesEntity> selectActiveOnStockId(Long stockId) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_select_active_on_stock_id.sql");
@@ -57,10 +61,11 @@ public class StockKnowledgesDao extends GenStockKnowledgesDao {
      * 指定のナレッジが削除されたときに、ストックからも消す
      * @param knowledgeId
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void deleteOnKnowledgeId(Long knowledgeId) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
         Integer user = (Integer) pool.getUser();
-        Date now = new Date();
+        Date now = DateUtils.now();
         String sql = "UPDATE stock_knowledges SET delete_flag = 1, update_user = ?, update_datetime = ? WHERE knowledge_id = ?";
         executeUpdate(sql, user, now, knowledgeId);
     }

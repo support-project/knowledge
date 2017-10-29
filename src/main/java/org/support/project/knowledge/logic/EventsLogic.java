@@ -22,6 +22,10 @@ import org.support.project.knowledge.entity.EventsEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.ParticipantsEntity;
+import org.support.project.knowledge.logic.notification.ParticipateChangeStatusForParticipantNotification;
+import org.support.project.knowledge.logic.notification.ParticipateForParticipantNotification;
+import org.support.project.knowledge.logic.notification.ParticipateForSponsorNotification;
+import org.support.project.knowledge.logic.notification.ParticipateRemoveForSponsorNotification;
 import org.support.project.knowledge.vo.Participation;
 import org.support.project.knowledge.vo.Participations;
 import org.support.project.web.bean.LoginedUser;
@@ -154,10 +158,9 @@ public class EventsLogic {
         ParticipantsDao.get().insert(participant);
         
         // 開催者（＝登録者）へメール通知
-        MailLogic.get().notifyAddParticipateForSponsor(knowledgeId, userId, participant.getStatus());
-        
+        ParticipateForSponsorNotification.get().notify(knowledgeId, userId, participant.getStatus());
         // 参加者へメール通知
-        MailLogic.get().notifyAddParticipateForParticipant(knowledgeId, userId, participant.getStatus());
+        ParticipateForParticipantNotification.get().notify(knowledgeId, userId, participant.getStatus());
         
         return participant.getStatus().intValue() == STATUS_PARTICIPATION;
     }
@@ -177,8 +180,8 @@ public class EventsLogic {
         ParticipantsDao.get().physicalDelete(participant); // 物理的に削除
         
         // 開催者（＝登録者）へメール通知
-        MailLogic.get().notifyRemoveParticipateForSponsor(knowledgeId, userId);
-
+        ParticipateRemoveForSponsorNotification.get().notify(knowledgeId, userId, -1);
+        
         if (participant.getStatus().intValue() == STATUS_PARTICIPATION) {
             List<Participation> participants = ParticipantsDao.get().selectParticipations(knowledgeId);
             for (int i = 0; i < participants.size(); i++) {
@@ -189,7 +192,7 @@ public class EventsLogic {
                     ParticipantsDao.get().update(entity);
                     
                     // キャンセル待ちが参加登録済になった参加者へメール通知
-                    MailLogic.get().notifyChangeParticipateStatusForParticipant(knowledgeId, p.getUserId());
+                    ParticipateChangeStatusForParticipantNotification.get().notify(knowledgeId, p.getUserId(), STATUS_PARTICIPATION);
                     
                     break; // キャンセル待ちの１件を本登録に変更
                 }

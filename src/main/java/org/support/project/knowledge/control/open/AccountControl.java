@@ -21,12 +21,18 @@ import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.AccountImagesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
+import org.support.project.knowledge.logic.AccountLogic;
 import org.support.project.knowledge.logic.IdenticonLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.AccountInfo;
+import org.support.project.knowledge.vo.ActivityHistory;
+import org.support.project.knowledge.vo.ContributionPointHistory;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
+import org.support.project.web.dao.UsersDao;
+import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance = Instance.Prototype)
@@ -93,6 +99,7 @@ public class AccountControl extends Control {
         }
         List<KnowledgesEntity> knowledges = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
         List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, getLoginedUser());
+        KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         setAttribute("knowledges", stocks);
 
         int previous = offset - 1;
@@ -110,7 +117,58 @@ public class AccountControl extends Control {
         }
         setAttribute("templates", templates);
         
+        long point = AccountLogic.get().getPoint(userId);
+        setAttribute("point", point);
+        
+        
         return forward("account.jsp");
     }
+    
+    @Get
+    public Boundary cp() throws Exception {
+        Integer userId = getPathInteger(-1);
+        UsersEntity account = UsersDao.get().selectOnKey(userId);
+        if (account == null) {
+            return send(HttpStatus.SC_NOT_FOUND, "NOT FOUND");
+        }
+        List<ContributionPointHistory> list = ActivityLogic.get().getUserPointHistoriesByDate(userId, getUserConfigs());
+        return send(list);
+    }
+    
+    @Get
+    public Boundary knowledge() throws Exception {
+        Integer userId = getPathInteger(-1);
+        UsersEntity account = UsersDao.get().selectOnKey(userId);
+        if (account == null) {
+            return send(HttpStatus.SC_NOT_FOUND, "NOT FOUND");
+        }
+        // そのユーザが登録したナレッジを取得
+        int offset = 0;
+        if (StringUtils.isInteger(getParam("offset"))) {
+            offset = getParam("offset", Integer.class);
+        }
+        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
+        List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, getLoginedUser());
+        KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
+        return send(stocks);
+    }
+    
+    @Get
+    public Boundary activity() throws Exception {
+        Integer userId = getPathInteger(-1);
+        UsersEntity account = UsersDao.get().selectOnKey(userId);
+        if (account == null) {
+            return send(HttpStatus.SC_NOT_FOUND, "NOT FOUND");
+        }
+        int limit = 20;
+        int offset = 0;
+        if (StringUtils.isInteger(getParam("offset"))) {
+            offset = getParam("offset", Integer.class);
+        }
+        List<ActivityHistory> list = ActivityLogic.get().getUserPointHistoriese(userId, limit, offset, getUserConfigs());
+        setSendEscapeHtml(false);
+        return send(list);
+    }
+    
 
 }

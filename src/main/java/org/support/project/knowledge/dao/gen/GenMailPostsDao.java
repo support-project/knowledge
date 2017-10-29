@@ -12,8 +12,10 @@ import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
 import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.config.Order;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.common.util.DateUtils;
 
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -43,8 +45,19 @@ public class GenMailPostsDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailPostsEntity> physicalSelectAll() { 
+        return physicalSelectAll(Order.DESC);
+    }
+    /**
+     * Select all data.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<MailPostsEntity> physicalSelectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailPostsDao/MailPostsDao_physical_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, MailPostsEntity.class);
     }
     /**
@@ -53,8 +66,21 @@ public class GenMailPostsDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailPostsEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        return physicalSelectAllWithPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data on limit and offset
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<MailPostsEntity> physicalSelectAllWithPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailPostsDao/MailPostsDao_physical_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, MailPostsEntity.class, limit, offset);
     }
     /**
@@ -62,6 +88,7 @@ public class GenMailPostsDao extends AbstractDao {
      * @param  messageId messageId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public MailPostsEntity physicalSelectOnKey(String messageId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailPostsDao/MailPostsDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, MailPostsEntity.class, messageId);
@@ -70,8 +97,19 @@ public class GenMailPostsDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailPostsEntity> selectAll() { 
+        return selectAll(Order.DESC);
+    }
+    /**
+     * Select all data that not deleted.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<MailPostsEntity> selectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailPostsDao/MailPostsDao_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, MailPostsEntity.class);
     }
     /**
@@ -80,14 +118,28 @@ public class GenMailPostsDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<MailPostsEntity> selectAllWidthPager(int limit, int offset) { 
+        return selectAllWidthPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data that not deleted with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<MailPostsEntity> selectAllWidthPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailPostsDao/MailPostsDao_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, MailPostsEntity.class, limit, offset);
     }
     /**
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailPostsDao/MailPostsDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -97,6 +149,7 @@ public class GenMailPostsDao extends AbstractDao {
      * @param  messageId messageId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public MailPostsEntity selectOnKey(String messageId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/MailPostsDao/MailPostsDao_select_on_key.sql");
         return executeQuerySingle(sql, MailPostsEntity.class, messageId);
@@ -105,6 +158,7 @@ public class GenMailPostsDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM MAIL_POSTS";
         return executeQuerySingle(sql, Integer.class);
@@ -161,9 +215,9 @@ public class GenMailPostsDao extends AbstractDao {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public MailPostsEntity insert(Integer user, MailPostsEntity entity) {
         entity.setInsertUser(user);
-        entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setInsertDatetime(new Timestamp(DateUtils.now().getTime()));
         entity.setUpdateUser(user);
-        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         entity.setDeleteFlag(0);
         return physicalInsert(entity);
     }
@@ -213,7 +267,7 @@ public class GenMailPostsDao extends AbstractDao {
         entity.setInsertDatetime(db.getInsertDatetime());
         entity.setDeleteFlag(db.getDeleteFlag());
         entity.setUpdateUser(user);
-        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         return physicalUpdate(entity);
     }
     /**
@@ -290,7 +344,7 @@ public class GenMailPostsDao extends AbstractDao {
         MailPostsEntity db = selectOnKey(messageId);
         db.setDeleteFlag(1);
         db.setUpdateUser(user);
-        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        db.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         physicalUpdate(db);
     }
     /**
@@ -339,7 +393,7 @@ public class GenMailPostsDao extends AbstractDao {
         MailPostsEntity db = physicalSelectOnKey(messageId);
         db.setDeleteFlag(0);
         db.setUpdateUser(user);
-        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        db.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         physicalUpdate(db);
     }
     /**

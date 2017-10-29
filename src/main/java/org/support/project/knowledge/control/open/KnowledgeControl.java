@@ -11,6 +11,7 @@ import java.util.Map;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -23,6 +24,7 @@ import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
+import org.support.project.knowledge.dao.LikeCommentsDao;
 import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.dao.TagsDao;
@@ -32,6 +34,7 @@ import org.support.project.knowledge.entity.DraftItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgeHistoriesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.LikeCommentsEntity;
 import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
@@ -42,12 +45,15 @@ import org.support.project.knowledge.logic.EventsLogic;
 import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KeywordLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.LikeLogic;
 import org.support.project.knowledge.logic.MarkdownLogic;
 import org.support.project.knowledge.logic.TagLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.TimeZoneLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
+import org.support.project.knowledge.logic.activity.Activity;
+import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.ListData;
 import org.support.project.knowledge.vo.MarkDown;
@@ -186,18 +192,22 @@ public class KnowledgeControl extends KnowledgeControlBase {
         for (CommentsEntity commentsEntity : comments) {
             MarkDown markDown2 = MarkdownLogic.get().markdownToHtml(commentsEntity.getComment());
             commentsEntity.setComment(markDown2.getHtml());
+            
+            Long likeCount = LikeCommentsDao.get().selectOnCommentNo(commentsEntity.getCommentNo());
+            commentsEntity.setLikeCount(likeCount);
         }
         setAttribute("comments", comments);
 
         // 表示するグループを取得
         // List<GroupsEntity> groups = GroupLogic.get().selectGroupsOnKnowledgeId(knowledgeId);
-        List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
+        List<LabelValue> groups = TargetLogic.get().selectTargetsViewOnKnowledgeId(knowledgeId, loginedUser);
         setAttribute("groups", groups);
 
         // 編集権限
-        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+        List<LabelValue> editors = TargetLogic.get().selectEditorsViewOnKnowledgeId(knowledgeId, loginedUser);
         setAttribute("editors", editors);
-        boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
+        List<LabelValue> editors2 = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+        boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors2);
         setAttribute("edit", edit);
 
         ArrayList<Long> knowledgeIds = new ArrayList<Long>();
@@ -209,6 +219,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
         //ストック情報を取得
         List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(entity, loginedUser);
         setAttribute("stocks", stocks);
+        
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, getLoginedUser(), DateUtils.now(), entity);
+        long point = KnowledgesDao.get().selectPoint(entity.getKnowledgeId());
+        setAttribute("point", point);
         
         return forward("view.jsp");
     }
@@ -310,7 +324,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         // ログインユーザ情報を最新化
         // TODO 毎回最新化するのは、パフォーマンスが悪い？グループ情報が更新になった場合に、影響があるユーザの一覧を保持しておき、
         // そのユーザのみを更新した方が良いかも。いったんは、ナレッジの一覧を表示する際に、毎回更新してみる（それほど負荷が高くなさそうなので）
-        super.updateLoginInfo();
+        updateLoginInfo();
 
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
@@ -470,6 +484,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
     
             List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);
+            KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
             setAttribute("knowledges", stocks);
             LOG.trace("検索終了");
             
@@ -489,7 +504,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     }
 
     /**
-     * 閲覧履歴の表示
+     * イベント一覧
      * 
      * @return
      * @throws InvalidParamException
@@ -516,6 +531,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 Participations participations = EventsLogic.get().isParticipation(stock.getKnowledgeId(), getLoginUserId());
                 stock.setParticipations(participations);
             }
+            KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
             setAttribute("knowledges", stocks);
         } catch (java.text.ParseException e) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
@@ -561,6 +577,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
         List<KnowledgesEntity> histories = knowledgeLogic.getKnowledges(historyIds, loginedUser);
         List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(histories, loginedUser);
+        KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         setAttribute("histories", stocks);
         LOG.trace("履歴取得完了");
 
@@ -585,6 +602,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
         List<KnowledgesEntity> list = knowledgeLogic.getPopularityKnowledges(loginedUser, 0, 20);
         List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(list, loginedUser);
+        KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         setAttribute("popularities", stocks);
         LOG.trace("取得完了");
         // ナレッジの公開先の情報を取得
@@ -623,7 +641,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
         List<KnowledgesEntity> list = knowledgeLogic.getStocks(loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT, stockid);
         List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(list, loginedUser);
-//        setAttribute("stocks", list);
+        KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         setAttribute("popularities", stocks);
         LOG.trace("取得完了");
         
@@ -635,24 +653,31 @@ public class KnowledgeControl extends KnowledgeControlBase {
         return forward("stocks.jsp");
     }    
     
-    
-    
-    
-    
-
     /**
      * いいねを押下
      * 
      * @return
      * @throws InvalidParamException
      */
-    @Post
+    @Post(subscribeToken="knowledge")
     public Boundary like() throws InvalidParamException {
         Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-        Long count = knowledgeLogic.addLike(knowledgeId, getLoginedUser());
+        Long count = LikeLogic.get().addLike(knowledgeId, getLoginedUser(), getLocale());
         LikeCount likeCount = new LikeCount();
         likeCount.setKnowledgeId(knowledgeId);
+        likeCount.setCount(count);
+        return send(likeCount);
+    }
+    /**
+     * コメントにイイネを押下
+     * @return
+     * @throws InvalidParamException 
+     */
+    @Post(subscribeToken="knowledge")
+    public Boundary likecomment() throws InvalidParamException {
+        Long commentNo = super.getPathLong(Long.valueOf(-1));
+        Long count = LikeLogic.get().addLikeComment(commentNo, getLoginedUser(), getLocale());
+        LikeCount likeCount = new LikeCount();
         likeCount.setCount(count);
         return send(likeCount);
     }
@@ -664,7 +689,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws ParseException
      */
-    @Post
+    @Post(subscribeToken = "")
     public Boundary escape(KnowledgesEntity entity) throws ParseException {
         super.setSendEscapeHtml(false);
         entity.setTitle(sanitize(entity.getTitle()));
@@ -679,7 +704,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @return
      * @throws ParseException
      */
-    @Post
+    @Post(subscribeToken = "")
     public Boundary marked(KnowledgesEntity entity) throws ParseException {
         super.setSendEscapeHtml(false);
         entity.setTitle(sanitize(entity.getTitle()));
@@ -764,6 +789,46 @@ public class KnowledgeControl extends KnowledgeControlBase {
         return forward("likes.jsp");
     }
 
+    
+    /**
+     * いいねを押したユーザを一覧表示（コメントに対し）
+     * 
+     * @return
+     * @throws InvalidParamException
+     */
+    @Get
+    public Boundary likecomments() throws InvalidParamException {
+        // 共通処理呼の表示条件の保持の呼び出し
+        setViewParam();
+
+        Long commentNo = super.getPathLong(Long.valueOf(-1));
+        CommentsEntity comment = CommentsDao.get().selectOnKey(commentNo);
+        if (comment == null) {
+            return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+        }
+        setAttribute("knowledgeId", comment.getKnowledgeId());
+        setAttribute("commentNo", comment.getKnowledgeId());
+
+        Integer page = 0;
+        String p = getParamWithDefault("page", "");
+        if (StringUtils.isInteger(p)) {
+            page = Integer.parseInt(p);
+        }
+
+        List<LikeCommentsEntity> likes = LikeCommentsDao.get().selectOnCommentNo(commentNo, page * PAGE_LIMIT, PAGE_LIMIT);
+        setAttribute("likes", likes);
+
+        int previous = page - 1;
+        if (previous < 0) {
+            previous = 0;
+        }
+        setAttribute("page", page);
+        setAttribute("previous", previous);
+        setAttribute("next", page + 1);
+        
+        return forward("likes.jsp");
+    }
+    
     /**
      * 編集履歴の表示
      * 
@@ -915,5 +980,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
         listdata.setItems(list);
         return super.send(listdata);
     }
+    
     
 }

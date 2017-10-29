@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -31,6 +32,7 @@ public class PinsDao extends GenPinsDao {
      * IDを採番 
      * ※コミットしなくても次のIDを採番する為、保存しなければ欠番になる 
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer getNextId() {
         String sql = "SELECT MAX(no) FROM pins;";
         Integer integer = executeQuerySingle(sql, Integer.class);

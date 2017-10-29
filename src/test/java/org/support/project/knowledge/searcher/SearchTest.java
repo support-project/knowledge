@@ -3,7 +3,6 @@ package org.support.project.knowledge.searcher;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
@@ -14,6 +13,7 @@ import org.junit.Test;
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.RandomUtil;
@@ -57,7 +57,7 @@ public class SearchTest {
         indexingValue.setTitle(title);
         indexingValue.setContents(contents);
         indexingValue.setCreator(100);
-        indexingValue.setTime(new Date().getTime());
+        indexingValue.setTime(DateUtils.now().getTime());
 
         Indexer indexer = Container.getComp(Indexer.class);
         indexer.writeIndex(indexingValue);
@@ -84,7 +84,7 @@ public class SearchTest {
         indexingValue.setTitle(title);
         indexingValue.setContents(contents);
         indexingValue.setCreator(100);
-        indexingValue.setTime(new Date().getTime());
+        indexingValue.setTime(DateUtils.now().getTime());
 
         indexer.writeIndex(indexingValue);
 
@@ -108,7 +108,7 @@ public class SearchTest {
         indexingValue.setContents(contents);
         indexingValue.addUser(0);
         indexingValue.setCreator(100);
-        indexingValue.setTime(new Date().getTime());
+        indexingValue.setTime(DateUtils.now().getTime());
 
         Indexer indexer = Container.getComp(Indexer.class);
         indexer.writeIndex(indexingValue);
@@ -177,7 +177,7 @@ public class SearchTest {
         indexingValue.addGroup(100);
         ;
         indexingValue.setCreator(100);
-        indexingValue.setTime(new Date().getTime());
+        indexingValue.setTime(DateUtils.now().getTime());
 
         Indexer indexer = Container.getComp(Indexer.class);
         indexer.writeIndex(indexingValue);
@@ -227,7 +227,7 @@ public class SearchTest {
         indexingValue.addUser(100);
         indexingValue.addGroup(100);
         indexingValue.setCreator(100);
-        indexingValue.setTime(new Date().getTime());
+        indexingValue.setTime(DateUtils.now().getTime());
         indexingValue.setTemplate(1);
         indexer.writeIndex(indexingValue);
 
@@ -239,7 +239,7 @@ public class SearchTest {
         indexingValue2.addUser(100);
         indexingValue2.addGroup(100);
         indexingValue2.setCreator(100);
-        indexingValue2.setTime(new Date().getTime());
+        indexingValue2.setTime(DateUtils.now().getTime());
         indexingValue2.setTemplate(2);
         indexer.writeIndex(indexingValue);
         

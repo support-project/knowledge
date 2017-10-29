@@ -15,6 +15,8 @@ public class StockKnowledge extends KnowledgesEntity {
     
     private Participations participations;
     
+    private boolean viewed = false;
+    
     /**
      * Get stocks
      * @return the stocks
@@ -43,6 +45,20 @@ public class StockKnowledge extends KnowledgesEntity {
      */
     public void setParticipations(Participations participations) {
         this.participations = participations;
+    }
+
+    /**
+     * @return the viewed
+     */
+    public boolean isViewed() {
+        return viewed;
+    }
+
+    /**
+     * @param viewed the viewed to set
+     */
+    public void setViewed(boolean viewed) {
+        this.viewed = viewed;
     }
     
     

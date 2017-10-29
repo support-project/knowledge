@@ -13,12 +13,12 @@
 
 <c:param name="PARAM_HEAD">
 <!-- build:css(src/main/webapp) css/page-protect-group.css -->
-<link rel="stylesheet" href="EasyWizard/easyWizard.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/EasyWizard/easyWizard.css" />
 <!-- endbuild -->
 </c:param>
 <c:param name="PARAM_SCRIPTS">
 <!-- build:js(src/main/webapp) js/page-protect-group.js -->
-<script type="text/javascript" src="EasyWizard/easyWizard.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/EasyWizard/easyWizard.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/group.js"></script>
 <!-- endbuild -->
 <script>
@@ -109,11 +109,9 @@ var _CONFIRM_DELETE = '<%= jspUtil.label("knowledge.group.view.label.confirm.del
     <a id="groupselect" class="btn btn-info" data-toggle="modal" href="#groupSelectModal">
         <i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.group.label.add.user") %>
     </a>
-    <% if (jspUtil.isAdmin()) { %>
-        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#wizardModal">
-            <i class="fa fa-list-alt" aria-hidden="true"></i> <%= jspUtil.label("knowledge.group.add.members") %>
-        </button>
-    <% } %>
+    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#wizardModal">
+        <i class="fa fa-list-alt" aria-hidden="true"></i> <%= jspUtil.label("knowledge.group.add.members") %>
+    </button>
 <% } %>
 <p>
 

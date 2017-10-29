@@ -3,7 +3,6 @@ package org.support.project.knowledge.logic;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +18,8 @@ import org.support.project.common.validate.ValidatorFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.dao.AccountImagesDao;
 import org.support.project.knowledge.entity.AccountImagesEntity;
 import org.support.project.knowledge.vo.UploadFile;
@@ -26,19 +27,61 @@ import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.ConfirmMailChangesDao;
 import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.RolesDao;
+import org.support.project.web.dao.UserConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.ConfirmMailChangesEntity;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.RolesEntity;
+import org.support.project.web.entity.UserConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
 @DI(instance = Instance.Singleton)
 public class AccountLogic {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(AccountLogic.class);
-
     public static AccountLogic get() {
         return Container.getComp(AccountLogic.class);
+    }
+    
+    private String cookieKeyTimezone = "";
+    private String cookieKeyTimezoneOffset = "";
+    private String cookieKeyThema = "";
+    private String cookieKeyHighlight = "";
+    /**
+     * @return the cookie_key_timezone
+     */
+    public String getCookieKeyTimezone() {
+        if (StringUtils.isEmpty(cookieKeyTimezone)) {
+            cookieKeyTimezone = AppConfig.get().getSystemName() + "_" + UserConfig.TIMEZONE;
+        }
+        return cookieKeyTimezone;
+    }
+    /**
+     * @return the cookie_key_timezone_offset
+     */
+    public String getCookieKeyTimezoneOffset() {
+        if (StringUtils.isEmpty(cookieKeyTimezoneOffset)) {
+            cookieKeyTimezoneOffset = AppConfig.get().getSystemName() + "_" + UserConfig.TIME_ZONE_OFFSET;
+        }
+        return cookieKeyTimezoneOffset;
+    }
+    /**
+     * @return the cookie_key_thema
+     */
+    public String getCookieKeyThema() {
+        if (StringUtils.isEmpty(cookieKeyThema)) {
+            cookieKeyThema = AppConfig.get().getSystemName() + "_" + UserConfig.THEMA;
+        }
+        return cookieKeyThema;
+    }
+    /**
+     * @return the cookie_key_highlight
+     */
+    public String getCookieKeyHighlight() {
+        if (StringUtils.isEmpty(cookieKeyHighlight)) {
+            cookieKeyHighlight = AppConfig.get().getSystemName() + "_" + UserConfig.HIGHLIGHT;
+        }
+        return cookieKeyHighlight;
     }
 
     /**
@@ -97,7 +140,7 @@ public class AccountLogic {
         UploadFile file = new UploadFile();
         file.setFileNo(new Long(entity.getUserId()));
         file.setUrl(context + "/open.account/icon/" + entity.getUserId());
-        file.setThumbnailUrl(context + "/open.account/icon/" + entity.getUserId() + "?t=" + new Date().getTime());
+        file.setThumbnailUrl(context + "/open.account/icon/" + entity.getUserId() + "?t=" + DateUtils.now().getTime());
         file.setName(entity.getFileName());
         file.setType("-");
         file.setSize(entity.getFileSize());
@@ -159,7 +202,7 @@ public class AccountLogic {
         StringBuilder builder = new StringBuilder();
         builder.append(label);
         builder.append("-");
-        builder.append(DateUtils.getTransferDateFormat().format(new Date()));
+        builder.append(DateUtils.getTransferDateFormat().format(DateUtils.now()));
         builder.append("-");
         builder.append(UUID.randomUUID().toString());
         builder.append("-");
@@ -237,4 +280,58 @@ public class AccountLogic {
         return loginedUser;
     }
     
+    /**
+     * ユーザのポイント取得
+     * @param user ユーザ
+     * @return
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public int getPoint(int user) {
+        UserConfigsEntity config = UserConfigsDao.get().selectOnKey(UserConfig.POINT, AppConfig.get().getSystemName(), user);
+        if (config == null) {
+            config = new UserConfigsEntity(UserConfig.POINT, AppConfig.get().getSystemName(), user);
+            config.setConfigValue("0");
+        }
+        if (!StringUtils.isInteger(config.getConfigValue())) {
+            config.setConfigValue("0");
+        }
+        int now = Integer.parseInt(config.getConfigValue());
+        return now;
+    }
+    
+    /**
+     * ユーザの設定を取得
+     * @param user ユーザ
+     * @param configKey 設定キー
+     * @return 設定値
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public String getConfig(int user, String configKey) {
+        UserConfigsEntity config = UserConfigsDao.get().selectOnKey(configKey, AppConfig.get().getSystemName(), user);
+        if (config == null) {
+            return "";
+        }
+        return config.getConfigValue();
+    }
+    /**
+     * ユーザの設定を取得
+     * @param user ユーザ
+     * @param configKey 設定キー
+     * @return 設定値
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public void setConfig(int user, String configKey, String configValue) {
+        UserConfigsEntity config = UserConfigsDao.get().selectOnKey(configKey, AppConfig.get().getSystemName(), user);
+        if (config == null) {
+            config = new UserConfigsEntity(configKey, AppConfig.get().getSystemName(), user);
+        }
+        config.setConfigValue(configValue);
+        UserConfigsDao.get().save(config);
+    }
+
+
+
+
+
+
 }

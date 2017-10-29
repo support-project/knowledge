@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.knowledge.vo.AccountInfo;
 import org.support.project.knowledge.vo.GroupUser;
@@ -35,6 +36,7 @@ public class ExUsersDao extends UsersDao {
      * @param limit
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<GroupUser> selectGroupUser(Integer groupId, int offset, int limit) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExUsersDao/selectGroupUser.sql");
         return executeQueryList(sql, GroupUser.class, groupId, limit, offset);
@@ -45,6 +47,7 @@ public class ExUsersDao extends UsersDao {
      * 
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<UsersEntity> selectNotifyPublicUsers() {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExUsersDao/selectNotifyPublicUsers.sql");
         return executeQueryList(sql, UsersEntity.class);
@@ -58,6 +61,7 @@ public class ExUsersDao extends UsersDao {
      * @param userId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public AccountInfo selectAccountInfoOnKey(Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExUsersDao/selectAccountInfoOnKey.sql");
         AccountInfo info = executeQuerySingle(sql, AccountInfo.class, userId);

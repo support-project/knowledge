@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -25,12 +26,13 @@ public class DraftKnowledgesDao extends GenDraftKnowledgesDao {
         return Container.getComp(DraftKnowledgesDao.class);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftKnowledgesEntity> selectOnUser(Integer loginUserId, int limit, int offset) {
         String sql = "SELECT * FROM DRAFT_KNOWLEDGES WHERE INSERT_USER = ? limit ? offset ?";
         return super.executeQueryList(sql, DraftKnowledgesEntity.class, loginUserId, limit, offset);
     }
 
-    
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public DraftKnowledgesEntity selectOnKnowledgeAndUser(Long knowledgeId, Integer loginUserId) {
         String sql = "SELECT * FROM DRAFT_KNOWLEDGES WHERE INSERT_USER = ? AND KNOWLEDGE_ID = ?";
         return super.executeQuerySingle(sql, DraftKnowledgesEntity.class, loginUserId, knowledgeId);

@@ -12,8 +12,10 @@ import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
 import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.config.Order;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.common.util.DateUtils;
 
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -43,8 +45,19 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftItemValuesEntity> physicalSelectAll() { 
+        return physicalSelectAll(Order.DESC);
+    }
+    /**
+     * Select all data.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<DraftItemValuesEntity> physicalSelectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_physical_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, DraftItemValuesEntity.class);
     }
     /**
@@ -53,8 +66,21 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftItemValuesEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        return physicalSelectAllWithPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data on limit and offset
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<DraftItemValuesEntity> physicalSelectAllWithPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_physical_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, DraftItemValuesEntity.class, limit, offset);
     }
     /**
@@ -64,6 +90,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * @param  typeId typeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public DraftItemValuesEntity physicalSelectOnKey(Long draftId, Integer itemNo, Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, DraftItemValuesEntity.class, draftId, itemNo, typeId);
@@ -72,8 +99,19 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftItemValuesEntity> selectAll() { 
+        return selectAll(Order.DESC);
+    }
+    /**
+     * Select all data that not deleted.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<DraftItemValuesEntity> selectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, DraftItemValuesEntity.class);
     }
     /**
@@ -82,14 +120,28 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftItemValuesEntity> selectAllWidthPager(int limit, int offset) { 
+        return selectAllWidthPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data that not deleted with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<DraftItemValuesEntity> selectAllWidthPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, DraftItemValuesEntity.class, limit, offset);
     }
     /**
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -101,6 +153,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * @param  typeId typeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public DraftItemValuesEntity selectOnKey(Long draftId, Integer itemNo, Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_select_on_key.sql");
         return executeQuerySingle(sql, DraftItemValuesEntity.class, draftId, itemNo, typeId);
@@ -110,6 +163,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * @param draftId draftId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftItemValuesEntity> selectOnDraftId(Long draftId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_select_on_draft_id.sql");
         return executeQueryList(sql, DraftItemValuesEntity.class, draftId);
@@ -119,6 +173,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftItemValuesEntity> selectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_select_on_item_no.sql");
         return executeQueryList(sql, DraftItemValuesEntity.class, itemNo);
@@ -128,6 +183,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * @param typeId typeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftItemValuesEntity> selectOnTypeId(Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_select_on_type_id.sql");
         return executeQueryList(sql, DraftItemValuesEntity.class, typeId);
@@ -137,6 +193,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * @param draftId draftId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftItemValuesEntity> physicalSelectOnDraftId(Long draftId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_physical_select_on_draft_id.sql");
         return executeQueryList(sql, DraftItemValuesEntity.class, draftId);
@@ -146,6 +203,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftItemValuesEntity> physicalSelectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_physical_select_on_item_no.sql");
         return executeQueryList(sql, DraftItemValuesEntity.class, itemNo);
@@ -155,6 +213,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * @param typeId typeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftItemValuesEntity> physicalSelectOnTypeId(Integer typeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftItemValuesDao/DraftItemValuesDao_physical_select_on_type_id.sql");
         return executeQueryList(sql, DraftItemValuesEntity.class, typeId);
@@ -163,6 +222,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM DRAFT_ITEM_VALUES";
         return executeQuerySingle(sql, Integer.class);
@@ -221,9 +281,9 @@ public class GenDraftItemValuesDao extends AbstractDao {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public DraftItemValuesEntity insert(Integer user, DraftItemValuesEntity entity) {
         entity.setInsertUser(user);
-        entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setInsertDatetime(new Timestamp(DateUtils.now().getTime()));
         entity.setUpdateUser(user);
-        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         entity.setDeleteFlag(0);
         return physicalInsert(entity);
     }
@@ -274,7 +334,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
         entity.setInsertDatetime(db.getInsertDatetime());
         entity.setDeleteFlag(db.getDeleteFlag());
         entity.setUpdateUser(user);
-        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         return physicalUpdate(entity);
     }
     /**
@@ -355,7 +415,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
         DraftItemValuesEntity db = selectOnKey(draftId, itemNo, typeId);
         db.setDeleteFlag(1);
         db.setUpdateUser(user);
-        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        db.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         physicalUpdate(db);
     }
     /**
@@ -408,7 +468,7 @@ public class GenDraftItemValuesDao extends AbstractDao {
         DraftItemValuesEntity db = physicalSelectOnKey(draftId, itemNo, typeId);
         db.setDeleteFlag(0);
         db.setUpdateUser(user);
-        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        db.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         physicalUpdate(db);
     }
     /**

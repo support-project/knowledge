@@ -1,20 +1,17 @@
 package org.support.project.knowledge.deploy;
 
 import java.io.File;
-import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.support.project.common.exception.SystemException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.config.AnalyticsConfig;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
-import org.support.project.knowledge.dao.ServiceConfigsDao;
-import org.support.project.knowledge.dao.ServiceLocaleConfigsDao;
-import org.support.project.knowledge.entity.ServiceConfigsEntity;
-import org.support.project.knowledge.entity.ServiceLocaleConfigsEntity;
 import org.support.project.knowledge.logic.ServiceConfigLogic;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.web.dao.SystemAttributesDao;
@@ -35,7 +32,16 @@ public class InitializationListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent contextEvent) {
         LOG.debug("contextInitialized");
-        InitializationLogic.get().init();
+        // DBの初期化処理
+        TimeZone zone = TimeZone.getTimeZone("GMT");
+        TimeZone.setDefault(zone);
+        InitDB initDB = new InitDB();
+        String version;
+        try {
+            version = initDB.init();
+        } catch (Exception e) {
+            throw new SystemException(e);
+        }
 
         // 添付ファイル格納ディレクトリ（テンポラリディレクトリ）が存在しなければ生成
         AppConfig appConfig = AppConfig.get();
@@ -66,6 +72,12 @@ public class InitializationListener implements ServletContextListener {
         
         // トップページ情報を取得
         ServiceConfigLogic.get().load();
+        
+        if (!InitDB.CURRENT.equals(version)) {
+            // Databaseのマイグレーションが必要
+            appConfig.setMaintenanceMode(true);
+            LOG.warn("The database version of this service is " + version + ". but lastest version is " + InitDB.CURRENT + ". Then this service start MaintenanceMode");
+        }
     }
 
 }

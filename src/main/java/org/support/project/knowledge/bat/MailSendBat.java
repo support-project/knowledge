@@ -13,6 +13,7 @@ import org.apache.commons.lang.ClassUtils;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.logic.MailLogic;
+import org.support.project.web.dao.MailsDao;
 
 /**
  * メールの送信処理は、時間がかかるため、バッチ処理の中で処理する
@@ -54,6 +55,8 @@ public class MailSendBat extends AbstractBat {
     public void start() throws UnsupportedEncodingException, MessagingException, InvalidKeyException, NoSuchAlgorithmException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         MailLogic.get().startSendMails();
+        int deletecount = MailsDao.get().physicalDeleteOnOldData();
+        LOG.info("delete old mails. [count]" + deletecount);
     }
 
 }

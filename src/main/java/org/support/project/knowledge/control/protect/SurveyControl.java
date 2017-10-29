@@ -7,11 +7,13 @@ import java.util.List;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.admin.TemplateControl;
+import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.SurveyAnswersEntity;
@@ -23,7 +25,11 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.SurveyLogic;
+import org.support.project.knowledge.logic.TargetLogic;
+import org.support.project.knowledge.logic.activity.Activity;
+import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.SurveyReport;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.MessageStatus;
@@ -68,7 +74,8 @@ public class SurveyControl extends TemplateControl {
             return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD_REQUEST");
         }
         KnowledgesEntity knowledge = KnowledgeLogic.get().select(knowledgeId, getLoginedUser());
-        if (knowledge == null || !KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledge, null)) {
+        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+        if (knowledge == null || !KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledge, editors)) {
             return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
         }
         // テンプレートと同じ構造にしているが、アンケートに変換して保存する
@@ -133,12 +140,24 @@ public class SurveyControl extends TemplateControl {
      * @return
      * @throws InvalidParamException
      */
-    @Get
+    @Get(publishToken = "survey")
     public Boundary load() throws InvalidParamException {
         Long id = super.getPathLong(new Long(-1));
         SurveysEntity entity = SurveyLogic.get().loadSurvey(id, getLoginUserId());
         if (entity == null) {
-            return sendError(404, null);
+            entity = new SurveysEntity();
+            entity.setDescription("");
+            entity.setItems(new ArrayList<>());
+            entity.setExist(false);
+        } else {
+            entity.setExist(true);
+        }
+        KnowledgesEntity knowledge = KnowledgeLogic.get().select(id, getLoginedUser());
+        List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(id);
+        if (knowledge != null && KnowledgeLogic.get().isEditor(super.getLoginedUser(), knowledge, editors)) {
+            entity.setEditable(true);
+        } else {
+            entity.setEditable(false);
         }
         return send(entity);
     }
@@ -148,7 +167,7 @@ public class SurveyControl extends TemplateControl {
      * @return
      * @throws InvalidParamException
      */
-    @Delete
+    @Delete(subscribeToken = "survey")
     public Boundary delete() throws InvalidParamException {
         Long id = super.getPathLong(new Long(-1));
         SurveyLogic.get().deleteSurvey(id);
@@ -167,7 +186,7 @@ public class SurveyControl extends TemplateControl {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    @Post(subscribeToken = "knowledge", checkReqToken = true)
+    @Post(subscribeToken = "survey", checkReqToken = true)
     public Boundary answer() throws InstantiationException, IllegalAccessException, JSONException, IOException, InvalidParamException {
         String id = getParam("knowledgeId");
         if (!StringUtils.isLong(id)) {
@@ -222,6 +241,8 @@ public class SurveyControl extends TemplateControl {
             LOG.debug(PropertyUtil.reflectionToString(answer));
         }
         SurveyLogic.get().saveAnswer(answer, getLoginUserId());
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_ANSWER, getLoginedUser(), DateUtils.now(),
+                KnowledgesDao.get().selectOnKey(knowledgeId));
         
         // メッセージ送信
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, "saved", "message.success.save");

@@ -1,0 +1,28 @@
+INSERT INTO POINT_USER_HISTORIES
+( 
+HISTORY_NO
+ , USER_ID
+ , ACTIVITY_NO
+ , TYPE
+ , POINT
+ , BEFORE_TOTAL
+ , TOTAL
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

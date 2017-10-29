@@ -45,6 +45,10 @@ public class CronListener implements ServletContextListener {
         fileClearfuture = service.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
+                if (AppConfig.get().isMaintenanceMode()) {
+                    LOG.debug("This service is maintenance mode now.");
+                    return;
+                }
                 LOG.trace("called. [fileClearfuture]");
                 // Java を別のVMで実行（添付ファイルの定期的なクリア）
                 JavaJob job = new JavaJob();
@@ -73,6 +77,10 @@ public class CronListener implements ServletContextListener {
         parsefuture = service.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
+                if (AppConfig.get().isMaintenanceMode()) {
+                    LOG.debug("This service is maintenance mode now.");
+                    return;
+                }
                 LOG.trace("called. [parsefuture]");
                 // 添付ファイルの中身を抽出し検索可能にする
                 JavaJob job = new JavaJob();
@@ -101,6 +109,10 @@ public class CronListener implements ServletContextListener {
         mailfuture = service.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
+                if (AppConfig.get().isMaintenanceMode()) {
+                    LOG.debug("This service is maintenance mode now.");
+                    return;
+                }
                 LOG.trace("called. [mailfuture]");
                 // メール送信
                 JavaJob job = new JavaJob();
@@ -129,6 +141,10 @@ public class CronListener implements ServletContextListener {
         webhookfuture = service.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
+                if (AppConfig.get().isMaintenanceMode()) {
+                    LOG.debug("This service is maintenance mode now.");
+                    return;
+                }
                 LOG.trace("called. [webhookfuture]");
                 // Webhook
                 JavaJob job = new JavaJob();
@@ -157,6 +173,10 @@ public class CronListener implements ServletContextListener {
         mailHookfuture = service.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
+                if (AppConfig.get().isMaintenanceMode()) {
+                    LOG.debug("This service is maintenance mode now.");
+                    return;
+                }
                 LOG.trace("called. [mailHookfuture]");
                 // メールからの投稿用のメールの読み込み
                 JavaJob job = new JavaJob();
@@ -185,6 +205,10 @@ public class CronListener implements ServletContextListener {
         notifyfuture = service.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
+                if (AppConfig.get().isMaintenanceMode()) {
+                    LOG.debug("This service is maintenance mode now.");
+                    return;
+                }
                 LOG.trace("called. [notifyfuture]");
                 // Java を別のVMで実行（添付ファイルの中身を抽出し検索可能にする）
                 JavaJob job = new JavaJob();

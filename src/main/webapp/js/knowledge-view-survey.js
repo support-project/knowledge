@@ -1,22 +1,26 @@
 $(document).ready(function() {
     var knowledgeId = $('#knowledgeId').val();
-    $.ajax({
-        type : 'GET',
-        url : _CONTEXT + '/protect.survey/load/' + knowledgeId
-    }).done(function(data) {
-        console.log(data);
-        $('#btnAnswerSurvey').removeClass('hide');
-        $('#modalAnswerSurveyLabel').text(data.title);
-        $('#surveyDescription').text(data.description);
-        document.__add_Template_Edit_Item(data);
-    }).fail(function(err) {
-        console.log(err);
-    });
+    if (_LOGIN_USER_ID) {
+        $.ajax({
+            type : 'GET',
+            url : _CONTEXT + '/protect.survey/load/' + knowledgeId
+        }).done(function(data) {
+            console.log(data);
+            if (data.msg || !data.exist) {
+                return;
+            }
+            $('#btnAnswerSurvey').removeClass('hide');
+            $('#modalAnswerSurveyLabel').text(data.title);
+            $('#surveyDescription').text(data.description);
+            document.__add_Template_Edit_Item(data);
+        }).fail(function(err) {
+            console.log(err);
+        });
+    }
     
     $('#saveSurveyButton').click(function(){
         $('#answerForm').submit();
     });
-
     
     // フォームのサブミットは禁止
     $('#answerForm').submit(function(event) {

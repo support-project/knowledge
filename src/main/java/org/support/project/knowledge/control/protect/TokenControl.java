@@ -8,7 +8,6 @@ import java.util.Date;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
-import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
@@ -33,8 +32,9 @@ public class TokenControl extends Control {
     /**
      * 現在のTokenの状態を見る
      */
-    @Get
+    @Get(publishToken = "csrf")
     public Boundary index() {
+        LOG.trace("access to index");
         String expires = "";
         TokensEntity entity = TokensDao.get().selectOnUserId(getLoginUserId());
         if (entity == null) {
@@ -52,8 +52,9 @@ public class TokenControl extends Control {
     /**
      * Tokenの発行／更新
      */
-    @Post
+    @Post(subscribeToken = "csrf")
     public Boundary save() {
+        LOG.trace("access to save");
         String expires = getParam("expires");
         if (StringUtils.isEmpty(expires)) {
             expires = "9999-12-31";
@@ -80,7 +81,7 @@ public class TokenControl extends Control {
     /**
      * Tokenの削除
      */
-    @Post
+    @Post(subscribeToken = "csrf")
     public Boundary delete() {
         TokensEntity entity = TokensDao.get().selectOnUserId(getLoginUserId());
         if (entity != null) {

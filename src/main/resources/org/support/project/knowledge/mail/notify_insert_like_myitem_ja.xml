@@ -2,13 +2,14 @@
 <mail>
 <title>[Knowledge] 評価の通知 {KnowledgeId} - {KnowledgeTitle}</title>
 <contents xml:space="preserve">
-以下のナレッジに「いいね！」が押されました！
+あなたの投稿に、「いいね！」が登録されました。
 
 {URL}
 
 ------------------------------------------
-{KnowledgeTitle}
+Title: {KnowledgeTitle}
 
+------------------------------------------
 {Contents}
 
 ------------------------------------------

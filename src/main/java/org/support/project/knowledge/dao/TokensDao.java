@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -28,6 +29,7 @@ public class TokensDao extends GenTokensDao {
      * @param userId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public TokensEntity selectOnUserId(Integer userId) {
         String sql = "SELECT * FROM TOKENS WHERE USER_ID = ? AND DELETE_FLAG = 0";
         return executeQuerySingle(sql, TokensEntity.class, userId);

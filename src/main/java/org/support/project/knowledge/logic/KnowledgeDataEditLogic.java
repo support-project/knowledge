@@ -50,6 +50,9 @@ public class KnowledgeDataEditLogic {
         KnowledgesEntity entity = new KnowledgesEntity();
         PropertyUtil.copyPropertyValue(data, entity);
         
+        // 必須チェックエラーになるので、初期値をセット（更新時は、KnowledgeLogicのupdateの中でDBに保存されている値を保持するようにセットしなおしている）
+        entity.setPoint(0);
+        
         List<ValidateError> errors = entity.validate();
         if (errors != null && !errors.isEmpty()) {
             StringJoinBuilder<String> builder = new StringJoinBuilder<>();
@@ -100,6 +103,9 @@ public class KnowledgeDataEditLogic {
     }
     
     private String convTargets(Target viewers) {
+        if (viewers == null) {
+            return "";
+        }
         StringJoinBuilder<String> builder = new StringJoinBuilder<>();
         List<NameId> groups = viewers.getGroups();
         if (groups != null) {
@@ -154,6 +160,10 @@ public class KnowledgeDataEditLogic {
         }
         // 画面での登録と形をあわせる
         KnowledgeData knowledge = conv(data);
+        // APIからデータ更新した場合、つねに「更新した」と判定する
+        // TODO この辺の判定処理は、後で共有化すること（KnowledgeControlで、ロジックを実装しすぎている）
+        knowledge.setUpdateContent(true);
+        knowledge.setNotifyUpdate(true);
         KnowledgeLogic.get().update(knowledge, loginedUser);
     }
 

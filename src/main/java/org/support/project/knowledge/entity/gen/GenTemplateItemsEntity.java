@@ -61,6 +61,8 @@ public class GenTemplateItemsEntity implements Serializable {
     private Integer itemType;
     /** 説明 */
     private String description;
+    /** 初期値 */
+    private String initialValue;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -149,6 +151,22 @@ public class GenTemplateItemsEntity implements Serializable {
      * @return this object     */
     public GenTemplateItemsEntity setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    /**
+     * Get 初期値.
+     * @return 初期値
+     */
+    public String getInitialValue() {
+        return this.initialValue;
+    }
+    /**
+     * Set 初期値.
+     * @param initialValue 初期値
+     * @return this object     */
+    public GenTemplateItemsEntity setInitialValue(String initialValue) {
+        this.initialValue = initialValue;
         return this;
     }
 
@@ -288,6 +306,7 @@ public class GenTemplateItemsEntity implements Serializable {
         builder.append("itemName = ").append(itemName).append("\n");
         builder.append("itemType = ").append(itemType).append("\n");
         builder.append("description = ").append(description).append("\n");
+        builder.append("initialValue = ").append(initialValue).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");

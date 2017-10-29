@@ -12,8 +12,10 @@ import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
 import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.config.Order;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.common.util.DateUtils;
 
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -43,8 +45,19 @@ public class GenDraftKnowledgesDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftKnowledgesEntity> physicalSelectAll() { 
+        return physicalSelectAll(Order.DESC);
+    }
+    /**
+     * Select all data.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<DraftKnowledgesEntity> physicalSelectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftKnowledgesDao/DraftKnowledgesDao_physical_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, DraftKnowledgesEntity.class);
     }
     /**
@@ -53,8 +66,21 @@ public class GenDraftKnowledgesDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftKnowledgesEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        return physicalSelectAllWithPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data on limit and offset
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<DraftKnowledgesEntity> physicalSelectAllWithPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftKnowledgesDao/DraftKnowledgesDao_physical_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, DraftKnowledgesEntity.class, limit, offset);
     }
     /**
@@ -62,6 +88,7 @@ public class GenDraftKnowledgesDao extends AbstractDao {
      * @param  draftId draftId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public DraftKnowledgesEntity physicalSelectOnKey(Long draftId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftKnowledgesDao/DraftKnowledgesDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, DraftKnowledgesEntity.class, draftId);
@@ -70,8 +97,19 @@ public class GenDraftKnowledgesDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftKnowledgesEntity> selectAll() { 
+        return selectAll(Order.DESC);
+    }
+    /**
+     * Select all data that not deleted.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<DraftKnowledgesEntity> selectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftKnowledgesDao/DraftKnowledgesDao_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, DraftKnowledgesEntity.class);
     }
     /**
@@ -80,14 +118,28 @@ public class GenDraftKnowledgesDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<DraftKnowledgesEntity> selectAllWidthPager(int limit, int offset) { 
+        return selectAllWidthPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data that not deleted with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<DraftKnowledgesEntity> selectAllWidthPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftKnowledgesDao/DraftKnowledgesDao_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, DraftKnowledgesEntity.class, limit, offset);
     }
     /**
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftKnowledgesDao/DraftKnowledgesDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -97,6 +149,7 @@ public class GenDraftKnowledgesDao extends AbstractDao {
      * @param  draftId draftId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public DraftKnowledgesEntity selectOnKey(Long draftId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/DraftKnowledgesDao/DraftKnowledgesDao_select_on_key.sql");
         return executeQuerySingle(sql, DraftKnowledgesEntity.class, draftId);
@@ -105,6 +158,7 @@ public class GenDraftKnowledgesDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM DRAFT_KNOWLEDGES";
         return executeQuerySingle(sql, Integer.class);
@@ -135,8 +189,13 @@ public class GenDraftKnowledgesDao extends AbstractDao {
             entity.getDeleteFlag());
         String driverClass = ConnectionManager.getInstance().getDriverClass(getConnectionName());
         if (ORMappingParameter.DRIVER_NAME_POSTGRESQL.equals(driverClass)) {
-            String setValSql = "select setval('DRAFT_KNOWLEDGES_DRAFT_ID_seq', (select max(DRAFT_ID) from DRAFT_KNOWLEDGES));";
-            executeQuerySingle(setValSql, Long.class);
+            String maxSql = "SELECT MAX(DRAFT_ID) from DRAFT_KNOWLEDGES;";
+            long max = executeQuerySingle(maxSql, Long.class);
+            if (max < 1) {
+                max = 1;
+            }
+            String setValSql = "SELECT SETVAL('DRAFT_KNOWLEDGES_DRAFT_ID_seq', ?);";
+            executeQuerySingle(setValSql, Long.class, max);
         }
         return entity;
     }
@@ -177,9 +236,9 @@ public class GenDraftKnowledgesDao extends AbstractDao {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public DraftKnowledgesEntity insert(Integer user, DraftKnowledgesEntity entity) {
         entity.setInsertUser(user);
-        entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setInsertDatetime(new Timestamp(DateUtils.now().getTime()));
         entity.setUpdateUser(user);
-        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         entity.setDeleteFlag(0);
         return physicalInsert(entity);
     }
@@ -234,7 +293,7 @@ public class GenDraftKnowledgesDao extends AbstractDao {
         entity.setInsertDatetime(db.getInsertDatetime());
         entity.setDeleteFlag(db.getDeleteFlag());
         entity.setUpdateUser(user);
-        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         return physicalUpdate(entity);
     }
     /**
@@ -311,7 +370,7 @@ public class GenDraftKnowledgesDao extends AbstractDao {
         DraftKnowledgesEntity db = selectOnKey(draftId);
         db.setDeleteFlag(1);
         db.setUpdateUser(user);
-        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        db.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         physicalUpdate(db);
     }
     /**
@@ -360,7 +419,7 @@ public class GenDraftKnowledgesDao extends AbstractDao {
         DraftKnowledgesEntity db = physicalSelectOnKey(draftId);
         db.setDeleteFlag(0);
         db.setUpdateUser(user);
-        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        db.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         physicalUpdate(db);
     }
     /**

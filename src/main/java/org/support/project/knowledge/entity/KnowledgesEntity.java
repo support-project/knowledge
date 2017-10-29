@@ -41,7 +41,7 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
     /** スコア(検索した際のスコア) */
     private Float score;
     /** 指定期間内のイイネ件数 */
-    private Integer likeCountOnTerm;
+    private Integer pointOnTerm;
 
     /** 開催日     UTC(Eventの場合のみ） */
     private Timestamp startDateTime;
@@ -65,6 +65,16 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
     public KnowledgesEntity(Long knowledgeId) {
         super(knowledgeId);
     }
+    
+    /**
+     * Get 参照件数.(Safe null)
+     * @return 参照件数
+     */
+    public Long getViewCount() {
+        if (super.getViewCount() == null) return new Long(0);
+        return super.getViewCount();
+    }
+   
     
     /**
      * 開始日時を指定のタイムゾーンの日時として取得
@@ -159,20 +169,6 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
     }
 
     /**
-     * @return the likeCountOnTerm
-     */
-    public Integer getLikeCountOnTerm() {
-        return likeCountOnTerm;
-    }
-
-    /**
-     * @param likeCountOnTerm the likeCountOnTerm to set
-     */
-    public void setLikeCountOnTerm(Integer likeCountOnTerm) {
-        this.likeCountOnTerm = likeCountOnTerm;
-    }
-
-    /**
      * @return the startDateTime
      */
     public Timestamp getStartDateTime() {
@@ -184,6 +180,20 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
      */
     public void setStartDateTime(Timestamp startDateTime) {
         this.startDateTime = startDateTime;
+    }
+
+    /**
+     * @return the pointOnTerm
+     */
+    public Integer getPointOnTerm() {
+        return pointOnTerm;
+    }
+
+    /**
+     * @param pointOnTerm the pointOnTerm to set
+     */
+    public void setPointOnTerm(Integer pointOnTerm) {
+        this.pointOnTerm = pointOnTerm;
     }
 
 }

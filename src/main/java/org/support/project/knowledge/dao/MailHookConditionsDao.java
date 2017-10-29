@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -29,6 +30,7 @@ public class MailHookConditionsDao extends GenMailHookConditionsDao {
      * @param hookId
      * @return
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int nextConditionNo(Integer hookId) {
         String sql = "SELECT COUNT(*) FROM MAIL_HOOK_CONDITIONS WHERE HOOK_ID = ?";
         int num = super.executeQuerySingle(sql, Integer.class, hookId);

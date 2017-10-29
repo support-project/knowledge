@@ -12,8 +12,10 @@ import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
 import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.config.Order;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.common.util.DateUtils;
 
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -43,8 +45,19 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeEditUsersEntity> physicalSelectAll() { 
+        return physicalSelectAll(Order.DESC);
+    }
+    /**
+     * Select all data.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<KnowledgeEditUsersEntity> physicalSelectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeEditUsersDao/KnowledgeEditUsersDao_physical_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, KnowledgeEditUsersEntity.class);
     }
     /**
@@ -53,8 +66,21 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeEditUsersEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        return physicalSelectAllWithPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data on limit and offset
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<KnowledgeEditUsersEntity> physicalSelectAllWithPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeEditUsersDao/KnowledgeEditUsersDao_physical_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, KnowledgeEditUsersEntity.class, limit, offset);
     }
     /**
@@ -63,6 +89,7 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
      * @param  userId userId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgeEditUsersEntity physicalSelectOnKey(Long knowledgeId, Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeEditUsersDao/KnowledgeEditUsersDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, KnowledgeEditUsersEntity.class, knowledgeId, userId);
@@ -71,8 +98,19 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeEditUsersEntity> selectAll() { 
+        return selectAll(Order.DESC);
+    }
+    /**
+     * Select all data that not deleted.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<KnowledgeEditUsersEntity> selectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeEditUsersDao/KnowledgeEditUsersDao_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, KnowledgeEditUsersEntity.class);
     }
     /**
@@ -81,14 +119,28 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeEditUsersEntity> selectAllWidthPager(int limit, int offset) { 
+        return selectAllWidthPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data that not deleted with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<KnowledgeEditUsersEntity> selectAllWidthPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeEditUsersDao/KnowledgeEditUsersDao_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, KnowledgeEditUsersEntity.class, limit, offset);
     }
     /**
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeEditUsersDao/KnowledgeEditUsersDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -99,6 +151,7 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
      * @param  userId userId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgeEditUsersEntity selectOnKey(Long knowledgeId, Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeEditUsersDao/KnowledgeEditUsersDao_select_on_key.sql");
         return executeQuerySingle(sql, KnowledgeEditUsersEntity.class, knowledgeId, userId);
@@ -108,6 +161,7 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
      * @param knowledgeId knowledgeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeEditUsersEntity> selectOnKnowledgeId(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeEditUsersDao/KnowledgeEditUsersDao_select_on_knowledge_id.sql");
         return executeQueryList(sql, KnowledgeEditUsersEntity.class, knowledgeId);
@@ -117,6 +171,7 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
      * @param userId userId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeEditUsersEntity> selectOnUserId(Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeEditUsersDao/KnowledgeEditUsersDao_select_on_user_id.sql");
         return executeQueryList(sql, KnowledgeEditUsersEntity.class, userId);
@@ -126,6 +181,7 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
      * @param knowledgeId knowledgeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeEditUsersEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeEditUsersDao/KnowledgeEditUsersDao_physical_select_on_knowledge_id.sql");
         return executeQueryList(sql, KnowledgeEditUsersEntity.class, knowledgeId);
@@ -135,6 +191,7 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
      * @param userId userId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeEditUsersEntity> physicalSelectOnUserId(Integer userId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/KnowledgeEditUsersDao/KnowledgeEditUsersDao_physical_select_on_user_id.sql");
         return executeQueryList(sql, KnowledgeEditUsersEntity.class, userId);
@@ -143,6 +200,7 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM KNOWLEDGE_EDIT_USERS";
         return executeQuerySingle(sql, Integer.class);
@@ -195,9 +253,9 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public KnowledgeEditUsersEntity insert(Integer user, KnowledgeEditUsersEntity entity) {
         entity.setInsertUser(user);
-        entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setInsertDatetime(new Timestamp(DateUtils.now().getTime()));
         entity.setUpdateUser(user);
-        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         entity.setDeleteFlag(0);
         return physicalInsert(entity);
     }
@@ -245,7 +303,7 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
         entity.setInsertDatetime(db.getInsertDatetime());
         entity.setDeleteFlag(db.getDeleteFlag());
         entity.setUpdateUser(user);
-        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         return physicalUpdate(entity);
     }
     /**
@@ -324,7 +382,7 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
         KnowledgeEditUsersEntity db = selectOnKey(knowledgeId, userId);
         db.setDeleteFlag(1);
         db.setUpdateUser(user);
-        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        db.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         physicalUpdate(db);
     }
     /**
@@ -375,7 +433,7 @@ public class GenKnowledgeEditUsersDao extends AbstractDao {
         KnowledgeEditUsersEntity db = physicalSelectOnKey(knowledgeId, userId);
         db.setDeleteFlag(0);
         db.setUpdateUser(user);
-        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        db.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         physicalUpdate(db);
     }
     /**

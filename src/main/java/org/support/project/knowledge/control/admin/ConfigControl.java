@@ -21,10 +21,12 @@ import org.support.project.web.dao.LdapConfigsDao;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.SystemAttributesDao;
 import org.support.project.web.dao.SystemConfigsDao;
+import org.support.project.web.dao.SystemsDao;
 import org.support.project.web.entity.LdapConfigsEntity;
 import org.support.project.web.entity.MailConfigsEntity;
 import org.support.project.web.entity.SystemAttributesEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
+import org.support.project.web.entity.SystemsEntity;
 
 @DI(instance = Instance.Prototype)
 public class ConfigControl extends Control {
@@ -76,8 +78,7 @@ public class ConfigControl extends Control {
         String type = getParam("userAddType");
         String notify = getParam("userAddNotify");
         // メール送信の場合、メールの設定が完了しているかチェック
-        if ((type != null && type.equals(SystemConfig.USER_ADD_TYPE_VALUE_MAIL))
-                || (notify != null && notify.equals(SystemConfig.USER_ADD_NOTIFY_ON))) {
+        if (type != null && type.equals(SystemConfig.USER_ADD_TYPE_VALUE_MAIL)) {
             MailConfigsDao mailConfigsDao = MailConfigsDao.get();
             MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
             if (mailConfigsEntity == null) {
@@ -135,6 +136,16 @@ public class ConfigControl extends Control {
             setAttribute("uploadMaxMBSize", "10"); // default
         }
 
+        config = dao.selectOnKey(SystemConfig.LIKE_CONFIG, AppConfig.get().getSystemName());
+        if (config != null) {
+            setAttribute("like_config", config.getConfigValue());
+        }
+        
+        SystemsEntity entity = SystemsDao.get().selectOnKey(AppConfig.get().getSystemName());
+        if (entity != null) {
+            setAttribute("db_version", entity.getVersion());
+        }
+        
         return forward("system.jsp");
     }
 
@@ -191,7 +202,14 @@ public class ConfigControl extends Control {
         config = new SystemConfigsEntity(SystemConfig.UPLOAD_MAX_MB_SIZE, AppConfig.get().getSystemName());
         config.setConfigValue(uploadMaxMBSize);
         dao.save(config);
-
+        
+        String like_config = getParam("like_config");
+        if (StringUtils.isNotEmpty(like_config)) {
+            config = new SystemConfigsEntity(SystemConfig.LIKE_CONFIG, AppConfig.get().getSystemName());
+            config.setConfigValue(like_config);
+            dao.save(config);
+        }
+        
         String successMsg = "message.success.save";
         setResult(successMsg, errors);
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
@@ -15,8 +16,10 @@ import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.dao.UserGroupsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.entity.UserGroupsEntity;
 import org.support.project.web.entity.UsersEntity;
 
 @DI(instance = Instance.Singleton)
@@ -125,23 +128,54 @@ public class TargetLogic {
         }
 
         TargetsDao targetsDao = TargetsDao.get();
+        List<Integer> groupIds = new ArrayList<Integer>();
+        Map<Long, List<Integer>> groupIdMaps = new HashMap<Long, List<Integer>>();
+        Map<Integer, List<Integer>> groupUserIds = new HashMap<Integer, List<Integer>>();
 
         for (Long knowledgeId : knowledgeIds) {
             results.put(knowledgeId, new ArrayList<LabelValue>());
+            groupIdMaps.put(knowledgeId, new ArrayList<Integer>());
         }
 
         List<GroupsEntity> groups = targetsDao.selectGroupsOnKnowledgeIds(knowledgeIds);
         for (GroupsEntity groupsEntity : groups) {
+            if (groupsEntity.getDeleteFlag() != null && groupsEntity.getDeleteFlag().intValue() == INT_FLAG.ON.getValue()) {
+                // 削除済のユーザは表示しない
+                continue;
+            }
             LabelValue labelValue = new LabelValue();
             labelValue.setLabel(NAME_PREFIX_GROUP + groupsEntity.getGroupName());
             labelValue.setValue(ID_PREFIX_GROUP + groupsEntity.getGroupId());
             results.get(groupsEntity.getKnowledgeId()).add(labelValue);
+            groupIdMaps.get(groupsEntity.getKnowledgeId()).add(groupsEntity.getGroupId());
+            groupIds.add(groupsEntity.getGroupId());
+            groupUserIds.put(groupsEntity.getGroupId(), new ArrayList<Integer>());
+        }
+
+        // フィルターするためにグループに所属するユーザーを取得する
+        if (!groupIds.isEmpty()) {
+            List<UserGroupsEntity> userGroups = UserGroupsDao.get().selectOnGroupIds(groupIds);
+            for (UserGroupsEntity userGroupsEntity : userGroups) {
+                groupUserIds.get(userGroupsEntity.getGroupId()).add(userGroupsEntity.getUserId());
+            }
         }
 
         List<UsersEntity> users = targetsDao.selectUsersOnKnowledgeIds(knowledgeIds);
         for (UsersEntity usersEntity : users) {
             // 自分の場合はスキップ
             if (usersEntity.getUserId().intValue() == loginedUser.getUserId().intValue()) {
+                continue;
+            }
+
+            // グループに公開されていてかつそのグループに所属してる場合もスキップ
+            for (Integer groupId : groupIdMaps.get(usersEntity.getKnowledgeId())) {
+                if (groupUserIds.get(groupId).contains(usersEntity.getUserId())) {
+                    continue;
+                }
+            }
+            
+            if (usersEntity.getDeleteFlag() != null && usersEntity.getDeleteFlag().intValue() == INT_FLAG.ON.getValue()) {
+                // 削除済のユーザは表示しない
                 continue;
             }
             LabelValue labelValue = new LabelValue();
@@ -163,11 +197,13 @@ public class TargetLogic {
         List<LabelValue> results = new ArrayList<>();
         TargetsDao targetsDao = TargetsDao.get();
         List<GroupsEntity> groups = targetsDao.selectEditorGroupsOnKnowledgeId(knowledgeId);
+        List<Integer> groupIds = new ArrayList<Integer>();
         for (GroupsEntity groupsEntity : groups) {
             LabelValue labelValue = new LabelValue();
             labelValue.setLabel(NAME_PREFIX_GROUP + groupsEntity.getGroupName());
             labelValue.setValue(ID_PREFIX_GROUP + groupsEntity.getGroupId());
             results.add(labelValue);
+            groupIds.add(groupsEntity.getGroupId());
         }
         List<UsersEntity> users = targetsDao.selectEditorUsersOnKnowledgeId(knowledgeId);
         for (UsersEntity usersEntity : users) {
@@ -176,6 +212,79 @@ public class TargetLogic {
             labelValue.setValue(ID_PREFIX_USER + usersEntity.getUserId());
             results.add(labelValue);
         }
+        return results;
+    }
+
+    /**
+     * ナレッジに指定されているアクセス可能なグループを取得(表示用)
+     *
+     * @param knowledgeId
+     * @param loginedUser
+     * @return
+     */
+    public List<LabelValue> selectTargetsViewOnKnowledgeId(Long knowledgeId, LoginedUser loginedUser) {
+        TargetsDao targetsDao = TargetsDao.get();
+        List<GroupsEntity> groups = targetsDao.selectGroupsOnKnowledgeId(knowledgeId);
+        List<UsersEntity> users = targetsDao.selectUsersOnKnowledgeId(knowledgeId);
+
+        return filterTargetLabel(groups, users, loginedUser);
+    }
+
+    /**
+     * ナレッジに指定されている編集可能なグループを取得(表示用)
+     *
+     * @param knowledgeId
+     * @param loginedUser
+     * @return
+     */
+    public List<LabelValue> selectEditorsViewOnKnowledgeId(Long knowledgeId, LoginedUser loginedUser) {
+        TargetsDao targetsDao = TargetsDao.get();
+        List<GroupsEntity> groups = targetsDao.selectEditorGroupsOnKnowledgeId(knowledgeId);
+        List<UsersEntity> users = targetsDao.selectEditorUsersOnKnowledgeId(knowledgeId);
+
+        return filterTargetLabel(groups, users, loginedUser);
+    }
+
+    /**
+     * ターゲットのラベルをフィルターする
+     *
+     * @param groups
+     * @param users
+     * @param loginedUser
+     * @return
+     */
+    public List<LabelValue> filterTargetLabel(List<GroupsEntity> groups, List<UsersEntity> users, LoginedUser loginedUser) {
+        List<LabelValue> results = new ArrayList<>();
+        List<Integer> groupIds = new ArrayList<Integer>();
+
+        for (GroupsEntity groupsEntity : groups) {
+            LabelValue labelValue = new LabelValue();
+            labelValue.setLabel(NAME_PREFIX_GROUP + groupsEntity.getGroupName());
+            labelValue.setValue(ID_PREFIX_GROUP + groupsEntity.getGroupId());
+            results.add(labelValue);
+            groupIds.add(groupsEntity.getGroupId());
+        }
+
+        // フィルターするためにグループに所属するユーザーを取得する
+        List<Integer> groupUserIds = new ArrayList<Integer>();
+        if (!groupIds.isEmpty()) {
+            List<UserGroupsEntity> userGroups = UserGroupsDao.get().selectOnGroupIds(groupIds);
+            for (UserGroupsEntity userGroupsEntity : userGroups) {
+                groupUserIds.add(userGroupsEntity.getUserId());
+            }
+        }
+
+        for (UsersEntity usersEntity : users) {
+            // グループに公開されていてかつそのグループに所属してる場合はスキップ
+            if (groupUserIds.contains(usersEntity.getUserId())) {
+                continue;
+            }
+            LabelValue labelValue = new LabelValue();
+            labelValue.setLabel(NAME_PREFIX_USER + usersEntity.getUserName());
+            labelValue.setValue(ID_PREFIX_USER + usersEntity.getUserId());
+            results.add(labelValue);
+        }
+
         return results;
     }
 

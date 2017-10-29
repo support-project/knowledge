@@ -12,12 +12,14 @@ import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.DraftKnowledgesDao;
@@ -37,6 +39,8 @@ import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
+import org.support.project.knowledge.logic.activity.Activity;
+import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.Stock;
 import org.support.project.knowledge.vo.UploadFile;
@@ -100,11 +104,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
         
         if (getAttribute("publicFlag") == null) {
             UserConfigsEntity publicFlag = UserConfigsDao.get().physicalSelectOnKey(
-                    "DEFAULT_PUBLIC_FLAG", AppConfig.get().getSystemName(), getLoginUserId());
+                    UserConfig.DEFAULT_PUBLIC_FLAG, AppConfig.get().getSystemName(), getLoginUserId());
             if (publicFlag != null) {
                 setAttribute("publicFlag", publicFlag.getConfigValue());
                 UserConfigsEntity targets = UserConfigsDao.get().physicalSelectOnKey(
-                        "DEFAULT_TARGET", AppConfig.get().getSystemName(), getLoginUserId());
+                        UserConfig.DEFAULT_TARGET, AppConfig.get().getSystemName(), getLoginUserId());
                 if (targets != null) {
                     if (StringUtils.isNotEmpty(targets.getConfigValue())) {
                         String[] targetKeys = targets.getConfigValue().split(",");
@@ -149,20 +153,21 @@ public class KnowledgeControl extends KnowledgeControlBase {
         if (draft != null) {
             super.setDraftInfo(draft);
         } else {
+            // 編集権限チェック
+            LoginedUser loginedUser = super.getLoginedUser();
+
             // ナレッジに紐づく添付ファイルを取得
             List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(knowledgeId, getRequest().getContextPath());
             setAttribute("files", files);
 
             // 表示するグループを取得
-            List<LabelValue> groups = TargetLogic.get().selectTargetsOnKnowledgeId(knowledgeId);
+            List<LabelValue> groups = TargetLogic.get().selectTargetsViewOnKnowledgeId(knowledgeId, loginedUser);
             setAttribute("groups", groups);
 
             // 共同編集者
-            List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
+            List<LabelValue> editors = TargetLogic.get().selectEditorsViewOnKnowledgeId(knowledgeId, loginedUser);
             setAttribute("editors", editors);
-            
-            // 編集権限チェック
-            LoginedUser loginedUser = super.getLoginedUser();
+
             boolean edit = knowledgeLogic.isEditor(loginedUser, entity, editors);
             if (!edit) {
                 setAttribute("edit", false);
@@ -209,7 +214,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         LOG.trace("save");
 
         KnowledgesEntity insertedEntity = knowledgeLogic.insert(data, super.getLoginedUser());
-
+        
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
                 String.valueOf(insertedEntity.getKnowledgeId()), "message.success.insert");
     }
@@ -278,8 +283,16 @@ public class KnowledgeControl extends KnowledgeControlBase {
             return sendValidateError(errors);
         }
         
+        // 明示的にユーザが、タイムラインの上にもっていきたくないと指定した
+        if ("true".equals(super.getAttribute("notUpdateTimeline", "false"))) {
+            data.setDonotUpdateTimeline(true);
+        }
         if (!StringUtils.isEmpty(getParam("updateContent")) && getParam("updateContent").toLowerCase().equals("true")) {
+            // コンテンツの内容が更新されている
             data.setUpdateContent(true);
+            if (!data.isDonotUpdateTimeline()) {
+                data.setNotifyUpdate(true);
+            }
             LOG.debug("コンテンツを更新した");
         } else {
             // メタデータのみ更新
@@ -289,13 +302,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 if (check.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PRIVATE &&
                         check.getPublicFlag().intValue() != data.getKnowledge().getPublicFlag().intValue()) {
                     // まだ通知を一度も出しておらず、かつ、「非公開」になっていたものを、それ以外の区分に変更した場合は、通知を出す
-                    data.setUpdateContent(true);
+                    data.setNotifyUpdate(true);
                     LOG.debug("メタデータのみ更新であったが、非公開から公開などへ変更した");
                 }
             }
         }
-        
-        
+        // 更新実行
         KnowledgesEntity updatedEntity = knowledgeLogic.update(data, super.getLoginedUser());
         
         if (data.isUpdateContent()) {
@@ -316,6 +328,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
     @Post(subscribeToken = "knowledge", checkReqToken = true)
     public Boundary save(KnowledgesEntity entity) throws Exception {
         try {
+            if (entity.getPoint() == null) {
+                entity.setPoint(0); // 初期値
+            }
             if (entity.getKnowledgeId() != null && entity.getKnowledgeId() >= 1) {
                 return update(entity);
             } else {
@@ -472,12 +487,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 }
             }
             setAttribute("comment_files", files);
-
             return super.devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(knowledgeId));
         }
-
         KnowledgeLogic.get().saveComment(knowledgeId, comment, fileNos, getLoginedUser());
-
         return super.redirect(getRequest().getContextPath() + "/open.knowledge/view/" + knowledgeId + params);
     }
 
@@ -659,6 +671,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
 
         KnowledgeLogic.get().deleteComment(db, getLoginedUser());
+        
         addMsgSuccess("message.success.delete.target", getResource("label.comment"));
         setAttribute("comment", null);
         return devolution(HttpMethod.get, "open.Knowledge/view", String.valueOf(db.getKnowledgeId()));
@@ -715,6 +728,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 dao.physicalDelete(entity);
             }
         }
+        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_STOCK, getLoginedUser(), DateUtils.now(),
+                KnowledgesDao.get().selectOnKey(knowledgeId));
+        
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK, "saved", "message.success.save");
     };
 

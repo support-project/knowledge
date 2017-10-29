@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,8 +13,8 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.entity.KnowledgesEntity;
-import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.logic.LikeLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
 
@@ -58,6 +59,7 @@ public class KnowledgesDaoTest extends TestCommon {
             KnowledgesEntity entity = new KnowledgesEntity();
             entity.setTitle("Test-" + i);
             entity.setContent("テスト");
+            entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
             KnowledgeLogic logic = KnowledgeLogic.get();
             
             KnowledgeData data = new KnowledgeData();
@@ -66,11 +68,11 @@ public class KnowledgesDaoTest extends TestCommon {
             entity = logic.insert(data, loginedUser);
             knowledge.add(entity);
 
-            for (int j = 0; j < i; j++) {
-                LikesEntity like = new LikesEntity();
-                like.setKnowledgeId(entity.getKnowledgeId());
-                LikesDao.get().save(like);
+            if (i == 29) {
+                LikeLogic.get().addLike(entity.getKnowledgeId(), loginedUser2, Locale.JAPAN);
             }
+            entity = KnowledgesDao.get().selectOnKey(entity.getKnowledgeId());
+            LOG.info("[" + i + "]" + entity.getPoint());
         }
 
         Calendar c = Calendar.getInstance();
@@ -86,7 +88,7 @@ public class KnowledgesDaoTest extends TestCommon {
         List<KnowledgesEntity> list = KnowledgesDao.get().selectPopularity(start, end, 0, 20);
 
         for (KnowledgesEntity knowledgesEntity : list) {
-            LOG.info(knowledgesEntity.getTitle() + ":" + knowledgesEntity.getLikeCountOnTerm());
+            LOG.info(knowledgesEntity.getTitle() + ":" + knowledgesEntity.getPointOnTerm() + " : " + knowledgesEntity.getPoint());
         }
         Assert.assertEquals("Test-29", list.get(0).getTitle());
     }
@@ -99,7 +101,7 @@ public class KnowledgesDaoTest extends TestCommon {
             KnowledgesEntity entity = new KnowledgesEntity();
             entity.setTitle("Test-" + i);
             entity.setContent("テスト");
-            entity.setPublicFlag(0);
+            entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
             KnowledgeLogic logic = KnowledgeLogic.get();
             
             KnowledgeData data = new KnowledgeData();
@@ -107,11 +109,8 @@ public class KnowledgesDaoTest extends TestCommon {
             
             entity = logic.insert(data, loginedUser);
             knowledge.add(entity);
-
-            for (int j = 0; j < i; j++) {
-                LikesEntity like = new LikesEntity();
-                like.setKnowledgeId(entity.getKnowledgeId());
-                LikesDao.get().save(like);
+            if (i == 29) {
+                LikeLogic.get().addLike(entity.getKnowledgeId(), loginedUser2, Locale.JAPAN);
             }
         }
 
@@ -128,7 +127,7 @@ public class KnowledgesDaoTest extends TestCommon {
         List<KnowledgesEntity> list = KnowledgesDao.get().selectPopularityWithAccessControl(loginedUser, start, end, 0, 20);
 
         for (KnowledgesEntity knowledgesEntity : list) {
-            LOG.info(knowledgesEntity.getTitle() + ":" + knowledgesEntity.getLikeCountOnTerm());
+            LOG.info(knowledgesEntity.getTitle() + ":" + knowledgesEntity.getPointOnTerm() + " : " + knowledgesEntity.getPoint());
         }
         Assert.assertEquals("Test-29", list.get(0).getTitle());
     }

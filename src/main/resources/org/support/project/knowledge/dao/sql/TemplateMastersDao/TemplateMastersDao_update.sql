@@ -3,6 +3,7 @@ SET
    TYPE_NAME = ?
  , TYPE_ICON = ?
  , DESCRIPTION = ?
+ , INITIAL_VALUE = ?
  , INSERT_USER = ?
  , INSERT_DATETIME = ?
  , UPDATE_USER = ?

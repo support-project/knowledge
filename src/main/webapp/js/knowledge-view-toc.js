@@ -2,6 +2,7 @@ var shownAgenda = false;
 var agenda;
 var createAgenda = function() {
     console.log('createAgenda');
+    var navbarHeight = $('nav.navbar-fixed-top').outerHeight(true);
     var toc = $('#toc');
     var exists = false;
     $('.markdown h1, .markdown h2, .markdown h3').each(function() {
@@ -17,7 +18,7 @@ var createAgenda = function() {
 
         $a.click(function() {
             $('body, html').animate({
-                scrollTop : $('#' + targetId).offset().top
+                scrollTop : $('#' + targetId).offset().top - navbarHeight
             }, 500);
             return false;
         });

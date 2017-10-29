@@ -40,7 +40,7 @@ public class ConnectControl extends Control {
      * 指定のユーザのLdap認証設定を設定する
      * @return
      */
-    @Get
+    @Get(publishToken="csrf")
     public Boundary config() {
         String key = getParam("key");
         if (StringUtils.isEmpty(key)) {
@@ -67,7 +67,7 @@ public class ConnectControl extends Control {
         return forward("config.jsp");
     }
     
-    @Post
+    @Post(subscribeToken="csrf")
     public Boundary connect() {
         String key = getParam("key");
         if (StringUtils.isEmpty(key)) {
@@ -133,7 +133,7 @@ public class ConnectControl extends Control {
         }
     }
 
-    @Post
+    @Post(subscribeToken="csrf")
     public Boundary disconnect() {
         String key = getParam("key");
         if (StringUtils.isEmpty(key)) {
@@ -153,7 +153,7 @@ public class ConnectControl extends Control {
         return index();
     }
     
-    @Post
+    @Post(subscribeToken="csrf")
     public Boundary update() {
         String key = getParam("key");
         if (StringUtils.isEmpty(key)) {

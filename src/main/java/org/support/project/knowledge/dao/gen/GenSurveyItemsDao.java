@@ -12,8 +12,10 @@ import org.support.project.ormapping.common.SQLManager;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
 import org.support.project.ormapping.config.ORMappingParameter;
+import org.support.project.ormapping.config.Order;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.common.util.DateUtils;
 
 import org.support.project.di.Container;
 import org.support.project.di.DI;
@@ -43,8 +45,19 @@ public class GenSurveyItemsDao extends AbstractDao {
      * Select all data.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> physicalSelectAll() { 
+        return physicalSelectAll(Order.DESC);
+    }
+    /**
+     * Select all data.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<SurveyItemsEntity> physicalSelectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_physical_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, SurveyItemsEntity.class);
     }
     /**
@@ -53,8 +66,21 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param offset offset
      * @return all data on limit and offset
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> physicalSelectAllWithPager(int limit, int offset) { 
+        return physicalSelectAllWithPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data on limit and offset
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<SurveyItemsEntity> physicalSelectAllWithPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_physical_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, SurveyItemsEntity.class, limit, offset);
     }
     /**
@@ -63,6 +89,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param  knowledgeId knowledgeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public SurveyItemsEntity physicalSelectOnKey(Integer itemNo, Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_physical_select_on_key.sql");
         return executeQuerySingle(sql, SurveyItemsEntity.class, itemNo, knowledgeId);
@@ -71,8 +98,19 @@ public class GenSurveyItemsDao extends AbstractDao {
      * Select all data that not deleted.
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> selectAll() { 
+        return selectAll(Order.DESC);
+    }
+    /**
+     * Select all data that not deleted.
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<SurveyItemsEntity> selectAll(Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_all.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, SurveyItemsEntity.class);
     }
     /**
@@ -81,14 +119,28 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param offset offset
      * @return all data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> selectAllWidthPager(int limit, int offset) { 
+        return selectAllWidthPager(limit, offset, Order.DESC);
+    }
+    /**
+     * Select all data that not deleted with pager.
+     * @param limit limit
+     * @param offset offset
+     * @param order order
+     * @return all data
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<SurveyItemsEntity> selectAllWidthPager(int limit, int offset, Order order) { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_all_with_pager.sql");
+        sql = String.format(sql, order.toString());
         return executeQueryList(sql, SurveyItemsEntity.class, limit, offset);
     }
     /**
      * Select count that not deleted.
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Integer selectCountAll() { 
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_count_all.sql");
         return executeQuerySingle(sql, Integer.class);
@@ -99,6 +151,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param  knowledgeId knowledgeId
      * @return data
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public SurveyItemsEntity selectOnKey(Integer itemNo, Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_on_key.sql");
         return executeQuerySingle(sql, SurveyItemsEntity.class, itemNo, knowledgeId);
@@ -108,6 +161,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> selectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_on_item_no.sql");
         return executeQueryList(sql, SurveyItemsEntity.class, itemNo);
@@ -117,6 +171,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param knowledgeId knowledgeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> selectOnKnowledgeId(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_select_on_knowledge_id.sql");
         return executeQueryList(sql, SurveyItemsEntity.class, knowledgeId);
@@ -126,6 +181,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param itemNo itemNo
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> physicalSelectOnItemNo(Integer itemNo) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_physical_select_on_item_no.sql");
         return executeQueryList(sql, SurveyItemsEntity.class, itemNo);
@@ -135,6 +191,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * @param knowledgeId knowledgeId
      * @return list
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<SurveyItemsEntity> physicalSelectOnKnowledgeId(Long knowledgeId) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveyItemsDao/SurveyItemsDao_physical_select_on_knowledge_id.sql");
         return executeQueryList(sql, SurveyItemsEntity.class, knowledgeId);
@@ -143,6 +200,7 @@ public class GenSurveyItemsDao extends AbstractDao {
      * Count all data
      * @return count
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public int physicalCountAll() {
         String sql = "SELECT COUNT(*) FROM SURVEY_ITEMS";
         return executeQuerySingle(sql, Integer.class);
@@ -201,9 +259,9 @@ public class GenSurveyItemsDao extends AbstractDao {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public SurveyItemsEntity insert(Integer user, SurveyItemsEntity entity) {
         entity.setInsertUser(user);
-        entity.setInsertDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setInsertDatetime(new Timestamp(DateUtils.now().getTime()));
         entity.setUpdateUser(user);
-        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         entity.setDeleteFlag(0);
         return physicalInsert(entity);
     }
@@ -254,7 +312,7 @@ public class GenSurveyItemsDao extends AbstractDao {
         entity.setInsertDatetime(db.getInsertDatetime());
         entity.setDeleteFlag(db.getDeleteFlag());
         entity.setUpdateUser(user);
-        entity.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        entity.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         return physicalUpdate(entity);
     }
     /**
@@ -333,7 +391,7 @@ public class GenSurveyItemsDao extends AbstractDao {
         SurveyItemsEntity db = selectOnKey(itemNo, knowledgeId);
         db.setDeleteFlag(1);
         db.setUpdateUser(user);
-        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        db.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         physicalUpdate(db);
     }
     /**
@@ -384,7 +442,7 @@ public class GenSurveyItemsDao extends AbstractDao {
         SurveyItemsEntity db = physicalSelectOnKey(itemNo, knowledgeId);
         db.setDeleteFlag(0);
         db.setUpdateUser(user);
-        db.setUpdateDatetime(new Timestamp(new java.util.Date().getTime()));
+        db.setUpdateDatetime(new Timestamp(DateUtils.now().getTime()));
         physicalUpdate(db);
     }
     /**

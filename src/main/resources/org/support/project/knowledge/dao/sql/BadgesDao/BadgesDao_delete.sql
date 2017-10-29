@@ -1,0 +1,4 @@
+DELETE FROM BADGES
+WHERE 
+NO = ?
+;

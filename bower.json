@@ -35,7 +35,9 @@
     "bootstrap-table": "1.11.1",
     "tableExport.jquery.plugin": "1.8.1",
     "diff2html": "2.3.0",
-    "jsdiff": "3.2.0"
+    "jsdiff": "3.2.0",
+    "chart.js": "2.6.0",
+    "vue": "2.4.2"
   },
   "devDependencies": {},
   "resolutions": {

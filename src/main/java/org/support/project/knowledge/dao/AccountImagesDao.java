@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -24,6 +25,7 @@ public class AccountImagesDao extends GenAccountImagesDao {
         return Container.getComp(AccountImagesDao.class);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public AccountImagesEntity selectOnUserId(Integer userId) {
         String sql = "SELECT * FROM ACCOUNT_IMAGES WHERE USER_ID = ?";
         return executeQuerySingle(sql, AccountImagesEntity.class, userId);

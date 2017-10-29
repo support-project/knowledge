@@ -2,6 +2,7 @@ package org.support.project.knowledge.dao;
 
 import java.util.List;
 
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -26,6 +27,7 @@ public class KnowledgeItemValuesDao extends GenKnowledgeItemValuesDao {
         return Container.getComp(KnowledgeItemValuesDao.class);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<KnowledgeItemValuesEntity> selectOnTypeIdAndItemNoAndStatus(int typeId, int itemNo, int status) {
         String sql = "SELECT * FROM KNOWLEDGE_ITEM_VALUES WHERE TYPE_ID = ? AND ITEM_NO = ? AND ITEM_STATUS = ? AND DELETE_FLAG = 0";
         return executeQueryList(sql, KnowledgeItemValuesEntity.class, typeId, itemNo, status);

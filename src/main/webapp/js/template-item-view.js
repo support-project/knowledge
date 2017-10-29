@@ -21,7 +21,7 @@ $(document).ready(function() {
             url = item.itemValue;
         }
         tag += '<h4>' + item.itemName + ': ';
-        tag += '<a href="' + url + '" target="_blank" >' + url + '</a></h4>';
+        tag += '<a href="' + escapeLink(url) + '" target="_blank" >' + url + '</a></h4>';
         return tag;
     };
     var createRadioItem = function(item) {

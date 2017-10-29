@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.bean.ValidateError;
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.common.validate.Validator;
 import org.support.project.common.validate.ValidatorFactory;
@@ -15,7 +16,10 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
+import org.support.project.knowledge.logic.KnowledgeAuthenticationLogic;
 import org.support.project.knowledge.logic.MailLogic;
+import org.support.project.knowledge.logic.notification.AcceptCheckUserNotification;
+import org.support.project.knowledge.logic.notification.AddUserNotification;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
@@ -32,7 +36,6 @@ import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.logic.AuthenticationLogic;
 import org.support.project.web.logic.UserLogic;
-import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 
 @DI(instance = Instance.Prototype)
 public class SignupControl extends Control {
@@ -81,7 +84,7 @@ public class SignupControl extends Control {
             ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
             List<ProvisionalRegistrationsEntity> check = dao.selectOnUserKey(getParam("userKey"));
             if (!check.isEmpty()) {
-                long now = new Date().getTime();
+                long now = DateUtils.now().getTime();
                 for (ProvisionalRegistrationsEntity entity : check) {
                     if (now - entity.getInsertDatetime().getTime() > 1000 * 60 * 60) {
                         // 無効なものなので、削除
@@ -116,8 +119,7 @@ public class SignupControl extends Control {
             // 仮登録を行う
             ProvisionalRegistrationsEntity entity = addProvisionalRegistration();
             // 管理者へメール通知
-            MailLogic mailLogic = MailLogic.get();
-            mailLogic.sendNotifyAcceptUser(entity);
+            AcceptCheckUserNotification.get().sendNotifyAcceptUser(entity);
 
             return forward("provisional_registration.jsp");
         }
@@ -133,7 +135,7 @@ public class SignupControl extends Control {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     private ProvisionalRegistrationsEntity addProvisionalRegistration() {
         ProvisionalRegistrationsEntity entity = super.getParams(ProvisionalRegistrationsEntity.class);
-        String id = UUID.randomUUID().toString() + "-" + new Date().getTime() + "-" + UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString() + "-" + DateUtils.now() + "-" + UUID.randomUUID().toString();
         entity.setId(id);
         ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
         // 既に仮登録が行われたユーザ(メールアドレス)でも、再度仮登録できる
@@ -154,13 +156,12 @@ public class SignupControl extends Control {
         user = UserLogic.get().insert(user, roles);
         setAttributeOnProperty(user);
 
-        // 管理者へユーザが追加されたことを通知
-        MailLogic mailLogic = MailLogic.get();
-        mailLogic.sendNotifyAddUser(user);
+        // 管理者にユーザが追加されたことを通知
+        AddUserNotification.get().sendNotifyAddUser(user);
 
         // ログイン処理
-        AuthenticationLogic<LoginedUser> logic = Container.getComp(DefaultAuthenticationLogicImpl.class);
-        logic.setSession(user.getUserKey(), getRequest());
+        AuthenticationLogic<LoginedUser> logic = Container.getComp(KnowledgeAuthenticationLogic.class);
+        logic.setSession(user.getUserKey(), getRequest(), getResponse());
     }
 
     /**
@@ -212,7 +213,7 @@ public class SignupControl extends Control {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
         }
 
-        long now = new Date().getTime();
+        long now = DateUtils.now().getTime();
         if (now - entity.getInsertDatetime().getTime() > 1000 * 60 * 60) {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
         }
@@ -221,13 +222,12 @@ public class SignupControl extends Control {
         UsersEntity user = UserLogic.get().activate(entity);
         // 管理者へユーザが追加されたことを通知
         if (user != null) {
-            MailLogic mailLogic = MailLogic.get();
-            mailLogic.sendNotifyAddUser(user);
-
+            // 管理者にユーザが追加されたことを通知
+            AddUserNotification.get().sendNotifyAddUser(user);
         }
         // ログイン処理
-        AuthenticationLogic<LoginedUser> logic = Container.getComp(DefaultAuthenticationLogicImpl.class);
-        logic.setSession(entity.getUserKey(), getRequest());
+        AuthenticationLogic<LoginedUser> logic = Container.getComp(KnowledgeAuthenticationLogic.class);
+        logic.setSession(entity.getUserKey(), getRequest(), getResponse());
 
         addMsgInfo("knowledge.signup.done");
         return devolution(HttpMethod.get, "Index/index");

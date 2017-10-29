@@ -24,7 +24,7 @@ public class UsersControl extends ApiControl {
     /**
      * List users
      */
-    @Get(path="api/users")
+    @Get(path="api/users", publishToken="")
     public Boundary index() {
         return get();
     }

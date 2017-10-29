@@ -6,3 +6,6 @@ target
 .eclipse-pmd
 .checkstyle
 node
+.idea
+.m2
+knowledge.iml

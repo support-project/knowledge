@@ -646,7 +646,7 @@ public class MailhookLogic {
      * @return
      * @throws Exception 
      */
-    private void checkConditionsAndPost(Message msg, List<MailHookConditionsEntity> conditions)
+    public void checkConditionsAndPost(Message msg, List<MailHookConditionsEntity> conditions)
             throws Exception {
         if (LOG.isDebugEnabled()) {
             Address[] in = msg.getFrom();
@@ -742,7 +742,7 @@ public class MailhookLogic {
             for (Address address : to) {
                 if (address instanceof InternetAddress) {
                     InternetAddress a = (InternetAddress) address;
-                    if (a.getAddress().equals(condition.getCondition())) {
+                    if (a.getAddress().indexOf(condition.getCondition())  != -1) {
                         return true;
                     }
                 } else {

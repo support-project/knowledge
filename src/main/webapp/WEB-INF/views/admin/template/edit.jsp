@@ -48,6 +48,10 @@
         <label for="description"><%= jspUtil.label("knowledge.template.label.description") %></label>
         <textarea class="form-control" name="description" id="description" placeholder="Description" ><%= jspUtil.out("description") %></textarea>
     </div>
+    <div class="form-group">
+        <label for="initialValue"><%= jspUtil.label("knowledge.template.label.initial.value") %></label>
+        <textarea class="form-control" name="initialValue" id="initialValue" placeholder="Initia lValue" ><%= jspUtil.out("initialValue") %></textarea>
+    </div>
     
     <h5><b><%= jspUtil.label("knowledge.template.label.item") %></b></h5>
     <div class="form-group">

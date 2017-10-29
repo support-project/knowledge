@@ -22,6 +22,8 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
     
     private boolean convSlidePath = false;
     
+    private boolean maintenanceMode = false;
+    
 
     /**
      * @return the indexPath
@@ -69,6 +71,20 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
      */
     public void setSlidePath(String slidePath) {
         this.slidePath = slidePath;
+    }
+
+    /**
+     * @return the maintenanceMode
+     */
+    public boolean isMaintenanceMode() {
+        return maintenanceMode;
+    }
+
+    /**
+     * @param maintenanceMode the maintenanceMode to set
+     */
+    public void setMaintenanceMode(boolean maintenanceMode) {
+        this.maintenanceMode = maintenanceMode;
     }
 
 }

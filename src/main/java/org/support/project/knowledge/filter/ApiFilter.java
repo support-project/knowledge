@@ -14,16 +14,17 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.knowledge.dao.TokensDao;
 import org.support.project.knowledge.entity.TokensEntity;
+import org.support.project.knowledge.logic.KnowledgeAuthenticationLogic;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.logic.AuthenticationLogic;
-import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 import org.support.project.web.wrapper.HttpServletRequestWrapper;
 
 public class ApiFilter implements Filter {
@@ -54,7 +55,7 @@ public class ApiFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletrequest, ServletResponse servletresponse, FilterChain filterchain)
             throws IOException, ServletException {
-        AuthenticationLogic<LoginedUser> authenticationLogic = (AuthenticationLogic) Container.getComp(DefaultAuthenticationLogicImpl.class);
+        AuthenticationLogic<LoginedUser> authenticationLogic = (AuthenticationLogic) Container.getComp(KnowledgeAuthenticationLogic.class);
         HttpServletRequest req_origin = (HttpServletRequest) servletrequest;
         HttpServletRequestWrapper req = new HttpServletRequestWrapper((HttpServletRequest) req_origin, authenticationLogic);
         HttpServletResponse res = (HttpServletResponse) servletresponse;
@@ -90,7 +91,7 @@ public class ApiFilter implements Filter {
             res.sendError(HttpStatus.SC_403_FORBIDDEN);
             return;
         }
-        Date now = new Date();
+        Date now = DateUtils.now();
         if (now.getTime() > tokensEntity.getExpires().getTime()) {
             res.sendError(HttpStatus.SC_403_FORBIDDEN);
             return;
@@ -104,7 +105,7 @@ public class ApiFilter implements Filter {
             return;
         }
         // 毎回セッションを生成して登録する（毎回なので少し重いかも）
-        authenticationLogic.setSession(user.getUserKey(), req);
+        authenticationLogic.setSession(user.getUserKey(), req, res);
         
         // APIの実際の処理を実施
         filterchain.doFilter(req, res);

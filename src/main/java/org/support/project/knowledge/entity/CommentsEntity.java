@@ -18,6 +18,8 @@ public class CommentsEntity extends GenCommentsEntity {
     private String insertUserName;
     /** 更新ユーザ名 */
     private String updateUserName;
+    
+    private long likeCount = 0;
 
     public boolean isUpdate() {
         if (getInsertDatetime().getTime() != getUpdateDatetime().getTime()) {
@@ -78,6 +80,20 @@ public class CommentsEntity extends GenCommentsEntity {
      */
     public void setInsertUserName(String insertUserName) {
         this.insertUserName = insertUserName;
+    }
+
+    /**
+     * @return the likeCount
+     */
+    public long getLikeCount() {
+        return likeCount;
+    }
+
+    /**
+     * @param likeCount the likeCount to set
+     */
+    public void setLikeCount(long likeCount) {
+        this.likeCount = likeCount;
     }
 
 }

@@ -2,6 +2,7 @@ package org.support.project.knowledge.control;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,13 +14,20 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.log.LogLevel;
 import org.support.project.common.util.HtmlUtils;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
+import org.support.project.knowledge.vo.UserConfigs;
+import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.logic.DateConvertLogic;
+import org.support.project.web.logic.NotificationLogic;
 import org.support.project.web.logic.SanitizingLogic;
+import org.support.project.web.util.JspUtil;
 
 @DI(instance = Instance.Prototype)
 public abstract class Control extends org.support.project.web.control.Control {
@@ -30,6 +38,7 @@ public abstract class Control extends org.support.project.web.control.Control {
     public static final String MSG_SUCCESS = "NOTIFY_MSG_SUCCESS";
     public static final String MSG_WARN = "NOTIFY_MSG_WARN";
     public static final String MSG_ERROR = "NOTIFY_MSG_ERROR";
+    public static final String NOTIFY_UNREAD_COUNT = "NOTIFY_UNREAD_COUNT";
 
     private List<String> infos = null;
     private List<String> successes = null;
@@ -48,6 +57,19 @@ public abstract class Control extends org.support.project.web.control.Control {
         request.setAttribute(MSG_SUCCESS, successes);
         request.setAttribute(MSG_WARN, warns);
         request.setAttribute(MSG_ERROR, errors);
+        
+        // 通知の件数を取得
+        if (getLoginedUser() != null) {
+            try {
+                Integer count = NotificationLogic.get().countUnRead(getLoginUserId());
+                if (count == null) {
+                    count = 0;
+                }
+                request.setAttribute(NOTIFY_UNREAD_COUNT, count);
+            } catch (Exception e) {
+                LOG.warn("Error on get user notification count. " + e.getClass().getSimpleName());
+            }
+        }
     }
 
     protected String getResource(String key) {
@@ -167,6 +189,30 @@ public abstract class Control extends org.support.project.web.control.Control {
             return true;
         }
         return false;
+    }
+    
+    protected UserConfigs getUserConfigs() {
+        UserConfigs userConfigs =  (UserConfigs) getRequest().getAttribute(UserConfig.REQUEST_USER_CONFIG_KEY);
+        if (userConfigs == null) {
+            userConfigs = new UserConfigs();
+        }
+        LoginedUser login = getLoginedUser();
+        if (login != null) {
+            userConfigs.setLocale(login.getLocale());
+        } else {
+            userConfigs.setLocale(getLocale());
+        }
+        
+        if (userConfigs.getTimezone().equals("UTC")) {
+            String offset = HttpUtil.getCookie(getRequest(), JspUtil.TIME_ZONE_OFFSET);
+            if (StringUtils.isInteger(offset)) {
+                int off = Integer.parseInt(offset);
+                userConfigs.setTimezoneOffset(off);
+                TimeZone zone = DateConvertLogic.get().getTimezone(getLocale(), off);
+                userConfigs.setTimezone(zone.getDisplayName());
+            }
+        }
+        return userConfigs;
     }
 
 }
