@@ -1,32 +1,38 @@
 version: '2.1'
 
 services:
-  dev:
-    image: knowledge
-    build:
-      context: .
-      args:
-        - https_proxy
-        - http_proxy
+  maven:
+    image: maven:3.5-jdk-8-slim
+    command: mvn -v
+    environment:
+      KNOWLEDGE_TEST_MAIL: 'false'
+      MAVEN_CONFIG: /var/maven/.m2
+      https_proxy: ${https_proxy}
+      http_proxy: ${http_proxy}
+    working_dir: /usr/src/mymaven/
+    entrypoint: ''
+    volumes:
+      - $PWD:/usr/src/mymaven
+      - $PWD/.m2:/root/.m2
+
+  tomcat:
+    image: tomcat:8.5-jre8-alpine
     ports:
       - 8080:8080
       - 8009:8009
     expose:
       - 8080
-    links:
-      - mailcatcher
-      - postgres
-      - elasticsearch
-      - kibana
+#    links:
+#      - mailcatcher
+#      - postgres
+#      - elasticsearch
+#      - kibana
     environment:
-      KNOWLEDGE_TEST_MAIL: 'false'
       https_proxy: ${https_proxy}
       http_proxy: ${http_proxy}
     volumes:
-      - $PWD:/usr/src/mymaven
-      - $PWD/.m2:/root/.m2
       - $PWD/.knowledge:/root/.knowledge
-      - $PWD/target/knowledge.war:/usr/local/tomcat/webapps/knowledge.war
+      - $PWD/target/ROOT.war:/usr/local/tomcat/webapps/ROOT.war
 
   mailcatcher:
     image: zolweb/docker-mailcatcher

@@ -1,3 +1,4 @@
 {
-  "directory" : "src/main/webapp/bower"
+  "directory" : "src/main/webapp/bower",
+  "allow_root": true
 }
