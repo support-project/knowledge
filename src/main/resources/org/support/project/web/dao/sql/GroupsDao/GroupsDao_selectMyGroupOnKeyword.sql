@@ -3,7 +3,7 @@ SELECT
 FROM
     GROUPS
 WHERE
-    GROUPS.GROUP_NAME LIKE '%' || ? || '%'
+    GROUPS.GROUP_NAME ILIKE '%' || ? || '%'
     AND
     GROUPS.DELETE_FLAG = 0
     AND

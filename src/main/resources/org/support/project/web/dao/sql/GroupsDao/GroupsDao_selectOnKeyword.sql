@@ -4,7 +4,7 @@ SELECT
         GROUPS
     WHERE
         GROUPS.DELETE_FLAG = 0
-        AND GROUPS.GROUP_NAME LIKE '%' || ? || '%'
+        AND GROUPS.GROUP_NAME ILIKE '%' || ? || '%'
         AND (
             EXISTS (
                 SELECT

@@ -9,7 +9,7 @@ SELECT
       GROUPS.GROUP_ID = KNOWLEDGE_GROUPS.GROUP_ID
     WHERE
         GROUPS.DELETE_FLAG = 0
-        AND GROUPS.GROUP_NAME LIKE '%' || ? || '%'
+        AND GROUPS.GROUP_NAME ILIKE '%' || ? || '%'
         AND (
             EXISTS (
                 SELECT
