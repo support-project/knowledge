@@ -32,7 +32,7 @@ services:
       http_proxy: ${http_proxy}
     volumes:
       - $PWD/.knowledge:/root/.knowledge
-      - $PWD/target/ROOT.war:/usr/local/tomcat/webapps/ROOT.war
+      - $PWD/target/webapps:/usr/local/tomcat/webapps
 
   mailcatcher:
     image: zolweb/docker-mailcatcher
