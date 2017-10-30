@@ -10,7 +10,7 @@ SELECT
                     USERS
                 WHERE
                     USERS.DELETE_FLAG != 1
-                    AND USERS.USER_NAME LIKE '%' || ? || '%'
+                    AND USERS.USER_NAME ILIKE '%' || ? || '%'
             UNION
             SELECT
                     'G-' || GROUPS.GROUP_ID AS VALUE
@@ -19,7 +19,7 @@ SELECT
                     GROUPS
                 WHERE
                     GROUPS.DELETE_FLAG != 1
-                    AND GROUPS.GROUP_NAME LIKE '%' || ? || '%'
+                    AND GROUPS.GROUP_NAME ILIKE '%' || ? || '%'
         ) AS TARGETS
     ORDER BY
         LABEL

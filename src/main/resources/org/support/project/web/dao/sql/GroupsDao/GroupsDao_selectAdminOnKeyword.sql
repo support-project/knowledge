@@ -5,7 +5,7 @@ SELECT
     WHERE
         GROUPS.DELETE_FLAG = 0
         AND
-        GROUPS.GROUP_NAME LIKE '%' || ? || '%'
+        GROUPS.GROUP_NAME ILIKE '%' || ? || '%'
     GROUP BY
         GROUPS.GROUP_ID
     ORDER BY
