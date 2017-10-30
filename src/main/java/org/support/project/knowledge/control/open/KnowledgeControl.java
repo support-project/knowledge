@@ -22,6 +22,7 @@ import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.DraftItemValuesDao;
 import org.support.project.knowledge.dao.ExGroupsDao;
+import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.KnowledgeHistoriesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
@@ -528,10 +529,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 if (StringUtils.isNotEmpty(creators)) {
                     String[] creatorsArray = creators.split(",");
                     for (String userName : creatorsArray) {
-                        List<UsersEntity> users = UserLogic.get().getUser(userName.trim(), offset, 20);
+                        List<UsersEntity> users = ExUsersDao.get().selectByUserName(userName);
                         creatorUserEntities.addAll(users);
                     }
                 }
+                setAttribute("creators", creatorUserEntities);
+                
                 knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, creatorUserEntities, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
             }
     

@@ -64,7 +64,7 @@
 
         <!-- Filter -->
         <c:if
-            test="${!empty selectedTag || !empty selectedGroup || !empty selectedUser || !empty selectedTags || !empty selectedGroups || !empty keyword || !empty types}">
+            test="${!empty selectedTag || !empty selectedGroup || !empty selectedUser || !empty selectedTags || !empty selectedGroups || !empty keyword || !empty types || !empty creators }">
             <div class="row">
                 <div class="col-sm-12 selected_tag">
 
@@ -103,6 +103,15 @@
                             </a>
                         </c:forEach>
                     </c:if>
+                    
+                    <c:if test="${!empty creators}">
+                        <c:forEach var="creator" items="${creators}" varStatus="status">
+                            <a class="text-link" href="<%=request.getContextPath()%>/open.knowledge/list?creators=<%=jspUtil.out("creator.userName")%>">
+                                <i class="fa fa-pencil"></i>&nbsp;<%=jspUtil.out("creator.userName")%>
+                            </a>
+                        </c:forEach>
+                    </c:if>
+                    
 
                     <c:if test="${!empty selectedGroups}">
                         <c:forEach var="group" items="${selectedGroups}" varStatus="status">
@@ -164,7 +173,7 @@
             </div>
         </c:if>
         
-
+        <c:if test="${empty types}">
         <div class="row">
             <div class="col-sm-12">
                 <form role="form" action="<%=request.getContextPath()%>/open.knowledge/list">
@@ -199,10 +208,11 @@
                 <button class="btn btn-primary btn-xs" type="submit">
                     <i class="fa fa-search"></i>&nbsp;<%= jspUtil.label("label.apply") %>
                 </button>
-                </form>
                 </div>
+                </form>
             </div>
         </div>
+        </c:if>
 
         <!-- リスト -->
         <div class="row" id="knowledgeList">
