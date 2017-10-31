@@ -2,7 +2,12 @@ version: '2.1'
 
 services:
   maven:
-    image: maven:3.5-jdk-8-slim
+    image: knowledge-dev
+    build:
+      context: .
+      args:
+        - https_proxy
+        - http_proxy
     command: mvn -v
     environment:
       KNOWLEDGE_TEST_MAIL: 'false'
