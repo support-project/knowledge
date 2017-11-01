@@ -1,4 +1,0 @@
-DELETE FROM AUTO_NO
-WHERE 
-NO = ?
-;
