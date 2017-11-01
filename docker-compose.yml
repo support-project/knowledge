@@ -18,7 +18,7 @@ services:
     entrypoint: ''
     volumes:
       - $PWD:/usr/src/mymaven
-      - $PWD/.m2:/root/.m2
+      - ${KNOWLEDGE_HOME}.m2:/root/.m2
 
   tomcat:
     image: tomcat:8.5-jre8-alpine
@@ -36,7 +36,7 @@ services:
       https_proxy: ${https_proxy}
       http_proxy: ${http_proxy}
     volumes:
-      - $PWD/.knowledge:/root/.knowledge
+      - ${KNOWLEDGE_HOME}.knowledge:/root/.knowledge
       - $PWD/target/webapps:/usr/local/tomcat/webapps
 
   mailcatcher:
@@ -56,7 +56,7 @@ services:
     environment:
       POSTGRES_PASSWORD: '1qazxsw2'
     volumes:
-      - $PWD/.postgres:/var/lib/postgresql/data
+      - ${KNOWLEDGE_HOME}.postgres:/var/lib/postgresql/data
 
   elasticsearch:
     image: elasticsearch:5.5.2-alpine
@@ -73,7 +73,7 @@ services:
       xpack.monitoring.history.duration: '1d'
       ES_JAVA_OPTS: '-Xms512m -Xmx512m'
     volumes:
-      - $PWD/.es_data:/usr/share/elasticsearch/data
+      - ${KNOWLEDGE_HOME}.es_data:/usr/share/elasticsearch/data
 
   kibana:
     image: kibana:5.5.2

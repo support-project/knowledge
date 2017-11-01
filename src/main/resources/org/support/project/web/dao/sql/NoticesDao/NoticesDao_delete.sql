@@ -1,4 +1,0 @@
-DELETE FROM NOTICES
-WHERE 
-NO = ?
-;

@@ -1,4 +1,0 @@
-SELECT * FROM ACCESS_LOGS
- WHERE 
-NO = ?
-;

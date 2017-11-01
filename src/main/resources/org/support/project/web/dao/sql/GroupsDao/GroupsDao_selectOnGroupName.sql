@@ -1,9 +1,0 @@
-SELECT
-    *
-FROM
-    GROUPS
-WHERE
-    GROUP_NAME = ?
-    AND
-    DELETE_FLAG = 0
-;
