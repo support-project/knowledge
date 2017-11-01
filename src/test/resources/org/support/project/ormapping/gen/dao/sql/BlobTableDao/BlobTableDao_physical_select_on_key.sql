@@ -1,4 +1,0 @@
-SELECT * FROM BLOB_TABLE
- WHERE 
-NO = ?
-;

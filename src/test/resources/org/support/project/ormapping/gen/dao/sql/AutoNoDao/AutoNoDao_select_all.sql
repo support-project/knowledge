@@ -1,2 +1,0 @@
-SELECT * FROM AUTO_NO
-;

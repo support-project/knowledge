@@ -1,4 +1,0 @@
-SELECT * FROM AUTO_NO
- WHERE 
-NO = ?
-;

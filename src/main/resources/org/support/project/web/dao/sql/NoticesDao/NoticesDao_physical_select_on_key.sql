@@ -1,4 +1,0 @@
-SELECT * FROM NOTICES
- WHERE 
-NO = ?
-;
