@@ -28,3 +28,7 @@
 ## How to initial set up
 - Please show the [wiki page](https://github.com/support-project/knowledge/wiki)
 
+## vulnerability testing
+- vulnerability testing with VAddy
+<a href="https://vaddy.net/" target="_blank">
+<img alt="VAddy logo" src="https://raw.github.com/wiki/support-project/knowledge/assets/images/VAddy_logo_b.png" height="40" /></a>
