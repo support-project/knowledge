@@ -78,5 +78,20 @@ public class ExUsersDao extends UsersDao {
 
         return info;
     }
+    
+    /**
+     * ユーザ名でユーザの情報を取得
+     * 同姓同名も存在しうるため、リストで返す
+     * @param userName
+     * @return
+     */
+    public List<UsersEntity> selectByUserName(String userName) {
+        String sql = "SELECT * FROM USERS WHERE USER_NAME = ?";
+        List<UsersEntity> users = executeQueryList(sql, UsersEntity.class, userName);
+        for (UsersEntity usersEntity : users) {
+            usersEntity.setPassword(""); // パスワードはクリア
+        }
+        return users;
+    }
 
 }

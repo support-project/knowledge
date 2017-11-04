@@ -6,8 +6,9 @@
     <!-- ConsoleAppender -->
     <appender name="APP_STDOUT" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out" />
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%-5p %d [%c{1}(%L)] %m%n" />
+        <layout class="com.jcabi.log.MulticolorLayout">
+            <param name="ConversionPattern" value="%color{%5p} %d %c{1}(%L) %m%n" />
+            <param name="Levels" value="INFO:2;36,DEBUG:2;37,TRACE:2;34" />
         </layout>
     </appender>
 
@@ -17,7 +18,7 @@
         <param name="Append" value="true" />
         <param name="DatePattern" value="'.'yyyy-MM-dd" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%-5p %d [%c{1}(%L)] %m%n" />
+            <param name="ConversionPattern" value="%-5p %d %c{1}(%L) %m%n" />
         </layout>
     </appender>
 

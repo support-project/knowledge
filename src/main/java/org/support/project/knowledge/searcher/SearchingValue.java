@@ -15,26 +15,29 @@ public class SearchingValue {
 
     /** データのタイプ */
     private Integer type;
-    /** テンプレートのタイプ */
-    private Integer template;
 
-    /** コンテンツの文字列 */
+    /** 検索のキーワード */
     private String keyword;
 
-    /** ユーザの文字列 */
-    private List<Integer> users = new ArrayList<Integer>();
-    /** グループの文字列 */
-    private List<Integer> groups = new ArrayList<Integer>();
-    /** タグの文字列 */
+    /** タグの文字列(AND条件) */
     private List<Integer> tags = new ArrayList<Integer>();
+
+    /** アクセス可能なユーザ（ログインユーザのユーザIDの + 公開先ユーザ指定) (OR条件)*/
+    private List<Integer> users = new ArrayList<Integer>();
+    /** アクセス可能なグループ(ログインユーザの所属しているグループ + 公開先グループ指定) (OR条件) */
+    private List<Integer> groups = new ArrayList<Integer>();
+
+    /** テンプレート(OR条件) */
+    private List<Integer> templates = new ArrayList<Integer>();
+
+    /** 作成者(OR条件) */
+    private List<Integer> creators = new ArrayList<Integer>();
 
     /** 読み出し開始 */
     private int offset;
     /** 読み出し件数 */
     private int limit = LIMIT;
 
-    /** 作成者 */
-    private Integer creator;
 
     /**
      * コンストラクタ
@@ -62,6 +65,12 @@ public class SearchingValue {
      */
     public void addTag(Integer tag) {
         tags.add(tag);
+    }
+    /**
+     * @param creator the creator to set
+     */
+    public void addCreator(Integer creator) {
+        this.creators.add(creator);
     }
 
     /**
@@ -110,6 +119,38 @@ public class SearchingValue {
             count++;
         }
         return builder.toString();
+    }
+
+    /**
+     * @return the creator
+     */
+    public String getCreators() {
+        StringBuilder builder = new StringBuilder();
+        int count = 0;
+        for (Integer creator : creators) {
+            if (count > 0) {
+                builder.append(SEPARATE);
+            }
+            builder.append(StringUtils.zeroPadding(creator, ID_ZEROPADDING_DIGIT));
+            count++;
+        }
+        return builder.toString();
+    }
+
+    /**
+     * Get templates
+     * @return templates
+     */
+    public List<Integer> getTemplates() {
+        return templates;
+    }
+
+    /**
+     * Add template
+     * @param templateId template
+     */
+    public void addTemplate(Integer templateId) {
+        this.templates.add(templateId);
     }
 
     /**
@@ -168,35 +209,5 @@ public class SearchingValue {
         this.limit = limit;
     }
 
-    /**
-     * @return the creator
-     */
-    public String getCreator() {
-        if (creator != null) {
-            return StringUtils.zeroPadding(creator, ID_ZEROPADDING_DIGIT);
-        }
-        return "";
-    }
-
-    /**
-     * @param creator the creator to set
-     */
-    public void setCreator(Integer creator) {
-        this.creator = creator;
-    }
-
-    /**
-     * @return the template
-     */
-    public Integer getTemplate() {
-        return template;
-    }
-
-    /**
-     * @param template the template to set
-     */
-    public void setTemplate(Integer template) {
-        this.template = template;
-    }
 
 }

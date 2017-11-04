@@ -70,6 +70,7 @@ import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.AuthenticateException;
 
 /**
@@ -528,13 +529,15 @@ public class KnowledgeLogic {
      * @param keyword
      * @param tags
      * @param groups
+     * @param creators 
      * @param loginedUser
      * @param offset
      * @param limit
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, String template, LoginedUser loginedUser,
+    public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
+            List<UsersEntity> creators, String[] templates, LoginedUser loginedUser,
             Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setKeyword(keyword);
@@ -548,9 +551,20 @@ public class KnowledgeLogic {
             }
         }
         // テンプレート指定もユーザに関係なく条件追加
-        if (StringUtils.isNotEmpty(template) && StringUtils.isInteger(template)) {
-            searchingValue.setTemplate(new Integer(template));
+        if (templates != null) {
+            for (String template: templates) {
+                if (StringUtils.isNotEmpty(template) && StringUtils.isInteger(template)) {
+                    searchingValue.addTemplate(new Integer(template));
+                }
+            }
         }
+        
+        if (creators != null) {
+            for (UsersEntity creator : creators) {
+                searchingValue.addCreator(creator.getUserId());
+            }
+        }
+        
         // ログインしてない場合はグループ検索ができないので公開記事のみを対象にして検索する
         if (loginedUser == null) {
             searchingValue.addUser(ALL_USER);
@@ -607,7 +621,7 @@ public class KnowledgeLogic {
      * @throws Exception
      */
     public List<KnowledgesEntity> searchKnowledge(String keyword, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
-        return searchKnowledge(keyword, null, null, null, loginedUser, offset, limit);
+        return searchKnowledge(keyword, null, null, null, null, loginedUser, offset, limit);
     }
 
     /**
@@ -690,11 +704,10 @@ public class KnowledgeLogic {
 
     /**
      * 指定ユーザのナレッジを取得
-     * 
-     * @param userId
+     * @param targetUser
      * @param loginedUser
-     * @param i
-     * @param pageLimit
+     * @param offset
+     * @param limit
      * @return
      * @throws Exception
      */
@@ -720,7 +733,7 @@ public class KnowledgeLogic {
                 }
             }
         }
-        searchingValue.setCreator(targetUser);
+        searchingValue.addCreator(targetUser);
 
         return searchKnowledge(searchingValue);
     }

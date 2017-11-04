@@ -7,3 +7,10 @@ docker-compose.yml
 
 target/
 
+tomcat.8080/
+
+.idea/
+.postgres/
+.settings/
+.es_data/
+
