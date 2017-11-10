@@ -1,0 +1,26 @@
+{
+    "comment_count": 0,
+    "like_count": 0,
+    "became_public": true,
+    "type_id": -100,
+    "insert_date": "2017/11/08 11:02:45",
+    "link": "",
+    "groups": [
+        "[GROUP] ALL USERS",
+        "[GROUP] テストグループ"
+    ],
+    "insert_user": "テストユーザ1",
+    "title": "サンプル",
+    "content": "サンプルです",
+    "update_date": "2017/11/08 11:02:45",
+    "tags": [
+        "KnowledgeManagement",
+        "Java",
+        "SQL"
+    ],
+    "update_user": "テストユーザ1",
+    "text": "\u003C|サンプル\u003E",
+    "public_flag": 2,
+    "knowledge_id": 1,
+    "status": "created"
+}

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
@@ -17,7 +16,6 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.bat.WebhookBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.KnowledgeGroupsDao;
@@ -28,8 +26,6 @@ import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
-import org.support.project.knowledge.dao.WebhookConfigsDao;
-import org.support.project.knowledge.dao.WebhooksDao;
 import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgeUsersEntity;
@@ -39,13 +35,11 @@ import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
-import org.support.project.knowledge.entity.WebhookConfigsEntity;
-import org.support.project.knowledge.entity.WebhooksEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
-import org.support.project.knowledge.logic.WebhookLogic;
+import org.support.project.knowledge.logic.notification.webhook.KnowledgeUpdateWebHookNotification;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.notification.KnowledgeUpdate;
 import org.support.project.web.bean.LoginedUser;
@@ -119,7 +113,7 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
         }
         
         // Webhook通知
-        sendKnowledgeWebhook(knowledge, notifyQueue.getType());
+        KnowledgeUpdateWebHookNotification.get().sendKnowledgeWebhook(knowledge, notifyQueue.getType());
         // 「非公開」のナレッジは、メール通知対象外
         if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
             notifyPublicKnowledgeUpdate(notifyQueue, knowledge);
@@ -285,32 +279,6 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
         }
         MailsDao.get().insert(mailsEntity);
     }
-    
-    /**
-     * 記事の追加・更新のWebhookの登録を行う
-     * @param comment
-     * @param knowledge
-     */
-    private void sendKnowledgeWebhook(KnowledgesEntity knowledge, int type) {
-        WebhookConfigsDao webhookConfigsDao = WebhookConfigsDao.get();
-        List<WebhookConfigsEntity> webhookConfigsEntities = webhookConfigsDao.selectOnHook(WebhookConfigsEntity.HOOK_KNOWLEDGES);
-
-        if (0 == webhookConfigsEntities.size()) {
-            return;
-        }
-
-        WebhookLogic webhookLogic = WebhookLogic.get();
-        Map<String, Object> knowledgeData = webhookLogic.getKnowledgeData(knowledge, type);
-
-        WebhooksEntity webhooksEntity = new WebhooksEntity();
-        String webhookId = idGen("Notify");
-        webhooksEntity.setWebhookId(webhookId);
-        webhooksEntity.setStatus(WebhookBat.WEBHOOK_STATUS_UNSENT);
-        webhooksEntity.setHook(WebhookConfigsEntity.HOOK_KNOWLEDGES);
-        webhooksEntity.setContent(JSON.encode(knowledgeData));
-
-        WebhooksDao.get().insert(webhooksEntity);
-    }    
     
     /**
      * 既に指定のユーザが追加されているのか確認

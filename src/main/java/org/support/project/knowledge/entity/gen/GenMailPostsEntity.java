@@ -51,7 +51,7 @@ public class GenMailPostsEntity implements Serializable {
     }
     /** Message-ID */
     private String messageId;
-    /** 投稿区分  1: Knowledge 2:Comment */
+    /** 投稿区分	 1: Knowledge 2:Comment */
     private Integer postKind;
     /** ID */
     private Long id;
@@ -85,15 +85,15 @@ public class GenMailPostsEntity implements Serializable {
     }
 
     /**
-     * Get 投稿区分  1: Knowledge 2:Comment.
-     * @return 投稿区分  1: Knowledge 2:Comment
+     * Get 投稿区分	 1: Knowledge 2:Comment.
+     * @return 投稿区分	 1: Knowledge 2:Comment
      */
     public Integer getPostKind() {
         return this.postKind;
     }
     /**
-     * Set 投稿区分  1: Knowledge 2:Comment.
-     * @param postKind 投稿区分  1: Knowledge 2:Comment
+     * Set 投稿区分	 1: Knowledge 2:Comment.
+     * @param postKind 投稿区分	 1: Knowledge 2:Comment
      * @return this object     */
     public GenMailPostsEntity setPostKind(Integer postKind) {
         this.postKind = postKind;
