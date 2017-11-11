@@ -7,7 +7,7 @@
         <user>sa</user>
         <password></password>
         <schema>public</schema>
-        <maxConn>5</maxConn>
+        <maxConn>1</maxConn>
         <autocommit>false</autocommit>
     </connectionConfig>
 
