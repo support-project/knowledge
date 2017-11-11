@@ -11,8 +11,13 @@ import org.junit.Test;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.DateUtils;
+import org.support.project.common.util.StringUtils;
+import org.support.project.common.util.SystemUtils;
 import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.bat.NotifyMailBat;
+import org.support.project.knowledge.bat.WebhookBat;
+import org.support.project.knowledge.config.AppConfig;
+import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.dao.WebhookConfigsDao;
 import org.support.project.knowledge.dao.WebhooksDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
@@ -21,6 +26,8 @@ import org.support.project.knowledge.entity.WebhooksEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
+import org.support.project.web.dao.SystemConfigsDao;
+import org.support.project.web.entity.SystemConfigsEntity;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -29,6 +36,9 @@ public class KnowledgeUpdateWebHookNotificationTest extends TestCommon {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(KnowledgeUpdateWebHookNotificationTest.class);
     
+    public static boolean sendWebhook = false;
+    public static WebhookConfigsEntity config;
+    
     /**
      * @BeforeClass
      * @throws Exception
@@ -36,17 +46,29 @@ public class KnowledgeUpdateWebHookNotificationTest extends TestCommon {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         TestCommon.setUpBeforeClass();
-        WebhookConfigsEntity config = new WebhookConfigsEntity();
+        
+        SystemConfigsEntity systemConfig = new SystemConfigsEntity(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
+        systemConfig.setConfigValue("http://localhost:8080");
+        SystemConfigsDao.get().save(systemConfig);
+        
+        config = new WebhookConfigsEntity();
         config.setHook(WebhookConfigsEntity.HOOK_KNOWLEDGES);
-        config.setUrl("http://example.support-project.org");
+        config.setUrl("http://localhost:8081");
         WebhookConfigsDao.get().insert(config);
+        
+        String testWebhookSend = SystemUtils.getenv("KNOWLEDGE_TEST_SEND_WEBHOOK");
+        if (StringUtils.isNotEmpty(testWebhookSend) && testWebhookSend.toLowerCase().equals("true")) {
+            // 実際にWebHookを送信する
+            // src/knowledge/src/test/webhook/app.js の node.js のテスト用サーバーを起動しておくことを想定
+            sendWebhook = true;
+        }
     }
     
     @Test
     public void testSendKnowledgeWebhook() throws Exception {
         KnowledgesEntity knowledge = new KnowledgesEntity();
         knowledge.setTitle("サンプル");
-        knowledge.setContent("サンプルです");
+        knowledge.setContent("１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０サンプル");
         knowledge.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PROTECT);
         knowledge.setLikeCount(new Long(0));
         knowledge.setCommentCount(0);
@@ -60,41 +82,24 @@ public class KnowledgeUpdateWebHookNotificationTest extends TestCommon {
         knowledge = KnowledgeLogic.get().insert(data, loginedUser);
         
         NotifyMailBat.main(null);
-        
+
         List<WebhooksEntity> hooks = WebhooksDao.get().selectAll();
         Assert.assertEquals(1, hooks.size());
         Assert.assertEquals(WebhookConfigsEntity.HOOK_KNOWLEDGES, hooks.get(0).getHook());
-        
-        JsonElement expected = new JsonParser().parse(new InputStreamReader(getClass().getResourceAsStream("webhook1.json"), "UTF-8"));
-        LOG.info(expected.toString());
+
+        JsonElement expected = new JsonParser().parse(new InputStreamReader(getClass().getResourceAsStream("webhook_knowledge.json"), "UTF-8"));
         JsonElement actual = new JsonParser().parse(new StringReader(hooks.get(0).getContent()));
-        LOG.info(actual.toString());
+        AssertJson.equals(expected.getAsJsonObject(), actual.getAsJsonObject());
         
-        Assert.assertEquals(expected.getAsJsonObject().get("title").getAsString(), actual.getAsJsonObject().get("title").getAsString());
-        Assert.assertEquals(expected.getAsJsonObject().get("content").getAsString(), actual.getAsJsonObject().get("content").getAsString());
+        String sendJSON = KnowledgeUpdateWebHookNotification.get().createSendJson(hooks.get(0), config);
+        expected = new JsonParser().parse(new InputStreamReader(getClass().getResourceAsStream("webhook_send_knowledge.json"), "UTF-8"));
+        actual = new JsonParser().parse(new StringReader(sendJSON));
+        AssertJson.equals(expected.getAsJsonObject(), actual.getAsJsonObject());
         
-        Assert.assertEquals(expected.getAsJsonObject().get("comment_count").getAsInt(), actual.getAsJsonObject().get("comment_count").getAsInt());
-        Assert.assertEquals(expected.getAsJsonObject().get("like_count").getAsInt(), actual.getAsJsonObject().get("like_count").getAsInt());
-        Assert.assertEquals(expected.getAsJsonObject().get("became_public").getAsBoolean(), actual.getAsJsonObject().get("became_public").getAsBoolean());
-        Assert.assertEquals(expected.getAsJsonObject().get("type_id").getAsInt(), actual.getAsJsonObject().get("type_id").getAsInt());
-        
-        Assert.assertEquals(expected.getAsJsonObject().get("link").getAsString(), actual.getAsJsonObject().get("link").getAsString()); // システムのURLが設定されていない
-        Assert.assertEquals(expected.getAsJsonObject().get("groups").getAsJsonArray().size(), actual.getAsJsonObject().get("groups").getAsJsonArray().size()); //0
-        for (int i = 0; i < expected.getAsJsonObject().get("groups").getAsJsonArray().size(); i++) {
-            Assert.assertEquals(expected.getAsJsonObject().get("groups").getAsJsonArray().get(i).getAsString(),
-                    actual.getAsJsonObject().get("groups").getAsJsonArray().get(i).getAsString());
+        if (sendWebhook) {
+            LOG.info("Webhook送信");
+            WebhookBat.main(null);
         }
-        Assert.assertEquals(expected.getAsJsonObject().get("insert_user").getAsString(), actual.getAsJsonObject().get("insert_user").getAsString());
-        Assert.assertEquals(expected.getAsJsonObject().get("tags").getAsJsonArray().size(), actual.getAsJsonObject().get("tags").getAsJsonArray().size());
-        for (int i = 0; i < expected.getAsJsonObject().get("tags").getAsJsonArray().size(); i++) {
-            Assert.assertEquals(expected.getAsJsonObject().get("tags").getAsJsonArray().get(i).getAsString(),
-                    actual.getAsJsonObject().get("tags").getAsJsonArray().get(i).getAsString());
-        }
-        Assert.assertEquals(expected.getAsJsonObject().get("update_user").getAsString(), actual.getAsJsonObject().get("update_user").getAsString());
-        Assert.assertEquals(expected.getAsJsonObject().get("text").getAsString(), actual.getAsJsonObject().get("text").getAsString());
-        Assert.assertEquals(expected.getAsJsonObject().get("public_flag").getAsInt(), actual.getAsJsonObject().get("public_flag").getAsInt());
-        Assert.assertEquals(expected.getAsJsonObject().get("knowledge_id").getAsInt(), actual.getAsJsonObject().get("knowledge_id").getAsInt());
-        Assert.assertEquals(expected.getAsJsonObject().get("status").getAsString(), actual.getAsJsonObject().get("status").getAsString());
     }
 
 }

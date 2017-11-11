@@ -43,6 +43,7 @@ public class AssertJson {
             if (!a.isJsonObject()) {
                 Assert.fail("[" + prop + "] " +  e.toString() + " != " + a.toString());
             }
+            LOG.info("property:" + prop + " is object.");
             equals(e.getAsJsonObject(), a.getAsJsonObject());
         } else if (e.isJsonArray()) {
             if (!a.isJsonArray()) {

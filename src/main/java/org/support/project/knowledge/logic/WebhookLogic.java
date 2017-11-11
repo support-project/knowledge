@@ -25,6 +25,8 @@ import org.support.project.knowledge.dao.WebhookConfigsDao;
 import org.support.project.knowledge.dao.WebhooksDao;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
 import org.support.project.knowledge.entity.WebhooksEntity;
+import org.support.project.knowledge.logic.notification.webhook.CommentInsertWebhookNotification;
+import org.support.project.knowledge.logic.notification.webhook.KnowledgeUpdateWebHookNotification;
 import org.support.project.web.dao.ProxyConfigsDao;
 import org.support.project.web.entity.ProxyConfigsEntity;
 
@@ -63,7 +65,8 @@ public class WebhookLogic extends HttpLogic {
             try {
                 List<WebhookConfigsEntity> configEntities = configs.get(entity.getHook());
                 for (WebhookConfigsEntity configEntity : configEntities) {
-                    WebhookLogic.get().notify(proxyConfig, configEntity, entity.getContent());
+                    String json = createJson(entity, configEntity);
+                    notify(proxyConfig, configEntity, json);
                 }
                 dao.physicalDelete(entity);
                 count++;
@@ -73,6 +76,20 @@ public class WebhookLogic extends HttpLogic {
             }
         }
         LOG.info("Webhook sended. count: " + count);
+    }
+    /**
+     * 送信するJSONを生成する
+     * @param entity
+     * @param configEntity
+     * @return
+     */
+    public String createJson(WebhooksEntity entity, WebhookConfigsEntity configEntity) throws Exception {
+        if (entity.getHook().equals(WebhookConfigsEntity.HOOK_KNOWLEDGES)) {
+            return KnowledgeUpdateWebHookNotification.get().createSendJson(entity, configEntity);
+        } else if (entity.getHook().equals(WebhookConfigsEntity.HOOK_COMMENTS)) {
+            return CommentInsertWebhookNotification.get().createSendJson(entity, configEntity);
+        }
+        return entity.getContent();
     }
 
     /**
