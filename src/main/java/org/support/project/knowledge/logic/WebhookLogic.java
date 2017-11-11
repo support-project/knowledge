@@ -17,6 +17,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -26,6 +27,7 @@ import org.support.project.knowledge.dao.WebhooksDao;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
 import org.support.project.knowledge.entity.WebhooksEntity;
 import org.support.project.knowledge.logic.notification.webhook.CommentInsertWebhookNotification;
+import org.support.project.knowledge.logic.notification.webhook.KnowledgeLikedWebHookNotification;
 import org.support.project.knowledge.logic.notification.webhook.KnowledgeUpdateWebHookNotification;
 import org.support.project.web.dao.ProxyConfigsDao;
 import org.support.project.web.entity.ProxyConfigsEntity;
@@ -65,12 +67,22 @@ public class WebhookLogic extends HttpLogic {
             try {
                 List<WebhookConfigsEntity> configEntities = configs.get(entity.getHook());
                 for (WebhookConfigsEntity configEntity : configEntities) {
-                    String json = createJson(entity, configEntity);
-                    notify(proxyConfig, configEntity, json);
+                    String json = "";
+                    try {
+                        json = createJson(entity, configEntity);
+                    } catch (Exception e) {
+                        LOG.warn("Failed to generate JSON to send webhook. [webhook config]" + configEntity.getHookId() + "[gen data]" + entity.getContent());
+                    }
+                    if (StringUtils.isEmpty(json)) {
+                        LOG.warn("Failed to generate JSON to send webhook. [webhook config]" + configEntity.getHookId() + "[gen data]" + entity.getContent());
+                    } else {
+                        notify(proxyConfig, configEntity, json);
+                    }
                 }
                 dao.physicalDelete(entity);
                 count++;
             } catch (Exception e) {
+                LOG.warn("Failed to send webhook. [webhook id]" + entity.getWebhookId(), e);
                 entity.setStatus(WEBHOOK_STATUS_ERROR);
                 dao.save(entity);
             }
@@ -88,6 +100,8 @@ public class WebhookLogic extends HttpLogic {
             return KnowledgeUpdateWebHookNotification.get().createSendJson(entity, configEntity);
         } else if (entity.getHook().equals(WebhookConfigsEntity.HOOK_COMMENTS)) {
             return CommentInsertWebhookNotification.get().createSendJson(entity, configEntity);
+        } else if (entity.getHook().equals(WebhookConfigsEntity.HOOK_LIKED_KNOWLEDGE)) {
+            return KnowledgeLikedWebHookNotification.get().createSendJson(entity, configEntity);
         }
         return entity.getContent();
     }
@@ -108,17 +122,21 @@ public class WebhookLogic extends HttpLogic {
 
         List<WebhookConfigsEntity> knowledgeHooks = new ArrayList<WebhookConfigsEntity>();
         List<WebhookConfigsEntity> commentHooks = new ArrayList<WebhookConfigsEntity>();
+        List<WebhookConfigsEntity> likedHooks = new ArrayList<WebhookConfigsEntity>();
 
         for (WebhookConfigsEntity entity : entities) {
             if (WebhookConfigsEntity.HOOK_KNOWLEDGES.equals(entity.getHook())) {
                 knowledgeHooks.add(entity);
             } else if (WebhookConfigsEntity.HOOK_COMMENTS.equals(entity.getHook())) {
                 commentHooks.add(entity);
+            } else if (WebhookConfigsEntity.HOOK_LIKED_KNOWLEDGE.equals(entity.getHook())) {
+                likedHooks.add(entity);
             }
         }
 
         hooks.put(WebhookConfigsEntity.HOOK_KNOWLEDGES, knowledgeHooks);
         hooks.put(WebhookConfigsEntity.HOOK_COMMENTS, commentHooks);
+        hooks.put(WebhookConfigsEntity.HOOK_LIKED_KNOWLEDGE, likedHooks);
 
         return hooks;
     }

@@ -1,4 +1,5 @@
 {
+    "type": "knowledge",
     "comment_count": "{knowledge.commentCount}",
     "like_count": "{knowledge.likeCount}",
     "became_public": "{knowledge.became_public}",

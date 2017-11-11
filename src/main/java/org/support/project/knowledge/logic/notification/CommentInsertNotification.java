@@ -111,7 +111,9 @@ public class CommentInsertNotification extends AbstractQueueNotification impleme
         }
         
         // Webhook通知
-        CommentInsertWebhookNotification.get().sendCommentWebhook(comment, knowledge);
+        CommentInsertWebhookNotification webhook = CommentInsertWebhookNotification.get();
+        webhook.init(comment, knowledge);
+        webhook.saveWebhookData();
 
         UsersDao usersDao = UsersDao.get();
         UsersEntity commentUser = usersDao.selectOnKey(comment.getInsertUser());
