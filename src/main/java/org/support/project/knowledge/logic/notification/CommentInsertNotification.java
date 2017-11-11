@@ -3,7 +3,6 @@ package org.support.project.knowledge.logic.notification;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.config.Resources;
@@ -14,28 +13,23 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.bat.WebhookBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.NotifyType;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
-import org.support.project.knowledge.dao.WebhookConfigsDao;
-import org.support.project.knowledge.dao.WebhooksDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.MailLocaleTemplatesEntity;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
-import org.support.project.knowledge.entity.WebhookConfigsEntity;
-import org.support.project.knowledge.entity.WebhooksEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.knowledge.logic.NotifyCommentLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
-import org.support.project.knowledge.logic.WebhookLogic;
+import org.support.project.knowledge.logic.notification.webhook.CommentInsertWebhookNotification;
 import org.support.project.knowledge.vo.notification.CommentInsert;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
@@ -116,7 +110,8 @@ public class CommentInsertNotification extends AbstractQueueNotification impleme
             sendedCommentKnowledgeIds.add(knowledge.getKnowledgeId());
         }
         
-        sendCommentWebhook(comment, knowledge);
+        // Webhook通知
+        CommentInsertWebhookNotification.get().sendCommentWebhook(comment, knowledge);
 
         UsersDao usersDao = UsersDao.get();
         UsersEntity commentUser = usersDao.selectOnKey(comment.getInsertUser());
@@ -232,31 +227,7 @@ public class CommentInsertNotification extends AbstractQueueNotification impleme
         MailsDao.get().insert(mailsEntity);
     }
     
-    /**
-     * コメント追加のWebhookの登録を行う
-     * @param comment
-     * @param knowledge
-     */
-    private void sendCommentWebhook(CommentsEntity comment, KnowledgesEntity knowledge) {
-        WebhookConfigsDao webhookConfigsDao = WebhookConfigsDao.get();
-        List<WebhookConfigsEntity> webhookConfigsEntities = webhookConfigsDao.selectOnHook(WebhookConfigsEntity.HOOK_COMMENTS);
 
-        if (0 == webhookConfigsEntities.size()) {
-            return;
-        }
-
-        WebhookLogic webhookLogic = WebhookLogic.get();
-        Map<String, Object> commentData = webhookLogic.getCommentData(comment, knowledge);
-
-        WebhooksEntity webhooksEntity = new WebhooksEntity();
-        String webhookId = idGen("Notify");
-        webhooksEntity.setWebhookId(webhookId);
-        webhooksEntity.setStatus(WebhookBat.WEBHOOK_STATUS_UNSENT);
-        webhooksEntity.setHook(WebhookConfigsEntity.HOOK_COMMENTS);
-        webhooksEntity.setContent(JSON.encode(commentData));
-
-        WebhooksDao.get().insert(webhooksEntity);
-    }
     
 
     @Override
