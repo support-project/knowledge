@@ -39,6 +39,49 @@ function testConfig(hookId) {
         }
     });
 };
+var selectedHookId;
+function editConfig(hookId) {
+    selectedHookId = hookId;
+    $('#editFormId').val(hookId);
+    $.ajax({
+        url: _CONTEXT + '/admin.webhook/get?hook_id=' + hookId,
+        type: 'GET',
+        timeout: 10000,  // 単位はミリ秒
+    }).done(function(result, textStatus, xhr) {
+        if (result.ignoreProxy == 1) {
+            $('#ignoreProxy').prop('checked', true);
+        } else {
+            $('#ignoreProxy').prop('checked', false);
+        }
+        console.log(result);
+    }).fail(function(xhr, textStatus, error) {
+        console.error(error);
+    }).always(function() {
+        $('#editModal').modal('show');
+    });
+}
+function putConfig() {
+    var ignoreProxy = 0;
+    if ($('#ignoreProxy').prop('checked')) ignoreProxy = 1;
+    $.ajax({
+        url: _CONTEXT + '/admin.webhook/customize',
+        type: 'POST',
+        data: $('#editForm').serialize(),
+        timeout: 10000,  // 単位はミリ秒
+    }).done(function(result, textStatus, xhr) {
+        if (result.ignoreProxy == 1) {
+            $('#ignoreProxy').prop('checked', true);
+        } else {
+            $('#ignoreProxy').prop('checked', false);
+        }
+        console.log(result);
+    }).fail(function(xhr, textStatus, error) {
+        console.error(error);
+    }).always(function() {
+        $('#editModal').modal('hide');
+    });
+}
+
 </script>
 </c:param>
 <c:param name="PARAM_CONTENT">
@@ -92,8 +135,12 @@ function testConfig(hookId) {
         <c:forEach var="webhookConfigsEntity" items="${webhookConfigsEntities}">
         <li class="list-group-item">
             <div class="pull-right">
-                <a class="btn btn-danger pull-right" href="javascript:void(0);" onclick="deleteConfig(<%= jspUtil.out("webhookConfigsEntity.hookId") %>)"><%= jspUtil.label("label.delete") %></a>
-                <a class="btn btn-default pull-right" href="javascript:void(0);" onclick="testConfig(<%= jspUtil.out("webhookConfigsEntity.hookId") %>)"><%= jspUtil.label("knowledge.webhook.test") %></a>
+                <a class="btn btn-danger pull-right" href="javascript:void(0);" onclick="deleteConfig(<%= jspUtil.out("webhookConfigsEntity.hookId") %>)">
+                    <%= jspUtil.label("label.delete") %></a>
+                <a class="btn btn-default pull-right" href="javascript:void(0);" onclick="testConfig(<%= jspUtil.out("webhookConfigsEntity.hookId") %>)">
+                    <%= jspUtil.label("knowledge.webhook.test") %></a>
+                <a class="btn btn-default pull-right" href="javascript:void(0);" onclick="editConfig(<%= jspUtil.out("webhookConfigsEntity.hookId") %>)">
+                    <i class="fa fa-pencil-square-o"></i>&nbsp; <%=jspUtil.label("knowledge.webhook.customize")%></a>
             </div>
             <div class="clearfix">
                 <span class="h4" style="font-family: monospace;"><%= jspUtil.out("webhookConfigsEntity.url") %></span>
@@ -106,5 +153,35 @@ function testConfig(hookId) {
 <form id="webhookForm" method="post">
     <input type="hidden" name="hook_id" value="">
 </form>
+
+<!-- Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel"><%=jspUtil.label("knowledge.webhook.customize")%></h4>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" name="hook_id" value="" id="editFormId" />
+                    <label><input type="checkbox" value="1" name="ignoreProxy" id="ignoreProxy"/>
+                        <%=jspUtil.label("knowledge.webhook.customize.ignore.proxy")%></label>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveButton" onclick="putConfig();">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 </c:param>
 </c:import>

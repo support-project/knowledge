@@ -15,6 +15,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.support.project.common.config.Flag;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
@@ -31,6 +32,8 @@ import org.support.project.knowledge.logic.notification.webhook.KnowledgeLikedWe
 import org.support.project.knowledge.logic.notification.webhook.KnowledgeUpdateWebHookNotification;
 import org.support.project.web.dao.ProxyConfigsDao;
 import org.support.project.web.entity.ProxyConfigsEntity;
+
+import com.sun.mail.imap.protocol.FLAGS;
 
 @DI(instance = Instance.Singleton)
 public class WebhookLogic extends HttpLogic {
@@ -154,7 +157,11 @@ public class WebhookLogic extends HttpLogic {
         URI uri = new URI(webhookConfig.getUrl());
 
         // HttpClient生成
-        this.httpclient = createHttpClient(proxyConfig);
+        if (Flag.is(webhookConfig.getIgnoreProxy())) {
+            this.httpclient = createHttpClient(null); // IgnoreProxy が ON の場合、Proxy設定を使わない
+        } else {
+            this.httpclient = createHttpClient(proxyConfig);
+        }
         HttpPost httpPost = new HttpPost(uri);
         httpPost.addHeader("Content-type", "application/json");
         httpPost.setEntity(new StringEntity(json, StandardCharsets.UTF_8));
