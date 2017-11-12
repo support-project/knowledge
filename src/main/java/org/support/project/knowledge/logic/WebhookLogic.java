@@ -1,6 +1,7 @@
 package org.support.project.knowledge.logic;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -32,8 +33,6 @@ import org.support.project.knowledge.logic.notification.webhook.KnowledgeLikedWe
 import org.support.project.knowledge.logic.notification.webhook.KnowledgeUpdateWebHookNotification;
 import org.support.project.web.dao.ProxyConfigsDao;
 import org.support.project.web.entity.ProxyConfigsEntity;
-
-import com.sun.mail.imap.protocol.FLAGS;
 
 @DI(instance = Instance.Singleton)
 public class WebhookLogic extends HttpLogic {
@@ -92,6 +91,25 @@ public class WebhookLogic extends HttpLogic {
         }
         LOG.info("Webhook sended. count: " + count);
     }
+    
+    /**
+     * JSON生成のテンプレートを読み出す
+     * @param configEntity
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws IOException
+     */
+    public String loadTemplate(WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
+        if (configEntity.getHook().equals(WebhookConfigsEntity.HOOK_KNOWLEDGES)) {
+            return KnowledgeUpdateWebHookNotification.get().loadTemplate(configEntity);
+        } else if (configEntity.getHook().equals(WebhookConfigsEntity.HOOK_COMMENTS)) {
+            return CommentInsertWebhookNotification.get().loadTemplate(configEntity);
+        } else if (configEntity.getHook().equals(WebhookConfigsEntity.HOOK_LIKED_KNOWLEDGE)) {
+            return KnowledgeLikedWebHookNotification.get().loadTemplate(configEntity);
+        }
+        return "";
+    }
+    
     /**
      * 送信するJSONを生成する
      * @param entity

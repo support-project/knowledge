@@ -53,14 +53,16 @@ function editConfig(hookId) {
         } else {
             $('#ignoreProxy').prop('checked', false);
         }
-        console.log(result);
+        $('#template').val(result.template);
     }).fail(function(xhr, textStatus, error) {
         console.error(error);
     }).always(function() {
+        $('#editMessage').html('');
         $('#editModal').modal('show');
     });
 }
 function putConfig() {
+    $('#editMessage').html('');
     var ignoreProxy = 0;
     if ($('#ignoreProxy').prop('checked')) ignoreProxy = 1;
     $.ajax({
@@ -75,10 +77,15 @@ function putConfig() {
             $('#ignoreProxy').prop('checked', false);
         }
         console.log(result);
-    }).fail(function(xhr, textStatus, error) {
-        console.error(error);
-    }).always(function() {
         $('#editModal').modal('hide');
+    }).fail(function(xhr, textStatus, error) {
+        if (xhr.responseJSON) {
+            $('#editMessage').html(xhr.responseJSON.msg);
+        } else {
+            $('#editMessage').html('save error.');
+        }
+        console.error(xhr);
+    }).always(function() {
     });
 }
 
@@ -163,12 +170,17 @@ function putConfig() {
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title" id="myModalLabel"><%=jspUtil.label("knowledge.webhook.customize")%></h4>
+                <div id="editMessage" class="text-warning">
+                </div>
             </div>
             <div class="modal-body">
                 <form id="editForm">
                     <input type="hidden" name="hook_id" value="" id="editFormId" />
                     <label><input type="checkbox" value="1" name="ignoreProxy" id="ignoreProxy"/>
                         <%=jspUtil.label("knowledge.webhook.customize.ignore.proxy")%></label>
+                    <br/>
+                    <%=jspUtil.label("knowledge.webhook.customize.template")%><br/>
+                    <textarea rows="12" class="form-control" name="template" id="template"></textarea>
                 </form>
             </div>
             <div class="modal-footer">

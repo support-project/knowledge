@@ -3,6 +3,7 @@ package org.support.project.knowledge.control.admin;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,9 @@ import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.ProxyConfigsDao;
 import org.support.project.web.entity.ProxyConfigsEntity;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 public class WebhookControl extends Control {
     /** ログ */
@@ -155,6 +159,9 @@ public class WebhookControl extends Control {
         if (null == webhookConfig) {
             return send(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
         }
+        String template = WebhookLogic.get().loadTemplate(webhookConfig);
+        webhookConfig.setTemplate(template);
+        setSendEscapeHtml(false);
         return send(webhookConfig);
     }
     @Post(subscribeToken = "admin")
@@ -175,8 +182,19 @@ public class WebhookControl extends Control {
         if ("1".equals(ignoreProxy)) {
             webhookConfig.setIgnoreProxy(INT_FLAG.ON.getValue());
         }
+        String template = getParam("template");
+        if (StringUtils.isNotEmpty(template)) {
+            try {
+                JsonElement actual = new JsonParser().parse(new StringReader(template));
+                actual.getAsJsonObject();
+            } catch (Exception e) {
+                // パースエラー
+                return send(HttpStatus.SC_400_BAD_REQUEST, "template json parse error.");
+            }
+        }
+        webhookConfig.setTemplate(template);
         webhookConfigDao.save(webhookConfig);
-        return send(webhookConfig);
+        return send("OK");
     }
     
 }

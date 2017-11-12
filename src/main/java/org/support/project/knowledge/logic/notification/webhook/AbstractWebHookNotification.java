@@ -51,6 +51,13 @@ public abstract class AbstractWebHookNotification {
      * @return
      */
     protected abstract String createWebhookJson();
+    /**
+     * テンプレートを読み出す
+     * @param configEntity
+     * @return
+     * @throws Exception
+     */
+    public abstract String loadTemplate(WebhookConfigsEntity configEntity) throws Exception;
 
     /**
      * Webhookで送信するJSONを生成する

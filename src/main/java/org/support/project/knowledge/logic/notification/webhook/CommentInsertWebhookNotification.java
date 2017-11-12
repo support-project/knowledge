@@ -63,10 +63,7 @@ public class CommentInsertWebhookNotification extends AbstractWebHookNotificatio
     @Override
     public String createSendJson(WebhooksEntity entity, WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
         LOG.trace("createSendJson");
-        String template = configEntity.getTemplate();
-        if (StringUtils.isEmpty(template)) {
-            template = FileUtil.read(getClass().getResourceAsStream("comment_template.json"), "UTF-8");
-        }
+        String template = loadTemplate(configEntity);
         WebhookLongIdJson json = JSON.decode(entity.getContent(), WebhookLongIdJson.class);
         CommentsEntity comment = CommentsDao.get().selectOnKey(json.id);
         if (comment == null) {
@@ -93,5 +90,13 @@ public class CommentInsertWebhookNotification extends AbstractWebHookNotificatio
         map.put("knowledge.became_public", false);
         buildJson(send.getAsJsonObject(), map);
         return send.toString();
+    }
+    @Override
+    public String loadTemplate(WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
+        String template = configEntity.getTemplate();
+        if (StringUtils.isEmpty(template)) {
+            template = FileUtil.read(getClass().getResourceAsStream("comment_template.json"), "UTF-8");
+        }
+        return template;
     }
 }
