@@ -1,8 +1,6 @@
 package org.support.project.knowledge.logic.notification.webhook;
 
-import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,10 +11,10 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
-import org.support.project.knowledge.entity.CommentsEntity;
+import org.support.project.knowledge.dao.LikesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
 import org.support.project.knowledge.entity.WebhooksEntity;
 import org.support.project.knowledge.logic.notification.QueueNotification;
@@ -30,68 +28,65 @@ import com.google.gson.JsonParser;
 import net.arnx.jsonic.JSON;
 
 /**
- * コメントが投稿された際のWebHook通知
+ * イイネが押されたときのWebHook
  * @author koda
  */
 @DI(instance = Instance.Prototype)
-public class CommentInsertWebhookNotification extends AbstractWebHookNotification {
+public class KnowledgeLikedWebHookNotification extends AbstractWebHookNotification {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(CommentInsertWebhookNotification.class);
+    private static final Log LOG = LogFactory.getLog(KnowledgeLikedWebHookNotification.class);
     /** インスタンス取得 */
-    public static CommentInsertWebhookNotification get() {
-        return Container.getComp(CommentInsertWebhookNotification.class);
+    public static KnowledgeLikedWebHookNotification get() {
+        return Container.getComp(KnowledgeLikedWebHookNotification.class);
     }
-    private CommentsEntity comment;
-//    private KnowledgesEntity knowledge;
-    public void init(CommentsEntity comment, KnowledgesEntity knowledge) {
-//        this.knowledge = knowledge;
-        this.comment = comment;
+    
+    private LikesEntity like;
+    public void init(LikesEntity like) {
+        this.like = like;
         super.inited = true;
     }
     @Override
     protected String getHook() {
-        return WebhookConfigsEntity.HOOK_COMMENTS;
+        return WebhookConfigsEntity.HOOK_LIKED_KNOWLEDGE;
     }
     @Override
     protected String createWebhookJson() {
         LOG.trace("createWebhookJson");
         WebhookLongIdJson json = new WebhookLongIdJson();
-        json.id = comment.getCommentNo();
+        json.id = like.getNo();
         return JSON.encode(json);
     }
     
     @Override
-    public String createSendJson(WebhooksEntity entity, WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
+    public String createSendJson(WebhooksEntity entity, WebhookConfigsEntity configEntity) throws Exception {
         LOG.trace("createSendJson");
         String template = configEntity.getTemplate();
         if (StringUtils.isEmpty(template)) {
-            template = FileUtil.read(getClass().getResourceAsStream("comment_template.json"), "UTF-8");
+            template = FileUtil.read(getClass().getResourceAsStream("liked_knowledge_template.json"), "UTF-8");
         }
         WebhookLongIdJson json = JSON.decode(entity.getContent(), WebhookLongIdJson.class);
-        CommentsEntity comment = CommentsDao.get().selectOnKey(json.id);
-        if (comment == null) {
+        like = LikesDao.get().selectOnKey(json.id);
+        if (like == null) {
             return ""; // 生成エラー
         }
-        UsersEntity insertUser = UsersDao.get().selectOnKey(comment.getInsertUser());
+        UsersEntity insertUser = UsersDao.get().selectOnKey(like.getInsertUser());
         if (insertUser != null) {
-            comment.setInsertUserName(insertUser.getUserName());
+            like.setUserName(insertUser.getUserName());
+        } else {
+            like.setUserName("Anonymous");
         }
-        UsersEntity updateUser = UsersDao.get().selectOnKey(comment.getInsertUser());
-        if (updateUser != null) {
-            comment.setUpdateUserName(updateUser.getUserName());
-        }
-        KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKeyWithUserName(comment.getKnowledgeId());
+        KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKeyWithUserName(like.getKnowledgeId());
         if (knowledge == null) {
             return ""; // 生成エラー
         }
         JsonElement send = new JsonParser().parse(new StringReader(template));
-        
         Map<String, Object> map = new HashMap<>();
         map.put("knowledge", knowledge);
-        map.put("comment", comment);
+        map.put("like", like);
         map.put("knowledge.type", QueueNotification.TYPE_KNOWLEDGE_UPDATE);
         map.put("knowledge.became_public", false);
         buildJson(send.getAsJsonObject(), map);
         return send.toString();
     }
+
 }

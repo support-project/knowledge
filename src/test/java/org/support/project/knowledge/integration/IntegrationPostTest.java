@@ -3,6 +3,7 @@ package org.support.project.knowledge.integration;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -36,6 +37,12 @@ public class IntegrationPostTest extends IntegrationCommon {
     private static final String READ_USER = "integration-test-user-03";
     
     private static long knowledgeId; // テストメソッド単位にインスタンスが歳生成されるようなので、staticで保持する
+    
+    @Before
+    public void setUp() throws Exception {
+        Thread.sleep(500);
+    }
+    
     
     /**
      * ユーザを登録

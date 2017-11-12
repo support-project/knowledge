@@ -16,8 +16,8 @@ public class AssertJson {
     private static final Log LOG = LogFactory.getLog(AssertJson.class);
     
     public static void equals(JsonObject expected, JsonObject actual) {
-        LOG.info(expected.toString());
-        LOG.info(actual.toString());
+        LOG.debug(expected.toString());
+        LOG.debug(actual.toString());
         Assert.assertEquals(expected.keySet().size(), actual.keySet().size());
         Iterator<String> props = expected.keySet().iterator();
         while (props.hasNext()) {
@@ -30,8 +30,8 @@ public class AssertJson {
 
     private static void equals(String prop, JsonElement e, JsonElement a) {
         if (e.isJsonPrimitive()) {
-            if (!a.isJsonPrimitive()) {
-                Assert.fail("[" + prop + "] " +  e.toString() + " != " + a.toString());
+            if (a == null || !a.isJsonPrimitive()) {
+                Assert.fail("[" + prop + "] " +  e + " != " + a);
             }
             if (prop.equals("insert_date") || prop.equals("update_date")) {
                 return;
@@ -40,14 +40,14 @@ public class AssertJson {
             JsonPrimitive val2 = a.getAsJsonPrimitive();
             Assert.assertEquals("[" + prop + "]", val1, val2);
         } else if (e.isJsonObject()) {
-            if (!a.isJsonObject()) {
-                Assert.fail("[" + prop + "] " +  e.toString() + " != " + a.toString());
+            if (a == null || !a.isJsonObject()) {
+                Assert.fail("[" + prop + "] " +  e + " != " + a);
             }
             LOG.info("property:" + prop + " is object.");
             equals(e.getAsJsonObject(), a.getAsJsonObject());
         } else if (e.isJsonArray()) {
-            if (!a.isJsonArray()) {
-                Assert.fail("[" + prop + "] " +  e.toString() + " != " + a.toString());
+            if (a == null || !a.isJsonArray()) {
+                Assert.fail("[" + prop + "] " +  e + " != " + a);
             }
             JsonArray array1 = e.getAsJsonArray();
             JsonArray array2 = a.getAsJsonArray();

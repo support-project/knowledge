@@ -1,12 +1,9 @@
 {
-    "type": "comment",
-    "update_user": "{comment.updateUserName}",
-    "comment_no": "{comment.commentNo}",
-    "insert_date": "{comment.insertDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}",
-    "comment": "{comment.comment}",
+    "type": "liked",
+    "no": "{like.no}",
+    "insert_user": "{like.userName}",
+    "insert_date": "{like.insertDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}",
     "text": "<{knowledge.link}|{knowledge.title}>",
-    "insert_user": "{comment.insertUserName}",
-    "update_date": "{comment.updateDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}",
     "knowledge": {
         "comment_count": "{knowledge.commentCount}",
         "like_count": "{knowledge.likeCount}",

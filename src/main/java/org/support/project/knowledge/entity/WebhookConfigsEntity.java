@@ -17,6 +17,7 @@ public class WebhookConfigsEntity extends GenWebhookConfigsEntity {
     /** Hooks */
     public static final String HOOK_KNOWLEDGES = "knowledges";
     public static final String HOOK_COMMENTS = "comments";
+    public static final String HOOK_LIKED_KNOWLEDGE = "liked_knowledge";
 
     /**
      * インスタンス取得 AOPに対応
