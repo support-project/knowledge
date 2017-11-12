@@ -3,7 +3,7 @@
     "no": "{like.no}",
     "insert_user": "{like.userName}",
     "insert_date": "{like.insertDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}",
-    "text": "{like.text}",
+    "text": "<{knowledge.link}|{knowledge.title}>",
     "knowledge": {
         "comment_count": "{knowledge.commentCount}",
         "like_count": "{knowledge.likeCount}",
@@ -18,7 +18,7 @@
         "update_date": "{knowledge.updateDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}",
         "tags": "{knowledge.tags}",
         "update_user": "{knowledge.updateUserName}",
-        "text": "{knowledge.text}",
+        "text": "<{knowledge.link}|{knowledge.title}>",
         "public_flag": "{knowledge.publicFlag}",
         "knowledge_id": "{knowledge.knowledgeId}"
     }
