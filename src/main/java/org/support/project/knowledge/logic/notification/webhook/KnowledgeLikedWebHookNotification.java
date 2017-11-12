@@ -1,6 +1,8 @@
 package org.support.project.knowledge.logic.notification.webhook;
 
+import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,10 +62,7 @@ public class KnowledgeLikedWebHookNotification extends AbstractWebHookNotificati
     @Override
     public String createSendJson(WebhooksEntity entity, WebhookConfigsEntity configEntity) throws Exception {
         LOG.trace("createSendJson");
-        String template = configEntity.getTemplate();
-        if (StringUtils.isEmpty(template)) {
-            template = FileUtil.read(getClass().getResourceAsStream("liked_knowledge_template.json"), "UTF-8");
-        }
+        String template = loadTemplate(configEntity);
         WebhookLongIdJson json = JSON.decode(entity.getContent(), WebhookLongIdJson.class);
         like = LikesDao.get().selectOnKey(json.id);
         if (like == null) {
@@ -87,6 +86,14 @@ public class KnowledgeLikedWebHookNotification extends AbstractWebHookNotificati
         map.put("knowledge.became_public", false);
         buildJson(send.getAsJsonObject(), map);
         return send.toString();
+    }
+    @Override
+    public String loadTemplate(WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
+        String template = configEntity.getTemplate();
+        if (StringUtils.isEmpty(template)) {
+            template = FileUtil.read(getClass().getResourceAsStream("liked_knowledge_template.json"), "UTF-8");
+        }
+        return template;
     }
 
 }

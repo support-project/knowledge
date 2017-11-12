@@ -70,10 +70,7 @@ public class KnowledgeUpdateWebHookNotification extends AbstractWebHookNotificat
     @Override
     public String createSendJson(WebhooksEntity entity, WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
         LOG.trace("createSendJson");
-        String template = configEntity.getTemplate();
-        if (StringUtils.isEmpty(template)) {
-            template = FileUtil.read(getClass().getResourceAsStream("knowledge_template.json"), "UTF-8");
-        }
+        String template = loadTemplate(configEntity);
         WebhookKnowledgeJson json = JSON.decode(entity.getContent(), WebhookKnowledgeJson.class);
         KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKeyWithUserName(json.knowledgeId);
         JsonElement send = new JsonParser().parse(new StringReader(template));
@@ -84,6 +81,15 @@ public class KnowledgeUpdateWebHookNotification extends AbstractWebHookNotificat
         map.put("knowledge.became_public", json.became_public);
         buildJson(send.getAsJsonObject(), map);
         return send.toString();
+    }
+    
+    @Override
+    public String loadTemplate(WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
+        String template = configEntity.getTemplate();
+        if (StringUtils.isEmpty(template)) {
+            template = FileUtil.read(getClass().getResourceAsStream("knowledge_template.json"), "UTF-8");
+        }
+        return template;
     }
 
 }
