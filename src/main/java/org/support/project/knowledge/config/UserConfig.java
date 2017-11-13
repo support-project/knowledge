@@ -13,5 +13,6 @@ public class UserConfig {
     public static final String THEMA = "THEMA";
     public static final String HIGHLIGHT = "HIGHLIGHT";
     
+    public static final String STEALTH_ACCESS = "STEALTH_ACCESS";
     
 }
