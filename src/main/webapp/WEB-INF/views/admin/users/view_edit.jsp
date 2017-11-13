@@ -123,6 +123,14 @@ function deleteUser() {
     </div>
 
     <div class="form-group">
+        <label><%= jspUtil.label("knowledge.user.stealth.access") %></label><br/>
+        <label class="radio-inline">
+            <input type="checkbox" value="1" name="STEALTH_ACCESS" <%= jspUtil.checked("1", "STEALTH_ACCESS", false) %> />
+            ON
+        </label>
+    </div>
+
+    <div class="form-group">
         <label for="input_no"><%= jspUtil.label("label.regist.datetime") %> / <%= jspUtil.label("label.update.datetime") %></label>
         <p class="form-control-static">
             <i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("insertDatetime")%> / 

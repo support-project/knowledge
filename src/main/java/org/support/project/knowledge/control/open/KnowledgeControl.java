@@ -18,6 +18,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
+import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.control.KnowledgeControlBase;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.DraftItemValuesDao;
@@ -77,7 +78,6 @@ import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UserConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
-import org.support.project.web.logic.UserLogic;
 
 /**
  * ナレッジ操作のコントロール
@@ -225,7 +225,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
         List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(entity, loginedUser);
         setAttribute("stocks", stocks);
         
-        ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, getLoginedUser(), DateUtils.now(), entity);
+        UserConfigsEntity stealth = UserConfigsDao.get().selectOnKey(UserConfig.STEALTH_ACCESS, AppConfig.get().getSystemName(), getLoginUserId());
+        if (stealth == null || !"1".equals(stealth.getConfigValue())) {
+            ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, getLoginedUser(), DateUtils.now(), entity);
+        }
         long point = KnowledgesDao.get().selectPoint(entity.getKnowledgeId());
         setAttribute("point", point);
         
