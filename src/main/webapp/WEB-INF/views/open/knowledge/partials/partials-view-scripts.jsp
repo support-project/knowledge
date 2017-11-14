@@ -57,6 +57,7 @@ MathJax.Hub.Config({
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/template-item-input.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-survey.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/presentation.js"></script>
 
 <!-- endbuild -->
 

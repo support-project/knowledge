@@ -18,5 +18,9 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-view.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/markdown.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/slide.css" />
+
 <!-- endbuild -->
 
+<% if (jspUtil.is(-102, "typeId")) { %>
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/presentation-thema/default.css" />
+<% } %>
