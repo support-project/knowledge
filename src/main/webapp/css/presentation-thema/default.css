@@ -1,0 +1,65 @@
+.markdownSlide div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    font-weight: normal;
+}
+
+.markdownSlide {
+    background-color: white;
+    overflow: hidden;
+    font-size: 3vh;
+    padding: 3vh;
+}
+
+.markdownSlide ul, ol {
+    padding-left: 3vh;
+    padding-top: 2vh;
+}
+
+
+.markdownSlide p, 
+.markdownSlide h1, 
+.markdownSlide h2, 
+.markdownSlide h3, 
+.markdownSlide h4 {
+    margin: 0px;
+}
+.markdownSlide p {
+    font-size: 3vh;
+    line-height: 4vh;
+}
+.markdownSlide h1 {
+    font-size: 5vh;
+    line-height: 6vh;
+    border-bottom: 0.2vh solid gray;
+}
+.markdownSlide h2 {
+    font-size: 4vh;
+    line-height: 5vh;
+    border-bottom: 0.2vh dotted gray;
+}
+.markdownSlide h3 {
+    font-size: 3vh;
+    line-height: 4vh;
+}
+.markdownSlide h4 {
+    font-size: 3vh;
+    line-height: 4vh;
+}
+

@@ -14,6 +14,8 @@
 <div style="word-break: normal; display: none;" id="template_items_area" class="markdown">
     <span id="template_view_items"></span>
 </div>
+<%-- プレゼンテーション --%>
+<div id="presentationArea" class="slideshow"></div>
 <%-- ナレッジコンテンツ --%>
 <div style="word-break: normal;" id="content" class="markdown viewarea">
     <%=jspUtil.out("content", JspUtil.ESCAPE_NONE)%>

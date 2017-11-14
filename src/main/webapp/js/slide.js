@@ -138,21 +138,21 @@ function showSlides(n, slideId) {
 }
 
 $(document).on({
-	'mouseenter': function () {
-		var id = $(this).attr('id');
-		$(window).on('keydown', function (e) {
-			e.preventDefault();
+    'mouseenter': function () {
+        var id = $(this).attr('id');
+        $(window).on('keydown', function (e) {
+            e.preventDefault();
 
-			if (37 == e.keyCode) {
-				plusSlides(-1, id);
-			}
+            if (37 == e.keyCode) {
+                plusSlides(-1, id);
+            }
 
-			if (39 == e.keyCode) {
-				plusSlides(1, id);
-			}
-		});
-	},
-	'mouseleave': function () {
-		$(window).off('keydown');
-	}
+            if (39 == e.keyCode) {
+                plusSlides(1, id);
+            }
+        });
+    },
+    'mouseleave': function () {
+        $(window).off('keydown');
+    }
 }, '.slideshow-area');

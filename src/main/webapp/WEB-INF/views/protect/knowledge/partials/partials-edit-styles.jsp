@@ -23,6 +23,8 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/slide.css" />
 <!-- endbuild -->
 
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/presentation-thema/default.css" />
+
 <style>
 <%-- width の上書き --%>
 .picedit_box {
