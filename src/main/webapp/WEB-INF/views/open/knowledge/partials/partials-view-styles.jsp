@@ -21,4 +21,6 @@
 
 <!-- endbuild -->
 
+<% if (jspUtil.is(-102, "typeId")) { %>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/presentation-thema/default.css" />
+<% } %>

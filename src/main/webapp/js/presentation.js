@@ -42,7 +42,24 @@ var createPresentation = function(targetId) {
         logging('createPresentation');
         var presentationArea = $('#presentationArea');
         
-        var slideLength = 2;
+        var sections = [];
+        var section = $('<div class="mySlides markdownSlide slide-fade in"></div>');
+        var add = false;
+        $(targetId).children().each(function(i, elem) {
+            if (elem.tagName.toLowerCase() == 'hr') {
+                sections.push(section);
+                section = $('<div class="mySlides markdownSlide slide-fade in"></div>');
+                add = false;
+            } else {
+                section.append($(elem).clone());
+                add = true;
+            }
+        });
+        if (add) {
+            sections.push(section);
+        }
+        
+        var slideLength = sections.length;
         var slideId = 'presentation';
         
         indexMap[slideId] = 1;
@@ -68,22 +85,6 @@ var createPresentation = function(targetId) {
         slidehtml += '</div></div></div>';
         presentationArea.html(slidehtml);
         
-        var sections = [];
-        var section = $('<div class="mySlides markdownSlide slide-fade in"></div>');
-        var add = false;
-        $(targetId).children().each(function(i, elem) {
-            if (elem.tagName.toLowerCase() == 'hr') {
-                sections.push(section);
-                section = $('<div class="mySlides markdownSlide slide-fade in"></div>');
-                add = false;
-            } else {
-                section.append($(elem).clone());
-                add = true;
-            }
-        });
-        if (add) {
-            sections.push(section);
-        }
         sections.forEach(function(s) {
             $('#sheets').append(s);
         });
