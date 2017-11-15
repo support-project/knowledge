@@ -31,6 +31,8 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/html2canvas/build/html2canvas.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jspdf/dist/jspdf.min.js"></script>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/tagselect.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/slide.js"></script>
