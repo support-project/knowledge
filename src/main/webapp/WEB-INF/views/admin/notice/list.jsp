@@ -17,6 +17,7 @@
 <!-- build:css(src/main/webapp) css/page-notice-list.css -->
         <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/css/markdown.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/css/adminpage.css" />
 <!-- endbuild -->
     </c:param>
 
@@ -33,7 +34,11 @@
     </c:param>
 
     <c:param name="PARAM_CONTENT">
-        <h4 class="title"><%=jspUtil.label("knowledge.admin.notice.title")%></h4>
+        <h4 class="title"><%=jspUtil.label("knowledge.admin.notice.title")%>
+        <span class="backlink">
+        <a href="<%= request.getContextPath() %>/admin.systemconfig/index"><%= jspUtil.label("knowledge.config.system.back.to.list") %></a>
+        </span>
+        </h4>
 
         <div class="alert alert-info alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

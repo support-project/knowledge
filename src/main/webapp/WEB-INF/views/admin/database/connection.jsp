@@ -14,11 +14,14 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
     <c:param name="PARAM_HEAD">
-        <style>
-.radio_block {
-    margin-bottom: 10px;
-}
-</style>
+<!-- build:css(src/main/webapp) css/admin-system-config.css -->
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/adminpage.css" />
+<!-- endbuild -->
+    <style>
+    .radio_block {
+        margin-bottom: 10px;
+    }
+    </style>
     </c:param>
 
     <c:param name="PARAM_SCRIPTS">
@@ -59,7 +62,11 @@
 
 
     <c:param name="PARAM_CONTENT">
-        <h4 class="title"><%=jspUtil.label("knowledge.navbar.data.connect")%></h4>
+        <h4 class="title"><%=jspUtil.label("knowledge.navbar.data.connect")%>
+        <span class="backlink">
+        <a href="<%= request.getContextPath() %>/admin.systemconfig/index"><%= jspUtil.label("knowledge.config.system.back.to.list") %></a>
+        </span>
+        </h4>
 
         <%
             if (!jspUtil.is(Boolean.TRUE, "postgres")) {
