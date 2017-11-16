@@ -236,8 +236,10 @@ $(document).ready(function() {
                 document._TEMPLATE.editable = result.editable;
                 if (!result.editable) {
                     $('#editableMsg').removeClass('hide');
+                    $('#deletebutton').addClass('hide');
                 } else {
                     $('.editbtn').removeClass('hide');
+                    $('#deletebutton').removeClass('hide');
                 }
                 item = result.items.length;
                 result.items.forEach(function(item) {

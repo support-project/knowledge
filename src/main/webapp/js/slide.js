@@ -101,40 +101,42 @@ var showSlide = function(parent) {
 };
 
 function plusSlides(n, slideId) {
-    showSlides(indexMap[slideId] += n, slideId);
+    return showSlides(indexMap[slideId] += n, slideId);
 }
 
 function currentSlide(n, slideId) {
-    showSlides(indexMap[slideId] = n, slideId);
+    return showSlides(indexMap[slideId] = n, slideId);
 }
 
 function showSlides(n, slideId) {
-    var slideIndex = indexMap[slideId];
-    //console.log(slideIndex);
-    var i;
-    var slideArea = document.getElementById(slideId);
-    var slides = slideArea.getElementsByClassName("mySlides");
-    var dots = slideArea.getElementsByClassName("dot");
-    if (n > slides.length) {slideIndex = 1} 
-    if (n < 1) {slideIndex = slides.length}
-    for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none"; 
-    }
-    for (i = 0; i < dots.length; i++) {
-        if (dots[i]) {
-            dots[i].className = dots[i].className.replace(" active", "");
+    return Promise.try(function() {
+        var slideIndex = indexMap[slideId];
+        //console.log(slideIndex);
+        var i;
+        var slideArea = document.getElementById(slideId);
+        var slides = slideArea.getElementsByClassName("mySlides");
+        var dots = slideArea.getElementsByClassName("dot");
+        if (n > slides.length) {slideIndex = 1} 
+        if (n < 1) {slideIndex = slides.length}
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none"; 
         }
-    }
-    slides[slideIndex-1].style.display = "block";
-    var slideimg = $(slides[slideIndex-1].getElementsByTagName('img')[0]);
-    slideimg.attr('src', slideimg.attr('lagy'));
-    
-    if (dots[slideIndex-1]) {
-        dots[slideIndex-1].className += " active";
-    }
-    
-    $('#' + slideId).find('.current').html(slideIndex);
-    indexMap[slideId] = slideIndex;
+        for (i = 0; i < dots.length; i++) {
+            if (dots[i]) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+        }
+        slides[slideIndex-1].style.display = "block";
+        var slideimg = $(slides[slideIndex-1].getElementsByTagName('img')[0]);
+        slideimg.attr('src', slideimg.attr('lagy'));
+        
+        if (dots[slideIndex-1]) {
+            dots[slideIndex-1].className += " active";
+        }
+        
+        $('#' + slideId).find('.current').html(slideIndex);
+        indexMap[slideId] = slideIndex;
+    });
 }
 
 $(document).on({

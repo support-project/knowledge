@@ -85,11 +85,7 @@
     <input type="hidden" name="typeId" value="<%= jspUtil.out("id") %>" id="typeId"/>
     
     <button type="submit" class="btn btn-primary" id="savebutton"><i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
-    <% String hide = "hide"; %>
-    <c:if test="${id != -1}">
-        <% hide = ""; %>
-    </c:if>
-    <button type="button" class="btn btn-danger <%= hide %>" id="deletebutton"><i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %></button>
+    <button type="button" class="btn btn-danger hide" id="deletebutton"><i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %></button>
     <a href="<%= request.getContextPath() %>/admin.template/list/<%= jspUtil.out("offset") %>"
         class="btn btn-success" role="button"><i class="fa fa-list-ul"></i>&nbsp;<%= jspUtil.label("label.backlist") %></a>
     

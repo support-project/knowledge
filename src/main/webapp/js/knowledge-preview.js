@@ -10,9 +10,9 @@ var preview = function() {
     ).then(function() {
         return processMathJax('#preview');
     }).then(function() {
-        if ($('#typeId').val() === '-102') {
+        if ($('input[name=typeId]:checked').val() === '-102') {
             // プレゼンテーションのタイプであった場合に、プレゼンテーションを生成する
-            return createPresentation('#preview');
+            return createPresentation($($('#preview').children()[0]));
         }
     });
 };
