@@ -110,9 +110,9 @@ var createPresentation = function(contentJqObj) {
     
 };
 
-function loadCanvus(doc, width, height) {
+var loadCanvus = function(doc, width, height) {
     return new Promise(function(resolve, reject) {
-        setTimeout(() => {
+        setTimeout(function() {
             var target = document.getElementById('sheets');
             html2canvas(target, {
                 onrendered: function(canvas) {
