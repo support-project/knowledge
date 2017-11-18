@@ -1,7 +1,6 @@
 package org.support.project.knowledge.logic;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -28,7 +27,10 @@ import org.support.project.knowledge.dao.WebhookConfigsDao;
 import org.support.project.knowledge.dao.WebhooksDao;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
 import org.support.project.knowledge.entity.WebhooksEntity;
+import org.support.project.knowledge.logic.notification.webhook.AbstractWebHookNotification;
 import org.support.project.knowledge.logic.notification.webhook.CommentInsertWebhookNotification;
+import org.support.project.knowledge.logic.notification.webhook.CommentLikedWebhookNotification;
+import org.support.project.knowledge.logic.notification.webhook.EmptyWebHookNotification;
 import org.support.project.knowledge.logic.notification.webhook.KnowledgeLikedWebHookNotification;
 import org.support.project.knowledge.logic.notification.webhook.KnowledgeUpdateWebHookNotification;
 import org.support.project.web.dao.ProxyConfigsDao;
@@ -93,21 +95,30 @@ public class WebhookLogic extends HttpLogic {
     }
     
     /**
+     * WebHook通知クラスを取得
+     * @param configEntity
+     * @return
+     */
+    public AbstractWebHookNotification getWebHookNotification(WebhookConfigsEntity configEntity) {
+        if (configEntity.getHook().equals(WebhookConfigsEntity.HOOK_KNOWLEDGES)) {
+            return KnowledgeUpdateWebHookNotification.get();
+        } else if (configEntity.getHook().equals(WebhookConfigsEntity.HOOK_COMMENTS)) {
+            return CommentInsertWebhookNotification.get();
+        } else if (configEntity.getHook().equals(WebhookConfigsEntity.HOOK_LIKED_KNOWLEDGE)) {
+            return KnowledgeLikedWebHookNotification.get();
+        } else if (configEntity.getHook().equals(WebhookConfigsEntity.HOOK_LIKED_COMMENT)) {
+            return CommentLikedWebhookNotification.get();
+        }
+        return new EmptyWebHookNotification();
+    }
+    /**
      * JSON生成のテンプレートを読み出す
      * @param configEntity
      * @return
-     * @throws UnsupportedEncodingException
-     * @throws IOException
+     * @throws Exception 
      */
-    public String loadTemplate(WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
-        if (configEntity.getHook().equals(WebhookConfigsEntity.HOOK_KNOWLEDGES)) {
-            return KnowledgeUpdateWebHookNotification.get().loadTemplate(configEntity);
-        } else if (configEntity.getHook().equals(WebhookConfigsEntity.HOOK_COMMENTS)) {
-            return CommentInsertWebhookNotification.get().loadTemplate(configEntity);
-        } else if (configEntity.getHook().equals(WebhookConfigsEntity.HOOK_LIKED_KNOWLEDGE)) {
-            return KnowledgeLikedWebHookNotification.get().loadTemplate(configEntity);
-        }
-        return "";
+    public String loadTemplate(WebhookConfigsEntity configEntity) throws Exception {
+        return getWebHookNotification(configEntity).loadTemplate(configEntity);
     }
     
     /**
@@ -117,14 +128,7 @@ public class WebhookLogic extends HttpLogic {
      * @return
      */
     public String createJson(WebhooksEntity entity, WebhookConfigsEntity configEntity) throws Exception {
-        if (entity.getHook().equals(WebhookConfigsEntity.HOOK_KNOWLEDGES)) {
-            return KnowledgeUpdateWebHookNotification.get().createSendJson(entity, configEntity);
-        } else if (entity.getHook().equals(WebhookConfigsEntity.HOOK_COMMENTS)) {
-            return CommentInsertWebhookNotification.get().createSendJson(entity, configEntity);
-        } else if (entity.getHook().equals(WebhookConfigsEntity.HOOK_LIKED_KNOWLEDGE)) {
-            return KnowledgeLikedWebHookNotification.get().createSendJson(entity, configEntity);
-        }
-        return entity.getContent();
+        return getWebHookNotification(configEntity).createSendJson(entity, configEntity);
     }
 
     /**
@@ -140,10 +144,12 @@ public class WebhookLogic extends HttpLogic {
         if (0 == entities.size()) {
             return hooks;
         }
-
+        
+        // TODO 後でリファクタリング（WebHookの種類を追加する毎に、ロジックを修正しなくてはいけなくて面倒）
         List<WebhookConfigsEntity> knowledgeHooks = new ArrayList<WebhookConfigsEntity>();
         List<WebhookConfigsEntity> commentHooks = new ArrayList<WebhookConfigsEntity>();
         List<WebhookConfigsEntity> likedHooks = new ArrayList<WebhookConfigsEntity>();
+        List<WebhookConfigsEntity> likedCommentHooks = new ArrayList<WebhookConfigsEntity>();
 
         for (WebhookConfigsEntity entity : entities) {
             if (WebhookConfigsEntity.HOOK_KNOWLEDGES.equals(entity.getHook())) {
@@ -152,12 +158,15 @@ public class WebhookLogic extends HttpLogic {
                 commentHooks.add(entity);
             } else if (WebhookConfigsEntity.HOOK_LIKED_KNOWLEDGE.equals(entity.getHook())) {
                 likedHooks.add(entity);
+            } else if (WebhookConfigsEntity.HOOK_LIKED_COMMENT.equals(entity.getHook())) {
+                likedCommentHooks.add(entity);
             }
         }
 
         hooks.put(WebhookConfigsEntity.HOOK_KNOWLEDGES, knowledgeHooks);
         hooks.put(WebhookConfigsEntity.HOOK_COMMENTS, commentHooks);
         hooks.put(WebhookConfigsEntity.HOOK_LIKED_KNOWLEDGE, likedHooks);
+        hooks.put(WebhookConfigsEntity.HOOK_LIKED_COMMENT, likedCommentHooks);
 
         return hooks;
     }

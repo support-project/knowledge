@@ -27,6 +27,7 @@ import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
+import org.support.project.knowledge.logic.notification.webhook.CommentLikedWebhookNotification;
 import org.support.project.knowledge.vo.notification.LikeInsert;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.MessageResult;
@@ -94,6 +95,11 @@ public class CommentLikedNotification extends AbstractQueueNotification implemen
             LOG.warn("Knowledge record not found.");
             return;
         }
+        
+        // Webhook通知
+        CommentLikedWebhookNotification webhook = CommentLikedWebhookNotification.get();
+        webhook.init(like);
+        webhook.saveWebhookData();
         
         if (sended.contains(comment.getCommentNo())) {
             // この通知キューでは、コメント対し何件のイイネがあっても1回送るだけになる
