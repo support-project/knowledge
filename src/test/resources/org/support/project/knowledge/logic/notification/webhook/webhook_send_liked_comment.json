@@ -1,0 +1,41 @@
+{
+    "type": "liked_comment",
+    "no": 1,
+    "insert_user": "テストユーザ1",
+    "insert_date": "2017/11/18 11:21:20.646+0000",
+    "text": "<http://localhost:8080/open.knowledge/view/1|サンプル>",
+    "comment": {
+        "update_user": "テストユーザ1",
+        "comment_no": 1,
+        "insert_date": "2017/11/18 11:21:20.327+0000",
+        "comment": "コメント",
+        "text": "<http://localhost:8080/open.knowledge/view/1|サンプル>",
+        "insert_user": "テストユーザ1",
+        "update_date": "2017/11/18 11:21:20.327+0000"
+    },
+    "knowledge": {
+        "comment_count": 1,
+        "like_count": 0,
+        "became_public": false,
+        "type_id": -100,
+        "insert_date": "2017/11/18 11:21:18.524+0000",
+        "link": "http://localhost:8080/open.knowledge/view/1",
+        "groups": [
+            "[GROUP] ALL USERS",
+            "[GROUP] テストグループ"
+        ],
+        "insert_user": "テストユーザ1",
+        "title": "サンプル",
+        "content": "１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０サンプル",
+        "update_date": "2017/11/18 11:21:18.524+0000",
+        "tags": [
+            "KnowledgeManagement",
+            "Java",
+            "SQL"
+        ],
+        "update_user": "テストユーザ1",
+        "text": "<http://localhost:8080/open.knowledge/view/1|サンプル>",
+        "public_flag": 2,
+        "knowledge_id": 1
+    }
+}

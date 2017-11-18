@@ -133,8 +133,15 @@ function putConfig() {
             <div>
                 <input type="checkbox" class="pull-left" name="hooks[]" id="liked_knowledge" value="liked_knowledge" />
                 <div class="prepend-left-20">
-                    <label for="comments" class="list-label"><strong><%= jspUtil.label("knowledge.webhook.event.liked.knowledge.title") %></strong></label>
+                    <label for="liked_knowledge" class="list-label"><strong><%= jspUtil.label("knowledge.webhook.event.liked.knowledge.title") %></strong></label>
                     <p class="light"><%= jspUtil.label("knowledge.webhook.event.liked.knowledge.description") %></p>
+                </div>
+            </div>
+            <div>
+                <input type="checkbox" class="pull-left" name="hooks[]" id="liked_comment" value="liked_comment" />
+                <div class="prepend-left-20">
+                    <label for="liked_comment" class="list-label"><strong><%= jspUtil.label("knowledge.webhook.event.liked.comment.title") %></strong></label>
+                    <p class="light"><%= jspUtil.label("knowledge.webhook.event.liked.comment.description") %></p>
                 </div>
             </div>
         </div>
