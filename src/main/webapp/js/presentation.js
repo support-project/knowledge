@@ -1,3 +1,4 @@
+/* global indexMap:false, showSlides:false, currentSlide:false, html2canvas:false, jsPDF:false */
 var setHeight = function() {
     var width = $('#presentation').width();
     var height = width * 9 / 16;
@@ -36,7 +37,7 @@ var setHeight = function() {
 };
 
 var slideLength;
-var createPresentation = function(contentJqObj) {
+var createPresentation = function(contentJqObj) {// eslint-disable-line no-unused-vars
     return Promise.try(function() {
         $(window).resize(function(){
             setHeight();
@@ -111,7 +112,7 @@ var createPresentation = function(contentJqObj) {
 };
 
 var loadCanvus = function(doc, width, height) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
         setTimeout(function() {
             var target = document.getElementById('sheets');
             html2canvas(target, {
@@ -125,7 +126,7 @@ var loadCanvus = function(doc, width, height) {
         }, 50);
     });
 }
-var downloadPdf = function() {
+var downloadPdf = function() {// eslint-disable-line no-unused-vars
     var width = $('#presentation').width();
     var height = width * 9 / 16;
     

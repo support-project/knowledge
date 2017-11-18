@@ -34,7 +34,7 @@
 
 ## リンク
 - リンクを入れたい部分に、[リンクの名前](リンク先のURL) を記載する
-   - [Knowledge](https://support-project.org/knowledge)
+   - [Knowledge](https://information-knowledge.support-project.org)
 
 ## コードを表示
 - コードを表示したい部分は「`（バッククオート）」で囲みます
@@ -99,7 +99,7 @@ E = mc^2
 - 画像をアップロードすると、「画像を表示」ボタンを押せるようになり、それを押すと画像が表示される
 - 画像の表示は以下のような形式で記載する
    - `![画像名](画像のURL)`
-- ![サンプル](https://support-project.org/knowledge/open.account/icon/2)
+- ![サンプル](https://test-knowledge.support-project.org/open.account/icon/1)
 
 
 ## 画像を記事内に挿入（クリップボードにコピーした画像を直接アップロード）

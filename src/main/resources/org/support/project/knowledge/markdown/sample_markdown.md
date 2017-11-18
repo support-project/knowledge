@@ -29,7 +29,7 @@
 
 ## Link
 - The part you want to put a link, to describe the [name of the link](link destination URL)
-   - [Knowledge](https://support-project.org/knowledge)
+   - [Knowledge](https://information-knowledge.support-project.org)
 
 ## Code
 - Where you want to display the code is enclosed in "` (back quote) "
@@ -95,7 +95,7 @@ The  famous  Euler  formula  is  $e^{i\theta}=\cos\theta+i\sin\theta$ ．
 - Uploading an image allows you to press the "Show image" button, and pressing it will display the image
 - Describe the display of images in the following format
     - `![Image name] (image URL)`
-- ![Sample] (https://support-project.org/knowledge/open.account/icon/2)
+- ![Sample] (https://test-knowledge.support-project.org/open.account/icon/1)
 
 
 ## Insert the image into the article (upload the image copied to the clipboard directly)

@@ -16,6 +16,7 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jspdf/dist/jspdf.min.js"></script>
 
 <!-- build:js(src/main/webapp) js/page-knowledge-edit.js -->
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
@@ -32,10 +33,8 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/moment/min/moment.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/html2canvas/build/html2canvas.min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jspdf/dist/jspdf.min.js"></script>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/tagselect.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/slide.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-common.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-edit.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-attachfile.js"></script>
@@ -50,6 +49,8 @@ MathJax.Hub.Config({
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/template-item-input.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-template.js"></script>
+
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/slide.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/presentation.js"></script>
 
 <!-- endbuild -->
