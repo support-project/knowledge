@@ -55,6 +55,10 @@ public class GenWebhookConfigsEntity implements Serializable {
     private String hook;
     /** URL */
     private String url;
+    /** IGNORE_PROXY */
+    private Integer ignoreProxy;
+    /** TEMPLATE */
+    private String template;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -111,6 +115,38 @@ public class GenWebhookConfigsEntity implements Serializable {
      * @return this object     */
     public GenWebhookConfigsEntity setUrl(String url) {
         this.url = url;
+        return this;
+    }
+
+    /**
+     * Get IGNORE_PROXY.
+     * @return IGNORE_PROXY
+     */
+    public Integer getIgnoreProxy() {
+        return this.ignoreProxy;
+    }
+    /**
+     * Set IGNORE_PROXY.
+     * @param ignoreProxy IGNORE_PROXY
+     * @return this object     */
+    public GenWebhookConfigsEntity setIgnoreProxy(Integer ignoreProxy) {
+        this.ignoreProxy = ignoreProxy;
+        return this;
+    }
+
+    /**
+     * Get TEMPLATE.
+     * @return TEMPLATE
+     */
+    public String getTemplate() {
+        return this.template;
+    }
+    /**
+     * Set TEMPLATE.
+     * @param template TEMPLATE
+     * @return this object     */
+    public GenWebhookConfigsEntity setTemplate(String template) {
+        this.template = template;
         return this;
     }
 
@@ -245,6 +281,8 @@ public class GenWebhookConfigsEntity implements Serializable {
         builder.append("hookId = ").append(hookId).append("\n");
         builder.append("hook = ").append(hook).append("\n");
         builder.append("url = ").append(url).append("\n");
+        builder.append("ignoreProxy = ").append(ignoreProxy).append("\n");
+        builder.append("template = ").append(template).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -290,6 +328,11 @@ public class GenWebhookConfigsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
         error = validator.validate(this.url, convLabelName("Url"), 256);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(this.ignoreProxy, convLabelName("Ignore Proxy"));
         if (error != null) {
             errors.add(error);
         }
@@ -341,6 +384,11 @@ public class GenWebhookConfigsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
         error = validator.validate(values.get("url"), convLabelName("Url"), 256);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(values.get("ignoreProxy"), convLabelName("Ignore Proxy"));
         if (error != null) {
             errors.add(error);
         }

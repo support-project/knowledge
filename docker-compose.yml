@@ -1,25 +1,88 @@
 version: '2.1'
 
 services:
-  dev:
-    image: knowledge-maven
+  maven:
+    image: knowledge-dev
     build:
       context: .
       args:
         - https_proxy
         - http_proxy
-    links:
-        - mailcatcher
+    command: mvn -v
     environment:
       KNOWLEDGE_TEST_MAIL: 'false'
+      MAVEN_CONFIG: /var/maven/.m2
+      https_proxy: ${https_proxy}
+      http_proxy: ${http_proxy}
+    working_dir: /usr/src/mymaven/
+    entrypoint: ''
     volumes:
       - $PWD:/usr/src/mymaven
-      - $PWD/.m2:/root/.m2
-      
-  mailcatcher:
-    image: "zolweb/docker-mailcatcher"
+      - ${KNOWLEDGE_HOME}.m2:/root/.m2
+
+  tomcat:
+    image: tomcat:8.5-jre8-alpine
     ports:
-      - "1025:1025"
-      - "1080:1080"
+      - 8080:8080
+      - 8009:8009
     expose:
-      - "1080"
+      - 8080
+#    links:
+#      - mailcatcher
+#      - postgres
+#      - elasticsearch
+#      - kibana
+    environment:
+      https_proxy: ${https_proxy}
+      http_proxy: ${http_proxy}
+    volumes:
+      - ${KNOWLEDGE_HOME}.knowledge:/root/.knowledge
+      - $PWD/target/webapps:/usr/local/tomcat/webapps
+
+  mailcatcher:
+    image: zolweb/docker-mailcatcher
+    ports:
+      - 1025:1025
+      - 1080:1080
+    expose:
+      - 1080
+
+  postgres:
+    image: postgres:9.6.5
+    ports:
+      - 15432:5432
+    expose:
+      - 5432
+    environment:
+      POSTGRES_PASSWORD: '1qazxsw2'
+    volumes:
+      - ${KNOWLEDGE_HOME}.postgres:/var/lib/postgresql/data
+
+  elasticsearch:
+    image: elasticsearch:5.5.2-alpine
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      transport.host: '0.0.0.0'
+      discovery.zen.minimum_master_nodes: '1'
+      xpack.security.enabled: 'false'
+      xpack.monitoring.enabled: 'true'
+      xpack.watcher.enabled: 'false'
+      xpack.graph.enabled: 'false'
+      xpack.monitoring.history.duration: '1d'
+      ES_JAVA_OPTS: '-Xms512m -Xmx512m'
+    volumes:
+      - ${KNOWLEDGE_HOME}.es_data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: kibana:5.5.2
+    links:
+      - elasticsearch
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+      XPACK_MONITORING_ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+      XPACK_SECURITY_ENABLED: 'false'
+

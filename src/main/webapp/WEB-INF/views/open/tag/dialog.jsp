@@ -38,26 +38,8 @@
             
                 <div class="te">
                     <ul class="list-group" id="tagDatas">
-                    
                     </ul>
                 </div>
-                
-                <%-- 
-                <nav>
-                    <ul class="pager">
-                        <li class="previous">
-                            <a class="tagselectPagerPrev">
-                                <span aria-hidden="true">&larr;</span><%= jspUtil.label("label.previous") %>
-                            </a>
-                        </li>
-                        <li class="next">
-                            <a class="tagselectPagerNext">
-                                <%= jspUtil.label("label.next") %> <span aria-hidden="true">&rarr;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                --%>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

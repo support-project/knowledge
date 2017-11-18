@@ -16,6 +16,7 @@ MathJax.Hub.Config({
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/emoji-parser/main.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/jspdf/dist/jspdf.min.js"></script>
 
 <!-- build:js(src/main/webapp) js/page-knowledge-view.js -->
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
@@ -37,7 +38,8 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/bower/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/slide.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/html2canvas/build/html2canvas.min.js"></script>
+
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-common.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-markdown.js"></script>
@@ -58,8 +60,10 @@ MathJax.Hub.Config({
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/template-item-input.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/knowledge-view-survey.js"></script>
 
-<!-- endbuild -->
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/slide.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/presentation.js"></script>
 
+<!-- endbuild -->
 
 <script>
 var LABEL_LIKE = '<%= jspUtil.label("knowledge.view.like") %>';

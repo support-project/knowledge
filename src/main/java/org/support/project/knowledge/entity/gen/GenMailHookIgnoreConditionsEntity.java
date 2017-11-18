@@ -59,7 +59,7 @@ public class GenMailHookIgnoreConditionsEntity implements Serializable {
     private Integer conditionNo;
     /** IGNORE_CONDITION_NO */
     private Integer ignoreConditionNo;
-    /** 条件の種類   1:宛先が「条件文字」であった場合 */
+    /** 条件の種類	 1:宛先が「条件文字」であった場合 */
     private Integer conditionKind;
     /** 条件の文字 */
     private String condition;
@@ -123,15 +123,15 @@ public class GenMailHookIgnoreConditionsEntity implements Serializable {
     }
 
     /**
-     * Get 条件の種類   1:宛先が「条件文字」であった場合.
-     * @return 条件の種類   1:宛先が「条件文字」であった場合
+     * Get 条件の種類	 1:宛先が「条件文字」であった場合.
+     * @return 条件の種類	 1:宛先が「条件文字」であった場合
      */
     public Integer getConditionKind() {
         return this.conditionKind;
     }
     /**
-     * Set 条件の種類   1:宛先が「条件文字」であった場合.
-     * @param conditionKind 条件の種類   1:宛先が「条件文字」であった場合
+     * Set 条件の種類	 1:宛先が「条件文字」であった場合.
+     * @param conditionKind 条件の種類	 1:宛先が「条件文字」であった場合
      * @return this object     */
     public GenMailHookIgnoreConditionsEntity setConditionKind(Integer conditionKind) {
         this.conditionKind = conditionKind;

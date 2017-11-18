@@ -273,15 +273,20 @@ public class LuceneSearcher implements Searcher {
 
             container.add(miniContainer, BooleanClause.Occur.MUST);
         }
-        if (StringUtils.isNotEmpty(value.getCreator())) {
+        if (StringUtils.isNotEmpty(value.getCreators())) {
             QueryParser queryParser = new QueryParser(Version.LUCENE_4_10_2, FIELD_LABEL_CREATE_USER, analyzer);
             queryParser.setDefaultOperator(Operator.OR);
-            Query query = queryParser.parse(value.getCreator());
+            Query query = queryParser.parse(value.getCreators());
             container.add(query, BooleanClause.Occur.MUST);
         }
-        if (value.getTemplate() != null) {
-            Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TEMPLATE, 1, value.getTemplate(), value.getTemplate(), true, true);
-            container.add(query, BooleanClause.Occur.MUST);
+        
+        if (value.getTemplates() != null && !value.getTemplates().isEmpty()) {
+            BooleanQuery miniContainer = new BooleanQuery();
+            for (Integer templatesId: value.getTemplates()) {
+                Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TEMPLATE, 1, templatesId, templatesId, true, true);
+                miniContainer.add(query, BooleanClause.Occur.SHOULD);
+            }
+            container.add(miniContainer, BooleanClause.Occur.MUST);
         }
         
         return container;

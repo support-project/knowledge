@@ -2,7 +2,6 @@ package org.support.project.knowledge.dao;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.support.project.aop.Aspect;

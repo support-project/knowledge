@@ -51,7 +51,7 @@ public class GenEventsEntity implements Serializable {
     }
     /** ナレッジID */
     private Long knowledgeId;
-    /** 開催日     UTC */
+    /** 開催日	 UTC */
     private Timestamp startDateTime;
     /** タイムゾーン */
     private String timeZone;
@@ -85,15 +85,15 @@ public class GenEventsEntity implements Serializable {
     }
 
     /**
-     * Get 開催日     UTC.
-     * @return 開催日     UTC
+     * Get 開催日	 UTC.
+     * @return 開催日	 UTC
      */
     public Timestamp getStartDateTime() {
         return this.startDateTime;
     }
     /**
-     * Set 開催日     UTC.
-     * @param startDateTime 開催日     UTC
+     * Set 開催日	 UTC.
+     * @param startDateTime 開催日	 UTC
      * @return this object     */
     public GenEventsEntity setStartDateTime(Timestamp startDateTime) {
         this.startDateTime = startDateTime;

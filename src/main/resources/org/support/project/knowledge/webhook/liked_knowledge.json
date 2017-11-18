@@ -1,0 +1,34 @@
+{
+    "type": "liked",
+    "no": 1,
+    "insert_user": "テストユーザ1",
+    "insert_date": "2017/11/11 22:11:54.554+0000",
+    "text": "<http://localhost:8080/open.knowledge/view/1|サンプル>",
+    "knowledge": {
+        "type": "knowledge",
+        "knowledge_id": 1,
+        "title": "サンプル",
+        "content": "サンプルの本文",
+        "status": "created",
+        "comment_count": 0,
+        "like_count": 0,
+        "public_flag": 2,
+        "became_public": true,
+        "type_id": -100,
+        "link": "http://localhost:8080/open.knowledge/view/1",
+        "insert_user": "テストユーザ1",
+        "insert_date": "2017/11/08 11:02:45.554+0000",
+        "update_user": "テストユーザ1",
+        "update_date": "2017/11/08 11:02:45.554+0000",
+        "groups": [
+            "[GROUP] ALL USERS",
+            "[GROUP] テストグループ"
+        ],
+        "tags": [
+            "Knowledge",
+            "Sample",
+            "Test"
+        ],
+        "text": "\u003Chttp://localhost:8080/open.knowledge/view/1|サンプル\u003E"
+    }
+}

@@ -225,3 +225,8 @@ body {
         content: ""!important;
     }
 }
+
+
+.cursor-pointer {
+    cursor: pointer;
+}

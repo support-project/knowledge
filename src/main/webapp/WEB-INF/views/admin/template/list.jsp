@@ -9,12 +9,19 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<!-- build:css(src/main/webapp) css/admin-template-list.css -->
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/adminpage.css" />
+<!-- endbuild -->
 </c:param>
 
 
 
 <c:param name="PARAM_CONTENT">
-<h4 class="title"><%= jspUtil.label("knowledge.navbar.config.admin.template") %></h4>
+<h4 class="title"><%= jspUtil.label("knowledge.navbar.config.admin.template") %>
+<span class="backlink">
+<a href="<%= request.getContextPath() %>/admin.systemconfig/index"><%= jspUtil.label("knowledge.config.system.back.to.list") %></a>
+</span>
+</h4>
 
 <nav>
     <ul class="pager">

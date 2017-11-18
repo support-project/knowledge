@@ -1,0 +1,20 @@
+{
+    "type": "knowledge",
+    "comment_count": "{knowledge.commentCount}",
+    "like_count": "{knowledge.likeCount}",
+    "became_public": "{knowledge.became_public}",
+    "type_id": "{knowledge.typeId}",
+    "insert_date": "{knowledge.insertDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}",
+    "link": "{knowledge.link}",
+    "groups": "{knowledge.groups}",
+    "insert_user": "{knowledge.insertUserName}",
+    "title": "{knowledge.title}",
+    "content": "{knowledge.content}",
+    "update_date": "{knowledge.updateDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}",
+    "tags": "{knowledge.tags}",
+    "update_user": "{knowledge.updateUserName}",
+    "text": "<{knowledge.link}|{knowledge.title}>",
+    "public_flag": "{knowledge.publicFlag}",
+    "knowledge_id": "{knowledge.knowledgeId}",
+    "status": "{knowledge.status}"
+}

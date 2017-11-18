@@ -36,6 +36,10 @@
             </div>
 
             <div class="tab-pane preview markdown" id="previewTab">
+                <%-- プレゼンテーション --%>
+                <div class="row">
+                <span id="presentationArea" class="slideshow"></span>
+                </div>
                 <div class="row">
                 <span id="preview"></span>
                 </div>

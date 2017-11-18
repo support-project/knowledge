@@ -1,0 +1,19 @@
+{
+    "extends": ["eslint:recommended"],
+    "plugins": [],
+    "parserOptions": {},
+    "env": {
+        "browser": true,
+        "jquery": true
+    },
+    "globals": {
+        "Promise": false,
+        "logging": false,
+        "isString": false,
+        "_CONTEXT": false
+    },
+    "rules": {
+        "no-console": "off",
+        "quotes": ["error", "single"]
+    }
+}

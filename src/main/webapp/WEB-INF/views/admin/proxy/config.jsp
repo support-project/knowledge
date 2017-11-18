@@ -14,6 +14,10 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<!-- build:css(src/main/webapp) css/admin-system-config.css -->
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/adminpage.css" />
+<!-- endbuild -->
+
 <style>
 .radio_block {
     margin-bottom: 10px;
@@ -45,7 +49,11 @@ function deleteConfig() {
 
 
 <c:param name="PARAM_CONTENT">
-<h4 class="title"><%= jspUtil.label("knowledge.proxy.title") %></h4>
+<h4 class="title"><%= jspUtil.label("knowledge.proxy.title") %>
+<span class="backlink">
+<a href="<%= request.getContextPath() %>/admin.systemconfig/index"><%= jspUtil.label("knowledge.config.system.back.to.list") %></a>
+</span>
+</h4>
 
 <div class="alert alert-info alert-dismissible" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

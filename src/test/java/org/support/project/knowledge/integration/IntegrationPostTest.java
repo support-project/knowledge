@@ -3,6 +3,7 @@ package org.support.project.knowledge.integration;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -12,6 +13,7 @@ import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
+import org.support.project.knowledge.logic.AggregateLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.boundary.ForwardBoundary;
@@ -35,6 +37,12 @@ public class IntegrationPostTest extends IntegrationCommon {
     private static final String READ_USER = "integration-test-user-03";
     
     private static long knowledgeId; // テストメソッド単位にインスタンスが歳生成されるようなので、staticで保持する
+    
+    @Before
+    public void setUp() throws Exception {
+        Thread.sleep(500);
+    }
+    
     
     /**
      * ユーザを登録
@@ -665,5 +673,23 @@ public class IntegrationPostTest extends IntegrationCommon {
         assertPointHistoryCount(KNOWLEDGE_POST_USER, 9);
         assertPointHistoryCount(COMMENT_POST_USER, 6);
     }
+
+
+
+
+    /**
+     * 再集計を実行
+     * @throws Exception
+     */
+    @Test
+    @Order(order = 1000)
+    public void testAggregate() throws Exception {
+        AggregateLogic.get().startAggregate();
+        // CPは変化しない
+        assertCP(COMMENT_POST_USER, 0);
+        assertCP(KNOWLEDGE_POST_USER, 0);
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 0);
+    }
+
 
 }

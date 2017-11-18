@@ -10,6 +10,9 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<!-- build:css(src/main/webapp) css/admin-system-config.css -->
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/adminpage.css" />
+<!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
@@ -66,7 +69,11 @@ $('#startMigrate').click(function() {
 <c:param name="PARAM_CONTENT">
 <h4 class="title">
 <%= jspUtil.label("knowledge.aggregate.title") %>
+<span class="backlink">
+<a href="<%= request.getContextPath() %>/admin.systemconfig/index"><%= jspUtil.label("knowledge.config.system.back.to.list") %></a>
+</span>
 </h4>
+
 <%= jspUtil.label("knowledge.aggregate.msg") %>
 <br/>
 <button class="btn btn-primary" id="startMigrate">Execute</button><br/>

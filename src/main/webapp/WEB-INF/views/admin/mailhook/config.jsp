@@ -14,6 +14,9 @@
 <c:import url="/WEB-INF/views/commons/layout/layoutMain.jsp">
 
 <c:param name="PARAM_HEAD">
+<!-- build:css(src/main/webapp) css/admin-mailhook-config.css -->
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/adminpage.css" />
+<!-- endbuild -->
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
@@ -44,7 +47,11 @@ addProperty('<%= prop.getPropertyKey() %>', '<%= prop.getPropertyValue() %>');
 </c:param>
 
 <c:param name="PARAM_CONTENT">
-<h4 class="title"><%= jspUtil.label("knowledge.admin.post.from.mail") %></h4>
+<h4 class="title"><%= jspUtil.label("knowledge.admin.post.from.mail") %>
+<span class="backlink">
+<a href="<%= request.getContextPath() %>/admin.systemconfig/index"><%= jspUtil.label("knowledge.config.system.back.to.list") %></a>
+</span>
+</h4>
 
 <div class="alert alert-info alert-dismissible" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">

@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.support.project.common.test.Order;
+import org.support.project.common.test.OrderedRunner;
 import org.support.project.knowledge.dao.LikeCommentsDao;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
@@ -19,6 +21,7 @@ import org.support.project.knowledge.logic.notification.Notification.TARGET;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.entity.NotificationsEntity;
 
+@RunWith(OrderedRunner.class)
 public class CommentLikedNotificationTest extends NotificationTestCommon {
     @Test
     @Order(order = 1)

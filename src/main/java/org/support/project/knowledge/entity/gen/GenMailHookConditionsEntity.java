@@ -55,13 +55,13 @@ public class GenMailHookConditionsEntity implements Serializable {
     private Integer hookId;
     /** CONDITION_NO */
     private Integer conditionNo;
-    /** 条件の種類  1:宛先が「条件文字」であった場合 */
+    /** 条件の種類	 1:宛先が「条件文字」であった場合 */
     private Integer conditionKind;
     /** 条件の文字 */
     private String condition;
     /** 投稿者 */
     private Integer processUser;
-    /** 投稿者の指定  1:送信者のメールアドレスから、2:常に固定 */
+    /** 投稿者の指定	 1:送信者のメールアドレスから、2:常に固定 */
     private Integer processUserKind;
     /** 公開区分 */
     private Integer publicFlag;
@@ -119,15 +119,15 @@ public class GenMailHookConditionsEntity implements Serializable {
     }
 
     /**
-     * Get 条件の種類  1:宛先が「条件文字」であった場合.
-     * @return 条件の種類  1:宛先が「条件文字」であった場合
+     * Get 条件の種類	 1:宛先が「条件文字」であった場合.
+     * @return 条件の種類	 1:宛先が「条件文字」であった場合
      */
     public Integer getConditionKind() {
         return this.conditionKind;
     }
     /**
-     * Set 条件の種類  1:宛先が「条件文字」であった場合.
-     * @param conditionKind 条件の種類  1:宛先が「条件文字」であった場合
+     * Set 条件の種類	 1:宛先が「条件文字」であった場合.
+     * @param conditionKind 条件の種類	 1:宛先が「条件文字」であった場合
      * @return this object     */
     public GenMailHookConditionsEntity setConditionKind(Integer conditionKind) {
         this.conditionKind = conditionKind;
@@ -167,15 +167,15 @@ public class GenMailHookConditionsEntity implements Serializable {
     }
 
     /**
-     * Get 投稿者の指定  1:送信者のメールアドレスから、2:常に固定.
-     * @return 投稿者の指定  1:送信者のメールアドレスから、2:常に固定
+     * Get 投稿者の指定	 1:送信者のメールアドレスから、2:常に固定.
+     * @return 投稿者の指定	 1:送信者のメールアドレスから、2:常に固定
      */
     public Integer getProcessUserKind() {
         return this.processUserKind;
     }
     /**
-     * Set 投稿者の指定  1:送信者のメールアドレスから、2:常に固定.
-     * @param processUserKind 投稿者の指定  1:送信者のメールアドレスから、2:常に固定
+     * Set 投稿者の指定	 1:送信者のメールアドレスから、2:常に固定.
+     * @param processUserKind 投稿者の指定	 1:送信者のメールアドレスから、2:常に固定
      * @return this object     */
     public GenMailHookConditionsEntity setProcessUserKind(Integer processUserKind) {
         this.processUserKind = processUserKind;

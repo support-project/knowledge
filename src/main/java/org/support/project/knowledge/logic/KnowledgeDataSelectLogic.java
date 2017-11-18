@@ -241,12 +241,15 @@ public class KnowledgeDataSelectLogic {
         if (LOG.isDebugEnabled()) {
             LOG.debug("get knowledge list. [params] " + PropertyUtil.reflectionToString(param));
         }
+        String [] templates = {param.getTemplate()}; // TODO テンプレートの複数指定に対応させる
+
         List<Knowledge> results = new ArrayList<>();
         List<KnowledgesEntity> entities = KnowledgeLogic.get().searchKnowledge(
                 param.getKeyword(),
                 param.getTags(),
                 param.getGroups(),
-                param.getTemplate(),
+                null,
+                templates,
                 param.getLoginedUser(),
                 param.getOffset(),
                 param.getLimit());

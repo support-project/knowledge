@@ -1,28 +1,37 @@
 {
-	"comment_no": 1,
-	"comment": "記事へのコメント",
-	"insert_user": "コメント投稿ユーザ名",
-	"insert_date": "2016/04/11 01:43:40",
-	"update_user": "コメント更新ユーザ名",
-	"update_date": "2016/04/11 01:43:40",
-	"knowledge": {
-		"knowledge_id": 1,
-		"title": "記事タイトル",
-		"content": "記事本文",
-		"public_flag": 10,
-		"tags": [
-			"Sample"
-		],
-		"groups": [
-			"ALL USERS"
-		],
-		"like_count": 2,
-		"comment_count": 3,
-		"type_id": -100,
-		"link": "http://example.jp/knowledge/open.knowledge/view/1",
-		"insert_user": "記事投稿ユーザ名",
-		"insert_date": "2016/04/11 01:42:40",
-		"update_user": "記事更新ユーザ名",
-		"update_date": "2016/04/11 01:42:40"
-	}
+    "type": "comment",
+    "comment_no": 1,
+    "comment": "コメント",
+    "insert_user": "テストユーザ1",
+    "insert_date": "2017/11/08 11:19:11",
+    "update_user": "テストユーザ1",
+    "update_date": "2017/11/08 11:19:10",
+    "text": "\u003Chttp://localhost:8080/open.knowledge/view/1|サンプル\u003E",
+    "knowledge": {
+        "type": "knowledge",
+        "knowledge_id": 1,
+        "title": "サンプル",
+        "content": "サンプルの本文",
+        "status": "created",
+        "comment_count": 0,
+        "like_count": 0,
+        "public_flag": 2,
+        "became_public": true,
+        "type_id": -100,
+        "link": "http://localhost:8080/open.knowledge/view/1",
+        "insert_user": "テストユーザ1",
+        "insert_date": "2017/11/08 11:02:45.554+0000",
+        "update_user": "テストユーザ1",
+        "update_date": "2017/11/08 11:02:45.554+0000",
+        "groups": [
+            "[GROUP] ALL USERS",
+            "[GROUP] テストグループ"
+        ],
+        "tags": [
+            "Knowledge",
+            "Sample",
+            "Test"
+        ],
+        "text": "\u003Chttp://localhost:8080/open.knowledge/view/1|サンプル\u003E"
+    }
 }

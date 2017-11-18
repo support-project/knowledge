@@ -2,7 +2,7 @@ var indexMap = {};
 var full = false;
 var slideCount = 0;
 
-function requestFullscreen(id) {
+var requestFullscreen = function(id) {// eslint-disable-line no-unused-vars
     if (full) {
         if (document.webkitCancelFullScreen) {
             document.webkitCancelFullScreen();
@@ -36,9 +36,9 @@ function requestFullscreen(id) {
             return;
         }
     }
-}
+};
 
-var showSlide = function(parent) {
+var showSlide = function(parent) {// eslint-disable-line no-unused-vars
 //    console.log(parent);
     var url = _CONTEXT + '/open.file/slide/';
     var target;
@@ -51,7 +51,7 @@ var showSlide = function(parent) {
     } else {
         target = $('.slideshow');
     }
-    target.each(function(i, block) {
+    target.each(function() {
         var fileNo = $(this).attr('slide');
         var slideArea = $(this);
         if (fileNo) {
@@ -61,12 +61,13 @@ var showSlide = function(parent) {
             $.ajax({
                 type : 'GET',
                 url : url + fileNo,
-                success : function(data, dataType) {
+                success : function(data) {
                     //console.log(data);
                     if (data.files && data.files.length > 0) {
+                        var i;
                         var slidehtml = '<div class="slideshow-area" id="' + slideId + '">';
                         slidehtml += '<div class="slideshow-container">';
-                        for (var i = 0; i < data.files.length; i++) {
+                        for (i = 0; i < data.files.length; i++) {
                             slidehtml += '<div class="mySlides slide-fade in">';
                             slidehtml += '<img src="' + _CONTEXT + '/images/loader.gif" lagy="' + _CONTEXT + '/open.file/slide/' + data.fileNo + '/';
                             slidehtml += data.files[i] + '" alt="slide-' + i + '" class="slide-image slide-image-' + fileNo + '" />';
@@ -82,7 +83,7 @@ var showSlide = function(parent) {
                         slidehtml += '<i class="full fa fa-television fa-2x" aria-hidden="true"></i></a></div>';
                         if (data.files.length < 60) {
                             slidehtml += '<div class="dotArea">';
-                            for (var i = 0; i < data.files.length; i++) {
+                            for (i = 0; i < data.files.length; i++) {
                                 slidehtml += '<span class="dot" onclick="currentSlide(' + (i+1) + ', \'' + slideId + '\')"></span> ';
                             }
                             slidehtml += '</div>';
@@ -92,7 +93,7 @@ var showSlide = function(parent) {
                         showSlides(indexMap[slideId], slideId);
                     }
                 },
-                error: function(XMLHttpRequest, status, errorThrown){
+                error: function(XMLHttpRequest, status){
                     console.log(status)
                 }
             });
@@ -101,58 +102,60 @@ var showSlide = function(parent) {
 };
 
 function plusSlides(n, slideId) {
-    showSlides(indexMap[slideId] += n, slideId);
+    return showSlides(indexMap[slideId] += n, slideId);
 }
 
-function currentSlide(n, slideId) {
-    showSlides(indexMap[slideId] = n, slideId);
+function currentSlide(n, slideId) {// eslint-disable-line no-unused-vars
+    return showSlides(indexMap[slideId] = n, slideId);
 }
 
 function showSlides(n, slideId) {
-    var slideIndex = indexMap[slideId];
-    //console.log(slideIndex);
-    var i;
-    var slideArea = document.getElementById(slideId);
-    var slides = slideArea.getElementsByClassName("mySlides");
-    var dots = slideArea.getElementsByClassName("dot");
-    if (n > slides.length) {slideIndex = 1} 
-    if (n < 1) {slideIndex = slides.length}
-    for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none"; 
-    }
-    for (i = 0; i < dots.length; i++) {
-        if (dots[i]) {
-            dots[i].className = dots[i].className.replace(" active", "");
+    return Promise.try(function() {
+        var slideIndex = indexMap[slideId];
+        //console.log(slideIndex);
+        var i;
+        var slideArea = document.getElementById(slideId);
+        var slides = slideArea.getElementsByClassName('mySlides');
+        var dots = slideArea.getElementsByClassName('dot');
+        if (n > slides.length) {slideIndex = 1} 
+        if (n < 1) {slideIndex = slides.length}
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = 'none'; 
         }
-    }
-    slides[slideIndex-1].style.display = "block";
-    var slideimg = $(slides[slideIndex-1].getElementsByTagName('img')[0]);
-    slideimg.attr('src', slideimg.attr('lagy'));
-    
-    if (dots[slideIndex-1]) {
-        dots[slideIndex-1].className += " active";
-    }
-    
-    $('#' + slideId).find('.current').html(slideIndex);
-    indexMap[slideId] = slideIndex;
+        for (i = 0; i < dots.length; i++) {
+            if (dots[i]) {
+                dots[i].className = dots[i].className.replace(' active', '');
+            }
+        }
+        slides[slideIndex-1].style.display = 'block';
+        var slideimg = $(slides[slideIndex-1].getElementsByTagName('img')[0]);
+        slideimg.attr('src', slideimg.attr('lagy'));
+        
+        if (dots[slideIndex-1]) {
+            dots[slideIndex-1].className += ' active';
+        }
+        
+        $('#' + slideId).find('.current').html(slideIndex);
+        indexMap[slideId] = slideIndex;
+    });
 }
 
 $(document).on({
-	'mouseenter': function () {
-		var id = $(this).attr('id');
-		$(window).on('keydown', function (e) {
-			e.preventDefault();
+    'mouseenter': function () {
+        var id = $(this).attr('id');
+        $(window).on('keydown', function (e) {
+            e.preventDefault();
 
-			if (37 == e.keyCode) {
-				plusSlides(-1, id);
-			}
+            if (37 == e.keyCode) {
+                plusSlides(-1, id);
+            }
 
-			if (39 == e.keyCode) {
-				plusSlides(1, id);
-			}
-		});
-	},
-	'mouseleave': function () {
-		$(window).off('keydown');
-	}
+            if (39 == e.keyCode) {
+                plusSlides(1, id);
+            }
+        });
+    },
+    'mouseleave': function () {
+        $(window).off('keydown');
+    }
 }, '.slideshow-area');

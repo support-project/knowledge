@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.support.project.aop.Aspect;
 import org.support.project.common.config.INT_FLAG;
@@ -17,7 +16,6 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.bat.WebhookBat;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.KnowledgeGroupsDao;
@@ -28,8 +26,6 @@ import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
-import org.support.project.knowledge.dao.WebhookConfigsDao;
-import org.support.project.knowledge.dao.WebhooksDao;
 import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgeUsersEntity;
@@ -39,13 +35,11 @@ import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
-import org.support.project.knowledge.entity.WebhookConfigsEntity;
-import org.support.project.knowledge.entity.WebhooksEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
-import org.support.project.knowledge.logic.WebhookLogic;
+import org.support.project.knowledge.logic.notification.webhook.KnowledgeUpdateWebHookNotification;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.notification.KnowledgeUpdate;
 import org.support.project.web.bean.LoginedUser;
@@ -63,32 +57,37 @@ import net.arnx.jsonic.JSON;
 
 /**
  * ナレッジを登録・更新した際の通知処理
+ * 
  * @author koda
  */
 @DI(instance = Instance.Prototype)
 public class KnowledgeUpdateNotification extends AbstractQueueNotification implements DesktopNotification {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(KnowledgeUpdateNotification.class);
+
     /** インスタンス取得 */
     public static KnowledgeUpdateNotification get() {
         return Container.getComp(KnowledgeUpdateNotification.class);
     }
-    
+
     /** Updated KnowledgesEntity */
     private KnowledgesEntity knowledge;
+
     public KnowledgesEntity getKnowledge() {
         return knowledge;
     }
+
     public void setKnowledge(KnowledgesEntity knowledge) {
         this.knowledge = knowledge;
     }
+
     @Override
     public void insertNotifyQueue() {
         NotifyQueuesEntity entity = new NotifyQueuesEntity();
         entity.setHash(RandomUtil.randamGen(30));
         entity.setType(getType());
         entity.setId(knowledge.getKnowledgeId());
-        
+
         NotifyQueuesDao notifyQueuesDao = NotifyQueuesDao.get();
         // 重複チェックし
         if (NumberUtils.is(entity.getType(), QueueNotification.TYPE_KNOWLEDGE_INSERT)) {
@@ -105,8 +104,7 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
             }
         }
     }
-    
-    
+
     @Override
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void notify(NotifyQueuesEntity notifyQueue) throws Exception {
@@ -117,9 +115,12 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
             LOG.warn("Knowledge record not found. id: " + notifyQueue.getId());
             return;
         }
-        
+
         // Webhook通知
-        sendKnowledgeWebhook(knowledge, notifyQueue.getType());
+        KnowledgeUpdateWebHookNotification webhook = KnowledgeUpdateWebHookNotification.get();
+        webhook.init(knowledge, notifyQueue.getType());
+        webhook.saveWebhookData();
+
         // 「非公開」のナレッジは、メール通知対象外
         if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
             notifyPublicKnowledgeUpdate(notifyQueue, knowledge);
@@ -128,24 +129,28 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
             notifyProtectKnowledgeUpdate(notifyQueue, knowledge);
             updateNotifyStatus(knowledge);
         }
-        
+
     }
+
     /**
      * 「公開」のナレッジを登録・更新した際にメール通知を送信する
+     * 
      * @param notifyQueuesEntity
      * @param knowledge
-     * @throws Exception 
+     * @throws Exception
      */
     private void notifyPublicKnowledgeUpdate(NotifyQueuesEntity notifyQueuesEntity, KnowledgesEntity knowledge) throws Exception {
-        //ナレッジ登録ONでかつ、公開区分「公開」を除外しないユーザに通知
+        // ナレッジ登録ONでかつ、公開区分「公開」を除外しないユーザに通知
         List<UsersEntity> users = ExUsersDao.get().selectNotifyPublicUsers();
         notifyKnowledgeUpdateToUsers(notifyQueuesEntity, knowledge, users);
     }
+
     /**
      * 「保護」のナレッジを登録・更新した際にメール通知を送信する
+     * 
      * @param notifyQueuesEntity
      * @param knowledge
-     * @throws Exception 
+     * @throws Exception
      */
     private void notifyProtectKnowledgeUpdate(NotifyQueuesEntity notifyQueuesEntity, KnowledgesEntity knowledge) throws Exception {
         List<UsersEntity> users = new ArrayList<>();
@@ -153,8 +158,8 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
         TargetsDao targetsDao = TargetsDao.get();
         List<UsersEntity> targetUsers = targetsDao.selectUsersOnKnowledgeId(knowledge.getKnowledgeId());
         users.addAll(targetUsers);
-        
-        //グループの一覧
+
+        // グループの一覧
         List<GroupsEntity> targetGroups = targetsDao.selectGroupsOnKnowledgeId(knowledge.getKnowledgeId());
         for (GroupsEntity groupsEntity : targetGroups) {
             List<GroupUser> groupUsers = ExUsersDao.get().selectGroupUser(groupsEntity.getGroupId(), 0, Integer.MAX_VALUE);
@@ -179,13 +184,14 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
         }
         notifyKnowledgeUpdateToUsers(notifyQueuesEntity, knowledge, users);
     }
-    
+
     /**
      * 指定のユーザ一覧に、ナレッジを登録・更新した際にメール通知を送信する
+     * 
      * @param notifyQueuesEntity
      * @param knowledge
      * @param users
-     * @throws Exception 
+     * @throws Exception
      */
     private void notifyKnowledgeUpdateToUsers(NotifyQueuesEntity notifyQueuesEntity, KnowledgesEntity knowledge, List<UsersEntity> users)
             throws Exception {
@@ -209,14 +215,14 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
             content.append("\n");
         }
         content.append(knowledge.getContent());
-        
+
         // 画面での通知の情報を登録
         NotificationsEntity notification = insertNotificationOnKnowledgeUpdate(knowledge);
-        
+
         for (UsersEntity usersEntity : users) {
             // 通知とユーザの紐付け
             NotificationLogic.get().insertUserNotification(notification, usersEntity);
-            
+
             if (!StringUtils.isEmailAddress(usersEntity.getMailAddress())) {
                 // 送信先のメールアドレスが不正なのでこのユーザにはメール送信しない
                 LOG.warn("mail targget [" + usersEntity.getMailAddress() + "] is wrong.");
@@ -239,14 +245,15 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
 
     /**
      * メール送信のキュー情報を登録する
+     * 
      * @param knowledge
      * @param usersEntity
-     * @param content 
+     * @param content
      * @param config
-     * @throws Exception 
+     * @throws Exception
      */
-    private void insertNotifyKnowledgeUpdateMailQue(KnowledgesEntity knowledge, UsersEntity usersEntity,
-            MailLocaleTemplatesEntity template, String content) throws Exception {
+    private void insertNotifyKnowledgeUpdateMailQue(KnowledgesEntity knowledge, UsersEntity usersEntity, MailLocaleTemplatesEntity template,
+            String content) throws Exception {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(AppConfig.get().getSystemName());
         if (mailConfigsEntity == null) {
@@ -274,46 +281,21 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
         contents = contents.replace("{KnowledgeId}", knowledge.getKnowledgeId().toString());
         contents = contents.replace("{KnowledgeTitle}", knowledge.getTitle());
         contents = contents.replace("{User}", knowledge.getUpdateUserName());
-        
+
         // コンテンツがHTMLであった場合、テキストを取得する
         contents = contents.replace("{Contents}", MailLogic.get().getMailContent(content));
         contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
         mailsEntity.setContent(contents);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("News email has been registered. [type] knowledge update. [knowledge]" + knowledge.getKnowledgeId().toString()
-                    + " [target] " + usersEntity.getMailAddress());
+            LOG.debug("News email has been registered. [type] knowledge update. [knowledge]" + knowledge.getKnowledgeId().toString() + " [target] "
+                    + usersEntity.getMailAddress());
         }
         MailsDao.get().insert(mailsEntity);
     }
-    
-    /**
-     * 記事の追加・更新のWebhookの登録を行う
-     * @param comment
-     * @param knowledge
-     */
-    private void sendKnowledgeWebhook(KnowledgesEntity knowledge, int type) {
-        WebhookConfigsDao webhookConfigsDao = WebhookConfigsDao.get();
-        List<WebhookConfigsEntity> webhookConfigsEntities = webhookConfigsDao.selectOnHook(WebhookConfigsEntity.HOOK_KNOWLEDGES);
 
-        if (0 == webhookConfigsEntities.size()) {
-            return;
-        }
-
-        WebhookLogic webhookLogic = WebhookLogic.get();
-        Map<String, Object> knowledgeData = webhookLogic.getKnowledgeData(knowledge, type);
-
-        WebhooksEntity webhooksEntity = new WebhooksEntity();
-        String webhookId = idGen("Notify");
-        webhooksEntity.setWebhookId(webhookId);
-        webhooksEntity.setStatus(WebhookBat.WEBHOOK_STATUS_UNSENT);
-        webhooksEntity.setHook(WebhookConfigsEntity.HOOK_KNOWLEDGES);
-        webhooksEntity.setContent(JSON.encode(knowledgeData));
-
-        WebhooksDao.get().insert(webhooksEntity);
-    }    
-    
     /**
      * 既に指定のユーザが追加されているのか確認
+     * 
      * @param users
      * @param groupUser
      * @return
@@ -326,9 +308,10 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
         }
         return false;
     }
-    
+
     /**
      * 通知を送ったもののステータスを更新
+     * 
      * @param knowledge
      */
     private void updateNotifyStatus(KnowledgesEntity knowledge) {
@@ -337,10 +320,10 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
             KnowledgesDao.get().physicalUpdate(knowledge); // 更新日時などは更新しない
         }
     }
-    
-    
+
     /**
      * Knowledgeの登録/更新時の通知情報を作成
+     * 
      * @param knowledge
      * @return
      */
@@ -360,23 +343,24 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
         notification = NotificationsDao.get().insert(notification);
         return notification;
     }
-    
+
     /**
      * ユーザへの通知を意味のある形へ変換
+     * 
      * @param notificationsEntity
-     * @param loginedUser 
+     * @param loginedUser
      */
     public void convNotification(NotificationsEntity notificationsEntity, LoginedUser loginedUser, TARGET target) {
         String category = notificationsEntity.getTitle();
         if (MailLogic.NOTIFY_INSERT_KNOWLEDGE.equals(category) || MailLogic.NOTIFY_UPDATE_KNOWLEDGE.equals(category)) {
             KnowledgeUpdate update = JSON.decode(notificationsEntity.getContent(), KnowledgeUpdate.class);
             MailLocaleTemplatesEntity template = MailLogic.get().load(loginedUser.getLocale(), MailLogic.NOTIFY_INSERT_KNOWLEDGE);
-            
+
             String title = template.getTitle();
             title = title.replace("{KnowledgeId}", String.valueOf(update.getKnowledgeId()));
             title = title.replace("{KnowledgeTitle}", StringUtils.abbreviate(update.getKnowledgeTitle(), 80));
             notificationsEntity.setTitle(title);
-            
+
             if (target == TARGET.detail) {
                 String contents = template.getContent();
                 contents = contents.replace("{KnowledgeId}", String.valueOf(update.getKnowledgeId()));
@@ -393,6 +377,7 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
             }
         }
     }
+
     @Override
     public MessageResult getMessage(LoginedUser loginuser, Locale locale) {
         if (getType() == TYPE_KNOWLEDGE_UPDATE) {
@@ -413,15 +398,13 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
         // TODO ストック機能ができたら、ストックしたナレッジの更新かどうかを判定する
         if (isToKnowledgeSave(loginuser, knowledge)) {
             MessageResult messageResult = new MessageResult();
-            messageResult.setMessage(
-                    Resources.getInstance(locale).getResource(title, String.valueOf(knowledge.getKnowledgeId())));
+            messageResult.setMessage(Resources.getInstance(locale).getResource(title, String.valueOf(knowledge.getKnowledgeId())));
             messageResult.setResult(NotifyLogic.get().makeURL(knowledge.getKnowledgeId())); // Knowledgeへのリンク
             return messageResult;
         }
         return null;
     }
 
-    
     /**
      * 自分宛てのナレッジが登録／更新されたか判定する
      * 
@@ -436,10 +419,10 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
             // デスクトップ通知対象外
             return false;
         }
-//  自分が登録した場合は、通知する必要無し？いったんは通知する
-//        if (knowledge.getInsertUser().intValue() == loginuser.getUserId().intValue()) {
-//             return false;
-//        }
+        // 自分が登録した場合は、通知する必要無し？いったんは通知する
+        // if (knowledge.getInsertUser().intValue() == loginuser.getUserId().intValue()) {
+        // return false;
+        // }
         if (!NotifyLogic.get().flagCheck(entity.getToItemSave())) {
             // 自分宛てのナレッジが登録／更新されたら通知するがOFF
             return false;
@@ -485,5 +468,5 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
         }
         return false;
     }
-    
+
 }
