@@ -350,6 +350,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
         String groupNames = getParam("groupNames");
         String creators = getParam("creators");
         String[] templates = getParam("template", String[].class);
+        if (templates == null) {
+            templates = new String[0];
+        }
 
         boolean hiddenFilter = false;
         if ("quickFilter".equals(getParam("from"))) {
