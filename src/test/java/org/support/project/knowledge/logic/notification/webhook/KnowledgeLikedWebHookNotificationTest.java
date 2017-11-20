@@ -82,7 +82,7 @@ public class KnowledgeLikedWebHookNotificationTest extends TestCommon {
             LOG.info("Webhook送信");
             WebhookBat.main(null);
         }
-    }    
+    }
     
     
 }

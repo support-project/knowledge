@@ -24,8 +24,8 @@
 <br/>
 
 <%
-if (request.getRemoteAddr().startsWith("192.168.") 
-        || request.getRemoteAddr().equals("127.0.0.1") 
+if (
+    request.getRemoteAddr().equals("127.0.0.1") 
         || request.getRemoteAddr().equals("0:0:0:0:0:0:0:1")) {
     if (exception == null && request.getAttribute("SERVER_EXCEPTION") != null) {
         exception = (Throwable) request.getAttribute("SERVER_EXCEPTION");

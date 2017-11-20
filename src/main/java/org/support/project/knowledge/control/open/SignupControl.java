@@ -1,6 +1,5 @@
 package org.support.project.knowledge.control.open;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +23,6 @@ import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
-import org.support.project.web.config.HttpMethod;
 import org.support.project.web.config.WebConfig;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
@@ -135,7 +133,7 @@ public class SignupControl extends Control {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     private ProvisionalRegistrationsEntity addProvisionalRegistration() {
         ProvisionalRegistrationsEntity entity = super.getParams(ProvisionalRegistrationsEntity.class);
-        String id = UUID.randomUUID().toString() + "-" + DateUtils.now() + "-" + UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString() + "-" + DateUtils.getTransferDateFormat().format(DateUtils.now());
         entity.setId(id);
         ProvisionalRegistrationsDao dao = ProvisionalRegistrationsDao.get();
         // 既に仮登録が行われたユーザ(メールアドレス)でも、再度仮登録できる
@@ -230,7 +228,7 @@ public class SignupControl extends Control {
         logic.setSession(entity.getUserKey(), getRequest(), getResponse());
 
         addMsgInfo("knowledge.signup.done");
-        return devolution(HttpMethod.get, "Index/index");
+        return forward("signup_done.jsp");
     }
 
 }

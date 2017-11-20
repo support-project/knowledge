@@ -1,0 +1,34 @@
+{
+    "type": "liked_comment",
+    "no": "{like_comment.no}",
+    "insert_user": "{like_comment.userName}",
+    "insert_date": "{like_comment.insertDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}",
+    "text": "<{knowledge.link}|{knowledge.title}>",
+    "comment": {
+        "update_user": "{comment.updateUserName}",
+        "comment_no": "{comment.commentNo}",
+        "insert_date": "{comment.insertDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}",
+        "comment": "{comment.comment}",
+        "text": "<{knowledge.link}|{knowledge.title}>",
+        "insert_user": "{comment.insertUserName}",
+        "update_date": "{comment.updateDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}"
+    },
+    "knowledge": {
+        "comment_count": "{knowledge.commentCount}",
+        "like_count": "{knowledge.likeCount}",
+        "became_public": "{knowledge.became_public}",
+        "type_id": "{knowledge.typeId}",
+        "insert_date": "{knowledge.insertDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}",
+        "link": "{knowledge.link}",
+        "groups": "{knowledge.groups}",
+        "insert_user": "{knowledge.insertUserName}",
+        "title": "{knowledge.title}",
+        "content": "{knowledge.content}",
+        "update_date": "{knowledge.updateDatetime,format=yyyy/MM/dd HH:mm:ss.SSSZ}",
+        "tags": "{knowledge.tags}",
+        "update_user": "{knowledge.updateUserName}",
+        "text": "<{knowledge.link}|{knowledge.title}>",
+        "public_flag": "{knowledge.publicFlag}",
+        "knowledge_id": "{knowledge.knowledgeId}"
+    }
+}
