@@ -236,7 +236,7 @@ public class UsersControl extends Control {
             UserConfigsDao.get().save(config);
         } else {
             UserConfigsEntity config = UserConfigsDao.get().selectOnKey(UserConfig.STEALTH_ACCESS, AppConfig.get().getSystemName(), user.getUserId());
-            if (stealth != null) {
+            if (stealth != null && config != null) {
                 UserConfigsDao.get().physicalDelete(config);
             }
         }
@@ -315,7 +315,7 @@ public class UsersControl extends Control {
             UserConfigsDao.get().save(config);
         } else {
             UserConfigsEntity config = UserConfigsDao.get().selectOnKey(UserConfig.STEALTH_ACCESS, AppConfig.get().getSystemName(), user.getUserId());
-            if (stealth != null) {
+            if (stealth != null && config != null) {
                 UserConfigsDao.get().physicalDelete(config);
             }
         }
