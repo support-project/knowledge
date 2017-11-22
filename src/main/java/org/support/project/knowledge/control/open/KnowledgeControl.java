@@ -379,7 +379,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         } else {
             if (getLoginedUser() != null && getLoginUserId() != Integer.MIN_VALUE) {
                 UserConfigsEntity config = UserConfigsDao.get().selectOnKey("LIST_FILTERS", AppConfig.get().getSystemName(), getLoginUserId());
-                if (templates == null) {
+                if (templates == null || templates.length == 0) {
                     // 検索画面からきていない
                     if (config != null) {
                         templates = config.getConfigValue().split(",");

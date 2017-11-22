@@ -1,5 +1,11 @@
 package org.support.project.knowledge.searcher;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.support.project.common.config.ConfigLoader;
@@ -9,17 +15,11 @@ import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.RandomUtil;
-import org.support.project.di.Container;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.indexer.Indexer;
 import org.support.project.knowledge.indexer.IndexingValue;
+import org.support.project.knowledge.logic.IndexLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
-
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 public class SearchConditionTest {
     /** ログ */
@@ -74,7 +74,7 @@ public class SearchConditionTest {
                 indexingValue.addGroup(group);
             }
         }
-        Indexer indexer = Container.getComp(Indexer.class);
+        Indexer indexer = IndexLogic.get().getIndexer();
         indexer.writeIndex(indexingValue);
         return id;
     }
@@ -88,7 +88,7 @@ public class SearchConditionTest {
         String id3 = addItem("title:testTemplateFilter", "contents:testTemplateFilter", 0, TemplateLogic.TYPE_ID_BOOKMARK,
                 100, DateUtils.now(), null, null, null);
 
-        Searcher searcher = Container.getComp(Searcher.class);
+        Searcher searcher = IndexLogic.get().getSearcher();
 
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.addTemplate(TemplateLogic.TYPE_ID_KNOWLEDGE);
@@ -117,7 +117,7 @@ public class SearchConditionTest {
         String id3 = addItem("title:testTemplateFilter", "contents:testTemplateFilter", 0, TemplateLogic.TYPE_ID_BOOKMARK,
                 102, DateUtils.now(), null, null, null);
 
-        Searcher searcher = Container.getComp(Searcher.class);
+        Searcher searcher = IndexLogic.get().getSearcher();
 
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.addCreator(100);

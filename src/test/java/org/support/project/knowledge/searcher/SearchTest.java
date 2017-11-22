@@ -17,10 +17,10 @@ import org.support.project.common.util.DateUtils;
 import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.RandomUtil;
-import org.support.project.di.Container;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.indexer.Indexer;
 import org.support.project.knowledge.indexer.IndexingValue;
+import org.support.project.knowledge.logic.IndexLogic;
 
 public class SearchTest {
     /** ログ */
@@ -59,12 +59,12 @@ public class SearchTest {
         indexingValue.setCreator(100);
         indexingValue.setTime(DateUtils.now().getTime());
 
-        Indexer indexer = Container.getComp(Indexer.class);
+        Indexer indexer = IndexLogic.get().getIndexer();
         indexer.writeIndex(indexingValue);
 
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setKeyword("Lucene");
-        Searcher searcher = Container.getComp(Searcher.class);
+        Searcher searcher = IndexLogic.get().getSearcher();
         List<SearchResultValue> results = searcher.search(searchingValue, 1);
 
         for (SearchResultValue searchResultValue : results) {
@@ -110,7 +110,7 @@ public class SearchTest {
         indexingValue.setCreator(100);
         indexingValue.setTime(DateUtils.now().getTime());
 
-        Indexer indexer = Container.getComp(Indexer.class);
+        Indexer indexer = IndexLogic.get().getIndexer();
         indexer.writeIndex(indexingValue);
 
         LOG.info("検索（ユーザで絞り込み）");
@@ -118,7 +118,7 @@ public class SearchTest {
         searchingValue.setKeyword("Lucene");
         searchingValue.addUser(0);
 
-        Searcher searcher = Container.getComp(Searcher.class);
+        Searcher searcher = IndexLogic.get().getSearcher();
         List<SearchResultValue> results = searcher.search(searchingValue, 1);
 
         for (SearchResultValue searchResultValue : results) {
@@ -179,10 +179,10 @@ public class SearchTest {
         indexingValue.setCreator(100);
         indexingValue.setTime(DateUtils.now().getTime());
 
-        Indexer indexer = Container.getComp(Indexer.class);
+        Indexer indexer = IndexLogic.get().getIndexer();
         indexer.writeIndex(indexingValue);
 
-        Searcher searcher = Container.getComp(Searcher.class);
+        Searcher searcher = IndexLogic.get().getSearcher();
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.addUser(1);
         List<SearchResultValue> results = searcher.search(searchingValue, 1);
@@ -215,7 +215,7 @@ public class SearchTest {
     
     @Test
     public void testSearch4() throws Exception {
-        Indexer indexer = Container.getComp(Indexer.class);
+        Indexer indexer = IndexLogic.get().getIndexer();
         String title = "テスト";
         String contents = "TEST";
 
@@ -243,7 +243,7 @@ public class SearchTest {
         indexingValue2.setTemplate(2);
         indexer.writeIndex(indexingValue);
         
-        Searcher searcher = Container.getComp(Searcher.class);
+        Searcher searcher = IndexLogic.get().getSearcher();
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.addUser(1);
         List<SearchResultValue> results = searcher.search(searchingValue, 1);

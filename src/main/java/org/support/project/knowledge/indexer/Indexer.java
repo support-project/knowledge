@@ -1,9 +1,10 @@
 package org.support.project.knowledge.indexer;
 
 import org.support.project.di.DI;
+import org.support.project.knowledge.indexer.impl.ElasticsearchIndexer;
 import org.support.project.knowledge.indexer.impl.LuceneIndexer;
 
-@DI(impl = LuceneIndexer.class)
+@DI(keys= {"LuceneIndexer","ElasticsearchIndexer"}, impls= {LuceneIndexer.class, ElasticsearchIndexer.class})
 public interface Indexer {
 
     /**

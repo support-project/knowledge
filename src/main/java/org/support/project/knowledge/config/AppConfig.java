@@ -24,7 +24,6 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
     
     private boolean maintenanceMode = false;
     
-
     /**
      * @return the indexPath
      */
