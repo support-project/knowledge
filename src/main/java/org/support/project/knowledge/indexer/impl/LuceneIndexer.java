@@ -189,4 +189,25 @@ public class LuceneIndexer implements Indexer {
         }
     }
 
+    @Override
+    public void deleteAll() throws Exception {
+        // 全文検索エンジンのインデックスの消去
+        Analyzer analyzer = new JapaneseAnalyzer();
+        AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
+        File indexDir = new File(appConfig.getIndexPath());
+        Directory dir = FSDirectory.open(indexDir);
+        IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_2, analyzer);
+        iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
+        IndexWriter writer = null;
+        try {
+            writer = new IndexWriter(dir, iwc);
+            writer.deleteAll();
+            writer.commit();
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
+        }
+    }
+
 }

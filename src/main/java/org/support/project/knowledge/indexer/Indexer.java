@@ -30,4 +30,10 @@ public interface Indexer {
      * @throws Exception
      */
     void deleteOnCreator(Integer creator) throws Exception;
+    
+    /**
+     * インデックスの初期化（全てのデータを削除）
+     * @throws Exception
+     */
+    void deleteAll() throws Exception;
 }

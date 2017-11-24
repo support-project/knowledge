@@ -23,4 +23,10 @@ public class ElasticsearchIndexer implements Indexer {
         
     }
 
+    @Override
+    public void deleteAll() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

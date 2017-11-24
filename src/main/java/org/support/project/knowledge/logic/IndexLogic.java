@@ -100,5 +100,14 @@ public class IndexLogic {
         Indexer indexer = getIndexer();
         indexer.deleteOnCreator(loginUserId);
     }
-
+    /**
+     * インデックスの初期化（全てのデータを削除）
+     * @throws Exception
+     */
+    public void deleteAll() throws Exception {
+        LOG.warn("delete all item on search engine.");
+        Indexer indexer = getIndexer();
+        indexer.deleteAll();
+    }
+    
 }
