@@ -3,10 +3,9 @@ package org.support.project.knowledge.searcher;
 import java.util.List;
 
 import org.support.project.di.DI;
-import org.support.project.knowledge.searcher.impl.ElasticsearchSearcher;
 import org.support.project.knowledge.searcher.impl.LuceneSearcher;
 
-@DI(keys= {"LuceneSearcher","ElasticsearchSearcher"}, impls= {LuceneSearcher.class, ElasticsearchSearcher.class})
+@DI(impl = LuceneSearcher.class)
 public interface Searcher {
 
     /**

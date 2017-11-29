@@ -1,10 +1,18 @@
 package org.support.project.knowledge;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.ja.JapaneseAnalyzer;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -12,6 +20,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
+import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.exception.SerializeException;
 import org.support.project.common.log.Log;
@@ -26,7 +35,6 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.knowledge.entity.KnowledgesEntity;
-import org.support.project.knowledge.logic.IndexLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.UserLogicEx;
@@ -54,8 +62,6 @@ import org.support.project.web.entity.UsersEntity;
  */
 @RunWith(OrderedRunner.class)
 public abstract class TestCommon {
-    private static final int _WAITTIME = 50;
-
     /** ログ */
     private static final Log LOG = LogFactory.getLog(TestCommon.class);
 
@@ -85,8 +91,6 @@ public abstract class TestCommon {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LOG.warn("[start] initialize all data for test.");
-        Date start = new Date();
         AppConfig.initEnvKey(KNOWLEDGE_TEST_HOME);
         if (!H2DBServerLogic.get().isActive()) {
             H2DBServerLogic.get().start();
@@ -94,8 +98,6 @@ public abstract class TestCommon {
         testConnection();
         initData();
         DBUserPool.get().setUser(loginedUser.getUserId());
-        long term = new Date().getTime() - start.getTime();
-        LOG.warn("[end] initialize all data for test. " + term + " ms");
     }
     /**
      * @AfterClass
@@ -154,7 +156,7 @@ public abstract class TestCommon {
         groupuser2.setLocale(Locale.ENGLISH);
 
         synchronized (KNOWLEDGE_TEST_HOME) {
-            Thread.sleep(_WAITTIME);
+            Thread.sleep(50);
         }
         
         // DBを完全初期化
@@ -164,7 +166,7 @@ public abstract class TestCommon {
         dao2.dropAllTable();
         
         synchronized (KNOWLEDGE_TEST_HOME) {
-            Thread.sleep(_WAITTIME);
+            Thread.sleep(50);
         }
         
         InitDB.main(new String[0]);
@@ -174,7 +176,22 @@ public abstract class TestCommon {
         }
         
         // 全文検索エンジンのインデックスの消去
-        IndexLogic.get().deleteAll();
+        Analyzer analyzer = new JapaneseAnalyzer();
+        AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);
+        File indexDir = new File(appConfig.getIndexPath());
+        Directory dir = FSDirectory.open(indexDir);
+        IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_2, analyzer);
+        iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
+        IndexWriter writer = null;
+        try {
+            writer = new IndexWriter(dir, iwc);
+            writer.deleteAll();
+            writer.commit();
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
+        }
         
         Integer[] rolesAdmin = {1}; // 2はユーザ、1はAdmin
         Integer[] roles = {2}; // 2はユーザ、1はAdmin
@@ -214,7 +231,7 @@ public abstract class TestCommon {
     private static List<RolesEntity> addUser(LoginedUser user, String userName, Integer[] roleIds) {
         synchronized (user) {
             try {
-                Thread.sleep(_WAITTIME);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
             }
         }
@@ -229,7 +246,7 @@ public abstract class TestCommon {
 
         synchronized (user) {
             try {
-                Thread.sleep(_WAITTIME);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
             }
         }
