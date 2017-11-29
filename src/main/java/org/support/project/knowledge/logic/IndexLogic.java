@@ -29,18 +29,6 @@ public class IndexLogic {
     public static IndexLogic get() {
         return Container.getComp(IndexLogic.class);
     }
-    
-    private String indexerType = "LuceneIndexer";
-    private String searcherType = "LuceneSearcher";
-    public Indexer getIndexer() {
-        Indexer indexer = Container.getComp(indexerType, Indexer.class);
-        return indexer;
-    }
-    public Searcher getSearcher() {
-        Searcher searcher = Container.getComp(searcherType, Searcher.class);
-        return searcher;
-    }
-    
 
     /**
      * 全文検索エンジンへ登録
@@ -49,7 +37,7 @@ public class IndexLogic {
      * @throws Exception
      */
     public void save(IndexingValue indexingValue) throws Exception {
-        Indexer indexer = getIndexer();
+        Indexer indexer = Container.getComp(Indexer.class);
         indexer.writeIndex(indexingValue);
     }
 
@@ -61,7 +49,7 @@ public class IndexLogic {
      * @throws Exception
      */
     public List<SearchResultValue> search(SearchingValue search, int keywordSortType) throws Exception {
-        Searcher searcher = getSearcher();
+        Searcher searcher = Container.getComp(Searcher.class);
         List<SearchResultValue> list = searcher.search(search, keywordSortType);
         if (LOG.isDebugEnabled()) {
             LOG.debug(JSON.encode(list, true));
@@ -86,7 +74,7 @@ public class IndexLogic {
      * @throws Exception
      */
     public void delete(String id) throws Exception {
-        Indexer indexer = getIndexer();
+        Indexer indexer = Container.getComp(Indexer.class);
         indexer.deleteItem(id);
     }
 
@@ -97,17 +85,8 @@ public class IndexLogic {
      * @throws Exception
      */
     public void deleteOnUser(Integer loginUserId) throws Exception {
-        Indexer indexer = getIndexer();
+        Indexer indexer = Container.getComp(Indexer.class);
         indexer.deleteOnCreator(loginUserId);
     }
-    /**
-     * インデックスの初期化（全てのデータを削除）
-     * @throws Exception
-     */
-    public void deleteAll() throws Exception {
-        LOG.warn("delete all item on search engine.");
-        Indexer indexer = getIndexer();
-        indexer.deleteAll();
-    }
-    
+
 }

@@ -1,10 +1,9 @@
 package org.support.project.knowledge.indexer;
 
 import org.support.project.di.DI;
-import org.support.project.knowledge.indexer.impl.ElasticsearchIndexer;
 import org.support.project.knowledge.indexer.impl.LuceneIndexer;
 
-@DI(keys= {"LuceneIndexer","ElasticsearchIndexer"}, impls= {LuceneIndexer.class, ElasticsearchIndexer.class})
+@DI(impl = LuceneIndexer.class)
 public interface Indexer {
 
     /**
@@ -30,10 +29,4 @@ public interface Indexer {
      * @throws Exception
      */
     void deleteOnCreator(Integer creator) throws Exception;
-    
-    /**
-     * インデックスの初期化（全てのデータを削除）
-     * @throws Exception
-     */
-    void deleteAll() throws Exception;
 }
