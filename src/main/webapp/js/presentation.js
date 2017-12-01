@@ -4,36 +4,6 @@ var setHeight = function() {
     var height = width * 9 / 16;
     //logging(width + ':' + height);
     $('.markdownSlide').height(height);
-    if ($('#presentation').innerWidth() > 1024) {
-        // 全画面表示と判定
-        $('.markdownSlide').css('padding', '6vh');
-        $('.markdownSlide').css('font-size', '5vh');
-        $('.markdownSlide p').css('font-size', '5vh');
-        $('.markdownSlide h1').css('font-size', '10vh');
-        $('.markdownSlide h2').css('font-size', '8vh');
-        $('.markdownSlide h3').css('font-size', '6vh');
-        $('.markdownSlide h4').css('font-size', '5vh');
-        $('.markdownSlide p').css('line-height', '6vh');
-        $('.markdownSlide h1').css('line-height', '12vh');
-        $('.markdownSlide h2').css('line-height', '10vh');
-        $('.markdownSlide h3').css('line-height', '6vh');
-        $('.markdownSlide h4').css('line-height', '6vh');
-        $('#createPdfButton').addClass('hide');
-    } else {
-        $('.markdownSlide').css('padding', '3vh');
-        $('.markdownSlide').css('font-size', '3vh');
-        $('.markdownSlide p').css('font-size', '3vh');
-        $('.markdownSlide h1').css('font-size', '5vh');
-        $('.markdownSlide h2').css('font-size', '4vh');
-        $('.markdownSlide h3').css('font-size', '3vh');
-        $('.markdownSlide h4').css('font-size', '3vh');
-        $('.markdownSlide p').css('line-height', '4vh');
-        $('.markdownSlide h1').css('line-height', '6vh');
-        $('.markdownSlide h2').css('line-height', '5vh');
-        $('.markdownSlide h3').css('line-height', '4vh');
-        $('.markdownSlide h4').css('line-height', '4vh');
-        $('#createPdfButton').removeClass('hide');
-    }
 };
 
 var slideLength;
@@ -47,17 +17,26 @@ var createPresentation = function(contentJqObj) {// eslint-disable-line no-unuse
         var presentationArea = $('#presentationArea');
         
         var sections = [];
-        var slideHtmlBase = '<div class="mySlides markdownSlide slide-fade in"></div>';
+        var slideHtmlBase = '<div class="mySlides markdownSlide"></div>';
+        // animated flipInY
         var section = $(slideHtmlBase);
+        var content = $('<div id="centered"><div>');
+        content.addClass('centered');
+        section.append(content);
+        
         var add = false;
         //console.log(contentJqObj);
         contentJqObj.children().each(function(i, elem) {
             if (elem.tagName.toLowerCase() == 'hr') {
                 sections.push(section);
+                
                 section = $(slideHtmlBase);
+                content = $('<div><div>');
+                section.append(content);
+                
                 add = false;
             } else {
-                section.append($(elem).clone());
+                content.append($(elem).clone());
                 add = true;
             }
         });
@@ -70,7 +49,7 @@ var createPresentation = function(contentJqObj) {// eslint-disable-line no-unuse
         
         indexMap[slideId] = 1;
         var slidehtml = '<div class="slideshow-area" id="' + slideId + '">';
-        slidehtml += '<div class="slideshow-container" id="sheets"></div>';
+        slidehtml += '<div class="slideshow-container" id="sheets"></div>'; // この中にスライドが入る
         slidehtml += '<br/>';
         slidehtml += '<div class="slideshow-control">';
         slidehtml += '<a class="prev" onclick="plusSlides(-1, \'' + slideId + '\')">&#10094; prev</a>';

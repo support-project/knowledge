@@ -38,30 +38,27 @@
 .markdownSlide {
     background-color: white;
     overflow: hidden;
-    font-size: 3vh;
     padding: 3vh;
+    position: relative;
 }
 
 .markdownSlide ul, .markdownSlide ol {
     padding-left: 3vh;
-    padding-top: 2vh;
 }
-
 
 .markdownSlide p, 
 .markdownSlide h1, 
 .markdownSlide h2, 
 .markdownSlide h3, 
 .markdownSlide h4 {
-    margin: 0px;
-}
-.markdownSlide p {
-    font-size: 3vh;
-    line-height: 4vh;
+    margin-top: 0px;
+    margin-bottom: 1vh;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 .markdownSlide h1 {
-    font-size: 5vh;
-    line-height: 6vh;
+    font-size: 8vh;
+    line-height: 10vh;
     border-bottom: 0.2vh solid gray;
 }
 .markdownSlide h2 {
@@ -70,11 +67,41 @@
     border-bottom: 0.2vh dotted gray;
 }
 .markdownSlide h3 {
-    font-size: 3vh;
+    font-size: 2.5vh;
     line-height: 4vh;
 }
 .markdownSlide h4 {
-    font-size: 3vh;
+    font-size: 2.5vh;
     line-height: 4vh;
+}
+.markdownSlide p, .markdownSlide li, .markdownSlide pre, .markdownSlide code, .markdownSlide span {
+    font-size: 2.5vh;
+}
+.markdownSlide p, .markdownSlide li {
+    line-height: 4vh;
+}
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    -webkit- transform: translateY(-50%) translateX(-50%);
+    width: 90%;
+}
+.centered h1,
+.centered h2 {
+    border: none;
+}
+
+.slideshow-area:-webkit-full-screen .slideshow-container,
+.slideshow-area:-webkit-full-screen .mySlides,
+.slideshow-area:-moz-full-screen .slideshow-container,
+.slideshow-area:-moz-full-screen .mySlides,
+.slideshow-area:-ms-fullscreen .slideshow-container,
+.slideshow-area:-ms-fullscreen .mySlides,
+.slideshow-area:fullscreen .slideshow-container,
+.slideshow-area:fullscreen .mySlides {
+    width    : 90%;
+    height   : 100%;
 }
 
