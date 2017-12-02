@@ -6,34 +6,88 @@ var setHeight = function() {
     $('.markdownSlide').height(height);
 };
 
+var getOptions = function(contentJqObj) {
+    var options = {};
+    var general = true;
+    var option = {};
+    options.general = option;
+    var pagecount = 0;
+    contentJqObj.children().filter(function(){
+        if (this.tagName.toLowerCase() == 'hr') {
+            return true;
+        }
+        if (this.tagName.toLowerCase() == 'p') {
+            if ($(this).find('var').length > 0) {
+                return true;
+            }
+        }
+        return false;
+    }).each(function(i, elem) {
+        if (elem.tagName.toLowerCase() == 'hr') {
+            if (!general) {
+                general = false;
+            }
+            pagecount++;
+            option = {};
+            options[pagecount] = option;
+        } else if (elem.tagName.toLowerCase() == 'p') {
+            $(elem).find('var').each(function(i, v) {
+                if ($(v).attr('transition')) {
+                    option.transition = $(v).attr('transition');
+                }
+                if ($(v).attr('centered')) {
+                    option.centered = $(v).attr('centered');
+                }
+            });
+        }
+    });
+    return options;
+}
+
+var createSection = function(options, pagecount) {
+    console.log(options);
+    var slideHtmlBase = '<div class="mySlides markdownSlide';
+    if (options[pagecount] && options[pagecount].transition) {
+        slideHtmlBase += ' animated ' + options[pagecount].transition;
+    } else if (options.general.transition) {
+        slideHtmlBase += ' animated ' + options.general.transition;
+    }
+    slideHtmlBase += '"></div>';
+    var section = $(slideHtmlBase);
+    return section;
+}
+var appendContent = function(section, options, pagecount) {
+    var content = $('<div><div>');
+    section.append(content);
+    if (pagecount === 0 || options[pagecount] && options[pagecount].centered) {
+        content.addClass('centered');
+    }
+    return content;
+}
+
 var slideLength;
 var createPresentation = function(contentJqObj) {// eslint-disable-line no-unused-vars
     return Promise.try(function() {
         $(window).resize(function(){
             setHeight();
         });
-        
         logging('createPresentation');
         var presentationArea = $('#presentationArea');
-        
-        var sections = [];
-        var slideHtmlBase = '<div class="mySlides markdownSlide"></div>';
-        // animated flipInY
-        var section = $(slideHtmlBase);
-        var content = $('<div id="centered"><div>');
-        content.addClass('centered');
-        section.append(content);
+        var options = getOptions(contentJqObj);
         
         var add = false;
+        var pagecount = 0;
+        var sections = [];
+        var section = createSection(options);
+        var content = appendContent(section, options, pagecount);
+        
         //console.log(contentJqObj);
         contentJqObj.children().each(function(i, elem) {
             if (elem.tagName.toLowerCase() == 'hr') {
                 sections.push(section);
-                
-                section = $(slideHtmlBase);
-                content = $('<div><div>');
-                section.append(content);
-                
+                pagecount++;
+                section = createSection(options, pagecount);
+                content = appendContent(section, options, pagecount);
                 add = false;
             } else {
                 content.append($(elem).clone());

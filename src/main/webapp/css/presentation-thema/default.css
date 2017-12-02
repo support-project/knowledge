@@ -93,15 +93,4 @@
     border: none;
 }
 
-.slideshow-area:-webkit-full-screen .slideshow-container,
-.slideshow-area:-webkit-full-screen .mySlides,
-.slideshow-area:-moz-full-screen .slideshow-container,
-.slideshow-area:-moz-full-screen .mySlides,
-.slideshow-area:-ms-fullscreen .slideshow-container,
-.slideshow-area:-ms-fullscreen .mySlides,
-.slideshow-area:fullscreen .slideshow-container,
-.slideshow-area:fullscreen .mySlides {
-    width    : 90%;
-    height   : 100%;
-}
 
