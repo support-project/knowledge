@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/At.js/dist/css/jquery.atwho.min.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/clockpicker/dist/bootstrap-clockpicker.min.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/bower/animate.css/animate.min.css" />
 
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-edit.css" />
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/knowledge-view.css" />

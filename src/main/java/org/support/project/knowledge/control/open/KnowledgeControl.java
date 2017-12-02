@@ -350,12 +350,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
         String groupNames = getParam("groupNames");
         String creators = getParam("creators");
         String[] templates = getParam("template", String[].class);
-        if (templates == null) {
-            templates = new String[0];
-        }
 
         boolean hiddenFilter = false;
         if ("quickFilter".equals(getParam("from"))) {
+            if (templates == null) {
+                templates = new String[0];
+            }
             hiddenFilter = true;
             if (getLoginedUser() != null && getLoginUserId() != Integer.MIN_VALUE) {
                 UserConfigsEntity config = UserConfigsDao.get().selectOnKey("LIST_FILTERS", AppConfig.get().getSystemName(), getLoginUserId());
@@ -376,6 +376,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                     UserConfigsDao.get().save(config);
                 }
             }
+            setAttribute("params", ""); // Filterの設定変更の場合は、検索パラメータをクリア
         } else {
             if (getLoginedUser() != null && getLoginUserId() != Integer.MIN_VALUE) {
                 UserConfigsEntity config = UserConfigsDao.get().selectOnKey("LIST_FILTERS", AppConfig.get().getSystemName(), getLoginUserId());

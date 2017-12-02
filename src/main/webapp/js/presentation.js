@@ -4,37 +4,66 @@ var setHeight = function() {
     var height = width * 9 / 16;
     //logging(width + ':' + height);
     $('.markdownSlide').height(height);
-    if ($('#presentation').innerWidth() > 1024) {
-        // 全画面表示と判定
-        $('.markdownSlide').css('padding', '6vh');
-        $('.markdownSlide').css('font-size', '5vh');
-        $('.markdownSlide p').css('font-size', '5vh');
-        $('.markdownSlide h1').css('font-size', '10vh');
-        $('.markdownSlide h2').css('font-size', '8vh');
-        $('.markdownSlide h3').css('font-size', '6vh');
-        $('.markdownSlide h4').css('font-size', '5vh');
-        $('.markdownSlide p').css('line-height', '6vh');
-        $('.markdownSlide h1').css('line-height', '12vh');
-        $('.markdownSlide h2').css('line-height', '10vh');
-        $('.markdownSlide h3').css('line-height', '6vh');
-        $('.markdownSlide h4').css('line-height', '6vh');
-        $('#createPdfButton').addClass('hide');
-    } else {
-        $('.markdownSlide').css('padding', '3vh');
-        $('.markdownSlide').css('font-size', '3vh');
-        $('.markdownSlide p').css('font-size', '3vh');
-        $('.markdownSlide h1').css('font-size', '5vh');
-        $('.markdownSlide h2').css('font-size', '4vh');
-        $('.markdownSlide h3').css('font-size', '3vh');
-        $('.markdownSlide h4').css('font-size', '3vh');
-        $('.markdownSlide p').css('line-height', '4vh');
-        $('.markdownSlide h1').css('line-height', '6vh');
-        $('.markdownSlide h2').css('line-height', '5vh');
-        $('.markdownSlide h3').css('line-height', '4vh');
-        $('.markdownSlide h4').css('line-height', '4vh');
-        $('#createPdfButton').removeClass('hide');
-    }
 };
+
+var getOptions = function(contentJqObj) {
+    var options = {};
+    var general = true;
+    var option = {};
+    options.general = option;
+    var pagecount = 0;
+    contentJqObj.children().filter(function(){
+        if (this.tagName.toLowerCase() == 'hr') {
+            return true;
+        }
+        if (this.tagName.toLowerCase() == 'p') {
+            if ($(this).find('var').length > 0) {
+                return true;
+            }
+        }
+        return false;
+    }).each(function(i, elem) {
+        if (elem.tagName.toLowerCase() == 'hr') {
+            if (!general) {
+                general = false;
+            }
+            pagecount++;
+            option = {};
+            options[pagecount] = option;
+        } else if (elem.tagName.toLowerCase() == 'p') {
+            $(elem).find('var').each(function(i, v) {
+                if ($(v).attr('transition')) {
+                    option.transition = $(v).attr('transition');
+                }
+                if ($(v).attr('centered')) {
+                    option.centered = $(v).attr('centered');
+                }
+            });
+        }
+    });
+    return options;
+}
+
+var createSection = function(options, pagecount) {
+    console.log(options);
+    var slideHtmlBase = '<div class="mySlides markdownSlide';
+    if (options[pagecount] && options[pagecount].transition) {
+        slideHtmlBase += ' animated ' + options[pagecount].transition;
+    } else if (options.general.transition) {
+        slideHtmlBase += ' animated ' + options.general.transition;
+    }
+    slideHtmlBase += '"></div>';
+    var section = $(slideHtmlBase);
+    return section;
+}
+var appendContent = function(section, options, pagecount) {
+    var content = $('<div><div>');
+    section.append(content);
+    if (pagecount === 0 || options[pagecount] && options[pagecount].centered) {
+        content.addClass('centered');
+    }
+    return content;
+}
 
 var slideLength;
 var createPresentation = function(contentJqObj) {// eslint-disable-line no-unused-vars
@@ -42,22 +71,26 @@ var createPresentation = function(contentJqObj) {// eslint-disable-line no-unuse
         $(window).resize(function(){
             setHeight();
         });
-        
         logging('createPresentation');
         var presentationArea = $('#presentationArea');
+        var options = getOptions(contentJqObj);
         
-        var sections = [];
-        var slideHtmlBase = '<div class="mySlides markdownSlide slide-fade in"></div>';
-        var section = $(slideHtmlBase);
         var add = false;
+        var pagecount = 0;
+        var sections = [];
+        var section = createSection(options);
+        var content = appendContent(section, options, pagecount);
+        
         //console.log(contentJqObj);
         contentJqObj.children().each(function(i, elem) {
             if (elem.tagName.toLowerCase() == 'hr') {
                 sections.push(section);
-                section = $(slideHtmlBase);
+                pagecount++;
+                section = createSection(options, pagecount);
+                content = appendContent(section, options, pagecount);
                 add = false;
             } else {
-                section.append($(elem).clone());
+                content.append($(elem).clone());
                 add = true;
             }
         });
@@ -70,7 +103,7 @@ var createPresentation = function(contentJqObj) {// eslint-disable-line no-unuse
         
         indexMap[slideId] = 1;
         var slidehtml = '<div class="slideshow-area" id="' + slideId + '">';
-        slidehtml += '<div class="slideshow-container" id="sheets"></div>';
+        slidehtml += '<div class="slideshow-container" id="sheets"></div>'; // この中にスライドが入る
         slidehtml += '<br/>';
         slidehtml += '<div class="slideshow-control">';
         slidehtml += '<a class="prev" onclick="plusSlides(-1, \'' + slideId + '\')">&#10094; prev</a>';
