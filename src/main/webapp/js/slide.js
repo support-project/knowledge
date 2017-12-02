@@ -53,6 +53,7 @@ var showSlide = function(parent) {// eslint-disable-line no-unused-vars
     }
     target.each(function() {
         var fileNo = $(this).attr('slide');
+        var transition = $(this).attr('transition');
         var slideArea = $(this);
         if (fileNo) {
             slideCount++;
@@ -68,7 +69,11 @@ var showSlide = function(parent) {// eslint-disable-line no-unused-vars
                         var slidehtml = '<div class="slideshow-area" id="' + slideId + '">';
                         slidehtml += '<div class="slideshow-container">';
                         for (i = 0; i < data.files.length; i++) {
-                            slidehtml += '<div class="mySlides slide-fade in">';
+                            slidehtml += '<div class="mySlides';
+                            if (transition) {
+                                slidehtml += ' animated ' + transition;
+                            }
+                            slidehtml += '">';
                             slidehtml += '<img src="' + _CONTEXT + '/images/loader.gif" lagy="' + _CONTEXT + '/open.file/slide/' + data.fileNo + '/';
                             slidehtml += data.files[i] + '" alt="slide-' + i + '" class="slide-image slide-image-' + fileNo + '" />';
                             slidehtml += '</div>';
