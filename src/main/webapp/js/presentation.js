@@ -114,11 +114,12 @@ var createPresentation = function(contentJqObj) {// eslint-disable-line no-unuse
         
         slidehtml += '&nbsp;&nbsp;&nbsp;<a onclick="requestFullscreen(\'' + slideId + '\');">';
         slidehtml += '<i class="full fa fa-television fa-2x" aria-hidden="true"></i></a>';
-
+        
+        /* いったんPDFダウンロードボタンはコメントアウト
         slidehtml += '&nbsp;&nbsp;&nbsp;<a id="createPdfButton" onclick="downloadPdf();">';
         slidehtml += '<i class="full fa fa-download fa-2x" aria-hidden="true"></i></a>';
-        
         slidehtml += '&nbsp;<span id="createPdfProgress" class="hide"><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></span>';
+        */
         
         slidehtml += '</div>';
         
@@ -152,7 +153,6 @@ var loadCanvus = function(doc, width, height) {
                 onrendered: function(canvas) {
                     var imgData = canvas.toDataURL('image/png');
                     doc.addImage(imgData, 'png', 0, 0, width, height);
-                    //console.log('image added.');
                     return resolve();
                 }
             });
@@ -160,19 +160,19 @@ var loadCanvus = function(doc, width, height) {
     });
 }
 var downloadPdf = function() {// eslint-disable-line no-unused-vars
-    var width = $('#presentation').width();
-    var height = width * 9 / 16;
-    
+    var width = $('#sheets').width();
+    var height = $('#sheets').height();
     $('#createPdfProgress').removeClass('hide');
-    
     var doc = new jsPDF('landscape', 'mm', [width, height]);
     var slideId = 'presentation';
     
+    /* 全てのページをPDF化しようと思ったが、途中で止まってしまう（多分メモリの問題）
+     * 1ページだけダウンロードできるようにしようかと思ったが、解像度もいまいちだし
+     * 実用に耐えないため、いったん実施しないようにする（↑でPDFダウンロードボタンをコメントアウト）
     var pages = [];
     for (var i = 1; i <= slideLength; i++) {
         pages.push(i);
     }
-    
     return Promise.mapSeries(pages, function(page, i) {
         //console.log('page:' + page);
         if (i > 0) {
@@ -183,6 +183,11 @@ var downloadPdf = function() {// eslint-disable-line no-unused-vars
             return loadCanvus(doc, width, height);
         });
     }).then(function() {
+        $('#createPdfProgress').addClass('hide');
+        doc.save('presentation.pdf');
+    });
+    */
+    loadCanvus(doc, width, height).then(function() {
         $('#createPdfProgress').addClass('hide');
         doc.save('presentation.pdf');
     });
