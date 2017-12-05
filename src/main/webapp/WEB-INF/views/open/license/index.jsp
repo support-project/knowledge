@@ -16,6 +16,8 @@
 </c:param>
 
 <c:param name="PARAM_SCRIPTS">
+<script type="text/javascript" src="<%= request.getContextPath() %>/bower/marked/lib/marked.js"></script>
+
 <script>
 $(document).ready(function(){
     hljs.initHighlightingOnLoad();

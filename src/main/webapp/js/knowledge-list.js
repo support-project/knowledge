@@ -1,11 +1,4 @@
 $(document).ready(function() {
-    marked.setOptions({
-        langPrefix : '',
-        highlight : function(code, lang) {
-            console.log('[highlight]' + lang);
-            return code;
-        }
-    });
     $('#input_tags').on('beforeItemRemove', function(event) {
         event.cancel = true;
     });
