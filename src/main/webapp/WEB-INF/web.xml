@@ -59,11 +59,11 @@
         <filter-class>org.support.project.knowledge.filter.CloseAbleAuthenticationFilter</filter-class>
         <init-param>
             <param-name>ignore-regular-expression</param-name>
-            <param-value>^/index|^/open|^/api|^/template|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$</param-value>
+            <param-value>^/index|^/open|^/api|^/template|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|^/assets|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$</param-value>
         </init-param>
         <init-param>
             <param-name>close-ignore-regular-expression</param-name>
-            <param-value>^/index|^/template|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$|^/open.signup|^/open.PasswordInitialization|^/open.account</param-value>
+            <param-value>^/index|^/template|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|^/assets|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$|^/open.signup|^/open.PasswordInitialization|^/open.account</param-value>
         </init-param>
         <init-param>
             <param-name>login-page</param-name>
