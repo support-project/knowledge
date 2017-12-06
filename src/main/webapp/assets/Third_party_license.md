@@ -209,4 +209,19 @@
 - Vue.js
    - License: [MIT License] https://github.com/vuejs/vue/blob/master/LICENSE
    - project-url: https://jp.vuejs.org/index.html
+
+   
+- html2canvas
+   - License: [MIT License] https://github.com/niklasvh/html2canvas/blob/master/LICENSE
+   - project-url: https://html2canvas.hertzen.com/
+
+- jsPDF
+   - License: [MIT License] https://github.com/MrRio/jsPDF/blob/master/MIT-LICENSE.txt
+   - project-url: https://parall.ax/products/jspdf
+
+- animate.css
+   - License: [MIT License] https://github.com/daneden/animate.css/blob/master/LICENSE
+   - project-url: https://daneden.github.io/animate.css/
+   
+   
    
