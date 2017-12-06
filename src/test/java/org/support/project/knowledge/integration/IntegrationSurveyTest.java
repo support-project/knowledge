@@ -98,8 +98,8 @@ public class IntegrationSurveyTest extends IntegrationCommon {
     @Test
     @Order(order = 101)
     public void testAssertAfterPost() throws Exception {
-        assertKnowledgeCP(POST_USER, knowledgeId, 50);
-        assertCP(POST_USER, 50);
+        assertKnowledgeCP(POST_USER, knowledgeId, 20);
+        assertCP(POST_USER, 20);
         assertKnowledgeCP(ANSWER_USER, knowledgeId, 1);
         assertCP(ANSWER_USER, 1);
         assertCP(POST_USER, 1);

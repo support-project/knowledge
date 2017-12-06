@@ -85,8 +85,8 @@ public class IntegrationAPITest extends IntegrationCommon {
     @Test
     @Order(order = 12)
     public void testCheckDataAfterPost() throws Exception {
-        assertCP(USER_01, 50);
-        assertKnowledgeCP(USER_01, 1, 50);
+        assertCP(USER_01, 20);
+        assertKnowledgeCP(USER_01, 1, 20);
 
         execNotificationQueue();
         assertNotificationCount(USER_01, 1);
