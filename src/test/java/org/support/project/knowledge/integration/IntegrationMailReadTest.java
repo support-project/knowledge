@@ -101,9 +101,9 @@ public class IntegrationMailReadTest extends IntegrationCommon {
     @Test
     @Order(order = 102)
     public void testCheckDataAfterPost() throws Exception {
-        assertCP(POST_USER, 50);
+        assertCP(POST_USER, 20);
         assertCP(COMMENT_USER, 0);
-        assertKnowledgeCP(POST_USER, 1, 50);
+        assertKnowledgeCP(POST_USER, 1, 20);
 
         execNotificationQueue();
         assertNotificationCount(POST_USER, 1);
@@ -159,8 +159,8 @@ public class IntegrationMailReadTest extends IntegrationCommon {
     @Order(order = 202)
     public void testCheckDataAfterComment() throws Exception {
         assertCP(POST_USER, 0);
-        assertCP(COMMENT_USER, 20);
-        assertKnowledgeCP(POST_USER, 1, 20);
+        assertCP(COMMENT_USER, 10);
+        assertKnowledgeCP(POST_USER, 1, 10);
 
         execNotificationQueue();
         assertNotificationCount(POST_USER, 1);

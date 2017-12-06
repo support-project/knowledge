@@ -9,6 +9,7 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.test.Order;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.dao.NotifyQueuesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
@@ -40,7 +41,7 @@ public class IntegrationPostTest extends IntegrationCommon {
     
     @Before
     public void setUp() throws Exception {
-        Thread.sleep(500);
+        Thread.sleep(TestCommon.WAIT_MILLSEC);
     }
     
     
@@ -175,8 +176,8 @@ public class IntegrationPostTest extends IntegrationCommon {
     @Order(order = 101)
     public void testCPAfterPost() throws Exception {
         assertCP(COMMENT_POST_USER, 0);
-        assertCP(KNOWLEDGE_POST_USER, 50);
-        assertKnowledgeCP(null, knowledgeId, 50);
+        assertCP(KNOWLEDGE_POST_USER, 20);
+        assertKnowledgeCP(null, knowledgeId, 20);
     }
     
     
@@ -474,10 +475,9 @@ public class IntegrationPostTest extends IntegrationCommon {
         comment(COMMENT_POST_USER, knowledgeId, "コメント");
         
         // CP確認
-        assertCP(COMMENT_POST_USER, 20); // コメント追加者 +20
+        assertCP(COMMENT_POST_USER, 10); // コメント追加者 +10
         assertCP(KNOWLEDGE_POST_USER, 0); // コメントを追加した記事の作者は変化無し
-        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 20); // +20
-        
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 10);
         // 通知の確認
         execNotificationQueue();
         assertNotificationCount(COMMENT_POST_USER, 1);
@@ -583,8 +583,8 @@ public class IntegrationPostTest extends IntegrationCommon {
         
         // CP確認
         assertCP(COMMENT_POST_USER, 0);
-        assertCP(KNOWLEDGE_POST_USER, 20);
-        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 20); // +20
+        assertCP(KNOWLEDGE_POST_USER, 10);
+        assertKnowledgeCP(COMMENT_POST_USER, knowledgeId, 10);
         
         // 通知の確認
         execNotificationQueue();

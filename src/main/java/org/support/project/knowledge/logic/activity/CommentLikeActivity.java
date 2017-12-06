@@ -7,6 +7,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.ActivitiesDao;
+import org.support.project.knowledge.logic.KnowledgeLogic;
 
 /**
  * 
@@ -30,7 +31,12 @@ public class CommentLikeActivity extends AbstractAddPointForCommentProcessor {
             return point;
         }
         // 指定のコメントについたイイネの件数（ユニーク件数）でポイントを増やす
-        int point = 10;
+        int point = 0;
+        if (getParentKnowledge().getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
+            point = 10;
+        } else if (getParentKnowledge().getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
+            point = 5;
+        }
         long count = ActivitiesDao.get().selectCountByTarget(
                 getActivity().getValue(), getComment().getCommentNo());
         int add = 0;

@@ -146,9 +146,9 @@ public class IntegrationUpdateTest extends IntegrationCommon {
     @Order(order = 200)
     public void testAssertAfterUpdatePrivateToProtect() throws Exception {
         doUpdate(KnowledgeLogic.PUBLIC_FLAG_PROTECT, true);
-        assertCP(POST_USER, 30);
+        assertCP(POST_USER, 10);
         assertCP(USER1, 0);
-        assertKnowledgeCP(POST_USER, knowledgeId, 30); // POST_USERではアクセスできる（CPを確認できる）
+        assertKnowledgeCP(POST_USER, knowledgeId, 10); // POST_USERではアクセスできる（CPを確認できる）
         assertNotAccessAble(USER1, knowledgeId, HttpStatus.SC_404_NOT_FOUND); // アクセス権が無い場合、403では無く404にしている
 
         execNotificationQueue();
@@ -165,10 +165,10 @@ public class IntegrationUpdateTest extends IntegrationCommon {
     public void testAssertAfterUpdateProtectToPublic() throws Exception {
         doUpdate(KnowledgeLogic.PUBLIC_FLAG_PUBLIC, true);
         
-        assertKnowledgeCP(POST_USER, knowledgeId, 20); // POST_USERではアクセスできる（CPを確認できる）
+        assertKnowledgeCP(POST_USER, knowledgeId, 10); // POST_USERではアクセスできる（CPを確認できる）
         assertKnowledgeCP(USER1, knowledgeId, 1); //参照したので１ポイント追加
         
-        assertCP(POST_USER, 21);
+        assertCP(POST_USER, 11);
         assertCP(USER1, 1);
 
         execNotificationQueue();
@@ -205,10 +205,10 @@ public class IntegrationUpdateTest extends IntegrationCommon {
     public void testAssertAfterUpdatePublicToProtect() throws Exception {
         doUpdate(KnowledgeLogic.PUBLIC_FLAG_PROTECT, true);
         
-        assertKnowledgeCP(POST_USER, knowledgeId, -20);
+        assertKnowledgeCP(POST_USER, knowledgeId, -10);
         assertNotAccessAble(USER1, knowledgeId, HttpStatus.SC_404_NOT_FOUND);
         
-        assertCP(POST_USER, -20);
+        assertCP(POST_USER, -10);
         assertCP(USER1, 0);
 
         execNotificationQueue();
@@ -225,10 +225,10 @@ public class IntegrationUpdateTest extends IntegrationCommon {
     public void testAssertAfterUpdateProtectToPrivate() throws Exception {
         doUpdate(KnowledgeLogic.PUBLIC_FLAG_PRIVATE, true);
         
-        assertKnowledgeCP(POST_USER, knowledgeId, -30);
+        assertKnowledgeCP(POST_USER, knowledgeId, -10);
         assertNotAccessAble(USER1, knowledgeId, HttpStatus.SC_404_NOT_FOUND);
         
-        assertCP(POST_USER, -30);
+        assertCP(POST_USER, -10);
         assertCP(USER1, 0);
 
         execNotificationQueue();
@@ -245,10 +245,10 @@ public class IntegrationUpdateTest extends IntegrationCommon {
     public void testAssertAfterUpdatePrivateToPublic() throws Exception {
         doUpdate(KnowledgeLogic.PUBLIC_FLAG_PUBLIC, true);
         
-        assertKnowledgeCP(POST_USER, knowledgeId, 50);
+        assertKnowledgeCP(POST_USER, knowledgeId, 20);
         assertKnowledgeCP(USER1, knowledgeId, 0);
         
-        assertCP(POST_USER, 50);
+        assertCP(POST_USER, 20);
         assertCP(USER1, 0);
 
         execNotificationQueue();

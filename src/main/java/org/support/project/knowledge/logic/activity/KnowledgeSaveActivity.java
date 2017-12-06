@@ -12,10 +12,10 @@ import org.support.project.knowledge.dao.PointKnowledgeHistoriesDao;
  * 過去の投稿の公開区分によって、今回獲得するポイントが変化する
  * 
  * 種類  | 獲得のタイプ  | ポイント付与先 | ポイント    | 獲得タイプの意味
- * 10   | 101         | 記事登録者    | 50       | 公開になった時点でトータル50になるように
- * 10   | 103         | 記事         | 50       | 
- * 11   | 111         | 記事登録者    | 30       | 
- * 11   | 113         | 記事         | 30       | 
+ * 10   | 101         | 記事登録者    | 20       | 公開になった時点でトータル50になるように
+ * 10   | 103         | 記事         | 20       | 
+ * 11   | 111         | 記事登録者    | 10       | 
+ * 11   | 113         | 記事         | 10       | 
  * 12   | 121         | 記事登録者    | 0        | このアクティビティの前に、投稿のアクティビティがあった場合、それを打ち消す（マイナスのポイント）
  * 12   | 123         | 記事         | 0        | 
  * @author koda
@@ -38,9 +38,9 @@ public class KnowledgeSaveActivity extends AbstractAddPointForKnowledgeProcessor
     private int point = 0;
     private int getKindPoint(int kind) {
         if (kind == Activity.KNOWLEDGE_POST_PUBLIC.getValue()) {
-            return 50;
+            return 20;
         } else if (kind == Activity.KNOWLEDGE_POST_PROTECTED.getValue()) {
-            return 30;
+            return 10;
         }
         return 0;
     }

@@ -32,9 +32,9 @@ public class CommentInsertActivity extends AbstractAddPointForCommentProcessor {
         }
         int point = 0;
         if (getParentKnowledge().getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
-            point = 20;
-        } else if (getParentKnowledge().getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
             point = 10;
+        } else if (getParentKnowledge().getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
+            point = 5;
         }
         return point;
     }
