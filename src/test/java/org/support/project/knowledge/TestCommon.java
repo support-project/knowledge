@@ -31,6 +31,7 @@ import org.support.project.common.test.OrderedRunner;
 import org.support.project.common.test.TestWatcher;
 import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
+import org.support.project.common.util.SystemUtils;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.InitDB;
@@ -65,7 +66,10 @@ public abstract class TestCommon {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(TestCommon.class);
 
+    public static int WAIT_MILLSEC = 50;
+    
     public static final String KNOWLEDGE_TEST_HOME = "KNOWLEDGE_TEST_HOME";
+    public static final String KNOWLEDGE_UNIT_TEST_WAIT_MILL = "KNOWLEDGE_UNIT_TEST_WAIT_MILL";
     /** login user for test */
     public static LoginedUser loginedUser = null;
     /** login user for test */
@@ -95,6 +99,12 @@ public abstract class TestCommon {
         if (!H2DBServerLogic.get().isActive()) {
             H2DBServerLogic.get().start();
         }
+        
+        String wait = SystemUtils.getenv(KNOWLEDGE_UNIT_TEST_WAIT_MILL);
+        if (StringUtils.isInteger(wait)) {
+            WAIT_MILLSEC = new Integer(wait);
+        }
+        
         testConnection();
         initData();
         DBUserPool.get().setUser(loginedUser.getUserId());
@@ -156,7 +166,7 @@ public abstract class TestCommon {
         groupuser2.setLocale(Locale.ENGLISH);
 
         synchronized (KNOWLEDGE_TEST_HOME) {
-            Thread.sleep(50);
+            Thread.sleep(WAIT_MILLSEC);
         }
         
         // DBを完全初期化
@@ -166,13 +176,13 @@ public abstract class TestCommon {
         dao2.dropAllTable();
         
         synchronized (KNOWLEDGE_TEST_HOME) {
-            Thread.sleep(50);
+            Thread.sleep(WAIT_MILLSEC);
         }
         
         InitDB.main(new String[0]);
         
         synchronized (KNOWLEDGE_TEST_HOME) {
-            Thread.sleep(50);
+            Thread.sleep(WAIT_MILLSEC);
         }
         
         // 全文検索エンジンのインデックスの消去
@@ -231,7 +241,7 @@ public abstract class TestCommon {
     private static List<RolesEntity> addUser(LoginedUser user, String userName, Integer[] roleIds) {
         synchronized (user) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(WAIT_MILLSEC);
             } catch (InterruptedException e) {
             }
         }
@@ -246,7 +256,7 @@ public abstract class TestCommon {
 
         synchronized (user) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(WAIT_MILLSEC);
             } catch (InterruptedException e) {
             }
         }
@@ -331,7 +341,7 @@ public abstract class TestCommon {
     private UsersEntity doAddUser(String userKey) {
         synchronized (this) {
             try {
-                Thread.sleep(300);
+                Thread.sleep(WAIT_MILLSEC);
             } catch (InterruptedException e) {
             }
         }

@@ -25,9 +25,6 @@ public class NotifyConfigsDaoTest extends TestCommon {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        synchronized (KNOWLEDGE_TEST_HOME) {
-            Thread.sleep(500);
-        }
         TestCommon.setUpBeforeClass();
     }
     

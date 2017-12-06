@@ -100,9 +100,9 @@ public class IntegrationEventTest extends IntegrationCommon {
     @Test
     @Order(order = 101)
     public void testAssertAfterPost() throws Exception {
-        assertCP(POST_USER, 50);
+        assertCP(POST_USER, 20);
         assertCP(JOIN_USER, 0);
-        assertKnowledgeCP(null, knowledgeId, 50);
+        assertKnowledgeCP(null, knowledgeId, 20);
         
         execNotificationQueue();
         assertNotificationCount(POST_USER, 1);

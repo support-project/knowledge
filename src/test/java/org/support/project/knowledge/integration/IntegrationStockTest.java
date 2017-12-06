@@ -67,9 +67,9 @@ public class IntegrationStockTest extends IntegrationCommon {
 
         knowledgeId = new Long(msg.getResult());
         
-        assertKnowledgeCP(POST_USER, knowledgeId, 50);
+        assertKnowledgeCP(POST_USER, knowledgeId, 20);
         assertKnowledgeCP(STOCK_USER, knowledgeId, 1);
-        assertCP(POST_USER, 51);
+        assertCP(POST_USER, 21);
         assertCP(STOCK_USER, 1);
         execNotificationQueue();
         assertNotificationCount(POST_USER, 1);
@@ -421,7 +421,6 @@ public class IntegrationStockTest extends IntegrationCommon {
     @Order(order = 1000)
     public void testAggregate2() throws Exception {
         AggregateLogic.get().startAggregate();
-        // CPは変化しない
         assertCP(POST_USER, -2);
         assertCP(STOCK_USER, 0);
         assertKnowledgeCP(POST_USER, knowledgeId, -2);

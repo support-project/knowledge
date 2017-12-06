@@ -96,9 +96,9 @@ public class IntegrationProtectTest extends IntegrationCommon {
     @Test
     @Order(order = 101)
     public void testAssertAfterPost() throws Exception {
-        assertCP(POST_USER, 30);
+        assertCP(POST_USER, 10);
         assertCP(USER1, 0);
-        assertKnowledgeCP(POST_USER, knowledgeId, 30);
+        assertKnowledgeCP(POST_USER, knowledgeId, 10);
         assertNotAccessAble(USER1, knowledgeId, HttpStatus.SC_404_NOT_FOUND); // アクセス権が無い場合、403では無く404にしている
 
         execNotificationQueue();
