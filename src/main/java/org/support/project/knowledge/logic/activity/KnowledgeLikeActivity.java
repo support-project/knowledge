@@ -7,6 +7,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.ActivitiesDao;
+import org.support.project.knowledge.logic.KnowledgeLogic;
 
 /**
  * 
@@ -30,8 +31,13 @@ public class KnowledgeLikeActivity extends AbstractAddPointForKnowledgeProcessor
             return point;
         }
         // ユニークユーザのイイネ件数によりポイントを増やす
-        int point = 10;
-        long count = ActivitiesDao.get().selectCountByTarget(
+        int point = 0;
+        if (getKnowledge().getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
+            point = 10;
+        } else if (getKnowledge().getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
+            point = 5;
+        }
+         long count = ActivitiesDao.get().selectCountByTarget(
                 getActivity().getValue(), getKnowledge().getKnowledgeId());
         int add = 0;
         if (count > 100) {

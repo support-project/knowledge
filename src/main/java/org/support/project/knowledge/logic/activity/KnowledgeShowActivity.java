@@ -30,7 +30,7 @@ public class KnowledgeShowActivity extends AbstractAddPointForKnowledgeProcessor
     }
     private int getPoint() {
         // ユニークな参照者が多くなると、ポイントが増えるように調整(投稿数が少なくても、良い記事を書けばポイントが高くなる）
-        int point = 1;
+        int point = 2;
         long count = ActivitiesDao.get().selectCountByTarget(
                 getActivity().getValue(), getKnowledge().getKnowledgeId());
         int add = 0;

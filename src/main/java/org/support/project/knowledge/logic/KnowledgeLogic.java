@@ -1418,7 +1418,7 @@ public class KnowledgeLogic {
     }
 
     /**
-     * 一定期間で、「イイネ」の件数が多いものを一覧で取得 （イイネの件数が多い順で並べる）
+     * 一定期間で人気の高い記事を並べる
      * 
      * 
      * @param loginedUser
@@ -1428,7 +1428,7 @@ public class KnowledgeLogic {
         long now = DateUtils.now().getTime();
         LOG.trace(now);
 
-        long term = 1000L * 60L * 60L * 24L * 30L;
+        long term = 1000L * 60L * 60L * 24L * 5L; // 5日間の中でCPの合計が高いものにする
         LOG.trace(term);
         long s = now - term;
         LOG.trace(s);
