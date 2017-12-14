@@ -19,11 +19,9 @@
    - [id/password] user2 / user2
    - [id/password] user3 / user3
 
-
 ## Deploy to Heroku
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/support-project/knowledge)
-
 
 ## How to initial set up
 - Please show the [wiki page](https://github.com/support-project/knowledge/wiki)
@@ -32,3 +30,26 @@
 - vulnerability testing with VAddy
 <a href="https://vaddy.net/" target="_blank">
 <img alt="VAddy logo" src="https://raw.github.com/wiki/support-project/knowledge/assets/images/VAddy_logo_b.png" height="40" /></a>
+
+
+## Development
+
+### Build war (web application archive)
+
+- Clone this repository your local machine and run this command
+- 'knowledge.war' is builded in backend/target directory when this command finished succeed
+
+```
+$ docker-compose run --rm maven mvn clean package
+```
+
+### Run builded web application on your machine
+
+- You can access builded web application on 'http://localhost:8080/knowledge'
+
+```
+$ docker-compose run --rm -p 8080:8080 tomcat 
+```
+
+
+

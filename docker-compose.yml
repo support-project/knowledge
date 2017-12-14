@@ -4,20 +4,21 @@ services:
   maven:
     image: knowledge-dev
     build:
-      context: .
+      context: ./backend
       args:
         - https_proxy
         - http_proxy
     command: mvn -v
     environment:
       KNOWLEDGE_TEST_MAIL: 'false'
+      KNOWLEDGE_UNIT_TEST_WAIT_MILL: 10
       MAVEN_CONFIG: /var/maven/.m2
       https_proxy: ${https_proxy}
       http_proxy: ${http_proxy}
     working_dir: /usr/src/mymaven/
     entrypoint: ''
     volumes:
-      - $PWD:/usr/src/mymaven
+      - $PWD/backend:/usr/src/mymaven
       - ${KNOWLEDGE_HOME}.m2:/root/.m2
 
   tomcat:
@@ -37,7 +38,8 @@ services:
       http_proxy: ${http_proxy}
     volumes:
       - ${KNOWLEDGE_HOME}.knowledge:/root/.knowledge
-      - $PWD/target/webapps:/usr/local/tomcat/webapps
+      - $PWD/backend/target/knowledge.war:/usr/local/tomcat/webapps/knowledge.war
+
 
   mailcatcher:
     image: zolweb/docker-mailcatcher
