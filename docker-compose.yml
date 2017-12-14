@@ -3,6 +3,7 @@ version: '2.1'
 services:
   maven:
     image: knowledge-dev
+    env_file: .env
     build:
       context: ./backend
       args:
@@ -18,11 +19,12 @@ services:
     working_dir: /usr/src/mymaven/
     entrypoint: ''
     volumes:
-      - $PWD/backend:/usr/src/mymaven
-      - ${KNOWLEDGE_HOME}.m2:/root/.m2
+      - $PWD/backend:/usr/src/mymaven:cached
+      - ${KNOWLEDGE_HOME}.m2:/root/.m2:cached
 
   tomcat:
     image: tomcat:8.5-jre8-alpine
+    env_file: .env
     ports:
       - 8080:8080
       - 8009:8009
@@ -37,9 +39,21 @@ services:
       https_proxy: ${https_proxy}
       http_proxy: ${http_proxy}
     volumes:
-      - ${KNOWLEDGE_HOME}.knowledge:/root/.knowledge
+      - ${KNOWLEDGE_HOME}.knowledge:/root/.knowledge:cached
       - $PWD/backend/target/knowledge.war:/usr/local/tomcat/webapps/knowledge.war
 
+  frontend:
+    image: node:8.9.3
+    env_file: .env
+    environment:
+      - https_proxy:${https_proxy}
+      - http_proxy:${http_proxy}
+    command: npm run dev
+    ports:
+      - 8081:8081
+    working_dir: "/usr/src"
+    volumes:
+      - $PWD/frontend:/usr/src:cached
 
   mailcatcher:
     image: zolweb/docker-mailcatcher

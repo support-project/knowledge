@@ -34,7 +34,37 @@
 
 ## Development
 
-### Build war (web application archive)
+### Frontend
+
+#### install dependencies
+
+```
+$  docker-compose run --rm frontend npm install
+```
+
+#### serve with hot reload at localhost:8081
+
+```
+$  docker-compose run --rm -p 8081:8081 frontend npm run dev
+```
+
+- If the following error occurs, execute the this command
+   - `Module build failed: Error: ENOENT: no such file or directory, scandir '/usr/src/node_modules/node-sass/vendor`
+
+```
+$ docker-compose run --rm frontend npm rebuild node-sass --force
+```
+
+# build for production with minification
+
+```
+$  docker-compose run --rm frontend npm run build
+```
+
+
+### Backend
+
+#### Build war (web application archive)
 
 - Clone this repository your local machine and run this command
 - 'knowledge.war' is builded in backend/target directory when this command finished succeed
@@ -43,7 +73,7 @@
 $ docker-compose run --rm maven mvn clean package
 ```
 
-### Run builded web application on your machine
+#### Run builded web application on your machine
 
 - You can access builded web application on 'http://localhost:8080/knowledge'
 
