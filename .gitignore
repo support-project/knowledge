@@ -17,3 +17,6 @@ out.txt
 .es_data
 .knowledge
 .vscode
+backend/src/main/webapp/_redirects
+backend/src/main/webapp/index.html
+backend/src/main/webapp/static

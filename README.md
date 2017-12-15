@@ -34,6 +34,10 @@
 
 ## Development
 
+- Clone this repository your local machine
+- 以下の手順で、フロントエンド、バックエンド、リバースプロキシの順に起動します
+- http://localhost にアクセスし確認できます
+
 ### Frontend
 
 #### install dependencies
@@ -55,30 +59,59 @@ $  docker-compose run --rm -p 8081:8081 frontend npm run dev
 $ docker-compose run --rm frontend npm rebuild node-sass --force
 ```
 
-# build for production with minification
+### Backend
+
+#### serve backend service 
+
+```
+$ docker-compose run --rm maven mvn clean package
+$ docker-compose run --rm -p 8080:8080 tomcat 
+```
+
+- Eclipse や IntelliJ IDEA などのIDEでBackendサービスを起動する場合、以下のクラスを実行してください
+
+- org.support.project.knowledge.Launch
+
+
+### Reverse proxy for develop
+
+```
+$ docker-compose run --rm -p 80:80 nginx 
+```
+
+
+
+
+## Build release package
+
+### Frontend
+
+#### build for production with minification
 
 ```
 $  docker-compose run --rm frontend npm run build
 ```
 
+- frontend/dist のディレクトリの中に、フロントエンドのリリース用ファイルを格納します
+- これを backend/src/main/webapp ディレクトリの下にコピーしてください
 
 ### Backend
 
 #### Build war (web application archive)
 
-- Clone this repository your local machine and run this command
-- 'knowledge.war' is builded in backend/target directory when this command finished succeed
-
 ```
 $ docker-compose run --rm maven mvn clean package
 ```
 
-#### Run builded web application on your machine
+- 'knowledge.war' is builded in backend/target directory when this command finished succeed
 
-- You can access builded web application on 'http://localhost:8080/knowledge'
+
+#### Run builded web application on your machine with tomcat
+
+- You can access builded web application on 'http://localhost:8080'
 
 ```
-$ docker-compose run --rm -p 8080:8080 tomcat 
+$ docker-compose run --rm -p 8080:8080 tomcat  
 ```
 
 

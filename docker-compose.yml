@@ -20,7 +20,7 @@ services:
     entrypoint: ''
     volumes:
       - $PWD/backend:/usr/src/mymaven:cached
-      - ${KNOWLEDGE_HOME}.m2:/root/.m2:cached
+      - ${APPLICATION_HOME}.m2:/root/.m2:cached
 
   tomcat:
     image: tomcat:8.5-jre8-alpine
@@ -30,6 +30,7 @@ services:
       - 8009:8009
     expose:
       - 8080
+    command: bash -c "rm -rf /usr/local/tomcat/webapps/ROOT && catalina.sh run" 
 #    links:
 #      - mailcatcher
 #      - postgres
@@ -39,8 +40,8 @@ services:
       https_proxy: ${https_proxy}
       http_proxy: ${http_proxy}
     volumes:
-      - ${KNOWLEDGE_HOME}.knowledge:/root/.knowledge:cached
-      - $PWD/backend/target/knowledge.war:/usr/local/tomcat/webapps/knowledge.war
+      - ${APPLICATION_HOME}.knowledge:/root/.knowledge:cached
+      - $PWD/backend/target/knowledge.war:/usr/local/tomcat/webapps/ROOT.war
 
   frontend:
     image: node:8.9.3
@@ -54,6 +55,14 @@ services:
     working_dir: "/usr/src"
     volumes:
       - $PWD/frontend:/usr/src:cached
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - $PWD/dev/nginx.conf:/etc/nginx/nginx.conf:ro
 
   mailcatcher:
     image: zolweb/docker-mailcatcher
@@ -72,7 +81,7 @@ services:
     environment:
       POSTGRES_PASSWORD: '1qazxsw2'
     volumes:
-      - ${KNOWLEDGE_HOME}.postgres:/var/lib/postgresql/data
+      - ${APPLICATION_HOME}.postgres:/var/lib/postgresql/data
 
   elasticsearch:
     image: elasticsearch:5.5.2-alpine
@@ -89,7 +98,7 @@ services:
       xpack.monitoring.history.duration: '1d'
       ES_JAVA_OPTS: '-Xms512m -Xmx512m'
     volumes:
-      - ${KNOWLEDGE_HOME}.es_data:/usr/share/elasticsearch/data
+      - ${APPLICATION_HOME}.es_data:/usr/share/elasticsearch/data
 
   kibana:
     image: kibana:5.5.2
