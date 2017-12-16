@@ -3,6 +3,8 @@ import LoginView from './components/Login.vue'
 import NotFoundView from './components/404.vue'
 
 // Import Views - Dash
+import ArticleListView from './components/views/ArticleList.vue'
+
 import DashboardView from './components/views/Dashboard.vue'
 import TablesView from './components/views/Tables.vue'
 import TasksView from './components/views/Tasks.vue'
@@ -22,8 +24,13 @@ const routes = [
     component: DashView,
     children: [
       {
-        path: 'dashboard',
+        path: 'article-list',
         alias: '',
+        component: ArticleListView,
+        name: 'ArticleListTitle',
+        meta: {description: 'ArticleListDescription'}
+      }, {
+        path: 'dashboard',
         component: DashboardView,
         name: 'Dashboard',
         meta: {description: 'Overview of environment'}

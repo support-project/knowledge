@@ -4,6 +4,7 @@ import 'es6-promise/auto'
 // Import System requirements
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueI18n from 'vue-i18n'
 
 import { sync } from 'vuex-router-sync'
 import routes from './routes'
@@ -61,11 +62,36 @@ if (window.localStorage) {
   }
 }
 
+const messageEn = require('../static/resource/message-en.json')
+const messageJa = require('../static/resource/message-ja.json')
+const message = {
+  en: messageEn,
+  ja: messageJa
+}
+
+// 言語の設定
+Vue.use(VueI18n)
+const i18n = new VueI18n({
+  locale: 'ja',
+//  locale: 'en',
+  fallbackLocale: 'en',
+  messages: message
+})
+
 // Start out app!
 // eslint-disable-next-line no-new
 new Vue({
   el: '#root',
   router: router,
   store: store,
-  render: h => h(AppView)
+  render: h => h(AppView),
+  i18n: i18n,
+  beforeCreate: function () {
+    var _self = this
+    setTimeout(function () {
+      // TODO Ajax access to get user locale config
+      _self.$i18n.locale = 'en'
+    }, 100)
+  }
 })
+

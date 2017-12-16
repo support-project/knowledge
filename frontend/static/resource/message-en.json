@@ -1,0 +1,9 @@
+{
+  "Route": {
+    "ArticleListTitle": "Article List",
+    "ArticleListDescription": "List"
+  },
+  "ArticleList": {
+    "Message": "aaa bbb ccc"
+  }
+}

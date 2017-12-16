@@ -1,8 +1,8 @@
 <template>
   <ul class="sidebar-menu">
 
-    <li class="header">TEST-MENU</li>
-    <router-link tag="li" class="pageLink" to="/list">
+    <li class="header">Main menu</li>
+    <router-link tag="li" class="pageLink" to="/">
       <a>
         <i class="fa fa-list"></i>
         <span class="page">List</span>
@@ -11,7 +11,7 @@
 
 
     <li class="header">TOOLS</li>
-    <router-link tag="li" class="pageLink" to="/">
+    <router-link tag="li" class="pageLink" to="/dashboard">
       <a>
         <i class="fa fa-desktop"></i>
         <span class="page">Dashboard</span>
