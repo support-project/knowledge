@@ -43,7 +43,8 @@
 #### install dependencies
 
 ```
-$  docker-compose run --rm frontend npm install
+$ docker-compose run --rm frontend npm install
+$ docker-compose run --rm frontend npm run afterinstall
 ```
 
 #### serve with hot reload at localhost:8081
@@ -65,7 +66,7 @@ $ docker-compose run --rm frontend npm rebuild node-sass --force
 
 ```
 $ docker-compose run --rm maven mvn clean package
-$ docker-compose run --rm -p 8080:8080 tomcat 
+$ docker-compose run --rm -p 8080:8080 tomcat
 ```
 
 - Eclipse や IntelliJ IDEA などのIDEでBackendサービスを起動する場合、以下のクラスを実行してください

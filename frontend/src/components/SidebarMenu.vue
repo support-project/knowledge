@@ -1,5 +1,15 @@
 <template>
   <ul class="sidebar-menu">
+
+    <li class="header">TEST-MENU</li>
+    <router-link tag="li" class="pageLink" to="/list">
+      <a>
+        <i class="fa fa-list"></i>
+        <span class="page">List</span>
+      </a>
+    </router-link>
+
+
     <li class="header">TOOLS</li>
     <router-link tag="li" class="pageLink" to="/">
       <a>
@@ -88,6 +98,7 @@
         <span class="page"> 404</span>
       </a>
     </router-link>
+    
   </ul>
 </template>
 <script>

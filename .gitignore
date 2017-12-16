@@ -20,3 +20,4 @@ out.txt
 backend/src/main/webapp/_redirects
 backend/src/main/webapp/index.html
 backend/src/main/webapp/static
+frontend/static/lib
