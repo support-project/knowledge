@@ -1,9 +1,14 @@
 <template>
   <div :class="['wrapper', classes]">
     <header class="main-header">
-	<span class="logo-mini">
-		<a href="/"><img src="/static/img/copilot-logo-white.svg" alt="Logo" class="img-responsive center-block logo"></a>
-	</span>
+
+      <a href="/" class="logo">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini"><i class="fa fa-book" aria-hidden="true"></i></span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg"><i class="fa fa-book" aria-hidden="true"></i>&nbsp;Knowledge</span>
+      </a>
+
       <!-- Header Navbar -->
       <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
@@ -228,7 +233,7 @@ export default {
 
 .logo-mini,
 .logo-lg {
-  text-align: left;
+  text-align: center;
 
   img {
     padding: .4em !important;
