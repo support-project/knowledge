@@ -13,8 +13,6 @@ import org.support.project.web.entity.SystemConfigsEntity;
 @DI(instance = Instance.Singleton)
 public class SystemConfigLogic {
 
-    private boolean close = false;
-
     public static SystemConfigLogic get() {
         return Container.getComp(SystemConfigLogic.class);
     }
@@ -41,19 +39,4 @@ public class SystemConfigLogic {
         }
         return true;
     }
-
-    /**
-     * @return the close
-     */
-    public boolean isClose() {
-        return close;
-    }
-
-    /**
-     * @param close the close to set
-     */
-    public void setClose(boolean close) {
-        this.close = close;
-    }
-
 }

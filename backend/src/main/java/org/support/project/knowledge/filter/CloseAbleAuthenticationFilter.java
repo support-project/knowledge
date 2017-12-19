@@ -19,15 +19,20 @@ import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.logic.AccountLogic;
 import org.support.project.knowledge.logic.KnowledgeAuthenticationLogic;
-import org.support.project.knowledge.logic.SystemConfigLogic;
 import org.support.project.knowledge.vo.UserConfigs;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.config.SystemConfigValue;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.filter.AuthenticationFilter;
 import org.support.project.web.logic.AuthenticationLogic;
 
+/**
+ * システム設定で、全てのアクセスにログインが必要を選択した場合のフィルタ
+ * `/open` のパスであってもログインを必須にする
+ * @author koda
+ */
 public class CloseAbleAuthenticationFilter extends AuthenticationFilter {
 
     private Pattern pattern = null;
@@ -43,7 +48,7 @@ public class CloseAbleAuthenticationFilter extends AuthenticationFilter {
         SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_EXPOSE_TYPE, AppConfig.get().getSystemName());
         if (config != null) {
             if (SystemConfig.SYSTEM_EXPOSE_TYPE_CLOSE.equals(config.getConfigValue())) {
-                SystemConfigLogic.get().setClose(true);
+                SystemConfigValue.get().setClose(true);
             }
         }
         String ignoreRegularExpression = filterconfig.getInitParameter("close-ignore-regular-expression");
@@ -62,7 +67,7 @@ public class CloseAbleAuthenticationFilter extends AuthenticationFilter {
     @Override
     public void doFilter(ServletRequest servletrequest, ServletResponse servletresponse, FilterChain filterchain)
             throws IOException, ServletException {
-        if (SystemConfigLogic.get().isClose()) {
+        if (SystemConfigValue.get().isClose()) {
             HttpServletRequest req = (HttpServletRequest) servletrequest;
             HttpServletResponse res = (HttpServletResponse) servletresponse;
             
@@ -80,7 +85,7 @@ public class CloseAbleAuthenticationFilter extends AuthenticationFilter {
             
             try {
                 if (!isLogin(req)) {
-                    AuthenticationLogic logic = Container.getComp(KnowledgeAuthenticationLogic.class);
+                    AuthenticationLogic<?> logic = Container.getComp(KnowledgeAuthenticationLogic.class);
                     logic.cookieLogin(req, res);
                 }
 
@@ -95,15 +100,26 @@ public class CloseAbleAuthenticationFilter extends AuthenticationFilter {
                         String path = pathBuilder.toString();
                         Matcher matcher = pattern.matcher(path);
                         if (!matcher.find() && !path.equals(getLoginProcess())) {
-                            // 対象外でないし、ログインページへの遷移でない
-                            String page = req.getParameter("page");
-                            req.setAttribute("page", page);
-
-                            res.setStatus(HttpStatus.SC_401_UNAUTHORIZED);
-                            StringBuilder builder = new StringBuilder();
-                            builder.append(getLoginPage());
-                            HttpUtil.forward(res, req, builder.toString());
-                            return;
+                            // HttpHeaderチェック
+                            String accept = req.getHeader("Accept");
+                            if (accept != null && accept.toLowerCase().equals("application/json")) {
+                                // レスポンスはJSON形式で
+                                res.setContentType("application/json");
+                                res.setCharacterEncoding("UTF-8");
+                                res.setStatus(HttpStatus.SC_401_UNAUTHORIZED);
+                                res.getWriter().write("{\"msg\":\"UNAUTHORIZED\"}");
+                                res.getWriter().close();
+                                return;
+                            } else {
+                                // 対象外でないし、ログインページへの遷移でないので、ログインページへ
+                                String page = req.getParameter("page");
+                                req.setAttribute("page", page);
+                                res.setStatus(HttpStatus.SC_401_UNAUTHORIZED);
+                                StringBuilder builder = new StringBuilder();
+                                builder.append(getLoginPage());
+                                HttpUtil.forward(res, req, builder.toString());
+                                return;
+                            }
                         }
                     }
                 }

@@ -11,10 +11,10 @@ import org.support.project.knowledge.config.AnalyticsConfig;
 import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.control.Control;
-import org.support.project.knowledge.logic.SystemConfigLogic;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpUtil;
+import org.support.project.web.config.SystemConfigValue;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.LdapConfigsDao;
@@ -193,9 +193,9 @@ public class ConfigControl extends Control {
             dao.save(config);
 
             if (SystemConfig.SYSTEM_EXPOSE_TYPE_CLOSE.equals(systemOpenType)) {
-                SystemConfigLogic.get().setClose(true);
+                SystemConfigValue.get().setClose(true);
             } else {
-                SystemConfigLogic.get().setClose(false);
+                SystemConfigValue.get().setClose(false);
             }
         }
         

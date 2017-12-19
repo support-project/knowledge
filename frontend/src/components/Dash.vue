@@ -165,7 +165,6 @@
 </template>
 
 <script>
-import faker from 'faker'
 import { mapState } from 'vuex'
 import config from '../config'
 import Sidebar from './Sidebar'
@@ -193,10 +192,9 @@ export default {
     ]),
     demo () {
       return {
-        displayName: faker.name.findName(),
-        avatar: faker.image.avatar(),
-        email: faker.internet.email(),
-        randomCard: faker.helpers.createCard()
+        displayName: 'displayName',
+        avatar: '',
+        email: 'example@example.com'
       }
     }
   },

@@ -13,12 +13,12 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.Control;
-import org.support.project.knowledge.dao.TokensDao;
-import org.support.project.knowledge.entity.TokensEntity;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.dao.TokensDao;
+import org.support.project.web.entity.TokensEntity;
 
 @DI(instance = Instance.Prototype)
 public class TokenControl extends Control {
@@ -71,6 +71,7 @@ public class TokenControl extends Control {
             entity = new TokensEntity();
             entity.setToken(RandomUtil.randamGen(64));
             entity.setUserId(getLoginUserId());
+            entity.setTokenType(1);
         }
         entity.setExpires(new Timestamp(date.getTime()));
         TokensDao.get().save(entity);

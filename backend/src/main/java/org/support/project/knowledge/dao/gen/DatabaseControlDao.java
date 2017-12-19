@@ -20,7 +20,7 @@ public class DatabaseControlDao extends AbstractDao {
 
     /** Drop all tables */
     public void dropAllTable() {
-        String[] sqls = new String[51];
+        String[] sqls = new String[50];
         sqls[0] = "DROP TABLE IF EXISTS KNOWLEDGES CASCADE;";
         sqls[1] = "DROP TABLE IF EXISTS EVENTS CASCADE;";
         sqls[2] = "DROP TABLE IF EXISTS MAIL_POSTS CASCADE;";
@@ -53,25 +53,24 @@ public class DatabaseControlDao extends AbstractDao {
         sqls[29] = "DROP TABLE IF EXISTS MAIL_LOCALE_TEMPLATES CASCADE;";
         sqls[30] = "DROP TABLE IF EXISTS VOTES CASCADE;";
         sqls[31] = "DROP TABLE IF EXISTS COMMENTS CASCADE;";
-        sqls[32] = "DROP TABLE IF EXISTS TOKENS CASCADE;";
-        sqls[33] = "DROP TABLE IF EXISTS MAIL_HOOK_CONDITIONS CASCADE;";
-        sqls[34] = "DROP TABLE IF EXISTS LIKES CASCADE;";
-        sqls[35] = "DROP TABLE IF EXISTS VIEW_HISTORIES CASCADE;";
-        sqls[36] = "DROP TABLE IF EXISTS SERVICE_CONFIGS CASCADE;";
-        sqls[37] = "DROP TABLE IF EXISTS KNOWLEDGE_EDIT_USERS CASCADE;";
-        sqls[38] = "DROP TABLE IF EXISTS PINS CASCADE;";
-        sqls[39] = "DROP TABLE IF EXISTS KNOWLEDGE_HISTORIES CASCADE;";
-        sqls[40] = "DROP TABLE IF EXISTS LIKE_COMMENTS CASCADE;";
-        sqls[41] = "DROP TABLE IF EXISTS BADGES CASCADE;";
-        sqls[42] = "DROP TABLE IF EXISTS SURVEY_ANSWERS CASCADE;";
-        sqls[43] = "DROP TABLE IF EXISTS SURVEYS CASCADE;";
-        sqls[44] = "DROP TABLE IF EXISTS ACTIVITIES CASCADE;";
-        sqls[45] = "DROP TABLE IF EXISTS MAIL_HOOK_IGNORE_CONDITIONS CASCADE;";
-        sqls[46] = "DROP TABLE IF EXISTS MAIL_TEMPLATES CASCADE;";
-        sqls[47] = "DROP TABLE IF EXISTS POINT_USER_HISTORIES CASCADE;";
-        sqls[48] = "DROP TABLE IF EXISTS SURVEY_ITEMS CASCADE;";
-        sqls[49] = "DROP TABLE IF EXISTS STOCKS CASCADE;";
-        sqls[50] = "DROP TABLE IF EXISTS TEMPLATE_ITEMS CASCADE;";
+        sqls[32] = "DROP TABLE IF EXISTS MAIL_HOOK_CONDITIONS CASCADE;";
+        sqls[33] = "DROP TABLE IF EXISTS LIKES CASCADE;";
+        sqls[34] = "DROP TABLE IF EXISTS VIEW_HISTORIES CASCADE;";
+        sqls[35] = "DROP TABLE IF EXISTS SERVICE_CONFIGS CASCADE;";
+        sqls[36] = "DROP TABLE IF EXISTS KNOWLEDGE_EDIT_USERS CASCADE;";
+        sqls[37] = "DROP TABLE IF EXISTS PINS CASCADE;";
+        sqls[38] = "DROP TABLE IF EXISTS KNOWLEDGE_HISTORIES CASCADE;";
+        sqls[39] = "DROP TABLE IF EXISTS LIKE_COMMENTS CASCADE;";
+        sqls[40] = "DROP TABLE IF EXISTS BADGES CASCADE;";
+        sqls[41] = "DROP TABLE IF EXISTS SURVEY_ANSWERS CASCADE;";
+        sqls[42] = "DROP TABLE IF EXISTS SURVEYS CASCADE;";
+        sqls[43] = "DROP TABLE IF EXISTS ACTIVITIES CASCADE;";
+        sqls[44] = "DROP TABLE IF EXISTS MAIL_HOOK_IGNORE_CONDITIONS CASCADE;";
+        sqls[45] = "DROP TABLE IF EXISTS MAIL_TEMPLATES CASCADE;";
+        sqls[46] = "DROP TABLE IF EXISTS POINT_USER_HISTORIES CASCADE;";
+        sqls[47] = "DROP TABLE IF EXISTS SURVEY_ITEMS CASCADE;";
+        sqls[48] = "DROP TABLE IF EXISTS STOCKS CASCADE;";
+        sqls[49] = "DROP TABLE IF EXISTS TEMPLATE_ITEMS CASCADE;";
         for (String sql : sqls) {
             LOG.debug(sql);
             executeUpdate(sql);
@@ -79,7 +78,7 @@ public class DatabaseControlDao extends AbstractDao {
     }
     /** Delete all table data */
     public void dropAllData() {
-        String[] sqls = new String[51];
+        String[] sqls = new String[50];
         sqls[0] = "TRUNCATE TABLE KNOWLEDGES;";
         sqls[1] = "TRUNCATE TABLE EVENTS;";
         sqls[2] = "TRUNCATE TABLE MAIL_POSTS;";
@@ -112,25 +111,24 @@ public class DatabaseControlDao extends AbstractDao {
         sqls[29] = "TRUNCATE TABLE MAIL_LOCALE_TEMPLATES;";
         sqls[30] = "TRUNCATE TABLE VOTES;";
         sqls[31] = "TRUNCATE TABLE COMMENTS;";
-        sqls[32] = "TRUNCATE TABLE TOKENS;";
-        sqls[33] = "TRUNCATE TABLE MAIL_HOOK_CONDITIONS;";
-        sqls[34] = "TRUNCATE TABLE LIKES;";
-        sqls[35] = "TRUNCATE TABLE VIEW_HISTORIES;";
-        sqls[36] = "TRUNCATE TABLE SERVICE_CONFIGS;";
-        sqls[37] = "TRUNCATE TABLE KNOWLEDGE_EDIT_USERS;";
-        sqls[38] = "TRUNCATE TABLE PINS;";
-        sqls[39] = "TRUNCATE TABLE KNOWLEDGE_HISTORIES;";
-        sqls[40] = "TRUNCATE TABLE LIKE_COMMENTS;";
-        sqls[41] = "TRUNCATE TABLE BADGES;";
-        sqls[42] = "TRUNCATE TABLE SURVEY_ANSWERS;";
-        sqls[43] = "TRUNCATE TABLE SURVEYS;";
-        sqls[44] = "TRUNCATE TABLE ACTIVITIES;";
-        sqls[45] = "TRUNCATE TABLE MAIL_HOOK_IGNORE_CONDITIONS;";
-        sqls[46] = "TRUNCATE TABLE MAIL_TEMPLATES;";
-        sqls[47] = "TRUNCATE TABLE POINT_USER_HISTORIES;";
-        sqls[48] = "TRUNCATE TABLE SURVEY_ITEMS;";
-        sqls[49] = "TRUNCATE TABLE STOCKS;";
-        sqls[50] = "TRUNCATE TABLE TEMPLATE_ITEMS;";
+        sqls[32] = "TRUNCATE TABLE MAIL_HOOK_CONDITIONS;";
+        sqls[33] = "TRUNCATE TABLE LIKES;";
+        sqls[34] = "TRUNCATE TABLE VIEW_HISTORIES;";
+        sqls[35] = "TRUNCATE TABLE SERVICE_CONFIGS;";
+        sqls[36] = "TRUNCATE TABLE KNOWLEDGE_EDIT_USERS;";
+        sqls[37] = "TRUNCATE TABLE PINS;";
+        sqls[38] = "TRUNCATE TABLE KNOWLEDGE_HISTORIES;";
+        sqls[39] = "TRUNCATE TABLE LIKE_COMMENTS;";
+        sqls[40] = "TRUNCATE TABLE BADGES;";
+        sqls[41] = "TRUNCATE TABLE SURVEY_ANSWERS;";
+        sqls[42] = "TRUNCATE TABLE SURVEYS;";
+        sqls[43] = "TRUNCATE TABLE ACTIVITIES;";
+        sqls[44] = "TRUNCATE TABLE MAIL_HOOK_IGNORE_CONDITIONS;";
+        sqls[45] = "TRUNCATE TABLE MAIL_TEMPLATES;";
+        sqls[46] = "TRUNCATE TABLE POINT_USER_HISTORIES;";
+        sqls[47] = "TRUNCATE TABLE SURVEY_ITEMS;";
+        sqls[48] = "TRUNCATE TABLE STOCKS;";
+        sqls[49] = "TRUNCATE TABLE TEMPLATE_ITEMS;";
         for (String sql : sqls) {
             LOG.debug(sql);
             executeUpdate(sql);

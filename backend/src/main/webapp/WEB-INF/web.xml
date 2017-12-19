@@ -58,12 +58,14 @@
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>org.support.project.knowledge.filter.CloseAbleAuthenticationFilter</filter-class>
         <init-param>
+            <!-- 認証無しでアクセスできるパス -->
             <param-name>ignore-regular-expression</param-name>
-            <param-value>^/index|^/open|^/api|^/template|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|^/assets|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$</param-value>
+            <param-value>^/index|^/api|^/template|^/static|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|^/assets|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$|^/open</param-value>
         </init-param>
         <init-param>
+            <!-- 全ての機能に認証が必須を設定している場合でも、認証無しでアクセスできるパス -->
             <param-name>close-ignore-regular-expression</param-name>
-            <param-value>^/index|^/template|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|^/assets|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$|^/open.signup|^/open.PasswordInitialization|^/open.account</param-value>
+            <param-value>^/index|^/api|^/template|^/static|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|^/assets|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$|^/open.signup|^/open.PasswordInitialization|^/open.account</param-value>
         </init-param>
         <init-param>
             <param-name>login-page</param-name>
@@ -115,6 +117,10 @@
         <init-param>
             <param-name>ignore-regular-expression</param-name>
             <param-value>^/ws|^/template|^/bower|css$|js$|ico$|html$</param-value>
+        </init-param>
+        <init-param>
+            <param-name>callControlLogicClass</param-name>
+            <param-value>org.support.project.web.logic.invoke.CallControlExLogicImpl</param-value>
         </init-param>
     </filter>
 

@@ -66,7 +66,7 @@ public abstract class TestCommon {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(TestCommon.class);
 
-    public static int WAIT_MILLSEC = 50;
+    public static int WAIT_MILLSEC = 100;
     
     public static final String KNOWLEDGE_TEST_HOME = "KNOWLEDGE_TEST_HOME";
     public static final String KNOWLEDGE_UNIT_TEST_WAIT_MILL = "KNOWLEDGE_UNIT_TEST_WAIT_MILL";

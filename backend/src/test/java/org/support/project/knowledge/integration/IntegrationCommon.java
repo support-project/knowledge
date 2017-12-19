@@ -16,6 +16,7 @@ import org.support.project.common.util.FileUtil;
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.common.util.SystemUtils;
+import org.support.project.di.Container;
 import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.bat.MailSendBat;
 import org.support.project.knowledge.bat.NotifyMailBat;
@@ -46,6 +47,7 @@ import org.support.project.web.entity.NotificationsEntity;
 import org.support.project.web.logic.CallControlLogic;
 import org.support.project.web.logic.HttpRequestCheckLogic;
 import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
+import org.support.project.web.logic.invoke.CallControlExLogicImpl;
 import org.support.project.web.test.stub.StubHttpServletRequest;
 import org.support.project.web.test.stub.StubHttpServletResponse;
 
@@ -53,7 +55,7 @@ public abstract class IntegrationCommon extends TestCommon {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(IntegrationCommon.class);
     
-    private static boolean isInitCallControlLogic = false;
+    protected static boolean isInitCallControlLogic = false;
     private static boolean isMailSend = false;
     
     private static Map<String, Long> userPointMap = new HashMap<>();
@@ -81,7 +83,8 @@ public abstract class IntegrationCommon extends TestCommon {
             String controlPackage = "org.support.project.knowledge.control,org.support.project.web.control";
             String classSuffix = "Control";
             String ignoreRegularExpression = "^/ws|^/template|^/bower|css$|js$|ico$|html$";
-            CallControlLogic.get().init(controlPackage, classSuffix, true, ignoreRegularExpression);
+            CallControlLogic callControlLogic = Container.getComp(CallControlExLogicImpl.class);
+            callControlLogic.init(controlPackage, classSuffix, true, ignoreRegularExpression);
             isInitCallControlLogic = true;
         }
         
@@ -106,7 +109,8 @@ public abstract class IntegrationCommon extends TestCommon {
      */
     @SuppressWarnings("unchecked")
     protected <T> T invoke(HttpServletRequest request, HttpServletResponse response, Class<T> clazz) throws Exception {
-        InvokeTarget invoke = CallControlLogic.get().searchInvokeTarget(request, response);
+        CallControlLogic callControlLogic = Container.getComp(CallControlExLogicImpl.class);
+        InvokeTarget invoke = callControlLogic.searchInvokeTarget(request, response);
         if (invoke == null) {
             LOG.error("InvokeTarget is not find. [Method]" + request.getMethod() + " [Path]" + request.getServletPath());
         }

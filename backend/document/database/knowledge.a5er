@@ -427,24 +427,6 @@ BkColor=$FFFFFF
 ModifiedDateTime=20170809123907
 Position="MAIN",1500,1450
 
-[Entity]
-PName=TOKENS
-LName=認証トークン
-Comment=
-TableOption=
-Page=MAIN
-Left=3600
-Top=300
-Field="TOKEN","TOKEN","@VARCHAR(128)","NOT NULL",0,"","",$FFFFFFFF,""
-Field="ユーザID","USER_ID","@INT","NOT NULL",,"","",$FFFFFFFF,""
-Field="有効期限","EXPIRES","@DATETIME","NOT NULL",,"","",$FFFFFFFF,""
-Index==1,USER_ID
-EffectMode=None
-Color=$000000
-BkColor=$FFFFFF
-ModifiedDateTime=20170620125822
-Position="MAIN",3600,300
-
 [Relation]
 Entity1=MAIL_HOOKS
 Entity2=MAIL_PROPERTIES
