@@ -43,7 +43,7 @@ public class ApiFilter extends ControlFilter {
     
     private boolean enableAuthParameter = true; // TODO 後でfalseへ
     
-    private String targetRegex = "(^/api)(.)*";
+    private String targetRegex = "(^/api)(.)*|(^/_api)(.)*";
     private Pattern pattern;
 
     
@@ -117,6 +117,9 @@ public class ApiFilter extends ControlFilter {
         // 認証(Tokenが指定されていれば、ログイン状態にする、指定していなければ何もしない）
         // Httpヘッダー「PRIVATE-TOKEN」か、リクエストパラメータ「private_token」の値で認証することを検討（GitLab準拠）
         // → クエリパラメータ指定だとアクセスログにtoken情報が表示されてしまい良くない気がするので、デフォルトはHttpヘッダー指定のみにする（設定で有効にもできる）
+        // 
+        // なお、OAuthに関連した仕様で RFC6750 があり、それだと、「Authorization: Bearer ヘッダ」を使う事が推奨なのだけど、
+        // OAuthを提供しているわけでは無いので、GitLab方式を採用している（外部からのWebAPI／内部API共に）
         String token = req.getHeader("PRIVATE-TOKEN");
         if (enableAuthParameter) {
             if (StringUtils.isEmpty(token)) {

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @DI(instance = Instance.Prototype)
-public class GroupsControl extends GetApiControl {
+public class GroupsApiControl extends GetApiControl {
     /**
      * List groups
      */

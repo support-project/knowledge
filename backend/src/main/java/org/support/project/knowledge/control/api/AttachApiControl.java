@@ -10,9 +10,9 @@ import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.GetApiControl;
 import org.support.project.web.control.service.Get;
 
-public class AttachControl extends GetApiControl {
+public class AttachApiControl extends GetApiControl {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AttachControl.class);
+    private static final Log LOG = LogFactory.getLog(AttachApiControl.class);
 
     @Get(path="api/attachments", publishToken="")
     public Boundary index() {

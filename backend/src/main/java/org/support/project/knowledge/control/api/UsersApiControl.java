@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @DI(instance = Instance.Prototype)
-public class UsersControl extends GetApiControl {
+public class UsersApiControl extends GetApiControl {
     /**
      * List users
      */

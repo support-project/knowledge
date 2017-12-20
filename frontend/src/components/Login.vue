@@ -2,7 +2,7 @@
   <div class="container container-table">
       <div class="row vertical-10p">
         <div class="container">
-          <img src="/static/img/logo.png" class="center-block logo">
+          <img src="/static/img/human.svg" class="center-block logo">
           <div class="text-center col-md-4 col-sm-offset-4">
             <!-- login form -->
             <form class="ui form loginForm"  @submit.prevent="checkCreds">
@@ -50,9 +50,11 @@ export default {
       this.$store.commit('TOGGLE_LOADING')
 
       /* Making API call to authenticate a user */
-      api.request('post', '/login', {username, password})
+      api.request('post', '/_api/v1/token', {id: username, password: password})
       .then(response => {
         this.toggleLoading()
+
+        console.log(response)
 
         var data = response.data
         /* Checking if error object was returned from the server */
@@ -73,6 +75,8 @@ export default {
         if (data.user) {
           var token = 'Bearer ' + data.token
 
+          data.user.avatar = 'open.account/icon'
+
           this.$store.commit('SET_USER', data.user)
           this.$store.commit('SET_TOKEN', token)
 
@@ -88,7 +92,11 @@ export default {
         this.$store.commit('TOGGLE_LOADING')
         console.log(error)
 
-        this.response = 'Server appears to be offline'
+        if (error.response.status === 403) {
+          this.response = 'Username/Password incorrect. Please try again.'
+        } else {
+          this.response = 'Server appears to be offline'
+        }
         this.toggleLoading()
       })
     },

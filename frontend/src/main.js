@@ -57,6 +57,8 @@ if (window.localStorage) {
   var localUser = JSON.parse(localUserString)
 
   if (localUser && store.state.user !== localUser) {
+    // TODO Tokenが有効かどうかのチェック（無効になっていれば、ログアウト）
+
     store.commit('SET_USER', localUser)
     store.commit('SET_TOKEN', window.localStorage.getItem('token'))
   }

@@ -29,7 +29,7 @@ import org.support.project.web.filter.ControlManagerFilter;
 import net.arnx.jsonic.JSONException;
 
 @DI(instance = Instance.Prototype)
-public class KnowledgesControl extends GetApiControl {
+public class KnowledgesApiControl extends GetApiControl {
     /** ログ */
     private static Log LOG = LogFactory.getLog(ControlManagerFilter.class);
     

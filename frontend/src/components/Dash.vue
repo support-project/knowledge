@@ -120,9 +120,9 @@
             <li class="dropdown user user-menu">
               <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                 <!-- The user image in the navbar-->
-                <img v-bind:src="demo.avatar" class="user-image" alt="User Image">
+                <img v-bind:src="user.avatar" class="user-image" alt="User Image">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                <span class="hidden-xs">{{ demo.displayName }}</span>
+                <span class="hidden-xs">{{ user.userName }}</span>
               </a>
             </li>
           </ul>
@@ -130,7 +130,7 @@
       </nav>
     </header>
     <!-- Left side column. contains the logo and sidebar -->
-    <sidebar :display-name="demo.displayName" :picture-url="demo.avatar" />
+    <sidebar :display-name="user.userName" :picture-url="user.avatar" />
   
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -188,8 +188,10 @@ export default {
   },
   computed: {
     ...mapState([
+      'user',
       'userInfo'
-    ]),
+    ])
+    /*
     demo () {
       return {
         displayName: 'displayName',
@@ -197,6 +199,7 @@ export default {
         email: 'example@example.com'
       }
     }
+    */
   },
   methods: {
     changeloading () {
