@@ -22,6 +22,10 @@
     <a href="#" v-on:click.prevent="changeMsg">メッセージ変更</a><br/>
     <a href="#" v-on:click.prevent="apisample1">API Sample1(OPEN)</a><br/>
     <a href="#" v-on:click.prevent="apisample2">API Sample2(CLOSE)</a><br/>
+    <a href="#" v-on:click.prevent="apisample3">API Sample3(内部OPEN)</a><br/>
+    <a href="#" v-on:click.prevent="apisample4">API Sample4(内部CLOSE)</a><br/>
+    <a href="#" v-on:click.prevent="apisamplePost1">API Sample Post1(Public CLOSE)</a><br/>
+    <a href="#" v-on:click.prevent="apisamplePost2">API Sample Post2(内部 CLOSE)</a><br/>
     <br/>
 
     {{ msg }}
@@ -90,12 +94,56 @@
         })
         .catch(error => {
           console.log(error)
+          this.msg = 'access error. ' + error.response.data.msg
         })
       },
       apisample2 () {
         console.log(this.$store.getters.GET_TOKEN)
-
         api.request('get', '/api/sample', null, this.$store.getters.GET_TOKEN)
+        .then(response => {
+          console.log(response.data)
+          this.msg = response.data.msg
+        })
+        .catch(error => {
+          console.log(error)
+          this.msg = 'access error. ' + error.response.data.msg
+        })
+      },
+      apisample3 () {
+        api.request('get', '/_api/sample3')
+        .then(response => {
+          console.log(response.data)
+          this.msg = response.data.msg
+        })
+        .catch(error => {
+          console.log(error)
+          this.msg = 'access error. ' + error.response.data.msg
+        })
+      },
+      apisample4 () {
+        api.request('get', '/_api/sample', null, this.$store.getters.GET_TOKEN)
+        .then(response => {
+          console.log(response.data)
+          this.msg = response.data.msg
+        })
+        .catch(error => {
+          console.log(error)
+          this.msg = 'access error. ' + error.response.data.msg
+        })
+      },
+      apisamplePost1 () {
+        api.request('post', '/api/samplepost', null, this.$store.getters.GET_TOKEN)
+        .then(response => {
+          console.log(response.data)
+          this.msg = response.data.msg
+        })
+        .catch(error => {
+          console.log(error)
+          this.msg = 'access error. ' + error.response.data.msg
+        })
+      },
+      apisamplePost2 () {
+        api.request('post', '/_api/samplepost', null, this.$store.getters.GET_TOKEN)
         .then(response => {
           console.log(response.data)
           this.msg = response.data.msg

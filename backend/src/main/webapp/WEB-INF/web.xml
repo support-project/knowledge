@@ -7,6 +7,11 @@
 
     <display-name>knowledge</display-name>
 
+    <context-param>
+        <param-name>auth-class-name</param-name>
+        <param-value>org.support.project.knowledge.logic.KnowledgeAuthenticationLogic</param-value>
+    </context-param>
+
     <listener>
         <listener-class>org.support.project.knowledge.listener.GlobalInitializationListener</listener-class>
     </listener>
@@ -50,8 +55,28 @@
     </filter>
 
     <filter>
-        <filter-name>ApiFilter</filter-name>
-        <filter-class>org.support.project.knowledge.filter.ApiFilter</filter-class>
+        <filter-name>PublicApiFilter</filter-name>
+        <filter-class>org.support.project.web.filter.PublicApiFilter</filter-class>
+        <init-param>
+            <param-name>target-regex</param-name>
+            <param-value>(^/api)(.)*</param-value>
+        </init-param>
+        <init-param>
+            <param-name>private_token</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>InternalApiFilter</filter-name>
+        <filter-class>org.support.project.web.filter.InternalApiFilter</filter-class>
+        <init-param>
+            <param-name>target-regex</param-name>
+            <param-value>(^/_api)(.)*</param-value>
+        </init-param>
+        <init-param>
+            <param-name>private_token</param-name>
+            <param-value>true</param-value>
+        </init-param>
     </filter>
 
     <filter>
@@ -84,10 +109,6 @@
             <param-value>/open.knowledge/list</param-value>
         </init-param>
         <init-param>
-            <param-name>auth-class-name</param-name>
-            <param-value>org.support.project.knowledge.logic.KnowledgeAuthenticationLogic</param-value>
-        </init-param>
-        <init-param>
             <param-name>cookie-max-age</param-name>
             <param-value>10</param-value>
         </init-param>
@@ -104,7 +125,7 @@
     
     <filter>
         <filter-name>MaintenanceModeFilter</filter-name>
-        <filter-class>org.support.project.knowledge.filter.MaintenanceModeFilter</filter-class>
+        <filter-class>org.support.project.web.filter.MaintenanceModeFilter</filter-class>
     </filter>
 
     <filter>
@@ -150,7 +171,12 @@
     </filter-mapping>
 
     <filter-mapping>
-        <filter-name>ApiFilter</filter-name>
+        <filter-name>PublicApiFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>InternalApiFilter</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>

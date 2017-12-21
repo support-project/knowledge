@@ -189,7 +189,7 @@ public class AccountControl extends Control {
         authenticationLogic.clearSession(getRequest());
 
         addMsgInfo("knowledge.account.delete");
-        return devolution(HttpMethod.get, "Index/index");
+        return redirect(getRequest().getContextPath() + "/signout");
         // return redirect(getRequest().getContextPath());
     }
 

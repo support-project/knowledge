@@ -57,7 +57,10 @@
     <category name="org.support.project.web.filter.LoggingFilter">
         <level value="INFO" />
     </category>
-    <category name="org.support.project.knowledge.filter.ApiFilter">
+    <category name="org.support.project.web.filter.PublicApiFilter">
+        <level value="INFO" />
+    </category>
+    <category name="org.support.project.web.filter.InternalApiFilter">
         <level value="INFO" />
     </category>
     <category name="org.support.project.knowledge.bat">

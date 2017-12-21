@@ -7,13 +7,16 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.web.common.HttpUtil;
 import org.support.project.web.exception.AuthenticateException;
+import org.support.project.web.logic.HttpRequestCheckLogic;
 import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 
 @DI(instance = Instance.Singleton)
 public class KnowledgeAuthenticationLogic extends DefaultAuthenticationLogicImpl {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(DefaultAuthenticationLogicImpl.class);
+    
     
     
     @Override
@@ -66,5 +69,13 @@ public class KnowledgeAuthenticationLogic extends DefaultAuthenticationLogicImpl
             }
         }
     */
+    }
+
+
+
+    @Override
+    public void removeCookie(HttpServletRequest req, HttpServletResponse res) {
+        super.removeCookie(req, res);
+        HttpUtil.setCookie(req, res, HttpRequestCheckLogic.CSRF_TOKENS, "");
     }
 }
