@@ -102,7 +102,7 @@ public class GroupsApiControl extends GetApiControl {
         param.setKeyword("");
         param.setTags("");
         param.setGroups(groups);
-        param.setTemplate("");
+        param.setTemplates("");
         param.setLoginedUser(getLoginedUser());
         try {
             List<Knowledge> results = KnowledgeDataSelectLogic.get().selectList(param);

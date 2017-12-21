@@ -13,7 +13,6 @@ export default {
       return
     }
 
-    console.log(token)
     var headers = {}
     if (token) {
       headers = {'PRIVATE-TOKEN': token}

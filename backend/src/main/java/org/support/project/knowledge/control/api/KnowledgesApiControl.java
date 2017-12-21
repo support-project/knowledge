@@ -47,7 +47,7 @@ public class KnowledgesApiControl extends GetApiControl {
         param.setKeyword(getParam("keyword"));
         param.setTags(getParam("tags"));
         param.setGroupsAndLoginUser(getParam("groups"), getLoginedUser());
-        param.setTemplate(getParam("template"));
+        param.setTemplates(getParam("template"));
         try {
             List<Knowledge> results = KnowledgeDataSelectLogic.get().selectList(param);
             return send(HttpStatus.SC_200_OK, results);

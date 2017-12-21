@@ -217,12 +217,4 @@ public class Knowledge {
     public void setViewers(Target viewers) {
         this.viewers = viewers;
     }
-
-    
-    
-    
-    
-    
-    
-    
 }

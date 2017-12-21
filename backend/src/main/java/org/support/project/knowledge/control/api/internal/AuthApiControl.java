@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.support.project.common.util.RandomUtil;
 import org.support.project.di.Container;
+import org.support.project.di.DI;
+import org.support.project.di.Instance;
 import org.support.project.knowledge.logic.KnowledgeAuthenticationLogic;
 import org.support.project.knowledge.vo.api.Auth;
 import org.support.project.knowledge.vo.api.AuthResult;
@@ -23,6 +25,7 @@ import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.logic.AuthenticationLogic;
 import org.support.project.web.logic.invoke.Open;
 
+@DI(instance = Instance.Prototype)
 public class AuthApiControl extends ApiControl {
     
     @Open

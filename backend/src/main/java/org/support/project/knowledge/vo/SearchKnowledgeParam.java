@@ -3,19 +3,22 @@ package org.support.project.knowledge.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.support.project.common.util.StringUtils;
+import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.TagsEntity;
-import org.support.project.knowledge.logic.KeywordLogic;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.entity.GroupsEntity;
+import org.support.project.web.entity.UsersEntity;
 
 public class SearchKnowledgeParam {
 
     private String keyword;
     private List<TagsEntity> tags;
     private List<GroupsEntity> groups;
-    private String template;
+    private List<UsersEntity> creators;
+    private String[] templates;
     private LoginedUser loginedUser;
     private int offset;
     private int limit;
@@ -53,9 +56,34 @@ public class SearchKnowledgeParam {
         }
         setGroups(groups);
     }
+    /**
+     * @param template the template to set
+     */
+    public void setTemplates(String template) {
+        if (template != null) {
+            this.templates = template.split(",");
+        }
+    }
+    public void setCreators(String creators) {
+        List <UsersEntity> creatorUserEntities = new ArrayList<>();
+        if (StringUtils.isNotEmpty(creators)) {
+            String[] creatorsArray = creators.split(",");
+            for (String userName : creatorsArray) {
+                List<UsersEntity> users = ExUsersDao.get().selectByUserName(userName);
+                creatorUserEntities.addAll(users);
+            }
+        }
+        this.creators = creatorUserEntities;
+    }
+
     
-    
-    
+    /**
+     * @return the templates
+     */
+    public String[] getTemplates() {
+        return templates;
+    }
+
     
     
     /**
@@ -95,18 +123,6 @@ public class SearchKnowledgeParam {
         this.groups = groups;
     }
     /**
-     * @return the template
-     */
-    public String getTemplate() {
-        return template;
-    }
-    /**
-     * @param template the template to set
-     */
-    public void setTemplate(String template) {
-        this.template = template;
-    }
-    /**
      * @return the loginedUser
      */
     public LoginedUser getLoginedUser() {
@@ -141,6 +157,9 @@ public class SearchKnowledgeParam {
      */
     public void setLimit(int limit) {
         this.limit = limit;
+    }
+    public List<UsersEntity> getCreators() {
+        return creators;
     }
     
 }
