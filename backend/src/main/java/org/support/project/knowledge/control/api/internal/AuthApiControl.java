@@ -26,7 +26,7 @@ import org.support.project.web.logic.invoke.Open;
 public class AuthApiControl extends ApiControl {
     
     @Open
-    @Post(path="_api/v1/token", subscribeToken="")
+    @Post(path="open/token", subscribeToken="")
     public JsonBoundary token() throws InterruptedException, InvalidParamException {
         Auth auth = parseJson(Auth.class);
         AuthenticationLogic<LoginedUser> authenticationLogic = Container.getComp(KnowledgeAuthenticationLogic.class);
@@ -58,7 +58,4 @@ public class AuthApiControl extends ApiControl {
         }
         return send(HttpStatus.SC_403_FORBIDDEN, new Msg("FORBIDDEN"));
     }
-    
-    
-    
 }

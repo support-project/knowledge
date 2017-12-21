@@ -1,11 +1,80 @@
 <template>
   <ul class="sidebar-menu">
 
-    <li class="header">Main menu</li>
+    <router-link tag="li" class="pageLink" to="/login" v-if="!user.userId">
+      <a>
+        <i class="fa fa-sign-in text-green"></i>
+        <span class="page"> Login {{ user.userId }}</span>
+      </a>
+    </router-link>
+    <li class="pageLink router-link-active" v-if="user.userId">
+      <a href="#" v-on:click.prevent="logout">
+        <i class="fa fa-sign-out text-yellow"></i>
+        <span class="page"> Logout</span>
+      </a>
+    </li>
+    
+    <router-link tag="li" class="pageLink" to="/add">
+      <a>
+        <i class="fa fa-plus-circle text-blue"></i>
+        <span class="page">作成</span>
+      </a>
+    </router-link>
+
     <router-link tag="li" class="pageLink" to="/">
       <a>
         <i class="fa fa-list"></i>
-        <span class="page">List</span>
+        <span class="page">{{ $t('Route.ArticleListViewTitle') }}</span>
+      </a>
+    </router-link>
+
+    <router-link tag="li" class="pageLink" to="/drafts">
+      <a>
+        <i class="fa fa-list"></i>
+        <span class="page">下書き</span>
+      </a>
+    </router-link>
+    <router-link tag="li" class="pageLink" to="/stocks">
+      <a>
+        <i class="fa fa-list"></i>
+        <span class="page">ストック</span>
+      </a>
+    </router-link>
+    <router-link tag="li" class="pageLink" to="/events">
+      <a>
+        <i class="fa fa-list"></i>
+        <span class="page">イベント</span>
+      </a>
+    </router-link>
+
+    <router-link tag="li" class="pageLink" to="/groups">
+      <a>
+        <i class="fa fa-list"></i>
+        <span class="page">グループ</span>
+      </a>
+    </router-link>
+
+    <router-link tag="li" class="pageLink" to="/tags">
+      <a>
+        <i class="fa fa-list"></i>
+        <span class="page">タグ</span>
+      </a>
+    </router-link>
+
+
+    <li class="header">ME</li>
+    <li class="pageLink router-link-active">
+      <a href="open.knowledge/list">
+        <i class="fa fa-recycle" aria-hidden="true"></i>
+        <span class="page">{{ $t('Route.MoveOldUI') }}</span>
+      </a>
+    </li>
+
+    <li class="header">Test</li>
+    <router-link tag="li" class="pageLink" to="/test">
+      <a>
+        <i class="fa fa-cogs"></i>
+        <span class="page">{{ $t('Route.TestViewTitle') }}</span>
       </a>
     </router-link>
 
@@ -24,7 +93,8 @@
       </a>
     </router-link>
 
-    <li class="header">ME</li>
+    <li class="header">Tools</li>
+
     <router-link tag="li" class="pageLink" to="/tasks">
       <a>
         <i class="fa fa-tasks"></i>
@@ -86,12 +156,6 @@
     </router-link>
 
     <li class="header">PAGES</li>
-    <router-link tag="li" class="pageLink" to="/login">
-      <a>
-        <i class="fa fa-circle-o text-yellow"></i>
-        <span class="page"> Login</span>
-      </a>
-    </router-link>
     <router-link tag="li" class="pageLink" to="/404">
       <a>
         <i class="fa fa-circle-o text-red"></i>
@@ -102,8 +166,32 @@
   </ul>
 </template>
 <script>
+import api from '../api'
 export default {
-  name: 'SidebarName'
+  name: 'SidebarName',
+  props: ['user'],
+  methods: {
+    logout () {
+      this.$store.commit('SET_USER', {
+        avatar: 'open.account/icon/',
+        userName: 'anonymous'
+      })
+      this.$store.commit('SET_TOKEN', null)
+
+      if (window.localStorage) {
+        window.localStorage.setItem('user', null)
+        window.localStorage.setItem('token', null)
+      }
+      api.request('post', '/signout')
+      .then(response => {
+        this.$router.push('/login')
+      })
+      .catch(error => {
+        console.log(error)
+        this.$router.push('/login')
+      })
+    }
+  }
 }
 </script>
 <style>

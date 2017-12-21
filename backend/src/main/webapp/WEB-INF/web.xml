@@ -65,7 +65,7 @@
         <init-param>
             <!-- 全ての機能に認証が必須を設定している場合でも、認証無しでアクセスできるパス -->
             <param-name>close-ignore-regular-expression</param-name>
-            <param-value>^/index|^/api|^/template|^/static|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|^/assets|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$|^/open.signup|^/open.PasswordInitialization|^/open.account</param-value>
+            <param-value>^/index|^/api|^/template|^/static|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|^/assets|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$|^/open.signup|^/open.PasswordInitialization|^/open.account|^/open/token</param-value>
         </init-param>
         <init-param>
             <param-name>login-page</param-name>

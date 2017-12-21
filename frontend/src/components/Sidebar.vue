@@ -14,12 +14,13 @@
             <p class="white">{{ displayName }}</p>
           </div>
           <a href="javascript:;">
-            <i class="fa fa-circle text-success"></i> Online
+            <i class="fa fa fa-heart-o text-success"></i> &#x00D7; 390
           </a>
         </div>
       </div>
 
       <!-- search form (Optional) -->
+      <!--
       <form v-on:submit.prevent class="sidebar-form">
         <div class="input-group">
           <input type="text"
@@ -36,10 +37,11 @@
           </span>
         </div>
       </form>
+      -->
       <!-- /.search form -->
 
       <!-- Sidebar Menu -->
-      <sidebar-menu />
+      <sidebar-menu :user="user" />
       <!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->
@@ -50,7 +52,7 @@ import SidebarMenu from './SidebarMenu'
 
 export default {
   name: 'Sidebar',
-  props: ['displayName', 'pictureUrl'],
+  props: ['displayName', 'pictureUrl', 'user'],
   components: { SidebarMenu },
   mounted: function () {
     window.jQuery('[data-toggle="hideseek"]').off().hideseek()

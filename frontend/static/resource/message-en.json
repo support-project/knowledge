@@ -1,9 +1,20 @@
 {
   "Route": {
-    "ArticleListTitle": "Article List",
-    "ArticleListDescription": "List"
+    "ArticleListViewTitle": "Article List",
+    "ArticleListViewDescription": "This page is Article List",
+    "MoveOldUI": "Change to OLD UI",
+    "TestViewTitle": "Page of Test",
+    "TestViewDescription": "This page is test of frontend development"
   },
-  "ArticleList": {
-    "Message": "aaa bbb ccc"
+  "DashView": {
+    "about": "About",
+    "manual": "Manual",
+    "licence": "Licence"
+  },
+  "ArticleListView": {
+    "Message": "message"
+  },
+  "TestView": {
+    "Message": "This is test."
   }
 }

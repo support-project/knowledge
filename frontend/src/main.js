@@ -61,6 +61,11 @@ if (window.localStorage) {
 
     store.commit('SET_USER', localUser)
     store.commit('SET_TOKEN', window.localStorage.getItem('token'))
+  } else {
+    store.commit('SET_USER', {
+      avatar: 'open.account/icon/',
+      userName: 'anonymous'
+    })
   }
 }
 
@@ -90,8 +95,9 @@ new Vue({
   i18n: i18n,
   beforeCreate: function () {
     var _self = this
+
+    // TODO Ajax access to get user locale config
     setTimeout(function () {
-      // TODO Ajax access to get user locale config
       _self.$i18n.locale = 'en'
     }, 100)
   }

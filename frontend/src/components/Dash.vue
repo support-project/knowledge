@@ -78,51 +78,16 @@
                 </li>
               </ul>
             </li>
-  
-            <!-- Tasks Menu -->
-            <li class="dropdown tasks-menu">
-              <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-flag-o"></i>
-                <span class="label label-danger">{{ userInfo.tasks | count }} </span>
-              </a>
-              <ul class="dropdown-menu">
-                <li class="header">You have {{ userInfo.tasks | count }} task(s)</li>
-                <li v-if="userInfo.tasks.length > 0">
-                  <!-- Inner menu: contains the tasks -->
-                  <ul class="menu">
-                    <li>
-                      <!-- Task item -->
-                      <a href="javascript:;">
-                        <!-- Task title and progress text -->
-                        <h3>
-                          Design some buttons
-                          <small class="pull-right">20%</small>
-                        </h3>
-                        <!-- The progress bar -->
-                        <div class="progress xs">
-                          <!-- Change the css width attribute to simulate progress -->
-                          <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                            <span class="sr-only">20% Complete</span>
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                    <!-- end task item -->
-                  </ul>
-                </li>
-                <li class="footer" v-if="userInfo.tasks.length > 0">
-                  <a href="javascript:;">View all tasks</a>
-                </li>
-              </ul>
-            </li>
-  
+            
             <!-- User Account Menu -->
             <li class="dropdown user user-menu">
               <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                 <!-- The user image in the navbar-->
                 <img v-bind:src="user.avatar" class="user-image" alt="User Image">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                <!--
                 <span class="hidden-xs">{{ user.userName }}</span>
+                -->
               </a>
             </li>
           </ul>
@@ -130,7 +95,7 @@
       </nav>
     </header>
     <!-- Left side column. contains the logo and sidebar -->
-    <sidebar :display-name="user.userName" :picture-url="user.avatar" />
+    <sidebar :display-name="user.userName" :picture-url="user.avatar" :user="user" />
   
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -157,8 +122,25 @@
   
     <!-- Main Footer -->
     <footer class="main-footer">
-      <strong>Copyright &copy; {{year}}
-        <a href="javascript:;">CoPilot</a>.</strong> All rights reserved.
+      <ul class="footer-menu list-inline">
+        <li class="first">
+            <a class="" href="" style="cursor: pointer;">
+              {{ $t('DashView.about') }}
+            </a>
+        </li>
+        <li>
+            <a class="" href="https://information-knowledge.support-project.org/manual" style="cursor: pointer;">
+              {{ $t('DashView.manual') }}
+            </a>
+        </li>
+        <li>
+            <a class="" href="open.license" style="cursor: pointer;">
+              {{ $t('DashView.licence') }}
+            </a>
+        </li>
+      </ul>
+      <strong>Copyright &copy; 2015 - {{year}}
+        <a href="https://support-project.org/knowledge_info/index">support-project.org</a>.</strong> All rights reserved.
     </footer>
   </div>
   <!-- ./wrapper -->

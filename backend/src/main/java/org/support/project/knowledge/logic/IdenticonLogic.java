@@ -30,7 +30,7 @@ public class IdenticonLogic {
     }
     
     private MessageDigest digest = null;
-    public static final int ICON_SIZE = 20;
+    public static final int ICON_SIZE = 48;
     // アイコンが登録されていない場合に、アイコンを生成するが、良く使われる人は20人までキャッシュする
     private SizeLimitMap<String, byte[]> _map = new SizeLimitMap<>(20);
     

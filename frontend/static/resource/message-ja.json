@@ -1,9 +1,20 @@
 {
   "Route": {
-    "ArticleListTitle": "記事一覧",
-    "ArticleListDescription": "記事の一覧です"
+    "ArticleListViewTitle": "記事一覧",
+    "ArticleListViewDescription": "記事の一覧です",
+    "MoveOldUI": "旧い画面に戻す",
+    "TestViewTitle": "テストページ",
+    "TestViewDescription": "フロントエンド開発テストページ"
   },
-  "ArticleList": {
+  "DashView": {
+    "about": "このアプリについて",
+    "manual": "オンラインマニュアル",
+    "licence": "ライセンス"
+  },
+  "ArticleListView": {
     "Message": "ほげほげふがふが"
+  },
+  "TestView": {
+    "Message": "これはテストです"
   }
 }

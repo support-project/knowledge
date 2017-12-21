@@ -17,6 +17,14 @@
                 <input class="form-control" name="password" placeholder="Password" type="password" v-model="password">
               </div>
               <button type="submit" v-bind:class="'btn btn-primary btn-lg ' + loading">Submit</button>
+
+              <router-link class="btn btn-default" to="/">
+                <a>
+                  <span class="page">キャンセル</span>
+                </a>
+              </router-link>
+
+
             </form>
 
             <!-- errors -->
@@ -50,7 +58,7 @@ export default {
       this.$store.commit('TOGGLE_LOADING')
 
       /* Making API call to authenticate a user */
-      api.request('post', '/_api/v1/token', {id: username, password: password})
+      api.request('post', '/open/token', {id: username, password: password})
       .then(response => {
         this.toggleLoading()
 
@@ -73,9 +81,9 @@ export default {
 
         /* Setting user in the state and caching record to the localStorage */
         if (data.user) {
-          var token = 'Bearer ' + data.token
+          var token = data.token
 
-          data.user.avatar = 'open.account/icon'
+          data.user.avatar = 'open.account/icon/' + data.user.userId
 
           this.$store.commit('SET_USER', data.user)
           this.$store.commit('SET_TOKEN', token)
