@@ -4,7 +4,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Knowledge {
+import org.support.project.knowledge.vo.KnowledgeDataInterface;
+
+public class Knowledge implements KnowledgeDataInterface {
     /** ナレッジID */
     private Long knowledgeId;
     /** タイトル */
@@ -26,11 +28,24 @@ public class Knowledge {
     /** 更新日時 */
     private Timestamp updateDatetime;
     
+    /** 登録ユーザ名 */
+    private String insertUserName;
+    /** 更新ユーザ名 */
+    private String updateUserName;
+    
+    /** ポイント */
+    private Integer point;
+    /** 指定期間内のイイネ件数 */
+    private Integer pointOnTerm;
+    
+    /** スコア(検索したでヒットした一覧の場合のスコア) */
+    private Float score;
+    
     /** タグ */
     private List<String> tags = new ArrayList<>();
     
-    /** テンプレート名 */
-    private String template;
+    /** 記事の種類 */
+    private Type type;
     
     /** 閲覧可能な対象（publicflag=2(保護)の場合に指定） */
     private Target viewers;
@@ -191,20 +206,6 @@ public class Knowledge {
     }
 
     /**
-     * @return the template
-     */
-    public String getTemplate() {
-        return template;
-    }
-
-    /**
-     * @param template the template to set
-     */
-    public void setTemplate(String template) {
-        this.template = template;
-    }
-
-    /**
      * @return the viewers
      */
     public Target getViewers() {
@@ -216,5 +217,53 @@ public class Knowledge {
      */
     public void setViewers(Target viewers) {
         this.viewers = viewers;
+    }
+
+    public String getInsertUserName() {
+        return insertUserName;
+    }
+
+    public void setInsertUserName(String insertUserName) {
+        this.insertUserName = insertUserName;
+    }
+
+    public String getUpdateUserName() {
+        return updateUserName;
+    }
+
+    public void setUpdateUserName(String updateUserName) {
+        this.updateUserName = updateUserName;
+    }
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public void setPoint(Integer point) {
+        this.point = point;
+    }
+
+    public Integer getPointOnTerm() {
+        return pointOnTerm;
+    }
+
+    public void setPointOnTerm(Integer pointOnTerm) {
+        this.pointOnTerm = pointOnTerm;
+    }
+
+    public Float getScore() {
+        return score;
+    }
+
+    public void setScore(Float score) {
+        this.score = score;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 }

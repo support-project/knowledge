@@ -69,12 +69,12 @@ public class StocksDao extends GenStocksDao {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<StocksEntity> selectStockOnKnowledge(KnowledgesEntity knowledgesEntity, LoginedUser loginedUser) {
-        if (knowledgesEntity == null || loginedUser == null) {
+    public List<StocksEntity> selectStockOnKnowledge(Long knowledgeId, LoginedUser loginedUser) {
+        if (knowledgeId == null || loginedUser == null) {
             return new ArrayList<>();
         }
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_selectStockOnKnowledge.sql");
-        return executeQueryList(sql, StocksEntity.class, loginedUser.getUserId(), knowledgesEntity.getKnowledgeId());
+        return executeQueryList(sql, StocksEntity.class, loginedUser.getUserId(), knowledgeId);
     }
     
     /**

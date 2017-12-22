@@ -222,7 +222,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setKnowledgeTargets(loginedUser, knowledgeIds);
 
         //ストック情報を取得
-        List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(entity, loginedUser);
+        List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(entity.getKnowledgeId(), loginedUser);
         setAttribute("stocks", stocks);
         
         UserConfigsEntity stealth = UserConfigsDao.get().selectOnKey(UserConfig.STEALTH_ACCESS, AppConfig.get().getSystemName(), getLoginUserId());

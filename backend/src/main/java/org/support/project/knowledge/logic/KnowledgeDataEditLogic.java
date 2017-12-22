@@ -76,14 +76,14 @@ public class KnowledgeDataEditLogic {
         knowledge.setFileNos(new ArrayList<>());
         
         // TemplateMastersEntity template
-        TemplateMastersEntity template = TemplateLogic.get().selectOnName(data.getTemplate());
+        TemplateMastersEntity template = TemplateLogic.get().selectOnName(data.getType().getName());
         if (template == null) {
             throw new InvalidParamException(new MessageResult(
                     MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST, "bad template name", ""));
         }
         List<TemplateItemsEntity> items = template.getItems();
         for (TemplateItemsEntity item : items) {
-            List<LabelValue> vals = data.getTemplateItems();
+            List<LabelValue> vals = data.getItems();
             for (LabelValue labelValue : vals) {
                 if (item.getItemName().equals(labelValue.getLabel())) {
                     item.setItemValue(labelValue.getValue());

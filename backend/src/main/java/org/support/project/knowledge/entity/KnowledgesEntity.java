@@ -10,12 +10,13 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.gen.GenKnowledgesEntity;
+import org.support.project.knowledge.vo.KnowledgeDataInterface;
 
 /**
  * ナレッジ
  */
 @DI(instance = Instance.Prototype)
-public class KnowledgesEntity extends GenKnowledgesEntity {
+public class KnowledgesEntity extends GenKnowledgesEntity implements KnowledgeDataInterface {
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;

@@ -6,6 +6,13 @@
     "TestViewTitle": "Page of Test",
     "TestViewDescription": "This page is test of frontend development"
   },
+  "Article": {
+    "PublicFlag": {
+      "0": "Public",
+      "1": "Private",
+      "2": "Protect"
+    }
+  },
   "DashView": {
     "about": "About",
     "manual": "Manual",

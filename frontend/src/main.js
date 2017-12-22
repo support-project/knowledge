@@ -5,6 +5,7 @@ import 'es6-promise/auto'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueI18n from 'vue-i18n'
+import VueLazyload from 'vue-lazyload'
 
 import { sync } from 'vuex-router-sync'
 import routes from './routes'
@@ -68,6 +69,13 @@ if (window.localStorage) {
     })
   }
 }
+
+Vue.use(VueLazyload, {
+  preLoad: 1.3,
+  error: 'static/img/loader.gif',
+  loading: 'static/img/loader.gif',
+  attempt: 1
+})
 
 const messageEn = require('../static/resource/message-en.json')
 const messageJa = require('../static/resource/message-ja.json')

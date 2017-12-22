@@ -1474,7 +1474,7 @@ public class KnowledgeLogic {
             PropertyUtil.copyPropertyValue(knowledgesEntity, stock);
             list.add(stock);
             //ストック情報を取得
-            List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(knowledgesEntity, loginedUser);
+            List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(knowledgesEntity.getKnowledgeId(), loginedUser);
             stock.setStocks(stocks);
         }
         return list;

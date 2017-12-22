@@ -2,6 +2,7 @@ package org.support.project.knowledge.logic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,26 +10,33 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
+import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
+import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
+import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
+import org.support.project.knowledge.vo.KnowledgeDataInterface;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
 import org.support.project.knowledge.vo.api.AttachedFile;
 import org.support.project.knowledge.vo.api.Comment;
 import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.knowledge.vo.api.Target;
+import org.support.project.knowledge.vo.api.Type;
+import org.support.project.knowledge.vo.api.internal.KnowledgeList;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.bean.NameId;
@@ -53,7 +61,7 @@ public class KnowledgeDataSelectLogic {
      * @param entity
      * @return
      */
-    private Knowledge conv(KnowledgesEntity entity, int type) {
+    private Knowledge conv(KnowledgesEntity entity, int type, Map<Integer, TemplateMastersEntity> typeMap) {
         if (entity == null) {
             return null;
         }
@@ -61,12 +69,21 @@ public class KnowledgeDataSelectLogic {
         PropertyUtil.copyPropertyValue(entity, result);
         
         // テンプレートの情報を追加
-        TemplateMastersEntity template = getTemplate(entity);
-        result.setTemplate(template.getTypeName());
+        TemplateMastersEntity template;
+        if (typeMap.containsKey(entity.getTypeId())) {
+            template = typeMap.get(entity.getTypeId());
+        } else {
+            template = typeMap.get(TemplateLogic.TYPE_ID_KNOWLEDGE);
+        }
+        result.setType(convType(template));
         
         // タグ
-        String[] tags = entity.getTagNames().split(",");
-        result.setTags(Arrays.asList(tags));
+        if (StringUtils.isNotEmpty(entity.getTagNames())) {
+            String[] tags = entity.getTagNames().split(",");
+            result.setTags(Arrays.asList(tags));
+        } else {
+            result.setTags(new ArrayList<>());
+        }
         
         // 公開範囲
         Target viewers = getViewers(entity);
@@ -79,7 +96,7 @@ public class KnowledgeDataSelectLogic {
             
             // テンプレートで拡張した項目の値を取得
             List<LabelValue> templateItems = getTemplateItems(entity, template);
-            detail.setTemplateItems(templateItems);
+            detail.setItems(templateItems);
             
             // コメント
             List<Comment> comments = getComments(entity);
@@ -97,6 +114,19 @@ public class KnowledgeDataSelectLogic {
             return detail;
         }
         return result;
+    }
+    /**
+     * 記事の種類の情報をAPIで返す形に変換
+     * @param templat
+     * @return
+     */
+    private Type convType(TemplateMastersEntity templat) {
+        Type type = new Type();
+        type.setId(templat.getTypeId());
+        type.setName(templat.getTypeName());
+        type.setIcon(templat.getTypeIcon());
+        type.setDescription(templat.getDescription());
+        return type;
     }
     /**
      * 添付ファイルを取得
@@ -201,21 +231,6 @@ public class KnowledgeDataSelectLogic {
         }
         return viewers;
     }
-    /**
-     * テンプレートの情報を取得
-     * @param entity
-     * @return
-     */
-    private TemplateMastersEntity getTemplate(KnowledgesEntity entity) {
-        int typeId = entity.getTypeId();
-        TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(typeId);
-        if (template == null) {
-            // そのテンプレートは既に削除済みの場合、通常のナレッジのテンプレートで表示する
-            typeId = TemplateLogic.TYPE_ID_KNOWLEDGE;
-            template = TemplateMastersDao.get().selectWithItems(typeId);
-        }
-        return template;
-    }
     
     /**
      * Knowledgeのデータを1件取得（WebAPIで返す形で）
@@ -228,7 +243,9 @@ public class KnowledgeDataSelectLogic {
         if (entity == null) {
             return null;
         }
-        Knowledge result = conv(entity, SINGLE);
+        // 記事のマスタを読み込み
+        Map<Integer, TemplateMastersEntity> typeMap = getTypeMap();
+        Knowledge result = conv(entity, SINGLE, typeMap);
         return result;
     }
     /**
@@ -241,6 +258,10 @@ public class KnowledgeDataSelectLogic {
         if (LOG.isDebugEnabled()) {
             LOG.debug("get knowledge list. [params] " + PropertyUtil.reflectionToString(param));
         }
+        // 記事のマスタを読み込み
+        Map<Integer, TemplateMastersEntity> typeMap = getTypeMap();
+        
+        // 記事検索
         List<Knowledge> results = new ArrayList<>();
         List<KnowledgesEntity> entities = KnowledgeLogic.get().searchKnowledge(
                 param.getKeyword(),
@@ -253,7 +274,7 @@ public class KnowledgeDataSelectLogic {
                 param.getLimit());
         List<String> ids = new ArrayList<>();
         for (KnowledgesEntity entity : entities) {
-            Knowledge result = conv(entity, LIST);
+            Knowledge result = conv(entity, LIST, typeMap);
             results.add(result);
             ids.add(String.valueOf(result.getKnowledgeId()));
         }
@@ -262,13 +283,50 @@ public class KnowledgeDataSelectLogic {
         for (KnowledgesEntity knowledgesEntity : dbs) {
             idMap.put(knowledgesEntity.getKnowledgeId(), knowledgesEntity);
         }
+        
+        // TODO 以下は、パブリックAPIのみで実施するように後で変更すること(このメソッドは共通処理）
         for (Knowledge knowledge : results) {
             if (idMap.containsKey(knowledge.getKnowledgeId())) {
                 // Titleのハイライトを消す
                 knowledge.setTitle(idMap.get(knowledge.getKnowledgeId()).getTitle());
             }
         }
+        
         return results;
+    }
+    private Map<Integer, TemplateMastersEntity> getTypeMap() {
+        // 記事の種類の情報取得
+        List<TemplateMastersEntity> template = TemplateMastersDao.get().selectAll();
+        Map<Integer, TemplateMastersEntity> typeMap = new HashMap<>();
+        for (TemplateMastersEntity templateMastersEntity : template) {
+            typeMap.put(templateMastersEntity.getTypeId(), templateMastersEntity);
+        }
+        return typeMap;
+    }
+    
+    public List<KnowledgeList> convInternalList(List<Knowledge> results, LoginedUser loginedUser) {
+        List<KnowledgeList> list = new ArrayList<>();
+        List<Long> knowledgeIds = null;
+        if (loginedUser != null) {
+            knowledgeIds = ViewHistoriesDao.get().selectViewdKnowledgeIds(results, loginedUser.getUserId());
+        }
+        //N+1問題になるので、もっと良い方法は無いか検討
+        for (KnowledgeDataInterface knowledge : results) {
+            KnowledgeList v = new KnowledgeList();
+            PropertyUtil.copyPropertyValue(knowledge, v);
+            list.add(v);
+            //ストック情報を取得
+            List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(knowledge.getKnowledgeId(), loginedUser);
+            v.setStocks(stocks);
+            // 参照の状態
+            if (loginedUser == null) {
+                // 未ログインユーザは、未読かんりしないので、全て既読にする
+                v.setViewed(true);
+            } else if (knowledgeIds.contains(knowledge.getKnowledgeId())) {
+                v.setViewed(true);
+            }
+        }
+        return list;
     }
 
 }

@@ -35,6 +35,7 @@
     "vuex": "^2.0.0",
     "vuex-router-sync": "^4.1.2",
     "vue-i18n": "^7.3.2",
+    "vue-lazyload": "^1.1.4",
     "admin-lte": "^2.4.2",
     "pace-progress": "^1.0.2",
     "html5shiv": "^3.7.3",

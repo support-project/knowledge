@@ -2,11 +2,14 @@ package org.support.project.knowledge.control.api.internal;
 
 import java.util.List;
 
+import org.support.project.common.log.Log;
+import org.support.project.common.log.LogFactory;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.logic.KnowledgeDataSelectLogic;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
 import org.support.project.knowledge.vo.api.Knowledge;
+import org.support.project.knowledge.vo.api.internal.KnowledgeList;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.ApiControl;
@@ -15,6 +18,8 @@ import org.support.project.web.logic.invoke.Open;
 
 @DI(instance = Instance.Prototype)
 public class ArticleListGetApiControl extends ApiControl {
+    /** ログ */
+    private static final Log LOG = LogFactory.getLog(ArticleListGetApiControl.class);
     /**
      * 記事の一覧を取得
      * @throws Exception 
@@ -22,6 +27,7 @@ public class ArticleListGetApiControl extends ApiControl {
     @Get(path="_api/articles")
     @Open
     public Boundary articles() throws Exception {
+        LOG.trace("access user: " + getLoginUserId());
         SearchKnowledgeParam param = new SearchKnowledgeParam();
         param.setLimit(getParamInt("limit", 50, 50));
         param.setOffset(getParamInt("offset", 0, -1));
@@ -31,6 +37,7 @@ public class ArticleListGetApiControl extends ApiControl {
         param.setCreators(getParam("creators"));
         param.setTemplates(getParam("templates"));
         List<Knowledge> results = KnowledgeDataSelectLogic.get().selectList(param);
-        return send(HttpStatus.SC_200_OK, results);
+        List<KnowledgeList> list =  KnowledgeDataSelectLogic.get().convInternalList(results, getLoginedUser());
+        return send(HttpStatus.SC_200_OK, list);
     }
 }

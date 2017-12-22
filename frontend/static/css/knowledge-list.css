@@ -1,0 +1,66 @@
+.knowledge_item {
+    width: 100%;
+    border: 1px solid transparent;
+    box-shadow: none;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-bottom: 1px solid #cccccc;
+}
+.knowledge_item:hover {
+    border: 1px solid #ccc;
+    color:black;
+    background-color: #f5f5f5;
+}
+
+.knowledge_item > a {
+    color: inherit;
+}
+
+.knowledge_item a {
+    text-decoration: none;
+    outline: 0;
+}
+
+.list-title {
+    font-size: 20px;
+    padding-top: 10px;
+    margin-bottom: 3px;
+}
+
+.insert_info {
+/*    border-bottom: 1px solid #cccccc;*/
+    margin: 0px;
+    padding: 0px;
+}
+
+.item_caption {
+    margin-top: 5px;
+}
+
+.bootstrap-tagsinput {
+    border: 0px solid #ccc;
+    box-shadow: none;
+    display: inline-block;
+    padding: 4px 6px;
+    margin-bottom: 0px;
+    color: #555;
+    vertical-align: middle;
+    border-radius: 0px;
+    max-width: 100%;
+    line-height: 22px;
+    cursor: text;
+}
+
+.list-group-item-current {
+    background-color: #ecf0f1;
+}
+.dispKnowledgeId {
+    color: #999999;
+}
+.title-link:hover {
+    color: #999999;
+}

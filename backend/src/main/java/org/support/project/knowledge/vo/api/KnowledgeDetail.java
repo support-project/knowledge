@@ -6,7 +6,7 @@ import org.support.project.web.bean.LabelValue;
 
 public class KnowledgeDetail extends Knowledge {
     /** テンプレートの項目値 */
-    private List<LabelValue> templateItems;
+    private List<LabelValue> items;
     /** コメント */
     private List<Comment> comments;
     /** 添付ファイル */
@@ -15,18 +15,6 @@ public class KnowledgeDetail extends Knowledge {
     /** 編集可能な対象（共同編集者） */
     private Target editors;
     
-    /**
-     * @return the templateItems
-     */
-    public List<LabelValue> getTemplateItems() {
-        return templateItems;
-    }
-    /**
-     * @param templateItems the templateItems to set
-     */
-    public void setTemplateItems(List<LabelValue> templateItems) {
-        this.templateItems = templateItems;
-    }
     /**
      * @return the comments
      */
@@ -62,5 +50,11 @@ public class KnowledgeDetail extends Knowledge {
      */
     public void setAttachments(List<AttachedFile> attachments) {
         this.attachments = attachments;
+    }
+    public List<LabelValue> getItems() {
+        return items;
+    }
+    public void setItems(List<LabelValue> items) {
+        this.items = items;
     }
 }

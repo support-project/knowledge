@@ -6,6 +6,13 @@
     "TestViewTitle": "テストページ",
     "TestViewDescription": "フロントエンド開発テストページ"
   },
+  "Article": {
+    "PublicFlag": {
+      "0": "公開",
+      "1": "非公開",
+      "2": "保護"
+    }
+  },
   "DashView": {
     "about": "このアプリについて",
     "manual": "オンラインマニュアル",
