@@ -64,7 +64,7 @@ if (window.localStorage) {
     store.commit('SET_TOKEN', window.localStorage.getItem('token'))
   } else {
     store.commit('SET_USER', {
-      avatar: 'open.account/icon/',
+      avatar: '/open.account/icon/',
       userName: 'anonymous'
     })
   }
@@ -72,8 +72,8 @@ if (window.localStorage) {
 
 Vue.use(VueLazyload, {
   preLoad: 1.3,
-  error: 'static/img/loader.gif',
-  loading: 'static/img/loader.gif',
+  error: '/static/img/loader.gif',
+  loading: '/static/img/loader.gif',
   attempt: 1
 })
 

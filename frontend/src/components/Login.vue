@@ -83,7 +83,7 @@ export default {
         if (data.user) {
           var token = data.token
 
-          data.user.avatar = 'open.account/icon/' + data.user.userId
+          data.user.avatar = '/open.account/icon/' + data.user.userId
 
           this.$store.commit('SET_USER', data.user)
           this.$store.commit('SET_TOKEN', token)

@@ -1,7 +1,8 @@
 {
   "Route": {
-    "ArticleListViewTitle": "Article List",
-    "ArticleListViewDescription": "This page is Article List",
+    "ArticleList": "Articles",
+    "ArticleDetail": "Article",
+    "ArticleEdit": "Edit Article",
     "MoveOldUI": "Change to OLD UI",
     "TestViewTitle": "Page of Test",
     "TestViewDescription": "This page is test of frontend development"
@@ -18,8 +19,15 @@
     "manual": "Manual",
     "licence": "Licence"
   },
-  "ArticleListView": {
+  "ArticleList": {
+    "description": "list of articles",
     "Message": "message"
+  },
+  "ArticleDetail": {
+    "description": "detail of a article"
+  },
+  "ArticleEdit": {
+    "description": "edit of a article"
   },
   "TestView": {
     "Message": "This is test."

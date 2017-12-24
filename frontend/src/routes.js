@@ -3,7 +3,9 @@ import LoginView from './components/Login.vue'
 import NotFoundView from './components/404.vue'
 
 // Import Views - Dash
-import ArticleListView from './components/views/ArticleList.vue'
+import ArticleList from './components/views/Articles/ArticleList.vue'
+import ArticleDetail from './components/views/Articles/ArticleDetail.vue'
+import ArticleEdit from './components/views/Articles/ArticleEdit.vue'
 
 import TestView from './components/views/Test.vue'
 
@@ -26,11 +28,18 @@ const routes = [
     component: DashView,
     children: [
       {
-        path: 'article-list',
+        path: 'articles',
         alias: '',
-        component: ArticleListView,
-        name: 'ArticleListViewTitle',
-        meta: {description: 'ArticleListViewDescription'}
+        component: ArticleList,
+        name: 'ArticleList'
+      }, {
+        path: 'articles/:id',
+        component: ArticleDetail,
+        name: 'ArticleDetail'
+      }, {
+        path: 'articles/:id/edit',
+        component: ArticleEdit,
+        name: 'ArticleEdit'
       }, {
         path: 'test',
         component: TestView,

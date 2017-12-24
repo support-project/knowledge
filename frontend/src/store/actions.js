@@ -10,8 +10,8 @@ export default {
       var articles = response.data
 
       articles.forEach(element => {
-        element.insertUserIcon = 'open.account/icon/' + element.insertUser
-        element.updateUserIcon = 'open.account/icon/' + element.updateUser
+        element.insertUserIcon = '/open.account/icon/' + element.insertUser
+        element.updateUserIcon = '/open.account/icon/' + element.updateUser
       })
 
       context.commit('SET_RESOURCES', {

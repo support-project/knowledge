@@ -97,23 +97,6 @@
   
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <h1>
-          {{ $t('Route.' + $route.name) }}
-          <small>{{ $t('Route.' + $route.meta.description) }}</small>
-        </h1>
-        <ol class="breadcrumb">
-          <li>
-            <a href="javascript:;">
-              <i class="fa fa-home"></i>Home</a>
-          </li>
-          <li class="active">
-            {{ $t('Route.' + $route.name) }}
-          </li>
-        </ol>
-      </section>
-  
       <router-view></router-view>
     </div>
     <!-- /.content-wrapper -->
@@ -132,7 +115,7 @@
             </a>
         </li>
         <li>
-            <a class="" href="open.license" style="cursor: pointer;">
+            <a class="" href="/open.license" style="cursor: pointer;">
               {{ $t('DashView.licence') }}
             </a>
         </li>
