@@ -1,3 +1,4 @@
+import Promise from 'bluebird'
 import api from '../api'
 
 export default {
@@ -19,6 +20,23 @@ export default {
       })
     })
     .catch(error => {
+      console.error(JSON.stringify(error))
+    })
+  },
+  getArticle: (context, id) => {
+    context.commit('SET_PAGE_STATE', {loading: true})
+    context.commit('SET_RESOURCES', {article: ''})
+    api.request('get', '/_api/articles/' + id + '?parse=true', null, context.state.token)
+    .then(response => {
+      return Promise.try(() => {
+        setTimeout(() => {
+          context.commit('SET_PAGE_STATE', {loading: false})
+          context.commit('SET_RESOURCES', {article: response.data})
+        }, 1000)
+      })
+    })
+    .catch(error => {
+      context.commit('SET_PAGE_STATE', {loading: false})
       console.error(JSON.stringify(error))
     })
   }

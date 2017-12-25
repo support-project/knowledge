@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.map.HashedMap;
+import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.PropertyUtil;
@@ -29,6 +30,7 @@ import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.vo.KnowledgeDataInterface;
+import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
 import org.support.project.knowledge.vo.api.AttachedFile;
 import org.support.project.knowledge.vo.api.Comment;
@@ -236,9 +238,11 @@ public class KnowledgeDataSelectLogic {
      * Knowledgeのデータを1件取得（WebAPIで返す形で）
      * @param knowledgeId
      * @param loginedUser
+     * @param parseMarkdown 
      * @return
+     * @throws ParseException 
      */
-    public Knowledge select(long knowledgeId, LoginedUser loginedUser) {
+    public Knowledge select(long knowledgeId, LoginedUser loginedUser, boolean parseMarkdown) throws ParseException {
         KnowledgesEntity entity = KnowledgeLogic.get().selectWithTags(knowledgeId, loginedUser);
         if (entity == null) {
             return null;
@@ -246,6 +250,12 @@ public class KnowledgeDataSelectLogic {
         // 記事のマスタを読み込み
         Map<Integer, TemplateMastersEntity> typeMap = getTypeMap();
         Knowledge result = conv(entity, SINGLE, typeMap);
+        
+        if (parseMarkdown) {
+            MarkDown markdown = MarkdownLogic.get().markdownToHtml(result.getContent());
+            result.setDisplaySafeHtml(markdown.getHtml());
+        }
+        
         return result;
     }
     /**

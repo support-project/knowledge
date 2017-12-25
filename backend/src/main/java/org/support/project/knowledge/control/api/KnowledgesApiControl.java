@@ -2,6 +2,7 @@ package org.support.project.knowledge.control.api;
 
 import java.util.List;
 
+import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
@@ -63,11 +64,15 @@ public class KnowledgesApiControl extends GetApiControl {
             return sendError(HttpStatus.SC_400_BAD_REQUEST);
         }
         long knowledgeId = Long.parseLong(id);
-        Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser());
-        if (result == null) {
-            return sendError(HttpStatus.SC_404_NOT_FOUND);
+        try {
+            Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), false);
+            if (result == null) {
+                return sendError(HttpStatus.SC_404_NOT_FOUND);
+            }
+            return send(HttpStatus.SC_200_OK, result);
+        } catch (ParseException e) {
+            return sendError(HttpStatus.SC_500_INTERNAL_SERVER_ERROR);
         }
-        return send(HttpStatus.SC_200_OK, result);
     }
     
     /**

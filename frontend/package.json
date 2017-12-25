@@ -40,7 +40,8 @@
     "admin-lte": "^2.4.2",
     "pace-progress": "^1.0.2",
     "html5shiv": "^3.7.3",
-    "respond.js": "^1.4.2"
+    "respond.js": "^1.4.2",
+    "bluebird": "^3.5.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",

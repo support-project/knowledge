@@ -18,14 +18,22 @@ export default {
     state.searchConditions = searchConditions
   },
   SET_RESOURCES (state, resources) {
-    if (resources.articles) {
+    if ('article' in resources) {
+      state.resources.article = resources.article
+    }
+    if ('articles' in resources) {
       state.resources.articles = resources.articles
     }
-    if (resources.groups) {
+    if ('groups' in resources) {
       state.resources.groups = resources.groups
     }
-    if (resources.tags) {
+    if ('tags' in resources) {
       state.resources.tags = resources.tags
+    }
+  },
+  SET_PAGE_STATE (state, pagestate) {
+    if ('loading' in pagestate) {
+      state.pagestate.loading = pagestate.loading
     }
   }
 }

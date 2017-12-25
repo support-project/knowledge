@@ -50,6 +50,8 @@ public class Knowledge implements KnowledgeDataInterface {
     /** 閲覧可能な対象（publicflag=2(保護)の場合に指定） */
     private Target viewers;
     
+    /** Markdownを表示用に変換したHTML(サニタイズ済で直接描画しても問題無いはず） */
+    private String displaySafeHtml;
     
     /**
      * @return the knowledgeId
@@ -265,5 +267,13 @@ public class Knowledge implements KnowledgeDataInterface {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public String getDisplaySafeHtml() {
+        return displaySafeHtml;
+    }
+
+    public void setDisplaySafeHtml(String displaySafeHtml) {
+        this.displaySafeHtml = displaySafeHtml;
     }
 }

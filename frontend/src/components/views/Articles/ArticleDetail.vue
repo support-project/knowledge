@@ -9,12 +9,17 @@
     <div class="content">
       #{{ $route.params.id }}
 
+      <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i>
+
+
       <router-link tag="a" :to="'/articles/' + $route.params.id + '/edit'">
         <a>
           編集
         </a>
       </router-link>
     
+
+      <span v-html="resources.article.displaySafeHtml"></span>
 
 
     </div>
@@ -43,8 +48,24 @@ export default {
   components: { PageTitle },
   computed: {
     ...mapState([
+      'pagestate',
       'resources'
     ])
+  },
+  methods: {
+    getArticle () {
+      console.log('getArticle')
+      this.$store.dispatch('getArticle', this.$route.params.id)
+      .then(() => {
+        console.log('finish getArticle')
+      })
+    }
+  },
+  mounted () {
+    // 画面表示時に読み込み
+    this.$nextTick(() => {
+      this.getArticle()
+    })
   }
 }
 </script>

@@ -16,8 +16,12 @@ export default {
     templates: ''
   },
   resources: {
+    article: {},
     articles: [],
     groups: [], // 一覧に表示するグループ（上位5件）
     tags: []
+  },
+  pagestate: {
+    loading: false
   }
 }

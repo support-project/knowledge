@@ -50,9 +50,6 @@ export default {
     ])
   },
   methods: {
-    handleClick_changeLanguage (lang) {
-      this.$i18n.locale = lang
-    },
     getArticleList () {
       console.log('getArticleList')
       this.$store.dispatch('getArticles')
