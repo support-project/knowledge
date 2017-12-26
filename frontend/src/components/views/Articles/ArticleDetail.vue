@@ -5,30 +5,39 @@
       :description = "$route.name + '.description'"
       :breadcrumb = "breadcrumb" />
 
+    <div id="secondNavbar">
+      <nav class="slidemenu" >
+        <a ><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
+        <a ><i class="fa fa-star-o fa-lg" aria-hidden="true"></i></a>
+        <router-link tag="a" :to="'/articles/' + $route.params.id + '/edit'">
+          <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
+        </router-link>
+        <a id="toc"><i class="fa fa-list fa-lg" aria-hidden="true"></i></a>
+      </nav>
+    </div>
+
     <!-- Main content -->
     <div class="content">
+
       #{{ $route.params.id }}
 
       <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i>
 
+      <div class="markdown-body">
+        <span v-html="this.resources.article.displaySafeHtml"></span>
+      </div>
 
-      <router-link tag="a" :to="'/articles/' + $route.params.id + '/edit'">
-        <a>
-          編集
-        </a>
-      </router-link>
-    
-
-      <span v-html="resources.article.displaySafeHtml"></span>
-
+      <article-detail-sidebar />
 
     </div>
   </div>
 </template>
 
 <script>
+/* global $ */
 import { mapState } from 'vuex'
 import PageTitle from '../Parts/PageTitle'
+import ArticleDetailSidebar from './ArticleDetailSidebar'
 
 export default {
   name: 'ArticleDetail',
@@ -45,7 +54,7 @@ export default {
       // ルートの変更の検知...
     }
   },
-  components: { PageTitle },
+  components: { PageTitle, ArticleDetailSidebar },
   computed: {
     ...mapState([
       'pagestate',
@@ -65,7 +74,76 @@ export default {
     // 画面表示時に読み込み
     this.$nextTick(() => {
       this.getArticle()
+
+      var toggle = false
+      $('#toc').click(() => {
+        if (!toggle) {
+          $('.control-sidebar').addClass('control-sidebar-open')
+//          $('.control-sidebar').addClass('fixed')
+          toggle = true
+        } else {
+          $('.control-sidebar').removeClass('control-sidebar-open')
+//          $('.control-sidebar').removeClass('fixed')
+          toggle = false
+        }
+      })
+      var nav = $('#secondNavbar')
+      var offset = nav.offset()
+      $(window).scroll(function () {
+        if ($(window).scrollTop() > offset.top) {
+          nav.addClass('fixed')
+          nav.addClass('navbar-color')
+        } else {
+          nav.removeClass('fixed')
+          nav.removeClass('navbar-color')
+        }
+      })
     })
   }
 }
 </script>
+
+<style src="github-markdown-css/github-markdown.css" />
+<style>
+#secondNavbar {
+	width: 100%;
+}
+.slidemenu {
+  height: 50px;
+  display: flex;
+  /*justify-content: center;*/
+  align-items: center;
+}
+.slidemenu a, .slidemenu a:hover, .slidemenu a:active {
+  margin-left: 10px;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  cursor: pointer;
+}
+
+.fixed {
+  position: fixed;
+  top: 0;
+  z-index: 999;
+}
+
+.markdown-body {
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 45px;
+}
+
+@media (max-width: 767px) {
+  .markdown-body {
+    padding: 15px;
+  }
+}
+</style>

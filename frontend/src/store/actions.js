@@ -1,5 +1,6 @@
 import Promise from 'bluebird'
 import api from '../api'
+import processLink from './decorateMarkdown/processLink'
 
 export default {
   getArticles: (context) => {
@@ -7,14 +8,11 @@ export default {
     api.request('get', '/_api/articles', null, context.state.token)
     .then(response => {
       console.log(response.data)
-
       var articles = response.data
-
       articles.forEach(element => {
         element.insertUserIcon = '/open.account/icon/' + element.insertUser
         element.updateUserIcon = '/open.account/icon/' + element.updateUser
       })
-
       context.commit('SET_RESOURCES', {
         articles: articles
       })
@@ -28,11 +26,15 @@ export default {
     context.commit('SET_RESOURCES', {article: ''})
     api.request('get', '/_api/articles/' + id + '?parse=true', null, context.state.token)
     .then(response => {
+      var article = response.data
+      console.log(response)
       return Promise.try(() => {
-        setTimeout(() => {
-          context.commit('SET_PAGE_STATE', {loading: false})
-          context.commit('SET_RESOURCES', {article: response.data})
-        }, 1000)
+        return processLink(response.data.displaySafeHtml)
+      }).then(function (result) {
+        console.log(result)
+        article.displaySafeHtml = result
+        context.commit('SET_PAGE_STATE', {loading: false})
+        context.commit('SET_RESOURCES', {article: article})
       })
     })
     .catch(error => {

@@ -41,7 +41,8 @@
     "pace-progress": "^1.0.2",
     "html5shiv": "^3.7.3",
     "respond.js": "^1.4.2",
-    "bluebird": "^3.5.1"
+    "bluebird": "^3.5.1",
+    "github-markdown-css": "^2.9.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
