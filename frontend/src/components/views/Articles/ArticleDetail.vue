@@ -23,13 +23,14 @@
 
       <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i>
 
-      <div class="markdown-body">
+      <div class="markdown">
         <span v-html="this.resources.article.displaySafeHtml"></span>
       </div>
 
       <article-detail-sidebar />
 
     </div>
+    <link rel="stylesheet" href="/static/css/markdown.css" >
   </div>
 </template>
 
@@ -102,8 +103,8 @@ export default {
   }
 }
 </script>
+<style src="highlight.js/styles/darkula.css" />
 
-<style src="github-markdown-css/github-markdown.css" />
 <style>
 #secondNavbar {
 	width: 100%;

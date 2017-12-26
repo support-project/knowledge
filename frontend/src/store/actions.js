@@ -1,6 +1,7 @@
 import Promise from 'bluebird'
 import api from '../api'
 import processLink from './decorateMarkdown/processLink'
+import processHighlight from './decorateMarkdown/processHighlight'
 
 export default {
   getArticles: (context) => {
@@ -18,7 +19,7 @@ export default {
       })
     })
     .catch(error => {
-      console.error(JSON.stringify(error))
+      console.error(error)
     })
   },
   getArticle: (context, id) => {
@@ -31,6 +32,8 @@ export default {
       return Promise.try(() => {
         return processLink(response.data.displaySafeHtml)
       }).then(function (result) {
+        return processHighlight(result)
+      }).then(function (result) {
         console.log(result)
         article.displaySafeHtml = result
         context.commit('SET_PAGE_STATE', {loading: false})
@@ -39,7 +42,7 @@ export default {
     })
     .catch(error => {
       context.commit('SET_PAGE_STATE', {loading: false})
-      console.error(JSON.stringify(error))
+      console.error(error)
     })
   }
 }

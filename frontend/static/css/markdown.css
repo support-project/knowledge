@@ -1,0 +1,430 @@
+.markdown a {
+    /* color: #4183C4; */
+    /* color: #18bc9c; */
+    word-wrap: break-word;
+}
+
+.markdown a.absent {
+    /* color: #cc0000; */
+}
+
+.markdown a.anchor {
+    display: block;
+    padding-left: 30px;
+    margin-left: -30px;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+    margin: 20px 0 10px;
+    padding: 0;
+    padding-bottom: 8px;
+    font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+    cursor: text;
+    position: relative;
+}
+
+.markdown h1:hover a.anchor,
+.markdown h2:hover a.anchor,
+.markdown h3:hover a.anchor,
+.markdown h4:hover a.anchor,
+.markdown h5:hover a.anchor,
+.markdown h6:hover a.anchor {
+    background: url("../images/para.png") no-repeat
+        10px center;
+    text-decoration: none;
+}
+
+.markdown h1 tt,
+.markdown h1 code {
+    font-size: inherit;
+}
+
+.markdown h2 tt,
+.markdown h2 code {
+    font-size: inherit;
+}
+
+.markdown h3 tt,
+.markdown h3 code {
+    font-size: inherit;
+}
+
+.markdown h4 tt,
+.markdown h4 code {
+    font-size: inherit;
+}
+
+.markdown h5 tt,
+.markdown h5 code {
+    font-size: inherit;
+}
+
+.markdown h6 tt,
+.markdown h6 code {
+    font-size: inherit;
+}
+
+.markdown h1 {
+    font-size: 28px;
+    color: black;
+}
+
+.markdown h2 {
+    font-size: 24px;
+    margin-top: 40px;
+    border-bottom: 1px solid #dddddd;
+    color: black;
+}
+
+.markdown h3 {
+    font-size: 18px;
+}
+
+.markdown h4 {
+    font-size: 16px;
+}
+
+.markdown h5 {
+    font-size: 14px;
+}
+
+.markdown h6 {
+    color: #777777;
+    font-size: 14px;
+}
+
+.markdown p,
+.markdown blockquote,
+.markdown dl,
+.markdown table{
+    margin: 15px 0;
+}
+
+.markdown ul,
+.markdown ol,
+.markdown li {}
+
+.markdown p,
+.markdown blockquote,
+.markdown li,
+.markdown dt,
+.markdown table{
+    line-height: 2.0em;
+}
+
+.markdown hr {
+    background: transparent
+        url("../images/dirty-shade.png") repeat-x 0 0;
+    border: 0 none;
+    color: #cccccc;
+    height: 4px;
+    padding: 0;
+}
+
+.markdown >h2:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.markdown >h1:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.markdown >h1:first-child+h2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.markdown >h3:first-child,
+.markdown >h4:first-child,
+.markdown >h5:first-child,
+.markdown >h6:first-child
+    {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.markdown a:first-child h1,
+.markdown a:first-child h2,
+.markdown a:first-child h3,
+.markdown a:first-child h4,
+.markdown a:first-child h5,
+.markdown a:first-child h6 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.markdown h1 p,
+.markdown h2 p,
+.markdown h3 p,
+.markdown h4 p,
+.markdown h5 p,
+.markdown h6 p {
+    margin-top: 0;
+}
+
+.markdown li p.first {
+    display: inline-block;
+}
+
+.markdown ul,
+.markdown ol {
+    padding-left: 30px;
+}
+
+.markdown ul :first-child,
+.markdown ol :first-child {
+    margin-top: 0;
+}
+
+.markdown ul :last-child,
+.markdown ol :last-child {
+    margin-bottom: 0;
+}
+
+.markdown dl {
+    padding: 0;
+}
+
+.markdown dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px;
+}
+
+.markdown dl dt:first-child {
+    padding: 0;
+}
+
+.markdown dl dt>:first-child {
+    margin-top: 0;
+}
+
+.markdown dl dt>:last-child {
+    margin-bottom: 0;
+}
+
+.markdown dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px;
+}
+
+.markdown dl dd>:first-child {
+    margin-top: 0;
+}
+
+.markdown dl dd>:last-child {
+    margin-bottom: 0;
+}
+
+.markdown blockquote {
+    border-left: 4px solid #dddddd;
+    padding: 0 15px;
+    color: #777777;
+    font-size: 15px;
+}
+
+.markdown blockquote>:first-child {
+    margin-top: 0;
+}
+
+.markdown blockquote>:last-child {
+    margin-bottom: 0;
+}
+
+.markdown table {
+    padding: 0;
+}
+
+.markdown table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.markdown table tr:nth-child(2n) {
+    background-color: #f8f8f8;
+}
+
+.markdown table tr th {
+    font-weight: bold;
+    border: 1px solid #cccccc;
+    text-align: left;
+    margin: 0;
+    padding: 6px 13px;
+}
+
+.markdown table tr td {
+    border: 1px solid #cccccc;
+    text-align: left;
+    margin: 0;
+    padding: 6px 13px;
+}
+
+.markdown table tr th :first-child,
+.markdown table tr td :first-child {
+    margin-top: 0;
+}
+
+.markdown table tr th :last-child,
+.markdown table tr td :last-child {
+    margin-bottom: 0;
+}
+
+.markdown img {
+    max-width: 100%;
+}
+
+.markdown span.frame {
+    display: block;
+    overflow: hidden;
+}
+
+.markdown span.frame>span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto;
+}
+
+.markdown span.frame span img {
+    display: block;
+    float: left;
+}
+
+.markdown span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0;
+}
+
+.markdown span.align-center {
+    display: block;
+    overflow: hidden;
+    clear: both;
+}
+
+.markdown span.align-center>span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center;
+}
+
+.markdown span.align-center span img {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.markdown span.align-right {
+    display: block;
+    overflow: hidden;
+    clear: both;
+}
+
+.markdown span.align-right>span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right;
+}
+
+.markdown span.align-right span img {
+    margin: 0;
+    text-align: right;
+}
+
+.markdown span.float-left {
+    display: block;
+    margin-right: 13px;
+    overflow: hidden;
+    float: left;
+}
+
+.markdown span.float-left span {
+    margin: 13px 0 0;
+}
+
+.markdown span.float-right {
+    display: block;
+    margin-left: 13px;
+    overflow: hidden;
+    float: right;
+}
+
+.markdown span.float-right>span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right;
+}
+
+.markdown code,
+.markdown tt {
+    margin: 0 2px;
+    padding: 0 5px;
+    border-radius: 3px;
+    word-wrap: break-word;
+}
+
+.markdown pre code {
+    margin: 0;
+    padding: 10px;
+    white-space: pre;
+    border: none;
+}
+
+.markdown .highlight pre {
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 10px;
+    border-radius: 3px;
+}
+
+.markdown pre {
+    background-color: transparent;
+    border: none;
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 10px;
+    border-radius: 3px;
+}
+
+.markdown pre code,
+.markdown pre tt {
+    border: none;
+}
+
+.markdown p > code.hljs { display: inline; }
+.markdown li > code.hljs { display: inline; }
+
+.emoji-img {
+    height: 20px;
+}
+
+.lang-math {
+    margin: 10px 10px 10px 10px;
+    border-radius: 5px;
+}
+

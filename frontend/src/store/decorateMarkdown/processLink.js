@@ -1,6 +1,5 @@
 import Promise from 'bluebird'
 import $ from 'jquery'
-
 import lang from '../../lib/lang'
 
 /**
