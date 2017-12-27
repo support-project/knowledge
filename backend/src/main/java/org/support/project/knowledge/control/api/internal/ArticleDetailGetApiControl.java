@@ -35,9 +35,14 @@ public class ArticleDetailGetApiControl extends ApiControl {
         if (parse != null && parse.toLowerCase().equals("true")) {
             parseMarkdown = true;
         }
+        boolean sanitize = true;
+        String s = getParam("sanitize");
+        if (s != null && s.toLowerCase().equals("false")) {
+            sanitize = false;
+        }
         
         long knowledgeId = Long.parseLong(id);
-        Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), parseMarkdown);
+        Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), parseMarkdown, sanitize);
         if (result == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND);
         }

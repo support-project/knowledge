@@ -239,10 +239,11 @@ public class KnowledgeDataSelectLogic {
      * @param knowledgeId
      * @param loginedUser
      * @param parseMarkdown 
+     * @param sanitize 
      * @return
      * @throws ParseException 
      */
-    public Knowledge select(long knowledgeId, LoginedUser loginedUser, boolean parseMarkdown) throws ParseException {
+    public Knowledge select(long knowledgeId, LoginedUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
         KnowledgesEntity entity = KnowledgeLogic.get().selectWithTags(knowledgeId, loginedUser);
         if (entity == null) {
             return null;
@@ -252,8 +253,14 @@ public class KnowledgeDataSelectLogic {
         Knowledge result = conv(entity, SINGLE, typeMap);
         
         if (parseMarkdown) {
-            MarkDown markdown = MarkdownLogic.get().markdownToHtml(result.getContent());
+            LOG.warn("Parse Markdown on server side is deprecated.");
+            MarkDown markdown = MarkdownLogic.get().markdownToHtml(result.getContent()); // Markdownのパースの中でサニタイズも実施
             result.setDisplaySafeHtml(markdown.getHtml());
+        }
+        if (sanitize) {
+            // content(生データ)のサニタイズ
+            // コードブロックのタグは全て置換し、Markdown本文内のタグは、危険なものを消す
+            entity.setContent(SanitizeMarkdownTextLogic.get().sanitize(entity.getContent()));
         }
         
         return result;
