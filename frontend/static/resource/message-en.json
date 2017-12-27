@@ -24,6 +24,10 @@
     "Message": "message"
   },
   "ArticleDetail": {
+    "BtnStar": "Like",
+    "BtnStock": "Stock this article",
+    "BtnEdit": "Edit this article",
+    "BtnToc": "Toggle table of contents",
     "description": "detail of a article"
   },
   "ArticleEdit": {

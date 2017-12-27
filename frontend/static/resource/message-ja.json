@@ -24,6 +24,10 @@
     "Message": "ほげほげふがふが"
   },
   "ArticleDetail": {
+    "BtnStar": "いいね",
+    "BtnStock": "この記事をストックする",
+    "BtnEdit": "この記事を編集する",
+    "BtnToc": "目次を表示を切り替え",
     "description": "記事を表示"
   },
   "ArticleEdit": {

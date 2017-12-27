@@ -7,12 +7,19 @@
 
     <div id="secondNavbar">
       <nav class="slidemenu" >
-        <a ><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
-        <a ><i class="fa fa-star-o fa-lg" aria-hidden="true"></i></a>
-        <router-link tag="a" :to="'/articles/' + $route.params.id + '/edit'">
+        <a :title="$t('ArticleDetail.BtnStar')">
+          <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
+        </a>
+        <a :title="$t('ArticleDetail.BtnStock')">
+          <i class="fa fa-star-o fa-lg" aria-hidden="true"></i>
+        </a>
+        <router-link tag="a" :to="'/articles/' + $route.params.id + '/edit'"
+          :title="$t('ArticleDetail.BtnEdit')">
           <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
         </router-link>
-        <a id="toc"><i class="fa fa-list fa-lg" aria-hidden="true"></i></a>
+        <a id="toc" :title="$t('ArticleDetail.BtnToc')">
+          <i class="fa fa-list fa-lg" aria-hidden="true"></i>
+        </a>
       </nav>
     </div>
 
@@ -34,6 +41,7 @@
 
 <script>
 /* global $ */
+import tippy from 'tippy.js'
 import { mapState } from 'vuex'
 import PageTitle from '../Parts/PageTitle'
 import ArticleDetailSidebar from './ArticleDetailSidebar'
@@ -78,6 +86,13 @@ export default {
     // 画面表示時に読み込み
     this.$nextTick(() => {
       this.getArticle()
+
+      tippy('[title]', {
+        placement: 'bottom',
+        animation: 'scale',
+        duration: 200,
+        arrow: true
+      })
 
       var toggle = false
       $('#toc').click(() => {
@@ -152,3 +167,4 @@ export default {
   color: rgb(128, 128, 128)
 }
 </style>
+<!-- <style src="tippy.js/dist/tippy.css"> -->

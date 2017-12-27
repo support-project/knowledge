@@ -1,8 +1,8 @@
 <template>
   <div>
     <page-title
-      :title="$t('Route.' + $route.name)"
-      :description="$t($route.name + '.description')"/>
+      :title = "'Route.' + $route.name"
+      :description = "$route.name + '.description'" />
 
     <!-- Main content -->
     <div class="content">
