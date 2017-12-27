@@ -1,3 +1,8 @@
+import logger from 'logger'
+if (process && process.env && process.env.LOG_LEVEL) {
+  logger.setLevel(process.env.LOG_LEVEL)
+}
+
 // Import ES6 Promise
 import 'es6-promise/auto'
 

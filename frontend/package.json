@@ -18,6 +18,8 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "logger": "file:local_modules/logger",
+    "lang": "file:local_modules/lang",
     "axios": "^0.15.3",
     "babel-runtime": "^5.8.0",
     "chart.js": "2.3.0",

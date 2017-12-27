@@ -5,4 +5,3 @@ var isString = function (obj) {
 module.exports = {
   isString: isString
 }
-

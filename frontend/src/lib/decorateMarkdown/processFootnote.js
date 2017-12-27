@@ -1,6 +1,7 @@
 import Promise from 'bluebird'
 import $ from 'jquery'
-import lang from '../../lib/lang'
+import lang from 'lang'
+import logger from 'logger'
 
 /**
  * 脚注記法を正しく処理
@@ -8,7 +9,7 @@ import lang from '../../lib/lang'
  * @param {*} parent 処理対象のHTML or JqueryObjct
  */
 export default function (parent) {
-  // console.log(parent)
+  logger.trace(parent)
   return Promise.try(() => {
     var jqObj = parent
     if (lang.isString(parent)) {
@@ -20,14 +21,14 @@ export default function (parent) {
         var href = $(this).attr('href')
         var target = $(href === '#' || href === '' ? 'html' : href)
         var position = target.offset().top
-        console.log(position)
+        logger.debug(position)
         // ヘッダーの分だけずらす
         position -= 80
         var link = location.pathname + $(this).attr('href')
         $(this).attr('href', link)
         $(this).click(function () {
           var speed = 400
-          console.log(position)
+          logger.debug(position)
           $('body,html').animate({ scrollTop: position }, speed, 'swing')
           return false
         })

@@ -1,0 +1,11 @@
+{
+    "name": "logger",
+    "version": "0.0.1",
+    "private": true,
+    "main": "index.js",
+    "dependencies": {
+        "callsite": "1.0.0"
+    },
+    "devDependencies": {
+    }
+}

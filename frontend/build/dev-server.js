@@ -4,6 +4,9 @@ var config = require('../config')
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
+if (!process.env.LOG_LEVEL) {
+  process.env.LOG_LEVEL = JSON.parse(config.dev.env.LOG_LEVEL)
+}
 
 var opn = require('opn')
 var path = require('path')

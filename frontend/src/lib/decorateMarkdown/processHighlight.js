@@ -1,18 +1,19 @@
 import Promise from 'bluebird'
 import $ from 'jquery'
 import hljs from 'highlight.js'
-import lang from '../../lib/lang'
+import lang from 'lang'
+import logger from 'logger'
 
 const highlight = function (jqobj, addstylus) {
-//  console.log(jqobj.html())
+  logger.trace(jqobj.html())
   return Promise.try(() => {
     if (addstylus) {
       jqobj.addClass('stylus')
     }
     var text = jqobj.text()
     if (text.indexOf('://') !== -1) {
-      console.log('skip on hljs freeze word')
-      console.log(text)
+      logger.info('skip on hljs freeze word')
+      logger.info(text)
       return
     }
     var result = hljs.highlightAuto(text)
