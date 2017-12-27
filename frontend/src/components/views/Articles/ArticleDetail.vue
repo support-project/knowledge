@@ -38,7 +38,7 @@ import { mapState } from 'vuex'
 import PageTitle from '../Parts/PageTitle'
 import ArticleDetailSidebar from './ArticleDetailSidebar'
 
-import processFootnote from '../../../lib/decorateMarkdown/processFootnote'
+import processFootnotesPotision from '../../../lib/decorateMarkdown/processFootnotesPotision'
 
 export default {
   name: 'ArticleDetail',
@@ -69,7 +69,7 @@ export default {
       .then(() => {
         console.log('finish getArticle')
         setTimeout(() => {
-          processFootnote($('.markdown'))
+          processFootnotesPotision($('.markdown-body'))
         }, 500)
       })
     }

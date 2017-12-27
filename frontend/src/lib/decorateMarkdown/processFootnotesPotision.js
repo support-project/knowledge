@@ -15,8 +15,9 @@ export default function (parent) {
     if (lang.isString(parent)) {
       jqObj = $('<div>' + parent + '</div>')
     }
-
+    logger.debug(jqObj.html())
     jqObj.find('a').each(function () {
+      logger.debug($(this))
       if ($(this).attr('href').startsWith('#fn')) {
         var href = $(this).attr('href')
         var target = $(href === '#' || href === '' ? 'html' : href)

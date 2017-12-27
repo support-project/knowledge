@@ -9,7 +9,7 @@ describe('test for emoji', () => {
   it('thumsup', (done) => {
     var str = 'これは:+1:です'
     processEmoji(str).then((result) => {
-      logger.info(result)
+      logger.debug(result)
       assert.equal('これは👍です', result)
       return done()
     }).catch((err) => {
