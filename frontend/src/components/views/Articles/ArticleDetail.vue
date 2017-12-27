@@ -18,19 +18,17 @@
 
     <!-- Main content -->
     <div class="content">
-
-      #{{ $route.params.id }}
+      <div class="title"><span class="articleid">#{{ $route.params.id }}</span> {{ resources.article.title}}</div>
 
       <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i>
 
-      <div class="markdown">
+      <div class="markdown-body">
         <span v-html="this.resources.article.displaySafeHtml"></span>
       </div>
 
       <article-detail-sidebar />
 
     </div>
-    <link rel="stylesheet" href="/static/css/markdown.css" >
   </div>
 </template>
 
@@ -108,7 +106,6 @@ export default {
   }
 }
 </script>
-<style src="highlight.js/styles/darkula.css" />
 
 <style>
 #secondNavbar {
@@ -139,17 +136,19 @@ export default {
   z-index: 999;
 }
 
-.markdown-body {
+.content {
   box-sizing: border-box;
-  min-width: 200px;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 45px;
+  padding-left: 30px;
 }
-
 @media (max-width: 767px) {
-  .markdown-body {
-    padding: 15px;
+  .content {
+    padding: 10px;
   }
+}
+.title {
+  font-size: 36px;
+}
+.title .articleid {
+  color: rgb(128, 128, 128)
 }
 </style>

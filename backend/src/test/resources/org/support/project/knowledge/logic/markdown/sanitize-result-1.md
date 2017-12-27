@@ -16,21 +16,21 @@
 
 - サニタイジングする
 
-- Javascriptの変数の定義は &#96;var a &#61; &#34;aaa&#34;;&#96; です
-- HTMLのタグは&#96;&lt;script&gt;alaert(&#39;hoge&#39;)&lt;/script&gt;&#96;のように書けます
+- Javascriptの変数の定義は `var a = "aaa";` です
+- HTMLのタグは`&lt;script&gt;alaert('hoge')&lt;/script&gt;`のように書けます
 
-&#96;&#96;&#96;ruby:qiita.rb
-puts &#39;The best way to log and share programmers knowledge.&#39;
-&#96;&#96;&#96;
+```ruby:qiita.rb
+puts 'The best way to log and share programmers knowledge.'
+```
 
-&#96;&#96;&#96;html
+```html
 &lt;button&gt;hogehoge&lt;/button&gt;
-&#96;&#96;&#96;
+```
 
-&#96;&#96;&#96;java
-private List&lt;Object&gt; params &#61; new ArrayList&lt;&gt;();
-&#96;&#96;&#96;
+```java
+private List&lt;Object&gt; params = new ArrayList&lt;&gt;();
+```
 
-&#96;&#96;&#96;
-&lt;script&gt;alert(&#39;hoge&#39;);&lt;/script&gt;
-&#96;&#96;&#96;
+```
+&lt;script&gt;alert('hoge');&lt;/script&gt;
+```

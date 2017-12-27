@@ -26,7 +26,7 @@ public class ArticleDetailGetApiControl extends ApiControl {
     public Boundary articles() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         String id = super.getParam("id");
-        LOG.warn(id);
+        LOG.debug(id);
         if (!StringUtils.isLong(id)) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST);
         }

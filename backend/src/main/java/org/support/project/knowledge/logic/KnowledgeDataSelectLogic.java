@@ -260,9 +260,8 @@ public class KnowledgeDataSelectLogic {
         if (sanitize) {
             // content(生データ)のサニタイズ
             // コードブロックのタグは全て置換し、Markdown本文内のタグは、危険なものを消す
-            entity.setContent(SanitizeMarkdownTextLogic.get().sanitize(entity.getContent()));
+            result.setContent(SanitizeMarkdownTextLogic.get().sanitize(result.getContent()));
         }
-        
         return result;
     }
     /**

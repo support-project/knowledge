@@ -22,6 +22,35 @@ public class SanitizeMarkdownTextLogic {
         return Container.getComp(SanitizeMarkdownTextLogic.class);
     }
     
+    /**
+     * org.owasp.html.HtmlSanitizerを使うと、一部の文字が文字参照に変換される
+     * （文字参照（&#で始まる10進や、&#xで始まる16進）
+     * 文字参照にする必要が無いので、元に戻す
+     * 
+     * 定義済み実体参照(&gt;とか)はそのまま
+     * @param str
+     * @return
+     */
+    public static String decode(String str) {
+        Pattern pattern = Pattern.compile("&#(\\d+);|&#([\\da-fA-F]+);");
+        Matcher matcher = pattern.matcher(str);
+        StringBuffer sb = new StringBuffer();
+        Character buf;
+        while(matcher.find()){
+            if(matcher.group(1) != null){
+                buf = new Character(
+                          (char)Integer.parseInt(matcher.group(1)));
+            }else{
+                buf = new Character(
+                          (char)Integer.parseInt(matcher.group(2), 16));
+            }
+            matcher.appendReplacement(sb, buf.toString());
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+    
+    
     public String sanitize(String str) throws ParseException {
         if (StringUtils.isEmpty(str)) {
             return str;
@@ -78,7 +107,10 @@ public class SanitizeMarkdownTextLogic {
         if (LOG.isTraceEnabled()) {
             LOG.trace(builder.toString());
         }
-        return SanitizingLogic.get().sanitize(builder.toString());
+        String result = SanitizingLogic.get().sanitize(builder.toString());
+        result = decode(result);
+        LOG.trace(result);
+        return result;
     }
     
 

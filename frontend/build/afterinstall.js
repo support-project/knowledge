@@ -48,3 +48,9 @@ dest = path.resolve('static/lib/respond.js/dest');
 
 fs.mkdirsSync(dest);
 fs.copySync(source, dest);
+
+source = path.resolve('node_modules/highlight.js/styles');
+dest = path.resolve('static/lib/highlight.js/styles');
+
+fs.mkdirsSync(dest);
+fs.copySync(source, dest);
