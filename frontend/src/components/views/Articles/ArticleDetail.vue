@@ -40,6 +40,8 @@ import { mapState } from 'vuex'
 import PageTitle from '../Parts/PageTitle'
 import ArticleDetailSidebar from './ArticleDetailSidebar'
 
+import processFootnote from '../../../lib/decorateMarkdown/processFootnote'
+
 export default {
   name: 'ArticleDetail',
   data () {
@@ -68,6 +70,9 @@ export default {
       this.$store.dispatch('getArticle', this.$route.params.id)
       .then(() => {
         console.log('finish getArticle')
+        setTimeout(() => {
+          processFootnote($('.markdown'))
+        }, 500)
       })
     }
   },

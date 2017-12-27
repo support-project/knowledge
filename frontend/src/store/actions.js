@@ -1,7 +1,6 @@
 import Promise from 'bluebird'
 import api from '../api'
-import processLink from './decorateMarkdown/processLink'
-import processHighlight from './decorateMarkdown/processHighlight'
+import processDecorateAll from '../lib/decorateMarkdown/processDecorateAll'
 
 export default {
   getArticles: (context) => {
@@ -28,13 +27,11 @@ export default {
     api.request('get', '/_api/articles/' + id + '?parse=true', null, context.state.token)
     .then(response => {
       var article = response.data
-      console.log(response)
+//      console.log(response)
       return Promise.try(() => {
-        return processLink(response.data.displaySafeHtml)
+        return processDecorateAll(response.data.displaySafeHtml)
       }).then(function (result) {
-        return processHighlight(result)
-      }).then(function (result) {
-        console.log(result)
+//        console.log(result)
         article.displaySafeHtml = result
         context.commit('SET_PAGE_STATE', {loading: false})
         context.commit('SET_RESOURCES', {article: article})

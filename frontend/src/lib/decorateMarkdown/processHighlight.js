@@ -4,7 +4,7 @@ import hljs from 'highlight.js'
 import lang from '../../lib/lang'
 
 const highlight = function (jqobj, addstylus) {
-  console.log(jqobj.html())
+//  console.log(jqobj.html())
   return Promise.try(() => {
     if (addstylus) {
       jqobj.addClass('stylus')
@@ -20,18 +20,6 @@ const highlight = function (jqobj, addstylus) {
   }).then((result) => {
     if (result) {
       jqobj.html(result.value)
-      /*
-      var html = '<code'
-      if (result.language) {
-        html += 'class="' + result.language + '"'
-      }
-      html += '>'
-      html += result
-      html += '</code>'
-      console.log(html)
-      jqobj.replaceWith(html)
-      console.log(jqobj.html())
-      */
     }
   })
 }

@@ -42,7 +42,8 @@
     "html5shiv": "^3.7.3",
     "respond.js": "^1.4.2",
     "bluebird": "^3.5.1",
-    "highlight.js": "^9.12.0"
+    "highlight.js": "^9.12.0",
+    "wemoji": "^1.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
