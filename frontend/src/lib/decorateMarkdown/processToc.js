@@ -23,15 +23,9 @@ export default function (parent) {
       // level
       var tagName = $(this).prop('tagName').toLowerCase()
       // link
-      var $a = $('<a href=""></a>')
+      var $a = $('<a href="" class="toclink"></a>')
       $a.text('- ' + $(this).text())
       $a.attr('href', '#' + targetId)
-      $a.click(function () {
-        $('body, html').animate({
-          scrollTop: $('#' + targetId).offset().top - 50
-        }, 500)
-        return false
-      })
       // link div
       var $div = $('<div class="toc-h toc-' + tagName + '"></div>')
       $a.appendTo($div)

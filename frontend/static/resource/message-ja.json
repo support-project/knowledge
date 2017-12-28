@@ -24,11 +24,14 @@
     "Message": "ほげほげふがふが"
   },
   "ArticleDetail": {
+    "description": "記事を表示",
     "BtnStar": "いいね",
     "BtnStock": "この記事をストックする",
     "BtnEdit": "この記事を編集する",
-    "BtnToc": "目次を表示を切り替え",
-    "description": "記事を表示"
+    "BtnToc": "目次を表示を切り替え"
+  },
+  "ArticleDetailSidebar": {
+    "TocTitle": "目次"
   },
   "ArticleEdit": {
     "description": "記事を編集します"

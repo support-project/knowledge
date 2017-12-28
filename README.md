@@ -36,6 +36,7 @@
 
 - Clone this repository your local machine
 - 以下の手順で、フロントエンド、バックエンド、リバースプロキシの順に起動します
+- docker & docker-compose を使います
 - http://localhost にアクセスし確認できます
 
 ### Frontend

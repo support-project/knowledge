@@ -1,0 +1,18 @@
+.control-sidebar {
+  position: fixed;
+}
+.control-sidebar .tab-content .tab-pane {
+  height: 100vh;
+  width: 100%;
+}
+/*
+.control-sidebar .tab-content .tab-pane a,
+.control-sidebar .tab-content .tab-pane a:hover,
+.control-sidebar .tab-content .tab-pane a:active,
+.control-sidebar .tab-content .tab-pane a:visited {
+}
+*/
+.close-btn-on-sidebar {
+  width: 100%;
+  text-align: right;
+}

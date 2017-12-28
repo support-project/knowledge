@@ -24,11 +24,14 @@
     "Message": "message"
   },
   "ArticleDetail": {
+    "description": "detail of a article",
     "BtnStar": "Like",
     "BtnStock": "Stock this article",
     "BtnEdit": "Edit this article",
-    "BtnToc": "Toggle table of contents",
-    "description": "detail of a article"
+    "BtnToc": "Toggle table of contents"
+  },
+  "ArticleDetailSidebar": {
+    "TocTitle": "Table of contents"
   },
   "ArticleEdit": {
     "description": "edit of a article"

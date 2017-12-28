@@ -6,7 +6,7 @@
       :breadcrumb = "breadcrumb" />
 
     <div id="secondNavbar">
-      <nav class="slidemenu" >
+      <nav class="secondNavbarMenu" >
         <a :title="$t('ArticleDetail.BtnStar')">
           <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
         </a>
@@ -43,10 +43,13 @@
 /* global $ */
 import tippy from 'tippy.js'
 import { mapState } from 'vuex'
+
 import PageTitle from '../Parts/PageTitle'
 import ArticleDetailSidebar from './ArticleDetailSidebar'
-
-import processFootnotesPotision from '../../../lib/decorateMarkdown/processFootnotesPotision'
+import processFootnotesPotision from '../../../lib/displayParts/processFootnotesPotision'
+import secondNavbar from '../../../lib/displayParts/secondNavbar'
+import toggleSideBar from '../../../lib/displayParts/toggleSideBar'
+import moveTocTarget from '../../../lib/displayParts/moveTocTarget'
 
 export default {
   name: 'ArticleDetail',
@@ -78,6 +81,7 @@ export default {
         console.log('finish getArticle')
         setTimeout(() => {
           processFootnotesPotision($('.markdown-body'))
+          moveTocTarget()
         }, 500)
       })
     }
@@ -94,63 +98,20 @@ export default {
         arrow: true
       })
 
-      var toggle = false
+      // 目次のサイドバーのトグル
+      toggleSideBar.init(true)
       $('#toc').click(() => {
-        if (!toggle) {
-          $('.control-sidebar').addClass('control-sidebar-open')
-//          $('.control-sidebar').addClass('fixed')
-          toggle = true
-        } else {
-          $('.control-sidebar').removeClass('control-sidebar-open')
-//          $('.control-sidebar').removeClass('fixed')
-          toggle = false
-        }
+        toggleSideBar.toggle()
       })
-      var nav = $('#secondNavbar')
-      var offset = nav.offset()
-      $(window).scroll(function () {
-        if ($(window).scrollTop() > offset.top) {
-          nav.addClass('fixed')
-          nav.addClass('navbar-color')
-        } else {
-          nav.removeClass('fixed')
-          nav.removeClass('navbar-color')
-        }
-      })
+
+      // この画面特有の操作ボタンの固定
+      secondNavbar()
     })
   }
 }
 </script>
 
 <style>
-#secondNavbar {
-	width: 100%;
-}
-.slidemenu {
-  height: 50px;
-  display: flex;
-  /*justify-content: center;*/
-  align-items: center;
-}
-.slidemenu a, .slidemenu a:hover, .slidemenu a:active {
-  margin-left: 10px;
-  height: 40px;
-  width: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 30px;
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
-  cursor: pointer;
-}
-
-.fixed {
-  position: fixed;
-  top: 0;
-  z-index: 999;
-}
-
 .content {
   box-sizing: border-box;
   padding-left: 30px;
@@ -167,4 +128,4 @@ export default {
   color: rgb(128, 128, 128)
 }
 </style>
-<!-- <style src="tippy.js/dist/tippy.css"> -->
+<style src="../../css/secondNavbar.css" />

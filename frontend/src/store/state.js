@@ -19,7 +19,8 @@ export default {
     article: {},
     articles: [],
     groups: [], // 一覧に表示するグループ（上位5件）
-    tags: []
+    tags: [],
+    toc: ''
   },
   pagestate: {
     loading: false

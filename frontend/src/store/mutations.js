@@ -30,6 +30,9 @@ export default {
     if ('tags' in resources) {
       state.resources.tags = resources.tags
     }
+    if ('toc' in resources) {
+      state.resources.toc = resources.toc
+    }
   },
   SET_PAGE_STATE (state, pagestate) {
     if ('loading' in pagestate) {

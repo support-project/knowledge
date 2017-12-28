@@ -1,0 +1,30 @@
+#secondNavbar {
+	width: 100%;
+}
+.secondNavbarMenu {
+  height: 50px;
+  display: flex;
+  /*justify-content: center;*/
+  align-items: center;
+}
+.secondNavbarMenu a,
+.secondNavbarMenu a:hover,
+.secondNavbarMenu a:active,
+.secondNavbarMenu a:visited {
+  margin-left: 10px;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  cursor: pointer;
+}
+
+.secondNavbarfixed {
+  position: fixed;
+  top: 0;
+  z-index: 1011;
+}
