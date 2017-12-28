@@ -1,6 +1,8 @@
 import Promise from 'bluebird'
 import logger from 'logger'
 
+const LABEL = 'processFootnotes.js'
+
 var setFootnotes = function (input) {
   var BLOCK_FOOTNOTES = /^\[\^([0-9]+)\]: (.*)/
   var lines = input.split('\n')
@@ -18,8 +20,8 @@ var setFootnotes = function (input) {
       li += '<a href="#fnref-' + key + '">&#8617;</a>'
       li += '</li>'
       li += '\n'
-      logger.debug(line)
-      logger.debug(li)
+      logger.debug(LABEL, line)
+      logger.debug(LABEL, li)
       footnotes += li
     } else {
       if (cnt > 0) {
@@ -45,12 +47,12 @@ var toFootnotes = function (input) {
     if (cnt > 0) {
       results += '\n'
     }
-    logger.debug(line)
+    logger.debug(LABEL, line)
     var matchs = line.match(INLINE_FOOTNOTE)
     if (matchs && matchs.length > 0) {
       matchs.forEach((m) => {
         var key = m.substring(2, m.length - 1)
-        logger.debug(key)
+        logger.debug(LABEL, key)
         var sup = '<sup class="footnote-ref" id="fnref-' + key + '">'
         sup += '<a href="#fn-' + key + '">' + key + '</a>'
         line = line.replace(m, sup)
@@ -68,9 +70,9 @@ var toFootnotes = function (input) {
 export default function (input) {
   return Promise.try(() => {
     input = setFootnotes(input)
-    logger.debug(input)
+    logger.debug(LABEL, input)
     input = toFootnotes(input)
-    logger.debug(input)
+    logger.debug(LABEL, input)
     return input
   })
 }

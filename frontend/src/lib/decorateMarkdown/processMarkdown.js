@@ -3,6 +3,8 @@ import logger from 'logger'
 import marked from 'marked'
 import hljs from 'highlight.js'
 
+const LABEL = 'processMarkdown.js'
+
 marked.setOptions({
   renderer: new marked.Renderer(),
   gfm: true,
@@ -29,13 +31,13 @@ renderer.heading = function (text, level) {
 renderer.code = function (code, language) {
   logger.debug(code)
   var value = '<pre class="hljs"><code class="' + language + '">' + hljs.highlightAuto(code).value + '</code></pre>'
-  logger.debug(value)
+  logger.debug(LABEL, value)
   return value
 }
 renderer.codespan = function (code) {
   logger.debug(code)
   var value = '<code class="hljs">' + hljs.highlightAuto(code).value + '</code>'
-  logger.debug(value)
+  logger.debug(LABEL, value)
   return value
 }
 
@@ -46,7 +48,7 @@ renderer.codespan = function (code) {
 export default function (input) {
   sequentialId = 0
   return Promise.try(() => {
-    logger.debug(input)
+    logger.debug(LABEL, input)
     return marked(input, { renderer: renderer })
   })
 }

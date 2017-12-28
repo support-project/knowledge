@@ -4,16 +4,18 @@ import hljs from 'highlight.js'
 import lang from 'lang'
 import logger from 'logger'
 
+const LABEL = 'processHighlight.js'
+
 const highlight = function (jqobj, addstylus) {
-  logger.trace(jqobj.html())
+  logger.trace(LABEL, jqobj.html())
   return Promise.try(() => {
     if (addstylus) {
       jqobj.addClass('stylus')
     }
     var text = jqobj.text()
     if (text.indexOf('://') !== -1) {
-      logger.info('skip on hljs freeze word')
-      logger.info(text)
+      logger.info(LABEL, 'skip on hljs freeze word')
+      logger.info(LABEL, text)
       return
     }
     var result = hljs.highlightAuto(text)
