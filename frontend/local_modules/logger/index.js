@@ -56,7 +56,7 @@ logger.setLevel = function (level) {
   }
 }
 
-var makelogStr = function (level, filePosition, msg) {
+var makelogStr = function (level, filePosition, msg, label) {
   var str = ''
   if (level === logger.LEVEL.DEBUG) {
     str += '[DEBUG]'
@@ -69,39 +69,57 @@ var makelogStr = function (level, filePosition, msg) {
   } else if (level === logger.LEVEL.TRACE) {
     str += '[TRACE]'
   }
+  if (label) {
+    str += ' ' + label
+  }
   str += filePosition
   str += msg
   return str
 }
 
+var createMsgArgs = function(loglevel, params) {
+  var args = [].slice.call(params)
+  if (args.length === 2) {
+    var msg = args[1]
+    if (msg) {
+      msg = JSON.stringify(msg)
+    }
+    args[1] = makelogStr(loglevel, getCallsiteStr(), args[1], args[0])
+    args.shift() // 先頭のラベルは削除
+  } else {
+    args[0] = makelogStr(loglevel, getCallsiteStr(), args[0])
+  }
+  return args;
+}
+
 logger.debug = function () {
-  if (this.level < this.LEVEL.DEBUG) return
-  var args = [].slice.call(arguments)
-  args[0] = makelogStr(this.LEVEL.DEBUG, getCallsiteStr(), args[0])
+  var L = this.LEVEL.DEBUG
+  if (this.level < L) return
+  var args = createMsgArgs(L, arguments)
   console.log.apply(console, args)
 }
 logger.info = function () {
-  if (this.level < this.LEVEL.INFO) return
-  var args = [].slice.call(arguments)
-  args[0] = makelogStr(this.LEVEL.INFO, getCallsiteStr(), args[0])
+  var L = this.LEVEL.INFO
+  if (this.level < L) return
+  var args = createMsgArgs(L, arguments)
   console.info.apply(console, args)
 }
 logger.warn = function () {
-  if (this.level < this.LEVEL.WARN) return
-  var args = [].slice.call(arguments)
-  args[0] = makelogStr(this.LEVEL.WARN, getCallsiteStr(), args[0])
+  var L = this.LEVEL.WARN
+  if (this.level < L) return
+  var args = createMsgArgs(L, arguments)
   console.warn.apply(console, args)
 }
 logger.error = function () {
-  if (this.level < this.LEVEL.ERROR) return
-  var args = [].slice.call(arguments)
-  args[0] = makelogStr(this.LEVEL.ERROR, getCallsiteStr(), args[0])
+  var L = this.LEVEL.ERROR
+  if (this.level < L) return
+  var args = createMsgArgs(L, arguments)
   console.error.apply(console, args)
 }
 logger.trace = function () {
-  if (this.level < this.LEVEL.TRACE) return
-  var args = [].slice.call(arguments)
-  args[0] = makelogStr(this.LEVEL.TRACE, getCallsiteStr(), args[0])
+  var L = this.LEVEL.TRACE
+  if (this.level < L) return
+  var args = createMsgArgs(L, arguments)
   console.log.apply(console, args)
 }
 
