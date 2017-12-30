@@ -1,16 +1,16 @@
 #secondNavbar {
 	width: 100%;
 }
-.secondNavbarMenu {
+.slidemenu {
   height: 50px;
   display: flex;
   /*justify-content: center;*/
   align-items: center;
 }
-.secondNavbarMenu a,
-.secondNavbarMenu a:hover,
-.secondNavbarMenu a:active,
-.secondNavbarMenu a:visited {
+.slidemenu a,
+.slidemenu a:hover,
+.slidemenu a:active,
+.slidemenu a:visited {
   margin-left: 10px;
   height: 40px;
   width: 40px;

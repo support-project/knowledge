@@ -1,3 +1,4 @@
+/* global $ */
 import logger from 'logger'
 if (process && process.env && process.env.LOG_LEVEL) {
   logger.setLevel(process.env.LOG_LEVEL)
@@ -22,6 +23,10 @@ import { domain, count, prettyDate, pluralize } from './filters'
 // Import Views - Top level
 import AppView from './components/App.vue'
 
+var LABEL = 'main.js'
+
+var serverURI = $('base').attr('href')
+serverURI = serverURI.substring(0, serverURI.length - 1)
 // Import Install and register helper items
 Vue.filter('count', count)
 Vue.filter('domain', domain)
@@ -61,7 +66,7 @@ sync(store, router)
 if (window.localStorage) {
   var localUserString = window.localStorage.getItem('user') || 'null'
   var localUser = JSON.parse(localUserString)
-
+  logger.debug(LABEL, localUser)
   if (localUser && store.state.user !== localUser) {
     // TODO Tokenが有効かどうかのチェック（無効になっていれば、ログアウト）
 
@@ -69,7 +74,7 @@ if (window.localStorage) {
     store.commit('SET_TOKEN', window.localStorage.getItem('token'))
   } else {
     store.commit('SET_USER', {
-      avatar: '/open.account/icon/',
+      avatar: 'open.account/icon/',
       userName: 'anonymous'
     })
   }
@@ -77,8 +82,8 @@ if (window.localStorage) {
 
 Vue.use(VueLazyload, {
   preLoad: 1.3,
-  error: '/static/img/loader.gif',
-  loading: '/static/img/loader.gif',
+  error: './static/img/loader.gif',
+  loading: './static/img/loader.gif',
   attempt: 1
 })
 
@@ -98,21 +103,22 @@ const i18n = new VueI18n({
   messages: message
 })
 
-// Start out app!
-// eslint-disable-next-line no-new
-new Vue({
-  el: '#root',
-  router: router,
-  store: store,
-  render: h => h(AppView),
-  i18n: i18n,
-  beforeCreate: function () {
-    var _self = this
+store.dispatch('setServerURI', serverURI).then(() => {
+  // Start out app!
+  // eslint-disable-next-line no-new
+  new Vue({
+    el: '#root',
+    router: router,
+    store: store,
+    render: h => h(AppView),
+    i18n: i18n,
+    beforeCreate: function () {
+      var _self = this
 
-    // TODO Ajax access to get user locale config
-    setTimeout(function () {
-      _self.$i18n.locale = 'en'
-    }, 100)
-  }
+      // TODO Ajax access to get user locale config
+      setTimeout(function () {
+        _self.$i18n.locale = 'en'
+      }, 100)
+    }
+  })
 })
-

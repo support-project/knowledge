@@ -115,7 +115,7 @@
             </a>
         </li>
         <li>
-            <a class="" href="/open.license" style="cursor: pointer;">
+            <a class="" href="open.license" style="cursor: pointer;">
               {{ $t('DashView.licence') }}
             </a>
         </li>

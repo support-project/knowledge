@@ -25,7 +25,7 @@
         </router-link>
         
         <div class="item-info">
-          <a :href="'/open.account/info/' + article.insertUser" class="text-primary btn-link">
+          <a :href="'open.account/info/' + article.insertUser" class="text-primary btn-link">
             <img v-lazy="article.insertUserIcon" alt="icon" width="18" height="18" />
             {{article.insertUserName}}
           </a>
@@ -33,7 +33,7 @@
           <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>&nbsp;{{article.insertDatetime | moment}}
           <span v-if="article.insertDatetime != article.updateDatetime" class="update_info">
             <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-            <a :href="'/open.account/info/' + article.updateUser" class="text-primary btn-link">
+            <a :href="'open.account/info/' + article.updateUser" class="text-primary btn-link">
               <img v-lazy="article.updateUserIcon" alt="icon" width="18" height="18" />
               {{article.updateUserName}}
             </a>
@@ -48,10 +48,10 @@
         <span v-if="article.pointOnTerm"> <!-- only popular list -->
           <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp;× {{article.pointOnTerm}} &nbsp;
         </span>
-        <a :href="'/open.knowledge/likes/' + article.knowledgeId" class="text-primary btn-link">
+        <a :href="'open.knowledge/likes/' + article.knowledgeId" class="text-primary btn-link">
             <i class="fa fa-thumbs-o-up"></i>&nbsp;× <span id="like_count">{{article.likeCount}}</span>
         </a> &nbsp;
-        <a :href="'/open.knowledge/view/' + article.knowledgeId + '#comments'" class="text-primary btn-link">
+        <a :href="'open.knowledge/view/' + article.knowledgeId + '#comments'" class="text-primary btn-link">
             <i class="fa fa-comments-o"></i>&nbsp;× {{article.commentCount}}
         </a> &nbsp;
         <i :class="'fa ' + article.type.icon"></i>&nbsp;{{article.type.name}}
@@ -64,7 +64,7 @@
         <!-- 保護の場合のターゲット -->
         <span v-if="article.viewers">
           <span v-for="group in article.viewers.groups" :key="group.id">
-            <a :href="'/open.knowledge/list?group=' + group.id">
+            <a :href="'open.knowledge/list?group=' + group.id">
               <span class="tag label label-default">
                 <i class="fa fa-users"></i>{{group.name}}
               </span>
@@ -72,7 +72,7 @@
           </span>
 
           <span v-for="user in article.viewers.users"> <!-- :key="user.id" -->
-            <a :href="'/open.knowledge/list?user=' + user.id">
+            <a :href="'open.knowledge/list?user=' + user.id">
               <span class="tag label label-default">
                 <i class="fa fa-user"></i>{{user.name}}
               </span>
@@ -82,7 +82,7 @@
         <span v-if="article.tags && article.tags.length > 0">
           <i class="fa fa-tags"></i>
           <span v-for="tag in article.tags" :key="tag">
-            <a :href="'/open.knowledge/list?tagNames=' + tag" v-if="tag">
+            <a :href="'open.knowledge/list?tagNames=' + tag" v-if="tag">
                 <span class="tag label label-default"><i class="fa fa-tag"></i>{{tag}}</span>
             </a>&nbsp;
           </span>
@@ -90,7 +90,7 @@
         <span v-if="article.stocks && article.stocks.length > 0">
           <i class="fa fa-star-o"></i>
           <span v-for="stock in article.stocks" :key="stock.stockId">
-            <a :href="'/open.knowledge/stocks?stockid=' + stock.stockId">
+            <a :href="'open.knowledge/stocks?stockid=' + stock.stockId">
                 <span class="tag label label-default"><i class="fa fa-star"></i>{{stock.stockName}}</span>
             </a>&nbsp;
           </span>

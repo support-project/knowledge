@@ -5,6 +5,9 @@ export default {
   TOGGLE_SEARCHING (state) {
     state.searching = (state.searching === '') ? 'loading' : ''
   },
+  SET_SERVER_URI (state, serverURI) {
+    state.serverURI = serverURI
+  },
   SET_USER (state, user) {
     state.user = user
   },

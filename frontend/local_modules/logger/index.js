@@ -36,7 +36,7 @@ logger.LEVEL = {
   TRACE: 5,
   FULL: 6
 }
-logger.level = logger.LEVEL.WARN
+logger.level = logger.LEVEL.INFO // Default is INFO
 
 logger.setLevel = function (level) {
   if (level === 'DEBUG') {
@@ -54,6 +54,10 @@ logger.setLevel = function (level) {
   } else if (level === 'FULL') {
     logger.level = logger.LEVEL.FULL
   }
+}
+
+var isString = function (obj) {
+  return typeof (obj) === 'string' || obj instanceof String
 }
 
 var makelogStr = function (level, filePosition, msg, label) {
@@ -81,9 +85,6 @@ var createMsgArgs = function(loglevel, params) {
   var args = [].slice.call(params)
   if (args.length === 2) {
     var msg = args[1]
-    if (msg) {
-      msg = JSON.stringify(msg)
-    }
     args[1] = makelogStr(loglevel, getCallsiteStr(), args[1], args[0])
     args.shift() // 先頭のラベルは削除
   } else {

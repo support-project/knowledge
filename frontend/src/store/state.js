@@ -1,7 +1,7 @@
 export default {
   callingAPI: false,
   searching: '',
-  serverURI: 'http://localhost:8080',
+  serverURI: '',
   user: null,
   token: null,
   userInfo: {

@@ -1,7 +1,12 @@
 import axios from 'axios'
-import config from '../config'
+import logger from 'logger'
+const LABEL = 'api.js'
+var serverURI = ''
 
 export default {
+  setServerURI (uri) {
+    serverURI = uri
+  },
   request (method, uri, data = null, token) {
     if (!method) {
       console.error('API function call requires method argument')
@@ -18,7 +23,12 @@ export default {
       headers = {'PRIVATE-TOKEN': token}
     }
 
-    var url = config.serverURI + uri
+    var url = serverURI + uri
+    logger.debug(LABEL, {
+      method: method,
+      url: url,
+      data: data
+    })
     return axios({ method, url, data, headers })
   }
 }

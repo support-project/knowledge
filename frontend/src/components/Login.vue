@@ -2,7 +2,7 @@
   <div class="container container-table">
       <div class="row vertical-10p">
         <div class="container">
-          <img src="/static/img/human.svg" class="center-block logo">
+          <img src="static/img/human.svg" class="center-block logo">
           <div class="text-center col-md-4 col-sm-offset-4">
             <!-- login form -->
             <form class="ui form loginForm"  @submit.prevent="checkCreds">
@@ -83,7 +83,7 @@ export default {
         if (data.user) {
           var token = data.token
 
-          data.user.avatar = '/open.account/icon/' + data.user.userId
+          data.user.avatar = 'open.account/icon/' + data.user.userId
 
           this.$store.commit('SET_USER', data.user)
           this.$store.commit('SET_TOKEN', token)

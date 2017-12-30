@@ -11,10 +11,10 @@
       <!-- Tab -->
       <div class="row padding-side">
           <ul class="nav nav-tabs">
-              <li role="presentation" class="active"><a href="/open.knowledge/list">一覧</a></li>
-              <li role="presentation"><a href="/open.knowledge/show_popularity">人気</a></li>
-              <li role="presentation"><a href="/open.knowledge/stocks">ストック</a></li>
-              <li role="presentation"><a href="/open.knowledge/show_history">履歴</a></li>
+              <li role="presentation" class="active"><a href="open.knowledge/list">一覧</a></li>
+              <li role="presentation"><a href="open.knowledge/show_popularity">人気</a></li>
+              <li role="presentation"><a href="open.knowledge/stocks">ストック</a></li>
+              <li role="presentation"><a href="open.knowledge/show_history">履歴</a></li>
           </ul>
       </div>
 
@@ -28,7 +28,6 @@
           <article-list-calendar />
         </div>
       </div>
-      <link rel="stylesheet" href="/static/css/knowledge-list.css" >
     </div>
   </div>
 
@@ -71,3 +70,4 @@ export default {
   padding-left: 10px;
 }
 </style>
+<style src="../../css/knowledge-list.css" />

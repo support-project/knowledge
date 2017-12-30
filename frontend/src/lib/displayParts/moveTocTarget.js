@@ -7,11 +7,11 @@ const LABEL = 'moveTocTarget.js'
 export default function () {
   logger.debug(LABEL, 'start')
   return Promise.try(() => {
-    logger.warn(LABEL, $('.toclink').length)
+    logger.debug(LABEL, $('.toclink').length)
     $('.toclink').each(function () {
-      logger.warn(LABEL, $(this).html())
+      logger.debug(LABEL, $(this).html())
       $(this).click(function () {
-        logger.warn(LABEL, 'clicked')
+        logger.debug(LABEL, 'clicked')
         var targetId = $(this).attr('href')
         $('body, html').animate({
           scrollTop: $(targetId).offset().top - 80

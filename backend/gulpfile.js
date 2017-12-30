@@ -6,6 +6,9 @@ var minifyCss = require('gulp-minify-css');
 var rev = require('gulp-rev');
 var replace = require('gulp-replace');
 var eslint = require('gulp-eslint');
+var rename = require("gulp-rename");  
+var rimraf = require('rimraf');
+var runSequence = require('run-sequence');
 
 gulp.task('min', function() {
     return gulp.src([
@@ -126,6 +129,24 @@ gulp.task('copy:pdfthema', function() {
     .pipe(gulp.dest('target/knowledge/css/presentation-thema'));
 });
 
+gulp.task('gen', function(callback) {
+    runSequence('gen:index', 'gen:rm', callback);
+});
+gulp.task('gen:index', function() {
+    return gulp.src([
+        'src/main/webapp/index.html'
+    ])
+    .pipe(replace('/static', 'static'))
+    .pipe(replace('<base href=/ >', '<base href="<%= request.getContextPath() %>/" >'))
+    .pipe(replace('/knowledgestatic/', 'static/'))
+    .pipe(replace('<!DOCTYPE html>', '<%@page pageEncoding="UTF-8"%><!DOCTYPE html>'))
+    .pipe(rename('index.jsp'))
+    .pipe(gulp.dest('target/knowledge/'));
+});
+gulp.task('gen:rm', function(callback) {
+    rimraf('./src/main/webapp/index.html', callback);
+})
+    
 gulp.task('check', function () {
     return gulp.src(['src/main/webapp/js/slide.js'])
     .pipe(eslint())
@@ -133,4 +154,4 @@ gulp.task('check', function () {
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('default', ['min', 'copy']);
+gulp.task('default', ['min', 'copy', 'gen']);

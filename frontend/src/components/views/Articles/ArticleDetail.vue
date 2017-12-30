@@ -6,7 +6,7 @@
       :breadcrumb = "breadcrumb" />
 
     <div id="secondNavbar">
-      <nav class="secondNavbarMenu" >
+      <nav class="slidemenu" >
         <a :title="$t('ArticleDetail.BtnStar')">
           <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
         </a>

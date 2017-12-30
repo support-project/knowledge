@@ -64,7 +64,7 @@
 
     <li class="header">ME</li>
     <li class="pageLink router-link-active">
-      <a href="/open.knowledge/list">
+      <a href="open.knowledge/list">
         <i class="fa fa-recycle" aria-hidden="true"></i>
         <span class="page">{{ $t('Route.MoveOldUI') }}</span>
       </a>

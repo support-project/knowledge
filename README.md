@@ -108,13 +108,4 @@ $ docker-compose run --rm maven mvn clean package
 - 'knowledge.war' is builded in backend/target directory when this command finished succeed
 
 
-#### Run builded web application on your machine with tomcat
-
-- You can access builded web application on 'http://localhost:8080'
-
-```
-$ docker-compose run --rm -p 8080:8080 tomcat  
-```
-
-
 
