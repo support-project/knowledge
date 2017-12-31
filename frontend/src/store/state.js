@@ -23,6 +23,7 @@ export default {
     toc: ''
   },
   pagestate: {
+    toggleTOC: true,
     loading: false
   }
 }

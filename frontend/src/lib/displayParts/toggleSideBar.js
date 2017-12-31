@@ -1,5 +1,6 @@
 import Promise from 'bluebird'
 import $ from 'jquery'
+import store from '../../store'
 
 var toggle = true
 
@@ -16,6 +17,10 @@ export default {
         $('.control-sidebar').removeClass('control-sidebar-open')
         toggle = false
       }
+      store.commit('SET_PAGE_STATE', {
+        toggleTOC: toggle
+      })
+      return toggle
     })
   }
 }

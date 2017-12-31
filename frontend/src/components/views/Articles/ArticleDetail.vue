@@ -17,7 +17,7 @@
           :title="$t('ArticleDetail.BtnEdit')">
           <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
         </router-link>
-        <a id="toc" :title="$t('ArticleDetail.BtnToc')">
+        <a id="toc" :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'label pull-right bg-green': pagestate.toggleTOC}">
           <i class="fa fa-list fa-lg" aria-hidden="true"></i>
         </a>
       </nav>
@@ -25,13 +25,21 @@
 
     <!-- Main content -->
     <div class="content">
-      <div class="title"><span class="articleid">#{{ $route.params.id }}</span> {{ resources.article.title}}</div>
+      <div class="article-information">
+        <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ resources.article.title}}</div>
+      </div>
+      
+      <article-detail-point :article="resources.article" />
 
       <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i>
 
       <div class="markdown-body">
         <span v-html="this.resources.article.displaySafeHtml"></span>
       </div>
+
+
+      <div id="comments">Comments</div>
+
 
       <article-detail-sidebar />
 
@@ -46,6 +54,7 @@ import { mapState } from 'vuex'
 
 import PageTitle from '../Parts/PageTitle'
 import ArticleDetailSidebar from './ArticleDetailSidebar'
+import ArticleDetailPoint from './ArticleDetailPoint'
 import processFootnotesPotision from '../../../lib/displayParts/processFootnotesPotision'
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
 import toggleSideBar from '../../../lib/displayParts/toggleSideBar'
@@ -66,7 +75,7 @@ export default {
       // ルートの変更の検知...
     }
   },
-  components: { PageTitle, ArticleDetailSidebar },
+  components: { PageTitle, ArticleDetailSidebar, ArticleDetailPoint },
   computed: {
     ...mapState([
       'pagestate',
@@ -121,11 +130,24 @@ export default {
     padding: 10px;
   }
 }
-.title {
-  font-size: 36px;
+.article-information {
+  margin-bottom: 10px;
 }
-.title .articleid {
+
+.article-information .article-title {
+  left: -5px;
+  font-size: 36px;
+  padding: 0.1em;
+  color: #010101;
+  background: #eaf3ff;
+  border-bottom: solid 3px #516ab6;
+  border-left: solid 10px #516ab6;
+}
+
+.article-information .article-title .article-id {
   color: rgb(128, 128, 128)
 }
+
+
 </style>
 <style src="../../css/secondNavbar.css" />

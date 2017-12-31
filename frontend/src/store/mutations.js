@@ -41,5 +41,8 @@ export default {
     if ('loading' in pagestate) {
       state.pagestate.loading = pagestate.loading
     }
+    if ('toggleTOC' in pagestate) {
+      state.pagestate.toggleTOC = pagestate.toggleTOC
+    }
   }
 }
