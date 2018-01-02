@@ -29,8 +29,24 @@
         <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ resources.article.title}}</div>
       </div>
       
-      <article-detail-point :article="resources.article" />
-
+      <div class="article-meta">
+        <div>
+          <article-parts-editor :article="resources.article" />
+        </div>
+        <div>
+          <article-parts-point :article="resources.article" />
+        </div>
+        <div>
+          <article-parts-type-label :article="resources.article" />
+          <span class="left-margin">
+            <article-parts-public-flag :article="resources.article" />
+          </span>
+        </div>
+        <div>
+          <article-parts-tags :article="resources.article" />
+          <article-parts-stocks :article="resources.article" />
+        </div>
+      </div>
       <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i>
 
       <div class="markdown-body">
@@ -54,7 +70,12 @@ import { mapState } from 'vuex'
 
 import PageTitle from '../Parts/PageTitle'
 import ArticleDetailSidebar from './ArticleDetailSidebar'
-import ArticleDetailPoint from './ArticleDetailPoint'
+import ArticlePartsEditor from './ArticlePartsEditor'
+import ArticlePartsPoint from './ArticlePartsPoint'
+import ArticlePartsTypeLabel from './ArticlePartsTypeLabel'
+import ArticlePartsPublicFlag from './ArticlePartsPublicFlag'
+import ArticlePartsTags from './ArticlePartsTags'
+import ArticlePartsStocks from './ArticlePartsStocks'
 import processFootnotesPotision from '../../../lib/displayParts/processFootnotesPotision'
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
 import toggleSideBar from '../../../lib/displayParts/toggleSideBar'
@@ -75,7 +96,7 @@ export default {
       // ルートの変更の検知...
     }
   },
-  components: { PageTitle, ArticleDetailSidebar, ArticleDetailPoint },
+  components: { PageTitle, ArticleDetailSidebar, ArticlePartsPoint, ArticlePartsEditor, ArticlePartsTypeLabel, ArticlePartsPublicFlag, ArticlePartsTags, ArticlePartsStocks },
   computed: {
     ...mapState([
       'pagestate',
@@ -148,6 +169,13 @@ export default {
   color: rgb(128, 128, 128)
 }
 
+.article-meta {
+  margin-bottom: 10px;
+}
+
+.left-margin {
+  margin-left: 10px;
+}
 
 </style>
 <style src="../../css/secondNavbar.css" />

@@ -30,37 +30,10 @@
     padding-top: 10px;
     margin-bottom: 3px;
 }
-
-.insert_info {
-/*    border-bottom: 1px solid #cccccc;*/
-    margin: 0px;
-    padding: 0px;
-}
-
-.item_caption {
-    margin-top: 5px;
-}
-
-.bootstrap-tagsinput {
-    border: 0px solid #ccc;
-    box-shadow: none;
-    display: inline-block;
-    padding: 4px 6px;
-    margin-bottom: 0px;
-    color: #555;
-    vertical-align: middle;
-    border-radius: 0px;
-    max-width: 100%;
-    line-height: 22px;
-    cursor: text;
-}
-
-.list-group-item-current {
-    background-color: #ecf0f1;
-}
 .dispKnowledgeId {
     color: #999999;
 }
-.title-link:hover {
-    color: #999999;
+
+.item-info {
+    margin-left: 5px;
 }

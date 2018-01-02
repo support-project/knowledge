@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.vo.KnowledgeDataInterface;
 
 public class Knowledge implements KnowledgeDataInterface {
@@ -49,6 +50,9 @@ public class Knowledge implements KnowledgeDataInterface {
     
     /** 閲覧可能な対象（publicflag=2(保護)の場合に指定） */
     private Target viewers;
+    
+    /** この記事をストックしている場合のストック情報 */
+    private List<StocksEntity> stocks;
     
     /** Markdownを表示用に変換したHTML(サニタイズ済で直接描画しても問題無いはず） */
     private String displaySafeHtml;
@@ -275,5 +279,13 @@ public class Knowledge implements KnowledgeDataInterface {
 
     public void setDisplaySafeHtml(String displaySafeHtml) {
         this.displaySafeHtml = displaySafeHtml;
+    }
+
+    public List<StocksEntity> getStocks() {
+        return stocks;
+    }
+
+    public void setStocks(List<StocksEntity> stocks) {
+        this.stocks = stocks;
     }
 }

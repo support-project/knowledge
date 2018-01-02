@@ -6,6 +6,12 @@ import processToc from '../lib/decorateMarkdown/processToc'
 
 const LABEL = 'action.js'
 
+var setIcon = function (context, article) {
+  logger.trace(LABEL, context.state.serverURI + '/open.account/icon/' + article.insertUser)
+  article.insertUserIcon = context.state.serverURI + '/open.account/icon/' + article.insertUser
+  article.updateUserIcon = context.state.serverURI + '/open.account/icon/' + article.updateUser
+}
+
 export default {
   setServerURI: (context, serverURI) => {
     logger.info('set server uri:' + serverURI)
@@ -18,10 +24,8 @@ export default {
     .then(response => {
       logger.debug(LABEL, response.data)
       var articles = response.data
-      articles.forEach(element => {
-        logger.trace(LABEL, context.state.serverURI + '/open.account/icon/' + element.insertUser)
-        element.insertUserIcon = context.state.serverURI + '/open.account/icon/' + element.insertUser
-        element.updateUserIcon = context.state.serverURI + '/open.account/icon/' + element.updateUser
+      articles.forEach(article => {
+        setIcon(context, article)
       })
       context.commit('SET_RESOURCES', {
         articles: articles
@@ -37,6 +41,7 @@ export default {
     api.request('get', '/_api/articles/' + id + '', null, context.state.token)
     .then(response => {
       var article = response.data
+      setIcon(context, article)
       logger.debug(LABEL, response)
       return Promise.try(() => {
         return processDecorateAll(response.data.content)
