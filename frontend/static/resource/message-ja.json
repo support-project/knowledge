@@ -7,6 +7,14 @@
     "TestViewTitle": "テストページ",
     "TestViewDescription": "フロントエンド開発テストページ"
   },
+  "Label": {
+    "Create": "登録",
+    "Update": "更新",
+    "Delete": "削除",
+    "Edit": "編集",
+    "Show": "表示",
+    "Hide": "非表示"
+  },
   "Article": {
     "PublicFlag": {
       "0": "公開",
@@ -32,6 +40,9 @@
   },
   "ArticleDetailSidebar": {
     "TocTitle": "目次"
+  },
+  "ArticleDetailComments": {
+    "DisplayHidden": "非表示になっています"
   },
   "ArticleEdit": {
     "description": "記事を編集します"

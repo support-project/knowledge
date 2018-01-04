@@ -49,11 +49,22 @@ export default {
         logger.debug(LABEL, result)
         article.displaySafeHtml = result
         context.commit('SET_RESOURCES', {article: article})
-        context.commit('SET_PAGE_STATE', {loading: false})
         return processToc(result)
       }).then(function (toc) {
         logger.debug(LABEL, toc)
         context.commit('SET_RESOURCES', {toc: toc})
+        return api.request('get', '/_api/articles/' + id + '/comments', null, context.state.token)
+      }).then(function (response) {
+        logger.debug(LABEL, response)
+        return Promise.each(response.data, function (comment) {
+          return processDecorateAll(comment.comment).then(function (result) {
+            comment.displaySafeHtml = result
+            setIcon(context, comment)
+          })
+        })
+      }).then(function (comments) {
+        context.commit('SET_RESOURCES', {comments: comments})
+        context.commit('SET_PAGE_STATE', {loading: false})
       })
     })
     .catch(error => {

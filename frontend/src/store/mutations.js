@@ -27,6 +27,9 @@ export default {
     if ('articles' in resources) {
       state.resources.articles = resources.articles
     }
+    if ('comments' in resources) {
+      state.resources.comments = resources.comments
+    }
     if ('groups' in resources) {
       state.resources.groups = resources.groups
     }

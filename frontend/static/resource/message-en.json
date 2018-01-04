@@ -14,6 +14,14 @@
       "2": "Protect"
     }
   },
+  "Label": {
+    "Create": "Create",
+    "Update": "Update",
+    "Delete": "Delete",
+    "Edit": "Edit",
+    "Show": "Show",
+    "Hide": "Hide"
+  },
   "DashView": {
     "about": "About",
     "manual": "Manual",
@@ -32,6 +40,9 @@
   },
   "ArticleDetailSidebar": {
     "TocTitle": "Table of contents"
+  },
+  "ArticleDetailComments": {
+    "DisplayHidden": "Hided this comment"
   },
   "ArticleEdit": {
     "description": "edit of a article"

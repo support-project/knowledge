@@ -5,7 +5,7 @@
       <span v-for="tag in article.tags" :key="tag">
         <a :href="'open.knowledge/list?tagNames=' + tag" v-if="tag">
             <span class="tag label label-default"><i class="fa fa-tag"></i>{{tag}}</span>
-        </a>&nbsp;
+        </a>
       </span>
     </span>
   </span>

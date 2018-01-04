@@ -5,7 +5,7 @@
       <span v-for="stock in article.stocks" :key="stock.stockId">
         <a :href="'open.knowledge/stocks?stockid=' + stock.stockId">
             <span class="tag label label-default"><i class="fa fa-star"></i>{{stock.stockName}}</span>
-        </a>&nbsp;
+        </a>
       </span>
     </span>
   </span>

@@ -17,6 +17,7 @@ export default {
   },
   resources: {
     article: {},
+    comments: [],
     articles: [],
     groups: [], // 一覧に表示するグループ（上位5件）
     tags: [],

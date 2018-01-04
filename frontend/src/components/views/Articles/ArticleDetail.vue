@@ -27,22 +27,20 @@
     <div class="content">
       <div class="article-information">
         <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ resources.article.title}}</div>
-      </div>
-      
-      <div class="article-meta">
-        <div>
+        
+        <div class="article-meta">
           <article-parts-editor :article="resources.article" />
         </div>
-        <div>
+        <div class="article-meta">
           <article-parts-point :article="resources.article" />
         </div>
-        <div>
+        <div class="article-meta">
           <article-parts-type-label :article="resources.article" />
           <span class="left-margin">
             <article-parts-public-flag :article="resources.article" />
           </span>
         </div>
-        <div>
+        <div class="article-meta">
           <article-parts-tags :article="resources.article" />
           <article-parts-stocks :article="resources.article" />
         </div>
@@ -52,10 +50,9 @@
       <div class="markdown-body">
         <span v-html="this.resources.article.displaySafeHtml"></span>
       </div>
-
-
-      <div id="comments">Comments</div>
-
+      <div id="comments">
+        <article-detail-comments :comments="resources.comments" :article="resources.article" />
+      </div>
 
       <article-detail-sidebar />
 
@@ -76,6 +73,8 @@ import ArticlePartsTypeLabel from './ArticlePartsTypeLabel'
 import ArticlePartsPublicFlag from './ArticlePartsPublicFlag'
 import ArticlePartsTags from './ArticlePartsTags'
 import ArticlePartsStocks from './ArticlePartsStocks'
+import ArticleDetailComments from './ArticleDetailComments'
+
 import processFootnotesPotision from '../../../lib/displayParts/processFootnotesPotision'
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
 import toggleSideBar from '../../../lib/displayParts/toggleSideBar'
@@ -96,7 +95,7 @@ export default {
       // ルートの変更の検知...
     }
   },
-  components: { PageTitle, ArticleDetailSidebar, ArticlePartsPoint, ArticlePartsEditor, ArticlePartsTypeLabel, ArticlePartsPublicFlag, ArticlePartsTags, ArticlePartsStocks },
+  components: { PageTitle, ArticleDetailSidebar, ArticlePartsPoint, ArticlePartsEditor, ArticlePartsTypeLabel, ArticlePartsPublicFlag, ArticlePartsTags, ArticlePartsStocks, ArticleDetailComments },
   computed: {
     ...mapState([
       'pagestate',
@@ -152,17 +151,18 @@ export default {
   }
 }
 .article-information {
-  margin-bottom: 10px;
+  background: #eaf3ff;
+  padding-left: 1vw;
+  padding-bottom: 5px;
+  border-bottom: solid 3px #516ab6;
+  border-left: solid 10px #516ab6;
+  margin-bottom: 20px;
 }
 
 .article-information .article-title {
-  left: -5px;
-  font-size: 36px;
-  padding: 0.1em;
+  font-size: 32px;
   color: #010101;
-  background: #eaf3ff;
-  border-bottom: solid 3px #516ab6;
-  border-left: solid 10px #516ab6;
+  margin-bottom: 10px;
 }
 
 .article-information .article-title .article-id {
@@ -170,7 +170,7 @@ export default {
 }
 
 .article-meta {
-  margin-bottom: 10px;
+  margin-bottom: 3px;
 }
 
 .left-margin {
