@@ -6,10 +6,10 @@
       :breadcrumb = "breadcrumb" />
 
     <div id="secondNavbar">
-      <nav class="slidemenu" >
-        <a :title="$t('ArticleDetail.BtnStar')">
+      <nav class="secondMenu" >
+        <button :title="$t('ArticleDetail.BtnStar')">
           <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
-        </a>
+        </button>
         <a :title="$t('ArticleDetail.BtnStock')">
           <i class="fa fa-star-o fa-lg" aria-hidden="true"></i>
         </a>
@@ -17,7 +17,7 @@
           :title="$t('ArticleDetail.BtnEdit')">
           <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
         </router-link>
-        <a id="toc" :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'label pull-right bg-green': pagestate.toggleTOC}">
+        <a id="toc" :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'toggle-on': pagestate.toggleTOC}">
           <i class="fa fa-list fa-lg" aria-hidden="true"></i>
         </a>
       </nav>

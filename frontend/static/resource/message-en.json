@@ -46,7 +46,12 @@
     "DisplayHidden": "Hided this comment"
   },
   "ArticleEdit": {
-    "description": "edit of a article"
+    "description": "edit of a article",
+    "BtnRelease": "Release this article",
+    "BtnDraft": "Save this article as draft",
+    "BtnAttributes": "Toggle display attribute",
+    "BtnCancel": "Cancel edit",
+    "BtnRemove": "Remove this article"
   },
   "TestView": {
     "Message": "This is test."

@@ -46,7 +46,12 @@
     "DisplayHidden": "非表示になっています"
   },
   "ArticleEdit": {
-    "description": "記事を編集します"
+    "description": "記事を編集します",
+    "BtnRelease": "この記事を投稿する",
+    "BtnDraft": "下書き保存",
+    "BtnAttributes": "属性表示の切り替え",
+    "BtnCancel": "編集をやめて参照ページに戻る",
+    "BtnRemove": "この記事を削除する"
   },
   "TestView": {
     "Message": "これはテストです"

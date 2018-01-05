@@ -41,3 +41,9 @@ export default {
   props: ['title', 'description', 'breadcrumb']
 }
 </script>
+
+<style>
+.content-header h1 {
+  margin-bottom: 15px;
+}
+</style>

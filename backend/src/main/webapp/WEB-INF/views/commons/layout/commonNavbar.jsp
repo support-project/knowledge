@@ -115,6 +115,7 @@
                                     <i class="fa fa-star-o" aria-hidden="true"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.move.new") %>
                                 </a>
                             </li>
+                            <li class="divider"></li>
                             <li >
                                 <a href="<%= request.getContextPath() %>/open.knowledge/list" >
                                     <i class="fa fa-list"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.list.knowledge") %>
@@ -156,6 +157,7 @@
                                     <i class="fa fa-star-o" aria-hidden="true"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.move.new") %>
                                 </a>
                             </li>
+                            <li class="divider"></li>
                             <li >
                                 <a href="<%= request.getContextPath() %>/open.knowledge/list" >
                                     <i class="fa fa-list"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.list.knowledge") %>

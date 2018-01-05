@@ -163,20 +163,3 @@
   background-color: #3b8ab8;
 }
 */
-
-/* skin-blue-light */
-/**** second header menu ****/
-.skin-blue-light .navbar-color {
-  color: #f6f6f6;
-  background-color: #3c8dbc;
-}
-.slidemenu a, .slidemenu a:hover, .slidemenu a:active {
-  color: skyblue;
-  border: 2px solid skyblue;
-}
-.skin-blue-light .navbar-color .slidemenu a,
-.skin-blue-light .navbar-color .slidemenu a:hover,
-.skin-blue-light .navbar-color .slidemenu a:active {
-  color: white;
-  border: 2px solid white;
-}
