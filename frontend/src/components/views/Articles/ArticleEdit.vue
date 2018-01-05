@@ -13,8 +13,9 @@
         <a :title="$t('ArticleEdit.BtnDraft')">
           <i class="fa fa-save fa-lg" aria-hidden="true"></i>
         </a>
-        <a id="toggleAttributes" :title="$t('ArticleEdit.BtnAttributes')"
-          v-bind:class="{'toggle-on': pagestate.toggleAttributes}">
+        <a :title="$t('ArticleEdit.BtnAttributes')"
+          v-bind:class="{'toggle-on': pagestate.toggleAttributes}"
+          v-on:click="toggleAttributes()">
           <i class="fa fa-list fa-lg" aria-hidden="true"></i>
         </a>
         <router-link tag="a" :to="'/articles/' + $route.params.id" class="bg-gray"
@@ -29,8 +30,11 @@
 
     <!-- Main content -->
     <div class="content">
-      #{{ $route.params.id }}
-      Edit
+
+
+
+      <article-edit-sidebar />
+
     </div>
   </div>
 </template>
@@ -38,7 +42,9 @@
 <script>
 import tippy from 'tippy.js'
 import { mapState } from 'vuex'
+
 import PageTitle from '../Parts/PageTitle'
+import ArticleEditSidebar from './ArticleEditSidebar'
 
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
 
@@ -53,12 +59,17 @@ export default {
       ]
     }
   },
-  components: { PageTitle },
+  components: { PageTitle, ArticleEditSidebar },
   computed: {
     ...mapState([
       'pagestate',
       'resources'
     ])
+  },
+  methods: {
+    toggleAttributes () {
+      this.$store.dispatch('toggleAttributes')
+    }
   },
   mounted () {
     // 画面表示時に読み込み
@@ -76,3 +87,5 @@ export default {
   }
 }
 </script>
+
+<style src="../../css/article-common.css" />

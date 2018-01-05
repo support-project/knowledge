@@ -47,5 +47,8 @@ export default {
     if ('toggleTOC' in pagestate) {
       state.pagestate.toggleTOC = pagestate.toggleTOC
     }
+    if ('toggleAttributes' in pagestate) {
+      state.pagestate.toggleAttributes = pagestate.toggleAttributes
+    }
   }
 }

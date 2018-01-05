@@ -25,6 +25,7 @@ export default {
   },
   pagestate: {
     toggleTOC: true,
+    toggleAttributes: true,
     loading: false
   }
 }

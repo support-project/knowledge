@@ -17,7 +17,8 @@
           :title="$t('ArticleDetail.BtnEdit')">
           <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
         </router-link>
-        <a id="toc" :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'toggle-on': pagestate.toggleTOC}">
+        <a :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'toggle-on': pagestate.toggleTOC}"
+          v-on:click="toggleSideBar()">
           <i class="fa fa-list fa-lg" aria-hidden="true"></i>
         </a>
       </nav>
@@ -80,7 +81,6 @@ import ArticleDetailComments from './ArticleDetailComments'
 
 import processFootnotesPotision from '../../../lib/displayParts/processFootnotesPotision'
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
-import toggleSideBar from '../../../lib/displayParts/toggleSideBar'
 import moveTocTarget from '../../../lib/displayParts/moveTocTarget'
 
 export default {
@@ -116,24 +116,23 @@ export default {
           moveTocTarget()
         }, 500)
       })
+    },
+    toggleSideBar () {
+      this.$store.dispatch('toggleTOC')
     }
   },
   mounted () {
     // 画面表示時に読み込み
     this.$nextTick(() => {
+      // データ読み込み
       this.getArticle()
 
+      // この画面特有の操作ボタンにTips表示
       tippy('[title]', {
         placement: 'bottom',
         animation: 'scale',
         duration: 200,
         arrow: true
-      })
-
-      // 目次のサイドバーのトグル
-      toggleSideBar.init(true)
-      $('#toc').click(() => {
-        toggleSideBar.toggle()
       })
 
       // この画面特有の操作ボタンの固定
@@ -144,15 +143,6 @@ export default {
 </script>
 
 <style>
-.content {
-  box-sizing: border-box;
-  padding-left: 30px;
-}
-@media (max-width: 767px) {
-  .content {
-    padding: 10px;
-  }
-}
 .article-information {
   background: #eaf3ff;
   padding-left: 1vw;
@@ -187,3 +177,4 @@ export default {
 
 </style>
 <style src="../../css/secondNavbar.css" />
+<style src="../../css/article-common.css" />
