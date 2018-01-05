@@ -20,6 +20,7 @@ import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.dao.TargetsDao;
+import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
@@ -167,8 +168,8 @@ public class KnowledgeDataSelectLogic {
      * @return
      */
     private List<LabelValue> getTemplateItems(KnowledgesEntity entity, TemplateMastersEntity template) {
+        List<TemplateItemsEntity> items = TemplateItemsDao.get().selectOnTypeId(template.getTypeId());
         List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(entity.getKnowledgeId());
-        List<TemplateItemsEntity> items = template.getItems();
         List<LabelValue> templateItems = new ArrayList<>();
         for (KnowledgeItemValuesEntity val : values) {
             for (TemplateItemsEntity item : items) {

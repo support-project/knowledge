@@ -1,6 +1,6 @@
 <template>
   <span>
-    <h1 class="comment-title">
+    <h1 class="comment-title" v-if="comments.length > 0">
       <i class="fa fa fa-comments-o fa-lg" aria-hidden="true"></i>
       Comments
     </h1>

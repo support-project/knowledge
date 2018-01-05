@@ -13,7 +13,8 @@
     "Delete": "削除",
     "Edit": "編集",
     "Show": "表示",
-    "Hide": "非表示"
+    "Hide": "非表示",
+    "Empty": "登録無し"
   },
   "Article": {
     "PublicFlag": {

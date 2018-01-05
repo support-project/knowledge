@@ -20,7 +20,8 @@
     "Delete": "Delete",
     "Edit": "Edit",
     "Show": "Show",
-    "Hide": "Hide"
+    "Hide": "Hide",
+    "Empty": "Empty"
   },
   "DashView": {
     "about": "About",

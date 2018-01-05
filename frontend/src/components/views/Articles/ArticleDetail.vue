@@ -47,6 +47,9 @@
       </div>
       <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i>
 
+      <div class="markdown-body template-items" v-if="this.resources.article.itemsHtml">
+        <span v-html="this.resources.article.itemsHtml"></span>
+      </div>
       <div class="markdown-body">
         <span v-html="this.resources.article.displaySafeHtml"></span>
       </div>
@@ -171,6 +174,11 @@ export default {
 
 .article-meta {
   margin-bottom: 3px;
+}
+
+.template-items {
+    border-bottom: 1px dashed #96cef1;
+    margin-bottom: 20px;
 }
 
 .left-margin {
