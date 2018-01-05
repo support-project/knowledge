@@ -51,7 +51,7 @@
       <div class="markdown-body template-items" v-if="this.resources.article.itemsHtml">
         <span v-html="this.resources.article.itemsHtml"></span>
       </div>
-      <div class="markdown-body">
+      <div class="markdown-body contents">
         <span v-html="this.resources.article.displaySafeHtml"></span>
       </div>
       <div id="comments">
@@ -68,6 +68,7 @@
 /* global $ */
 import tippy from 'tippy.js'
 import { mapState } from 'vuex'
+import logger from 'logger'
 
 import PageTitle from '../Parts/PageTitle'
 import ArticleDetailSidebar from './ArticleDetailSidebar'
@@ -82,6 +83,8 @@ import ArticleDetailComments from './ArticleDetailComments'
 import processFootnotesPotision from '../../../lib/displayParts/processFootnotesPotision'
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
 import moveTocTarget from '../../../lib/displayParts/moveTocTarget'
+
+const LABEL = 'ArticleDetail.vue'
 
 export default {
   name: 'ArticleDetail',
@@ -107,10 +110,10 @@ export default {
   },
   methods: {
     getArticle () {
-      console.log('getArticle')
+      logger.debug(LABEL, 'getArticle')
       this.$store.dispatch('getArticle', this.$route.params.id)
       .then(() => {
-        console.log('finish getArticle')
+        logger.debug(LABEL, 'finish getArticle')
         setTimeout(() => {
           processFootnotesPotision($('.markdown-body'))
           moveTocTarget()
@@ -169,6 +172,12 @@ export default {
 .template-items {
     border-bottom: 1px dashed #96cef1;
     margin-bottom: 20px;
+}
+
+.markdown-body.contents {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 20px;
 }
 
 .left-margin {

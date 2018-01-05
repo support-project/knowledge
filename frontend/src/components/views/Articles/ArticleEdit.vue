@@ -30,9 +30,18 @@
 
     <!-- Main content -->
     <div class="content">
+      <form role="form" id="knowledgeForm">
+        <div class="form-group">
+            <label for="input_title">
+              Title
+            </label>
+            <input type="text" class="form-control" name="title" placeholder="Title"
+              v-model="resources.article.title" />
+        </div>
 
+        <article-edit-contents :article="resources.article" />
 
-
+      </form>
       <article-edit-sidebar />
 
     </div>
@@ -45,6 +54,7 @@ import { mapState } from 'vuex'
 
 import PageTitle from '../Parts/PageTitle'
 import ArticleEditSidebar from './ArticleEditSidebar'
+import ArticleEditContents from './ArticleEditContents'
 
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
 
@@ -59,7 +69,7 @@ export default {
       ]
     }
   },
-  components: { PageTitle, ArticleEditSidebar },
+  components: { PageTitle, ArticleEditSidebar, ArticleEditContents },
   computed: {
     ...mapState([
       'pagestate',
@@ -67,6 +77,9 @@ export default {
     ])
   },
   methods: {
+    getArticle () {
+      this.$store.dispatch('getArticleForEdit', this.$route.params.id)
+    },
     toggleAttributes () {
       this.$store.dispatch('toggleAttributes')
     }
@@ -74,6 +87,8 @@ export default {
   mounted () {
     // 画面表示時に読み込み
     this.$nextTick(() => {
+      this.getArticle()
+
       // この画面特有の操作ボタンにTips表示
       tippy('[title]', {
         placement: 'bottom',

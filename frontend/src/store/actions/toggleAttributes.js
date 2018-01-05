@@ -13,7 +13,7 @@ export default () => {
     } else {
       toggle = false
     }
-    logger.info(LABEL, 'toggle:' + toggle)
+    logger.debug(LABEL, 'toggle:' + toggle)
     store.commit('SET_PAGE_STATE', {
       toggleAttributes: toggle
     })

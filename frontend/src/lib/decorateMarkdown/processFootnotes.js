@@ -32,7 +32,9 @@ var setFootnotes = function (input) {
     }
   })
   if (footnotes) {
+    logger.trace(LABEL, results)
     results += '<ol class="footnotes">' + footnotes + '</ol>'
+    logger.trace(LABEL, results)
   }
   return results
 }

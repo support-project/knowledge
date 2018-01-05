@@ -1,3 +1,6 @@
+import logger from 'logger'
+const LABEL = 'mutations.js'
+
 export default {
   TOGGLE_LOADING (state) {
     state.callingAPI = !state.callingAPI
@@ -22,6 +25,7 @@ export default {
   },
   SET_RESOURCES (state, resources) {
     if ('article' in resources) {
+      logger.info(LABEL, 'Change state.resources.article: ' + JSON.stringify(resources.article))
       state.resources.article = resources.article
     }
     if ('articles' in resources) {
@@ -45,9 +49,11 @@ export default {
       state.pagestate.loading = pagestate.loading
     }
     if ('toggleTOC' in pagestate) {
+      logger.info(LABEL, 'Change state.pagestate.toggleTOC: ' + JSON.stringify(pagestate.toggleTOC))
       state.pagestate.toggleTOC = pagestate.toggleTOC
     }
     if ('toggleAttributes' in pagestate) {
+      logger.info(LABEL, 'Change state.pagestate.toggleAttributes: ' + JSON.stringify(pagestate.toggleAttributes))
       state.pagestate.toggleAttributes = pagestate.toggleAttributes
     }
   }
