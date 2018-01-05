@@ -14,7 +14,8 @@
     "Edit": "編集",
     "Show": "表示",
     "Hide": "非表示",
-    "Empty": "登録無し"
+    "Empty": "登録無し",
+    "Close": "閉じる"
   },
   "Article": {
     "PublicFlag": {
@@ -52,6 +53,9 @@
     "BtnAttributes": "属性表示の切り替え",
     "BtnCancel": "編集をやめて参照ページに戻る",
     "BtnRemove": "この記事を削除する"
+  },
+  "ArticlePartsEmoji": {
+    "Emoji": "絵文字"
   },
   "TestView": {
     "Message": "これはテストです"

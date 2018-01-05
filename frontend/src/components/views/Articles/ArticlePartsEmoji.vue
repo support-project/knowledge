@@ -1,25 +1,43 @@
 <template>
   <span>
-    <!--
-    <a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/people" data-target="#emojiPeopleModal">people</a>
-    <a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/nature" data-target="#emojiNatureModal">nature</a>
-    <a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/objects" data-target="#emojiObjectsModal">objects</a>
-    <a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/places" data-target="#emojiPlacesModal">places</a>
-    <a data-toggle="modal" href="<%= request.getContextPath()%>/open.emoji/symbols" data-target="#emojiSymbolsModal">symbols</a>
-    -->
-    
-    <a v-on:click="emojiSelect('hello!')">emoji</a>
-
+    <div class="modal fade" id="modal-emoji" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span></button>
+            <h4 class="modal-title">{{$t('ArticlePartsEmoji.Emoji')}}</h4>
+          </div>
+          <div class="modal-body text-center">
+            <picker title="Pick your emoji…" emoji="point_up" perLine="15" @click="emojiSelect"></picker>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('Label.Close')}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#modal-emoji">
+      &#x1F600;{{$t('ArticlePartsEmoji.Emoji')}}
+    </button>
   </span>
 </template>
 
 <script>
+/* global $ */
+import { Picker } from 'emoji-mart-vue'
+import logger from 'logger'
+const LABEL = 'ArticlePartsEmoji.vue'
+
 export default {
   name: 'ArticlePartsEmoji',
   props: ['contents'],
+  components: { Picker },
   methods: {
-    emojiSelect: function (val) {
-      this.$emit('emoji-select', val)
+    emojiSelect: function (emoji) {
+      logger.info(LABEL, JSON.stringify(emoji))
+      this.$emit('emoji-select', emoji.native)
+      $('#modal-emoji').modal('hide')
     }
   }
 }

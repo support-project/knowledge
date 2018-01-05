@@ -7,18 +7,18 @@
 
     <div id="secondNavbar">
       <nav class="secondMenu" >
+        <a :title="$t('ArticleEdit.BtnAttributes')"
+          v-bind:class="{'toggle-on': pagestate.toggleAttributes}"
+          v-on:click="toggleAttributes()">
+          <i class="fa fa-list fa-lg" aria-hidden="true"></i>
+        </a>
         <button :title="$t('ArticleEdit.BtnRelease')" class="label-primary">
           <i class="fa fa-rocket fa-lg" aria-hidden="true"></i>
         </button>
         <a :title="$t('ArticleEdit.BtnDraft')">
           <i class="fa fa-save fa-lg" aria-hidden="true"></i>
         </a>
-        <a :title="$t('ArticleEdit.BtnAttributes')"
-          v-bind:class="{'toggle-on': pagestate.toggleAttributes}"
-          v-on:click="toggleAttributes()">
-          <i class="fa fa-list fa-lg" aria-hidden="true"></i>
-        </a>
-        <router-link tag="a" :to="'/articles/' + $route.params.id" class="bg-gray"
+        <router-link tag="a" :to="'/articles/' + $route.params.id"
           :title="$t('ArticleEdit.BtnCancel')">
           <i class="fa fa-undo fa-lg" aria-hidden="true"></i>
         </router-link>

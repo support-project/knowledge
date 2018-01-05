@@ -7,6 +7,10 @@
 
     <div id="secondNavbar">
       <nav class="secondMenu" >
+        <a :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'toggle-on': pagestate.toggleTOC}"
+          v-on:click="toggleSideBar()">
+          <i class="fa fa-list fa-lg" aria-hidden="true"></i>
+        </a>
         <button :title="$t('ArticleDetail.BtnStar')">
           <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
         </button>
@@ -17,10 +21,6 @@
           :title="$t('ArticleDetail.BtnEdit')">
           <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
         </router-link>
-        <a :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'toggle-on': pagestate.toggleTOC}"
-          v-on:click="toggleSideBar()">
-          <i class="fa fa-list fa-lg" aria-hidden="true"></i>
-        </a>
       </nav>
     </div>
 
@@ -170,14 +170,19 @@ export default {
 }
 
 .template-items {
-    border-bottom: 1px dashed #96cef1;
-    margin-bottom: 20px;
+  border-bottom: 1px dashed #96cef1;
+  padding-left: 20px;
+  padding-bottom: 5px;
+  margin-bottom: 20px;
 }
 
 .markdown-body.contents {
   background-color: white;
   border: 1px solid #ddd;
   padding: 20px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
 }
 
 .left-margin {

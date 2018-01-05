@@ -21,7 +21,8 @@
     "Edit": "Edit",
     "Show": "Show",
     "Hide": "Hide",
-    "Empty": "Empty"
+    "Empty": "Empty",
+    "Close": "Close"
   },
   "DashView": {
     "about": "About",
@@ -52,6 +53,9 @@
     "BtnAttributes": "Toggle display attribute",
     "BtnCancel": "Cancel edit",
     "BtnRemove": "Remove this article"
+  },
+  "ArticlePartsEmoji": {
+    "Emoji": "Emoji"
   },
   "TestView": {
     "Message": "This is test."

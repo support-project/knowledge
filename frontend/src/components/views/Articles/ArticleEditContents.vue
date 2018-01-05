@@ -11,7 +11,7 @@
     </ul>
     <div class="tab-content">
       <div class="tab-pane contents active" id="contentsTab">
-        <textarea class="form-control" name="content" rows="15" placeholder="Markdown"
+        <textarea class="form-control" name="content" rows="15" placeholder="Markdown" id="content"
         v-model="article.content"></textarea>
 
         <article-parts-emoji @emoji-select="selectEmojiToCotents" />
@@ -45,7 +45,17 @@ export default {
   components: { ArticlePartsEmoji },
   methods: {
     selectEmojiToCotents: function (emoji) {
-      this.article.content += emoji
+      var obj = $('#content')
+      obj.focus()
+      var s = obj.val()
+      var p = obj.get(0).selectionStart
+      var np = p + emoji.length
+      var text = s.substr(0, p) + emoji + s.substr(p)
+      this.article.content = text
+      setTimeout(() => {
+        obj.get(0).setSelectionRange(np, np)
+        obj.focus()
+      }, 500)
     },
     preview: function () {
       this.$store.dispatch('previewArticle', this.article)
@@ -66,5 +76,14 @@ export default {
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   padding: 20px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  -webkit-border-top-right-radius: 10px;  
+  -webkit-border-bottom-right-radius: 10px;  
+  -webkit-border-bottom-left-radius: 10px;  
+  -moz-border-radius-topright: 10px;  
+  -moz-border-radius-bottomright: 10px;  
+  -moz-border-radius-bottomleft: 10px;  
 }
 </style>
