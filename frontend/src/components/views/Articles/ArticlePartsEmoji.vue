@@ -9,7 +9,7 @@
             <h4 class="modal-title">{{$t('ArticlePartsEmoji.Emoji')}}</h4>
           </div>
           <div class="modal-body text-center">
-            <picker title="Pick your emoji…" emoji="point_up" perLine="15" @click="emojiSelect"></picker>
+            <picker title="Pick your emoji…" emoji="point_up" :perLine="15" @click="emojiSelect"></picker>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('Label.Close')}}</button>

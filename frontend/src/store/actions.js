@@ -5,6 +5,7 @@ import getArticleForEdit from './actions/getArticleForEdit'
 import previewArticle from './actions/previewArticle'
 import toggleTOC from './actions/toggleTOC'
 import toggleAttributes from './actions/toggleAttributes'
+import getTypes from './actions/getTypes'
 
 export default {
   setServerURI: setServerURI,
@@ -13,5 +14,6 @@ export default {
   getArticleForEdit: getArticleForEdit,
   previewArticle: previewArticle,
   toggleTOC: toggleTOC,
-  toggleAttributes: toggleAttributes
+  toggleAttributes: toggleAttributes,
+  getTypes: getTypes
 }

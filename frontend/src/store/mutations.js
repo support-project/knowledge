@@ -37,6 +37,9 @@ export default {
     if ('groups' in resources) {
       state.resources.groups = resources.groups
     }
+    if ('types' in resources) {
+      state.resources.types = resources.types
+    }
     if ('tags' in resources) {
       state.resources.tags = resources.tags
     }

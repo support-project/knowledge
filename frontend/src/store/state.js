@@ -16,11 +16,14 @@ export default {
     templates: ''
   },
   resources: {
-    article: {},
+    article: {
+      type: {id: -100}
+    },
     comments: [],
     articles: [],
-    groups: [], // 一覧に表示するグループ（上位5件）
+    groups: [],
     tags: [],
+    types: [],
     toc: ''
   },
   pagestate: {

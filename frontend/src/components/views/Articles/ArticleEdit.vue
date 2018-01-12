@@ -78,7 +78,9 @@ export default {
   },
   methods: {
     getArticle () {
-      this.$store.dispatch('getArticleForEdit', this.$route.params.id)
+      this.$store.dispatch('getArticleForEdit', this.$route.params.id).then(() => {
+        return this.$store.dispatch('getTypes', this.$route.params.id)
+      })
     },
     toggleAttributes () {
       this.$store.dispatch('toggleAttributes')

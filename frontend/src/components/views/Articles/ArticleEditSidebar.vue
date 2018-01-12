@@ -11,7 +11,14 @@
         </a>
       </div>
 
-      属性の編集がサイドバーで実施
+      Types:
+      <div v-for="t in resources.types" :key="t.id">
+        <label v-if="resources.article.type">
+          <input type="radio" name="type" :value="t.id" v-model="resources.article.type.id">
+          <i :class="'fa ' + t.icon" aria-hidden="true"></i>
+          {{ t.name | abbreviate}}
+        </label>
+      </div>
 
     </div>
   </div>
@@ -21,6 +28,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import lang from 'lang'
 
 export default {
   name: 'ArticleEditSidebar',
@@ -29,6 +37,11 @@ export default {
       'pagestate',
       'resources'
     ])
+  },
+  filters: {
+    abbreviate: function (value) {
+      return lang.abbreviate(value, 5)
+    }
   },
   methods: {
     toggleAttributes () {

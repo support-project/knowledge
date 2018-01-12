@@ -13,7 +13,24 @@ var escapeLink = function (url) {
   }
 }
 
+var abbreviate = function (value, length, omission) {
+  if (!length) {
+    length = 20
+  }
+  if (isString(length)) {
+    length = parseInt(length, 10)
+  }
+  if (!omission) {
+    omission = '...'
+  }
+  if (value.length <= length) {
+    return value
+  } else {
+    return value.substring(0, length) + omission
+  }
+}
 module.exports = {
   isString: isString,
-  escapeLink: escapeLink
+  escapeLink: escapeLink,
+  abbreviate: abbreviate
 }
