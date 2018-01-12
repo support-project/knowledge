@@ -1,5 +1,8 @@
 package org.support.project.knowledge.vo.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 記事種類（記事のテンプレート）
  * @author koda
@@ -13,6 +16,8 @@ public class Type {
     private String icon;
     /** 説明 */
     private String description;
+    
+    private List<Item> items = new ArrayList<>();
     
     public Integer getId() {
         return id;
@@ -37,6 +42,12 @@ public class Type {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+    public List<Item> getItems() {
+        return items;
+    }
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
     
     

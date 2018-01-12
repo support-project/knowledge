@@ -87,6 +87,30 @@ public class TargetLogic {
         }
         return results;
     }
+    
+    public List<LabelValue> selectUsersOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {
+        UsersDao usersDao = UsersDao.get();
+        List<UsersEntity> users = usersDao.selectOnKeyword(offset, limit, keyword);
+        List<LabelValue> list = new ArrayList<>();
+        for (UsersEntity user : users) {
+            LabelValue labelValue = new LabelValue();
+            labelValue.setValue(ID_PREFIX_USER + user.getUserId());
+            labelValue.setLabel(NAME_PREFIX_USER + user.getUserName());
+            list.add(labelValue);
+        }
+        return list;
+    }
+    public List<LabelValue> selectGroupsOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {
+        List<GroupsEntity> groups = ExGroupsDao.get().selectOnKeyword(keyword, loginedUser, offset, limit);
+        List<LabelValue> list = new ArrayList<>();
+        for (GroupsEntity group : groups) {
+            LabelValue labelValue = new LabelValue();
+            labelValue.setValue(ID_PREFIX_GROUP + group.getGroupId());
+            labelValue.setLabel(NAME_PREFIX_GROUP + group.getGroupName());
+            list.add(labelValue);
+        }
+        return list;
+    }
 
     /**
      * ナレッジに指定されているアクセス可能なグループを取得
@@ -346,17 +370,6 @@ public class TargetLogic {
         return false;
     }
 
-    public List<LabelValue> selectUsersOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {
-        UsersDao usersDao = UsersDao.get();
-        List<UsersEntity> users = usersDao.selectOnKeyword(offset, limit, keyword);
-        List<LabelValue> list = new ArrayList<>();
-        for (UsersEntity user : users) {
-            LabelValue labelValue = new LabelValue();
-            labelValue.setValue(ID_PREFIX_USER + user.getUserId());
-            labelValue.setLabel(NAME_PREFIX_USER + user.getUserName());
-            list.add(labelValue);
-        }
-        return list;
-    }
+
 
 }

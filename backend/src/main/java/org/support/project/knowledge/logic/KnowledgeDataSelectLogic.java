@@ -24,6 +24,7 @@ import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
+import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
@@ -34,7 +35,9 @@ import org.support.project.knowledge.vo.KnowledgeDataInterface;
 import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
 import org.support.project.knowledge.vo.api.AttachedFile;
+import org.support.project.knowledge.vo.api.Choice;
 import org.support.project.knowledge.vo.api.Comment;
+import org.support.project.knowledge.vo.api.Item;
 import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.knowledge.vo.api.Target;
@@ -120,15 +123,32 @@ public class KnowledgeDataSelectLogic {
     }
     /**
      * 記事の種類の情報をAPIで返す形に変換
-     * @param templat
+     * @param template
      * @return
      */
-    private Type convType(TemplateMastersEntity templat) {
+    public Type convType(TemplateMastersEntity template) {
         Type type = new Type();
-        type.setId(templat.getTypeId());
-        type.setName(templat.getTypeName());
-        type.setIcon(templat.getTypeIcon());
-        type.setDescription(templat.getDescription());
+        type.setId(template.getTypeId());
+        type.setName(template.getTypeName());
+        type.setIcon(template.getTypeIcon());
+        type.setDescription(template.getDescription());
+        
+        if (template.getItems() != null) {
+            for (TemplateItemsEntity i : template.getItems()) {
+                Item item = new Item();
+                PropertyUtil.copyPropertyValue(i, item);
+                type.getItems().add(item);
+                if (i.getChoices() != null) {
+                    List<Choice> choices = new ArrayList<>();
+                    for (ItemChoicesEntity c : i.getChoices()) {
+                        Choice choice = new Choice();
+                        PropertyUtil.copyPropertyValue(c, choice);
+                        choices.add(choice);
+                    }
+                    item.setChoices(choices);
+                }
+            }
+        }
         return type;
     }
     /**

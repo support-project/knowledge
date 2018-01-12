@@ -1,4 +1,4 @@
-package org.support.project.knowledge.control.api.internal;
+package org.support.project.knowledge.control.api.internal.articles;
 
 import java.util.List;
 
@@ -18,16 +18,16 @@ import org.support.project.web.control.service.Get;
 import org.support.project.web.logic.invoke.Open;
 
 @DI(instance = Instance.Prototype)
-public class ArticleDetailGetApiControl extends ApiControl {
+public class GetArticleOneApiControl extends ApiControl {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(ArticleDetailGetApiControl.class);
+    private static final Log LOG = LogFactory.getLog(GetArticleOneApiControl.class);
     /**
      * 記事の一覧を取得
      * @throws Exception 
      */
     @Get(path="_api/articles/:id")
     @Open
-    public Boundary articles() throws Exception {
+    public Boundary article() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         String id = super.getParam("id");
         LOG.debug(id);

@@ -1,4 +1,4 @@
-package org.support.project.knowledge.control.api.internal;
+package org.support.project.knowledge.control.api.internal.articles;
 
 import java.util.List;
 
@@ -17,9 +17,9 @@ import org.support.project.web.control.service.Get;
 import org.support.project.web.logic.invoke.Open;
 
 @DI(instance = Instance.Prototype)
-public class ArticleListGetApiControl extends ApiControl {
+public class GetArticleListApiControl extends ApiControl {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(ArticleListGetApiControl.class);
+    private static final Log LOG = LogFactory.getLog(GetArticleListApiControl.class);
     /**
      * 記事の一覧を取得
      * @throws Exception 
