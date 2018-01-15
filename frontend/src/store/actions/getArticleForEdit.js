@@ -17,6 +17,15 @@ export default (context, id) => {
     return Promise.try(() => {
       return api.request('get', '/_api/articles/' + id + '/items', null, context.state.token)
     }).then(function (response) {
+      logger.info(LABEL, JSON.stringify(response.data, null, '  '))
+      var type = response.data
+      type.items.forEach(element => {
+        if (element.itemType === 11) {
+          // bind checkbox value to array object
+          var vals = element.itemValue.split(',')
+          element.itemValue = vals
+        }
+      })
       article.type = response.data
       context.commit('SET_RESOURCES', {article: article})
       context.commit('SET_PAGE_STATE', {loading: false})

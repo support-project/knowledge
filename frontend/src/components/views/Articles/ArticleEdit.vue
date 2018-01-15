@@ -39,6 +39,8 @@
               v-model="resources.article.title" />
         </div>
 
+        <article-edit-items />
+
         <article-edit-contents :article="resources.article" />
 
       </form>
@@ -55,6 +57,7 @@ import { mapState } from 'vuex'
 import PageTitle from '../Parts/PageTitle'
 import ArticleEditSidebar from './ArticleEditSidebar'
 import ArticleEditContents from './ArticleEditContents'
+import ArticleEditItems from './ArticleEditItems'
 
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
 
@@ -69,7 +72,7 @@ export default {
       ]
     }
   },
-  components: { PageTitle, ArticleEditSidebar, ArticleEditContents },
+  components: { PageTitle, ArticleEditSidebar, ArticleEditContents, ArticleEditItems },
   computed: {
     ...mapState([
       'pagestate',

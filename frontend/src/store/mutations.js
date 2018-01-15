@@ -25,7 +25,7 @@ export default {
   },
   SET_RESOURCES (state, resources) {
     if ('article' in resources) {
-      logger.info(LABEL, 'Change state.resources.article: ' + JSON.stringify(resources.article))
+      logger.debug(LABEL, 'Change state.resources.article: ' + JSON.stringify(resources.article))
       state.resources.article = resources.article
     }
     if ('articles' in resources) {
