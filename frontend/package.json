@@ -49,7 +49,8 @@
     "wemoji": "^1.0.1",
     "tippy.js": "^2.0.8",
     "emoji-mart-vue": "^1.0.4",
-    "vue-flatpickr-component": "^6.0.0"
+    "vue-flatpickr-component": "^6.0.0",
+    "clockpicker": "^0.0.7"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",

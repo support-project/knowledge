@@ -12,7 +12,7 @@
           v-on:click="toggleAttributes()">
           <i class="fa fa-list fa-lg" aria-hidden="true"></i>
         </a>
-        <button :title="$t('ArticleEdit.BtnRelease')" class="label-primary">
+        <button :title="$t('ArticleEdit.BtnRelease')" class="label-primary" v-on:click="releaseArticle()">
           <i class="fa fa-rocket fa-lg" aria-hidden="true"></i>
         </button>
         <a :title="$t('ArticleEdit.BtnDraft')">
@@ -58,6 +58,7 @@
 <script>
 import tippy from 'tippy.js'
 import { mapState } from 'vuex'
+import logger from 'logger'
 
 import PageTitle from '../Parts/PageTitle'
 import ArticleEditSidebar from './ArticleEditSidebar'
@@ -65,6 +66,8 @@ import ArticleEditContents from './ArticleEditContents'
 import ArticleEditItems from './ArticleEditItems'
 
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
+
+const LABEL = 'ArticleEdit.vue'
 
 export default {
   name: 'ArticleDetail',
@@ -92,6 +95,9 @@ export default {
     },
     toggleAttributes () {
       this.$store.dispatch('toggleAttributes')
+    },
+    releaseArticle () {
+      logger.info(LABEL, JSON.stringify(this.resources.article, null, '  '))
     }
   },
   mounted () {

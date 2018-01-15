@@ -41,7 +41,7 @@
           &nbsp;{{choice.choiceLabel}}
         </label>
       </span>
-  
+
       <span v-if="item.itemType === 20">
         <div class="input-group">
           <span class="input-group-addon">
@@ -57,6 +57,18 @@
         </div>
       </span>
 
+      <span v-if="item.itemType === 21">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <span class="fa fa-clock-o"></span>
+          </span>
+          <clock-picker v-model="item.itemValue" :id="'item_' + item.itemNo">
+          </clock-picker>
+        </div>
+      </span>
+
+
+
     </div>
   </div>
 </template>
@@ -68,7 +80,9 @@ import flatPickr from 'vue-flatpickr-component'
 import 'flatpickr/dist/flatpickr.css'
 
 import 'flatpickr/dist/themes/material_blue.css'
-import {JA} from 'flatpickr/dist/l10n/ja'
+import {Japanese} from 'flatpickr/dist/l10n/ja'
+
+import ClockPicker from '../Parts/ClockPicker'
 
 export default {
   name: 'ArticleEditItems',
@@ -79,12 +93,12 @@ export default {
         altFormat: 'Y-m-d',
         altInput: true,
         dateFormat: 'Y-m-d',
-        locale: JA
+        locale: Japanese
       }
     }
   },
   components: {
-    flatPickr
+    flatPickr, ClockPicker
   },
   computed: {
     ...mapState([
