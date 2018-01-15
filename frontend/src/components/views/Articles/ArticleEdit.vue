@@ -35,8 +35,13 @@
             <label for="input_title">
               Title
             </label>
-            <input type="text" class="form-control" name="title" placeholder="Title"
-              v-model="resources.article.title" />
+            <div class="input-group">
+              <span class="input-group-addon">
+                <span class="fa fa-bookmark"></span>
+              </span>
+              <input type="text" class="form-control" name="title" placeholder="Title"
+                v-model="resources.article.title" />
+            </div>
         </div>
 
         <article-edit-items />
