@@ -2,6 +2,7 @@
 import logger from 'logger'
 if (process && process.env && process.env.LOG_LEVEL) {
   logger.setLevel(process.env.LOG_LEVEL)
+  logger.setCallSite(process.env.LOG_CALLSITE)
 }
 
 // Import ES6 Promise

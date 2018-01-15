@@ -1,28 +1,5 @@
-'use strict'
-
 // var callsite = require('callsite')
 // var path = require('path')
-
-var getCallsiteStr = function () {
-  /* webpack で結合されたjsファイルになるので、ファイル名＆行番号を取得できない（直接Node.jsで実行する場合は以下のコードで取得できるけど利用しない）
-  if (!path) {
-    return ''
-  }
-  if (!callsite) {
-    return ''
-  }
-  var calls = callsite()
-  console.log(calls)
-  if (!calls || !calls.length || calls.length < 2) {
-    return ''
-  }
-  var call = calls[2]
-  var file = path.relative(process.cwd(), call.getFileName())
-  var line = call.getLineNumber()
-  return '[' + file + ':' + line + '] - '
-  */
-  return ' - '
-}
 
 var logger = function logger() {
 }
@@ -54,6 +31,37 @@ logger.setLevel = function (level) {
   } else if (level === 'FULL') {
     logger.level = logger.LEVEL.FULL
   }
+}
+logger.callsite = true
+
+logger.setCallSite = function (callsite) {
+  logger.callsite = callsite
+}
+
+var getCallsiteStr = function () {
+  /* webpack で結合されたjsファイルになるので、ファイル名＆行番号を取得できない（直接Node.jsで実行する場合は以下のコードで取得できるけど利用しない）
+  if (!path) {
+    return ''
+  }
+  if (!callsite) {
+    return ''
+  }
+  var calls = callsite()
+  console.log(calls)
+  if (!calls || !calls.length || calls.length < 2) {
+    return ''
+  }
+  var call = calls[2]
+  var file = path.relative(process.cwd(), call.getFileName())
+  var line = call.getLineNumber()
+  return '[' + file + ':' + line + '] - '
+  */
+  if (logger.callsite) {
+    console.trace()
+  }
+  var c = ''
+  c += ' - '
+  return c
 }
 
 var isString = function (obj) {
