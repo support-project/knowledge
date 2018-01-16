@@ -17,7 +17,7 @@ export default (context, id) => {
     return Promise.try(() => {
       return api.request('get', '/_api/articles/' + id + '/items', null, context.state.token)
     }).then(function (response) {
-      logger.info(LABEL, JSON.stringify(response.data, null, '  '))
+      logger.debug(LABEL, JSON.stringify(response.data, null, '  '))
       var type = response.data
       type.items.forEach(element => {
         if (element.itemType === 11) {

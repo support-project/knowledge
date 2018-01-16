@@ -7,8 +7,8 @@
 
 <script>
 /* global $ */
-import '../../../../node_modules/clockpicker/dist/bootstrap-clockpicker'
-import '../../../../node_modules/clockpicker/dist/bootstrap-clockpicker.min.css'
+import 'clockpicker/dist/bootstrap-clockpicker'
+import 'clockpicker/dist/bootstrap-clockpicker.min.css'
 
 export default {
   props: ['value', 'id'],
@@ -19,7 +19,6 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      console.log(this.value)
       const pageContext = this
       const id = this.id
       $('#' + id).clockpicker({

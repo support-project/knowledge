@@ -52,11 +52,11 @@ export default {
       state.pagestate.loading = pagestate.loading
     }
     if ('toggleTOC' in pagestate) {
-      logger.info(LABEL, 'Change state.pagestate.toggleTOC: ' + JSON.stringify(pagestate.toggleTOC))
+      logger.debug(LABEL, 'Change state.pagestate.toggleTOC: ' + JSON.stringify(pagestate.toggleTOC))
       state.pagestate.toggleTOC = pagestate.toggleTOC
     }
     if ('toggleAttributes' in pagestate) {
-      logger.info(LABEL, 'Change state.pagestate.toggleAttributes: ' + JSON.stringify(pagestate.toggleAttributes))
+      logger.debug(LABEL, 'Change state.pagestate.toggleAttributes: ' + JSON.stringify(pagestate.toggleAttributes))
       state.pagestate.toggleAttributes = pagestate.toggleAttributes
     }
   }

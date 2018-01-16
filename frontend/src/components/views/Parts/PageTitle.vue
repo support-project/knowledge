@@ -18,19 +18,6 @@
           {{ $t(item.name) }}
         </a>
       </router-link>
-
-
-    <!--
-      <li>
-        <a href="javascript:;">
-          <i class="fa fa-home"></i>Home</a>
-      </li>
-        <li v-for="(route) in $route.matched" v-if="route.name">
-          <router-link :to="{name: route.name}" tag="a">
-            {{ $t('Route.' + route.name) }}
-          </router-link>
-        </li>
-      -->
     </ol>
   </section>
 </template>

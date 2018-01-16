@@ -29,7 +29,8 @@
     "hideseek": "^0.7.0",
     "http-server": "^0.9.0",
     "jquery": "^2.2.2",
-    "moment": "^2.12.0",
+    "moment": "^2.20.1",
+    "moment-timezone": "^0.5.14",
     "vue": "^2.2.2",
     "vue-date-picker": "^1.0.2",
     "vue-resource": "^1.0.3",
@@ -50,7 +51,8 @@
     "tippy.js": "^2.0.8",
     "emoji-mart-vue": "^1.0.4",
     "vue-flatpickr-component": "^6.0.0",
-    "clockpicker": "^0.0.7"
+    "clockpicker": "^0.0.7",
+    "uiv": "^0.16.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",

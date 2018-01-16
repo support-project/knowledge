@@ -14,8 +14,8 @@ const highlight = function (jqobj, addstylus) {
     }
     var text = jqobj.text()
     if (text.indexOf('://') !== -1) {
-      logger.info(LABEL, 'skip on hljs freeze word')
-      logger.info(LABEL, text)
+      logger.debug(LABEL, 'skip on hljs freeze word')
+      logger.debug(LABEL, text)
       return
     }
     var result = hljs.highlightAuto(text)

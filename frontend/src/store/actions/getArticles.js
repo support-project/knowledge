@@ -6,7 +6,7 @@ import actionCommon from './actionCommon'
 const LABEL = 'getArticles.js'
 
 export default (context) => {
-  logger.info(LABEL, 'get articles from api')
+  logger.debug(LABEL, 'get articles from api')
   api.request('get', '/_api/articles', null, context.state.token)
   .then(response => {
     logger.debug(LABEL, response.data)

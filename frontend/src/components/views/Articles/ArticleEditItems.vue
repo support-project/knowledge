@@ -66,15 +66,22 @@
           </clock-picker>
         </div>
       </span>
-
-
-
+      <span v-if="item.itemType === 22">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <span class="fa fa-globe"></span>
+          </span>
+          <input :id="'item_' + item.itemNo" class="form-control" type="text" :value="item.itemValue">
+        </div>
+        <typeahead v-model="item.itemValue" :data="timezonedata" :target="'#item_' + item.itemNo"/>
+      </span>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import logger from 'logger'
 
 import flatPickr from 'vue-flatpickr-component'
 import 'flatpickr/dist/flatpickr.css'
@@ -84,9 +91,19 @@ import {Japanese} from 'flatpickr/dist/l10n/ja'
 
 import ClockPicker from '../Parts/ClockPicker'
 
+import {Typeahead} from 'uiv'
+import timezones from 'moment-timezone/data/meta/latest.json'
+
+const LABEL = 'ArticleEditItems.vue'
+
 export default {
   name: 'ArticleEditItems',
   data () {
+    var timezonedata = []
+    for (var zone in timezones.zones) {
+      timezonedata.push(zone)
+    }
+    logger.trace(LABEL, JSON.stringify(timezonedata))
     return {
       config: {
         wrap: true,
@@ -94,11 +111,12 @@ export default {
         altInput: true,
         dateFormat: 'Y-m-d',
         locale: Japanese
-      }
+      },
+      timezonedata: timezonedata
     }
   },
   components: {
-    flatPickr, ClockPicker
+    flatPickr, ClockPicker, Typeahead
   },
   computed: {
     ...mapState([

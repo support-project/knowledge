@@ -35,7 +35,7 @@ export default {
   components: { Picker },
   methods: {
     emojiSelect: function (emoji) {
-      logger.info(LABEL, JSON.stringify(emoji))
+      logger.debug(LABEL, JSON.stringify(emoji))
       this.$emit('emoji-select', emoji.native)
       $('#modal-emoji').modal('hide')
     }
