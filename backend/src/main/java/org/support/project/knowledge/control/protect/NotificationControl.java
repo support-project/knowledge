@@ -16,7 +16,7 @@ public class NotificationControl extends Control {
     @Get(publishToken = "knowledge")
     public Boundary list() throws InvalidParamException {
         int offset = getPathInteger(0);
-        boolean all = "true".equals(getAttribute("all", "false"));
+        boolean all = "true".equals(getAttributeByString("all", "false"));
         List<NotificationsEntity> notifications = NotificationLogic.get().getNotification(getLoginedUser(), offset, all);
         setAttribute("notifications", notifications);
         
@@ -48,7 +48,7 @@ public class NotificationControl extends Control {
     @Get
     public Boundary previous() throws InvalidParamException {
         long no = getPathLong(new Long(-1));
-        boolean all = "true".equals(getAttribute("all", "false"));
+        boolean all = "true".equals(getAttributeByString("all", "false"));
         NotificationsEntity notification = NotificationLogic.get().previous(no, getLoginedUser(), all);
         if (notification == null) {
             setAttribute("method", getResource("label.previous"));
@@ -65,7 +65,7 @@ public class NotificationControl extends Control {
     @Get
     public Boundary next() throws InvalidParamException {
         long no = getPathLong(new Long(-1));
-        boolean all = "true".equals(getAttribute("all", "false"));
+        boolean all = "true".equals(getAttributeByString("all", "false"));
         NotificationsEntity notification = NotificationLogic.get().next(no, getLoginedUser(), all);
         if (notification == null) {
             setAttribute("method", getResource("label.next"));
@@ -82,7 +82,7 @@ public class NotificationControl extends Control {
 
     @Post(subscribeToken = "knowledge")
     public Boundary markread() {
-        String no = getAttribute("no", "");
+        String no = getAttributeByString("no", "");
         NotificationLogic.get().markAllAsRead(no, getLoginUserId());
         return send("OK");
     }

@@ -98,6 +98,7 @@ export default {
     },
     releaseArticle () {
       logger.info(LABEL, JSON.stringify(this.resources.article, null, '  '))
+      this.$store.dispatch('saveArticle')
     }
   },
   mounted () {

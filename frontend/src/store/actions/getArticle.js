@@ -13,7 +13,7 @@ const LABEL = 'getArticle.js'
 export default (context, id) => {
   context.commit('SET_PAGE_STATE', {loading: true})
   context.commit('SET_RESOURCES', {article: ''})
-  api.request('get', '/_api/articles/' + id + '', null, context.state.token)
+  api.request('get', '/_api/articles/' + id + '', null)
   .then(response => {
     var article = response.data
     actionCommon.setIcon(context, article)
@@ -27,7 +27,7 @@ export default (context, id) => {
     }).then(function (toc) {
       logger.debug(LABEL, toc)
       context.commit('SET_RESOURCES', {toc: toc})
-      return api.request('get', '/_api/articles/' + id + '/items', null, context.state.token)
+      return api.request('get', '/_api/articles/' + id + '/items', null)
     }).then(function (response) {
       return processTemplateItemView(response.data)
     }).then(function (itemsHtml) {
@@ -35,7 +35,7 @@ export default (context, id) => {
       article.itemsHtml = itemsHtml
       context.commit('SET_RESOURCES', {article: article})
       // return article.comments
-      return api.request('get', '/_api/articles/' + id + '/comments', null, context.state.token)
+      return api.request('get', '/_api/articles/' + id + '/comments', null)
     }).then(function (response) {
       logger.debug(LABEL, response.data)
       return Promise.each(response.data, function (comment) {

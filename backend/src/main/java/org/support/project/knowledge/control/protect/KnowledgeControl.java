@@ -284,7 +284,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
         
         // 明示的にユーザが、タイムラインの上にもっていきたくないと指定した
-        if ("true".equals(super.getAttribute("notUpdateTimeline", "false"))) {
+        if ("true".equals(super.getAttributeByString("notUpdateTimeline", "false"))) {
             data.setDonotUpdateTimeline(true);
         }
         if (!StringUtils.isEmpty(getParam("updateContent")) && getParam("updateContent").toLowerCase().equals("true")) {

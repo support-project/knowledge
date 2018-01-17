@@ -4,6 +4,7 @@ export default {
   serverURI: '',
   user: null,
   token: null,
+  requestToken: null,
   userInfo: {
     messages: [{1: 'test', 2: 'test'}],
     notifications: []

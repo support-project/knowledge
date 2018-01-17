@@ -51,8 +51,8 @@ public class LoggingControl extends Control {
     @Auth(roles = "admin")
     public Boundary delete_config() {
         LOG.trace("delete_config");
-        String control = getParameter("control");
-        String days = getParameter("days");
+        String control = getAttributeByString("control");
+        String days = getAttributeByString("days");
 
         if ("enable".equals(control)) {
             if (StringUtils.isEmpty(days)) {

@@ -1048,7 +1048,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      */
     @Get
     public Boundary items() throws ParseException {
-        String q = super.getParameter("q");
+        String q = super.getAttributeByString("q");
         List<KnowledgesEntity> list = KnowledgeLogic.get().selectAccessAbleKnowledge(q, getLoginedUser());
         ListData listdata = new ListData();
         listdata.setItems(list);

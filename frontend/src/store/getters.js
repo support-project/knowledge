@@ -5,6 +5,9 @@ export default {
   GET_TOKEN (state) {
     return state.token
   },
+  GET_REQUEST_TOKEN (state) {
+    return state.requestToken
+  },
   GET_USER_INFO (state) {
     return state.userInfo
   },

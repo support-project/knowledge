@@ -6,6 +6,7 @@ import previewArticle from './actions/previewArticle'
 import toggleTOC from './actions/toggleTOC'
 import toggleAttributes from './actions/toggleAttributes'
 import getTypes from './actions/getTypes'
+import saveArticle from './actions/saveArticle'
 
 export default {
   setServerURI: setServerURI,
@@ -15,5 +16,6 @@ export default {
   previewArticle: previewArticle,
   toggleTOC: toggleTOC,
   toggleAttributes: toggleAttributes,
-  getTypes: getTypes
+  getTypes: getTypes,
+  saveArticle: saveArticle
 }

@@ -9,13 +9,13 @@ const LABEL = 'getArticleForEdit.js'
 export default (context, id) => {
   context.commit('SET_PAGE_STATE', {loading: true})
   context.commit('SET_RESOURCES', {article: ''})
-  api.request('get', '/_api/articles/' + id + '', null, context.state.token)
+  api.request('get', '/_api/articles/' + id + '', null)
   .then(response => {
     var article = response.data
     actionCommon.setIcon(context, article)
     logger.debug(LABEL, response)
     return Promise.try(() => {
-      return api.request('get', '/_api/articles/' + id + '/items', null, context.state.token)
+      return api.request('get', '/_api/articles/' + id + '/items', null)
     }).then(function (response) {
       logger.debug(LABEL, JSON.stringify(response.data, null, '  '))
       var type = response.data

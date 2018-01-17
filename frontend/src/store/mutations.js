@@ -17,6 +17,9 @@ export default {
   SET_TOKEN (state, token) {
     state.token = token
   },
+  SET_REQUEST_TOKEN (state, requestToken) {
+    state.requestToken = requestToken
+  },
   SET_USER_INFO (state, userInfo) {
     state.userInfo = userInfo
   },
