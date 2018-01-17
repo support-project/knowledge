@@ -33,6 +33,10 @@ const routes = [
         component: ArticleList,
         name: 'ArticleList'
       }, {
+        path: 'articles/new',
+        component: ArticleEdit,
+        name: 'ArticleCreate'
+      }, {
         path: 'articles/:id',
         component: ArticleDetail,
         name: 'ArticleDetail'

@@ -83,6 +83,7 @@ import ArticleDetailComments from './ArticleDetailComments'
 import processFootnotesPotision from '../../../lib/displayParts/processFootnotesPotision'
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
 import moveTocTarget from '../../../lib/displayParts/moveTocTarget'
+import rightSidebar from './../../../lib/displayParts/rightSidebar'
 
 const LABEL = 'ArticleDetail.vue'
 
@@ -140,6 +141,8 @@ export default {
 
       // この画面特有の操作ボタンの固定
       secondNavbar()
+      // 右側のサイドバーを開く
+      rightSidebar(true)
     })
   }
 }

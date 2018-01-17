@@ -8,8 +8,18 @@ const LABEL = 'getArticleForEdit.js'
 
 export default (context, id) => {
   context.commit('SET_PAGE_STATE', {loading: true})
-  context.commit('SET_RESOURCES', {article: ''})
-  api.request('get', '/_api/articles/' + id + '', null)
+  context.commit('SET_RESOURCES', {article: {
+    content: '',
+    type: {
+      id: -100,
+      items: []
+    }
+  }})
+  if (!id) {
+    context.commit('SET_PAGE_STATE', {loading: false})
+    return
+  }
+  return api.request('get', '/_api/articles/' + id + '', null)
   .then(response => {
     var article = response.data
     actionCommon.setIcon(context, article)

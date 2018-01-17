@@ -14,16 +14,16 @@
       </a>
     </li>
     
-    <router-link tag="li" class="pageLink" to="/add">
+    <router-link tag="li" class="pageLink" to="/articles/new">
       <a>
         <i class="fa fa-plus-circle text-blue"></i>
-        <span class="page">作成</span>
+        <span class="page">{{ $t('Route.ArticleCreate') }}</span>
       </a>
     </router-link>
 
     <router-link tag="li" class="pageLink" to="/">
       <a>
-        <i class="fa fa-list"></i>
+        <i class="fa fa-list text-blue"></i>
         <span class="page">{{ $t('Route.ArticleList') }}</span>
       </a>
     </router-link>

@@ -66,18 +66,24 @@ import ArticleEditContents from './ArticleEditContents'
 import ArticleEditItems from './ArticleEditItems'
 
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
+import rightSidebar from './../../../lib/displayParts/rightSidebar'
 
 const LABEL = 'ArticleEdit.vue'
 
 export default {
-  name: 'ArticleDetail',
+  name: 'ArticleEdit',
   data () {
-    return {
-      breadcrumb: [
-//        {to: '/articles', name: 'Route.ArticleList'},
+    var breadcrumb = [
+      {to: '/articles/new', name: 'Route.ArticleCreate'}
+    ]
+    if (this.$route.params.id) {
+      breadcrumb = [
         {to: '/articles/' + this.$route.params.id, name: 'Route.ArticleDetail'},
         {to: '/articles/' + this.$route.params.id + '/edit', name: 'Route.ArticleEdit'}
       ]
+    }
+    return {
+      breadcrumb: breadcrumb
     }
   },
   components: { PageTitle, ArticleEditSidebar, ArticleEditContents, ArticleEditItems },
@@ -89,8 +95,12 @@ export default {
   },
   methods: {
     getArticle () {
+      logger.info(LABEL, 'getArticle')
+      // 右側のサイドバーを開く
+      rightSidebar(true)
+      // データの取得
       this.$store.dispatch('getArticleForEdit', this.$route.params.id).then(() => {
-        return this.$store.dispatch('getTypes', this.$route.params.id)
+        return this.$store.dispatch('getTypes')
       })
     },
     toggleAttributes () {
@@ -98,14 +108,18 @@ export default {
     },
     releaseArticle () {
       logger.info(LABEL, JSON.stringify(this.resources.article, null, '  '))
-      this.$store.dispatch('saveArticle')
+      this.$store.dispatch('saveArticle').then((id) => {
+        this.$router.push('/articles/' + id)
+      })
     }
+  },
+  watch: {
+    '$route': 'getArticle'
   },
   mounted () {
     // 画面表示時に読み込み
     this.$nextTick(() => {
       this.getArticle()
-
       // この画面特有の操作ボタンにTips表示
       tippy('[title]', {
         placement: 'bottom',

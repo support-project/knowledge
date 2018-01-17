@@ -1,5 +1,6 @@
 {
   "Route": {
+    "ArticleCreate": "Create",
     "ArticleList": "Articles",
     "ArticleDetail": "Article",
     "ArticleEdit": "Edit Article",
@@ -46,8 +47,11 @@
   "ArticleDetailComments": {
     "DisplayHidden": "Hided this comment"
   },
+  "ArticleCreate": {
+    "description": "create a new article"
+  },
   "ArticleEdit": {
-    "description": "edit of a article",
+    "description": "edit this article",
     "BtnRelease": "Release this article",
     "BtnDraft": "Save this article as draft",
     "BtnAttributes": "Toggle display attribute",

@@ -30,7 +30,6 @@
 import { mapState } from 'vuex'
 import lang from 'lang'
 import logger from 'logger'
-import rightSidebar from './../../../lib/displayParts/rightSidebar'
 
 const LABEL = 'ArticleEditSidebar.vue'
 
@@ -58,7 +57,6 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      rightSidebar(true)
     })
   }
 }

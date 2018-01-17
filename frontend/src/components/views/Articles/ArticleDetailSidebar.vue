@@ -22,7 +22,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import rightSidebar from './../../../lib/displayParts/rightSidebar'
 
 export default {
   name: 'ArticleDetailSidebar',
@@ -39,7 +38,6 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      rightSidebar(true)
     })
   }
 }

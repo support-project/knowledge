@@ -5,7 +5,7 @@ const LABEL = 'getTypes.js'
 
 export default (context) => {
   logger.debug(LABEL, 'get types from api')
-  api.request('get', '/_api/types', null)
+  return api.request('get', '/_api/types', null)
   .then(response => {
     logger.debug(LABEL, response.data)
     var types = response.data

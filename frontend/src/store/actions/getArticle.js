@@ -13,7 +13,7 @@ const LABEL = 'getArticle.js'
 export default (context, id) => {
   context.commit('SET_PAGE_STATE', {loading: true})
   context.commit('SET_RESOURCES', {article: ''})
-  api.request('get', '/_api/articles/' + id + '', null)
+  return api.request('get', '/_api/articles/' + id + '', null)
   .then(response => {
     var article = response.data
     actionCommon.setIcon(context, article)

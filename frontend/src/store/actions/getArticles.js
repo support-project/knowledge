@@ -7,7 +7,7 @@ const LABEL = 'getArticles.js'
 
 export default (context) => {
   logger.debug(LABEL, 'get articles from api')
-  api.request('get', '/_api/articles', null)
+  return api.request('get', '/_api/articles', null)
   .then(response => {
     logger.debug(LABEL, response.data)
     var articles = response.data

@@ -1,5 +1,6 @@
 {
   "Route": {
+    "ArticleCreate": "作成",
     "ArticleList": "記事一覧",
     "ArticleDetail": "記事表示",
     "ArticleEdit": "記事編集",
@@ -45,6 +46,9 @@
   },
   "ArticleDetailComments": {
     "DisplayHidden": "非表示になっています"
+  },
+  "ArticleCreate": {
+    "description": "新しい記事を作成します"
   },
   "ArticleEdit": {
     "description": "記事を編集します",
