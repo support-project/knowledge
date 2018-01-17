@@ -1,0 +1,15 @@
+/* Override right slider width */ 
+.control-sidebar-bg,
+.control-sidebar {
+  right: -400px;
+  width: 400px;
+}
+@media (min-width: 768px) {
+  .control-sidebar-open .content-wrapper,
+  .control-sidebar-open .right-side,
+  .control-sidebar-open .main-footer {
+    margin-right: 400px;
+  }
+}
+
+

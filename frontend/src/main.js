@@ -24,6 +24,8 @@ import { domain, count, prettyDate, pluralize } from './filters'
 // Import Views - Top level
 import AppView from './components/App.vue'
 
+import rightSidebar from './lib/displayParts/rightSidebar'
+
 var LABEL = 'main.js'
 
 var serverURI = $('base').attr('href')
@@ -48,6 +50,7 @@ var router = new VueRouter({
 
 // Some middleware to help us ensure the user is authenticated.
 router.beforeEach((to, from, next) => {
+  rightSidebar(false)
   if (to.matched.some(record => record.meta.requiresAuth) && (!router.app.$store.state.token || router.app.$store.state.token === 'null')) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.

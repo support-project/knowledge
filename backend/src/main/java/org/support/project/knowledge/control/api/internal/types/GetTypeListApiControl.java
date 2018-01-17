@@ -34,7 +34,7 @@ public class GetTypeListApiControl extends ApiControl {
         List<Type> types = new ArrayList<>();
         // 種類にある、項目の情報も取得
         for (TemplateMastersEntity template : results) {
-            TemplateLogic.get().loadTemplate(template.getTypeId());
+            template = TemplateLogic.get().loadTemplate(template.getTypeId());
             Type type = KnowledgeDataSelectLogic.get().convType(template);
             types.add(type);
         }

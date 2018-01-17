@@ -1,6 +1,7 @@
 import Promise from 'bluebird'
 import store from '../../store'
 import logger from 'logger'
+import rightSidebar from './../../lib/displayParts/rightSidebar'
 
 const LABEL = 'toggleTOC.js'
 
@@ -17,6 +18,7 @@ export default () => {
     store.commit('SET_PAGE_STATE', {
       toggleTOC: toggle
     })
+    rightSidebar(toggle)
     return toggle
   })
 }

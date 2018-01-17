@@ -18,6 +18,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.vo.KnowledgeData;
+import org.support.project.knowledge.vo.api.Item;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.knowledge.vo.api.Target;
 import org.support.project.web.bean.LabelValue;
@@ -76,17 +77,32 @@ public class KnowledgeDataEditLogic {
         knowledge.setFileNos(new ArrayList<>());
         
         // TemplateMastersEntity template
-        TemplateMastersEntity template = TemplateLogic.get().selectOnName(data.getType().getName());
+        TemplateMastersEntity template = null;
+        if (data.getType().getId() != null) {
+            template = TemplateLogic.get().loadTemplate(data.getType().getId());
+        } else {
+            template = TemplateLogic.get().selectOnName(data.getType().getName());
+        }
         if (template == null) {
             throw new InvalidParamException(new MessageResult(
                     MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST, "bad template name", ""));
         }
         List<TemplateItemsEntity> items = template.getItems();
         for (TemplateItemsEntity item : items) {
-            List<LabelValue> vals = data.getItems();
-            for (LabelValue labelValue : vals) {
-                if (item.getItemName().equals(labelValue.getLabel())) {
-                    item.setItemValue(labelValue.getValue());
+            if (data.getType().getItems().size() == items.size()) {
+                // typeの下に値がセットされている
+                List<Item> vals = data.getType().getItems();
+                for (Item val : vals) {
+                    if (item.getItemNo().equals(val.getItemNo())) {
+                        item.setItemValue(val.getItemValue());
+                    }
+                }
+            } else {
+                List<LabelValue> vals = data.getItems();
+                for (LabelValue labelValue : vals) {
+                    if (item.getItemName().equals(labelValue.getLabel())) {
+                        item.setItemValue(labelValue.getValue());
+                    }
                 }
             }
         }

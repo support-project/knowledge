@@ -14,7 +14,7 @@
       Types:
       <div v-for="t in resources.types" :key="t.id">
         <label v-if="resources.article.type">
-          <input type="radio" name="type" :value="t.id" v-model="resources.article.type.id">
+          <input type="radio" name="type" :value="t.id" v-model="resources.article.type.id" v-on:change="changeType(t.id)">
           <i :class="'fa ' + t.icon" aria-hidden="true"></i>
           {{ t.name | abbreviate}}
         </label>
@@ -29,6 +29,10 @@
 <script>
 import { mapState } from 'vuex'
 import lang from 'lang'
+import logger from 'logger'
+import rightSidebar from './../../../lib/displayParts/rightSidebar'
+
+const LABEL = 'ArticleEditSidebar.vue'
 
 export default {
   name: 'ArticleEditSidebar',
@@ -40,16 +44,21 @@ export default {
   },
   filters: {
     abbreviate: function (value) {
-      return lang.abbreviate(value, 5)
+      return lang.abbreviate(value, 25)
     }
   },
   methods: {
     toggleAttributes () {
       this.$store.dispatch('toggleAttributes')
+    },
+    changeType (type) {
+      logger.debug(LABEL, type)
+      this.$store.commit('CHANGE_ARTICLE_TYPE', type)
     }
   },
   mounted () {
     this.$nextTick(() => {
+      rightSidebar(true)
     })
   }
 }

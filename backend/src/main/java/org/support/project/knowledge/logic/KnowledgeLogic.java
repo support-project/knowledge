@@ -320,6 +320,7 @@ public class KnowledgeLogic {
      * @param template
      * @param loginedUser
      */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     private void saveTemplateItemValue(Long knowledgeId, TemplateMastersEntity template, LoginedUser loginedUser) {
         if (template == null) {
             return;

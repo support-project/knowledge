@@ -22,7 +22,10 @@ export default (context, id) => {
       type.items.forEach(element => {
         if (element.itemType === 11) {
           // bind checkbox value to array object
-          var vals = element.itemValue.split(',')
+          var vals = []
+          if (element.itemValue) {
+            vals = element.itemValue.split(',')
+          }
           element.itemValue = vals
         }
       })

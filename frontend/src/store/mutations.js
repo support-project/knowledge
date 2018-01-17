@@ -1,5 +1,6 @@
-import logger from 'logger'
-const LABEL = 'mutations.js'
+import setResources from './mutations/setResources'
+import setPageState from './mutations/setPageState'
+import changeArticleType from './mutations/changeArticleType'
 
 export default {
   TOGGLE_LOADING (state) {
@@ -27,40 +28,12 @@ export default {
     state.searchConditions = searchConditions
   },
   SET_RESOURCES (state, resources) {
-    if ('article' in resources) {
-      logger.debug(LABEL, 'Change state.resources.article: ' + JSON.stringify(resources.article))
-      state.resources.article = resources.article
-    }
-    if ('articles' in resources) {
-      state.resources.articles = resources.articles
-    }
-    if ('comments' in resources) {
-      state.resources.comments = resources.comments
-    }
-    if ('groups' in resources) {
-      state.resources.groups = resources.groups
-    }
-    if ('types' in resources) {
-      state.resources.types = resources.types
-    }
-    if ('tags' in resources) {
-      state.resources.tags = resources.tags
-    }
-    if ('toc' in resources) {
-      state.resources.toc = resources.toc
-    }
+    setResources(state, resources)
   },
   SET_PAGE_STATE (state, pagestate) {
-    if ('loading' in pagestate) {
-      state.pagestate.loading = pagestate.loading
-    }
-    if ('toggleTOC' in pagestate) {
-      logger.debug(LABEL, 'Change state.pagestate.toggleTOC: ' + JSON.stringify(pagestate.toggleTOC))
-      state.pagestate.toggleTOC = pagestate.toggleTOC
-    }
-    if ('toggleAttributes' in pagestate) {
-      logger.debug(LABEL, 'Change state.pagestate.toggleAttributes: ' + JSON.stringify(pagestate.toggleAttributes))
-      state.pagestate.toggleAttributes = pagestate.toggleAttributes
-    }
+    setPageState(state, pagestate)
+  },
+  CHANGE_ARTICLE_TYPE (state, type) {
+    changeArticleType(state, type)
   }
 }

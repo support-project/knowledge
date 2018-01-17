@@ -33,4 +33,10 @@ public class KnowledgeItemValuesDao extends GenKnowledgeItemValuesDao {
         return executeQueryList(sql, KnowledgeItemValuesEntity.class, typeId, itemNo, status);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public int deleteOnKnowledgeId(Long knowledgeId) {
+        String sql = "DELETE FROM KNOWLEDGE_ITEM_VALUES WHERE KNOWLEDGE_ID = ?";
+        return executeUpdate(sql, knowledgeId);
+    }
+
 }
