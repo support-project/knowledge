@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ import org.support.project.web.entity.UsersEntity;
 @DI(instance = Instance.Singleton)
 public class KnowledgeDataSelectLogic {
     /** LOG */
-    private static final Log LOG = LogFactory.getLog(KnowledgeDataSelectLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** Get instance */
     public static KnowledgeDataSelectLogic get() {
         return Container.getComp(KnowledgeDataSelectLogic.class);

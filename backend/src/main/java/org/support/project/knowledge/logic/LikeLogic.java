@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Locale;
 
 import org.support.project.common.config.Resources;
@@ -29,7 +30,7 @@ import org.support.project.web.exception.InvalidParamException;
 
 public class LikeLogic {
     /** LOG */
-    private static final Log LOG = LogFactory.getLog(LikeLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** Get instance */
     public static LikeLogic get() {
         return Container.getComp(LikeLogic.class);

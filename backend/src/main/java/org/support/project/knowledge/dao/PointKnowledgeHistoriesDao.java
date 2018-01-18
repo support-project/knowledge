@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import org.support.project.knowledge.dao.gen.GenPointKnowledgeHistoriesDao;
 @DI(instance = Instance.Singleton)
 public class PointKnowledgeHistoriesDao extends GenPointKnowledgeHistoriesDao {
     /** LOG */
-    private static final Log LOG = LogFactory.getLog(PointKnowledgeHistoriesDao.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;

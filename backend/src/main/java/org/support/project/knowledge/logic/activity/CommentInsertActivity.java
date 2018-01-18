@@ -1,5 +1,7 @@
 package org.support.project.knowledge.logic.activity;
 
+import java.lang.invoke.MethodHandles;
+
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.RandomUtil;
@@ -18,7 +20,7 @@ import org.support.project.knowledge.logic.KnowledgeLogic;
  */
 @DI(instance = Instance.Prototype)
 public class CommentInsertActivity extends AbstractAddPointForCommentProcessor {
-    private static final Log LOG = LogFactory.getLog(CommentInsertActivity.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     public static CommentInsertActivity get() {
         return Container.getComp(CommentInsertActivity.class);
     }

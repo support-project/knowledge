@@ -2,6 +2,7 @@ package org.support.project.knowledge.logic;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +39,7 @@ import org.support.project.web.entity.UsersEntity;
 @DI(instance = Instance.Singleton)
 public class AccountLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AccountLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     public static AccountLogic get() {
         return Container.getComp(AccountLogic.class);
     }

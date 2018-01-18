@@ -1,6 +1,7 @@
 package org.support.project.knowledge.integration;
 
 import java.io.ByteArrayInputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.junit.Assert;
@@ -31,7 +32,7 @@ import org.support.project.web.test.stub.StubHttpServletResponse;
  */
 public class IntegrationStockTest extends IntegrationCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(IntegrationStockTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     private static final String POST_USER = "integration-test-user-01";
     private static final String STOCK_USER = "integration-test-user-02";

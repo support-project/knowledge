@@ -1,5 +1,7 @@
 package org.support.project.knowledge.logic.activity;
 
+import java.lang.invoke.MethodHandles;
+
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
@@ -22,7 +24,7 @@ import org.support.project.knowledge.dao.PointKnowledgeHistoriesDao;
  */
 @DI(instance = Instance.Prototype)
 public class KnowledgeSaveActivity extends AbstractAddPointForKnowledgeProcessor implements MultiActivityProcessor {
-    private static final Log LOG = LogFactory.getLog(KnowledgeSaveActivity.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     public static KnowledgeSaveActivity get() {
         return Container.getComp(KnowledgeSaveActivity.class);
     }

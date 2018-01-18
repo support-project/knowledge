@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.notification.webhook;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Iterator;
 
 import org.junit.Assert;
@@ -13,7 +14,7 @@ import com.google.gson.JsonPrimitive;
 
 public class AssertJson {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AssertJson.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     public static void equals(JsonObject expected, JsonObject actual) {
         LOG.debug(expected.toString());

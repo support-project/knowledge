@@ -1,5 +1,7 @@
 package org.support.project.knowledge.logic.activity;
 
+import java.lang.invoke.MethodHandles;
+
 import org.support.project.aop.Aspect;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -12,7 +14,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 
 @DI(instance = Instance.Prototype)
 public abstract class AbstractAddPointForCommentProcessor extends AbstractActivityProcessor {
-    private static final Log LOG = LogFactory.getLog(AbstractAddPointForCommentProcessor.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     private CommentsEntity comment;
     private KnowledgesEntity parentKnowledge;
     /**

@@ -1,16 +1,11 @@
 package org.support.project.knowledge.logic;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.support.project.common.log.Log;
-import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.FileUtil;
 
 public class MailLogicTest {
-    /** ログ */
-    private static final Log LOG = LogFactory.getLog(MailLogicTest.class);
-
     @Test
     public void testGetMailContent() throws Exception {
         String html = FileUtil.read(this.getClass().getResourceAsStream("data/html.txt"));

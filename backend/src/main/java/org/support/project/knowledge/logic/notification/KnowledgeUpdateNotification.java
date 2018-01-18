@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.notification;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -63,7 +64,7 @@ import net.arnx.jsonic.JSON;
 @DI(instance = Instance.Prototype)
 public class KnowledgeUpdateNotification extends AbstractQueueNotification implements DesktopNotification {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(KnowledgeUpdateNotification.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /** インスタンス取得 */
     public static KnowledgeUpdateNotification get() {

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -27,7 +28,7 @@ import org.support.project.web.entity.UsersEntity;
 
 public class AddSampleKnowledge {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AddSampleKnowledge.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     // private static final String userKey = "user@test.com";
     private UsersDao usersDao = UsersDao.get();

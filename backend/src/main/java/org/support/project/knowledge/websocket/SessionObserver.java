@@ -1,5 +1,6 @@
 package org.support.project.knowledge.websocket;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Observable;
@@ -22,7 +23,7 @@ import net.arnx.jsonic.JSON;
  */
 public class SessionObserver implements Observer {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(SessionObserver.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     /**
      * セッション

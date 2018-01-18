@@ -3,8 +3,6 @@ package org.support.project.knowledge.logic;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.support.project.common.log.Log;
-import org.support.project.common.log.LogFactory;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.web.common.HttpUtil;
@@ -14,10 +12,6 @@ import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
 
 @DI(instance = Instance.Singleton)
 public class KnowledgeAuthenticationLogic extends DefaultAuthenticationLogicImpl {
-    /** ログ */
-    private static final Log LOG = LogFactory.getLog(DefaultAuthenticationLogicImpl.class);
-    
-    
     
     @Override
     public void setSession(String userId, HttpServletRequest request, HttpServletResponse response) throws AuthenticateException {

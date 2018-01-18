@@ -3,6 +3,7 @@
  */
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -49,7 +50,7 @@ import org.support.project.web.entity.SystemConfigsEntity;
  */
 public class MailEventLogicTest extends TestCommon{
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(MailEventLogicTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /**
      * @BeforeClass

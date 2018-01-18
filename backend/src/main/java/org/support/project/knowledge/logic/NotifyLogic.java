@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.support.project.common.config.INT_FLAG;
@@ -32,7 +33,7 @@ import org.support.project.web.entity.UsersEntity;
 @DI(instance = Instance.Singleton)
 public class NotifyLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(NotifyLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
      * インスタンスを取得
      * @return

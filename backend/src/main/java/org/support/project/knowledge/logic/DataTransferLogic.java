@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -12,7 +13,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.support.project.common.classanalysis.ClassSearch;
@@ -24,8 +24,6 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.config.AppConfig;
-import org.support.project.knowledge.dao.TemplateItemsDao;
-import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.ormapping.config.ConnectionConfig;
@@ -33,7 +31,6 @@ import org.support.project.ormapping.config.ORMappingParameter;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.ormapping.dao.AbstractDao;
 import org.support.project.ormapping.transaction.TransactionManager;
-import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.RolesDao;
 import org.support.project.web.dao.SystemsDao;
 import org.support.project.web.dao.UserRolesDao;
@@ -47,7 +44,7 @@ public class DataTransferLogic {
     private static final String TRANSFER_STARTED = "TRANSFER_STARTED";
 
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(DataTransferLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static DataTransferLogic get() {
         return Container.getComp(DataTransferLogic.class);

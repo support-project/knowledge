@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.notification;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public abstract class AbstractEventNotification extends AbstractNotification imp
     public static final String TEMPLATE_EVENT_WEEK = "knowledge.event.label.timing.week";
 
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AbstractEventNotification.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     protected static final int NOTIFY_STATUS_NOT_SEND = MailEventLogic.NOTIFY_STATUS_NOT_SEND;
     /** 今週のイベント通知(日曜に通知) */

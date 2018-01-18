@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
@@ -32,7 +33,7 @@ import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
 
 public class CreateExportDataBat extends AbstractBat {
-    private static final Log LOG = LogFactory.getLog(CreateExportDataBat.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static final String DATA_DIR = "DataExport";
 

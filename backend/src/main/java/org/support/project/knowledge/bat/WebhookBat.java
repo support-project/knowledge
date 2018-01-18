@@ -1,5 +1,7 @@
 package org.support.project.knowledge.bat;
 
+import java.lang.invoke.MethodHandles;
+
 import org.apache.commons.lang.ClassUtils;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -12,7 +14,7 @@ import org.support.project.knowledge.logic.WebhookLogic;
  */
 public class WebhookBat extends AbstractBat {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(WebhookBat.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
 
     public static void main(String[] args) throws Exception {

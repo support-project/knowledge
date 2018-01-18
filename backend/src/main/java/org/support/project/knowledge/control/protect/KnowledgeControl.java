@@ -2,6 +2,7 @@ package org.support.project.knowledge.control.protect;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -63,7 +64,7 @@ import net.arnx.jsonic.JSON;
 @DI(instance = Instance.Prototype)
 public class KnowledgeControl extends KnowledgeControlBase {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(KnowledgeControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
     private UploadedFileLogic fileLogic = UploadedFileLogic.get();

@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control.api.internal.targets;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.support.project.common.log.Log;
@@ -17,7 +18,7 @@ import org.support.project.web.logic.invoke.Open;
 @DI(instance = Instance.Prototype)
 public class GetTargetListApiControl extends ApiControl {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(GetTargetListApiControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
      * 記事の公開範囲や、編集者に指定するターゲット（ユーザやグループ）のリストを取得
      * @throws Exception 

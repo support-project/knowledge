@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +33,7 @@ import org.support.project.web.entity.UsersEntity;
 @DI(instance = Instance.Singleton)
 public class NotifyCommentLogic extends NotifyLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(NotifyCommentLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /**
      * インスタンスを取得

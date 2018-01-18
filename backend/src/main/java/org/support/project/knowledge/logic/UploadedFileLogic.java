@@ -2,8 +2,8 @@ package org.support.project.knowledge.logic;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,7 +30,7 @@ import org.support.project.web.bean.LoginedUser;
 @DI(instance = Instance.Singleton)
 public class UploadedFileLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(UploadedFileLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** KnowledgeFilesDao */
     private KnowledgeFilesDao filesDao = KnowledgeFilesDao.get();
     /** Get instance */

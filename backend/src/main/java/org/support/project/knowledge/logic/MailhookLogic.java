@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ import org.support.project.web.entity.UsersEntity;
 
 public class MailhookLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(MailhookLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /**
      * MAIL HOOK のID DBとしては、MailHookは複数のメールアドレスで実行できる構成をとったが、 

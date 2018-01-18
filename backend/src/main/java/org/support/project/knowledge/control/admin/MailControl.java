@@ -1,6 +1,7 @@
 package org.support.project.knowledge.control.admin;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.invoke.MethodHandles;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import org.support.project.web.entity.MailsEntity;
 @DI(instance = Instance.Prototype)
 public class MailControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(MailControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private static final String NO_CHANGE_PASSWORD = "NO_CHANGE_PASSWORD-fXLSJ_V-ZJ2E-GBAghu_usb-gtaG"; // パスワードを更新しなかったことを表すパスワード
 

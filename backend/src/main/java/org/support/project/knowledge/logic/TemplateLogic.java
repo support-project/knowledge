@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,7 +28,7 @@ import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance = Instance.Singleton)
 public class TemplateLogic {
-    private static final Log LOG = LogFactory.getLog(TemplateLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static TemplateLogic get() {
         return Container.getComp(TemplateLogic.class);

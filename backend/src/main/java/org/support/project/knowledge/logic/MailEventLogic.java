@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -25,7 +26,7 @@ import org.support.project.web.bean.LoginedUser;
 @DI(instance = Instance.Singleton)
 public class MailEventLogic extends MailLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(MailEventLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     public static MailEventLogic get() {
         return Container.getComp(MailEventLogic.class);

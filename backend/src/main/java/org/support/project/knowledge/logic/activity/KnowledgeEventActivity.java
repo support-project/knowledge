@@ -1,5 +1,7 @@
 package org.support.project.knowledge.logic.activity;
 
+import java.lang.invoke.MethodHandles;
+
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.RandomUtil;
@@ -18,7 +20,7 @@ import org.support.project.knowledge.dao.ActivitiesDao;
  */
 @DI(instance = Instance.Prototype)
 public class KnowledgeEventActivity extends AbstractAddPointForKnowledgeProcessor {
-    private static final Log LOG = LogFactory.getLog(KnowledgeEventActivity.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     public static KnowledgeEventActivity get() {
         return Container.getComp(KnowledgeEventActivity.class);
     }

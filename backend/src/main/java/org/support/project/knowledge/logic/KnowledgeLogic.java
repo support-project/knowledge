@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ import org.support.project.web.exception.AuthenticateException;
 @DI(instance = Instance.Singleton)
 public class KnowledgeLogic {
     /** LOG */
-    private static final Log LOG = LogFactory.getLog(KnowledgeLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /** Group id for ALL_USER */
     public static final int ALL_USER = 0;

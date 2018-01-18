@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control.api.internal.groups;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.support.project.common.log.Log;
@@ -17,7 +18,7 @@ import org.support.project.web.logic.invoke.Open;
 @DI(instance = Instance.Prototype)
 public class GetGroupListApiControl extends ApiControl {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(GetGroupListApiControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
      * グループの一覧を取得
      * @throws Exception 

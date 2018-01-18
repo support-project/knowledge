@@ -1,5 +1,7 @@
 package org.support.project.knowledge.api;
 
+import java.lang.invoke.MethodHandles;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.support.project.common.log.Log;
@@ -15,7 +17,7 @@ import org.support.project.web.test.stub.StubHttpServletResponse;
 
 public class SampleApiControlTest extends IntegrationCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(SampleApiControlTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     private static final String USER = "SampleApiControlTest";
     

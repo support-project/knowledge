@@ -1,6 +1,7 @@
 package org.support.project.knowledge.logic;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import org.support.project.web.entity.ProxyConfigsEntity;
 @DI(instance = Instance.Singleton)
 public class WebhookLogic extends HttpLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(WebhookLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static WebhookLogic get() {
         return Container.getComp(WebhookLogic.class);

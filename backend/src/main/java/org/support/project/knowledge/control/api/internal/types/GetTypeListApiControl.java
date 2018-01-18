@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control.api.internal.types;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import org.support.project.web.logic.invoke.Open;
 @DI(instance = Instance.Prototype)
 public class GetTypeListApiControl extends ApiControl {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(GetTypeListApiControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
      * 記事の種類（テンプレート）の一覧を取得
      * 記事の種類が多くの件数になることは無いと思われるため、件数制御／オフセット制御はいったんしない

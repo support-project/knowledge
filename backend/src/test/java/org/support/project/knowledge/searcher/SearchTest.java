@@ -3,6 +3,7 @@ package org.support.project.knowledge.searcher;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.junit.After;
@@ -24,7 +25,7 @@ import org.support.project.knowledge.indexer.IndexingValue;
 
 public class SearchTest {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(SearchTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {

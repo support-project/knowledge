@@ -1,5 +1,7 @@
 package org.support.project.knowledge.logic.notification;
 
+import java.lang.invoke.MethodHandles;
+
 import org.junit.BeforeClass;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.log.Log;
@@ -11,7 +13,7 @@ import org.support.project.knowledge.logic.AddUserProcessLogic;
 
 public abstract class NotificationTestCommon extends TestCommon {
     /** ログ */
-    protected Log LOG = LogFactory.getLog(this.getClass());
+    protected Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     /**
      * @BeforeClass

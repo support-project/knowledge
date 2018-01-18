@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import java.lang.invoke.MethodHandles;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import org.support.project.ormapping.common.DBUserPool;
 
 public class KnowledgesDaoTest extends TestCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(KnowledgesDaoTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     @Test
     public void testSelectKnowledges() throws Exception {

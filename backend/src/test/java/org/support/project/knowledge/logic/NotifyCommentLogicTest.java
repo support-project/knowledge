@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import org.support.project.web.entity.UsersEntity;
  */
 public class NotifyCommentLogicTest extends TestCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(NotifyCommentLogicTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     /** テスト用ナレッジ1 */
     private static KnowledgesEntity knowledge1;

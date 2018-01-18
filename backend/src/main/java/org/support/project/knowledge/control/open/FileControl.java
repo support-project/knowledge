@@ -1,6 +1,7 @@
 package org.support.project.knowledge.control.open;
 
 import java.io.FileNotFoundException;
+import java.lang.invoke.MethodHandles;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -20,7 +21,7 @@ import org.support.project.web.exception.InvalidParamException;
 @DI(instance = Instance.Prototype)
 public class FileControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(FileControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private UploadedFileLogic fileLogic = UploadedFileLogic.get();
 

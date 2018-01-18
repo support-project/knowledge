@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,7 @@ import com.google.gson.JsonParser;
 
 public class WebhookControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(WebhookControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /**
      * 設定画面を表示

@@ -1,6 +1,7 @@
 package org.support.project.knowledge.integration;
 
 import java.io.ByteArrayInputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ import org.support.project.web.test.stub.StubHttpServletResponse;
 
 public abstract class IntegrationCommon extends TestCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(IntegrationCommon.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     protected static boolean isInitCallControlLogic = false;
     private static boolean isMailSend = false;

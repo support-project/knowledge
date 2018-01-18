@@ -1,5 +1,7 @@
 package org.support.project.knowledge.dao;
 
+import java.lang.invoke.MethodHandles;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -15,7 +17,7 @@ import org.support.project.knowledge.entity.LikesEntity;
 
 public class LikesDaoTest {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(LikesDaoTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {

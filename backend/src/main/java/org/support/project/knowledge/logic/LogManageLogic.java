@@ -2,6 +2,7 @@ package org.support.project.knowledge.logic;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,7 @@ import org.support.project.web.entity.SystemConfigsEntity;
 
 public class LogManageLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(LogManageLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static LogManageLogic get() {
         return Container.getComp(LogManageLogic.class);

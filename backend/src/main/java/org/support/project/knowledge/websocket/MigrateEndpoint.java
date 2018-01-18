@@ -1,6 +1,7 @@
 package org.support.project.knowledge.websocket;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import javax.websocket.OnClose;
@@ -25,7 +26,7 @@ import net.arnx.jsonic.JSONException;
 @ServerEndpoint(value = "/migrate", configurator = EndpointConfigurator.class)
 public class MigrateEndpoint extends CallBatchEndpoint {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(ReindexingEndpoint.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     @OnOpen
     public void onOpen(Session session) throws IOException {

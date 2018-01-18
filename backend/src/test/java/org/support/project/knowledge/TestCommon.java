@@ -2,6 +2,7 @@ package org.support.project.knowledge;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
 
@@ -64,7 +65,7 @@ import org.support.project.web.entity.UsersEntity;
 @RunWith(OrderedRunner.class)
 public abstract class TestCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(TestCommon.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static int WAIT_MILLSEC = 100;
     

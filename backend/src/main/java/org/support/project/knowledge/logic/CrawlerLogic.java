@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -53,7 +54,7 @@ import org.support.project.web.entity.ProxyConfigsEntity;
 @DI(instance = Instance.Singleton)
 public class CrawlerLogic extends HttpLogic {
     /** ログ */
-    private static Log log = LogFactory.getLog(CrawlerLogic.class);
+    private static Log log = LogFactory.getLog(MethodHandles.lookup());
 
     public static CrawlerLogic get() {
         return Container.getComp(CrawlerLogic.class);

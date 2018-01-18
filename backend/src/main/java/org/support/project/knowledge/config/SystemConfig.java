@@ -1,5 +1,6 @@
 package org.support.project.knowledge.config;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -13,7 +14,7 @@ import org.support.project.web.config.WebConfig;
 
 public class SystemConfig {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(SystemConfig.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     //public static final String KNOWLEDGE_ENV_KEY = "KNOWLEDGE_HOME";
     

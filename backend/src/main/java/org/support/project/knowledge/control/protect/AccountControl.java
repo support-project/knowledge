@@ -1,6 +1,7 @@
 package org.support.project.knowledge.control.protect;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ import org.support.project.web.logic.AuthenticationLogic;
 @DI(instance = Instance.Prototype)
 public class AccountControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AccountControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** アイコン画像の最大サイズ(5MB) */
     private static final int ICON_IMAGE_MAX_SIZE = 5 * 1024 * 1024;
     

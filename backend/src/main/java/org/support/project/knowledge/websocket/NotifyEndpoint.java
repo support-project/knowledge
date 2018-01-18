@@ -1,6 +1,7 @@
 package org.support.project.knowledge.websocket;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,7 +25,7 @@ import net.arnx.jsonic.JSONException;
 @ServerEndpoint(value = "/notify", configurator = EndpointConfigurator.class)
 public class NotifyEndpoint {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(NotifyEndpoint.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private Map<String, SessionObserver> map = Collections.synchronizedMap(new HashMap<>());
     private NotifyAction notify = Container.getComp(NotifyAction.class);

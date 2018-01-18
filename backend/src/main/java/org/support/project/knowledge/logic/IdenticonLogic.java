@@ -7,6 +7,7 @@ import java.awt.image.WritableRaster;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -23,7 +24,7 @@ import org.support.project.knowledge.vo.SizeLimitMap;
 @DI(instance = Instance.Singleton)
 public class IdenticonLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(IdenticonLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     public static IdenticonLogic get() {
         return Container.getComp(IdenticonLogic.class);

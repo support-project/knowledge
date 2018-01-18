@@ -1,5 +1,7 @@
 package org.support.project.knowledge.control.api.internal.articles;
 
+import java.lang.invoke.MethodHandles;
+
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.DI;
@@ -18,7 +20,7 @@ import net.arnx.jsonic.JSONException;
 @DI(instance = Instance.Prototype)
 public class PostArticleApiControl extends ApiControl {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(PostArticleApiControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
      * 記事を投稿(Release)
      * @throws Exception 

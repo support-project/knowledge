@@ -1,5 +1,7 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
+
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -11,7 +13,7 @@ import org.support.project.web.logic.AddUserProcess;
 
 public class AddUserProcessLogic implements AddUserProcess {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AddUserProcessLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     @Override
     public void addUserProcess(String userKey) {

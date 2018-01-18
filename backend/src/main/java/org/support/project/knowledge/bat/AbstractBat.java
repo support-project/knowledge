@@ -1,5 +1,6 @@
 package org.support.project.knowledge.bat;
 
+import java.lang.invoke.MethodHandles;
 import java.util.TimeZone;
 
 import org.apache.log4j.FileAppender;
@@ -12,7 +13,7 @@ import org.support.project.web.logic.DBConnenctionLogic;
 
 public abstract class AbstractBat {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AbstractBat.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static void initLogName(String logname) {
         Logger log = Logger.getRootLogger();

@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -32,7 +33,7 @@ import org.support.project.web.util.JspUtil;
 @DI(instance = Instance.Prototype)
 public abstract class Control extends org.support.project.web.control.Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(Control.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static final String MSG_INFO = "NOTIFY_MSG_INFO";
     public static final String MSG_SUCCESS = "NOTIFY_MSG_SUCCESS";

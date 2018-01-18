@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,7 +36,7 @@ public class EventsLogic {
     private static final int PAGE_LIMIT = 20;
 
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(EventsLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     public static final int ITEM_NO_DATE = 0;
     public static final int ITEM_NO_START = 1;

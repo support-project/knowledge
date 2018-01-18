@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.notification;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -51,7 +52,7 @@ import net.arnx.jsonic.JSON;
 @DI(instance = Instance.Prototype)
 public class CommentInsertNotification extends AbstractQueueNotification implements DesktopNotification {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(CommentInsertNotification.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** インスタンス取得 */
     public static CommentInsertNotification get() {
         return Container.getComp(CommentInsertNotification.class);

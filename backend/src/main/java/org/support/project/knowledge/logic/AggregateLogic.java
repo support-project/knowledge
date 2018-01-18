@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.support.project.aop.Aspect;
@@ -42,7 +43,7 @@ import org.support.project.web.entity.UsersEntity;
 @DI(instance = Instance.Prototype)
 public class AggregateLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AggregateLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** Get instance */
     public static AggregateLogic get() {
         return Container.getComp(AggregateLogic.class);

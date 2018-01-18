@@ -1,5 +1,12 @@
 package org.support.project.knowledge.searcher;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.lang.invoke.MethodHandles;
+import java.util.Date;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.support.project.common.config.ConfigLoader;
@@ -15,15 +22,9 @@ import org.support.project.knowledge.indexer.Indexer;
 import org.support.project.knowledge.indexer.IndexingValue;
 import org.support.project.knowledge.logic.TemplateLogic;
 
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
 public class SearchConditionTest {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(SearchConditionTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     @Before
     public void setUp() throws Exception {

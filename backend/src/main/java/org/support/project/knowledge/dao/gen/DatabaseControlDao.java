@@ -1,6 +1,9 @@
 package org.support.project.knowledge.dao.gen;
 
 import org.support.project.ormapping.dao.AbstractDao;
+
+import java.lang.invoke.MethodHandles;
+
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.DI;
@@ -16,7 +19,7 @@ public class DatabaseControlDao extends AbstractDao {
     /** SerialVersion */
     private static final long serialVersionUID = 1L;
     /** LOG */
-    private static final Log LOG = LogFactory.getLog(DatabaseControlDao.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /** Drop all tables */
     public void dropAllTable() {

@@ -1,6 +1,7 @@
 package org.support.project.knowledge.config;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -16,7 +17,7 @@ import org.support.project.di.Instance;
 @DI(instance = Instance.Singleton)
 public class LocaleTextReader {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(LocaleTextReader.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static LocaleTextReader get() {
         return Container.getComp(LocaleTextReader.class);

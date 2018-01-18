@@ -1,6 +1,7 @@
 package org.support.project.knowledge.listener;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +24,7 @@ import org.support.project.knowledge.config.AppConfig;
 
 public class CronListener implements ServletContextListener {
 
-    private static final Log LOG = LogFactory.getLog(CronListener.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private ScheduledThreadPoolExecutor service;
     private ScheduledFuture<?> fileClearfuture;

@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.integration;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.junit.Assert;
@@ -42,7 +43,7 @@ import org.support.project.web.entity.UsersEntity;
 @RunWith(OrderedRunner.class)
 public class PostPublicLogicIntegrationTest extends TestCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(PostPublicLogicIntegrationTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     private static long knowledgeId; // テストメソッド単位にインスタンスが歳生成されるようなので、staticで保持する
     

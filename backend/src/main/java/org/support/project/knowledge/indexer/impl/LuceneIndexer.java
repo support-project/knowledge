@@ -1,6 +1,7 @@
 package org.support.project.knowledge.indexer.impl;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.ja.JapaneseAnalyzer;
@@ -27,7 +28,7 @@ import org.support.project.knowledge.indexer.IndexingValue;
 
 public class LuceneIndexer implements Indexer {
     /** ログ */
-    private static Log log = LogFactory.getLog(LuceneIndexer.class);
+    private static Log log = LogFactory.getLog(MethodHandles.lookup());
 
     public static final String FIELD_LABEL_TYPE = "type";
     public static final String FIELD_LABEL_ID = "id";

@@ -2,6 +2,7 @@ package org.support.project.knowledge.logic.notification.webhook;
 
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import com.google.gson.JsonParser;
 @RunWith(OrderedRunner.class)
 public class CommentLikedWebhookNotificationTest extends TestCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(CommentLikedWebhookNotificationTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     /**
      * @BeforeClass

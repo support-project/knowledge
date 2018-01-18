@@ -1,5 +1,7 @@
 package org.support.project.knowledge.control.api.internal.articles;
 
+import java.lang.invoke.MethodHandles;
+
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
@@ -20,7 +22,7 @@ import org.support.project.web.logic.invoke.Open;
 @DI(instance = Instance.Prototype)
 public class GetArticleTemplateItemsApiControl extends ApiControl {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(GetArticleTemplateItemsApiControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
      * 記事の一覧を取得
      * @throws Exception 

@@ -1,5 +1,7 @@
 package org.support.project.knowledge.logic.notification;
 
+import java.lang.invoke.MethodHandles;
+
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
@@ -26,7 +28,7 @@ import org.support.project.web.entity.UsersEntity;
 @DI(instance = Instance.Singleton)
 public class ParticipateRemoveForSponsorNotification extends AbstractParticipateNotification{
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(ParticipateRemoveForSponsorNotification.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** インスタンス取得 */
     public static ParticipateRemoveForSponsorNotification get() {
         return Container.getComp(ParticipateRemoveForSponsorNotification.class);

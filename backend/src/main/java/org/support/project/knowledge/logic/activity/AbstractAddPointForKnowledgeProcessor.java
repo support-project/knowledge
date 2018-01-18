@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.activity;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 
 @DI(instance = Instance.Prototype)
 public abstract class AbstractAddPointForKnowledgeProcessor extends AbstractActivityProcessor {
-    private static final Log LOG = LogFactory.getLog(AbstractAddPointForKnowledgeProcessor.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     private KnowledgesEntity knowledge;
     /**
      * @return the knowledge

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -23,7 +24,7 @@ import org.support.project.di.Instance;
 @DI(instance = Instance.Singleton)
 public class CompressLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(CompressLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static CompressLogic get() {
         return Container.getComp(CompressLogic.class);

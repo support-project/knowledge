@@ -1,5 +1,6 @@
 package org.support.project.knowledge.bat;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.apache.commons.lang.ClassUtils;
@@ -20,7 +21,7 @@ import org.support.project.web.entity.MailsEntity;
 public class KnowledgeFileClearBat extends AbstractBat {
     
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(KnowledgeFileClearBat.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     public static void main(String[] args) {
         try {

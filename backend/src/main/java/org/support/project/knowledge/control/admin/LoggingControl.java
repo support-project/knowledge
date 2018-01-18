@@ -3,6 +3,7 @@ package org.support.project.knowledge.control.admin;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.support.project.common.log.Log;
@@ -27,7 +28,7 @@ import org.support.project.web.exception.InvalidParamException;
 @DI(instance = Instance.Prototype)
 public class LoggingControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(LoggingControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     @Get(publishToken = "admin")
     @Auth(roles = "admin")

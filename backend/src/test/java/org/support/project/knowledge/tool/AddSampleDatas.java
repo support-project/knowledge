@@ -3,6 +3,7 @@ package org.support.project.knowledge.tool;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.invoke.MethodHandles;
 import java.util.TimeZone;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -19,7 +20,6 @@ import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.gen.DatabaseControlDao;
 import org.support.project.knowledge.deploy.InitDB;
 import org.support.project.ormapping.common.DBUserPool;
-import org.support.project.ormapping.tool.dao.InitializeDao;
 import org.support.project.web.config.AppConfig;
 import org.support.project.web.config.GroupRoleType;
 import org.support.project.web.dao.UserGroupsDao;
@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 public class AddSampleDatas {
 
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AddSampleDatas.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static void main(String[] args) throws Exception {
         AppConfig appConfig = ConfigLoader.load(AppConfig.APP_CONFIG, AppConfig.class);

@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import java.lang.invoke.MethodHandles;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,7 +26,7 @@ import org.support.project.ormapping.connection.ConnectionManager;
 @DI(instance = Instance.Singleton)
 public class PointUserHistoriesDao extends GenPointUserHistoriesDao {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(PointUserHistoriesDao.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;

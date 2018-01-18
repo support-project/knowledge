@@ -2,6 +2,7 @@ package org.support.project.knowledge.logic;
 
 import static org.support.project.common.test.AssertEx.eqdb;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import net.arnx.jsonic.JSON;
 @RunWith(OrderedRunner.class)
 public class KnowledgeLogicTest extends TestCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(KnowledgeLogicTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private static List<KnowledgesEntity> list = new ArrayList<>();
 

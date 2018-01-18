@@ -1,6 +1,7 @@
 package org.support.project.knowledge.logic.activity;
 
 
+import java.lang.invoke.MethodHandles;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -31,7 +32,7 @@ import org.support.project.web.entity.UserConfigsEntity;
  */
 @DI(instance = Instance.Prototype)
 public abstract class AbstractActivityProcessor implements ActivityProcessor {
-    private static final Log LOG = LogFactory.getLog(AbstractActivityProcessor.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     private static Object lockUser = new Object();
     private static Object lockKnowledge = new Object();
     

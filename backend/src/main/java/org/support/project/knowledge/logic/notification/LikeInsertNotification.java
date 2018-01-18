@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.notification;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -50,7 +51,7 @@ import net.arnx.jsonic.JSON;
 @DI(instance = Instance.Prototype)
 public class LikeInsertNotification extends AbstractQueueNotification implements DesktopNotification {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(LikeInsertNotification.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** インスタンス取得 */
     public static LikeInsertNotification get() {
         return Container.getComp(LikeInsertNotification.class);

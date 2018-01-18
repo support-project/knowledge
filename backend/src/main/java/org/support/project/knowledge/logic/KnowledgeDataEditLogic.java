@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -32,7 +33,7 @@ import org.support.project.web.exception.InvalidParamException;
 @DI(instance = Instance.Singleton)
 public class KnowledgeDataEditLogic {
     /** LOG */
-    private static final Log LOG = LogFactory.getLog(KnowledgeDataEditLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** Get instance */
     public static KnowledgeDataEditLogic get() {
         return Container.getComp(KnowledgeDataEditLogic.class);

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -47,7 +48,7 @@ import org.support.project.web.entity.ProxyConfigsEntity;
 
 public class FileParseBat extends AbstractBat {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(FileParseBat.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static final int PARSE_STATUS_WAIT = 0;
     public static final int PARSE_STATUS_SLIDE_PARSED = 1;

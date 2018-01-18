@@ -1,5 +1,6 @@
 package org.support.project.knowledge.bat;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.apache.commons.lang.ClassUtils;
@@ -21,7 +22,7 @@ import org.support.project.knowledge.logic.notification.QueueNotification;
  */
 public class NotifyMailBat extends AbstractBat {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(NotifyMailBat.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     /**
      * バッチ処理の開始

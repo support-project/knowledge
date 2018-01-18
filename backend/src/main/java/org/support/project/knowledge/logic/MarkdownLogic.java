@@ -6,6 +6,7 @@ import io.github.gitbucket.markedj.Options;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
 import java.util.Date;
 
@@ -30,7 +31,7 @@ import org.support.project.web.logic.SanitizingLogic;
 @DI(instance = Instance.Singleton)
 public class MarkdownLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(MarkdownLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static final int ENGINE_PEGDOWN = 1;
     public static final int ENGINE_MARKEDJS = 2;

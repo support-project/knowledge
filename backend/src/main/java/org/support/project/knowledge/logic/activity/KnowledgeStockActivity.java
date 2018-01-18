@@ -1,5 +1,7 @@
 package org.support.project.knowledge.logic.activity;
 
+import java.lang.invoke.MethodHandles;
+
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
@@ -16,7 +18,7 @@ import org.support.project.di.Instance;
  */
 @DI(instance = Instance.Prototype)
 public class KnowledgeStockActivity extends AbstractAddPointForKnowledgeProcessor {
-    private static final Log LOG = LogFactory.getLog(KnowledgeStockActivity.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     public static KnowledgeStockActivity get() {
         return Container.getComp(KnowledgeStockActivity.class);
     }

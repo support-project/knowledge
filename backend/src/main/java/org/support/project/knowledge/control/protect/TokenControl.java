@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control.protect;
 
+import java.lang.invoke.MethodHandles;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -23,7 +24,7 @@ import org.support.project.web.entity.TokensEntity;
 @DI(instance = Instance.Prototype)
 public class TokenControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(TokenControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private DateFormat gateDayFormat() {
         return new SimpleDateFormat("yyyy-MM-dd");

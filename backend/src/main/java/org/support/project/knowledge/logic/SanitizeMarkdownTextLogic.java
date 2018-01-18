@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +17,7 @@ import org.support.project.web.logic.SanitizingLogic;
 @DI(instance = Instance.Singleton)
 public class SanitizeMarkdownTextLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(SanitizeMarkdownTextLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static SanitizeMarkdownTextLogic get() {
         return Container.getComp(SanitizeMarkdownTextLogic.class);

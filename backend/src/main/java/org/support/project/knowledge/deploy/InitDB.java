@@ -1,5 +1,6 @@
 package org.support.project.knowledge.deploy;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,7 +51,7 @@ import org.support.project.web.logic.DBConnenctionLogic;
 
 public class InitDB {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(InitDB.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private static final String SYSTEM_NAME = org.support.project.knowledge.config.AppConfig.get().getSystemName();
     private static final Map<String, Migrate> MAP = new LinkedHashMap<>();

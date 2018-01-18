@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.support.project.aop.Aspect;
@@ -19,7 +20,7 @@ import org.support.project.web.bean.LoginedUser;
 @DI(instance = Instance.Singleton)
 public class ServiceConfigLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(ServiceConfigLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
      * インスタンスを取得
      * @return

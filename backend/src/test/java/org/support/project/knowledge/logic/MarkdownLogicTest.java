@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import org.support.project.web.logic.SanitizingLogic;
 @RunWith(OrderedRunner.class)
 public class MarkdownLogicTest extends TestCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(MarkdownLogicTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /**
      * 改行コードは無視して値比較をするために、文字列（Line）の配列で取得

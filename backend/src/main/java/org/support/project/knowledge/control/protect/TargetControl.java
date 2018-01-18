@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control.protect;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.support.project.common.log.Log;
@@ -17,7 +18,7 @@ import org.support.project.web.exception.InvalidParamException;
 @DI(instance = Instance.Prototype)
 public class TargetControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(GroupControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static final int PAGE_LIMIT = 10;
 

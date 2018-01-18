@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ import org.support.project.web.entity.UsersEntity;
 @DI(instance = Instance.Singleton)
 public class TargetLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(TargetLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static final String ID_PREFIX_GROUP = "G-";
     public static final String ID_PREFIX_USER = "U-";

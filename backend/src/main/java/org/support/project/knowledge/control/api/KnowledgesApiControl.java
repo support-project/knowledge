@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control.api;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.support.project.common.exception.ParseException;
@@ -33,7 +34,7 @@ import net.arnx.jsonic.JSONException;
 @DI(instance = Instance.Prototype)
 public class KnowledgesApiControl extends GetApiControl {
     /** ログ */
-    private static Log LOG = LogFactory.getLog(ControlManagerFilter.class);
+    private static Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     @Get(path="api/knowledges", publishToken="")
     public Boundary index() {

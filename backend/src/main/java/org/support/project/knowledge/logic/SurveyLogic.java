@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,7 +31,7 @@ import org.support.project.web.entity.UsersEntity;
 
 @DI(instance = Instance.Singleton)
 public class SurveyLogic extends TemplateLogic {
-    private static final Log LOG = LogFactory.getLog(SurveyLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static SurveyLogic get() {
         return Container.getComp(SurveyLogic.class);

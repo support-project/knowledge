@@ -1,6 +1,7 @@
 package org.support.project.knowledge.control.admin;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ import net.arnx.jsonic.JSONException;
 @DI(instance = Instance.Prototype)
 public class LdapControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(LdapControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private static final String CONFIG_TYPE2 = "config2";
     private static final String CONFIG_TYPE1 = "config1";

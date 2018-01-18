@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control.open;
 
+import java.lang.invoke.MethodHandles;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ import org.support.project.web.exception.InvalidParamException;
 @DI(instance = Instance.Prototype)
 public class KnowledgeControl extends KnowledgeControlBase {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(KnowledgeControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** Cookieに保持する閲覧履歴の件数 */
     private static final int COOKIE_COUNT = 20;
     /** Cookieに保持する閲覧履歴の区切り文字 */

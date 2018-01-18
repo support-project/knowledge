@@ -1,5 +1,6 @@
 package org.support.project.knowledge.dao;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import org.support.project.knowledge.entity.ActivitiesEntity;
 @DI(instance = Instance.Singleton)
 public class ActivitiesDao extends GenActivitiesDao {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(ActivitiesDao.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;

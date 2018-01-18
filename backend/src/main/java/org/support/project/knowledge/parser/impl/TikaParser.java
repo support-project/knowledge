@@ -3,6 +3,7 @@ package org.support.project.knowledge.parser.impl;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -21,7 +22,7 @@ import org.support.project.knowledge.vo.ParseResult;
 @DI(instance = Instance.Prototype)
 public class TikaParser implements Parser {
     /** ログ */
-    private static Log log = LogFactory.getLog(TikaParser.class);
+    private static Log log = LogFactory.getLog(MethodHandles.lookup());
 
     public static TikaParser get() {
         return Container.getComp(TikaParser.class);

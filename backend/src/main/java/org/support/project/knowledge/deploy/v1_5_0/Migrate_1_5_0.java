@@ -1,6 +1,7 @@
 package org.support.project.knowledge.deploy.v1_5_0;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.MessageDigest;
@@ -31,7 +32,7 @@ import org.support.project.web.entity.ProxyConfigsEntity;
 
 public class Migrate_1_5_0 implements Migrate {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(Migrate_1_5_0.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private static final String CIPHER_ALGORITHM = "AES";
 

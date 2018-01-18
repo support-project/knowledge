@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,7 +37,7 @@ public class SlideLogic {
     public static final long FILE_NO_ERROR_PARED = -2;
     
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(SlideLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
      * インスタンスを取得
      * @return

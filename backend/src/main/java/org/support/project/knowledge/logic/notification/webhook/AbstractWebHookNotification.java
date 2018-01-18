@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.notification.webhook;
 
+import java.lang.invoke.MethodHandles;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +37,7 @@ import com.google.gson.JsonPrimitive;
 @DI(instance = Instance.Prototype)
 public abstract class AbstractWebHookNotification {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AbstractWebHookNotification.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     protected boolean inited = false;
     

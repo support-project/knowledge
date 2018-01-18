@@ -2,6 +2,7 @@ package org.support.project.knowledge.websocket;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -28,7 +29,7 @@ import net.arnx.jsonic.JSONException;
 @ServerEndpoint(value = "/reindexing", configurator = EndpointConfigurator.class)
 public class ReindexingEndpoint {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(ReindexingEndpoint.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private Thread thread;
 

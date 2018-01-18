@@ -1,6 +1,7 @@
 package org.support.project.knowledge.deploy;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.TimeZone;
 
 import javax.servlet.ServletContextEvent;
@@ -19,7 +20,7 @@ import org.support.project.web.entity.SystemAttributesEntity;
 
 public class InitializationListener implements ServletContextListener {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(InitializationListener.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     @Override
     public void contextDestroyed(ServletContextEvent contextEvent) {

@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control.protect;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ import org.support.project.web.entity.SystemConfigsEntity;
 @DI(instance = Instance.Prototype)
 public class FileControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(FileControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private KnowledgeFilesDao filesDao = KnowledgeFilesDao.get();
     private UploadedFileLogic fileLogic = UploadedFileLogic.get();

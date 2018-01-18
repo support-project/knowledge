@@ -2,6 +2,7 @@ package org.support.project.knowledge.bat;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
@@ -17,7 +18,7 @@ import org.support.project.knowledge.parser.SlideShowParserFactory;
  */
 public class FileParse {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(FileParseBat.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     private static final String EXPORT_DIR = "/data/temp/slide/exports";
     private static final String FILE_PATH = "/data/temp/slide/hoge.pdf";

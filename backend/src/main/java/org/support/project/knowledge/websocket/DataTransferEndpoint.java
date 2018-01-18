@@ -2,6 +2,7 @@ package org.support.project.knowledge.websocket;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -32,7 +33,7 @@ import net.arnx.jsonic.JSONException;
 public class DataTransferEndpoint {
 
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(DataTransferEndpoint.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private Thread thread;
 

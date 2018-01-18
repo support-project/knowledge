@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.support.project.common.log.Log;
@@ -24,7 +25,7 @@ import net.arnx.jsonic.JSON;
 @DI(instance = Instance.Singleton)
 public class IndexLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(IndexLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static IndexLogic get() {
         return Container.getComp(IndexLogic.class);

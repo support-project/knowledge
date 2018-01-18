@@ -3,6 +3,7 @@ package org.support.project.knowledge.logic;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.invoke.MethodHandles;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -87,7 +88,7 @@ public class MailLogic {
     private static final String MAIL_ENCODE = "UTF-8";
 
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(MailLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     /** メールの状態：未送信（送信待ち） */
     public static final int MAIL_STATUS_UNSENT = 0;

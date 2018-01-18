@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.activity;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ import org.support.project.web.logic.DateConvertLogic;
 @DI(instance = Instance.Singleton)
 public class ActivityLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(ActivityLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static ActivityLogic get() {
         return Container.getComp(ActivityLogic.class);

@@ -3,6 +3,7 @@ package org.support.project.knowledge.control.open;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,7 @@ import org.support.project.web.exception.InvalidParamException;
 @DI(instance = Instance.Prototype)
 public class AccountControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AccountControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     public static final int PAGE_LIMIT = 50;
     /**

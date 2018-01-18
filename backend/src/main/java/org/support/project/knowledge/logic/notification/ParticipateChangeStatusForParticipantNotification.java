@@ -1,5 +1,7 @@
 package org.support.project.knowledge.logic.notification;
 
+import java.lang.invoke.MethodHandles;
+
 import org.support.project.common.config.Resources;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -27,7 +29,7 @@ import org.support.project.web.entity.UsersEntity;
 @DI(instance = Instance.Singleton)
 public class ParticipateChangeStatusForParticipantNotification extends AbstractParticipateNotification{
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(ParticipateChangeStatusForParticipantNotification.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** インスタンス取得 */
     public static ParticipateChangeStatusForParticipantNotification get() {
         return Container.getComp(ParticipateChangeStatusForParticipantNotification.class);

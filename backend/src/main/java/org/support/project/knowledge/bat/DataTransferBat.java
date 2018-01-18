@@ -1,5 +1,7 @@
 package org.support.project.knowledge.bat;
 
+import java.lang.invoke.MethodHandles;
+
 import org.apache.commons.lang.ClassUtils;
 import org.h2.tools.Server;
 import org.support.project.common.config.ConfigLoader;
@@ -12,7 +14,7 @@ import org.support.project.web.logic.DBConnenctionLogic;
 
 public class DataTransferBat extends AbstractBat implements Runnable {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(DataTransferBat.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private boolean runing = false;
     private boolean serverStarted = false;

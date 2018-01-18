@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.notification;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -16,7 +17,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 @DI(instance = Instance.Singleton)
 public class EventNotificationByDate extends AbstractEventNotification {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(EventNotificationByDate.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** インスタンス取得 */
     public static EventNotificationByDate get() {
         return Container.getComp(EventNotificationByDate.class);

@@ -1,5 +1,6 @@
 package org.support.project.knowledge.integration;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.junit.Assert;
@@ -31,7 +32,7 @@ import org.support.project.web.test.stub.StubHttpServletResponse;
  */
 public class IntegrationPostTest extends IntegrationCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(IntegrationPostTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     private static final String COMMENT_POST_USER = "integration-test-user-01";
     private static final String KNOWLEDGE_POST_USER = "integration-test-user-02";

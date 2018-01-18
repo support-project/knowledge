@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic.notification;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,7 +36,7 @@ import net.arnx.jsonic.JSON;
 @DI(instance = Instance.Singleton)
 public class AddUserNotification extends AbstractNotification {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(AddUserNotification.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** インスタンス取得 */
     public static AddUserNotification get() {
         return Container.getComp(AddUserNotification.class);

@@ -1,5 +1,6 @@
 package org.support.project.knowledge.control.admin;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import org.support.project.web.entity.ProxyConfigsEntity;
 @DI(instance = Instance.Prototype)
 public class ProxyControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(ProxyControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     private static final String NO_CHANGE_PASSWORD = "NO_CHANGE_PASSWORD-fXLSJ_V-ZJ2E-GHUuagFASR-gtaG"; // パスワードを更新しなかったことを表すパスワード
 

@@ -2,6 +2,7 @@ package org.support.project.knowledge.searcher.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,7 @@ import org.support.project.web.exception.InvalidParamException;
  */
 public class LuceneSearcher implements Searcher {
     /** ログ */
-    private static Log log = LogFactory.getLog(LuceneSearcher.class);
+    private static Log log = LogFactory.getLog(MethodHandles.lookup());
     /** 検索のリミット */
     public static final int CONTENTS_LIMIT_LENGTH = 200;
 

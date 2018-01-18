@@ -1,6 +1,7 @@
 package org.support.project.knowledge.listener;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -13,7 +14,7 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.config.AppConfig;
 
 public class GlobalInitializationListener implements ServletContextListener {
-    private static final Log LOG = LogFactory.getLog(GlobalInitializationListener.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     @Override
     public void contextInitialized(ServletContextEvent config) {

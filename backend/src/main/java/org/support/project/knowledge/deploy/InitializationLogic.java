@@ -1,5 +1,6 @@
 package org.support.project.knowledge.deploy;
 
+import java.lang.invoke.MethodHandles;
 import java.util.TimeZone;
 
 import org.support.project.common.exception.SystemException;
@@ -9,7 +10,7 @@ import org.support.project.di.Container;
 
 public class InitializationLogic {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(InitializationLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static InitializationLogic get() {
         return Container.getComp(InitializationLogic.class);

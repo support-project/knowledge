@@ -1,5 +1,6 @@
 package org.support.project.knowledge.integration;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import javax.mail.Address;
@@ -23,7 +24,7 @@ import org.support.project.web.test.stub.StubHttpServletRequest;
 
 public class IntegrationMailReadTest extends IntegrationCommon {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(IntegrationPostTest.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     private static final String CONFIG_USER = "CONFIG-USER";
     private static final String POST_USER = "POST-USER";

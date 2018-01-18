@@ -12,11 +12,12 @@ import org.support.project.common.log.LogFactory;
 
 import javax.servlet.ServletException;
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 
 public class Launch {
 
-    private static final Log LOG = LogFactory.getLog(Launch.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static final Optional<String> PORT = Optional.ofNullable(System.getenv("PORT"));
     public static final Optional<String> HOSTNAME = Optional.ofNullable(System.getenv("HOSTNAME"));

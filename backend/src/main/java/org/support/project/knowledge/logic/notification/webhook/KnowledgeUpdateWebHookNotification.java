@@ -3,6 +3,7 @@ package org.support.project.knowledge.logic.notification.webhook;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ import net.arnx.jsonic.JSON;
 @DI(instance = Instance.Prototype)
 public class KnowledgeUpdateWebHookNotification extends AbstractWebHookNotification {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(KnowledgeUpdateWebHookNotification.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     /** インスタンス取得 */
     public static KnowledgeUpdateWebHookNotification get() {

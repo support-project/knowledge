@@ -1,5 +1,6 @@
 package org.support.project.knowledge.logic;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.support.project.common.log.Log;
@@ -17,7 +18,7 @@ import org.support.project.knowledge.entity.TemplateMastersEntity;
 @DI(instance = Instance.Singleton)
 public class KnowledgeTemplateItemSelectLogic {
     /** LOG */
-    private static final Log LOG = LogFactory.getLog(KnowledgeTemplateItemSelectLogic.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** Get instance */
     public static KnowledgeTemplateItemSelectLogic get() {
         return Container.getComp(KnowledgeTemplateItemSelectLogic.class);

@@ -1,6 +1,7 @@
 package org.support.project.knowledge.control.protect;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ import net.arnx.jsonic.JSONException;
 @DI(instance = Instance.Prototype)
 public class SurveyControl extends TemplateControl {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(SurveyControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     
     /**

@@ -1,6 +1,7 @@
 package org.support.project.knowledge.control.admin;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ import net.arnx.jsonic.JSONException;
 @DI(instance = Instance.Prototype)
 public class MailhookControl extends Control {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(MailhookControl.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     
     private static final String NO_CHANGE_PASSWORD = "NO_CHANGE_PASSWORD-GUHO-UIG-ZJ2E-HishaihTHY-YIOHA"; // パスワードを更新しなかったことを表すパスワード
     

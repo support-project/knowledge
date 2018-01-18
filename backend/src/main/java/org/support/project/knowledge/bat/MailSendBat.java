@@ -1,6 +1,7 @@
 package org.support.project.knowledge.bat;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.invoke.MethodHandles;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -23,7 +24,7 @@ import org.support.project.web.dao.MailsDao;
  */
 public class MailSendBat extends AbstractBat {
     /** ログ */
-    private static final Log LOG = LogFactory.getLog(MailSendBat.class);
+    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
     public static void main(String[] args) throws Exception {
         try {
