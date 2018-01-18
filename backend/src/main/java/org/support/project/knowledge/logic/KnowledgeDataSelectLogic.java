@@ -33,6 +33,7 @@ import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.vo.KnowledgeDataInterface;
+import org.support.project.knowledge.vo.KnowledgeKeyInterface;
 import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
 import org.support.project.knowledge.vo.api.AttachedFile;
@@ -68,7 +69,7 @@ public class KnowledgeDataSelectLogic {
      * @param entity
      * @return
      */
-    private Knowledge conv(KnowledgesEntity entity, int type, Map<Integer, TemplateMastersEntity> typeMap) {
+    private Knowledge conv(KnowledgeDataInterface entity, int type, Map<Integer, TemplateMastersEntity> typeMap) {
         if (entity == null) {
             return null;
         }
@@ -157,7 +158,7 @@ public class KnowledgeDataSelectLogic {
      * @param entity
      * @return
      */
-    private List<AttachedFile> getAttachedFiles(KnowledgesEntity entity) {
+    private List<AttachedFile> getAttachedFiles(KnowledgeDataInterface entity) {
         List<AttachedFile> attachedFiles = new ArrayList<>();
         List<KnowledgeFilesEntity> filesEntities = KnowledgeFilesDao.get().selectOnKnowledgeId(entity.getKnowledgeId());
         for (KnowledgeFilesEntity knowledgeFilesEntity : filesEntities) {
@@ -172,7 +173,7 @@ public class KnowledgeDataSelectLogic {
      * @param entity
      * @return
      */
-    private List<Comment> getComments(KnowledgesEntity entity) {
+    private List<Comment> getComments(KnowledgeDataInterface entity) {
         List<Comment> comments = new ArrayList<>();
         List<CommentsEntity> commentsEntities = CommentsDao.get().selectOnKnowledgeId(entity.getKnowledgeId());
         for (CommentsEntity commentsEntity : commentsEntities) {
@@ -188,7 +189,7 @@ public class KnowledgeDataSelectLogic {
      * @param template
      * @return
      */
-    private List<LabelValue> getTemplateItems(KnowledgesEntity entity, TemplateMastersEntity template) {
+    private List<LabelValue> getTemplateItems(KnowledgeDataInterface entity, TemplateMastersEntity template) {
         List<TemplateItemsEntity> items = TemplateItemsDao.get().selectOnTypeId(template.getTypeId());
         List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(entity.getKnowledgeId());
         List<LabelValue> templateItems = new ArrayList<>();
@@ -210,7 +211,7 @@ public class KnowledgeDataSelectLogic {
      * @param entity
      * @return
      */
-    private Target getEditors(KnowledgesEntity entity) {
+    private Target getEditors(KnowledgeDataInterface entity) {
         Target editors = new Target();
         List<NameId> listGroups = new ArrayList<>();
         List<NameId> listUsers = new ArrayList<>();
@@ -234,7 +235,7 @@ public class KnowledgeDataSelectLogic {
      * @param entity
      * @return
      */
-    private Target getViewers(KnowledgesEntity entity) {
+    private Target getViewers(KnowledgeDataInterface entity) {
         Target viewers = new Target();
         if (entity.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
             List<NameId> groupViewers = new ArrayList<>();
@@ -267,6 +268,19 @@ public class KnowledgeDataSelectLogic {
      */
     public Knowledge select(long knowledgeId, LoginedUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
         KnowledgesEntity entity = KnowledgeLogic.get().selectWithTags(knowledgeId, loginedUser);
+        return conv(entity, loginedUser, parseMarkdown, sanitize);
+    }
+    
+    /**
+     * Knowledgeのデータを1件取得（WebAPIで返す形で）
+     * @param knowledgeId
+     * @param loginedUser
+     * @param parseMarkdown 
+     * @param sanitize 
+     * @return
+     * @throws ParseException 
+     */
+    public Knowledge conv(KnowledgeDataInterface entity, LoginedUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
         if (entity == null) {
             return null;
         }
@@ -285,7 +299,8 @@ public class KnowledgeDataSelectLogic {
             result.setContent(SanitizeMarkdownTextLogic.get().sanitize(result.getContent()));
         }
         return result;
-    }
+    }    
+    
     /**
      * Knowledgeのデータを取得（WebAPIで返す形で）
      * @param param
@@ -349,7 +364,7 @@ public class KnowledgeDataSelectLogic {
             knowledgeIds = ViewHistoriesDao.get().selectViewdKnowledgeIds(results, loginedUser.getUserId());
         }
         //N+1問題になるので、もっと良い方法は無いか検討
-        for (KnowledgeDataInterface knowledge : results) {
+        for (KnowledgeKeyInterface knowledge : results) {
             KnowledgeList v = new KnowledgeList();
             PropertyUtil.copyPropertyValue(knowledge, v);
             list.add(v);

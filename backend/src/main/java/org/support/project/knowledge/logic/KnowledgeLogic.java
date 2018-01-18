@@ -1610,4 +1610,11 @@ public class KnowledgeLogic {
         }
     }
 
+    public long draft(KnowledgeData knowledge, LoginedUser loginedUser) {
+        DraftKnowledgesEntity draft = new DraftKnowledgesEntity();
+        PropertyUtil.copyPropertyValue(knowledge.getKnowledge(), draft);
+        draft = draft(draft, knowledge.getTemplate(), knowledge.getFilesStrs(), loginedUser);
+        return 0;
+    }
+
 }

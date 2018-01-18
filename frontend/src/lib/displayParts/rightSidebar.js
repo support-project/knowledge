@@ -1,5 +1,4 @@
-import $ from 'jQuery'
-
+/* global $ */
 export default function (toggle) {
   if (toggle) {
     $('body').addClass('control-sidebar-open')

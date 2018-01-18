@@ -4,6 +4,7 @@
     "ArticleList": "Articles",
     "ArticleDetail": "Article",
     "ArticleEdit": "Edit Article",
+    "DraftList": "Drafts",
     "MoveOldUI": "Change to OLD UI",
     "TestViewTitle": "Page of Test",
     "TestViewDescription": "This page is test of frontend development"
@@ -57,6 +58,10 @@
     "BtnAttributes": "Toggle display attribute",
     "BtnCancel": "Cancel edit",
     "BtnRemove": "Remove this article"
+  },
+  "DraftList": {
+    "description": "list of draft",
+    "EmptyTitle": "Title is empty"
   },
   "ArticlePartsEmoji": {
     "Emoji": "Emoji"

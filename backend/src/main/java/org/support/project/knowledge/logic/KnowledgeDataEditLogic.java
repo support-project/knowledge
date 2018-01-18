@@ -208,6 +208,22 @@ public class KnowledgeDataEditLogic {
         KnowledgeLogic.get().delete(id);
         
     }
+    
+    /**
+     * 下書き保存
+     * @param data
+     * @param loginedUser
+     * @return
+     * @throws InvalidParamException
+     */
+    public long draftInsert(KnowledgeDetail data, LoginedUser loginedUser) throws InvalidParamException {
+        LOG.trace("insert");
+        // 画面での登録と形をあわせる
+        KnowledgeData knowledge = conv(data);
+        knowledge.getKnowledge().setKnowledgeId(null);
+        long draftId = KnowledgeLogic.get().draft(knowledge, loginedUser);
+        return draftId;
+    }
 
 
 

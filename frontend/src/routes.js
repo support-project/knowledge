@@ -6,6 +6,7 @@ import NotFoundView from './components/404.vue'
 import ArticleList from './components/views/Articles/ArticleList.vue'
 import ArticleDetail from './components/views/Articles/ArticleDetail.vue'
 import ArticleEdit from './components/views/Articles/ArticleEdit.vue'
+import DraftList from './components/views/Articles/DraftList.vue'
 
 import TestView from './components/views/Test.vue'
 
@@ -44,6 +45,10 @@ const routes = [
         path: 'articles/:id/edit',
         component: ArticleEdit,
         name: 'ArticleEdit'
+      }, {
+        path: 'drafts',
+        component: DraftList,
+        name: 'DraftList'
       }, {
         path: 'test',
         component: TestView,

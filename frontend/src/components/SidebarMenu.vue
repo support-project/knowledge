@@ -3,7 +3,7 @@
 
     <router-link tag="li" class="pageLink" to="/login" v-if="!user.userId">
       <a>
-        <i class="fa fa-sign-in text-green"></i>
+        <i class="fa fa-sign-in text-purple"></i>
         <span class="page"> Login {{ user.userId }}</span>
       </a>
     </router-link>
@@ -23,15 +23,15 @@
 
     <router-link tag="li" class="pageLink" to="/">
       <a>
-        <i class="fa fa-list text-blue"></i>
+        <i class="fa fa-list text-green"></i>
         <span class="page">{{ $t('Route.ArticleList') }}</span>
       </a>
     </router-link>
 
     <router-link tag="li" class="pageLink" to="/drafts">
       <a>
-        <i class="fa fa-list"></i>
-        <span class="page">下書き</span>
+        <i class="fa fa-list text-olive"></i>
+        <span class="page">{{ $t('Route.DraftList') }}</span>
       </a>
     </router-link>
     <router-link tag="li" class="pageLink" to="/stocks">

@@ -4,6 +4,7 @@
     "ArticleList": "記事一覧",
     "ArticleDetail": "記事表示",
     "ArticleEdit": "記事編集",
+    "DraftList": "下書き",
     "MoveOldUI": "旧い画面に戻す",
     "TestViewTitle": "テストページ",
     "TestViewDescription": "フロントエンド開発テストページ"
@@ -57,6 +58,10 @@
     "BtnAttributes": "属性表示の切り替え",
     "BtnCancel": "編集をやめて参照ページに戻る",
     "BtnRemove": "この記事を削除する"
+  },
+  "DraftList": {
+    "description": "下書き一覧",
+    "EmptyTitle": "タイトル未指定"
   },
   "ArticlePartsEmoji": {
     "Emoji": "絵文字"

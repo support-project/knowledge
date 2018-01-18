@@ -5,7 +5,7 @@
       {{article.insertUserName}}
     </a>
     -
-    <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>&nbsp;{{article.insertDatetime | moment}}
+    <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>&nbsp;{{article.insertDatetime | dispDate}}
     <span v-if="article.insertDatetime !== article.updateDatetime" class="update_info">
       <i class="fa fa-angle-double-right" aria-hidden="true"></i>
       <a :href="'open.account/info/' + article.updateUser" class="text-primary btn-link">
@@ -13,21 +13,15 @@
         {{article.updateUserName}}
       </a>
       -
-      <i class="fa fa-calendar-check-o" aria-hidden="true"></i>&nbsp;{{article.updateDatetime | moment}}
+      <i class="fa fa-calendar-check-o" aria-hidden="true"></i>&nbsp;{{article.updateDatetime | dispDate}}
     </span>
   </span>
 </template>
 
 <script>
-import moment from 'moment'
 export default {
   name: 'ArticlePartsEditor',
   props: ['article'],
-  filters: {
-    moment: function (date) {
-      return moment(date).format('YYYY/MM/DD HH:mm')
-    }
-  },
   mounted () {
     this.$nextTick(() => {
     })

@@ -22,6 +22,7 @@ export default {
     },
     comments: [],
     articles: [],
+    drafts: [],
     groups: [],
     tags: [],
     types: [],

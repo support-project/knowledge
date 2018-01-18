@@ -16,7 +16,7 @@
         <label v-if="resources.article.type">
           <input type="radio" name="type" :value="t.id" v-model="resources.article.type.id" v-on:change="changeType(t.id)">
           <i :class="'fa ' + t.icon" aria-hidden="true"></i>
-          {{ t.name | abbreviate}}
+          {{ t.name | abbreviate(25)}}
         </label>
       </div>
 
@@ -28,7 +28,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import lang from 'lang'
 import logger from 'logger'
 
 const LABEL = 'ArticleEditSidebar.vue'
@@ -40,11 +39,6 @@ export default {
       'pagestate',
       'resources'
     ])
-  },
-  filters: {
-    abbreviate: function (value) {
-      return lang.abbreviate(value, 25)
-    }
   },
   methods: {
     toggleAttributes () {

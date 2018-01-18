@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     getArticleList () {
-      console.log('getArticleList')
       this.$store.dispatch('getArticles')
       .then(() => {
         $('#loadingList').addClass('hide')

@@ -9,6 +9,9 @@ export default (state, resources) => {
   if ('articles' in resources) {
     state.resources.articles = resources.articles
   }
+  if ('drafts' in resources) {
+    state.resources.drafts = resources.drafts
+  }
   if ('comments' in resources) {
     state.resources.comments = resources.comments
   }

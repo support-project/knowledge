@@ -26,6 +26,9 @@ import AppView from './components/App.vue'
 
 import rightSidebar from './lib/displayParts/rightSidebar'
 
+import lang from 'lang'
+import moment from 'moment'
+
 var LABEL = 'main.js'
 
 var serverURI = $('base').attr('href')
@@ -35,6 +38,16 @@ Vue.filter('count', count)
 Vue.filter('domain', domain)
 Vue.filter('prettyDate', prettyDate)
 Vue.filter('pluralize', pluralize)
+Vue.filter('abbreviate', function (value, len) {
+  return lang.abbreviate(value, len)
+})
+Vue.filter('dispDate', function (date, format) {
+  var f = 'YYYY/MM/DD HH:mm'
+  if (format) {
+    f = format
+  }
+  return moment(date).format(f)
+})
 
 Vue.use(VueRouter)
 
