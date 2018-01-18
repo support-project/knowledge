@@ -12,7 +12,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.bat.FileParseBat;
 import org.support.project.knowledge.dao.gen.GenKnowledgeFilesDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 /**
  * 添付ファイル
@@ -84,7 +84,7 @@ public class KnowledgeFilesDao extends GenKnowledgeFilesDao {
      * @param loginedUser
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void connectKnowledge(Long fileNo, Long knowledgeId, Long commentNo, LoginedUser loginedUser) {
+    public void connectKnowledge(Long fileNo, Long knowledgeId, Long commentNo, AccessUser loginedUser) {
         StringBuilder sql = new StringBuilder();
         sql.append("UPDATE KNOWLEDGE_FILES ");
         sql.append("SET KNOWLEDGE_ID = ?, UPDATE_USER = ?, UPDATE_DATETIME = ?, COMMENT_NO = ? ");

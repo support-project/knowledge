@@ -14,7 +14,7 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.SystemConfig;
 import org.support.project.knowledge.entity.MailLocaleTemplatesEntity;
 import org.support.project.knowledge.logic.MailLogic;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.config.WebConfig;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
@@ -110,7 +110,7 @@ public class AddUserNotification extends AbstractNotification {
     }
     
     @Override
-    public void convNotification(NotificationsEntity notificationsEntity, LoginedUser loginedUser, TARGET target) {
+    public void convNotification(NotificationsEntity notificationsEntity, AccessUser loginedUser, TARGET target) {
         UsersEntity user = JSON.decode(notificationsEntity.getContent(), UsersEntity.class);
         MailLocaleTemplatesEntity template = MailLogic.get().load(loginedUser.getLocale(), notificationsEntity.getTitle());
         

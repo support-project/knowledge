@@ -8,7 +8,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.TagsEntity;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.entity.GroupsEntity;
 
 @DI(instance = Instance.Singleton)
@@ -26,7 +26,7 @@ public class TagLogic {
      * @param pageLimit
      * @return
      */
-    public List<TagsEntity> selectTagsWithCount(LoginedUser loginedUser, int offset, int limit) {
+    public List<TagsEntity> selectTagsWithCount(AccessUser loginedUser, int offset, int limit) {
         int userid = Integer.MIN_VALUE;
         if (loginedUser != null) {
             userid = loginedUser.getUserId();

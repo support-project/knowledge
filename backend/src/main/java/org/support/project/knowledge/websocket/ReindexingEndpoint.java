@@ -19,7 +19,7 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.bat.ReIndexingBat;
 import org.support.project.knowledge.config.AppConfig;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.websocket.EndpointConfigurator;
 
@@ -36,7 +36,7 @@ public class ReindexingEndpoint {
     @OnOpen
     public void onOpen(Session session) throws IOException {
         if (session.getUserProperties().containsKey(EndpointConfigurator.LOCALE_KEY)) {
-            LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
+            AccessUser loginuser = (AccessUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
             if (!loginuser.isAdmin()) {
                 // 管理者以外はアクセス出来ない
                 session.close();

@@ -16,7 +16,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.UserGroupsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
@@ -38,7 +38,7 @@ public class TargetLogic {
         return Container.getComp(TargetLogic.class);
     }
 
-    public List<LabelValue> selectOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {
+    public List<LabelValue> selectOnKeyword(String keyword, AccessUser loginedUser, int offset, int limit) {
         LOG.trace("call selectOnKeyword");
         TargetsDao targetDao = TargetsDao.get();
         List<LabelValue> list = targetDao.selectOnKeyword(keyword, offset, limit);
@@ -89,7 +89,7 @@ public class TargetLogic {
         return results;
     }
     
-    public List<LabelValue> selectUsersOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {
+    public List<LabelValue> selectUsersOnKeyword(String keyword, AccessUser loginedUser, int offset, int limit) {
         UsersDao usersDao = UsersDao.get();
         List<UsersEntity> users = usersDao.selectOnKeyword(offset, limit, keyword);
         List<LabelValue> list = new ArrayList<>();
@@ -101,7 +101,7 @@ public class TargetLogic {
         }
         return list;
     }
-    public List<LabelValue> selectGroupsOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {
+    public List<LabelValue> selectGroupsOnKeyword(String keyword, AccessUser loginedUser, int offset, int limit) {
         List<GroupsEntity> groups = ExGroupsDao.get().selectOnKeyword(keyword, loginedUser, offset, limit);
         List<LabelValue> list = new ArrayList<>();
         for (GroupsEntity group : groups) {
@@ -146,7 +146,7 @@ public class TargetLogic {
      * @param loginedUser
      * @return
      */
-    public Map<Long, List<LabelValue>> selectTargetsOnKnowledgeIds(List<Long> knowledgeIds, LoginedUser loginedUser) {
+    public Map<Long, List<LabelValue>> selectTargetsOnKnowledgeIds(List<Long> knowledgeIds, AccessUser loginedUser) {
         Map<Long, List<LabelValue>> results = new HashMap<Long, List<LabelValue>>();
         if (loginedUser == null || knowledgeIds.isEmpty()) {
             return results;
@@ -247,7 +247,7 @@ public class TargetLogic {
      * @param loginedUser
      * @return
      */
-    public List<LabelValue> selectTargetsViewOnKnowledgeId(Long knowledgeId, LoginedUser loginedUser) {
+    public List<LabelValue> selectTargetsViewOnKnowledgeId(Long knowledgeId, AccessUser loginedUser) {
         TargetsDao targetsDao = TargetsDao.get();
         List<GroupsEntity> groups = targetsDao.selectGroupsOnKnowledgeId(knowledgeId);
         List<UsersEntity> users = targetsDao.selectUsersOnKnowledgeId(knowledgeId);
@@ -262,7 +262,7 @@ public class TargetLogic {
      * @param loginedUser
      * @return
      */
-    public List<LabelValue> selectEditorsViewOnKnowledgeId(Long knowledgeId, LoginedUser loginedUser) {
+    public List<LabelValue> selectEditorsViewOnKnowledgeId(Long knowledgeId, AccessUser loginedUser) {
         TargetsDao targetsDao = TargetsDao.get();
         List<GroupsEntity> groups = targetsDao.selectEditorGroupsOnKnowledgeId(knowledgeId);
         List<UsersEntity> users = targetsDao.selectEditorUsersOnKnowledgeId(knowledgeId);
@@ -278,7 +278,7 @@ public class TargetLogic {
      * @param loginedUser
      * @return
      */
-    public List<LabelValue> filterTargetLabel(List<GroupsEntity> groups, List<UsersEntity> users, LoginedUser loginedUser) {
+    public List<LabelValue> filterTargetLabel(List<GroupsEntity> groups, List<UsersEntity> users, AccessUser loginedUser) {
         List<LabelValue> results = new ArrayList<>();
         List<Integer> groupIds = new ArrayList<Integer>();
 

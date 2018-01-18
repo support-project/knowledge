@@ -24,7 +24,7 @@ import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.dao.AccountImagesDao;
 import org.support.project.knowledge.entity.AccountImagesEntity;
 import org.support.project.knowledge.vo.UploadFile;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.ConfirmMailChangesDao;
 import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.RolesDao;
@@ -95,7 +95,7 @@ public class AccountLogic {
      * @throws IOException
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public UploadFile saveIconImage(byte[] img, LoginedUser loginedUser, String context) throws IOException {
+    public UploadFile saveIconImage(byte[] img, AccessUser loginedUser, String context) throws IOException {
         LOG.trace("saveFile()");
         AccountImagesDao dao = AccountImagesDao.get();
         AccountImagesEntity entity = dao.selectOnUserId(loginedUser.getUserId());
@@ -158,7 +158,7 @@ public class AccountLogic {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<ValidateError> saveChangeEmailRequest(String changeEmail, LoginedUser loginedUser) {
+    public List<ValidateError> saveChangeEmailRequest(String changeEmail, AccessUser loginedUser) {
         List<ValidateError> errors = new ArrayList<ValidateError>();
         Validator validator = ValidatorFactory.getInstance(Validator.REQUIRED);
         ValidateError error = validator.validate(changeEmail, "E-Mail");
@@ -218,7 +218,7 @@ public class AccountLogic {
      * @param loginedUser
      * @return
      */
-    public List<ValidateError> completeChangeEmailRequest(String id, LoginedUser loginedUser) {
+    public List<ValidateError> completeChangeEmailRequest(String id, AccessUser loginedUser) {
         List<ValidateError> errors = new ArrayList<ValidateError>();
         ConfirmMailChangesDao mailChangesDao = ConfirmMailChangesDao.get();
         ConfirmMailChangesEntity mailChangesEntity = mailChangesDao.selectOnKey(id);
@@ -262,14 +262,14 @@ public class AccountLogic {
      * @param userKey
      * @return
      */
-    public LoginedUser createLoginUser(String userKey) {
+    public AccessUser createLoginUser(String userKey) {
         UsersDao usersDao = UsersDao.get();
         UsersEntity usersEntity = usersDao.selectOnUserKey(userKey);
         RolesDao rolesDao = RolesDao.get();
         List<RolesEntity> rolesEntities = rolesDao.selectOnUserKey(userKey);
 
-        LoginedUser loginedUser = new LoginedUser();
-        loginedUser.setLoginUser(usersEntity);
+        AccessUser loginedUser = new AccessUser();
+        loginedUser.setUserInfomation(usersEntity);
         loginedUser.setRoles(rolesEntities);
         loginedUser.setLocale(usersEntity.getLocale());
 

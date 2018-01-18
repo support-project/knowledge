@@ -26,7 +26,7 @@ public class PostDraftApiControl extends ApiControl {
      * @throws Exception 
      */
     @Post(path="_api/drafts", checkCookieToken=false, checkHeaderToken=true)
-    public Boundary article() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         try {
             KnowledgeDetail data = getJsonObject(KnowledgeDetail.class);

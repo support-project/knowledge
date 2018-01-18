@@ -11,7 +11,7 @@ import javax.websocket.Session;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.knowledge.logic.notification.DesktopNotification;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.websocket.EndpointConfigurator;
 
@@ -47,13 +47,13 @@ public class SessionObserver implements Observer {
 
             Locale locale = Locale.getDefault();
             Map<String, Object> prop = session.getUserProperties();
-            LoginedUser loginuser = null;
+            AccessUser loginuser = null;
             if (prop != null) {
                 if (prop.containsKey(EndpointConfigurator.LOCALE_KEY)) {
                     locale = (Locale) prop.get(EndpointConfigurator.LOCALE_KEY);
                 }
                 if (prop.containsKey(EndpointConfigurator.LOCALE_KEY)) {
-                    loginuser = (LoginedUser) prop.get(EndpointConfigurator.LOGIN_USER_KEY);
+                    loginuser = (AccessUser) prop.get(EndpointConfigurator.LOGIN_USER_KEY);
                 }
             }
 

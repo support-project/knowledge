@@ -25,7 +25,7 @@ public class GetTargetListApiControl extends ApiControl {
      */
     @Get(path="_api/targets")
     @Open
-    public Boundary articles() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("call _api/targets");
         String keyword = super.getParam("keyword");
         ApiParams apiParams = super.getCommonApiParams();

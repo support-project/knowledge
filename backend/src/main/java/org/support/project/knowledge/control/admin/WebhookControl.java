@@ -110,6 +110,8 @@ public class WebhookControl extends Control {
             return config();
         }
 
+        //TODO テストの場合も、カスタマイズを有効にする
+        
         try {
             InputStream is = getClass().getResourceAsStream(webhookConfig.resourcePath());
             BufferedReader br = new BufferedReader(new InputStreamReader(is));

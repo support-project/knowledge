@@ -27,7 +27,7 @@ public class PutArticleApiControl extends ApiControl {
      * @throws Exception 
      */
     @Put(path="_api/articles/:id", checkCookieToken=false, checkHeaderToken=true)
-    public Boundary article() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         try {
             String id = getAttributeByString("id"); // パスの :id は attribute にセットしている

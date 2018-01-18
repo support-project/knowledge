@@ -27,7 +27,7 @@ public class GetArticleListApiControl extends ApiControl {
      */
     @Get(path="_api/articles")
     @Open
-    public Boundary articles() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         SearchKnowledgeParam param = new SearchKnowledgeParam();
         param.setLimit(getParamInt("limit", 50, 50));

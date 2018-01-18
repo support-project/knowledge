@@ -25,7 +25,7 @@ public class GetGroupListApiControl extends ApiControl {
      */
     @Get(path="_api/groups")
     @Open
-    public Boundary articles() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("call _api/groups");
         String keyword = super.getParam("keyword");
         ApiParams apiParams = super.getCommonApiParams();

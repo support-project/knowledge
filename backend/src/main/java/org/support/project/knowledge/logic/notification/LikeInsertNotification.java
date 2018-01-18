@@ -31,7 +31,7 @@ import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
 import org.support.project.knowledge.logic.notification.webhook.KnowledgeLikedWebHookNotification;
 import org.support.project.knowledge.vo.notification.LikeInsert;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
@@ -215,7 +215,7 @@ public class LikeInsertNotification extends AbstractQueueNotification implements
     
 
     @Override
-    public void convNotification(NotificationsEntity notificationsEntity, LoginedUser loginedUser, TARGET target) {
+    public void convNotification(NotificationsEntity notificationsEntity, AccessUser loginedUser, TARGET target) {
         LikeInsert info = JSON.decode(notificationsEntity.getContent(), LikeInsert.class);
         MailLocaleTemplatesEntity template = MailLogic.get().load(loginedUser.getLocale(), notificationsEntity.getTitle());
         
@@ -241,7 +241,7 @@ public class LikeInsertNotification extends AbstractQueueNotification implements
         }
     }
     @Override
-    public MessageResult getMessage(LoginedUser loginuser, Locale locale) {
+    public MessageResult getMessage(AccessUser loginuser, Locale locale) {
         NotifyConfigsDao dao = NotifyConfigsDao.get();
         NotifyConfigsEntity entity = dao.selectOnKey(loginuser.getUserId());
         if (!NotifyLogic.get().flagCheck(entity.getNotifyDesktop())) {

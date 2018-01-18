@@ -1,6 +1,6 @@
 package org.support.project.knowledge.logic.notification;
 
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.entity.NotificationsEntity;
 
 public interface Notification {
@@ -14,5 +14,5 @@ public interface Notification {
      * @param loginedUser
      * @param target
      */
-    void convNotification(NotificationsEntity notificationsEntity, LoginedUser loginedUser, TARGET target);
+    void convNotification(NotificationsEntity notificationsEntity, AccessUser loginedUser, TARGET target);
 }

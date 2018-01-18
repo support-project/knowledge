@@ -29,7 +29,7 @@ import org.support.project.knowledge.logic.notification.ParticipateForSponsorNot
 import org.support.project.knowledge.logic.notification.ParticipateRemoveForSponsorNotification;
 import org.support.project.knowledge.vo.Participation;
 import org.support.project.knowledge.vo.Participations;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 @DI(instance = Instance.Singleton)
 public class EventsLogic {
@@ -70,7 +70,7 @@ public class EventsLogic {
         }
     }
     
-    public List<EventsEntity> eventList(String date, String timezone, LoginedUser loginedUser) throws ParseException {
+    public List<EventsEntity> eventList(String date, String timezone, AccessUser loginedUser) throws ParseException {
         DateFormat monthformat = new SimpleDateFormat("yyyyMM");
         Date d = monthformat.parse(date);
         TimeZone tz = TimeZone.getTimeZone(timezone);
@@ -93,7 +93,7 @@ public class EventsLogic {
         return EventsDao.get().selectAccessAbleEvents(start, end, loginedUser);
     }
 
-    public List<KnowledgesEntity> eventKnowledgeList(String date, String timezone, LoginedUser loginedUser) throws ParseException {
+    public List<KnowledgesEntity> eventKnowledgeList(String date, String timezone, AccessUser loginedUser) throws ParseException {
         DateFormat format = new SimpleDateFormat("yyyyMMdd");
         Date d = format.parse(date);
         TimeZone tz = TimeZone.getTimeZone(timezone);

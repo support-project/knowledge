@@ -8,7 +8,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.vo.api.GroupDetail;
 import org.support.project.ormapping.common.SQLManager;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.entity.GroupsEntity;
 
@@ -43,7 +43,7 @@ public class ExGroupsDao extends GroupsDao {
      */
     @Override
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<GroupsEntity> selectMyGroup(LoginedUser loginedUser, int offset, int limit) {
+    public List<GroupsEntity> selectMyGroup(AccessUser loginedUser, int offset, int limit) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExGroupsDao/ExGroupsDao_selectMyGroup.sql");
         return executeQueryList(sql, GroupsEntity.class, loginedUser.getUserId(), limit, offset);
     }
@@ -59,7 +59,7 @@ public class ExGroupsDao extends GroupsDao {
      */
     @Override
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<GroupsEntity> selectAccessAbleGroups(LoginedUser loginedUser, int offset, int limit) {
+    public List<GroupsEntity> selectAccessAbleGroups(AccessUser loginedUser, int offset, int limit) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExGroupsDao/ExGroupsDao_selectAccessAbleGroups.sql");
         return executeQueryList(sql, GroupsEntity.class, loginedUser.getUserId(), limit, offset);
     }
@@ -75,7 +75,7 @@ public class ExGroupsDao extends GroupsDao {
      */
     @Override
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<GroupsEntity> selectOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {
+    public List<GroupsEntity> selectOnKeyword(String keyword, AccessUser loginedUser, int offset, int limit) {
         if (loginedUser != null && loginedUser.isAdmin()) {
             String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/ExGroupsDao/ExGroupsDao_selectAdminOnKeyword.sql");
             return executeQueryList(sql, GroupsEntity.class, keyword, limit, offset);

@@ -19,7 +19,7 @@ import org.support.project.knowledge.logic.KnowledgeAuthenticationLogic;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.notification.AcceptCheckUserNotification;
 import org.support.project.knowledge.logic.notification.AddUserNotification;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
@@ -158,7 +158,7 @@ public class SignupControl extends Control {
         AddUserNotification.get().sendNotifyAddUser(user);
 
         // ログイン処理
-        AuthenticationLogic<LoginedUser> logic = Container.getComp(KnowledgeAuthenticationLogic.class);
+        AuthenticationLogic<AccessUser> logic = Container.getComp(KnowledgeAuthenticationLogic.class);
         logic.setSession(user.getUserKey(), getRequest(), getResponse());
     }
 
@@ -224,7 +224,7 @@ public class SignupControl extends Control {
             AddUserNotification.get().sendNotifyAddUser(user);
         }
         // ログイン処理
-        AuthenticationLogic<LoginedUser> logic = Container.getComp(KnowledgeAuthenticationLogic.class);
+        AuthenticationLogic<AccessUser> logic = Container.getComp(KnowledgeAuthenticationLogic.class);
         logic.setSession(entity.getUserKey(), getRequest(), getResponse());
 
         addMsgInfo("knowledge.signup.done");

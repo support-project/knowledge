@@ -24,7 +24,7 @@ import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
 import org.support.project.knowledge.vo.notification.EventInformation;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.NotificationsDao;
 import org.support.project.web.dao.UsersDao;
@@ -183,7 +183,7 @@ public abstract class AbstractEventNotification extends AbstractNotification imp
     
     
     @Override
-    public void convNotification(NotificationsEntity notificationsEntity, LoginedUser loginedUser, TARGET target) {
+    public void convNotification(NotificationsEntity notificationsEntity, AccessUser loginedUser, TARGET target) {
         String category = notificationsEntity.getTitle();
         EventInformation knowledge = JSON.decode(notificationsEntity.getContent(), EventInformation.class);
         MailLocaleTemplatesEntity template = MailLogic.get().load(loginedUser.getLocale(), category);
@@ -259,7 +259,7 @@ public abstract class AbstractEventNotification extends AbstractNotification imp
             contents = contents.replace("{URL}", NotifyLogic.get().makeURL(knowledge.getKnowledgeId()));
             contents = contents.replace("{Status}", statusLabel);
             contents = contents.replace("{Timing}", timingLabel);
-            contents = contents.replace("{UserName}", loginedUser.getLoginUser().getUserName());
+            contents = contents.replace("{UserName}", loginedUser.getUserInfomation().getUserName());
             notificationsEntity.setContent(contents);
         }
     }

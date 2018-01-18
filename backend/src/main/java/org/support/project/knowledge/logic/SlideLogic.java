@@ -29,7 +29,7 @@ import org.support.project.knowledge.parser.SlideShowParser;
 import org.support.project.knowledge.parser.SlideShowParserFactory;
 import org.support.project.knowledge.vo.SlideInfo;
 import org.support.project.web.bean.DownloadInfo;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 @DI(instance = Instance.Singleton)
 public class SlideLogic {
@@ -125,7 +125,7 @@ public class SlideLogic {
      * @param loginedUser
      * @return
      */
-    public SlideInfo getSlideInfo(String fileNo, LoginedUser loginedUser) {
+    public SlideInfo getSlideInfo(String fileNo, AccessUser loginedUser) {
         SlideInfo slideInfo = new SlideInfo();
         
         KnowledgeFilesEntity entity = KnowledgeFilesDao.get().selectOnKeyWithoutBinary(new Long(fileNo));
@@ -198,7 +198,7 @@ public class SlideLogic {
      * @return
      * @throws FileNotFoundException
      */
-    public DownloadInfo getSlideImage(String fileNo, String slideImage, LoginedUser loginedUser) throws FileNotFoundException {
+    public DownloadInfo getSlideImage(String fileNo, String slideImage, AccessUser loginedUser) throws FileNotFoundException {
         if (FILE_NO_NOT_PARSED != new Long(fileNo).longValue() 
                 && FILE_NO_ERROR_PARED != new Long(fileNo).longValue()) {
             KnowledgeFilesEntity entity = KnowledgeFilesDao.get().selectOnKeyWithoutBinary(new Long(fileNo));

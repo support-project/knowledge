@@ -17,7 +17,7 @@ import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.StringList;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
@@ -288,7 +288,7 @@ public class GroupControl extends Control {
             userGroupsDao.physicalDelete(userGroupsEntity);
         }
         // 所属追加したのでグループから削除
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         List<GroupsEntity> groups = loginedUser.getGroups();
         for (GroupsEntity groupsEntity : groups) {
             if (groupsEntity.equalsOnKey(group)) {
@@ -323,7 +323,7 @@ public class GroupControl extends Control {
             userGroupsDao.save(userGroupsEntity);
         }
         // 所属追加したのでグループにセット
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         loginedUser.getGroups().add(group);
 
         addMsgSuccess("message.success.insert");
@@ -481,7 +481,7 @@ public class GroupControl extends Control {
         int limit = 10;
         String keyword = super.getParam("keyword");
         Integer offset = super.getPathInteger(0);
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
 
         List<GroupsEntity> groups = new ArrayList<GroupsEntity>();
         if (loginedUser == null) {

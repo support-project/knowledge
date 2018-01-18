@@ -35,7 +35,7 @@ import org.support.project.knowledge.entity.ViewHistoriesEntity;
 import org.support.project.knowledge.logic.activity.Activity;
 import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.ormapping.config.Order;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.UserConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.UsersEntity;
@@ -191,13 +191,13 @@ public class AggregateLogic {
                 LOG.debug("    comment [" + item.getCommentNo() + "] is not found. so skip add point by comment like.");
                 continue;
             }
-            LoginedUser user = new LoginedUser();
+            AccessUser user = new AccessUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
                 LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by comment like.");
                 continue;
             }
-            user.setLoginUser(account);
+            user.setUserInfomation(account);
             LOG.debug("    comment [" + item.getCommentNo() + "], knowledge [ " + comment.getKnowledgeId() + "]");
             ActivityLogic.get().processActivity(Activity.COMMENT_LIKE, user, item.getInsertDatetime(), comment);
         }
@@ -223,13 +223,13 @@ public class AggregateLogic {
         List<CommentsEntity> list;
         list = CommentsDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (CommentsEntity item : list) {
-            LoginedUser user = new LoginedUser();
+            AccessUser user = new AccessUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
                 LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by comment insert.");
                 continue;
             }
-            user.setLoginUser(account);
+            user.setUserInfomation(account);
             LOG.debug("    comment [" + item.getCommentNo() + "], knowledge [ " + item.getKnowledgeId() + "]");
             ActivityLogic.get().processActivity(Activity.COMMENT_INSERT, user, item.getInsertDatetime(), item);
         }
@@ -260,13 +260,13 @@ public class AggregateLogic {
                 LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge event.");
                 continue;
             }
-            LoginedUser user = new LoginedUser();
+            AccessUser user = new AccessUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
                 LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge event.");
                 continue;
             }
-            user.setLoginUser(account);
+            user.setUserInfomation(account);
             LOG.debug("    knowledge [" + knowledge.getKnowledgeId() + "] ");
             ActivityLogic.get().processActivity(Activity.KNOWLEDGE_EVENT_ADD, user, item.getInsertDatetime(), knowledge);
         }
@@ -298,13 +298,13 @@ public class AggregateLogic {
                 LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge survey answer.");
                 continue;
             }
-            LoginedUser user = new LoginedUser();
+            AccessUser user = new AccessUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
                 LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge survey answer.");
                 continue;
             }
-            user.setLoginUser(account);
+            user.setUserInfomation(account);
             LOG.debug("    knowledge [" + knowledge.getKnowledgeId() + "] ");
             ActivityLogic.get().processActivity(Activity.KNOWLEDGE_ANSWER, user, item.getInsertDatetime(), knowledge);
         }
@@ -336,13 +336,13 @@ public class AggregateLogic {
                 LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge stock.");
                 continue;
             }
-            LoginedUser user = new LoginedUser();
+            AccessUser user = new AccessUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
                 LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge stock.");
                 continue;
             }
-            user.setLoginUser(account);
+            user.setUserInfomation(account);
             LOG.debug("    knowledge [" + knowledge.getKnowledgeId() + "] ");
             ActivityLogic.get().processActivity(Activity.KNOWLEDGE_STOCK, user, item.getInsertDatetime(), knowledge);
         }
@@ -373,13 +373,13 @@ public class AggregateLogic {
                 LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge like.");
                 continue;
             }
-            LoginedUser user = new LoginedUser();
+            AccessUser user = new AccessUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
                 LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge like.");
                 continue;
             }
-            user.setLoginUser(account);
+            user.setUserInfomation(account);
             LOG.debug("    knowledge [" + knowledge.getKnowledgeId() + "] ");
             ActivityLogic.get().processActivity(Activity.KNOWLEDGE_LIKE, user, item.getInsertDatetime(), knowledge);
         }
@@ -410,13 +410,13 @@ public class AggregateLogic {
                 LOG.debug("    knowledge [" + item.getKnowledgeId() + "] is not found. so skip add point by knowledge show.");
                 continue;
             }
-            LoginedUser user = new LoginedUser();
+            AccessUser user = new AccessUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
                 LOG.debug("    event user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge show.");
                 continue;
             }
-            user.setLoginUser(account);
+            user.setUserInfomation(account);
             LOG.debug("    knowledge [" + knowledge.getKnowledgeId() + "] ");
             ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, user, item.getInsertDatetime(), knowledge);
         }
@@ -442,13 +442,13 @@ public class AggregateLogic {
         List<KnowledgesEntity> knowledges;
         knowledges = KnowledgesDao.get().selectAllWidthPager(limit, offset, Order.ASC);
         for (KnowledgesEntity item : knowledges) {
-            LoginedUser user = new LoginedUser();
+            AccessUser user = new AccessUser();
             UsersEntity account = UsersDao.get().selectOnKey(item.getInsertUser());
             if (account == null) {
                 LOG.debug("    insert user [" + item.getInsertUser() + "] is not found. so skip add point by knowledge insert.");
                 continue;
             }
-            user.setLoginUser(account);
+            user.setUserInfomation(account);
             LOG.debug("    knowledge [" + item.getKnowledgeId() + "] ");
             ActivityLogic.get().processKnowledgeSaveActivity(user, item.getInsertDatetime(), item);
         }

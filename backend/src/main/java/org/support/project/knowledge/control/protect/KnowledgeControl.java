@@ -45,8 +45,8 @@ import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.Stock;
 import org.support.project.knowledge.vo.UploadFile;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.HttpMethod;
@@ -155,7 +155,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             super.setDraftInfo(draft);
         } else {
             // 編集権限チェック
-            LoginedUser loginedUser = super.getLoginedUser();
+            AccessUser loginedUser = super.getLoginedUser();
 
             // ナレッジに紐づく添付ファイルを取得
             List<UploadFile> files = fileLogic.selectOnKnowledgeIdWithoutCommentFiles(knowledgeId, getRequest().getContextPath());
@@ -531,7 +531,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         // }
 
         // 権限チェック（コメントの編集は、システム管理者 or コメントの登録者 or ナレッジ編集者
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         if (loginedUser == null) {
             // ログインしていないユーザに編集権限は無し
             return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
@@ -608,7 +608,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
         }
         // 権限チェック（コメントの編集は、システム管理者 or コメントの登録者 or ナレッジの編集可能ユーザ
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         if (loginedUser == null) {
             // ログインしていないユーザに編集権限は無し
             return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
@@ -654,7 +654,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND");
         }
         // 権限チェック（コメントの削除は、システム管理者 or コメントの登録者 or ナレッジの編集可能ユーザ
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         if (loginedUser == null) {
             // ログインしていないユーザに編集権限は無し
             return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
@@ -751,7 +751,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         CommentsEntity db = commentsDao.selectOnKey(commentNo);
 
         // 権限チェック（コメントの編集は、システム管理者 or コメントの登録者 or ナレッジ編集者
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         if (loginedUser == null) {
             // ログインしていないユーザに編集権限は無し
             return sendError(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");

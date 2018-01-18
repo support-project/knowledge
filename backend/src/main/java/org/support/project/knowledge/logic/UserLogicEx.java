@@ -7,7 +7,7 @@ import java.util.Locale;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.config.CommonWebParameter;
 import org.support.project.web.config.RoleType;
 import org.support.project.web.entity.RolesEntity;
@@ -38,8 +38,8 @@ public class UserLogicEx extends org.support.project.web.logic.UserLogic {
      * バッチなどで、管理者権限として動作させたい場合に、管理者ユーザのオブジェクトを取得する
      * @return
      */
-    public LoginedUser getAdminUser() {
-        LoginedUser admin = new LoginedUser();
+    public AccessUser getAdminUser() {
+        AccessUser admin = new AccessUser();
         List<RolesEntity> roles = new ArrayList<>();
         RolesEntity role = new RolesEntity(RoleType.admin.ordinal());
         role.setRoleKey(CommonWebParameter.ROLE_ADMIN);

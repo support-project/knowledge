@@ -19,7 +19,7 @@ import org.support.project.knowledge.logic.MailhookLogic;
 import org.support.project.knowledge.stub.mail.StubAddress;
 import org.support.project.knowledge.stub.mail.StubMessage;
 import org.support.project.knowledge.vo.api.Knowledge;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.test.stub.StubHttpServletRequest;
 
 public class IntegrationMailReadTest extends IntegrationCommon {
@@ -41,7 +41,7 @@ public class IntegrationMailReadTest extends IntegrationCommon {
         addUser(CONFIG_USER);
         addUser(POST_USER);
         addUser(COMMENT_USER);
-        LoginedUser user = super.getLoginUser(CONFIG_USER);
+        AccessUser user = super.getLoginUser(CONFIG_USER);
         
         // メールから投稿設定
         MailHookConditionsEntity condition = new MailHookConditionsEntity();
@@ -63,10 +63,10 @@ public class IntegrationMailReadTest extends IntegrationCommon {
     @Test
     @Order(order = 100)
     public void testPostFromMail() throws Exception {
-        LoginedUser user = super.getLoginUser(POST_USER);
+        AccessUser user = super.getLoginUser(POST_USER);
         List<MailHookConditionsEntity> conditions = MailHookConditionsDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
         StubMessage msg = new StubMessage();
-        Address[] addresses = {new StubAddress(user.getLoginUser().getMailAddress())};
+        Address[] addresses = {new StubAddress(user.getUserInfomation().getMailAddress())};
         msg.addFrom(addresses);
         Address[] recipients = {new StubAddress("to@example.com")};
         msg.setAllRecipients(recipients);
@@ -82,7 +82,7 @@ public class IntegrationMailReadTest extends IntegrationCommon {
     @Test
     @Order(order = 101)
     public void testViewAfterPost() throws Exception {
-        LoginedUser user = super.getLoginUser(POST_USER);
+        AccessUser user = super.getLoginUser(POST_USER);
         Knowledge result = knowledgeGetOnAPI(POST_USER, 1);
         Assert.assertEquals((long) 1, result.getKnowledgeId().longValue());
         Assert.assertEquals("[メールからの投稿] タイトル", result.getTitle());
@@ -119,10 +119,10 @@ public class IntegrationMailReadTest extends IntegrationCommon {
     @Test
     @Order(order = 200)
     public void testCommentFromMail() throws Exception {
-        LoginedUser user = super.getLoginUser(COMMENT_USER);
+        AccessUser user = super.getLoginUser(COMMENT_USER);
         List<MailHookConditionsEntity> conditions = MailHookConditionsDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
         StubMessage msg = new StubMessage();
-        Address[] addresses = {new StubAddress(user.getLoginUser().getMailAddress())};
+        Address[] addresses = {new StubAddress(user.getUserInfomation().getMailAddress())};
         msg.addFrom(addresses);
         Address[] recipients = {new StubAddress("to@example.com")};
         msg.setAllRecipients(recipients);
@@ -144,7 +144,7 @@ public class IntegrationMailReadTest extends IntegrationCommon {
         Assert.assertEquals("[メールからの投稿] タイトル", result.getTitle());
         Assert.assertEquals("投稿の本文になる", result.getContent());
         
-        LoginedUser user = super.getLoginUser(POST_USER); // 作成者チェック
+        AccessUser user = super.getLoginUser(POST_USER); // 作成者チェック
         Assert.assertEquals(user.getUserId(), result.getInsertUser());
         
         StubHttpServletRequest request = openKnowledge(POST_USER, 1);
@@ -183,7 +183,7 @@ public class IntegrationMailReadTest extends IntegrationCommon {
         // テストユーザ追加
         addUser(CONFIG_USER);
         addUser(POST_USER);
-        LoginedUser user = super.getLoginUser(CONFIG_USER);
+        AccessUser user = super.getLoginUser(CONFIG_USER);
         
         // メールから投稿設定（受信メールアドレスの一部で）
         MailHookConditionsEntity condition = new MailHookConditionsEntity();
@@ -201,7 +201,7 @@ public class IntegrationMailReadTest extends IntegrationCommon {
         user = super.getLoginUser(POST_USER);
         List<MailHookConditionsEntity> conditions = MailHookConditionsDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
         StubMessage msg = new StubMessage();
-        Address[] addresses = {new StubAddress(user.getLoginUser().getMailAddress())};
+        Address[] addresses = {new StubAddress(user.getUserInfomation().getMailAddress())};
         msg.addFrom(addresses);
         Address[] recipients = {new StubAddress("hoge@example.com")};
         msg.setAllRecipients(recipients);
@@ -218,7 +218,7 @@ public class IntegrationMailReadTest extends IntegrationCommon {
         user = super.getLoginUser(POST_USER);
         conditions = MailHookConditionsDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
         msg = new StubMessage();
-        addresses[0] = new StubAddress(user.getLoginUser().getMailAddress());
+        addresses[0] = new StubAddress(user.getUserInfomation().getMailAddress());
         msg.addFrom(addresses);
         recipients[0] = new StubAddress("hoge_info@example.com");
         msg.setAllRecipients(recipients);
@@ -245,7 +245,7 @@ public class IntegrationMailReadTest extends IntegrationCommon {
         // テストユーザ追加
         addUser(CONFIG_USER);
         addUser(POST_USER);
-        LoginedUser user = super.getLoginUser(CONFIG_USER);
+        AccessUser user = super.getLoginUser(CONFIG_USER);
         
         // メールから投稿設定（受信メールアドレスの一部で）
         MailHookConditionsEntity condition = new MailHookConditionsEntity();
@@ -263,7 +263,7 @@ public class IntegrationMailReadTest extends IntegrationCommon {
         user = super.getLoginUser(POST_USER);
         List<MailHookConditionsEntity> conditions = MailHookConditionsDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
         StubMessage msg = new StubMessage();
-        Address[] addresses = {new StubAddress(user.getLoginUser().getMailAddress())};
+        Address[] addresses = {new StubAddress(user.getUserInfomation().getMailAddress())};
         msg.addFrom(addresses);
         Address[] recipients = {new StubAddress("hoge@example.com")};
         msg.setAllRecipients(recipients);
@@ -280,7 +280,7 @@ public class IntegrationMailReadTest extends IntegrationCommon {
         user = super.getLoginUser(POST_USER);
         conditions = MailHookConditionsDao.get().selectOnHookId(MailhookLogic.MAIL_HOOK_ID);
         msg = new StubMessage();
-        addresses[0] = new StubAddress(user.getLoginUser().getMailAddress());
+        addresses[0] = new StubAddress(user.getUserInfomation().getMailAddress());
         msg.addFrom(addresses);
         recipients[0] = new StubAddress("hoge_info@example.com");
         msg.setAllRecipients(recipients);

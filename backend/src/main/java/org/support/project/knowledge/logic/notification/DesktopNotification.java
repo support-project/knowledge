@@ -2,7 +2,7 @@ package org.support.project.knowledge.logic.notification;
 
 import java.util.Locale;
 
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 
 public interface DesktopNotification {
@@ -13,5 +13,5 @@ public interface DesktopNotification {
      * @param locale
      * @return
      */
-    MessageResult getMessage(LoginedUser loginuser, Locale locale);
+    MessageResult getMessage(AccessUser loginuser, Locale locale);
 }

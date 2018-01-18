@@ -11,7 +11,7 @@ import org.support.project.knowledge.logic.KnowledgeAuthenticationLogic;
 import org.support.project.knowledge.vo.api.Auth;
 import org.support.project.knowledge.vo.api.AuthResult;
 import org.support.project.knowledge.vo.api.User;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.JsonBoundary;
 import org.support.project.web.common.HttpStatus;
@@ -32,7 +32,7 @@ public class AuthApiControl extends ApiControl {
     @Post(path="open/token", subscribeToken="")
     public JsonBoundary token() throws InterruptedException, InvalidParamException {
         Auth auth = parseJson(Auth.class);
-        AuthenticationLogic<LoginedUser> authenticationLogic = Container.getComp(KnowledgeAuthenticationLogic.class);
+        AuthenticationLogic<AccessUser> authenticationLogic = Container.getComp(KnowledgeAuthenticationLogic.class);
         int userId = authenticationLogic.auth(auth.getId(), auth.getPassword());
         if (userId >= 0) {
             // Token 登録

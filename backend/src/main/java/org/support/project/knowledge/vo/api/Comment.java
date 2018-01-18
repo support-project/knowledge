@@ -1,6 +1,8 @@
 package org.support.project.knowledge.vo.api;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Comment {
     /** コメント番号 */
@@ -19,6 +21,10 @@ public class Comment {
     private Integer updateUser;
     /** 更新日時 */
     private Timestamp updateDatetime;
+    
+    /** 添付ファイル */
+    private List<AttachedFile> attachments = new ArrayList<>();
+    
     /**
      * @return the commentNo
      */
@@ -114,6 +120,12 @@ public class Comment {
      */
     public void setUpdateDatetime(Timestamp updateDatetime) {
         this.updateDatetime = updateDatetime;
+    }
+    public List<AttachedFile> getAttachments() {
+        return attachments;
+    }
+    public void setAttachments(List<AttachedFile> attachments) {
+        this.attachments = attachments;
     }
 
     

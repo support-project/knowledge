@@ -19,7 +19,7 @@ public class GetDraftListApiControl extends ApiControl {
      * @throws Exception 
      */
     @Get(path="_api/drafts")
-    public Boundary articles() throws Exception {
+    public Boundary execute() throws Exception {
         ApiParams apiParams = super.getCommonApiParams();
         int limit = apiParams.getLimit();
         int offset = apiParams.getOffset();

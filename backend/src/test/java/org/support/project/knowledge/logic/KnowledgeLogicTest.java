@@ -50,8 +50,8 @@ public class KnowledgeLogicTest extends TestCommon {
         KnowledgesEntity saved = KnowledgesDao.get().selectOnKey(entity.getKnowledgeId());
         eqdb(entity, saved);
 
-        entity.setInsertUserName(loginedUser.getLoginUser().getUserName());
-        entity.setUpdateUserName(loginedUser.getLoginUser().getUserName());
+        entity.setInsertUserName(loginedUser.getUserInfomation().getUserName());
+        entity.setUpdateUserName(loginedUser.getUserInfomation().getUserName());
         saved = KnowledgesDao.get().selectOnKeyWithUserName(entity.getKnowledgeId());
         eqdb(entity, saved);
         entity.setLikeCount((long) 0);
@@ -84,8 +84,8 @@ public class KnowledgeLogicTest extends TestCommon {
         logic.update(data, loginedUser2);
 
         saved = KnowledgesDao.get().selectOnKeyWithUserName(entity.getKnowledgeId());
-        entity.setInsertUserName(loginedUser2.getLoginUser().getUserName());
-        entity.setUpdateUserName(loginedUser2.getLoginUser().getUserName());
+        entity.setInsertUserName(loginedUser2.getUserInfomation().getUserName());
+        entity.setUpdateUserName(loginedUser2.getUserInfomation().getUserName());
         eqdb(entity, saved);
         entity.setLikeCount((long) 0);
         list.add(entity);

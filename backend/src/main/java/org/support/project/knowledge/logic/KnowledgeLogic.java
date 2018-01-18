@@ -69,7 +69,7 @@ import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.AuthenticateException;
@@ -186,7 +186,7 @@ public class KnowledgeLogic {
      * @throws Exception Exception
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity insert(KnowledgeData data, LoginedUser loginedUser) throws Exception {
+    public KnowledgesEntity insert(KnowledgeData data, AccessUser loginedUser) throws Exception {
         List<BeforeSaveHook> beforeSaveHooks = HookFactory.getBeforeSaveHookInstance(data, null);
         for (BeforeSaveHook beforeSaveHook : beforeSaveHooks) {
             beforeSaveHook.beforeSave(data, null, loginedUser);
@@ -237,7 +237,7 @@ public class KnowledgeLogic {
      * @throws Exception Exception
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity update(KnowledgeData data, LoginedUser loginedUser) throws Exception {
+    public KnowledgesEntity update(KnowledgeData data, AccessUser loginedUser) throws Exception {
         // 更新前の情報を保持
         KnowledgesEntity db = knowledgesDao.selectOnKey(data.getKnowledge().getKnowledgeId());
         List<BeforeSaveHook> beforeSaveHooks = HookFactory.getBeforeSaveHookInstance(data, db);
@@ -322,7 +322,7 @@ public class KnowledgeLogic {
      * @param loginedUser
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private void saveTemplateItemValue(Long knowledgeId, TemplateMastersEntity template, LoginedUser loginedUser) {
+    private void saveTemplateItemValue(Long knowledgeId, TemplateMastersEntity template, AccessUser loginedUser) {
         if (template == null) {
             return;
         }
@@ -380,7 +380,7 @@ public class KnowledgeLogic {
      * @param loginedUser
      * @param editors
      */
-    private void saveEditorsUser(KnowledgesEntity entity, LoginedUser loginedUser, List<LabelValue> editors) {
+    private void saveEditorsUser(KnowledgesEntity entity, AccessUser loginedUser, List<LabelValue> editors) {
         KnowledgeEditUsersDao editUsersDao = KnowledgeEditUsersDao.get();
         KnowledgeEditGroupsDao editGroupsDao = KnowledgeEditGroupsDao.get();
 
@@ -415,11 +415,11 @@ public class KnowledgeLogic {
      * @param loginedUser
      * @param targets
      */
-    private void saveAccessUser(KnowledgesEntity entity, LoginedUser loginedUser, List<LabelValue> targets) {
+    private void saveAccessUser(KnowledgesEntity entity, AccessUser loginedUser, List<LabelValue> targets) {
         // ナレッジにアクセス可能なユーザに、自分自身をセット
         KnowledgeUsersEntity knowledgeUsersEntity = new KnowledgeUsersEntity();
         knowledgeUsersEntity.setKnowledgeId(entity.getKnowledgeId());
-        knowledgeUsersEntity.setUserId(loginedUser.getLoginUser().getUserId());
+        knowledgeUsersEntity.setUserId(loginedUser.getUserInfomation().getUserId());
         knowledgeUsersDao.insert(knowledgeUsersEntity);
         if (entity.getPublicFlag() == null || PUBLIC_FLAG_PUBLIC == entity.getPublicFlag()) {
             // 全て公開する情報
@@ -539,7 +539,7 @@ public class KnowledgeLogic {
      * @throws Exception
      */
     public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
-            List<UsersEntity> creators, String[] templates, LoginedUser loginedUser,
+            List<UsersEntity> creators, String[] templates, AccessUser loginedUser,
             Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setKeyword(keyword);
@@ -599,7 +599,7 @@ public class KnowledgeLogic {
         // 管理者じゃなければ自身が参加してる公開記事、自身の記事、グループの記事を条件に追加する
         if (!loginedUser.isAdmin()) {
             searchingValue.addUser(ALL_USER);
-            searchingValue.addUser(loginedUser.getLoginUser().getUserId());
+            searchingValue.addUser(loginedUser.getUserInfomation().getUserId());
 
             List<GroupsEntity> logiedUserGroups = loginedUser.getGroups();
             if (logiedUserGroups != null && !logiedUserGroups.isEmpty()) {
@@ -622,7 +622,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> searchKnowledge(String keyword, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public List<KnowledgesEntity> searchKnowledge(String keyword, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
         return searchKnowledge(keyword, null, null, null, null, loginedUser, offset, limit);
     }
 
@@ -636,7 +636,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> showKnowledgeOnTag(String tag, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public List<KnowledgesEntity> showKnowledgeOnTag(String tag, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setOffset(offset);
         searchingValue.setLimit(limit);
@@ -647,7 +647,7 @@ public class KnowledgeLogic {
         } else {
             searchingValue.addUser(ALL_USER);
             if (loginedUser != null) {
-                Integer userId = loginedUser.getLoginUser().getUserId();
+                Integer userId = loginedUser.getUserInfomation().getUserId();
                 searchingValue.addUser(userId);
 
                 List<GroupsEntity> groups = loginedUser.getGroups();
@@ -676,7 +676,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> showKnowledgeOnGroup(String group, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public List<KnowledgesEntity> showKnowledgeOnGroup(String group, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
         List<KnowledgesEntity> knowledges = new ArrayList<KnowledgesEntity>();
         if (loginedUser == null) {
             return knowledges;
@@ -713,7 +713,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> showKnowledgeOnUser(int targetUser, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public List<KnowledgesEntity> showKnowledgeOnUser(int targetUser, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setOffset(offset);
         searchingValue.setLimit(limit);
@@ -724,7 +724,7 @@ public class KnowledgeLogic {
         } else {
             searchingValue.addUser(ALL_USER);
             if (loginedUser != null) {
-                Integer userId = loginedUser.getLoginUser().getUserId();
+                Integer userId = loginedUser.getUserInfomation().getUserId();
                 searchingValue.addUser(userId);
 
                 List<GroupsEntity> groups = loginedUser.getGroups();
@@ -904,7 +904,7 @@ public class KnowledgeLogic {
     /**
      * ナレッジの情報を取得 取得する際にタグ情報も取得
      */
-    public KnowledgesEntity selectWithTags(Long knowledgeId, LoginedUser loginedUser) {
+    public KnowledgesEntity selectWithTags(Long knowledgeId, AccessUser loginedUser) {
         KnowledgesEntity entity = select(knowledgeId, loginedUser);
         if (entity != null) {
             // タグをセット
@@ -920,7 +920,7 @@ public class KnowledgeLogic {
      * @param loginedUser
      * @return
      */
-    public KnowledgesEntity select(Long knowledgeId, LoginedUser loginedUser) {
+    public KnowledgesEntity select(Long knowledgeId, AccessUser loginedUser) {
         KnowledgesDao dao = Container.getComp(KnowledgesDao.class);
         KnowledgesEntity entity = dao.selectOnKeyWithUserName(knowledgeId);
         if (entity == null) {
@@ -932,7 +932,7 @@ public class KnowledgeLogic {
         }
         Integer userId = Integer.MIN_VALUE;
         if (loginedUser != null) {
-            userId = loginedUser.getLoginUser().getUserId();
+            userId = loginedUser.getUserInfomation().getUserId();
         }
         if (entity.getInsertUser().intValue() == userId.intValue()) {
             // 作成者ならば、アクセス可能
@@ -995,7 +995,7 @@ public class KnowledgeLogic {
      * @param loginedUser
      * @return
      */
-    public List<KnowledgesEntity> getKnowledges(List<String> ids, LoginedUser loginedUser) {
+    public List<KnowledgesEntity> getKnowledges(List<String> ids, AccessUser loginedUser) {
         List<Long> knowledgeIds = new ArrayList<>();
         for (String string : ids) {
             if (StringUtils.isLong(string)) {
@@ -1112,7 +1112,7 @@ public class KnowledgeLogic {
      * @param loginedUser
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void addViewHistory(Long knowledgeId, LoginedUser loginedUser) {
+    public void addViewHistory(Long knowledgeId, AccessUser loginedUser) {
         ViewHistoriesDao historiesDao = ViewHistoriesDao.get();
         ViewHistoriesEntity historiesEntity = new ViewHistoriesEntity();
         historiesEntity.setKnowledgeId(knowledgeId);
@@ -1188,7 +1188,7 @@ public class KnowledgeLogic {
      * @param fileNos
      * @throws Exception
      */
-    public CommentsEntity saveComment(Long knowledgeId, String comment, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
+    public CommentsEntity saveComment(Long knowledgeId, String comment, List<Long> fileNos, AccessUser loginedUser) throws Exception {
         CommentsDao commentsDao = CommentsDao.get();
         CommentsEntity commentsEntity = new CommentsEntity();
         commentsEntity.setKnowledgeId(knowledgeId);
@@ -1220,7 +1220,7 @@ public class KnowledgeLogic {
      * @param loginedUser
      * @throws Exception
      */
-    public void updateComment(CommentsEntity commentsEntity, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
+    public void updateComment(CommentsEntity commentsEntity, List<Long> fileNos, AccessUser loginedUser) throws Exception {
         CommentsDao commentsDao = CommentsDao.get();
         CommentsEntity updatedCommentsEntity = commentsDao.update(commentsEntity);
         // 一覧表示用の情報を更新
@@ -1255,7 +1255,7 @@ public class KnowledgeLogic {
      * @param loginedUser
      * @throws Exception
      */
-    public void deleteComment(CommentsEntity commentsEntity, LoginedUser loginedUser) throws Exception {
+    public void deleteComment(CommentsEntity commentsEntity, AccessUser loginedUser) throws Exception {
         deleteComment(commentsEntity);
         // 一覧表示用の情報を更新
         KnowledgeLogic.get().updateKnowledgeExInfo(commentsEntity.getKnowledgeId());
@@ -1359,7 +1359,7 @@ public class KnowledgeLogic {
      * @param knowledgeId
      * @return
      */
-    public boolean isEditor(LoginedUser loginedUser, Long knowledgeId) {
+    public boolean isEditor(AccessUser loginedUser, Long knowledgeId) {
         if (loginedUser.isAdmin()) {
             return true;
         }
@@ -1380,7 +1380,7 @@ public class KnowledgeLogic {
      * @param editors
      * @return
      */
-    public boolean isEditor(LoginedUser loginedUser, KnowledgesEntity entity, List<LabelValue> editors) {
+    public boolean isEditor(AccessUser loginedUser, KnowledgesEntity entity, List<LabelValue> editors) {
         if (loginedUser == null) {
             // ログインしていないユーザに編集権限は無し
             return false;
@@ -1426,7 +1426,7 @@ public class KnowledgeLogic {
      * @param loginedUser
      * @return
      */
-    public List<KnowledgesEntity> getPopularityKnowledges(LoginedUser loginedUser, int offset, int limit) {
+    public List<KnowledgesEntity> getPopularityKnowledges(AccessUser loginedUser, int offset, int limit) {
         long now = DateUtils.now().getTime();
         LOG.trace(now);
 
@@ -1459,7 +1459,7 @@ public class KnowledgeLogic {
      * @param stockid
      * @return
      */
-    public List<KnowledgesEntity> getStocks(LoginedUser loginedUser, int offset, int limit, Long stockid) {
+    public List<KnowledgesEntity> getStocks(AccessUser loginedUser, int offset, int limit, Long stockid) {
         return KnowledgesDao.get().selectStocks(loginedUser, offset, limit, stockid);
     }
     /**
@@ -1468,7 +1468,7 @@ public class KnowledgeLogic {
      * @param loginedUser
      * @return
      */
-    public List<StockKnowledge> setStockInfo(List<KnowledgesEntity> knowledges, LoginedUser loginedUser) {
+    public List<StockKnowledge> setStockInfo(List<KnowledgesEntity> knowledges, AccessUser loginedUser) {
         List<StockKnowledge> list = new ArrayList<>();
         //N+1問題になるので、もっと良い方法は無いか検討
         for (KnowledgesEntity knowledgesEntity : knowledges) {
@@ -1491,7 +1491,7 @@ public class KnowledgeLogic {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public DraftKnowledgesEntity draft(DraftKnowledgesEntity draft, TemplateMastersEntity template, String[] files, LoginedUser loginedUser) {
+    public DraftKnowledgesEntity draft(DraftKnowledgesEntity draft, TemplateMastersEntity template, String[] files, AccessUser loginedUser) {
         if (draft.getKnowledgeId() != null && draft.getKnowledgeId() > 0) {
             // 権限チェック
             KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKey(draft.getKnowledgeId());
@@ -1555,7 +1555,7 @@ public class KnowledgeLogic {
      * @param loginedUser
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void removeDraft(Long draftId, LoginedUser loginedUser) {
+    public void removeDraft(Long draftId, AccessUser loginedUser) {
         DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKey(draftId);
         if (draft == null) {
             // 既に削除済
@@ -1577,7 +1577,7 @@ public class KnowledgeLogic {
      * @param loginedUser
      * @return
      */
-    public List<KnowledgesEntity> selectAccessAbleKnowledge(String q, LoginedUser loginedUser) {
+    public List<KnowledgesEntity> selectAccessAbleKnowledge(String q, AccessUser loginedUser) {
         int limit = 5;
         int offset = 0;
         if (loginedUser.isAdmin()) {
@@ -1591,7 +1591,7 @@ public class KnowledgeLogic {
      * @param stocks
      * @param loginedUser
      */
-    public void setViewed(List<StockKnowledge> stocks, LoginedUser loginedUser) {
+    public void setViewed(List<StockKnowledge> stocks, AccessUser loginedUser) {
         if (stocks == null) {
             return;
         }
@@ -1610,7 +1610,7 @@ public class KnowledgeLogic {
         }
     }
 
-    public long draft(KnowledgeData knowledge, LoginedUser loginedUser) {
+    public long draft(KnowledgeData knowledge, AccessUser loginedUser) {
         DraftKnowledgesEntity draft = new DraftKnowledgesEntity();
         PropertyUtil.copyPropertyValue(knowledge.getKnowledge(), draft);
         draft = draft(draft, knowledge.getTemplate(), knowledge.getFilesStrs(), loginedUser);

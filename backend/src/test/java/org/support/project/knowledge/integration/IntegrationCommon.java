@@ -33,7 +33,7 @@ import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.vo.ActivityHistory;
 import org.support.project.knowledge.vo.LikeCount;
 import org.support.project.knowledge.vo.api.Knowledge;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.bean.Msg;
 import org.support.project.web.bean.NameId;
@@ -187,7 +187,7 @@ public abstract class IntegrationCommon extends TestCommon {
      * @throws Exception
      */
     protected void assertCP(String userKey, long cp) throws Exception {
-        LoginedUser user = super.getLoginUser(userKey);
+        AccessUser user = super.getLoginUser(userKey);
         
         StubHttpServletRequest request = new StubHttpServletRequest();
         StubHttpServletResponse response = new StubHttpServletResponse(request);
@@ -610,7 +610,7 @@ public abstract class IntegrationCommon extends TestCommon {
         DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
         auth.setSession(userKey, request, response);
         
-        LoginedUser user = getLoginUser(userKey);
+        AccessUser user = getLoginUser(userKey);
         request.setServletPath("open.account/activity/" + user.getUserId());
         request.setMethod("get");
         JsonBoundary jsonBoundary = invoke(request, response, JsonBoundary.class);

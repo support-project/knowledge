@@ -25,7 +25,7 @@ public class GetDraftOneApiControl extends ApiControl {
      * @throws Exception 
      */
     @Get(path="_api/drafts/:id")
-    public Boundary article() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         String id = super.getParam("id");
         LOG.debug(id);

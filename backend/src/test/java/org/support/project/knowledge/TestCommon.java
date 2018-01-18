@@ -45,7 +45,7 @@ import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.ormapping.common.IDGen;
 import org.support.project.ormapping.connection.ConnectionManager;
 import org.support.project.ormapping.tool.config.ORmappingToolConfig;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.dao.RolesDao;
 import org.support.project.web.dao.UserGroupsDao;
@@ -72,20 +72,20 @@ public abstract class TestCommon {
     public static final String KNOWLEDGE_TEST_HOME = "KNOWLEDGE_TEST_HOME";
     public static final String KNOWLEDGE_UNIT_TEST_WAIT_MILL = "KNOWLEDGE_UNIT_TEST_WAIT_MILL";
     /** login user for test */
-    public static LoginedUser loginedUser = null;
+    public static AccessUser loginedUser = null;
     /** login user for test */
-    public static LoginedUser loginedUser2 = null;
+    public static AccessUser loginedUser2 = null;
     /** login user for test */
-    public static LoginedUser loginedUser3 = null;
+    public static AccessUser loginedUser3 = null;
     /** login user for test */
-    public static LoginedUser loginedAdmin = null;
+    public static AccessUser loginedAdmin = null;
     
     /** group for test */
     public static GroupsEntity group = null;
     /** login user for test */
-    public static LoginedUser groupuser1 = null;
+    public static AccessUser groupuser1 = null;
     /** login user for test */
-    public static LoginedUser groupuser2 = null;
+    public static AccessUser groupuser2 = null;
     
     @Rule
     public TestWatcher watchman = new TestWatcher();
@@ -152,12 +152,12 @@ public abstract class TestCommon {
      */
     public static void initData() throws Exception {
         LOG.info("init data");
-        loginedUser = new LoginedUser();
-        loginedUser2 = new LoginedUser();
-        loginedUser3 = new LoginedUser();
-        loginedAdmin = new LoginedUser();
-        groupuser1 = new LoginedUser();
-        groupuser2 = new LoginedUser();
+        loginedUser = new AccessUser();
+        loginedUser2 = new AccessUser();
+        loginedUser3 = new AccessUser();
+        loginedAdmin = new AccessUser();
+        groupuser1 = new AccessUser();
+        groupuser2 = new AccessUser();
         
         loginedUser.setLocale(Locale.ENGLISH);
         loginedUser2.setLocale(Locale.ENGLISH);
@@ -239,7 +239,7 @@ public abstract class TestCommon {
      * @param roleIds
      * @return
      */
-    private static List<RolesEntity> addUser(LoginedUser user, String userName, Integer[] roleIds) {
+    private static List<RolesEntity> addUser(AccessUser user, String userName, Integer[] roleIds) {
         synchronized (user) {
             try {
                 Thread.sleep(WAIT_MILLSEC);
@@ -253,7 +253,7 @@ public abstract class TestCommon {
         entity.setPassword(RandomUtil.randamGen(64));
         entity.setMailAddress("sample@example.com");
         entity = UsersDao.get().insert(entity);
-        user.setLoginUser(entity);
+        user.setUserInfomation(entity);
 
         synchronized (user) {
             try {
@@ -286,16 +286,16 @@ public abstract class TestCommon {
      * @return
      * @throws Exception
      */
-    protected KnowledgesEntity insertKnowledge(String title, LoginedUser loginedUser) throws Exception {
+    protected KnowledgesEntity insertKnowledge(String title, AccessUser loginedUser) throws Exception {
         int publicFlag = KnowledgeLogic.PUBLIC_FLAG_PUBLIC;
         int typeId = TemplateLogic.TYPE_ID_KNOWLEDGE;
         return insertKnowledge(title, loginedUser, typeId, publicFlag);
     }
-    protected KnowledgesEntity insertKnowledge(String title, LoginedUser loginedUser, int typeId, int publicFlag) throws Exception {
+    protected KnowledgesEntity insertKnowledge(String title, AccessUser loginedUser, int typeId, int publicFlag) throws Exception {
         String viewersStr = "";
         return insertKnowledge(title, loginedUser, typeId, publicFlag, viewersStr);
     }
-    protected KnowledgesEntity insertKnowledge(String title, LoginedUser loginedUser, int typeId, int publicFlag, String viewersStr) throws Exception {
+    protected KnowledgesEntity insertKnowledge(String title, AccessUser loginedUser, int typeId, int publicFlag, String viewersStr) throws Exception {
         KnowledgesEntity entity = new KnowledgesEntity();
         entity.setTitle(title);
         entity.setContent("contens of " + title);
@@ -365,14 +365,14 @@ public abstract class TestCommon {
      * @param userKey
      * @return
      */
-    protected LoginedUser getLoginUser(String userKey) {
+    protected AccessUser getLoginUser(String userKey) {
         UsersDao usersDao = UsersDao.get();
         UsersEntity usersEntity = usersDao.selectOnUserKey(userKey);
         RolesDao rolesDao = RolesDao.get();
         List<RolesEntity> rolesEntities = rolesDao.selectOnUserKey(userKey);
 
-        LoginedUser loginedUser = new LoginedUser();
-        loginedUser.setLoginUser(usersEntity);
+        AccessUser loginedUser = new AccessUser();
+        loginedUser.setUserInfomation(usersEntity);
         loginedUser.setRoles(rolesEntities);
         loginedUser.setLocale(usersEntity.getLocale());
 

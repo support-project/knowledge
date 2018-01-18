@@ -19,7 +19,7 @@ import org.support.project.knowledge.logic.notification.ParticipateChangeStatusF
 import org.support.project.knowledge.logic.notification.ParticipateForParticipantNotification;
 import org.support.project.knowledge.logic.notification.ParticipateForSponsorNotification;
 import org.support.project.knowledge.logic.notification.ParticipateRemoveForSponsorNotification;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.NotificationsDao;
 import org.support.project.web.dao.UserNotificationsDao;
 import org.support.project.web.entity.NotificationsEntity;
@@ -74,7 +74,7 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
     }
     
     
-    public List<NotificationsEntity> getNotification(LoginedUser loginedUser, int offset, boolean all) {
+    public List<NotificationsEntity> getNotification(AccessUser loginedUser, int offset, boolean all) {
         List<NotificationsEntity> notifications = super.getNotification(loginedUser.getUserId(), offset, all);
         for (Iterator<NotificationsEntity> iterator = notifications.iterator(); iterator.hasNext();) {
             NotificationsEntity notificationsEntity = (NotificationsEntity) iterator.next();
@@ -95,7 +95,7 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
      * @param loginedUser
      * @return
      */
-    public NotificationsEntity load(long no, LoginedUser loginedUser) {
+    public NotificationsEntity load(long no, AccessUser loginedUser) {
         UserNotificationsEntity userNotification = UserNotificationsDao.get().selectOnKey(no, loginedUser.getUserId());
         if (userNotification == null) {
             return null;
@@ -109,7 +109,7 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
         return notificationsEntity;
     }
     
-    public NotificationsEntity previous(long no, LoginedUser loginedUser, boolean all) {
+    public NotificationsEntity previous(long no, AccessUser loginedUser, boolean all) {
         if (loginedUser == null) {
             return null;
         }
@@ -121,7 +121,7 @@ public class NotificationLogic extends org.support.project.web.logic.Notificatio
         notification.convNotification(notificationsEntity, loginedUser, TARGET.detail);
         return notificationsEntity;
     }
-    public NotificationsEntity next(long no, LoginedUser loginedUser, boolean all) {
+    public NotificationsEntity next(long no, AccessUser loginedUser, boolean all) {
         if (loginedUser == null) {
             return null;
         }

@@ -3,7 +3,7 @@ package org.support.project.knowledge.logic.hook;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.vo.KnowledgeData;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 @DI(instance=Instance.Singleton)
 public interface AfterSaveHook {
@@ -14,5 +14,5 @@ public interface AfterSaveHook {
      * @return
      * @throws Exception
      */
-    void afterSave(KnowledgeData knowledgeData, LoginedUser loginedUser) throws Exception;
+    void afterSave(KnowledgeData knowledgeData, AccessUser loginedUser) throws Exception;
 }

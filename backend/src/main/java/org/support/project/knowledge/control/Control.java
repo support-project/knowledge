@@ -22,7 +22,7 @@ import org.support.project.knowledge.config.UserConfig;
 import org.support.project.knowledge.dao.NotifyConfigsDao;
 import org.support.project.knowledge.entity.NotifyConfigsEntity;
 import org.support.project.knowledge.vo.UserConfigs;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.common.HttpUtil;
 import org.support.project.web.logic.DateConvertLogic;
@@ -197,7 +197,7 @@ public abstract class Control extends org.support.project.web.control.Control {
         if (userConfigs == null) {
             userConfigs = new UserConfigs();
         }
-        LoginedUser login = getLoginedUser();
+        AccessUser login = getLoginedUser();
         if (login != null) {
             userConfigs.setLocale(login.getLocale());
         } else {

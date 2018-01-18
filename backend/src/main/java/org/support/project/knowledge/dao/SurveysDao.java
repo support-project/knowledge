@@ -10,7 +10,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenSurveysDao;
 import org.support.project.knowledge.entity.SurveysEntity;
 import org.support.project.ormapping.common.SQLManager;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.entity.GroupsEntity;
 
 /**
@@ -52,7 +52,7 @@ public class SurveysDao extends GenSurveysDao {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<SurveysEntity> selectWithKnowledgeTitleOnlyAccessAble(LoginedUser loginedUser, String idPrefix, int limit, int offset) {
+    public List<SurveysEntity> selectWithKnowledgeTitleOnlyAccessAble(AccessUser loginedUser, String idPrefix, int limit, int offset) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/SurveysDao/SurveysDao_select_on_accessable.sql");
         List<Object> params = new ArrayList<>();
         params.add(idPrefix);

@@ -25,7 +25,7 @@ public class GetUserListApiControl extends ApiControl {
      */
     @Get(path="_api/users")
     @Open
-    public Boundary articles() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("call _api/users");
         String keyword = super.getParam("keyword");
         ApiParams apiParams = super.getCommonApiParams();

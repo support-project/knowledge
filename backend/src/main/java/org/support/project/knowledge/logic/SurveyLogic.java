@@ -25,7 +25,7 @@ import org.support.project.knowledge.entity.SurveyItemAnswersEntity;
 import org.support.project.knowledge.entity.SurveyItemsEntity;
 import org.support.project.knowledge.entity.SurveysEntity;
 import org.support.project.knowledge.vo.SurveyReport;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.UsersEntity;
 
@@ -38,7 +38,7 @@ public class SurveyLogic extends TemplateLogic {
     }
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public SurveysEntity saveSurvey(SurveysEntity survey, LoginedUser loginedUser) {
+    public SurveysEntity saveSurvey(SurveysEntity survey, AccessUser loginedUser) {
         LOG.trace("saveSurvey");
         SurveyItemsDao.get().deleteOnKnowledgeId(survey.getKnowledgeId());
         SurveyChoicesDao.get().deleteOnKnowledgeId(survey.getKnowledgeId());
@@ -72,7 +72,7 @@ public class SurveyLogic extends TemplateLogic {
      * @param page ページ番号
      * @return 
      */
-    public List<SurveysEntity> listSurveys(LoginedUser user, String idPrefix, int page) {
+    public List<SurveysEntity> listSurveys(AccessUser user, String idPrefix, int page) {
         int limit = 10;
         int offset = page * limit;
         if (user == null) {

@@ -16,7 +16,6 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.StocksDao;
@@ -24,7 +23,6 @@ import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
-import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
@@ -46,7 +44,7 @@ import org.support.project.knowledge.vo.api.Target;
 import org.support.project.knowledge.vo.api.Type;
 import org.support.project.knowledge.vo.api.internal.KnowledgeList;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.NameId;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
@@ -68,8 +66,9 @@ public class KnowledgeDataSelectLogic {
      * KnowledgesEntity を WebAPIで送る情報に変換する
      * @param entity
      * @return
+     * @throws ParseException 
      */
-    private Knowledge conv(KnowledgeDataInterface entity, int type, Map<Integer, TemplateMastersEntity> typeMap) {
+    private Knowledge conv(KnowledgeDataInterface entity, int type, Map<Integer, TemplateMastersEntity> typeMap) throws ParseException {
         if (entity == null) {
             return null;
         }
@@ -107,7 +106,7 @@ public class KnowledgeDataSelectLogic {
             detail.setItems(templateItems);
             
             // コメント
-            List<Comment> comments = getComments(entity);
+            List<Comment> comments = CommentDataSelectLogic.get().getComments(entity.getKnowledgeId());
             detail.setComments(comments);
             
             // 添付ファイル
@@ -168,21 +167,7 @@ public class KnowledgeDataSelectLogic {
         }
         return attachedFiles;
     }
-    /**
-     * コメント取得
-     * @param entity
-     * @return
-     */
-    private List<Comment> getComments(KnowledgeDataInterface entity) {
-        List<Comment> comments = new ArrayList<>();
-        List<CommentsEntity> commentsEntities = CommentsDao.get().selectOnKnowledgeId(entity.getKnowledgeId());
-        for (CommentsEntity commentsEntity : commentsEntities) {
-            Comment comment = new Comment();
-            PropertyUtil.copyPropertyValue(commentsEntity, comment);
-            comments.add(comment);
-        }
-        return comments;
-    }
+
     /**
      * テンプレートの項目とその値を取得
      * @param entity
@@ -266,7 +251,7 @@ public class KnowledgeDataSelectLogic {
      * @return
      * @throws ParseException 
      */
-    public Knowledge select(long knowledgeId, LoginedUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
+    public Knowledge select(long knowledgeId, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
         KnowledgesEntity entity = KnowledgeLogic.get().selectWithTags(knowledgeId, loginedUser);
         return conv(entity, loginedUser, parseMarkdown, sanitize);
     }
@@ -280,7 +265,7 @@ public class KnowledgeDataSelectLogic {
      * @return
      * @throws ParseException 
      */
-    public Knowledge conv(KnowledgeDataInterface entity, LoginedUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
+    public Knowledge conv(KnowledgeDataInterface entity, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
         if (entity == null) {
             return null;
         }
@@ -357,7 +342,7 @@ public class KnowledgeDataSelectLogic {
         return typeMap;
     }
     
-    public List<KnowledgeList> convInternalList(List<Knowledge> results, LoginedUser loginedUser) {
+    public List<KnowledgeList> convInternalList(List<Knowledge> results, AccessUser loginedUser) {
         List<KnowledgeList> list = new ArrayList<>();
         List<Long> knowledgeIds = null;
         if (loginedUser != null) {

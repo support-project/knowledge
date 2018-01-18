@@ -21,7 +21,7 @@ import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.config.MessageStatus;
 import org.support.project.web.exception.InvalidParamException;
@@ -120,7 +120,7 @@ public class TemplateLogic {
      * @param loginedUser
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public TemplateMastersEntity addTemplate(TemplateMastersEntity template, LoginedUser loginedUser) {
+    public TemplateMastersEntity addTemplate(TemplateMastersEntity template, AccessUser loginedUser) {
         TemplateMastersDao templateDao = TemplateMastersDao.get();
         int id = templateDao.getNextId();
         template.setTypeId(id);
@@ -139,7 +139,7 @@ public class TemplateLogic {
      * @param loginedUser
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public TemplateMastersEntity updateTemplate(TemplateMastersEntity template, LoginedUser loginedUser) throws InvalidParamException {
+    public TemplateMastersEntity updateTemplate(TemplateMastersEntity template, AccessUser loginedUser) throws InvalidParamException {
         TemplateMastersDao templateDao = TemplateMastersDao.get();
         TemplateItemsDao itemsDao = TemplateItemsDao.get();
         ItemChoicesDao choicesDao = ItemChoicesDao.get();
@@ -238,7 +238,7 @@ public class TemplateLogic {
      * @param loginedUser
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void deleteTemplate(Integer typeId, LoginedUser loginedUser) {
+    public void deleteTemplate(Integer typeId, AccessUser loginedUser) {
         TemplateMastersDao templateDao = TemplateMastersDao.get();
         TemplateItemsDao itemsDao = TemplateItemsDao.get();
         ItemChoicesDao choicesDao = ItemChoicesDao.get();

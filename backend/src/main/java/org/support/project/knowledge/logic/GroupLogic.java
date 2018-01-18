@@ -15,7 +15,7 @@ import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.knowledge.entity.KnowledgeGroupsEntity;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.config.CommonWebParameter;
 import org.support.project.web.config.MessageStatus;
@@ -37,7 +37,7 @@ public class GroupLogic {
      * @param loginedUser
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public GroupsEntity addGroup(GroupsEntity groupsEntity, LoginedUser loginedUser) {
+    public GroupsEntity addGroup(GroupsEntity groupsEntity, AccessUser loginedUser) {
         ExGroupsDao groupsDao = ExGroupsDao.get();
         GroupsEntity insertedEntity = groupsDao.insert(groupsEntity);
 
@@ -57,7 +57,7 @@ public class GroupLogic {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public GroupsEntity updateGroup(GroupsEntity groupsEntity, LoginedUser loginedUser) {
+    public GroupsEntity updateGroup(GroupsEntity groupsEntity, AccessUser loginedUser) {
         ExGroupsDao groupsDao = ExGroupsDao.get();
         if (!loginedUser.isAdmin()) {
             if (groupsDao.selectAccessAbleGroup(groupsEntity.getGroupId(), loginedUser) == null) {
@@ -74,7 +74,7 @@ public class GroupLogic {
      * @param loginedUser
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void deleteGroup(Integer groupId, LoginedUser loginedUser) {
+    public void deleteGroup(Integer groupId, AccessUser loginedUser) {
         ExGroupsDao groupsDao = ExGroupsDao.get();
         if (!loginedUser.isAdmin()) {
             if (groupsDao.selectAccessAbleGroup(groupId, loginedUser) == null) {
@@ -101,7 +101,7 @@ public class GroupLogic {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<GroupsEntity> selectOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {
+    public List<GroupsEntity> selectOnKeyword(String keyword, AccessUser loginedUser, int offset, int limit) {
         List<GroupsEntity> list;
         if (loginedUser == null) {
             list = new ArrayList<>();
@@ -136,7 +136,7 @@ public class GroupLogic {
      * @param limit
      * @return
      */
-    public List<GroupsEntity> selectMyGroup(LoginedUser loginedUser, int offset, int limit) {
+    public List<GroupsEntity> selectMyGroup(AccessUser loginedUser, int offset, int limit) {
         ExGroupsDao groupsDao = ExGroupsDao.get();
         List<GroupsEntity> list = groupsDao.selectMyGroup(loginedUser, offset, limit);
 
@@ -156,7 +156,7 @@ public class GroupLogic {
      * @param limit
      * @return
      */
-    public List<GroupsEntity> selectMyGroupOnKeyword(String keyword, LoginedUser loginedUser, int offset, int limit) {
+    public List<GroupsEntity> selectMyGroupOnKeyword(String keyword, AccessUser loginedUser, int offset, int limit) {
         ExGroupsDao groupsDao = ExGroupsDao.get();
         List<GroupsEntity> list = groupsDao.selectMyGroupOnKeyword(keyword, loginedUser, offset, limit);
 
@@ -173,7 +173,7 @@ public class GroupLogic {
      * @param groupsEntity
      * @param loginedUser
      */
-    private void setGroupStatus(GroupsEntity groupsEntity, LoginedUser loginedUser) {
+    private void setGroupStatus(GroupsEntity groupsEntity, AccessUser loginedUser) {
         UserGroupsDao userGroupsDao = UserGroupsDao.get();
         UserGroupsEntity userGroupsEntity = userGroupsDao.selectOnKey(groupsEntity.getGroupId(), loginedUser.getUserId());
         if (userGroupsEntity != null) {
@@ -188,7 +188,7 @@ public class GroupLogic {
      * @param loginedUser
      * @return
      */
-    public GroupsEntity getGroup(Integer groupId, LoginedUser loginedUser) {
+    public GroupsEntity getGroup(Integer groupId, AccessUser loginedUser) {
         ExGroupsDao groupsDao = ExGroupsDao.get();
         GroupsEntity group;
         if (loginedUser.isAdmin()) {
@@ -210,7 +210,7 @@ public class GroupLogic {
      * @param loginedUser
      * @return
      */
-    public GroupsEntity getEditAbleGroup(Integer groupId, LoginedUser loginedUser) {
+    public GroupsEntity getEditAbleGroup(Integer groupId, AccessUser loginedUser) {
         ExGroupsDao groupsDao = ExGroupsDao.get();
         if (loginedUser.isAdmin()) {
             return groupsDao.selectOnKey(groupId);
@@ -305,7 +305,7 @@ public class GroupLogic {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public MessageResult addUsers(LoginedUser loginedUser, Integer groupId, String users) {
+    public MessageResult addUsers(AccessUser loginedUser, Integer groupId, String users) {
         ExGroupsDao groupsDao = ExGroupsDao.get();
         if (!loginedUser.isAdmin()) {
             if (groupsDao.selectAccessAbleGroup(groupId, loginedUser) == null) {

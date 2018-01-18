@@ -52,7 +52,7 @@ public class Knowledge implements KnowledgeKeyInterface {
     private Target viewers;
     
     /** この記事をストックしている場合のストック情報 */
-    private List<StocksEntity> stocks;
+    private List<StocksEntity> stocks = new ArrayList<>();
     
     /** Markdownを表示用に変換したHTML(サニタイズ済で直接描画しても問題無いはず） */
     private String displaySafeHtml;

@@ -65,7 +65,7 @@ import org.support.project.knowledge.vo.Participations;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
@@ -124,7 +124,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setAttribute("url", url.toString());
 
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
-        LoginedUser loginedUser = getLoginedUser();
+        AccessUser loginedUser = getLoginedUser();
 
         if (loginedUser == null) {
             KnowledgesEntity entity = KnowledgesDao.get().selectOnKey(knowledgeId);
@@ -241,7 +241,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @param loginedUser
      * @param knowledges
      */
-    private void setKnowledgeTargetsWithConv(LoginedUser loginedUser, List<KnowledgesEntity> knowledges) {
+    private void setKnowledgeTargetsWithConv(AccessUser loginedUser, List<KnowledgesEntity> knowledges) {
         ArrayList<Long> knowledgeIds = new ArrayList<>();
         for (KnowledgesEntity knowledgesEntity : knowledges) {
             knowledgeIds.add(knowledgesEntity.getKnowledgeId());
@@ -253,7 +253,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * @param loginedUser
      * @param knowledgeIds
      */
-    private void setKnowledgeTargets(LoginedUser loginedUser, List<Long> knowledgeIds) {
+    private void setKnowledgeTargets(AccessUser loginedUser, List<Long> knowledgeIds) {
         TargetLogic targetLogic = TargetLogic.get();
         Map<Long, List<LabelValue>> targets = targetLogic.selectTargetsOnKnowledgeIds(knowledgeIds, loginedUser);
         setAttribute("targets", targets);
@@ -264,7 +264,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      * タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
      * @param loginedUser
      */
-    private void setSublistInformations(LoginedUser loginedUser) {
+    private void setSublistInformations(AccessUser loginedUser) {
         TagsDao tagsDao = TagsDao.get();
         ExGroupsDao groupsDao = ExGroupsDao.get();
 
@@ -343,7 +343,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
         KeywordLogic keywordLogic = KeywordLogic.get();
 
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         String tag = getParam("tag");
         String group = getParam("group");
         String user = getParam("user");
@@ -588,7 +588,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     public Boundary events() throws InvalidParamException {
         String date = getParam("date");
         String timezone = getParam("timezone");
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         if (StringUtils.isEmpty(date) || StringUtils.isEmpty(timezone)) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST, "BAD REQUEST");
         }
@@ -628,7 +628,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      */
     @Get
     public Boundary show_history() throws InvalidParamException {
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
 
         // History表示
@@ -672,7 +672,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
      */
     @Get
     public Boundary show_popularity() throws InvalidParamException {
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
 
         List<KnowledgesEntity> list = knowledgeLogic.getPopularityKnowledges(loginedUser, 0, 20);
@@ -698,7 +698,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     public Boundary stocks() throws InvalidParamException {
         Integer offset = getOffsetParameter();
         String stockidstr = getParam("stockid");
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         Long stockid = null;
         if (StringUtils.isLong(stockidstr)) {
             stockid = Long.parseLong(stockidstr);
@@ -796,7 +796,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     @Get
     public Boundary search() {
         KeywordLogic keywordLogic = KeywordLogic.get();
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         List<GroupsEntity> groupitems = new ArrayList<GroupsEntity>();
         List<TagsEntity> tagitems = TagsDao.get().selectAll();
         setAttribute("tagitems", tagitems);

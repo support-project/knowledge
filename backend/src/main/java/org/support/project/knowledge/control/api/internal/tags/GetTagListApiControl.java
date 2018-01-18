@@ -25,7 +25,7 @@ public class GetTagListApiControl extends ApiControl {
      */
     @Get(path="_api/tags")
     @Open
-    public Boundary articles() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("call _api/tags");
         String keyword = super.getParam("keyword");
         ApiParams apiParams = super.getCommonApiParams();

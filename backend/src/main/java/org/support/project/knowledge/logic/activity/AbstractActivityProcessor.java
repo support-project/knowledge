@@ -21,7 +21,7 @@ import org.support.project.knowledge.dao.PointUserHistoriesDao;
 import org.support.project.knowledge.entity.ActivitiesEntity;
 import org.support.project.knowledge.entity.PointKnowledgeHistoriesEntity;
 import org.support.project.knowledge.entity.PointUserHistoriesEntity;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.UserConfigsDao;
 import org.support.project.web.entity.UserConfigsEntity;
 
@@ -36,12 +36,12 @@ public abstract class AbstractActivityProcessor implements ActivityProcessor {
     private static Object lockUser = new Object();
     private static Object lockKnowledge = new Object();
     
-    protected LoginedUser eventUser;
+    protected AccessUser eventUser;
     protected Date eventDateTime;
     /**
      * @param eventUser the eventUser to set
      */
-    public void setEventUser(LoginedUser eventUser) {
+    public void setEventUser(AccessUser eventUser) {
         this.eventUser = eventUser;
     }
     /**

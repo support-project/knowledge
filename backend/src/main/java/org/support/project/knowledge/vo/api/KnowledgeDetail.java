@@ -1,16 +1,17 @@
 package org.support.project.knowledge.vo.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.support.project.web.bean.LabelValue;
 
 public class KnowledgeDetail extends Knowledge {
     /** テンプレートの項目値 */
-    private List<LabelValue> items;
+    private List<LabelValue> items = new ArrayList<>();
     /** コメント */
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
     /** 添付ファイル */
-    private List<AttachedFile> attachments;
+    private List<AttachedFile> attachments = new ArrayList<>();
     
     /** 編集可能な対象（共同編集者） */
     private Target editors;

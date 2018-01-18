@@ -45,7 +45,7 @@ import org.support.project.knowledge.entity.MailTemplatesEntity;
 import org.support.project.knowledge.parser.Parser;
 import org.support.project.knowledge.parser.ParserFactory;
 import org.support.project.knowledge.vo.ParseResult;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.SystemConfigsDao;
@@ -487,7 +487,7 @@ public class MailLogic {
      * @param mailChangesEntity
      * @param loginedUser
      */
-    public void sendChangeEmailRequest(ConfirmMailChangesEntity mailChangesEntity, LoginedUser loginedUser) {
+    public void sendChangeEmailRequest(ConfirmMailChangesEntity mailChangesEntity, AccessUser loginedUser) {
         MailConfigsDao mailConfigsDao = MailConfigsDao.get();
         MailConfigsEntity mailConfigsEntity = mailConfigsDao.selectOnKey(org.support.project.knowledge.config.AppConfig.get().getSystemName());
         if (mailConfigsEntity == null) {
@@ -500,14 +500,14 @@ public class MailLogic {
         mailsEntity.setMailId(mailId);
         mailsEntity.setStatus(MailLogic.MAIL_STATUS_UNSENT);
         mailsEntity.setToAddress(mailChangesEntity.getMailAddress());
-        mailsEntity.setToName(loginedUser.getLoginUser().getUserName());
+        mailsEntity.setToName(loginedUser.getUserInfomation().getUserName());
 
         MailLocaleTemplatesEntity template = load(loginedUser.getLocale(), MAIL_CONFIRM);
 
         String title = template.getTitle();
         mailsEntity.setTitle(title);
         String contents = template.getContent();
-        contents = contents.replace("{UserName}", loginedUser.getLoginUser().getUserName());
+        contents = contents.replace("{UserName}", loginedUser.getUserInfomation().getUserName());
         contents = contents.replace("{URL}", makeURL("protect.Account/confirm_mail/", mailChangesEntity.getId()));
 
         mailsEntity.setContent(contents);

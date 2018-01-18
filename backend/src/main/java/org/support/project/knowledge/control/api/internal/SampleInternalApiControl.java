@@ -19,7 +19,7 @@ public class SampleInternalApiControl extends Control {
     @Get(path="_api/sample", publishToken="hogefuga")
     @Close
     public Boundary sample() {
-        Msg msg = new Msg("Hi, " + getLoginedUser().getLoginUser().getUserName()  + ", this is internal api sample.");
+        Msg msg = new Msg("Hi, " + getLoginedUser().getUserInfomation().getUserName()  + ", this is internal api sample.");
         return send(msg);
     }
     /**
@@ -30,7 +30,7 @@ public class SampleInternalApiControl extends Control {
     public Boundary sample2() {
         String username = "anonymous";
         if (getLoginedUser() != null) {
-            username = getLoginedUser().getLoginUser().getUserName();
+            username = getLoginedUser().getUserInfomation().getUserName();
         }
         Msg msg = new Msg("Hi, " + username + ", this is internal api sample2.");
         return send(msg);
@@ -43,7 +43,7 @@ public class SampleInternalApiControl extends Control {
     public Boundary sample3() {
         String username = "anonymous";
         if (getLoginedUser() != null) {
-            username = getLoginedUser().getLoginUser().getUserName();
+            username = getLoginedUser().getUserInfomation().getUserName();
         }
         Msg msg = new Msg("Hi, " + username + ", this is internal api sample3.");
         return send(msg);
@@ -56,7 +56,7 @@ public class SampleInternalApiControl extends Control {
     public Boundary samplepost() {
         String username = "anonymous";
         if (getLoginedUser() != null) {
-            username = getLoginedUser().getLoginUser().getUserName();
+            username = getLoginedUser().getUserInfomation().getUserName();
         }
         Msg msg = new Msg("Hi, " + username + ", this is internal api post sample.");
         return send(msg);

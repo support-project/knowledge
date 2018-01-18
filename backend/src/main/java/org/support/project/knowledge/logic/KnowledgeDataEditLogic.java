@@ -23,7 +23,7 @@ import org.support.project.knowledge.vo.api.Item;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.knowledge.vo.api.Target;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.bean.NameId;
 import org.support.project.web.common.HttpStatus;
@@ -146,7 +146,7 @@ public class KnowledgeDataEditLogic {
      * @return
      * @throws Exception 
      */
-    public long insert(KnowledgeDetail data, LoginedUser loginedUser) throws Exception {
+    public long insert(KnowledgeDetail data, AccessUser loginedUser) throws Exception {
         LOG.trace("insert");
         // 画面での登録と形をあわせる
         KnowledgeData knowledge = conv(data);
@@ -161,7 +161,7 @@ public class KnowledgeDataEditLogic {
      * @return
      * @throws Exception 
      */
-    public void update(KnowledgeDetail data, LoginedUser loginedUser) throws Exception {
+    public void update(KnowledgeDetail data, AccessUser loginedUser) throws Exception {
         LOG.trace("update");
         KnowledgesEntity check = KnowledgesDao.get().selectOnKey(data.getKnowledgeId());
         if (check == null) {
@@ -191,7 +191,7 @@ public class KnowledgeDataEditLogic {
      * @return
      * @throws Exception 
      */
-    public void delete(Long id, LoginedUser loginedUser) throws Exception {
+    public void delete(Long id, AccessUser loginedUser) throws Exception {
         LOG.trace("delete");
         KnowledgesEntity check = KnowledgesDao.get().selectOnKey(id);
         if (check == null) {
@@ -216,7 +216,7 @@ public class KnowledgeDataEditLogic {
      * @return
      * @throws InvalidParamException
      */
-    public long draftInsert(KnowledgeDetail data, LoginedUser loginedUser) throws InvalidParamException {
+    public long draftInsert(KnowledgeDetail data, AccessUser loginedUser) throws InvalidParamException {
         LOG.trace("insert");
         // 画面での登録と形をあわせる
         KnowledgeData knowledge = conv(data);

@@ -18,7 +18,7 @@ import org.support.project.knowledge.logic.MailEventLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.logic.TimeZoneLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.MessageStatus;
@@ -32,7 +32,7 @@ public class BeforeSaveEventHook implements BeforeSaveHook {
     public static final int ITEM_NO_TIMEZONE = EventsLogic.ITEM_NO_TIMEZONE;
     public static final int ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED = EventsLogic.ITEM_NO_THE_NUMBER_TO_BE_ACCEPTED;
     
-    public EventsEntity parseDate(KnowledgeData knowledgeData, LoginedUser loginedUser) throws InvalidParamException {
+    public EventsEntity parseDate(KnowledgeData knowledgeData, AccessUser loginedUser) throws InvalidParamException {
         EventsEntity event = new EventsEntity();
         event.setKnowledgeId(knowledgeData.getKnowledge().getKnowledgeId());
         List<TemplateItemsEntity> items = knowledgeData.getTemplate().getItems();
@@ -106,7 +106,7 @@ public class BeforeSaveEventHook implements BeforeSaveHook {
     
     
     @Override
-    public void beforeSave(KnowledgeData knowledgeData, KnowledgesEntity db, LoginedUser loginedUser) throws Exception {
+    public void beforeSave(KnowledgeData knowledgeData, KnowledgesEntity db, AccessUser loginedUser) throws Exception {
         // イベントの場合、拡張項目は必須とする
         if (TemplateLogic.TYPE_ID_EVENT == knowledgeData.getKnowledge().getTypeId()) {
             parseDate(knowledgeData, loginedUser);

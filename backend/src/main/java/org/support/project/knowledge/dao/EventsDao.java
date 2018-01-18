@@ -13,7 +13,7 @@ import org.support.project.knowledge.dao.gen.GenEventsDao;
 import org.support.project.knowledge.entity.EventsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.ormapping.common.SQLManager;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.entity.GroupsEntity;
 
 /**
@@ -33,7 +33,7 @@ public class EventsDao extends GenEventsDao {
     }
     
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<EventsEntity> selectAccessAbleEvents(Calendar start, Calendar end, LoginedUser loginedUser) {
+    public List<EventsEntity> selectAccessAbleEvents(Calendar start, Calendar end, AccessUser loginedUser) {
         String sql;
         if (loginedUser != null && loginedUser.isAdmin()) {
             sql = SQLManager.getInstance()
@@ -52,7 +52,7 @@ public class EventsDao extends GenEventsDao {
     }
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private String addAccessCondition(LoginedUser loginedUser, String sql, List<Object> params) {
+    private String addAccessCondition(AccessUser loginedUser, String sql, List<Object> params) {
         Integer loginuserId = Integer.MIN_VALUE;
         if (loginedUser != null) {
             loginuserId = loginedUser.getUserId();
@@ -83,7 +83,7 @@ public class EventsDao extends GenEventsDao {
     }
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<KnowledgesEntity> selectAccessAbleEvents(Calendar start, LoginedUser loginedUser, int limit, int offset) {
+    public List<KnowledgesEntity> selectAccessAbleEvents(Calendar start, AccessUser loginedUser, int limit, int offset) {
         String sql;
         if (loginedUser != null && loginedUser.isAdmin()) {
             sql = SQLManager.getInstance()

@@ -25,7 +25,7 @@ import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.UserLogicEx;
 import org.support.project.knowledge.vo.UploadFile;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
@@ -63,11 +63,11 @@ public class AccountControl extends Control {
         }
         setAttribute("userAddType", userAddType.getConfigValue());
 
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         if (loginedUser == null) {
             return sendError(HttpStatus.SC_401_UNAUTHORIZED, "");
         }
-        Integer userId = loginedUser.getLoginUser().getUserId();
+        Integer userId = loginedUser.getUserInfomation().getUserId();
         UsersEntity user = UsersDao.get().selectOnKey(userId);
         if (user == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
@@ -97,7 +97,7 @@ public class AccountControl extends Control {
         }
         setAttribute("userAddType", userAddType.getConfigValue());
 
-        LoginedUser loginedUser = super.getLoginedUser();
+        AccessUser loginedUser = super.getLoginedUser();
         if (loginedUser == null) {
             return sendError(HttpStatus.SC_401_UNAUTHORIZED, "");
         }
@@ -186,7 +186,7 @@ public class AccountControl extends Control {
         UserLogicEx.get().withdrawal(getLoginUserId(), knowledgeRemove, HttpUtil.getLocale(getRequest()));
 
         // セッションを破棄
-        AuthenticationLogic<LoginedUser> authenticationLogic = Container.getComp(KnowledgeAuthenticationLogic.class);
+        AuthenticationLogic<AccessUser> authenticationLogic = Container.getComp(KnowledgeAuthenticationLogic.class);
         authenticationLogic.clearSession(getRequest());
 
         addMsgInfo("knowledge.account.delete");

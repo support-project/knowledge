@@ -21,7 +21,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.vo.UploadFile;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 /**
  * Logic for attached file.
@@ -58,7 +58,7 @@ public class UploadedFileLogic {
      * @throws IOException
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public UploadFile saveFile(FileItem fileItem, LoginedUser loginedUser, String context) throws IOException {
+    public UploadFile saveFile(FileItem fileItem, AccessUser loginedUser, String context) throws IOException {
         LOG.trace("saveFile()");
         KnowledgeFilesEntity entity = new KnowledgeFilesEntity();
         entity.setFileName(fileItem.getName());
@@ -81,7 +81,7 @@ public class UploadedFileLogic {
      * @return
      * @throws IOException
      */
-    public UploadFile saveFile(byte[] img, LoginedUser loginedUser, String context) {
+    public UploadFile saveFile(byte[] img, AccessUser loginedUser, String context) {
         LOG.trace("saveFile()");
         KnowledgeFilesEntity entity = new KnowledgeFilesEntity();
         entity.setFileName("image-" + DateUtils.formatTransferDateTime(DateUtils.now()) + ".png");
@@ -148,7 +148,7 @@ public class UploadedFileLogic {
      * @throws Exception
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void setKnowledgeFiles(Long knowledgeId, List<Long> fileNos, LoginedUser loginedUser) throws Exception {
+    public void setKnowledgeFiles(Long knowledgeId, List<Long> fileNos, AccessUser loginedUser) throws Exception {
         // 現在、すでに紐づいている添付ファイルを取得
         List<KnowledgeFilesEntity> filesEntities = filesDao.selectOnKnowledgeId(knowledgeId);
         Map<Long, KnowledgeFilesEntity> filemap = new HashMap<>();
@@ -196,7 +196,7 @@ public class UploadedFileLogic {
      * @throws Exception
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void setKnowledgeFiles(Long knowledgeId, List<Long> fileNos, LoginedUser loginedUser, Long commentNo) throws Exception {
+    public void setKnowledgeFiles(Long knowledgeId, List<Long> fileNos, AccessUser loginedUser, Long commentNo) throws Exception {
         // 現在、すでに紐づいている添付ファイルを取得
         List<KnowledgeFilesEntity> filesEntities = filesDao.selectOnKnowledgeId(knowledgeId);
         Map<Long, KnowledgeFilesEntity> filemap = new HashMap<>();
@@ -317,7 +317,7 @@ public class UploadedFileLogic {
      * @param loginedUser
      * @return
      */
-    public KnowledgeFilesEntity getFile(Long fileNo, LoginedUser loginedUser) {
+    public KnowledgeFilesEntity getFile(Long fileNo, AccessUser loginedUser) {
         KnowledgeFilesEntity entity = filesDao.selectOnKeyWithoutBinary(fileNo);
         if (entity == null) {
             return null;

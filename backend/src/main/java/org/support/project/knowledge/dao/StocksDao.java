@@ -12,7 +12,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.vo.Stock;
 import org.support.project.ormapping.common.SQLManager;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 /**
  * ストックしたナレッジ
@@ -41,7 +41,7 @@ public class StocksDao extends GenStocksDao {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<StocksEntity> selectMyStocksWithKnowledgeCount(LoginedUser loginedUser, int offset, int limit) {
+    public List<StocksEntity> selectMyStocksWithKnowledgeCount(AccessUser loginedUser, int offset, int limit) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_selectMyStocksWithKnowledgeCount.sql");
         return executeQueryList(sql, StocksEntity.class, loginedUser.getUserId(), limit, offset);
@@ -57,7 +57,7 @@ public class StocksDao extends GenStocksDao {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<Stock> selectMyStocksWithStocked(LoginedUser loginedUser, Long knowledgeId, int offset, int limit) {
+    public List<Stock> selectMyStocksWithStocked(AccessUser loginedUser, Long knowledgeId, int offset, int limit) {
         String sql = SQLManager.getInstance().getSql("/org/support/project/knowledge/dao/sql/StocksDao/StocksDao_selectMyStocksWithStocked.sql");
         return executeQueryList(sql, Stock.class, knowledgeId, loginedUser.getUserId(), limit, offset);
     }
@@ -69,7 +69,7 @@ public class StocksDao extends GenStocksDao {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<StocksEntity> selectStockOnKnowledge(Long knowledgeId, LoginedUser loginedUser) {
+    public List<StocksEntity> selectStockOnKnowledge(Long knowledgeId, AccessUser loginedUser) {
         if (knowledgeId == null || loginedUser == null) {
             return new ArrayList<>();
         }
@@ -85,7 +85,7 @@ public class StocksDao extends GenStocksDao {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<StocksEntity> selectMyStocks(LoginedUser loginedUser, int offset, int limit) {
+    public List<StocksEntity> selectMyStocks(AccessUser loginedUser, int offset, int limit) {
         String sql = "SELECT * FROM STOCKS WHERE STOCKS.INSERT_USER = ? AND STOCKS.DELETE_FLAG = 0 ORDER BY STOCKS.INSERT_DATETIME LIMIT ? OFFSET ?";
         return executeQueryList(sql, StocksEntity.class, loginedUser.getUserId(), limit, offset);
     }

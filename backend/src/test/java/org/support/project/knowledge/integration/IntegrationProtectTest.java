@@ -16,7 +16,7 @@ import org.support.project.knowledge.logic.AggregateLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.boundary.JsonBoundary;
@@ -139,7 +139,7 @@ public class IntegrationProtectTest extends IntegrationCommon {
         request.addParameter("publicFlag", String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT));
         request.addParameter("updateContent", "true");
         
-        LoginedUser user = super.getLoginUser(USER1);
+        AccessUser user = super.getLoginUser(USER1);
         request.addParameter("groups", TargetLogic.ID_PREFIX_USER + user.getUserId());
         
         JsonBoundary jsonBoundary = invoke(request, response, JsonBoundary.class);
@@ -198,7 +198,7 @@ public class IntegrationProtectTest extends IntegrationCommon {
         request.addParameter("publicFlag", String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT));
         request.addParameter("updateContent", "false");
         
-        LoginedUser user = super.getLoginUser(USER1);
+        AccessUser user = super.getLoginUser(USER1);
         request.addParameter("groups", TargetLogic.ID_PREFIX_USER + user.getUserId());
         
         request.addParameter("tagNames", "タグのみを追加したパターン");

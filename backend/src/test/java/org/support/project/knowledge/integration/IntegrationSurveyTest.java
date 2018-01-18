@@ -16,7 +16,7 @@ import org.support.project.knowledge.logic.AggregateLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.TargetLogic;
 import org.support.project.knowledge.logic.TemplateLogic;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.boundary.ForwardBoundary;
 import org.support.project.web.boundary.JsonBoundary;
@@ -263,7 +263,7 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         request.addParameter("content", "内容");
         request.addParameter("publicFlag", String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT));
         request.addParameter("typeId", String.valueOf(TemplateLogic.TYPE_ID_KNOWLEDGE));
-        LoginedUser answerUser = super.getLoginUser(ANSWER_USER);
+        AccessUser answerUser = super.getLoginUser(ANSWER_USER);
         request.addParameter("groups", TargetLogic.ID_PREFIX_USER + answerUser.getUserId());
         request.addParameter("editors", TargetLogic.ID_PREFIX_USER + answerUser.getUserId());
         JsonBoundary jsonBoundary = invoke(request, response, JsonBoundary.class);

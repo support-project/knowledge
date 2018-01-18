@@ -7,13 +7,13 @@ import org.support.project.knowledge.entity.EventsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 @DI(instance = Instance.Singleton)
 public class BeforeSaveOldEventRemoveHook implements BeforeSaveHook {
 
     @Override
-    public void beforeSave(KnowledgeData data, KnowledgesEntity db, LoginedUser loginedUser) throws Exception {
+    public void beforeSave(KnowledgeData data, KnowledgesEntity db, AccessUser loginedUser) throws Exception {
         // 前に保存されていたデータがイベント情報で、かつ、現在の保存する情報がそれ以外になった場合に、イベント情報を削除する
         if (db != null) {
             if (TemplateLogic.TYPE_ID_EVENT == db.getTypeId()

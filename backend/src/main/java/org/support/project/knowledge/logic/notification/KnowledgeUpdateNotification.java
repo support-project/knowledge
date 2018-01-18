@@ -43,7 +43,7 @@ import org.support.project.knowledge.logic.NotifyLogic;
 import org.support.project.knowledge.logic.notification.webhook.KnowledgeUpdateWebHookNotification;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.notification.KnowledgeUpdate;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
@@ -351,7 +351,7 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
      * @param notificationsEntity
      * @param loginedUser
      */
-    public void convNotification(NotificationsEntity notificationsEntity, LoginedUser loginedUser, TARGET target) {
+    public void convNotification(NotificationsEntity notificationsEntity, AccessUser loginedUser, TARGET target) {
         String category = notificationsEntity.getTitle();
         if (MailLogic.NOTIFY_INSERT_KNOWLEDGE.equals(category) || MailLogic.NOTIFY_UPDATE_KNOWLEDGE.equals(category)) {
             KnowledgeUpdate update = JSON.decode(notificationsEntity.getContent(), KnowledgeUpdate.class);
@@ -380,7 +380,7 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
     }
 
     @Override
-    public MessageResult getMessage(LoginedUser loginuser, Locale locale) {
+    public MessageResult getMessage(AccessUser loginuser, Locale locale) {
         if (getType() == TYPE_KNOWLEDGE_UPDATE) {
             return getUpdateKnowledgeMessage(loginuser, locale, "knowledge.notify.msg.desktop.to.update");
         } else {
@@ -395,7 +395,7 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
      * @param knowledge
      * @return
      */
-    private MessageResult getUpdateKnowledgeMessage(LoginedUser loginuser, Locale locale, String title) {
+    private MessageResult getUpdateKnowledgeMessage(AccessUser loginuser, Locale locale, String title) {
         // TODO ストック機能ができたら、ストックしたナレッジの更新かどうかを判定する
         if (isToKnowledgeSave(loginuser, knowledge)) {
             MessageResult messageResult = new MessageResult();
@@ -413,7 +413,7 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
      * @param knowledge
      * @return
      */
-    private boolean isToKnowledgeSave(LoginedUser loginuser, KnowledgesEntity knowledge) {
+    private boolean isToKnowledgeSave(AccessUser loginuser, KnowledgesEntity knowledge) {
         NotifyConfigsDao dao = NotifyConfigsDao.get();
         NotifyConfigsEntity entity = dao.selectOnKey(loginuser.getUserId());
         if (!NotifyLogic.get().flagCheck(entity.getNotifyDesktop())) {
@@ -439,7 +439,7 @@ public class KnowledgeUpdateNotification extends AbstractQueueNotification imple
      * @param entity
      * @return
      */
-    private boolean isToKnowledge(LoginedUser loginuser, KnowledgesEntity knowledge, NotifyConfigsEntity entity) {
+    private boolean isToKnowledge(AccessUser loginuser, KnowledgesEntity knowledge, NotifyConfigsEntity entity) {
         if (knowledge.getPublicFlag() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
             // 公開のナレッジ
             if (!NotifyLogic.get().flagCheck(entity.getToItemIgnorePublic())) {

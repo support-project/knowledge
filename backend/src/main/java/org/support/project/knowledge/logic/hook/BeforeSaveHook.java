@@ -4,7 +4,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.vo.KnowledgeData;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 @DI(instance=Instance.Singleton)
 public interface BeforeSaveHook {
@@ -15,5 +15,5 @@ public interface BeforeSaveHook {
      * @return
      * @throws Exception
      */
-    void beforeSave(KnowledgeData knowledgeData, KnowledgesEntity db, LoginedUser loginedUser) throws Exception;
+    void beforeSave(KnowledgeData knowledgeData, KnowledgesEntity db, AccessUser loginedUser) throws Exception;
 }

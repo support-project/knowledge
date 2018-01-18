@@ -20,7 +20,7 @@ import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.RolesDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.RolesEntity;
@@ -88,8 +88,8 @@ public class AddSampleKnowledge {
         RolesDao rolesDao = RolesDao.get();
         List<RolesEntity> rolesEntities = rolesDao.selectOnUserKey(usersEntity.getUserKey());
 
-        LoginedUser loginedUser = new LoginedUser();
-        loginedUser.setLoginUser(usersEntity);
+        AccessUser loginedUser = new AccessUser();
+        loginedUser.setUserInfomation(usersEntity);
         loginedUser.setRoles(rolesEntities);
 
         KnowledgesEntity entity = new KnowledgesEntity();

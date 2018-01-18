@@ -21,7 +21,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.logic.notification.EventNotificationByDate;
 import org.support.project.knowledge.logic.notification.EventNotificationByMinute;
 import org.support.project.knowledge.logic.notification.EventNotificationByWeek;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 @DI(instance = Instance.Singleton)
 public class MailEventLogic extends MailLogic {
@@ -50,7 +50,7 @@ public class MailEventLogic extends MailLogic {
         // 登録されているイベントを一週間分取得
         // タイムゾーンを考慮して取得するため、少し範囲広めで取得する。
         // GMT で先週の土曜〜次週の月曜
-        LoginedUser admin = UserLogicEx.get().getAdminUser(); // バッチ起動であるため、管理者権限でデータを取得する
+        AccessUser admin = UserLogicEx.get().getAdminUser(); // バッチ起動であるため、管理者権限でデータを取得する
         
         TimeZone gmt = TimeZone.getTimeZone("GMT");
         Calendar now = Calendar.getInstance(gmt);

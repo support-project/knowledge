@@ -29,7 +29,7 @@ public class GetTypeListApiControl extends ApiControl {
      */
     @Get(path="_api/types")
     @Open
-    public Boundary articles() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("call _api/types");
         List<TemplateMastersEntity> results = TemplateLogic.get().selectAll();
         List<Type> types = new ArrayList<>();

@@ -9,7 +9,7 @@ import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.NotificationLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
 import org.support.project.knowledge.vo.notification.Participate;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.NotificationsDao;
 import org.support.project.web.dao.UserNotificationsDao;
 import org.support.project.web.dao.UsersDao;
@@ -52,7 +52,7 @@ public abstract class AbstractParticipateNotification extends AbstractNotificati
 
     
     @Override
-    public void convNotification(NotificationsEntity notificationsEntity, LoginedUser loginedUser, TARGET target) {
+    public void convNotification(NotificationsEntity notificationsEntity, AccessUser loginedUser, TARGET target) {
         Participate info = JSON.decode(notificationsEntity.getContent(), Participate.class);
         String templateString = notificationsEntity.getTitle();
         MailLocaleTemplatesEntity template = MailLogic.get().load(loginedUser.getLocale(), notificationsEntity.getTitle());

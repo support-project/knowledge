@@ -7,7 +7,7 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.dao.ExUsersDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.entity.TagsEntity;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.GroupsDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
@@ -19,7 +19,7 @@ public class SearchKnowledgeParam {
     private List<GroupsEntity> groups;
     private List<UsersEntity> creators;
     private String[] templates;
-    private LoginedUser loginedUser;
+    private AccessUser loginedUser;
     private int offset;
     private int limit;
     
@@ -38,7 +38,7 @@ public class SearchKnowledgeParam {
         }
         setTags(tags);
     }
-    public void setGroupsAndLoginUser(String groupNames, LoginedUser loginedUser) {
+    public void setGroupsAndLoginUser(String groupNames, AccessUser loginedUser) {
         this.loginedUser = loginedUser;
         List<GroupsEntity> groups = new ArrayList<GroupsEntity>();
         if (loginedUser != null) {
@@ -125,13 +125,13 @@ public class SearchKnowledgeParam {
     /**
      * @return the loginedUser
      */
-    public LoginedUser getLoginedUser() {
+    public AccessUser getLoginedUser() {
         return loginedUser;
     }
     /**
      * @param loginedUser the loginedUser to set
      */
-    public void setLoginedUser(LoginedUser loginedUser) {
+    public void setLoginedUser(AccessUser loginedUser) {
         this.loginedUser = loginedUser;
     }
     /**

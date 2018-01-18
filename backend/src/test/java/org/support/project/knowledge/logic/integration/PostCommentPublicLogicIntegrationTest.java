@@ -23,7 +23,7 @@ import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.notification.QueueNotification;
 import org.support.project.ormapping.common.DBUserPool;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.MailConfigsDao;
 import org.support.project.web.dao.MailsDao;
 import org.support.project.web.dao.NotificationsDao;
@@ -72,7 +72,7 @@ public class PostCommentPublicLogicIntegrationTest extends TestCommon {
     @Order(order = 3)
     public void testInsertKnowledge() throws Exception {
         LOG.info("記事投稿");
-        LoginedUser loginUser = getLoginUser("integration-test-user-01");
+        AccessUser loginUser = getLoginUser("integration-test-user-01");
         DBUserPool.get().setUser(loginUser.getUserId()); // 操作ユーザのIDを指定
         
         KnowledgesEntity knowledge = super.insertKnowledge("integration-test-knowledge-01", loginUser);
@@ -106,7 +106,7 @@ public class PostCommentPublicLogicIntegrationTest extends TestCommon {
     @Order(order = 7)
     public void testKnowledgeView() throws Exception {
         LOG.info("記事を参照");
-        LoginedUser user = getLoginUser("integration-test-user-01");
+        AccessUser user = getLoginUser("integration-test-user-01");
         List<KnowledgesEntity> knowledges = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100);
         Assert.assertEquals(1, knowledges.size());
         
@@ -130,7 +130,7 @@ public class PostCommentPublicLogicIntegrationTest extends TestCommon {
     @Test
     @Order(order = 8)
     public void testInsertComment() throws Exception {
-        LoginedUser user = getLoginUser("integration-test-user-02");
+        AccessUser user = getLoginUser("integration-test-user-02");
         CommentsEntity comment = KnowledgeLogic.get().saveComment(knowledgeId, "コメント", new ArrayList<>(), user);
         
         NotifyQueuesEntity notify = NotifyQueuesDao.get().selectOnTypeAndId(QueueNotification.TYPE_KNOWLEDGE_COMMENT, comment.getCommentNo());

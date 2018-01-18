@@ -26,7 +26,7 @@ public class PostArticleApiControl extends ApiControl {
      * @throws Exception 
      */
     @Post(path="_api/articles", checkCookieToken=false, checkHeaderToken=true)
-    public Boundary article() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         try {
             KnowledgeDetail data = getJsonObject(KnowledgeDetail.class);

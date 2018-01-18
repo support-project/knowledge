@@ -20,7 +20,7 @@ import org.support.project.knowledge.entity.LikesEntity;
 import org.support.project.knowledge.entity.NotificationStatusEntity;
 import org.support.project.knowledge.logic.activity.Activity;
 import org.support.project.knowledge.logic.activity.ActivityLogic;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.MessageStatus;
@@ -90,7 +90,7 @@ public class LikeLogic {
      * @return
      * @throws InvalidParamException 
      */
-    public Long addLike(Long knowledgeId, LoginedUser loginedUser, Locale locale) throws InvalidParamException {
+    public Long addLike(Long knowledgeId, AccessUser loginedUser, Locale locale) throws InvalidParamException {
         LOG.debug("start addLike");
         if (getCheckOfLike()) {
             Resources resources = Resources.getInstance(locale);
@@ -136,7 +136,7 @@ public class LikeLogic {
      * @return
      * @throws InvalidParamException 
      */
-    public Long addLikeComment(Long commentNo, LoginedUser loginedUser, Locale locale) throws InvalidParamException {
+    public Long addLikeComment(Long commentNo, AccessUser loginedUser, Locale locale) throws InvalidParamException {
         LOG.debug("start addLikeComment");
         if (getCheckOfLike()) {
             Resources resources = Resources.getInstance(locale);

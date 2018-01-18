@@ -26,7 +26,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.logic.CompressLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.vo.ExportUser;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.SystemConfigsEntity;
@@ -71,7 +71,7 @@ public class CreateExportDataBat extends AbstractBat {
         userdir.mkdirs();
 
         // ナレッジデータを取得
-        LoginedUser loginedUser = new LoginedUser() {
+        AccessUser loginedUser = new AccessUser() {
             private static final long serialVersionUID = 1L;
 
             @Override

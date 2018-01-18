@@ -17,7 +17,7 @@ import javax.websocket.server.ServerEndpoint;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.websocket.EndpointConfigurator;
 
 import net.arnx.jsonic.JSONException;
@@ -35,7 +35,7 @@ public class NotifyEndpoint {
         // 開始時
         if (LOG.isInfoEnabled()) {
             if (session.getUserProperties().containsKey(EndpointConfigurator.LOCALE_KEY)) {
-                LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
+                AccessUser loginuser = (AccessUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
                 LOG.debug("websocket open: " + session.getId() + " : " + loginuser.getUserId());
             }
         }
@@ -61,7 +61,7 @@ public class NotifyEndpoint {
         // 完了時
         if (LOG.isInfoEnabled()) {
             if (session.getUserProperties().containsKey(EndpointConfigurator.LOCALE_KEY)) {
-                LoginedUser loginuser = (LoginedUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
+                AccessUser loginuser = (AccessUser) session.getUserProperties().get(EndpointConfigurator.LOGIN_USER_KEY);
                 LOG.debug("websocket close: " + session.getId() + " : " + loginuser.getUserId());
             }
         }

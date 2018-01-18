@@ -29,7 +29,7 @@ public class GetArticleTemplateItemsApiControl extends ApiControl {
      */
     @Get(path="_api/articles/:id/items")
     @Open
-    public Boundary templateItems() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         String id = super.getParam("id");
         LOG.debug(id);

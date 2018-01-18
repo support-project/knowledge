@@ -30,7 +30,7 @@ import org.support.project.knowledge.vo.ActivityHistory;
 import org.support.project.knowledge.vo.ContributionPointHistory;
 import org.support.project.knowledge.vo.UserConfigs;
 import org.support.project.ormapping.config.Order;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.logic.DateConvertLogic;
@@ -68,7 +68,7 @@ public class ActivityLogic {
         return array;
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    private void execute(Activity activity, LoginedUser eventUser, Date eventDateTime, KnowledgesEntity knowledge, CommentsEntity comment) {
+    private void execute(Activity activity, AccessUser eventUser, Date eventDateTime, KnowledgesEntity knowledge, CommentsEntity comment) {
         List<ActivityProcessor> processors = this.getActivityProcessors(activity);
         for (ActivityProcessor activityProcessor : processors) {
             if (activityProcessor instanceof AbstractActivityProcessor) {
@@ -110,19 +110,19 @@ public class ActivityLogic {
     }
     
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void processActivity(Activity activity, LoginedUser eventUser, Date eventDateTime) {
+    public void processActivity(Activity activity, AccessUser eventUser, Date eventDateTime) {
         execute(activity, eventUser, eventDateTime, null, null);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void processActivity(Activity activity, LoginedUser eventUser, Date eventDateTime, KnowledgesEntity knowledge) {
+    public void processActivity(Activity activity, AccessUser eventUser, Date eventDateTime, KnowledgesEntity knowledge) {
         execute(activity, eventUser, eventDateTime, knowledge, null);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void processActivity(Activity activity, LoginedUser eventUser, Date eventDateTime, CommentsEntity comment) {
+    public void processActivity(Activity activity, AccessUser eventUser, Date eventDateTime, CommentsEntity comment) {
         execute(activity, eventUser, eventDateTime, null, comment);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void processKnowledgeSaveActivity(LoginedUser eventUser, Date eventDateTime, KnowledgesEntity knowledge) {
+    public void processKnowledgeSaveActivity(AccessUser eventUser, Date eventDateTime, KnowledgesEntity knowledge) {
         Activity activity = null;
         int publicFlag = KnowledgeLogic.PUBLIC_FLAG_PRIVATE;
         if (knowledge.getPublicFlag() != null) {

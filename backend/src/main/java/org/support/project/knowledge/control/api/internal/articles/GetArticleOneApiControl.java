@@ -28,7 +28,7 @@ public class GetArticleOneApiControl extends ApiControl {
      */
     @Get(path="_api/articles/:id")
     @Open
-    public Boundary article() throws Exception {
+    public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         String id = super.getParam("id");
         LOG.debug(id);

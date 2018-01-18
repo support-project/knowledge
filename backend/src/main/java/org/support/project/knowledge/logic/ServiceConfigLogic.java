@@ -15,7 +15,7 @@ import org.support.project.knowledge.dao.ServiceConfigsDao;
 import org.support.project.knowledge.dao.ServiceLocaleConfigsDao;
 import org.support.project.knowledge.entity.ServiceConfigsEntity;
 import org.support.project.knowledge.entity.ServiceLocaleConfigsEntity;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 @DI(instance = Instance.Singleton)
 public class ServiceConfigLogic {
@@ -41,7 +41,7 @@ public class ServiceConfigLogic {
     }
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void saveConfig(LoginedUser loginedUser, ServiceConfigsEntity configsEntity, String enPage, String jaPage) {
+    public void saveConfig(AccessUser loginedUser, ServiceConfigsEntity configsEntity, String enPage, String jaPage) {
         ServiceConfigsDao.get().save(configsEntity);
         ServiceLocaleConfigsEntity en = new ServiceLocaleConfigsEntity("en", configsEntity.getServiceName());
         en.setPageHtml(enPage);

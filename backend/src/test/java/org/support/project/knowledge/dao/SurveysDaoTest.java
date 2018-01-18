@@ -12,14 +12,14 @@ import org.support.project.knowledge.entity.SurveysEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 public class SurveysDaoTest extends TestCommon {
 
     @Test
     @Order(order = 1)
     public void testSelectWithKnowledgeTitle() throws Exception {
-        LoginedUser admin = SurveysDaoTest.loginedAdmin; //AdminUser
+        AccessUser admin = SurveysDaoTest.loginedAdmin; //AdminUser
         
         DBUserPool.get().setUser(admin.getUserId());
         
@@ -49,8 +49,8 @@ public class SurveysDaoTest extends TestCommon {
     @Test
     @Order(order = 2)
     public void testSelectWithKnowledgeTitleOnlyAccessAble() throws Exception {
-        LoginedUser admin = SurveysDaoTest.loginedAdmin; //AdminUser
-        LoginedUser user = SurveysDaoTest.loginedUser2;
+        AccessUser admin = SurveysDaoTest.loginedAdmin; //AdminUser
+        AccessUser user = SurveysDaoTest.loginedUser2;
         KnowledgeLogic logic = KnowledgeLogic.get();
         
         DBUserPool.get().setUser(admin.getUserId());

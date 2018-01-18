@@ -58,7 +58,7 @@ import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.dao.RolesDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.UsersEntity;
@@ -226,7 +226,7 @@ public class MailhookLogic {
         }
         
         // 登録者の取得
-        LoginedUser loginedUser = new LoginedUser();
+        AccessUser loginedUser = new AccessUser();
         UsersEntity user = null;
         Address[] in = msg.getFrom();
         for (Address address : in) {
@@ -251,11 +251,11 @@ public class MailhookLogic {
                 LOG.debug("Register user [" + userId + "] is not found.");
                 return;
             }
-            loginedUser.setLoginUser(user);
+            loginedUser.setUserInfomation(user);
             loginedUser.setRoles(RolesDao.get().selectOnUserKey(user.getUserKey()));
         } else {
             DBUserPool.get().setUser(user.getUserId());
-            loginedUser.setLoginUser(user);
+            loginedUser.setUserInfomation(user);
             loginedUser.setRoles(RolesDao.get().selectOnUserKey(user.getUserKey()));
         }
         
@@ -324,7 +324,7 @@ public class MailhookLogic {
      * @param loginedUser 
      * @throws Exception 
      */
-    private void updateTargetsAndTags(KnowledgesEntity knowledge, MailHookConditionsEntity condition, LoginedUser loginedUser) throws Exception {
+    private void updateTargetsAndTags(KnowledgesEntity knowledge, MailHookConditionsEntity condition, AccessUser loginedUser) throws Exception {
         // タグ
         List<TagsEntity> tagList = null;
         if (StringUtils.isNotEmpty(condition.getTags())) {
@@ -414,7 +414,7 @@ public class MailhookLogic {
      * @throws Exception 
      * @throws MessagingException 
      */
-    private void addCommnet(Message msg, MailHookConditionsEntity condition, LoginedUser loginedUser, String msgId, KnowledgesEntity parent)
+    private void addCommnet(Message msg, MailHookConditionsEntity condition, AccessUser loginedUser, String msgId, KnowledgesEntity parent)
             throws MessagingException, Exception {
         LOG.debug("Add Comment");
         String content = getContent(msg);
@@ -440,7 +440,7 @@ public class MailhookLogic {
      * @param loginedUser 
      * @throws Exception 
      */
-    private void addKnowkedge(Message msg, MailHookConditionsEntity condition, LoginedUser loginedUser, String msgId) throws Exception {
+    private void addKnowkedge(Message msg, MailHookConditionsEntity condition, AccessUser loginedUser, String msgId) throws Exception {
         LOG.debug("Add Knowledge");
         
         KnowledgesEntity entity = new KnowledgesEntity();

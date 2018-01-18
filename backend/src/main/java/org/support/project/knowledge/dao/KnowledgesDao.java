@@ -12,7 +12,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenKnowledgesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.ormapping.common.SQLManager;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.entity.GroupsEntity;
 
 /**
@@ -170,7 +170,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<KnowledgesEntity> selectPopularityWithAccessControl(LoginedUser loginedUser, Timestamp start, Timestamp end, int offset, int limit) {
+    public List<KnowledgesEntity> selectPopularityWithAccessControl(AccessUser loginedUser, Timestamp start, Timestamp end, int offset, int limit) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectPopularityWithAccessControl.sql");
         List<Object> params = new ArrayList<>();
@@ -209,7 +209,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
     }
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<KnowledgesEntity> selectStocks(LoginedUser loginedUser, int offset, int limit, Long stockid) {
+    public List<KnowledgesEntity> selectStocks(AccessUser loginedUser, int offset, int limit, Long stockid) {
         if (loginedUser == null) {
             // ログインしていないのであれば、ストックは無し
             return new ArrayList<>();
@@ -287,7 +287,7 @@ public class KnowledgesDao extends GenKnowledgesDao {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<KnowledgesEntity> selectAccessAbleKnowledgeOnIdPrefix(String q, LoginedUser loginedUser, int limit, int offset) {
+    public List<KnowledgesEntity> selectAccessAbleKnowledgeOnIdPrefix(String q, AccessUser loginedUser, int limit, int offset) {
         String sql = SQLManager.getInstance()
                 .getSql("/org/support/project/knowledge/dao/sql/KnowledgesDao/KnowledgesDao_selectAccessAbleKnowledgeOnIdPrefix.sql");
         List<Object> params = new ArrayList<>();

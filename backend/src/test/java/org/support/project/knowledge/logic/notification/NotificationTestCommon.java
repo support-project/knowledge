@@ -23,7 +23,7 @@ public abstract class NotificationTestCommon extends TestCommon {
     public static void setUpBeforeClass() throws Exception {
         TestCommon.setUpBeforeClass();
         AddUserProcessLogic logic = new AddUserProcessLogic();
-        logic.addUserProcess(loginedUser.getLoginUser().getUserKey());
+        logic.addUserProcess(loginedUser.getUserInfomation().getUserKey());
         // デスクトップ通知をONにする
         NotifyConfigsEntity notifyConfig = NotifyConfigsDao.get().selectOnKey(loginedUser.getUserId());
         if (notifyConfig != null) {

@@ -9,7 +9,7 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.TemplateLogic;
 import org.support.project.ormapping.tool.dao.InitializeDao;
-import org.support.project.web.bean.LoginedUser;
+import org.support.project.web.bean.AccessUser;
 
 public class Migrate_0_6_0pre4 implements Migrate {
 
@@ -61,7 +61,7 @@ public class Migrate_0_6_0pre4 implements Migrate {
 
         template.setItems(items);
 
-        TemplateLogic.get().addTemplate(template, new LoginedUser());
+        TemplateLogic.get().addTemplate(template, new AccessUser());
 
         return true;
 
