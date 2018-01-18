@@ -37,7 +37,7 @@
   },
   "ArticleDetail": {
     "description": "detail of a article",
-    "BtnStar": "Like",
+    "BtnLike": "Like",
     "BtnStock": "Stock this article",
     "BtnEdit": "Edit this article",
     "BtnToc": "Toggle table of contents"

@@ -12,6 +12,8 @@ import toggleAttributes from './actions/toggleAttributes'
 
 import saveArticle from './actions/saveArticle'
 
+import likeArticle from './actions/likeArticle'
+
 export default {
   setServerURI: setServerURI,
   getArticles: getArticles,
@@ -22,5 +24,6 @@ export default {
   previewArticle: previewArticle,
   toggleTOC: toggleTOC,
   toggleAttributes: toggleAttributes,
-  saveArticle: saveArticle
+  saveArticle: saveArticle,
+  likeArticle: likeArticle
 }

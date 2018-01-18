@@ -29,7 +29,7 @@
     </div>
 
     <!-- Main content -->
-    <div class="content">
+    <div class="content main-content">
       <form role="form" id="knowledgeForm">
         <div class="form-group">
             <label for="input_title">

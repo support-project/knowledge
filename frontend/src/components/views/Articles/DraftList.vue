@@ -5,7 +5,7 @@
       :description = "$route.name + '.description'" />
 
     <!-- Main content -->
-    <div class="content">
+    <div class="content main-content">
       <i class="fa fa-refresh fa-spin fa-3x fa-fw" id="loadingList"></i>
 
       <div class="knowledge_item" v-for="draft in resources.drafts" :key="draft.draftId">

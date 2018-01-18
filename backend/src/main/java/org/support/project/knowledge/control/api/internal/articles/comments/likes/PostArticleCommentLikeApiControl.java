@@ -24,7 +24,7 @@ public class PostArticleCommentLikeApiControl extends ApiControl {
      * 記事の一覧を取得
      * @throws Exception 
      */
-    @Post(path="_api/articles/:id/comments/:commentid/likes")
+    @Post(path="_api/articles/:id/comments/:commentid/likes", checkCookieToken=false, checkHeaderToken=true)
     @Open
     public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());

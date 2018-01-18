@@ -11,7 +11,7 @@
           v-on:click="toggleSideBar()">
           <i class="fa fa-list fa-lg" aria-hidden="true"></i>
         </a>
-        <button :title="$t('ArticleDetail.BtnStar')">
+        <button :title="$t('ArticleDetail.BtnLike')" v-on:click="likeArticle()">
           <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
         </button>
         <a :title="$t('ArticleDetail.BtnStock')">
@@ -25,7 +25,7 @@
     </div>
 
     <!-- Main content -->
-    <div class="content">
+    <div class="content main-content">
       <div class="article-information">
         <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ resources.article.title}}</div>
         
@@ -123,6 +123,11 @@ export default {
     },
     toggleSideBar () {
       this.$store.dispatch('toggleTOC')
+    },
+    likeArticle () {
+      this.$store.dispatch('likeArticle', this.$route.params.id).then((cnt) => {
+        logger.debug(LABEL, JSON.stringify(cnt))
+      })
     }
   },
   mounted () {

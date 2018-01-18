@@ -23,7 +23,7 @@ public class PostArticleCommentApiControl extends ApiControl {
      * コメントを登録
      * @throws Exception 
      */
-    @Post(path="_api/articles/:id/comments/")
+    @Post(path="_api/articles/:id/comments/", checkCookieToken=false, checkHeaderToken=true)
     public Boundary execute() throws Exception {
         LOG.debug("post");
         String id = super.getParam("id");

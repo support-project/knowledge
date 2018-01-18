@@ -24,7 +24,7 @@ public class PostArticleLikeApiControl extends ApiControl {
      * 記事の一覧を取得
      * @throws Exception 
      */
-    @Post(path="_api/articles/:id/likes")
+    @Post(path="_api/articles/:id/likes", checkCookieToken=false, checkHeaderToken=true)
     @Open
     public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());

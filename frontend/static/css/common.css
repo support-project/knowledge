@@ -12,4 +12,10 @@
   }
 }
 
-
+/** コンテンツ領域の調整 */
+.main-content {
+  min-height: 80vh;
+}
+.wrapper {
+  overflow-y: hidden;
+}

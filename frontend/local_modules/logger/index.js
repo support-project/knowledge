@@ -38,7 +38,7 @@ logger.setCallSite = function (callsite) {
   logger.callsite = callsite
 }
 
-var getCallsiteStr = function () {
+var getCallsiteStr = function (loglevel) {
   /* webpack で結合されたjsファイルになるので、ファイル名＆行番号を取得できない（直接Node.jsで実行する場合は以下のコードで取得できるけど利用しない）
   if (!path) {
     return ''
@@ -56,8 +56,8 @@ var getCallsiteStr = function () {
   var line = call.getLineNumber()
   return '[' + file + ':' + line + '] - '
   */
-  if (logger.callsite) {
-    console.trace()
+  if (logger.callsite && loglevel <= logger.LEVEL.WARN) {
+    console.trace(loglevel)
   }
   var c = ''
   c += ' - '
@@ -93,10 +93,10 @@ var createMsgArgs = function(loglevel, params) {
   var args = [].slice.call(params)
   if (args.length === 2) {
     var msg = args[1]
-    args[1] = makelogStr(loglevel, getCallsiteStr(), args[1], args[0])
+    args[1] = makelogStr(loglevel, getCallsiteStr(loglevel), args[1], args[0])
     args.shift() // 先頭のラベルは削除
   } else {
-    args[0] = makelogStr(loglevel, getCallsiteStr(), args[0])
+    args[0] = makelogStr(loglevel, getCallsiteStr(loglevel), args[0])
   }
   return args;
 }
