@@ -1,12 +1,12 @@
 <template>
 
 <aside class="control-sidebar control-sidebar-dark "
-  v-bind:class="{'control-sidebar-open': pagestate.toggleTOC}">
+  v-bind:class="{'control-sidebar-open': pagestate.showRightSideBar}">
   <div class="tab-content" id="tab-content">
     <!-- Home tab content -->
     <div class="tab-pane active" id="control-sidebar-theme-demo-options-tab">
       <div class="close-btn-on-sidebar">
-        <a class="btn btn-link" v-on:click="toggleSideBar()">
+        <a class="btn btn-link" v-on:click="toggleRightSideBar()">
           <i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i>
         </a>
       </div>
@@ -32,8 +32,8 @@ export default {
     ])
   },
   methods: {
-    toggleSideBar () {
-      this.$store.dispatch('toggleTOC')
+    toggleRightSideBar () {
+      this.$store.dispatch('toggleRightSideBar')
     }
   },
   mounted () {

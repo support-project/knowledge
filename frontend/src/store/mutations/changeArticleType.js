@@ -2,11 +2,11 @@ import logger from 'logger'
 const LABEL = 'changeArticleType.js'
 
 export default (state, type) => {
-  logger.info(LABEL, 'Change article type: ' + type)
+  logger.debug(LABEL, 'Change article type: ' + type)
   var article = state.resources.article
   var types = state.resources.types
-  logger.info(LABEL, JSON.stringify(article))
-  logger.info(LABEL, JSON.stringify(types))
+  logger.debug(LABEL, JSON.stringify(article))
+  logger.debug(LABEL, JSON.stringify(types))
   article.type.id = type
   var beforeTypeId = -100
   if (article.type.items.length > 0) {

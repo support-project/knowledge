@@ -29,8 +29,7 @@ export default {
     toc: ''
   },
   pagestate: {
-    toggleTOC: true,
-    toggleAttributes: true,
+    showRightSideBar: true,
     loading: false
   }
 }

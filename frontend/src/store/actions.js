@@ -7,8 +7,7 @@ import getTypes from './actions/getTypes'
 import getDrafts from './actions/getDrafts'
 
 import previewArticle from './actions/previewArticle'
-import toggleTOC from './actions/toggleTOC'
-import toggleAttributes from './actions/toggleAttributes'
+import toggleRightSideBar from './actions/toggleRightSideBar'
 
 import saveArticle from './actions/saveArticle'
 
@@ -23,8 +22,7 @@ export default {
   getTypes: getTypes,
   getDrafts: getDrafts,
   previewArticle: previewArticle,
-  toggleTOC: toggleTOC,
-  toggleAttributes: toggleAttributes,
+  toggleRightSideBar: toggleRightSideBar,
   saveArticle: saveArticle,
   likeArticle: likeArticle,
   likeComment: likeComment

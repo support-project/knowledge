@@ -4,7 +4,7 @@ import logger from 'logger'
 const LABEL = 'likeComment.js'
 
 export default (context, params) => {
-  logger.info(LABEL, 'like comment. ' + JSON.stringify(params))
+  logger.debug(LABEL, 'like comment. ' + JSON.stringify(params))
   return api.request('post', '/_api/articles/' + params.id + '/comments/' + params.commentNo + '/likes', null)
   .then(response => {
     logger.debug(LABEL, JSON.stringify(response.data))

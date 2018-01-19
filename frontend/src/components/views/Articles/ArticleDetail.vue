@@ -7,8 +7,8 @@
 
     <div id="secondNavbar">
       <nav class="secondMenu" >
-        <a :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'toggle-on': pagestate.toggleTOC}"
-          v-on:click="toggleSideBar()">
+        <a :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'toggle-on': pagestate.showRightSideBar}"
+          v-on:click="toggleRightSideBar()">
           <i class="fa fa-list fa-lg" aria-hidden="true"></i>
         </a>
         <button :title="$t('ArticleDetail.BtnLike')" v-on:click="likeArticle()">
@@ -122,8 +122,8 @@ export default {
         }, 500)
       })
     },
-    toggleSideBar () {
-      this.$store.dispatch('toggleTOC')
+    toggleRightSideBar () {
+      this.$store.dispatch('toggleRightSideBar')
     },
     likeArticle () {
       this.$store.dispatch('likeArticle', this.$route.params.id).then((cnt) => {
@@ -152,8 +152,8 @@ export default {
 
       // この画面特有の操作ボタンの固定
       secondNavbar()
-      // 右側のサイドバーを開く
-      rightSidebar(true)
+      // 右側のサイドバーの状態を復元
+      rightSidebar(this.$store.state.pagestate.showRightSideBar)
     })
   }
 }

@@ -8,8 +8,8 @@
     <div id="secondNavbar">
       <nav class="secondMenu" >
         <a :title="$t('ArticleEdit.BtnAttributes')"
-          v-bind:class="{'toggle-on': pagestate.toggleAttributes}"
-          v-on:click="toggleAttributes()">
+          v-bind:class="{'toggle-on': pagestate.showRightSideBar}"
+          v-on:click="toggleRightSideBar()">
           <i class="fa fa-list fa-lg" aria-hidden="true"></i>
         </a>
         <button :title="$t('ArticleEdit.BtnRelease')" class="label-primary" v-on:click="releaseArticle()">
@@ -95,19 +95,19 @@ export default {
   },
   methods: {
     getArticle () {
-      logger.info(LABEL, 'getArticle')
-      // 右側のサイドバーを開く
-      rightSidebar(true)
+      logger.debug(LABEL, 'getArticle')
+      // 右側のサイドバーの状態を復元
+      rightSidebar(this.$store.state.pagestate.showRightSideBar)
       // データの取得
       this.$store.dispatch('getArticleForEdit', this.$route.params.id).then(() => {
         return this.$store.dispatch('getTypes')
       })
     },
-    toggleAttributes () {
-      this.$store.dispatch('toggleAttributes')
+    toggleRightSideBar () {
+      this.$store.dispatch('toggleRightSideBar')
     },
     releaseArticle () {
-      logger.info(LABEL, JSON.stringify(this.resources.article, null, '  '))
+      logger.debug(LABEL, JSON.stringify(this.resources.article, null, '  '))
       this.$store.dispatch('saveArticle').then((id) => {
         this.$router.push('/articles/' + id)
       })
