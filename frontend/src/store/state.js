@@ -1,6 +1,4 @@
 export default {
-  callingAPI: false,
-  searching: '',
   serverURI: '',
   user: null,
   token: null,
@@ -30,6 +28,7 @@ export default {
   },
   pagestate: {
     showRightSideBar: true,
-    loading: false
+    loading: false,
+    alerts: []
   }
 }

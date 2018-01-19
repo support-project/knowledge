@@ -1,4 +1,4 @@
-package org.support.project.knowledge.control.api.internal;
+package org.support.project.knowledge.control.api.internal.auth;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -29,7 +29,7 @@ import org.support.project.web.logic.invoke.Open;
 public class AuthApiControl extends ApiControl {
     
     @Open
-    @Post(path="open/token", subscribeToken="")
+    @Post(path="open/auth")
     public JsonBoundary token() throws InterruptedException, InvalidParamException {
         Auth auth = parseJson(Auth.class);
         AuthenticationLogic<AccessUser> authenticationLogic = Container.getComp(KnowledgeAuthenticationLogic.class);
@@ -50,10 +50,7 @@ public class AuthApiControl extends ApiControl {
             u.setUserName(user.getUserName());
             authResult.setUser(u);
             authResult.setToken(entity.getToken());
-            
-//            JsonObject json = new JsonObject();
-//            json.addProperty("token", entity.getToken());
-            
+            authResult.setExpires(entity.getExpires());
             return send(HttpStatus.SC_200_OK, authResult);
         }
         synchronized (this) {

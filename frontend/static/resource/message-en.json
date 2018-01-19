@@ -16,6 +16,10 @@
       "2": "Protect"
     }
   },
+  "Login": {
+    "BtnSubmit": "Submit",
+    "BtnCancel": "Cancel"
+  },
   "Label": {
     "Create": "Create",
     "Update": "Update",

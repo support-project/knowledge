@@ -26,6 +26,10 @@
       "2": "保護"
     }
   },
+  "Login": {
+    "BtnSubmit": "ログイン",
+    "BtnCancel": "キャンセル"
+  },
   "DashView": {
     "about": "このアプリについて",
     "manual": "オンラインマニュアル",

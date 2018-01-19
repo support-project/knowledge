@@ -63,11 +63,11 @@ var router = new VueRouter({
 
 // Some middleware to help us ensure the user is authenticated.
 router.beforeEach((to, from, next) => {
-  rightSidebar(store.state.pagestate.showRightSideBar)
+  rightSidebar(false) // ルーティングの際には一度必ず閉じる→書くページで必要に応じ復元する
   if (to.matched.some(record => record.meta.requiresAuth) && (!router.app.$store.state.token || router.app.$store.state.token === 'null')) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
-    window.console.log('Not authenticated')
+    logger.debug(LABEL, 'Not authenticated')
     next({
       path: '/login',
       query: { redirect: to.fullPath }
@@ -75,6 +75,9 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
+})
+router.onReady(() => {
+  store.commit('SET_PAGE_STATE', {loading: false}) // 画面を切り替えた場合、必ず読み込み中の表示をOFFにする
 })
 
 sync(store, router)
@@ -115,7 +118,6 @@ const message = {
 Vue.use(VueI18n)
 const i18n = new VueI18n({
   locale: 'ja',
-//  locale: 'en',
   fallbackLocale: 'en',
   messages: message
 })
@@ -128,14 +130,6 @@ store.dispatch('setServerURI', serverURI).then(() => {
     router: router,
     store: store,
     render: h => h(AppView),
-    i18n: i18n,
-    beforeCreate: function () {
-      var _self = this
-
-      // TODO Ajax access to get user locale config
-      setTimeout(function () {
-        _self.$i18n.locale = 'en'
-      }, 100)
-    }
+    i18n: i18n
   })
 })

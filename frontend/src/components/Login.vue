@@ -3,32 +3,26 @@
       <div class="row vertical-10p">
         <div class="container">
           <img src="static/img/human.svg" class="center-block logo">
+          <alerts></alerts>
           <div class="text-center col-md-4 col-sm-offset-4">
-            <!-- login form -->
             <form class="ui form loginForm"  @submit.prevent="checkCreds">
-
               <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                 <input class="form-control" name="username" placeholder="Username" type="text" v-model="username">
               </div>
-
               <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-lock"></i></span>
                 <input class="form-control" name="password" placeholder="Password" type="password" v-model="password">
               </div>
-              <button type="submit" v-bind:class="'btn btn-primary btn-lg ' + loading">Submit</button>
-
+              <button type="submit" v-bind:class="'btn btn-primary btn-lg'">
+                {{ $t('Login.BtnSubmit') }}
+              </button>
               <router-link class="btn btn-default" to="/">
                 <a>
-                  <span class="page">キャンセル</span>
+                  <span class="page">{{ $t('Login.BtnCancel') }}</span>
                 </a>
               </router-link>
-
-
             </form>
-
-            <!-- errors -->
-            <div v-if=response class="text-red"><p>{{response}}</p></div>
           </div>
         </div>
       </div>
@@ -36,83 +30,24 @@
 </template>
 
 <script>
-import api from '../api'
+import Alerts from './views/Parts/Alerts'
 
 export default {
   name: 'Login',
+  components: { Alerts },
   data (router) {
     return {
-      section: 'Login',
-      loading: '',
       username: '',
-      password: '',
-      response: ''
+      password: ''
     }
   },
   methods: {
     checkCreds () {
       const {username, password} = this
-
-      this.toggleLoading()
-      this.resetResponse()
-      this.$store.commit('TOGGLE_LOADING')
-
-      /* Making API call to authenticate a user */
-      api.request('post', '/open/token', {id: username, password: password})
-      .then(response => {
-        this.toggleLoading()
-
-        console.log(response)
-
-        var data = response.data
-        /* Checking if error object was returned from the server */
-        if (data.error) {
-          var errorName = data.error.name
-          if (errorName) {
-            this.response = errorName === 'InvalidCredentialsError'
-            ? 'Username/Password incorrect. Please try again.'
-            : errorName
-          } else {
-            this.response = data.error
-          }
-
-          return
-        }
-
-        /* Setting user in the state and caching record to the localStorage */
-        if (data.user) {
-          var token = data.token
-
-          data.user.avatar = 'open.account/icon/' + data.user.userId
-
-          this.$store.commit('SET_USER', data.user)
-          this.$store.commit('SET_TOKEN', token)
-
-          if (window.localStorage) {
-            window.localStorage.setItem('user', JSON.stringify(data.user))
-            window.localStorage.setItem('token', token)
-          }
-
-          this.$router.push(data.redirect ? data.redirect : '/')
-        }
+      this.$store.dispatch('login', {id: username, password: password}).then((data) => {
+        this.$router.push(data.redirect ? data.redirect : '/')
+      }).catch((e) => {
       })
-      .catch(error => {
-        this.$store.commit('TOGGLE_LOADING')
-        console.log(error)
-
-        if (error.response.status === 403) {
-          this.response = 'Username/Password incorrect. Please try again.'
-        } else {
-          this.response = 'Server appears to be offline'
-        }
-        this.toggleLoading()
-      })
-    },
-    toggleLoading () {
-      this.loading = (this.loading === '') ? 'loading' : ''
-    },
-    resetResponse () {
-      this.response = ''
     }
   }
 }
@@ -121,7 +56,7 @@ export default {
 <style>
 html, body, .container-table {
   height: 100%;
-  background-color: #282B30 !important;
+/*  background-color: #282B30 !important; */
 }
 .container-table {
     display: table;

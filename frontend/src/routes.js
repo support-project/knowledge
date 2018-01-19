@@ -36,7 +36,8 @@ const routes = [
       }, {
         path: 'articles/new',
         component: ArticleEdit,
-        name: 'ArticleCreate'
+        name: 'ArticleCreate',
+        meta: {requiresAuth: true}
       }, {
         path: 'articles/:id',
         component: ArticleDetail,
@@ -44,11 +45,13 @@ const routes = [
       }, {
         path: 'articles/:id/edit',
         component: ArticleEdit,
-        name: 'ArticleEdit'
+        name: 'ArticleEdit',
+        meta: {requiresAuth: true}
       }, {
         path: 'drafts',
         component: DraftList,
-        name: 'DraftList'
+        name: 'DraftList',
+        meta: {requiresAuth: true}
       }, {
         path: 'test',
         component: TestView,

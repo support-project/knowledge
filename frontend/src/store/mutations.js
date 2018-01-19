@@ -1,14 +1,9 @@
 import setResources from './mutations/setResources'
 import setPageState from './mutations/setPageState'
 import changeArticleType from './mutations/changeArticleType'
+import addAlert from './mutations/addAlert'
 
 export default {
-  TOGGLE_LOADING (state) {
-    state.callingAPI = !state.callingAPI
-  },
-  TOGGLE_SEARCHING (state) {
-    state.searching = (state.searching === '') ? 'loading' : ''
-  },
   SET_SERVER_URI (state, serverURI) {
     state.serverURI = serverURI
   },
@@ -35,5 +30,11 @@ export default {
   },
   CHANGE_ARTICLE_TYPE (state, type) {
     changeArticleType(state, type)
+  },
+  ADD_ALERT (state, params) {
+    addAlert(state, params)
+  },
+  CREAR_ALERTS (state, params) {
+    state.pagestate.alerts = []
   }
 }
