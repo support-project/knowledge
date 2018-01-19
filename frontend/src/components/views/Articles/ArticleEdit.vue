@@ -5,7 +5,7 @@
       :description = "$route.name + '.description'"
       :breadcrumb = "breadcrumb" />
 
-    <div id="secondNavbar">
+    <div id="secondNavbar" class="left-margin-content">
       <nav class="secondMenu" >
         <a :title="$t('ArticleEdit.BtnAttributes')"
           v-bind:class="{'toggle-on': pagestate.showRightSideBar}"

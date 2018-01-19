@@ -1,14 +1,14 @@
 /* Override right slider width */ 
 .control-sidebar-bg,
 .control-sidebar {
-  right: -330px;
-  width: 330px;
+  right: -250px;
+  width: 250px;
 }
 @media (min-width: 768px) {
   .control-sidebar-open .content-wrapper,
   .control-sidebar-open .right-side,
   .control-sidebar-open .main-footer {
-    margin-right: 330px;
+    margin-right: 250px;
   }
 }
 
@@ -23,4 +23,9 @@
 /** 画面右上の通知を一番上にもってくる */
 .alert {
   z-index: 9999;
+}
+
+/** コンテンツ領域を、contentと同じだけ左に隙間をつける */
+.left-margin-content {
+  padding-left: 30px;
 }

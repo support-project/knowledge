@@ -82,24 +82,6 @@ router.onReady(() => {
 
 sync(store, router)
 
-// Check local storage to handle refreshes
-if (window.localStorage) {
-  var localUserString = window.localStorage.getItem('user') || 'null'
-  var localUser = JSON.parse(localUserString)
-  logger.debug(LABEL, localUser)
-  if (localUser && store.state.user !== localUser) {
-    // TODO Tokenが有効かどうかのチェック（無効になっていれば、ログアウト）
-
-    store.commit('SET_USER', localUser)
-    store.commit('SET_TOKEN', window.localStorage.getItem('token'))
-  } else {
-    store.commit('SET_USER', {
-      avatar: 'open.account/icon/',
-      userName: 'anonymous'
-    })
-  }
-}
-
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   error: './static/img/loader.gif',
@@ -122,7 +104,10 @@ const i18n = new VueI18n({
   messages: message
 })
 
-store.dispatch('setServerURI', serverURI).then(() => {
+store.dispatch('setServerURI', serverURI)
+.then(() => {
+  return store.dispatch('loadUserInformation', {i18n})
+}).then(() => {
   // Start out app!
   // eslint-disable-next-line no-new
   new Vue({

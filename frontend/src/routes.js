@@ -8,8 +8,8 @@ import ArticleDetail from './components/views/Articles/ArticleDetail.vue'
 import ArticleEdit from './components/views/Articles/ArticleEdit.vue'
 import DraftList from './components/views/Articles/DraftList.vue'
 
+/*
 import TestView from './components/views/Test.vue'
-
 import DashboardView from './components/views/Dashboard.vue'
 import TablesView from './components/views/Tables.vue'
 import TasksView from './components/views/Tasks.vue'
@@ -17,6 +17,7 @@ import SettingView from './components/views/Setting.vue'
 import AccessView from './components/views/Access.vue'
 import ServerView from './components/views/Server.vue'
 import ReposView from './components/views/Repos.vue'
+*/
 
 // Routes
 const routes = [
@@ -52,6 +53,7 @@ const routes = [
         component: DraftList,
         name: 'DraftList',
         meta: {requiresAuth: true}
+/*
       }, {
         path: 'test',
         component: TestView,
@@ -92,6 +94,7 @@ const routes = [
         component: ReposView,
         name: 'Repository',
         meta: {description: 'List of popular javascript repos'}
+*/
       }
     ]
   }, {

@@ -1,6 +1,6 @@
 <template>
   <!-- Content Header (Page header) -->
-  <section class="content-header">
+  <section class="content-header left-margin-content">
     <h1>
       {{ $t(title) }}
       <small>

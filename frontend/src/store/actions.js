@@ -2,6 +2,7 @@ import setServerURI from './actions/setServerURI'
 
 import login from './actions/login'
 import logout from './actions/logout'
+import loadUserInformation from './actions/loadUserInformation'
 
 import getArticles from './actions/getArticles'
 import getArticle from './actions/getArticle'
@@ -21,6 +22,7 @@ export default {
   setServerURI: setServerURI,
   login: login,
   logout: logout,
+  loadUserInformation: loadUserInformation,
   getArticles: getArticles,
   getArticle: getArticle,
   getArticleForEdit: getArticleForEdit,

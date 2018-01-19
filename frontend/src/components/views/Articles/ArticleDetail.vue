@@ -5,7 +5,7 @@
       :description = "$route.name + '.description'"
       :breadcrumb = "breadcrumb" />
 
-    <div id="secondNavbar">
+    <div id="secondNavbar" class="left-margin-content">
       <nav class="secondMenu" >
         <a :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'toggle-on': pagestate.showRightSideBar}"
           v-on:click="toggleRightSideBar()">
@@ -37,7 +37,7 @@
         </div>
         <div class="article-meta">
           <article-parts-type-label :article="resources.article" />
-          <span class="left-margin">
+          <span>
             <article-parts-public-flag :article="resources.article" />
           </span>
         </div>
@@ -185,7 +185,7 @@ export default {
 
 .template-items {
   border-bottom: 1px dashed #96cef1;
-  padding-left: 20px;
+  padding-left: 5px;
   padding-bottom: 5px;
   margin-bottom: 20px;
 }
@@ -197,10 +197,6 @@ export default {
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
-}
-
-.left-margin {
-  margin-left: 10px;
 }
 
 </style>
