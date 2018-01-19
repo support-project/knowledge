@@ -6,7 +6,9 @@
 
     <!-- Main content -->
     <div class="content main-content">
-      <i class="fa fa-refresh fa-spin fa-3x fa-fw" id="loadingList"></i>
+      <div v-if="pagestate.loading" class="text-center">
+        <i class="fa fa-refresh fa-spin fa-1x fa-fw" v-if="pagestate.loading"></i>
+      </div>
 
       <!-- Tab -->
       <div class="row padding-side">
@@ -34,7 +36,6 @@
 </template>
 
 <script>
-/* global $ */
 import { mapState } from 'vuex'
 import PageTitle from '../Parts/PageTitle'
 import ArticleListItem from './ArticleListItem'
@@ -45,15 +46,13 @@ export default {
   components: { PageTitle, ArticleListItem, ArticleListCalendar },
   computed: {
     ...mapState([
+      'pagestate',
       'resources'
     ])
   },
   methods: {
     getArticleList () {
       this.$store.dispatch('getArticles')
-      .then(() => {
-        $('#loadingList').addClass('hide')
-      })
     }
   },
   mounted () {

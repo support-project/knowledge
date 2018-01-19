@@ -11,7 +11,7 @@
     </ul>
     <div class="tab-content">
       <div class="tab-pane contents active" id="contentsTab">
-        <textarea class="form-control" name="content" rows="20" placeholder="Markdown" id="content"
+        <textarea class="form-control" name="content" :rows="rows" placeholder="Markdown" id="content"
         v-model="article.content"></textarea>
 
         <article-parts-emoji @emoji-select="selectEmojiToCotents" />
@@ -41,7 +41,7 @@ import processFootnotesPotision from '../../../lib/displayParts/processFootnotes
 
 export default {
   name: 'ArticleEditContents',
-  props: ['article'],
+  props: ['article', 'rows'],
   components: { ArticlePartsEmoji },
   methods: {
     selectEmojiToCotents: function (emoji) {

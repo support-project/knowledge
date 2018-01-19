@@ -46,7 +46,7 @@
 
         <article-edit-items />
 
-        <article-edit-contents :article="resources.article" />
+        <article-edit-contents :article="resources.article" :rows="20" />
 
       </form>
       <article-edit-sidebar />

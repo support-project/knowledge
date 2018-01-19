@@ -11,6 +11,6 @@ export default (context, article) => {
   }).then(function (result) {
     logger.debug(LABEL, result)
     article.displaySafeHtml = result
-    context.commit('SET_RESOURCES', {article: article})
+    // context.commit('SET_RESOURCES', {article: article})
   })
 }

@@ -27,7 +27,7 @@ export default {
 <style>
 .loading-icon {
   position: fixed;
-  top: 0px;
+  bottom: 0px;
   left: 0px;
   z-index: 9998;
 }
