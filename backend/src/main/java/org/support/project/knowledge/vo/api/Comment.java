@@ -25,6 +25,14 @@ public class Comment {
     /** 添付ファイル */
     private List<AttachedFile> attachments = new ArrayList<>();
     
+    /** いいねの件数 */
+    private long likeCount = 0;
+    /** 登録ユーザ名 */
+    private String insertUserName;
+    /** 更新ユーザ名 */
+    private String updateUserName;
+
+    
     /**
      * @return the commentNo
      */
@@ -126,6 +134,24 @@ public class Comment {
     }
     public void setAttachments(List<AttachedFile> attachments) {
         this.attachments = attachments;
+    }
+    public long getLikeCount() {
+        return likeCount;
+    }
+    public void setLikeCount(long likeCount) {
+        this.likeCount = likeCount;
+    }
+    public String getInsertUserName() {
+        return insertUserName;
+    }
+    public void setInsertUserName(String insertUserName) {
+        this.insertUserName = insertUserName;
+    }
+    public String getUpdateUserName() {
+        return updateUserName;
+    }
+    public void setUpdateUserName(String updateUserName) {
+        this.updateUserName = updateUserName;
     }
 
     

@@ -38,6 +38,16 @@ public class CommentsDao extends GenCommentsDao {
         return executeQueryList(builder.toString(), CommentsEntity.class, knowledgeId);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public CommentsEntity selectWithUserName(Long commentNo) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT COMMENTS.*, UPDATE_USER.USER_NAME AS UPDATE_USER_NAME, INSERT_USER.USER_NAME AS INSERT_USER_NAME FROM COMMENTS ");
+        builder.append("LEFT OUTER JOIN USERS AS UPDATE_USER ON UPDATE_USER.USER_ID = COMMENTS.UPDATE_USER ");
+        builder.append("LEFT OUTER JOIN USERS AS INSERT_USER ON INSERT_USER.USER_ID = COMMENTS.INSERT_USER ");
+        builder.append("WHERE COMMENTS.COMMENT_NO = ? AND COMMENTS.DELETE_FLAG = 0 ");
+        return executeQuerySingle(builder.toString(), CommentsEntity.class, commentNo);
+    }
+    
     /**
      * ナレッジのコメントの件数を取得
      * 

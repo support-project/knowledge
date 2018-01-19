@@ -34,6 +34,17 @@
         <span class="page">{{ $t('Route.DraftList') }}</span>
       </a>
     </router-link>
+    
+
+    <li class="header">Other</li>
+    <li class="pageLink router-link-active">
+      <a href="open.knowledge/list">
+        <i class="fa fa-recycle" aria-hidden="true"></i>
+        <span class="page">{{ $t('Route.MoveOldUI') }}</span>
+      </a>
+    </li>
+    
+    <!--
     <router-link tag="li" class="pageLink" to="/stocks">
       <a>
         <i class="fa fa-list"></i>
@@ -162,8 +173,9 @@
         <span class="page"> 404</span>
       </a>
     </router-link>
-    
+    -->
   </ul>
+
 </template>
 <script>
 import api from '../api'

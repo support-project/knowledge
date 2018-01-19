@@ -15,25 +15,37 @@
     </c:forEach>
     -->
     
-    <a href="<%=request.getContextPath()%>/open.knowledge/likecomments/"
-        class="text-primary btn-link">
+    <a class="text-primary btn-link">
         <i class="fa fa-thumbs-o-up"></i>
-        &nbsp;Like × 
-        <span id="like_comment_count_<%=comment.getCommentNo()%>">
-        {{comment.likeCount}}
-        </span>
+        &nbsp;Like × {{comment.likeCount}}
     </a>
     &nbsp;
-    <button class="btn btn-info btn-circle" onclick="addlikeComment(<%=comment.getCommentNo()%>);">
+    <button class="btn btn-info btn-circle" v-on:click="likeComment(comment.knowledgeId, comment.commentNo)">
         <i class="fa fa-thumbs-o-up"></i>&nbsp;
     </button>
   </span>
 </template>
 
 <script>
+import { Notification } from 'uiv'
+import logger from 'logger'
+const LABEL = 'ArticleDetailCommentsContents.vue'
+
 export default {
   name: 'ArticleDetailCommentsContents',
-  props: ['comment', 'article']
+  props: ['comment', 'article'],
+  methods: {
+    likeComment (id, commentNo) {
+      this.$store.dispatch('likeComment', { id, commentNo }).then((cnt) => {
+        logger.debug(LABEL, JSON.stringify(cnt))
+        Notification.notify({
+          type: 'success',
+          title: 'Well done!',
+          content: 'You successfully added Like.'
+        })
+      })
+    }
+  }
 }
 </script>
 

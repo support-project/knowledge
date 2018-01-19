@@ -19,3 +19,8 @@
 .wrapper {
   overflow-y: hidden;
 }
+
+/** 画面右上の通知を一番上にもってくる */
+.alert {
+  z-index: 9999;
+}

@@ -69,6 +69,7 @@
 import tippy from 'tippy.js'
 import { mapState } from 'vuex'
 import logger from 'logger'
+import { Notification } from 'uiv'
 
 import PageTitle from '../Parts/PageTitle'
 import ArticleDetailSidebar from './ArticleDetailSidebar'
@@ -127,6 +128,11 @@ export default {
     likeArticle () {
       this.$store.dispatch('likeArticle', this.$route.params.id).then((cnt) => {
         logger.debug(LABEL, JSON.stringify(cnt))
+        Notification.notify({
+          type: 'success',
+          title: 'Well done!',
+          content: 'You successfully added Like.'
+        })
       })
     }
   },

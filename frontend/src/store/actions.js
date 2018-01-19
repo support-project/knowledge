@@ -13,6 +13,7 @@ import toggleAttributes from './actions/toggleAttributes'
 import saveArticle from './actions/saveArticle'
 
 import likeArticle from './actions/likeArticle'
+import likeComment from './actions/likeComment'
 
 export default {
   setServerURI: setServerURI,
@@ -25,5 +26,6 @@ export default {
   toggleTOC: toggleTOC,
   toggleAttributes: toggleAttributes,
   saveArticle: saveArticle,
-  likeArticle: likeArticle
+  likeArticle: likeArticle,
+  likeComment: likeComment
 }

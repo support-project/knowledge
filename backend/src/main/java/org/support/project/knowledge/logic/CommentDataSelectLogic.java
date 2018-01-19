@@ -13,6 +13,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
+import org.support.project.knowledge.dao.LikeCommentsDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.vo.api.AttachedFile;
@@ -53,6 +54,8 @@ public class CommentDataSelectLogic {
         List<Comment> comments = new ArrayList<>();
         List<CommentsEntity> commentsEntities = CommentsDao.get().selectOnKnowledgeId(knowledgeId);
         for (CommentsEntity commentsEntity : commentsEntities) {
+            Long likeCount = LikeCommentsDao.get().selectOnCommentNo(commentsEntity.getCommentNo());
+            commentsEntity.setLikeCount(likeCount);
             comments.add(conv(commentsEntity));
         }
         return comments;
@@ -91,12 +94,13 @@ public class CommentDataSelectLogic {
             // 存在しない or アクセス権無し
             return null;
         }
-        CommentsEntity commentsEntity = CommentsDao.get().selectOnKey(commentNo);
+        CommentsEntity commentsEntity = CommentsDao.get().selectWithUserName(commentNo);
         if (commentsEntity == null) {
             return null;
         }
+        Long likeCount = LikeCommentsDao.get().selectOnCommentNo(commentsEntity.getCommentNo());
+        commentsEntity.setLikeCount(likeCount);
         Comment comment = conv(commentsEntity);
-        
         List<AttachedFile> attachedFiles = new ArrayList<>();
         List<KnowledgeFilesEntity> filesEntities = KnowledgeFilesDao.get().selectOnKnowledgeId(knowledgeId);
         for (KnowledgeFilesEntity knowledgeFilesEntity : filesEntities) {
