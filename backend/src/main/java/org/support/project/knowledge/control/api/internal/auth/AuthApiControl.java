@@ -29,7 +29,7 @@ import org.support.project.web.logic.invoke.Open;
 public class AuthApiControl extends ApiControl {
     
     @Open
-    @Post(path="open/auth")
+    @Post(path="_api/auth", subscribeToken="", checkCookieToken=false)
     public JsonBoundary token() throws InterruptedException, InvalidParamException {
         Auth auth = parseJson(Auth.class);
         AuthenticationLogic<AccessUser> authenticationLogic = Container.getComp(KnowledgeAuthenticationLogic.class);

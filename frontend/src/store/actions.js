@@ -1,6 +1,7 @@
 import setServerURI from './actions/setServerURI'
 
 import login from './actions/login'
+import logout from './actions/logout'
 
 import getArticles from './actions/getArticles'
 import getArticle from './actions/getArticle'
@@ -19,6 +20,7 @@ import likeComment from './actions/likeComment'
 export default {
   setServerURI: setServerURI,
   login: login,
+  logout: logout,
   getArticles: getArticles,
   getArticle: getArticle,
   getArticleForEdit: getArticleForEdit,

@@ -178,28 +178,12 @@
 
 </template>
 <script>
-import api from '../api'
 export default {
   name: 'SidebarName',
   props: ['user'],
   methods: {
     logout () {
-      this.$store.commit('SET_USER', {
-        avatar: '/open.account/icon/',
-        userName: 'anonymous'
-      })
-      this.$store.commit('SET_TOKEN', null)
-
-      if (window.localStorage) {
-        window.localStorage.setItem('user', null)
-        window.localStorage.setItem('token', null)
-      }
-      api.request('post', '/signout')
-      .then(response => {
-        this.$router.push('/login')
-      })
-      .catch(error => {
-        console.log(error)
+      this.$store.dispatch('logout').then(() => {
         this.$router.push('/login')
       })
     }

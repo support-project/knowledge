@@ -18,7 +18,6 @@ import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.TokensEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.InvalidParamException;
-import org.support.project.web.logic.invoke.Open;
 
 @DI(instance = Instance.Prototype)
 public class CheckTokenApiControl extends ApiControl {
@@ -29,7 +28,6 @@ public class CheckTokenApiControl extends ApiControl {
      * @throws InterruptedException
      * @throws InvalidParamException
      */
-    @Open
     @Post(path="_api/token", checkCookieToken=false)
     public JsonBoundary token() throws InterruptedException, InvalidParamException {
         Msg request = parseJson(Msg.class);
