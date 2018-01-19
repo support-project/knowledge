@@ -72,7 +72,8 @@ public class TokenControl extends Control {
             entity = new TokensEntity();
             entity.setToken(RandomUtil.randamGen(64));
             entity.setUserId(getLoginUserId());
-            entity.setTokenType(1);
+            entity.setTokenName("PRIVATE TOKEN");
+            entity.setTokenType(TokensDao.TOKEN_TYPE_PRIVATE_TOKEN);
         }
         entity.setExpires(new Timestamp(date.getTime()));
         TokensDao.get().save(entity);

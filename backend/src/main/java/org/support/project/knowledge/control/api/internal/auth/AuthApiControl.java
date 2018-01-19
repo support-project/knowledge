@@ -39,7 +39,7 @@ public class AuthApiControl extends ApiControl {
             TokensEntity entity = new TokensEntity();
             entity.setToken(RandomUtil.randamGen(128));
             entity.setUserId(userId);
-            entity.setTokenType(2);
+            entity.setTokenType(TokensDao.TOKEN_TYPE_API_TOKEN);
             entity.setExpires(new Timestamp(new Date().getTime() + (1000 * 60 * 60 * 7))); // 7日間有効なTokenを発行する
             TokensDao.get().insert(entity);
             

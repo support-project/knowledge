@@ -15,7 +15,7 @@ import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.knowledge.bat.FileParseBat;
-import org.support.project.knowledge.bat.KnowledgeFileClearBat;
+import org.support.project.knowledge.bat.DataClearBat;
 import org.support.project.knowledge.bat.MailReadBat;
 import org.support.project.knowledge.bat.MailSendBat;
 import org.support.project.knowledge.bat.NotifyMailBat;
@@ -56,7 +56,7 @@ public class CronListener implements ServletContextListener {
                 job.setCurrentDirectory(logDir);
                 job.addjarDir(new File(sce.getServletContext().getRealPath("/WEB-INF/lib")));
                 job.addClassPathDir(new File(sce.getServletContext().getRealPath("/WEB-INF/classes")));
-                job.setMainClass(KnowledgeFileClearBat.class.getName());
+                job.setMainClass(DataClearBat.class.getName());
                 job.setXmx(256);
                 if (StringUtils.isNotEmpty(envValue)) {
                     job.addEnvironment(AppConfig.getEnvKey(), envValue);

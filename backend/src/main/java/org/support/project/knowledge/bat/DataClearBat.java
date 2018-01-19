@@ -16,9 +16,10 @@ import org.support.project.knowledge.logic.LogManageLogic;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.UploadedFileLogic;
 import org.support.project.web.dao.MailsDao;
+import org.support.project.web.dao.TokensDao;
 import org.support.project.web.entity.MailsEntity;
 
-public class KnowledgeFileClearBat extends AbstractBat {
+public class DataClearBat extends AbstractBat {
     
     /** ログ */
     private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
@@ -26,9 +27,9 @@ public class KnowledgeFileClearBat extends AbstractBat {
     public static void main(String[] args) {
         try {
             initLogName("KnowledgeFileClearBat.log");
-            configInit(ClassUtils.getShortClassName(KnowledgeFileClearBat.class));
+            configInit(ClassUtils.getShortClassName(DataClearBat.class));
             
-            KnowledgeFileClearBat bat = new KnowledgeFileClearBat();
+            DataClearBat bat = new DataClearBat();
             bat.dbInit();
             bat.start();
             
@@ -73,6 +74,9 @@ public class KnowledgeFileClearBat extends AbstractBat {
         
         // ログファイルの定期削除
         LogManageLogic.get().clearLogFiles();
+        // 有効期限が切れてしばらく経過したTokenを削除
+        TokensDao.get().removeExpiredToken(1, 1000 * 60 * 60 * 24 * 180); // UIで発行したTokenは180日たったら削除
+        TokensDao.get().removeExpiredToken(2, 1000 * 60 * 60 * 24 * 5); // 自動的に発行したTokenは有効期限が切れて5日たったら削除
     }
 
 }
