@@ -1,52 +1,50 @@
 <template>
   <span>
-    <h1 class="comment-title" v-if="comments.length > 0">
-      <i class="fa fa fa-comments-o fa-lg" aria-hidden="true"></i>
-      Comments
-    </h1>
+    <ul class="timeline commentsArea">
+      <!-- timeline time label -->
+      <li class="time-label" v-if="comments.length > 0">
+        <span class="bg-gray">
+          <i class="fa fa fa-comments-o fa-lg" aria-hidden="true"></i>
+          Comments
+          <!-- {{comments[0].insertDatetime | dispDate}} -->
+        </span>
+      </li>
+      <!-- /.timeline-label -->
+      <!-- timeline item -->
+      <li v-for="comment in comments" :key="comment.commentNo">
+        <i class="fa fa-comments" 
+          v-bind:class="{
+            'bg-blue': parseInt(comment.insertUser) !== parseInt(article.insertUser),
+            'bg-green': parseInt(comment.insertUser) === parseInt(article.insertUser),
+          }"
+        ></i>
+        <div class="timeline-item">
+          <span class="time"><i class="fa fa-clock-o"></i>
+            {{comment.insertDatetime | dispDate}}
+            ({{$t('Label.Create')}})
+            <span v-if="comment.insertDatetime !== comment.updateDatetime">
+              / {{comment.updateDatetime | dispDate}}
+              ({{$t('Label.Update')}})
+            </span>
+          </span>
+          <h3 class="timeline-header">
+            <img v-lazy="comment.insertUserIcon" alt="icon" width="18" height="18" />
+            <a href="#">{{comment.insertUserName}}</a>
+          </h3>
 
-    <div class="row" v-for="comment in comments" :key="comment.commentNo">
-      <!-- question -->
-      <div v-if="parseInt(comment.insertUser) !== parseInt(article.insertUser)">
-        <div class="col-xs-12" >
-          <article-detail-comments-editor :comment="comment" :article="article" />
-          &nbsp;
-          <article-detail-comments-button :comment="comment" :article="article" />
-        </div>
-        <div class="col-xs-12 question_Box" v-if="comment.commentStatus != 1">
-          <div class="question_image">
-            <img v-lazy="comment.insertUserIcon" alt="icon" width="64" height="64" />
-          </div>
-          <div class="arrow_question markdown">
+          <div class="timeline-body">
             <article-detail-comments-contents :comment="comment" :article="article" />
           </div>
-        </div>
-        <div class="text-left collapse_comment" v-if="comment.commentStatus == 1">
-          {{$t('ArticleDetailComments.DisplayHidden')}}
-          <br />
-        </div>
-      </div>
-      <!-- answer -->
-      <div v-if="parseInt(comment.insertUser) === parseInt(article.insertUser)">
-        <div class="col-xs-12 text-right">
-          <article-detail-comments-button :comment="comment" :article="article" />
-          &nbsp;
-          <article-detail-comments-editor :comment="comment" :article="article" />
-        </div>
-        <div class="col-xs-12 question_Box" v-if="comment.commentStatus != 1">
-          <div class="answer_image">
-            <img v-lazy="comment.insertUserIcon" alt="icon" width="64" height="64" />
-          </div>
-          <div class="arrow_answer markdown">
-            <article-detail-comments-contents :comment="comment" :article="article" />
+          <div class="timeline-footer">
+            <article-detail-comments-button :comment="comment" :article="article" />
           </div>
         </div>
-        <div class="text-right collapse_comment" v-if="comment.commentStatus == 1">
-          {{$t('ArticleDetailComments.DisplayHidden')}}
-          <br />
-        </div>
-      </div>
-    </div>
+      </li>
+      <!-- END timeline item -->
+      <li>
+        <i class="fa fa-clock-o bg-gray"></i>
+      </li>
+    </ul>
   </span>
 </template>
 
@@ -67,8 +65,11 @@ export default {
 </script>
 
 <style>
-.comment-title {
-  font-size: 24px;
+.comment-title, .time-label {
+  font-size: 18px;
+}
+.commentsArea {
+  margin-top: 20px;
 }
 </style>
 

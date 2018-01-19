@@ -1,5 +1,16 @@
 <template>
   <span>
+    <a class="text-primary btn-link">
+        <i class="fa fa-thumbs-o-up"></i>
+        &nbsp;Like × {{comment.likeCount}}
+    </a>
+    &nbsp;
+    <button class="btn btn-info btn-circle btn-xs" v-on:click="likeComment(comment.knowledgeId, comment.commentNo)">
+        <i class="fa fa-thumbs-o-up"></i>&nbsp;
+    </button>
+    &nbsp;
+    &nbsp;
+
     <a class="btn btn-primary btn-xs"
         href="<%=request.getContextPath()%>/protect.knowledge/edit_comment/<%=comment.getCommentNo()%>"> <i class="fa fa-edit"></i>
         {{$t('Label.Edit')}}
@@ -22,6 +33,10 @@
 </template>
 
 <script>
+import { Notification } from 'uiv'
+import logger from 'logger'
+const LABEL = 'ArticleDetailCommentsButton.vue'
+
 export default {
   name: 'ArticleDetailCommentsButton',
   props: ['comment', 'article'],
@@ -29,6 +44,16 @@ export default {
     collapse: function (comment, flag) {
       comment.commentStatus = flag
       // TODO 保存
+    },
+    likeComment (id, commentNo) {
+      this.$store.dispatch('likeComment', { id, commentNo }).then((cnt) => {
+        logger.debug(LABEL, JSON.stringify(cnt))
+        Notification.notify({
+          type: 'success',
+          title: 'Well done!',
+          content: 'You successfully added Like.'
+        })
+      })
     }
   }
 }
