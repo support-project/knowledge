@@ -30,6 +30,7 @@
 
     <!-- Main content -->
     <div class="content main-content">
+      <alerts></alerts>
       <form role="form" id="knowledgeForm">
         <div class="form-group">
             <label for="input_title">
@@ -65,6 +66,7 @@ import ArticleEditSidebar from './ArticleEditSidebar'
 import ArticleEditContents from './ArticleEditContents'
 import ArticleEditItems from './ArticleEditItems'
 
+import Alerts from '../Parts/Alerts'
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
 import rightSidebar from './../../../lib/displayParts/rightSidebar'
 
@@ -86,7 +88,7 @@ export default {
       breadcrumb: breadcrumb
     }
   },
-  components: { PageTitle, ArticleEditSidebar, ArticleEditContents, ArticleEditItems },
+  components: { PageTitle, ArticleEditSidebar, ArticleEditContents, ArticleEditItems, Alerts },
   computed: {
     ...mapState([
       'pagestate',

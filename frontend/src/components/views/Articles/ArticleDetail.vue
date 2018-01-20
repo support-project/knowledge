@@ -4,7 +4,7 @@
       :title = "'Route.' + $route.name"
       :description = "$route.name + '.description'"
       :breadcrumb = "breadcrumb" />
-
+    
     <div id="secondNavbar" class="left-margin-content">
       <nav class="secondMenu" >
         <a :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'toggle-on': pagestate.showRightSideBar}"
@@ -23,9 +23,10 @@
         </router-link>
       </nav>
     </div>
-
+    
     <!-- Main content -->
     <div class="content main-content">
+      <alerts></alerts>
       <div class="article-information">
         <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ resources.article.title}}</div>
         
@@ -69,7 +70,6 @@
 import tippy from 'tippy.js'
 import { mapState } from 'vuex'
 import logger from 'logger'
-import { Notification } from 'uiv'
 
 import PageTitle from '../Parts/PageTitle'
 import ArticleDetailSidebar from './ArticleDetailSidebar'
@@ -81,6 +81,7 @@ import ArticlePartsTags from './ArticlePartsTags'
 import ArticlePartsStocks from './ArticlePartsStocks'
 import ArticleDetailComments from './ArticleDetailComments'
 
+import Alerts from '../Parts/Alerts'
 import processFootnotesPotision from '../../../lib/displayParts/processFootnotesPotision'
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
 import moveTocTarget from '../../../lib/displayParts/moveTocTarget'
@@ -103,7 +104,7 @@ export default {
       // ルートの変更の検知...
     }
   },
-  components: { PageTitle, ArticleDetailSidebar, ArticlePartsPoint, ArticlePartsEditor, ArticlePartsTypeLabel, ArticlePartsPublicFlag, ArticlePartsTags, ArticlePartsStocks, ArticleDetailComments },
+  components: { PageTitle, ArticleDetailSidebar, ArticlePartsPoint, ArticlePartsEditor, ArticlePartsTypeLabel, ArticlePartsPublicFlag, ArticlePartsTags, ArticlePartsStocks, ArticleDetailComments, Alerts },
   computed: {
     ...mapState([
       'pagestate',
@@ -120,6 +121,8 @@ export default {
           processFootnotesPotision($('.markdown-body'))
           moveTocTarget()
         }, 500)
+      }).catch(error => {
+        logger.error(LABEL, JSON.stringify(error))
       })
     },
     toggleRightSideBar () {
@@ -128,11 +131,6 @@ export default {
     likeArticle () {
       this.$store.dispatch('likeArticle', this.$route.params.id).then((cnt) => {
         logger.debug(LABEL, JSON.stringify(cnt))
-        Notification.notify({
-          type: 'success',
-          title: 'Well done!',
-          content: 'You successfully added Like.'
-        })
       })
     }
   },

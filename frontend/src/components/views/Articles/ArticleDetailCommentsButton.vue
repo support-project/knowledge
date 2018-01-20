@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import { Notification } from 'uiv'
 import logger from 'logger'
 const LABEL = 'ArticleDetailCommentsButton.vue'
 
@@ -48,11 +47,6 @@ export default {
     likeComment (id, commentNo) {
       this.$store.dispatch('likeComment', { id, commentNo }).then((cnt) => {
         logger.debug(LABEL, JSON.stringify(cnt))
-        Notification.notify({
-          type: 'success',
-          title: 'Well done!',
-          content: 'You successfully added Like.'
-        })
       })
     }
   }

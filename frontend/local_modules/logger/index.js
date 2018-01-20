@@ -132,6 +132,32 @@ logger.trace = function () {
   console.log.apply(console, args)
 }
 
+// axios の http response が error になった場合に、そこからエラーのメッセージを生成する
+logger.buildResponseErrorMsg = function (response, params) {
+  var msg = ''
+  var detail = false
+  if (params && params.detail) {
+    detail = params.detail
+  }
+  var prefix = ''
+  var suffix = ''
+  if (params && params.prefix) {
+    prefix = params.prefix
+  }
+  if (params && params.suffix) {
+    suffix = params.suffix
+  }
+  msg += prefix  
+  if (response.status && detail) {
+    msg += '[Status] ' + response.status + '. '
+  }
+  if (response.data && response.data.message) {
+    msg += response.data.message + ' '
+  }
+  msg += suffix  
+  return msg
+}
+
 module.exports = (function () {
   return logger
 })()

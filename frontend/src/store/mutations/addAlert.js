@@ -2,10 +2,10 @@ import logger from 'logger'
 const LABEL = 'addAlert.js'
 
 var types = {
-  danger: {type: 'danger', icon: 'fa-ban'},
-  info: {type: 'info', icon: 'fa-info-circle'},
-  warning: {type: 'warning', icon: 'fa-warning'},
-  success: {type: 'success', icon: 'fa-check'}
+  danger: { type: 'danger', icon: 'fa-ban', display: true, notify: true },
+  info: { type: 'info', icon: 'fa-info-circle', display: true, notify: true },
+  warning: { type: 'warning', icon: 'fa-warning', display: true, notify: true },
+  success: { type: 'success', icon: 'fa-check', display: true, notify: true }
 }
 
 export default (state, params) => {
@@ -16,15 +16,20 @@ export default (state, params) => {
       type = types[params.type]
     }
   }
-  if (params.icon) {
-    type.icon = params.icon
-  }
   var alertMsg = {
     key: new Date().getTime(),
-    type: type.type,
     title: params.title,
-    msg: params.msg,
-    icon: type.icon
+    content: params.content
+  }
+  alertMsg = Object.assign(alertMsg, type)
+  if (params.icon) {
+    alertMsg.icon = params.icon
+  }
+  if ('display' in params) {
+    alertMsg.display = params.display
+  }
+  if ('notify' in params) {
+    alertMsg.notify = params.notify
   }
   logger.debug(LABEL, JSON.stringify(alertMsg))
   state.pagestate.alerts.push(alertMsg)

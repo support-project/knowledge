@@ -7,12 +7,30 @@
 
 <script>
 import { mapState } from 'vuex'
+import { Notification } from 'uiv'
 export default {
   name: 'App',
   computed: {
     ...mapState([
       'pagestate'
-    ])
+    ]),
+    currentAlerts () { return this.$store.state.pagestate.alerts }
+  },
+  watch: {
+    // use the watch to react on the value change.
+    currentAlerts (alerts) {
+      console.log('alerts was change. ' + JSON.stringify(alerts))
+      alerts.forEach(element => {
+        if (element.notify) {
+          Notification.notify({
+            type: element.type,
+            title: element.title,
+            content: element.content
+          })
+          element.notify = false
+        }
+      })
+    }
   },
   data () {
     return {

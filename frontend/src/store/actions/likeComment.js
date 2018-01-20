@@ -12,6 +12,12 @@ export default (context, params) => {
     context.state.resources.comments.forEach(comment => {
       if (comment.commentNo === params.commentNo) {
         comment.likeCount = response.data.count
+        context.commit('ADD_ALERT', {
+          display: false,
+          type: 'succcess',
+          title: 'Well done!',
+          content: 'You successfully added Like.'
+        })
       }
     })
     return response.data

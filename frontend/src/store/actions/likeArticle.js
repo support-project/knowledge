@@ -10,6 +10,12 @@ export default (context, id) => {
     logger.debug(LABEL, JSON.stringify(response.data))
     logger.debug(LABEL, JSON.stringify(context.state.resources.article))
     context.state.resources.article.likeCount = response.data.count
+    context.commit('ADD_ALERT', {
+      display: false,
+      type: 'succcess',
+      title: 'Well done!',
+      content: 'You successfully added Like.'
+    })
     return response.data
   })
 }

@@ -23,9 +23,10 @@ export default (context, params) => {
         }
       } else {
         context.commit('ADD_ALERT', {
+          notify: false,
           type: 'warning',
           title: 'Faild login',
-          msg: 'Username/Password incorrect. Please try again.'
+          content: 'Username/Password incorrect. Please try again.'
         })
         throw new Error('invalid Username/Password.')
       }
@@ -34,15 +35,17 @@ export default (context, params) => {
   }).catch(error => {
     if (error.response.status === 403) {
       context.commit('ADD_ALERT', {
+        notify: false,
         type: 'warning',
         title: 'Faild login',
-        msg: 'Username/Password incorrect. Please try again.'
+        content: 'Username/Password incorrect. Please try again.'
       })
     } else {
       context.commit('ADD_ALERT', {
+        notify: false,
         type: 'danger',
         title: 'Faild login',
-        msg: 'Server appears to be offline.'
+        content: 'Server appears to be offline.'
       })
     }
     throw new Error('invalid Username/Password.')
