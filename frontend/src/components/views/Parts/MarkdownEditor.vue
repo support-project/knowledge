@@ -13,13 +13,10 @@
       <div class="tab-pane contents active" id="contentsTab">
         <textarea class="form-control" name="content" :rows="rows" placeholder="Markdown" id="content"
         v-model="article.content"></textarea>
-
         <emoji-picker @emoji-select="selectEmojiToCotents" />
-
         <span class="helpMarkdownLabel pull-right">
-            <a data-toggle="modal" data-target="#helpMarkdownModal"><i class="fa fa-info-circle" aria-hidden="true"></i>Markdown information</a>
+          <markdown-sample />
         </span>
-        
       </div>
 
       <div class="tab-pane contents" id="previewTab">
@@ -37,6 +34,7 @@
 <script>
 /* global $ */
 import EmojiPicker from './EmojiPicker'
+import MarkdownSample from './MarkdownSample'
 import processFootnotesPotision from '../../../lib/displayParts/processFootnotesPotision'
 
 export default {
@@ -47,7 +45,7 @@ export default {
       displaySafeHtml: ''
     }
   },
-  components: { EmojiPicker },
+  components: { EmojiPicker, MarkdownSample },
   methods: {
     selectEmojiToCotents: function (emoji) {
       var obj = $('#content')
