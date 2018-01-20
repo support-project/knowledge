@@ -28,6 +28,9 @@
       "2": "保護"
     }
   },
+  "EmojiPicker": {
+    "Emoji": "絵文字"
+  },
   "Login": {
     "BtnSubmit": "ログイン",
     "BtnCancel": "キャンセル"
@@ -68,9 +71,6 @@
   "DraftList": {
     "description": "下書き一覧",
     "EmptyTitle": "タイトル未指定"
-  },
-  "ArticlePartsEmoji": {
-    "Emoji": "絵文字"
   },
   "TestView": {
     "Message": "これはテストです"

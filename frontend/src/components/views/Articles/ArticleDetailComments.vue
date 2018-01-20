@@ -10,6 +10,17 @@
         </span>
       </li>
       <!-- /.timeline-label -->
+      <li>
+        <i class="fa fa-comments" v-if="comments.length === 0"></i>
+        <div class="timeline-item">
+          <span class="time"><i class="fa fa-clock-o"></i></span>
+          <!-- <h3 class="timeline-header"></h3> -->
+          <div class="timeline-body text-gray">
+            Not yet been registered
+          </div>
+          <!-- <div class="timeline-footer"></div> -->
+        </div>
+      </li>
       <!-- timeline item -->
       <li v-for="comment in comments" :key="comment.commentNo">
         <i class="fa fa-comments" 
@@ -42,6 +53,16 @@
       </li>
       <!-- END timeline item -->
 
+      <!-- timeline time label -->
+      <li class="time-label">
+        <span class="bg-gray">
+          <i class="fa fa fa-comment-o fa-lg" aria-hidden="true"></i>
+          Add Comment
+          <!-- {{comments[0].insertDatetime | dispDate}} -->
+        </span>
+      </li>
+      <!-- /.timeline-label -->
+      
       <!-- timeline edit item -->
       <li>
         <i class="fa fa-edit" 
@@ -60,7 +81,7 @@
           </h3>
 
           <div class="timeline-body">
-            <article-edit-contents :article="comment" :rows="10" />
+            <markdown-editor :article="comment" :rows="10" />
           </div>
           <div class="timeline-footer">
             <a class="btn btn-primary btn-xs">
@@ -83,12 +104,12 @@ import { mapState } from 'vuex'
 import ArticleDetailCommentsEditor from './ArticleDetailCommentsEditor'
 import ArticleDetailCommentsButton from './ArticleDetailCommentsButton'
 import ArticleDetailCommentsContents from './ArticleDetailCommentsContents'
-import ArticleEditContents from './ArticleEditContents'
+import MarkdownEditor from '../Parts/MarkdownEditor'
 
 export default {
   name: 'ArticleDetailComments',
   props: ['comments', 'article'],
-  components: { ArticleDetailCommentsEditor, ArticleDetailCommentsButton, ArticleDetailCommentsContents, ArticleEditContents },
+  components: { ArticleDetailCommentsEditor, ArticleDetailCommentsButton, ArticleDetailCommentsContents, MarkdownEditor },
   data: function () {
     return {
       // section: 'Dash',

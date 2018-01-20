@@ -47,7 +47,7 @@
 
         <article-edit-items />
 
-        <article-edit-contents :article="resources.article" :rows="20" />
+        <markdown-editor :article="resources.article" :rows="20" />
 
       </form>
       <article-edit-sidebar />
@@ -63,7 +63,7 @@ import logger from 'logger'
 
 import PageTitle from '../Parts/PageTitle'
 import ArticleEditSidebar from './ArticleEditSidebar'
-import ArticleEditContents from './ArticleEditContents'
+import MarkdownEditor from '../Parts/MarkdownEditor'
 import ArticleEditItems from './ArticleEditItems'
 
 import Alerts from '../Parts/Alerts'
@@ -88,7 +88,7 @@ export default {
       breadcrumb: breadcrumb
     }
   },
-  components: { PageTitle, ArticleEditSidebar, ArticleEditContents, ArticleEditItems, Alerts },
+  components: { PageTitle, ArticleEditSidebar, MarkdownEditor, ArticleEditItems, Alerts },
   computed: {
     ...mapState([
       'pagestate',

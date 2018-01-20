@@ -9,17 +9,6 @@
     "TestViewTitle": "Page of Test",
     "TestViewDescription": "This page is test of frontend development"
   },
-  "Article": {
-    "PublicFlag": {
-      "0": "Public",
-      "1": "Private",
-      "2": "Protect"
-    }
-  },
-  "Login": {
-    "BtnSubmit": "Submit",
-    "BtnCancel": "Cancel"
-  },
   "Label": {
     "Create": "Create",
     "Update": "Update",
@@ -31,6 +20,20 @@
     "Hide": "Hide",
     "Empty": "Empty",
     "Close": "Close"
+  },
+  "Article": {
+    "PublicFlag": {
+      "0": "Public",
+      "1": "Private",
+      "2": "Protect"
+    }
+  },
+  "EmojiPicker": {
+    "Emoji": "Emoji"
+  },
+  "Login": {
+    "BtnSubmit": "Submit",
+    "BtnCancel": "Cancel"
   },
   "DashView": {
     "about": "About",
@@ -68,9 +71,6 @@
   "DraftList": {
     "description": "list of draft",
     "EmptyTitle": "Title is empty"
-  },
-  "ArticlePartsEmoji": {
-    "Emoji": "Emoji"
   },
   "TestView": {
     "Message": "This is test."

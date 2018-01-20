@@ -14,7 +14,7 @@
         <textarea class="form-control" name="content" :rows="rows" placeholder="Markdown" id="content"
         v-model="article.content"></textarea>
 
-        <article-parts-emoji @emoji-select="selectEmojiToCotents" />
+        <emoji-picker @emoji-select="selectEmojiToCotents" />
 
         <span class="helpMarkdownLabel pull-right">
             <a data-toggle="modal" data-target="#helpMarkdownModal"><i class="fa fa-info-circle" aria-hidden="true"></i>Markdown information</a>
@@ -27,7 +27,7 @@
           <span id="presentationArea" class="slideshow"></span>
         </div>
         <div class="markdown-body">
-          <span v-html="article.displaySafeHtml"></span>
+          <span v-html="displaySafeHtml"></span>
         </div>
       </div>
     </div>
@@ -36,13 +36,18 @@
 
 <script>
 /* global $ */
-import ArticlePartsEmoji from './ArticlePartsEmoji'
+import EmojiPicker from './EmojiPicker'
 import processFootnotesPotision from '../../../lib/displayParts/processFootnotesPotision'
 
 export default {
-  name: 'ArticleEditContents',
+  name: 'MarkdownEditor',
   props: ['article', 'rows'],
-  components: { ArticlePartsEmoji },
+  data () {
+    return {
+      displaySafeHtml: ''
+    }
+  },
+  components: { EmojiPicker },
   methods: {
     selectEmojiToCotents: function (emoji) {
       var obj = $('#content')
@@ -59,7 +64,9 @@ export default {
     },
     preview: function () {
       this.$store.dispatch('previewArticle', this.article)
-      .then(() => {
+      .then((result) => {
+        this.article.displaySafeHtml = result
+        this.displaySafeHtml = result
         setTimeout(() => {
           processFootnotesPotision($('.markdown-body'))
         }, 500)

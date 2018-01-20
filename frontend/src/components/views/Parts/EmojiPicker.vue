@@ -6,7 +6,7 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span></button>
-            <h4 class="modal-title">{{$t('ArticlePartsEmoji.Emoji')}}</h4>
+            <h4 class="modal-title">{{$t('EmojiPicker.Emoji')}}</h4>
           </div>
           <div class="modal-body text-center">
             <picker title="Pick your emoji…" emoji="point_up" :perLine="15" @click="emojiSelect"></picker>
@@ -18,7 +18,7 @@
       </div>
     </div>
     <button type="button" class="btn btn-link" data-toggle="modal" data-target="#modal-emoji">
-      &#x1F600;{{$t('ArticlePartsEmoji.Emoji')}}
+      &#x1F600;{{$t('EmojiPicker.Emoji')}}
     </button>
   </span>
 </template>
@@ -27,10 +27,10 @@
 /* global $ */
 import { Picker } from 'emoji-mart-vue'
 import logger from 'logger'
-const LABEL = 'ArticlePartsEmoji.vue'
+const LABEL = 'EmojiPicker.vue'
 
 export default {
-  name: 'ArticlePartsEmoji',
+  name: 'EmojiPicker',
   props: ['contents'],
   components: { Picker },
   methods: {
