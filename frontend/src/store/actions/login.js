@@ -18,7 +18,7 @@ export default (state, params) => {
         state.commit('SET_USER', data.user)
         state.commit('SET_TOKEN', token)
         if (window.localStorage) {
-          window.localStorage.setItem('user', JSON.stringify(data.user))
+          // window.localStorage.setItem('user', JSON.stringify(data.user))
           window.localStorage.setItem('token', token)
         }
       } else {

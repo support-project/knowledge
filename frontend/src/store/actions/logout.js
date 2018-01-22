@@ -24,7 +24,7 @@ export default (state, params) => {
     })
     state.commit('SET_TOKEN', null)
     if (window.localStorage) {
-      window.localStorage.setItem('user', null)
+      // window.localStorage.setItem('user', null)
       window.localStorage.setItem('token', null)
     }
     state.commit('SET_PAGE_STATE', {loading: false})

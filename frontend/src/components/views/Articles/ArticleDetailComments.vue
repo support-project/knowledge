@@ -130,6 +130,11 @@ export default {
       this.$store.dispatch('addComment', {
         id: id,
         comment: comment
+      }).then(() => {
+        this.comment = {
+          content: '',
+          displaySafeHtml: ''
+        }
       })
     }
   },
