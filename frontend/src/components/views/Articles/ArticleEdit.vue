@@ -18,7 +18,7 @@
         <a :title="$t('ArticleEdit.BtnDraft')">
           <i class="fa fa-save fa-lg" aria-hidden="true"></i>
         </a>
-        <router-link tag="a" :to="'/articles/' + $route.params.id"
+        <router-link tag="a" :to="backhref"
           :title="$t('ArticleEdit.BtnCancel')">
           <i class="fa fa-undo fa-lg" aria-hidden="true"></i>
         </router-link>
@@ -78,14 +78,17 @@ export default {
     var breadcrumb = [
       {to: '/articles/new', name: 'Route.ArticleCreate'}
     ]
+    var backhref = '/articles'
     if (this.$route.params.id) {
       breadcrumb = [
         {to: '/articles/' + this.$route.params.id, name: 'Route.ArticleDetail'},
         {to: '/articles/' + this.$route.params.id + '/edit', name: 'Route.ArticleEdit'}
       ]
+      backhref = '/articles/' + this.$route.params.id
     }
     return {
-      breadcrumb: breadcrumb
+      breadcrumb: breadcrumb,
+      backhref: backhref
     }
   },
   components: { PageTitle, ArticleEditSidebar, MarkdownEditor, ArticleEditItems, Alerts },

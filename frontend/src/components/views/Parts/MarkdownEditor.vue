@@ -69,6 +69,10 @@ export default {
           processFootnotesPotision($('.markdown-body'))
         }, 500)
       })
+    },
+    clearPreview: function () {
+      this.article.displaySafeHtml = ''
+      this.displaySafeHtml = ''
     }
   }
 }

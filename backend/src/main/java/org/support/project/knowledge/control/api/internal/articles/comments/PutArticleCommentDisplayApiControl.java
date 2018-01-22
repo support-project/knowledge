@@ -17,14 +17,14 @@ import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.exception.SendErrorException;
 
 @DI(instance = Instance.Prototype)
-public class PutArticleCommentApiControl extends ApiControl {
+public class PutArticleCommentDisplayApiControl extends ApiControl {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
-     * コメントの表示／非表示を更新
+     * コメントを登録
      * @throws Exception 
      */
-    @Put(path="_api/articles/:id/comments/:commentid", checkCookieToken=false, checkHeaderToken=true)
+    @Put(path="_api/articles/:id/comments/:commentid/collapse", checkCookieToken=false, checkHeaderToken=true)
     public Boundary execute() throws Exception {
         LOG.debug("post");
         String id = super.getAttributeByString("id");
@@ -41,7 +41,7 @@ public class PutArticleCommentApiControl extends ApiControl {
         comment.setKnowledgeId(knowledgeId);
         comment.setCommentNo(commentNo);
         try {
-            comment = CommentDataEditLogic.get().update(comment, geAccessUser());
+            comment = CommentDataEditLogic.get().updateCollapse(comment, geAccessUser());
         } catch (InvalidParamException e) {
             return sendError(e);
         } catch (SendErrorException e) {

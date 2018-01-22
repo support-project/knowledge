@@ -42,7 +42,10 @@ export default {
   methods: {
     collapse: function (comment, flag) {
       comment.commentStatus = flag
-      // TODO 保存
+      this.$store.dispatch('toggleDisplayComment', {
+        id: this.comment.knowledgeId,
+        comment: this.comment
+      })
     },
     likeComment (id, commentNo) {
       this.$store.dispatch('likeComment', { id, commentNo }).then((cnt) => {

@@ -76,18 +76,54 @@ public class CommentDataEditLogic {
      * @return
      * @throws Exception
      */
-    public Comment update(Comment comment, AccessUser loginedUser) throws Exception {
+    public Comment update(Comment comment, AccessUser accessUser) throws Exception {
+        CommentsEntity db = checkUpdateAble(comment, accessUser);
+        db.setComment(comment.getComment());
+        List<Long> fileNos = new ArrayList<>();
+        for (AttachedFile file : comment.getAttachments()) {
+            fileNos.add(file.getFileNo());
+        }
+        KnowledgeLogic.get().updateComment(db, fileNos, accessUser);
+        return comment;
+    }
+    /**
+     * コメントのステータス（表示／非表示）を保存する
+     * @param comment
+     * @param geAccessUser
+     * @return
+     * @throws SendErrorException 
+     */
+    public Comment updateCollapse(Comment comment, AccessUser accessUser) throws Exception {
+        CommentsEntity db = checkUpdateAble(comment, accessUser);
+        db.setComment(comment.getComment());
+        List<Long> fileNos = new ArrayList<>();
+        for (AttachedFile file : comment.getAttachments()) {
+            fileNos.add(file.getFileNo());
+        }
+        
+        db.setCommentStatus(comment.getCommentStatus());
+        CommentsDao.get().physicalUpdate(db); // 更新履歴は付けないで更新
+        return comment;
+    }
+    /**
+     * 指定のコメントを更新できる権限かチェック
+     * @param comment
+     * @param loginedUser
+     * @return
+     * @throws SendErrorException
+     */
+    private CommentsEntity checkUpdateAble(Comment comment, AccessUser accessUser) throws SendErrorException {
         LOG.trace("insert");
-        if (!loginedUser.isLogined()) {
+        if (!accessUser.isLogined()) {
             throw new SendErrorException(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
         }
-        KnowledgesEntity check = KnowledgeLogic.get().select(comment.getKnowledgeId(), loginedUser);
+        KnowledgesEntity check = KnowledgeLogic.get().select(comment.getKnowledgeId(), accessUser);
         if (check == null) {
             // 存在しない or アクセス権無し
             throw new SendErrorException(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
         }
         if (StringUtils.isEmpty(comment.getComment())) {
-            throw new SendErrorException(HttpStatus.SC_400_BAD_REQUEST, loginedUser.getMsg("errors.required", "Comment"));
+            throw new SendErrorException(HttpStatus.SC_400_BAD_REQUEST, accessUser.getMsg("errors.required", "Comment"));
         }
         
         CommentsEntity db = CommentsDao.get().selectOnKey(comment.getCommentNo());
@@ -98,19 +134,14 @@ public class CommentDataEditLogic {
         // コメントを更新できるか権限チェック
         // コメント登録者／管理者／記事の編集者はコメントを更新できる
         List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(db.getKnowledgeId());
-        if (!loginedUser.isAdmin()) {
-            if (loginedUser.getUserId().intValue() != db.getInsertUser().intValue()
-                    && !KnowledgeLogic.get().isEditor(loginedUser, check, editors))
+        if (!accessUser.isAdmin()) {
+            if (accessUser.getUserId().intValue() != db.getInsertUser().intValue()
+                    && !KnowledgeLogic.get().isEditor(accessUser, check, editors))
                 throw new SendErrorException(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
         }
-        db.setComment(comment.getComment());
-        List<Long> fileNos = new ArrayList<>();
-        for (AttachedFile file : comment.getAttachments()) {
-            fileNos.add(file.getFileNo());
-        }
-        KnowledgeLogic.get().updateComment(db, fileNos, loginedUser);
-        return comment;
+        return db;
     }
+
     
     
     

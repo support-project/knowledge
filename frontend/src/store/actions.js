@@ -10,14 +10,15 @@ import getArticleForEdit from './actions/getArticleForEdit'
 import getTypes from './actions/getTypes'
 import getDrafts from './actions/getDrafts'
 
-import previewArticle from './actions/previewArticle'
-import toggleRightSideBar from './actions/toggleRightSideBar'
-
 import saveArticle from './actions/saveArticle'
 import addComment from './actions/addComment'
 
 import likeArticle from './actions/likeArticle'
 import likeComment from './actions/likeComment'
+
+import previewArticle from './actions/previewArticle'
+import toggleRightSideBar from './actions/toggleRightSideBar'
+import toggleDisplayComment from './actions/toggleDisplayComment'
 
 export default {
   setServerURI: setServerURI,
@@ -29,10 +30,11 @@ export default {
   getArticleForEdit: getArticleForEdit,
   getTypes: getTypes,
   getDrafts: getDrafts,
-  previewArticle: previewArticle,
-  toggleRightSideBar: toggleRightSideBar,
   saveArticle: saveArticle,
   addComment: addComment,
   likeArticle: likeArticle,
-  likeComment: likeComment
+  likeComment: likeComment,
+  previewArticle: previewArticle,
+  toggleRightSideBar: toggleRightSideBar,
+  toggleDisplayComment: toggleDisplayComment
 }

@@ -1,6 +1,7 @@
 import Promise from 'bluebird'
 import api from '../../api'
 import logger from 'logger'
+import he from 'he'
 
 import actionCommon from './actionCommon'
 
@@ -40,6 +41,9 @@ export default (state, id) => {
         }
       })
       article.type = response.data
+      article.content = he.decode(article.content, {
+        'isAttributeValue': true
+      })
       state.commit('SET_RESOURCES', {article: article})
       state.commit('SET_PAGE_STATE', {loading: false})
     })

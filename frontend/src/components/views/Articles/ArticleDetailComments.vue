@@ -10,8 +10,8 @@
         </span>
       </li>
       <!-- /.timeline-label -->
-      <li>
-        <i class="fa fa-comments" v-if="comments.length === 0"></i>
+      <li v-if="comments.length === 0">
+        <i class="fa fa-comments"></i>
         <div class="timeline-item">
           <span class="time"><i class="fa fa-clock-o"></i></span>
           <!-- <h3 class="timeline-header"></h3> -->
@@ -81,7 +81,7 @@
           </h3>
 
           <div class="timeline-body">
-            <markdown-editor :article="comment" :rows="10" />
+            <markdown-editor :article="comment" :rows="10" ref="commentEditor"/>
           </div>
           <div class="timeline-footer">
             <a class="btn btn-primary btn-xs" v-on:click="addComment(article.knowledgeId, comment)">
@@ -135,6 +135,7 @@ export default {
           content: '',
           displaySafeHtml: ''
         }
+        this.$refs.commentEditor.clearPreview()
       })
     }
   },

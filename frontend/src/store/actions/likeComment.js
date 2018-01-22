@@ -1,3 +1,4 @@
+import Promise from 'bluebird'
 import api from '../../api'
 import logger from 'logger'
 
@@ -5,8 +6,9 @@ const LABEL = 'likeComment.js'
 
 export default (state, params) => {
   logger.debug(LABEL, 'like comment. ' + JSON.stringify(params))
-  return api.request('post', '/_api/articles/' + params.id + '/comments/' + params.commentNo + '/likes', null)
-  .then(response => {
+  return Promise.try(() => {
+    return api.request('post', '/_api/articles/' + params.id + '/comments/' + params.commentNo + '/likes', null)
+  }).then(response => {
     logger.debug(LABEL, JSON.stringify(response.data))
     logger.debug(LABEL, JSON.stringify(state.state.resources.comments))
     state.state.resources.comments.forEach(comment => {
@@ -21,5 +23,14 @@ export default (state, params) => {
       }
     })
     return response.data
+  }).catch(error => {
+    logger.error(LABEL, JSON.stringify(error))
+    var msg = logger.buildResponseErrorMsg(error.response, {suffix: 'Please try again.'})
+    state.commit('ADD_ALERT', {
+      type: 'warning',
+      title: 'Error',
+      content: msg
+    })
+    throw error
   })
 }
