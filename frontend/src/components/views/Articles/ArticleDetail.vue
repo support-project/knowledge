@@ -47,8 +47,7 @@
           <article-parts-stocks :article="resources.article" />
         </div>
       </div>
-      <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i>
-
+<!--      <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i> -->
       <div class="markdown-body template-items" v-if="this.resources.article.itemsHtml">
         <span v-html="this.resources.article.itemsHtml"></span>
       </div>

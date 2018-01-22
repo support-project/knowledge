@@ -84,7 +84,7 @@
             <markdown-editor :article="comment" :rows="10" />
           </div>
           <div class="timeline-footer">
-            <a class="btn btn-primary btn-xs">
+            <a class="btn btn-primary btn-xs" v-on:click="addComment(article.knowledgeId, comment)">
               <i class="fa fa-save"></i>
               {{$t('Label.Release')}}
             </a>
@@ -124,6 +124,14 @@ export default {
     ...mapState([
       'user'
     ])
+  },
+  methods: {
+    addComment: function (id, comment) {
+      this.$store.dispatch('addComment', {
+        id: id,
+        comment: comment
+      })
+    }
   },
   mounted () {
     this.$nextTick(() => {

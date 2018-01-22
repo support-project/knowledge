@@ -14,6 +14,7 @@ import previewArticle from './actions/previewArticle'
 import toggleRightSideBar from './actions/toggleRightSideBar'
 
 import saveArticle from './actions/saveArticle'
+import addComment from './actions/addComment'
 
 import likeArticle from './actions/likeArticle'
 import likeComment from './actions/likeComment'
@@ -31,6 +32,7 @@ export default {
   previewArticle: previewArticle,
   toggleRightSideBar: toggleRightSideBar,
   saveArticle: saveArticle,
+  addComment: addComment,
   likeArticle: likeArticle,
   likeComment: likeComment
 }

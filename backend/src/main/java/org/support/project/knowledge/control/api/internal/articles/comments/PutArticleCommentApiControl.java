@@ -13,6 +13,7 @@ import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.ApiControl;
 import org.support.project.web.control.service.Put;
+import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.exception.SendErrorException;
 
 @DI(instance = Instance.Prototype)
@@ -26,7 +27,7 @@ public class PutArticleCommentApiControl extends ApiControl {
     @Put(path="_api/articles/:id/comments/:commentid", checkCookieToken=false, checkHeaderToken=true)
     public Boundary execute() throws Exception {
         LOG.debug("post");
-        String id = super.getParam("id");
+        String id = super.getAttributeByString("id");
         if (!StringUtils.isLong(id)) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST);
         }
@@ -41,6 +42,8 @@ public class PutArticleCommentApiControl extends ApiControl {
         comment.setCommentNo(commentNo);
         try {
             comment = CommentDataEditLogic.get().update(comment, geAccessUser());
+        } catch (InvalidParamException e) {
+            return sendError(e);
         } catch (SendErrorException e) {
             return send(e.getHttpStatus(), e.getMsg());
         }

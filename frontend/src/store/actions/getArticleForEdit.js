@@ -6,9 +6,9 @@ import actionCommon from './actionCommon'
 
 const LABEL = 'getArticleForEdit.js'
 
-export default (context, id) => {
-  context.commit('SET_PAGE_STATE', {loading: true})
-  context.commit('SET_RESOURCES', {article: {
+export default (state, id) => {
+  state.commit('SET_PAGE_STATE', {loading: true})
+  state.commit('SET_RESOURCES', {article: {
     content: '',
     type: {
       id: -100,
@@ -16,13 +16,13 @@ export default (context, id) => {
     }
   }})
   if (!id) {
-    context.commit('SET_PAGE_STATE', {loading: false})
+    state.commit('SET_PAGE_STATE', {loading: false})
     return
   }
   return api.request('get', '/_api/articles/' + id + '', null)
   .then(response => {
     var article = response.data
-    actionCommon.setIcon(context, article)
+    actionCommon.setIcon(state, article)
     logger.debug(LABEL, response)
     return Promise.try(() => {
       return api.request('get', '/_api/articles/' + id + '/items', null)
@@ -40,12 +40,12 @@ export default (context, id) => {
         }
       })
       article.type = response.data
-      context.commit('SET_RESOURCES', {article: article})
-      context.commit('SET_PAGE_STATE', {loading: false})
+      state.commit('SET_RESOURCES', {article: article})
+      state.commit('SET_PAGE_STATE', {loading: false})
     })
   })
   .catch(error => {
-    context.commit('SET_PAGE_STATE', {loading: false})
+    state.commit('SET_PAGE_STATE', {loading: false})
     logger.error(LABEL, error)
   })
 }

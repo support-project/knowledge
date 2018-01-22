@@ -4,9 +4,9 @@ import logger from 'logger'
 
 const LABEL = 'login.js'
 
-export default (context, params) => {
+export default (state, params) => {
   logger.trace(LABEL, 'start login: ' + JSON.stringify(params))
-  context.commit('SET_PAGE_STATE', {loading: true})
+  state.commit('SET_PAGE_STATE', {loading: true})
   return Promise.try(() => {
     return api.request('post', '/_api/auth', params)
     .then(response => {
@@ -15,14 +15,14 @@ export default (context, params) => {
       if (data.user) {
         var token = data.token
         data.user.avatar = 'open.account/icon/' + data.user.userId
-        context.commit('SET_USER', data.user)
-        context.commit('SET_TOKEN', token)
+        state.commit('SET_USER', data.user)
+        state.commit('SET_TOKEN', token)
         if (window.localStorage) {
           window.localStorage.setItem('user', JSON.stringify(data.user))
           window.localStorage.setItem('token', token)
         }
       } else {
-        context.commit('ADD_ALERT', {
+        state.commit('ADD_ALERT', {
           notify: false,
           type: 'warning',
           title: 'Faild login',
@@ -34,14 +34,14 @@ export default (context, params) => {
     })
   }).catch(error => {
     if (error.response.status === 403) {
-      context.commit('ADD_ALERT', {
+      state.commit('ADD_ALERT', {
         notify: false,
         type: 'warning',
         title: 'Faild login',
         content: 'Username/Password incorrect. Please try again.'
       })
     } else {
-      context.commit('ADD_ALERT', {
+      state.commit('ADD_ALERT', {
         notify: false,
         type: 'danger',
         title: 'Faild login',
@@ -50,6 +50,6 @@ export default (context, params) => {
     }
     throw new Error('invalid Username/Password.')
   }).finally(() => {
-    context.commit('SET_PAGE_STATE', {loading: false})
+    state.commit('SET_PAGE_STATE', {loading: false})
   })
 }

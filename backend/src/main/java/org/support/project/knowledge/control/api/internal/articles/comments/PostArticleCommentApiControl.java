@@ -13,6 +13,7 @@ import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.ApiControl;
 import org.support.project.web.control.service.Post;
+import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.exception.SendErrorException;
 
 @DI(instance = Instance.Prototype)
@@ -23,10 +24,10 @@ public class PostArticleCommentApiControl extends ApiControl {
      * コメントを登録
      * @throws Exception 
      */
-    @Post(path="_api/articles/:id/comments/", checkCookieToken=false, checkHeaderToken=true)
+    @Post(path="_api/articles/:id/comments", checkCookieToken=false, checkHeaderToken=true)
     public Boundary execute() throws Exception {
         LOG.debug("post");
-        String id = super.getParam("id");
+        String id = super.getAttributeByString("id");
         if (!StringUtils.isLong(id)) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST);
         }
@@ -35,6 +36,8 @@ public class PostArticleCommentApiControl extends ApiControl {
         comment.setKnowledgeId(knowledgeId);
         try {
             comment = CommentDataEditLogic.get().insert(comment, geAccessUser());
+        } catch (InvalidParamException e) {
+            return sendError(e);
         } catch (SendErrorException e) {
             return send(e.getHttpStatus(), e.getMsg());
         }

@@ -67,7 +67,7 @@ public class CommentDataEditLogic {
             fileNos.add(file.getFileNo());
         }
         CommentsEntity entity = KnowledgeLogic.get().saveComment(comment.getKnowledgeId(), comment.getComment(), fileNos, loginedUser);
-        return CommentDataSelectLogic.get().conv(entity);
+        return CommentDataSelectLogic.get().getComment(comment.getKnowledgeId(), entity.getCommentNo(), loginedUser);
     }
     /**
      * コメント更新

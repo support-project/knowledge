@@ -64,6 +64,7 @@ var router = new VueRouter({
 // Some middleware to help us ensure the user is authenticated.
 router.beforeEach((to, from, next) => {
   rightSidebar(false) // ルーティングの際には一度必ず閉じる→書くページで必要に応じ復元する
+  store.commit('CREAR_ALERTS') // Alerts初期化
   if (to.matched.some(record => record.meta.requiresAuth) && (!router.app.$store.state.token || router.app.$store.state.token === 'null')) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
