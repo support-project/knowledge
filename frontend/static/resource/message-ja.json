@@ -5,6 +5,7 @@
     "ArticleDetail": "記事表示",
     "ArticleEdit": "記事編集",
     "DraftList": "下書き",
+    "DraftEdit": "記事編集",
     "MoveOldUI": "旧い画面に戻す",
     "TestViewTitle": "テストページ",
     "TestViewDescription": "フロントエンド開発テストページ"
@@ -71,6 +72,9 @@
   "DraftList": {
     "description": "下書き一覧",
     "EmptyTitle": "タイトル未指定"
+  },
+  "DraftEdit": {
+    "description": "記事を編集します"
   },
   "TestView": {
     "Message": "これはテストです"

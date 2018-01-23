@@ -27,7 +27,12 @@
 
 /** コンテンツ領域を、contentと同じだけ左に隙間をつける */
 .left-margin-content {
-  padding-left: 30px;
+  padding-left: 5px;
+}
+@media (min-width: 768px) {
+  .left-margin-content {
+    padding-left: 30px;
+  }
 }
 
 /* circle button style */

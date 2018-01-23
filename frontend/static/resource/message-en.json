@@ -5,6 +5,7 @@
     "ArticleDetail": "Article",
     "ArticleEdit": "Edit Article",
     "DraftList": "Drafts",
+    "DraftEdit": "Edit Article",
     "MoveOldUI": "Change to OLD UI",
     "TestViewTitle": "Page of Test",
     "TestViewDescription": "This page is test of frontend development"
@@ -71,6 +72,9 @@
   "DraftList": {
     "description": "list of draft",
     "EmptyTitle": "Title is empty"
+  },
+  "DraftEdit": {
+    "description": "edit this article"
   },
   "TestView": {
     "Message": "This is test."

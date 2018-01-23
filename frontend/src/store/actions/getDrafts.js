@@ -13,7 +13,7 @@ export default (store) => {
       if (draft.knowledgeId) {
         draft.editPage = '/articles/' + draft.knowledgeId + '/edit'
       } else {
-        draft.editPage = '/draft/' + draft.draftId + '/edit'
+        draft.editPage = '/drafts/' + draft.draftId + '/edit'
       }
     })
     store.commit('SET_RESOURCES', {

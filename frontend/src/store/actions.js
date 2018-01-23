@@ -9,6 +9,7 @@ import getArticle from './actions/getArticle'
 import getArticleForEdit from './actions/getArticleForEdit'
 import getTypes from './actions/getTypes'
 import getDrafts from './actions/getDrafts'
+import getDraftForEdit from './actions/getDraftForEdit'
 
 import saveArticle from './actions/saveArticle'
 import saveDraft from './actions/saveDraft'
@@ -31,6 +32,7 @@ export default {
   getArticleForEdit: getArticleForEdit,
   getTypes: getTypes,
   getDrafts: getDrafts,
+  getDraftForEdit: getDraftForEdit,
   saveArticle: saveArticle,
   saveDraft: saveDraft,
   addComment: addComment,

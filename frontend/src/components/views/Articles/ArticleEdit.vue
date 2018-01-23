@@ -104,9 +104,18 @@ export default {
       // 右側のサイドバーの状態を復元
       rightSidebar(this.$store.state.pagestate.showRightSideBar)
       // データの取得
-      this.$store.dispatch('getArticleForEdit', this.$route.params.id).then(() => {
-        return this.$store.dispatch('getTypes')
-      })
+      if (this.$route.params.draftId) {
+        // 下書きから（まだ記事を投稿前)
+        logger.info(LABEL, 'edit draft. ' + this.$route.params.draftId)
+        this.$store.dispatch('getDraftForEdit', this.$route.params.draftId)
+      } else if (this.$route.params.id) {
+        logger.info(LABEL, 'edit article. ' + this.$route.params.id)
+        this.$store.dispatch('getArticleForEdit', this.$route.params.id).then(() => {
+          return this.$store.dispatch('getTypes')
+        })
+      } else {
+        logger.info(LABEL, 'create new article.')
+      }
     },
     toggleRightSideBar () {
       this.$store.dispatch('toggleRightSideBar')

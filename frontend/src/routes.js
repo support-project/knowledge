@@ -53,6 +53,11 @@ const routes = [
         component: DraftList,
         name: 'DraftList',
         meta: {requiresAuth: true}
+      }, {
+        path: 'drafts/:draftId/edit',
+        component: ArticleEdit,
+        name: 'DraftEdit',
+        meta: {requiresAuth: true}
 /*
       }, {
         path: 'test',

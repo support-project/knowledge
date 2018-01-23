@@ -5,7 +5,7 @@ import he from 'he'
 
 import actionCommon from './actionCommon'
 
-const LABEL = 'getArticleForEdit.js'
+const LABEL = 'getDraftForEdit.js'
 
 export default (store, id) => {
   store.commit('SET_PAGE_STATE', {loading: true})
@@ -20,13 +20,13 @@ export default (store, id) => {
     store.commit('SET_PAGE_STATE', {loading: false})
     return
   }
-  var article
   return Promise.try(() => {
-    return api.request('get', '/_api/articles/' + id + '?include_draft=true', null)
+    return api.request('get', '/_api/drafts/' + id + '', null)
   }).then(response => {
-    article = response.data
+    var article = response.data
     actionCommon.setIcon(store, article)
     logger.debug(LABEL, response)
+/*
     return api.request('get', '/_api/articles/' + id + '/items', null)
   }).then(function (response) {
     logger.debug(LABEL, JSON.stringify(response.data, null, '  '))
@@ -42,6 +42,7 @@ export default (store, id) => {
       }
     })
     article.type = response.data
+*/
     article.content = he.decode(article.content, {
       'isAttributeValue': true
     })

@@ -52,11 +52,15 @@ public class DraftDataSelectLogic extends KnowledgeDataSelectLogic {
      */
     public Knowledge selectOnKnowledgeId(long knowledgeId, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
         DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKnowledgeAndUser(knowledgeId, loginedUser.getUserId());
+        return convDraft(draft, parseMarkdown, sanitize);
+    }
+
+    public KnowledgeDetailDraft convDraft(DraftKnowledgesEntity draft, boolean parseMarkdown, boolean sanitize) throws ParseException {
         if (draft == null) {
             return null;
         }
         Map<Integer, TemplateMastersEntity> typeMap = getTypeMap();
-        Knowledge result = convDraft(draft, SINGLE, typeMap);
+        KnowledgeDetailDraft result = convDraft(draft, SINGLE, typeMap);
         
         if (parseMarkdown) {
             LOG.warn("Parse Markdown on server side is deprecated.");
@@ -71,7 +75,7 @@ public class DraftDataSelectLogic extends KnowledgeDataSelectLogic {
         return result;
     }
 
-    private Knowledge convDraft(DraftKnowledgesEntity entity, int single, Map<Integer, TemplateMastersEntity> typeMap) {
+    private KnowledgeDetailDraft convDraft(DraftKnowledgesEntity entity, int single, Map<Integer, TemplateMastersEntity> typeMap) {
         KnowledgeDetailDraft result = new KnowledgeDetailDraft();
         PropertyUtil.copyPropertyValue(entity, result, true);
         

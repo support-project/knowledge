@@ -22,6 +22,7 @@ import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.api.Item;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
+import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
 import org.support.project.knowledge.vo.api.Target;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
@@ -217,14 +218,13 @@ public class KnowledgeDataEditLogic {
      * @return
      * @throws InvalidParamException
      */
-    public long saveDraft(KnowledgeDetail data, AccessUser loginedUser) throws InvalidParamException {
+    public long saveDraft(KnowledgeDetailDraft data, AccessUser loginedUser) throws InvalidParamException {
         LOG.trace("insert");
         // 画面での登録と形をあわせる
         KnowledgeData knowledge = conv(data);
-        
         DraftKnowledgesEntity draft = new DraftKnowledgesEntity();
         PropertyUtil.copyPropertyValue(knowledge.getKnowledge(), draft);
-        
+        draft.setDraftId(data.getDraftId());
         draft = KnowledgeLogic.get().draft(draft, knowledge.getTemplate(), knowledge.getFilesStrs(), loginedUser);
         return draft.getDraftId();
     }
