@@ -66,7 +66,7 @@ public class KnowledgesApiControl extends GetApiControl {
         }
         long knowledgeId = Long.parseLong(id);
         try {
-            Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), false, false);
+            Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), false, false, false);
             if (result == null) {
                 return sendError(HttpStatus.SC_404_NOT_FOUND);
             }

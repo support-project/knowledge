@@ -3,13 +3,13 @@ import logger from 'logger'
 
 const LABEL = 'getTypes.js'
 
-export default (state) => {
+export default (store) => {
   logger.debug(LABEL, 'get types from api')
   return api.request('get', '/_api/types', null)
   .then(response => {
     logger.debug(LABEL, response.data)
     var types = response.data
-    state.commit('SET_RESOURCES', {
+    store.commit('SET_RESOURCES', {
       types: types
     })
   })

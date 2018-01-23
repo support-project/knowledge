@@ -3,8 +3,8 @@ import logger from 'logger'
 
 const LABEL = 'setServerURI.js'
 
-export default (state, serverURI) => {
+export default (store, serverURI) => {
   logger.debug(LABEL, 'set server uri:' + serverURI)
-  state.commit('SET_SERVER_URI', serverURI)
+  store.commit('SET_SERVER_URI', serverURI)
   api.setServerURI(serverURI)
 }

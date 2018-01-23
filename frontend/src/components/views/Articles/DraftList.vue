@@ -9,7 +9,7 @@
       <i class="fa fa-refresh fa-spin fa-3x fa-fw" id="loadingList"></i>
 
       <div class="knowledge_item" v-for="draft in resources.drafts" :key="draft.draftId">
-        <router-link tag="a" :to="'/drafts/' + draft.draftId">
+        <router-link tag="a" :to="draft.editPage">
           <div class="item-info">
             <a>
             <i class="fa fa-calendar"></i>&nbsp;{{draft.updateDatetime | dispDate}}

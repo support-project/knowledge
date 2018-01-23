@@ -15,7 +15,7 @@
         <button :title="$t('ArticleEdit.BtnRelease')" class="label-primary" v-on:click="releaseArticle()">
           <i class="fa fa-rocket fa-lg" aria-hidden="true"></i>
         </button>
-        <a :title="$t('ArticleEdit.BtnDraft')">
+        <a :title="$t('ArticleEdit.BtnDraft')" v-on:click="saveDraftArticle()">
           <i class="fa fa-save fa-lg" aria-hidden="true"></i>
         </a>
         <router-link tag="a" :to="backhref"
@@ -115,6 +115,12 @@ export default {
       logger.debug(LABEL, JSON.stringify(this.resources.article, null, '  '))
       this.$store.dispatch('saveArticle').then((id) => {
         this.$router.push('/articles/' + id)
+      })
+    },
+    saveDraftArticle () {
+      this.$store.dispatch('saveDraft').then((id) => {
+        logger.info(LABEL, 'article was save draft. draft id: ' + id)
+        this.resources.article.draftId = id
       })
     }
   },

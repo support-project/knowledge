@@ -5,7 +5,7 @@ import processDecorateAll from '../../lib/decorateMarkdown/processDecorateAll'
 
 const LABEL = 'previewArticle.js'
 
-export default (context, article) => {
+export default (store, article) => {
   return Promise.try(() => {
     return processDecorateAll(article.content)
   }).then(function (result) {

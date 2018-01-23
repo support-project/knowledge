@@ -6,8 +6,8 @@ import actionCommon from './actionCommon'
 
 const LABEL = 'getArticles.js'
 
-export default (state) => {
-  state.commit('SET_PAGE_STATE', {loading: true})
+export default (store) => {
+  store.commit('SET_PAGE_STATE', {loading: true})
   return Promise.try(() => {
     logger.debug(LABEL, 'get articles from api')
     return api.request('get', '/_api/articles', null)
@@ -15,9 +15,9 @@ export default (state) => {
       logger.debug(LABEL, response.data)
       var articles = response.data
       articles.forEach(article => {
-        actionCommon.setIcon(state, article)
+        actionCommon.setIcon(store, article)
       })
-      state.commit('SET_RESOURCES', {
+      store.commit('SET_RESOURCES', {
         articles: articles
       })
     })
@@ -25,6 +25,6 @@ export default (state) => {
       logger.error(LABEL, error)
     })
   }).finally(() => {
-    state.commit('SET_PAGE_STATE', {loading: false})
+    store.commit('SET_PAGE_STATE', {loading: false})
   })
 }

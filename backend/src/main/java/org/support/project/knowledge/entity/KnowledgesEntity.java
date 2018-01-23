@@ -126,7 +126,7 @@ public class KnowledgesEntity extends GenKnowledgesEntity implements KnowledgeDa
         // }
         return super.getContent();
     }
-
+    
     /**
      * @return the insertUserName
      */

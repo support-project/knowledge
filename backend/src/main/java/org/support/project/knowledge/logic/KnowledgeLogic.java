@@ -68,8 +68,8 @@ import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.StockKnowledge;
-import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.AccessUser;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.AuthenticateException;
@@ -1501,13 +1501,20 @@ public class KnowledgeLogic {
             if (!isEditor(loginedUser, knowledge, editors)) {
                 throw new AuthenticateException("errors.noauthority");
             }
+            // 既にその記事に対して、そのユーザで下書きが保存されているかチェックし、保存されているのであればその下書きのIDを使う
+            // 例えば、ブラウザを2つで下書きAを開いて片方で下書きAを削除し下書きBを保存、その後、もう片方で下書きAを保存した場合、Bとして上書きになる
+            DraftKnowledgesEntity exist = DraftKnowledgesDao.get().selectOnKnowledgeAndUser(draft.getKnowledgeId(), loginedUser.getUserId());
+            if (exist != null) {
+                draft.setDraftId(exist.getDraftId());
+            }
         }
+        
         if (draft.getDraftId() == null || draft.getDraftId() <= 0) {
             DraftKnowledgesDao.get().insert(draft);
         } else {
             DraftKnowledgesEntity saved = DraftKnowledgesDao.get().selectOnKey(draft.getDraftId());
             if (saved == null) {
-                // 既に別の画面で削除済
+                // 既に別の画面で削除済 or 新規下書き保存
                 DraftKnowledgesDao.get().insert(draft);
             } else {
                 draft.setInsertUser(saved.getInsertUser());
@@ -1610,11 +1617,5 @@ public class KnowledgeLogic {
         }
     }
 
-    public long draft(KnowledgeData knowledge, AccessUser loginedUser) {
-        DraftKnowledgesEntity draft = new DraftKnowledgesEntity();
-        PropertyUtil.copyPropertyValue(knowledge.getKnowledge(), draft);
-        draft = draft(draft, knowledge.getTemplate(), knowledge.getFilesStrs(), loginedUser);
-        return 0;
-    }
 
 }

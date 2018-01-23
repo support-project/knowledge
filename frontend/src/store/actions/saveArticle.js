@@ -4,11 +4,11 @@ import logger from 'logger'
 
 const LABEL = 'saveArticle.js'
 
-export default (state) => {
-  state.commit('SET_PAGE_STATE', {loading: true})
+export default (store) => {
+  store.commit('SET_PAGE_STATE', {loading: true})
   return Promise.try(() => {
-    state.commit('CREAR_ALERTS')
-    const article = state.state.resources.article
+    store.commit('CREAR_ALERTS')
+    const article = store.state.resources.article
     if (article.knowledgeId) {
       logger.debug(LABEL, 'save articles to api. put data:\n' + JSON.stringify(article, null, '  '))
       return api.request('put', '/_api/articles/' + article.knowledgeId, article)
@@ -27,13 +27,13 @@ export default (state) => {
   }).catch(error => {
     logger.error(LABEL, JSON.stringify(error))
     var msg = logger.buildResponseErrorMsg(error.response, {suffix: 'Please try again.'})
-    state.commit('ADD_ALERT', {
+    store.commit('ADD_ALERT', {
       type: 'warning',
       title: 'Error',
       content: msg
     })
     throw error
   }).finally(() => {
-    state.commit('SET_PAGE_STATE', {loading: false})
+    store.commit('SET_PAGE_STATE', {loading: false})
   })
 }

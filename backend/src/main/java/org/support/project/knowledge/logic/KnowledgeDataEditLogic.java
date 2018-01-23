@@ -15,6 +15,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.KnowledgesDao;
+import org.support.project.knowledge.entity.DraftKnowledgesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
@@ -22,8 +23,8 @@ import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.api.Item;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.knowledge.vo.api.Target;
-import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.AccessUser;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.MessageResult;
 import org.support.project.web.bean.NameId;
 import org.support.project.web.common.HttpStatus;
@@ -216,19 +217,16 @@ public class KnowledgeDataEditLogic {
      * @return
      * @throws InvalidParamException
      */
-    public long draftInsert(KnowledgeDetail data, AccessUser loginedUser) throws InvalidParamException {
+    public long saveDraft(KnowledgeDetail data, AccessUser loginedUser) throws InvalidParamException {
         LOG.trace("insert");
         // 画面での登録と形をあわせる
         KnowledgeData knowledge = conv(data);
-        knowledge.getKnowledge().setKnowledgeId(null);
-        long draftId = KnowledgeLogic.get().draft(knowledge, loginedUser);
-        return draftId;
+        
+        DraftKnowledgesEntity draft = new DraftKnowledgesEntity();
+        PropertyUtil.copyPropertyValue(knowledge.getKnowledge(), draft);
+        
+        draft = KnowledgeLogic.get().draft(draft, knowledge.getTemplate(), knowledge.getFilesStrs(), loginedUser);
+        return draft.getDraftId();
     }
-
-
-
-
-
-
 
 }

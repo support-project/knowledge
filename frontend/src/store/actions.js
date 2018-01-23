@@ -11,6 +11,7 @@ import getTypes from './actions/getTypes'
 import getDrafts from './actions/getDrafts'
 
 import saveArticle from './actions/saveArticle'
+import saveDraft from './actions/saveDraft'
 import addComment from './actions/addComment'
 
 import likeArticle from './actions/likeArticle'
@@ -31,6 +32,7 @@ export default {
   getTypes: getTypes,
   getDrafts: getDrafts,
   saveArticle: saveArticle,
+  saveDraft: saveDraft,
   addComment: addComment,
   likeArticle: likeArticle,
   likeComment: likeComment,

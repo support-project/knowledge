@@ -39,5 +39,21 @@ public class DraftKnowledgesEntity extends GenDraftKnowledgesEntity implements K
     public DraftKnowledgesEntity(Long draftId) {
         super( draftId);
     }
+    
+    @Override
+    public String getEditors() {
+        if (super.getEditors() == null) {
+            return "";
+        }
+        return super.getEditors();
+    }
+    @Override
+    public String getAccesses() {
+        if (super.getAccesses() == null) {
+            return "";
+        }
+        return super.getAccesses();
+    }
+
 
 }

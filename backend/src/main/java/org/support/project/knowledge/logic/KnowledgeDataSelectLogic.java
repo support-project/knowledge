@@ -43,8 +43,8 @@ import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.knowledge.vo.api.Target;
 import org.support.project.knowledge.vo.api.Type;
 import org.support.project.knowledge.vo.api.internal.KnowledgeList;
-import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.AccessUser;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.NameId;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
@@ -58,8 +58,8 @@ public class KnowledgeDataSelectLogic {
         return Container.getComp(KnowledgeDataSelectLogic.class);
     }
     
-    private static final int SINGLE = 0;
-    private static final int LIST = 1;
+    protected static final int SINGLE = 0;
+    protected static final int LIST = 1;
     
     
     /**
@@ -248,11 +248,21 @@ public class KnowledgeDataSelectLogic {
      * @param loginedUser
      * @param parseMarkdown 
      * @param sanitize 
+     * @param includeDraft 
      * @return
      * @throws ParseException 
      */
-    public Knowledge select(long knowledgeId, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
+    public Knowledge select(long knowledgeId, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize, boolean includeDraft) throws ParseException {
         KnowledgesEntity entity = KnowledgeLogic.get().selectWithTags(knowledgeId, loginedUser);
+        if (entity == null) {
+            return null;
+        }
+        if (includeDraft) {
+            Knowledge draft = DraftDataSelectLogic.get().selectOnKnowledgeId(knowledgeId, loginedUser, parseMarkdown, sanitize);
+            if (draft != null) {
+                return draft;
+            }
+        }
         return conv(entity, loginedUser, parseMarkdown, sanitize);
     }
     
@@ -332,7 +342,7 @@ public class KnowledgeDataSelectLogic {
         
         return results;
     }
-    private Map<Integer, TemplateMastersEntity> getTypeMap() {
+    protected Map<Integer, TemplateMastersEntity> getTypeMap() {
         // 記事の種類の情報取得
         List<TemplateMastersEntity> template = TemplateMastersDao.get().selectAll();
         Map<Integer, TemplateMastersEntity> typeMap = new HashMap<>();

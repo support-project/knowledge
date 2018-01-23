@@ -45,9 +45,14 @@ public class GetArticleOneApiControl extends ApiControl {
         if (s != null && s.toLowerCase().equals("false")) {
             sanitize = false;
         }
+        boolean includeDraft = false; // 下書きがあれば下書きの情報を取得
+        String d = getParam("include_draft");
+        if (d != null && d.toLowerCase().equals("true")) {
+            includeDraft = true;
+        }
         
         long knowledgeId = Long.parseLong(id);
-        Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), parseMarkdown, sanitize);
+        Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), parseMarkdown, sanitize, includeDraft);
         if (result == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND);
         }

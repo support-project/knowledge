@@ -2,10 +2,10 @@ import logger from 'logger'
 
 const LABEL = 'actionCommon.js'
 
-var setIcon = (state, article) => {
-  logger.trace(LABEL, state.state.serverURI + '/open.account/icon/' + article.insertUser)
-  article.insertUserIcon = state.state.serverURI + '/open.account/icon/' + article.insertUser
-  article.updateUserIcon = state.state.serverURI + '/open.account/icon/' + article.updateUser
+var setIcon = (store, article) => {
+  logger.trace(LABEL, store.state.serverURI + '/open.account/icon/' + article.insertUser)
+  article.insertUserIcon = store.state.serverURI + '/open.account/icon/' + article.insertUser
+  article.updateUserIcon = store.state.serverURI + '/open.account/icon/' + article.updateUser
 }
 
 export default {
