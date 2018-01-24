@@ -1,0 +1,34 @@
+INSERT INTO MAIL_CONFIGS
+( 
+SYSTEM_NAME
+ , HOST
+ , PORT
+ , AUTH_TYPE
+ , SMTP_ID
+ , SMTP_PASSWORD
+ , SALT
+ , FROM_ADDRESS
+ , FROM_NAME
+ , ROW_ID
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);
