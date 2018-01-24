@@ -44,7 +44,7 @@ public class StubHttpServletRequest implements HttpServletRequest {
     private List<Cookie> cookies;
 
     /** パラメータのマップ */
-    private Hashtable<String, String[]> parameterMap;
+    private Hashtable<String, String[]> parameterMap = new Hashtable<>();
 
     /** エンコード */
     private String characterEncoding;

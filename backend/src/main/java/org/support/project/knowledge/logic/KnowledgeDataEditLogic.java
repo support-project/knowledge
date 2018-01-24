@@ -81,14 +81,13 @@ public class KnowledgeDataEditLogic {
         
         // TemplateMastersEntity template
         TemplateMastersEntity template = null;
-        if (data.getType().getId() != null) {
+        if (data.getType() != null && data.getType().getId() != null) {
             template = TemplateLogic.get().loadTemplate(data.getType().getId());
-        } else {
+        } else if (data.getType() != null) {
             template = TemplateLogic.get().selectOnName(data.getType().getName());
         }
         if (template == null) {
-            throw new InvalidParamException(new MessageResult(
-                    MessageStatus.Warning, HttpStatus.SC_400_BAD_REQUEST, "bad template name", ""));
+            template = TemplateLogic.get().loadTemplate(TemplateLogic.TYPE_ID_KNOWLEDGE);
         }
         List<TemplateItemsEntity> items = template.getItems();
         for (TemplateItemsEntity item : items) {

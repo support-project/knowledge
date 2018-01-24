@@ -147,8 +147,8 @@ public class CallControlLogicImpl implements CallControlLogic {
             }
             
             HttpRequestCheckLogic check = HttpRequestCheckLogic.get();
-            if (!check.checkCSRF(invokeTarget, request, loginId)) {
-                // CSRFチェック対象であればチェック実施
+            if (!check.checkCSRF(invokeTarget, request, response, loginId)) {
+                // CSRFチェzック対象であればチェック実施
                 throw new CallControlException(HttpStatus.SC_403_FORBIDDEN, method, path, "CSRF check error.");
             }
             // CSRF用のリクエストキーなど発行
@@ -281,6 +281,9 @@ public class CallControlLogicImpl implements CallControlLogic {
         invokeTarget.setParams(params);
         return invokeTarget;
     }
-    
-    
+
+    @Override
+    public InvokeTarget getController(HttpMethod method, String path, String pathinfo) {
+        return _invokeSearch.getController(method, path, pathinfo);
+    }
 }

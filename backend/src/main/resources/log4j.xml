@@ -51,6 +51,10 @@
     </category>
     -->
     
+    <category name="org.support.project.web.common.InvokeSearch">
+        <level value="DEBUG" />
+    </category>
+    
     <category name="org.support.project.ormapping.tool">
         <level value="INFO" />
     </category>

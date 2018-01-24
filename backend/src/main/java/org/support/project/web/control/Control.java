@@ -42,7 +42,9 @@ import org.support.project.web.config.HttpMethod;
 import org.support.project.web.config.MessageStatus;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.exception.InvalidParamException;
+import org.support.project.web.logic.CallControlLogic;
 import org.support.project.web.logic.impl.DefaultAuthenticationLogicImpl;
+import org.support.project.web.logic.invoke.CallControlExLogicImpl;
 
 import net.arnx.jsonic.JSON;
 import net.arnx.jsonic.JSONException;
@@ -123,8 +125,8 @@ public abstract class Control {
         if (path.startsWith("/")) {
             path = path.substring(1);
         }
-        InvokeSearch invokeSearch = Container.getComp(InvokeSearch.class);
-        InvokeTarget invokeTarget = invokeSearch.getController(method, path, pathinfo);
+        CallControlLogic callControlLogic = Container.getComp(CallControlExLogicImpl.class);
+        InvokeTarget invokeTarget = callControlLogic.getController(method, path, pathinfo);
         if (invokeTarget != null && Control.class.isAssignableFrom(invokeTarget.getTargetClass())) {
             Control control = (Control) invokeTarget.getTarget();
             copy(control);
@@ -133,7 +135,7 @@ public abstract class Control {
             control.setPathInfo(pathinfo);
             return (Boundary) invokeTarget.invoke();
         }
-        throw new SystemException("can not devolution path :" + path);
+        throw new SystemException("can not devolution path :" + method.name() + " " + path);
     }
 
     /**

@@ -498,6 +498,8 @@ public abstract class IntegrationCommon extends TestCommon {
         if (result instanceof NameId) {
             NameId nameId = (NameId) boundary.getObj();
             return new Long(nameId.getId());
+        } else {
+            LOG.warn("result is not NameId object." + result.getClass().getName() + "\n" + PropertyUtil.reflectionToString(result));
         }
         Assert.fail("result is not NameId object.");
         return -1;

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.web.common.InvokeTarget;
+import org.support.project.web.config.HttpMethod;
 import org.support.project.web.exception.InvalidParamException;
 import org.support.project.web.exception.SendErrorException;
 
@@ -40,5 +41,7 @@ public interface CallControlLogic {
      */
     InvokeTarget searchInvokeTarget(HttpServletRequest request, HttpServletResponse response) throws SendErrorException, InstantiationException,
             IllegalAccessException, JSONException, IOException, InvalidParamException, NoSuchAlgorithmException;
+
+    InvokeTarget getController(HttpMethod method, String path, String pathinfo);
 
 }

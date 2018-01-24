@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
@@ -17,6 +19,8 @@ public class StubHttpServletResponse implements HttpServletResponse {
     /** Cookie */
     private List<Cookie> cookies;
     private StubHttpServletRequest request;
+    
+    private Map<String, String> headers = new HashMap<>();
     
     private int status;
 
@@ -43,8 +47,10 @@ public class StubHttpServletResponse implements HttpServletResponse {
     public int getStatus() {
         return status;
     }
-    
-    
+    @Override
+    public void setHeader(String paramString1, String paramString2) {
+        headers.put(paramString1, paramString2);
+    }
     
     
     @Override
@@ -170,11 +176,6 @@ public class StubHttpServletResponse implements HttpServletResponse {
 
     @Override
     public void addDateHeader(String paramString, long paramLong) {
-        throw new NotImplementedException("NotImplemented");
-    }
-
-    @Override
-    public void setHeader(String paramString1, String paramString2) {
         throw new NotImplementedException("NotImplemented");
     }
 

@@ -15,7 +15,7 @@ public class CSRFTokens implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    private LinkedHashMap<String, CSRFToken> tokens = new LinkedHashMap<>();
+    private LinkedHashMap<String, String> tokens = new LinkedHashMap<>();
 
     /**
      * 指定のキーに対するTokenを発行する
@@ -26,8 +26,7 @@ public class CSRFTokens implements Serializable {
      */
     public String addToken(String key) throws NoSuchAlgorithmException {
         if (tokens.containsKey(key)) {
-            CSRFToken token = tokens.get(key);
-            return token.getToken();
+            return tokens.get(key);
         }
         if (tokens.size() > 20) {
             Iterator<String> iterator = tokens.keySet().iterator();
@@ -38,8 +37,9 @@ public class CSRFTokens implements Serializable {
             }
         }
         CSRFToken token = CSRFToken.create(key);
-        tokens.put(key, token);
-        return token.getToken();
+        String tokenString = token.getToken();
+        tokens.put(key, tokenString);
+        return tokenString;
     }
 
     /**
@@ -49,15 +49,17 @@ public class CSRFTokens implements Serializable {
      * @param reqTokens CSRFTokens
      * @return チェック結果
      */
-    public boolean checkToken(String key, CSRFTokens reqTokens) {
-        Iterator<CSRFToken> iterator = tokens.values().iterator();
+    public boolean checkToken(String key, LinkedHashMap<String, String> reqTokens) {
+        Iterator<String> iterator = tokens.keySet().iterator();
         while (iterator.hasNext()) {
-            CSRFToken csrfToken = (CSRFToken) iterator.next();
-            if (csrfToken.getKey().equals(key)) {
-                Iterator<CSRFToken> iterator2 = reqTokens.tokens.values().iterator();
+            String k = iterator.next();
+            String token = tokens.get(k);
+            if (k.equals(key)) {
+                Iterator<String> iterator2 = reqTokens.keySet().iterator();
                 while (iterator2.hasNext()) {
-                    CSRFToken reqToken = (CSRFToken) iterator2.next();
-                    if (reqToken.getKey().equals(key) && csrfToken.getToken().equals(reqToken.getToken())) {
+                    String k2 = iterator2.next();
+                    String reqToken = reqTokens.get(k);
+                    if (k2.equals(key) && token.equals(reqToken)) {
                         return true;
                     }
                 }
@@ -73,15 +75,19 @@ public class CSRFTokens implements Serializable {
      * @return チェック結果
      */
     public boolean checkToken(String key) {
-        Iterator<CSRFToken> iterator = tokens.values().iterator();
+        Iterator<String> iterator = tokens.values().iterator();
         while (iterator.hasNext()) {
-            CSRFToken csrfToken = (CSRFToken) iterator.next();
-            if (csrfToken.getToken().equals(key)) {
+            String csrfToken = (String) iterator.next();
+            if (csrfToken.equals(key)) {
                 // 保持されているTokenのリストの中に存在すればOK
                 return true;
             }
         }
         return false;
+    }
+
+    public LinkedHashMap<String, String> getTokens() {
+        return tokens;
     }
 
 }

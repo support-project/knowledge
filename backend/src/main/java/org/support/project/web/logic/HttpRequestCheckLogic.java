@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.security.NoSuchAlgorithmException;
+import java.util.LinkedHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,10 +14,13 @@ import org.support.project.common.exception.SerializeException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.serialize.SerializeUtils;
+import org.support.project.common.serialize.impl.SerializerForSerializableImpl;
+import org.support.project.common.util.Base64Utils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.web.bean.CSRFToken;
 import org.support.project.web.bean.CSRFTokens;
 import org.support.project.web.common.HttpUtil;
 import org.support.project.web.common.InvokeTarget;
@@ -224,7 +228,9 @@ public class HttpRequestCheckLogic {
                 LOG.debug("Add token to CSRF_TOKENS. key:" + tokenkey + "  token:" + result);
             }
             try {
-                HttpUtil.setCookie(request, response, CSRF_TOKENS, SerializeUtils.objectToBase64(tokens));
+                String t = SerializeUtils.objectToBase64(tokens.getTokens());
+                LOG.warn("Set tokens table to Cokkie: " + t);
+                HttpUtil.setCookie(request, response, CSRF_TOKENS, t);
             } catch (SerializeException e) {
                 LOG.debug("Error on set CSRF token to request. " + e.getClass().getSimpleName());
             }
@@ -247,7 +253,8 @@ public class HttpRequestCheckLogic {
      * @param request
      * @return
      */
-    public boolean checkCSRF(InvokeTarget invokeTarget, HttpServletRequest request, Integer userId) {
+    @SuppressWarnings("unchecked")
+    public boolean checkCSRF(InvokeTarget invokeTarget, HttpServletRequest request, HttpServletResponse response, Integer userId) {
         if (isCheckReferer(invokeTarget)) {
             // CSRFの簡易対策で、Referrerをチェックする
             HttpRequestCheckLogic check = HttpRequestCheckLogic.get();
@@ -277,13 +284,18 @@ public class HttpRequestCheckLogic {
                 return false;
             }
             try {
-                CSRFTokens reqTokens = SerializeUtils.Base64ToObject(base64, CSRFTokens.class);
+                LOG.warn("Get tokens table to Cokkie: " + base64);
+                byte[] bytes = Base64Utils.fromBase64(base64);
+                LinkedHashMap<String, String> reqTokens = SerializeUtils.bytesToObject(
+                        bytes, LinkedHashMap.class,
+                        SerializeUtils.getSerializerInstanse(SerializerForSerializableImpl.class));
                 if (!tokens.checkToken(tokenkey, reqTokens)) {
                     LOG.warn("Token NG : " + tokenkey);
                     return false;
                 }
             } catch (SerializeException e) {
                 LOG.warn("Failed to restore Token", e);
+                HttpUtil.setCookie(request, response, CSRF_TOKENS, "");
                 return false;
             }
         }

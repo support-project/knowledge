@@ -136,30 +136,34 @@ public class InvokeSearch {
 
     protected void addDeleteTarget(Class<?> class1, Method method, String targetPackageName, String classSuffix, String call, Delete delete) {
         String path = delete.path();
-        addTarget(class1, method, targetPackageName, classSuffix, call, path, invokeDeleteTargets);
+        addTarget(class1, method, targetPackageName, classSuffix, call, path, invokeDeleteTargets, "DELETE");
     }
 
     protected void addPutTarget(Class<?> class1, Method method, String targetPackageName, String classSuffix, String call, Put put) {
         String path = put.path();
-        addTarget(class1, method, targetPackageName, classSuffix, call, path, invokePutTargets);
+        addTarget(class1, method, targetPackageName, classSuffix, call, path, invokePutTargets, "PUT");
     }
 
     protected void addPostTarget(Class<?> class1, Method method, String targetPackageName, String classSuffix, String call, Post post) {
         String path = post.path();
-        addTarget(class1, method, targetPackageName, classSuffix, call, path, invokePostTargets);
+        addTarget(class1, method, targetPackageName, classSuffix, call, path, invokePostTargets, "POST");
     }
 
     protected void addGetTarget(Class<?> class1, Method method, String targetPackageName, String classSuffix, String call, Get get) {
         String path = get.path();
-        addTarget(class1, method, targetPackageName, classSuffix, call, path, invokeGetTargets);
+        addTarget(class1, method, targetPackageName, classSuffix, call, path, invokeGetTargets, "GET");
     }
 
     protected void addTarget(Class<?> class1, Method method, String targetPackageName, String classSuffix, String call, String path,
-            Map<String, InvokeTarget> invokeTargets) {
-        LOG.info(ClassUtils.getShortClassName(class1) + "#" + method.getName());
+            Map<String, InvokeTarget> invokeTargets, String httpMethod) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(ClassUtils.getShortClassName(class1) + "#" + method.getName());
+        }
         Annotation[] as = method.getAnnotations();
         for (Annotation annotation : as) {
-            LOG.info("        " + annotation.annotationType());
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("        " + annotation.annotationType());
+            }
         }
         
         InvokeTarget invokeTarget = createInvokeTarget(class1, method, targetPackageName, classSuffix);
@@ -168,7 +172,9 @@ public class InvokeSearch {
         Auth auth = method.getAnnotation(Auth.class);
         if (auth != null) {
             String[] roles = auth.roles();
-            LOG.info("            " + String.join(",", roles));
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("            " + String.join(",", roles));
+            }
             for (String role : roles) {
                 invokeTarget.addRole(role);
             }
@@ -195,7 +201,7 @@ public class InvokeSearch {
         // 大文字／小文字は判定しない
         invokeTargets.put(key.toLowerCase(), invokeTarget);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Add targget. [" + key + "]");
+            LOG.debug("Add targget. " + httpMethod + " " + key.toLowerCase() + " => " + class1.getName() + "#" + method.getName());
         }
     }
 

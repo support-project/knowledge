@@ -171,19 +171,20 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         StubHttpServletRequest request = new StubHttpServletRequest();
         StubHttpServletResponse response = new StubHttpServletResponse(request);
         
+        DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
+        auth.setSession(ANSWER_USER, request, response);
+        
         request.setServletPath("protect.survey/load/" + knowledgeId);
         request.setMethod("get");
         JsonBoundary survey = invoke(request, response, JsonBoundary.class);
         LOG.info(survey);
         Assert.assertNotNull(survey);
+
+        String csrfToken = (String) request.getAttribute(HttpRequestCheckLogic.REQ_ID_KEY);
+        request.addParameter(HttpRequestCheckLogic.REQ_ID_KEY, csrfToken);
         
         request.setServletPath("protect.survey/answer");
         request.setMethod("post");
-        DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
-        auth.setSession(ANSWER_USER, request, response);
-        
-        String csrfToken = (String) request.getAttribute(HttpRequestCheckLogic.REQ_ID_KEY);
-        request.addParameter(HttpRequestCheckLogic.REQ_ID_KEY, csrfToken);
         
         request.addParameter("knowledgeId", String.valueOf(knowledgeId));
         request.addParameter("item_0", "回答");
@@ -296,17 +297,21 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         Assert.assertEquals(false, result.isEditable());
         Assert.assertEquals(false, result.isExist());
         
+        auth.setSession(ANSWER_USER, request, response);
+        msg = invoke(request, response, JsonBoundary.class);
+        csrfToken = (String) request.getAttribute(HttpRequestCheckLogic.REQ_ID_KEY);
+        request.addParameter(HttpRequestCheckLogic.REQ_ID_KEY, csrfToken);
+        
         request.setServletPath("protect.survey/save");
         request.setMethod("post");
         auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
         auth.setSession(ANSWER_USER, request, response);
-        csrfToken = (String) request.getAttribute(HttpRequestCheckLogic.REQ_ID_KEY);
-        request.addParameter(HttpRequestCheckLogic.REQ_ID_KEY, csrfToken);
         request.addParameter("knowledgeId", String.valueOf(knowledgeId));
         request.addParameter("typeName", "アンケート");
         request.addParameter("itemType", "text_item0");
         request.addParameter("title_item0", "入力項目1");
         jsonBoundary = invoke(request, response, JsonBoundary.class);
+        
         MessageResult messageResult = (MessageResult) jsonBoundary.getObj();
         LOG.info(messageResult);
         Assert.assertEquals(HttpStatus.SC_200_OK, messageResult.getCode().intValue());
@@ -316,6 +321,7 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         request.setServletPath("protect.survey/load/" + knowledgeId);
         request.setMethod("get");
         auth.setSession(OTHER_USER, request, response);
+        
         msg = invoke(request, response, JsonBoundary.class);
         result = (SurveysEntity) msg.getObj();
         Assert.assertEquals(null, result.getDescription());
