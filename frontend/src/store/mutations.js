@@ -40,6 +40,16 @@ export default {
   CHANGE_ARTICLE_TYPE (state, type) {
     changeArticleType(state, type)
   },
+  INIT_ARTICLE (state) {
+    state.resources.article = {
+      title: '',
+      content: '',
+      type: {
+        id: -100,
+        items: []
+      }
+    }
+  },
   ADD_ALERT (state, params) {
     addAlert(state, params)
   },

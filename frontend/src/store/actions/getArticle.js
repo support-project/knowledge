@@ -13,7 +13,7 @@ const LABEL = 'getArticle.js'
 export default (store, id) => {
   store.commit('SET_PAGE_STATE', {loading: true})
   return Promise.try(() => {
-    store.commit('SET_RESOURCES', {article: ''})
+    store.commit('INIT_ARTICLE')
     store.commit('SET_RESOURCES', {comments: []})
     store.commit('CREAR_ALERTS')
     return api.request('get', '/_api/articles/' + id + '', null)

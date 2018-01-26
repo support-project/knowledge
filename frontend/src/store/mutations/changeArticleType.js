@@ -1,4 +1,5 @@
 import logger from 'logger'
+import lang from 'lang'
 const LABEL = 'changeArticleType.js'
 
 export default (state, type) => {
@@ -24,6 +25,14 @@ export default (state, type) => {
       article.type.name = element.name
       var items = []
       element.items.forEach(item => {
+        if (item.itemType === 11) {
+          // bind checkbox value to array object
+          var vals = []
+          if (lang.isString(item.itemValue)) {
+            vals = item.itemValue.split(',')
+          }
+          item.itemValue = vals
+        }
         items.push(item)
       })
       article.type.items = items

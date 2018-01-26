@@ -9,13 +9,7 @@ const LABEL = 'getArticleForEdit.js'
 
 export default (store, id) => {
   store.commit('SET_PAGE_STATE', {loading: true})
-  store.commit('SET_RESOURCES', {article: {
-    content: '',
-    type: {
-      id: -100,
-      items: []
-    }
-  }})
+  store.commit('INIT_ARTICLE')
   if (!id) {
     store.commit('SET_PAGE_STATE', {loading: false})
     return
@@ -27,7 +21,7 @@ export default (store, id) => {
     article = response.data
     actionCommon.setIcon(store, article)
     logger.debug(LABEL, response)
-    return api.request('get', '/_api/articles/' + id + '/items', null)
+    return api.request('get', '/_api/articles/' + id + '/items?include_draft=true', null) // TODO Backend
   }).then(function (response) {
     logger.debug(LABEL, JSON.stringify(response.data, null, '  '))
     var type = response.data
@@ -38,6 +32,7 @@ export default (store, id) => {
         if (element.itemValue) {
           vals = element.itemValue.split(',')
         }
+        logger.info(LABEL, vals)
         element.itemValue = vals
       }
     })

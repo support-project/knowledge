@@ -48,6 +48,7 @@ public class GetMyInfoemationApiControl extends ApiControl {
         for (UserConfigsEntity userConfigsEntity : userConfigs) {
             Config config = new Config();
             PropertyUtil.copyPropertyValue(userConfigsEntity, config, true);
+            configs.add(config);
         }
         u.setConfigs(configs);
         return send(HttpStatus.SC_200_OK, u);

@@ -1,7 +1,7 @@
 <template>
   <div v-if="resources.article.type">
     <div class="form-group" v-for="item in resources.article.type.items" :key="item.id">
-      <label>{{item.itemName}} - {{item.itemType}}</label>
+      <label>{{item.itemName}}</label>
 
       <span v-if="item.itemType === 0">
         <div class="input-group">

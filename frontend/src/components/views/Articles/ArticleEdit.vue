@@ -115,6 +115,7 @@ export default {
         })
       } else {
         logger.info(LABEL, 'create new article.')
+        this.$store.commit('INIT_ARTICLE')
       }
     },
     toggleRightSideBar () {

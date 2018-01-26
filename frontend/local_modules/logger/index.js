@@ -148,11 +148,15 @@ logger.buildResponseErrorMsg = function (response, params) {
     suffix = params.suffix
   }
   msg += prefix  
-  if (response.status && detail) {
-    msg += '[Status] ' + response.status + '. '
-  }
-  if (response.data && response.data.message) {
-    msg += response.data.message + ' '
+  if (response) {
+    if (response.status && detail) {
+      msg += '[Status] ' + response.status + '. '
+    }
+    if (response.data && response.data.message) {
+      msg += response.data.message + ' '
+    }
+  } else {
+    msg += 'response is undefined.'
   }
   msg += suffix  
   return msg

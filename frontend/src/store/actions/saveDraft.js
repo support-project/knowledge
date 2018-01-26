@@ -1,6 +1,7 @@
 import Promise from 'bluebird'
 import api from '../../api'
 import logger from 'logger'
+import lang from 'lang'
 
 const LABEL = 'saveDraft.js'
 
@@ -8,7 +9,16 @@ export default (store) => {
   store.commit('SET_PAGE_STATE', {loading: true})
   store.commit('CREAR_ALERTS')
   return Promise.try(() => {
-    const article = store.state.resources.article
+    return lang.deepClone(store.state.resources.article)
+  }).then((article) => {
+    article.type.items.forEach(element => {
+      if (element.itemType === 11) {
+        if (!lang.isString(element.itemValue)) {
+          var vals = element.itemValue.join(',')
+          element.itemValue = vals
+        }
+      }
+    })
     logger.info(LABEL, 'draft save articles to api. put data:\n' + JSON.stringify(article, null, '  '))
     return api.request('post', '/_api/drafts', article)
   }).then(response => {
