@@ -11,16 +11,15 @@ export default (store, params) => {
     return api.request('post', '/_api/auth', params)
     .then(response => {
       var data = response.data
-      logger.debug(LABEL, 'logined: ' + JSON.stringify(data))
-      if (data.user) {
+      logger.info(LABEL, 'logined: ' + JSON.stringify(data))
+      if (data.token) {
         var token = data.token
-        data.user.avatar = 'open.account/icon/' + data.user.userId
-        store.commit('SET_USER', data.user)
         store.commit('SET_TOKEN', token)
         if (window.localStorage) {
           // window.localStorage.setItem('user', JSON.stringify(data.user))
           window.localStorage.setItem('token', token)
         }
+        return true
       } else {
         store.commit('ADD_ALERT', {
           notify: false,
@@ -30,7 +29,6 @@ export default (store, params) => {
         })
         throw new Error('invalid Username/Password.')
       }
-      return data
     })
   }).catch(error => {
     if (error.response.status === 403) {

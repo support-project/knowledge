@@ -55,10 +55,15 @@ public class InternalApiFilter extends PublicApiFilter {
                 return;
             }
             invoke(invokeTarget, req, res);
-            // もし新たにセッションをAPIで生成した場合は、リクエスト毎にクリア（基本的には、内部APIの場合はクリアする必要は無いはず）
             if (setSession) {
+                // TODO NEW画面でログインした場合も、旧画面でログインしたことになるようにつじつまをあわせる処理を追加
+                //      SessionIDをCookieに持つようにすればOK（PrivateTokenだけでなく）
+                
+                /* もし新たにセッションをAPIで生成した場合は、リクエスト毎にクリア（基本的には、内部APIの場合はクリアする必要は無いはず）
+                 * と考えてみたが、旧画面でのセッションもクリアするようになるので、クリアしない方が無難のようなのでクリアしないようにする
                 LOG.info("clear session. sessionid:" + req.getSession().getId());
                 getAuthenticationLogic().clearSession(req);
+                */
             }
         } catch (SendErrorException e) {
             LOG.warn(e.getMessage());

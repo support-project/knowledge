@@ -100,13 +100,15 @@ const message = {
 // 言語の設定
 Vue.use(VueI18n)
 const i18n = new VueI18n({
-  locale: 'ja',
+  locale: 'en',
   fallbackLocale: 'en',
   messages: message
 })
 
 store.dispatch('setServerURI', serverURI)
 .then(() => {
+  return store.dispatch('checkTokenOnLocalStrage')
+}).then(() => {
   return store.dispatch('loadUserInformation', {i18n})
 }).then(() => {
   // Start out app!

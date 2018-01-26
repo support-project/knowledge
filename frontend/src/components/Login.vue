@@ -31,6 +31,9 @@
 
 <script>
 import Alerts from './views/Parts/Alerts'
+import logger from 'logger'
+
+const LABEL = 'Login.vue'
 
 export default {
   name: 'Login',
@@ -44,8 +47,24 @@ export default {
   methods: {
     checkCreds () {
       const {username, password} = this
-      this.$store.dispatch('login', {id: username, password: password}).then((data) => {
-        this.$router.push(data.redirect ? data.redirect : '/')
+      this.$store.dispatch('login', {id: username, password: password}).then((result) => {
+        logger.info(LABEL, 'login result: ' + JSON.stringify(result))
+        if (result) {
+          return this.$store.dispatch('loadUserInformation', {
+            i18n: this.$i18n
+          })
+        }
+        return result
+      }).then((result) => {
+        logger.info(LABEL, 'load user information result: ' + JSON.stringify(result))
+        if (result) {
+          var redirect = this.$route.query.redirect
+          if (!redirect) {
+            redirect = '/'
+          }
+          logger.info(LABEL, 'redirect: ' + JSON.stringify(redirect))
+          this.$router.push(redirect)
+        }
       }).catch((e) => {
       })
     }

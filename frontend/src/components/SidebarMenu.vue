@@ -184,6 +184,10 @@ export default {
   methods: {
     logout () {
       this.$store.dispatch('logout').then(() => {
+        return this.$store.dispatch('loadUserInformation', {
+          i18n: this.$i18n
+        })
+      }).then(() => {
         this.$router.push('/login')
       })
     }

@@ -18,15 +18,10 @@ export default (store, params) => {
     logger.error(LABEL, error)
     return ''
   }).finally(() => {
-    store.commit('SET_USER', {
-      avatar: '/open.account/icon/',
-      userName: 'anonymous'
-    })
+    store.commit('SET_PAGE_STATE', {loading: false})
     store.commit('SET_TOKEN', null)
     if (window.localStorage) {
-      // window.localStorage.setItem('user', null)
       window.localStorage.setItem('token', null)
     }
-    store.commit('SET_PAGE_STATE', {loading: false})
   })
 }

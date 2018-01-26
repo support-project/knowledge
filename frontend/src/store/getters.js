@@ -1,4 +1,10 @@
 export default {
+  IS_LOGINED (state) {
+    if (state.token) {
+      return true
+    }
+    return false
+  },
   GET_USER (state) {
     return state.user
   },

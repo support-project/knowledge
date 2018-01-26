@@ -2,6 +2,7 @@ import setServerURI from './actions/setServerURI'
 
 import login from './actions/login'
 import logout from './actions/logout'
+import checkTokenOnLocalStrage from './actions/checkTokenOnLocalStrage'
 import loadUserInformation from './actions/loadUserInformation'
 
 import getArticles from './actions/getArticles'
@@ -26,6 +27,7 @@ export default {
   setServerURI: setServerURI,
   login: login,
   logout: logout,
+  checkTokenOnLocalStrage: checkTokenOnLocalStrage,
   loadUserInformation: loadUserInformation,
   getArticles: getArticles,
   getArticle: getArticle,

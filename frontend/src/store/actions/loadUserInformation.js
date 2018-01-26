@@ -4,45 +4,41 @@ import logger from 'logger'
 
 const LABEL = 'loadUserInformation.js'
 
+var initUserInformation = (store) => {
+  store.commit('SET_USER', {
+    avatar: 'open.account/icon/',
+    userName: 'anonymous'
+  })
+}
+
 export default (store, params) => {
   logger.trace(LABEL, 'Load user information')
+  if (!store.getters.IS_LOGINED) {
+    initUserInformation(store)
+    return
+  }
+
   store.commit('SET_PAGE_STATE', {loading: true})
-  // params.i18n.locale = 'en'
   return Promise.try(() => {
-    // Check local storage to handle refreshes
-    if (window.localStorage) {
-      // var localUserString = window.localStorage.getItem('user') || 'null'
-      // var localUser = JSON.parse(localUserString)
-      // logger.debug(LABEL, localUser)
-      var token = window.localStorage.getItem('token')
-      if (token) {
-        return api.request('post', '/_api/token', {msg: token})
-      }
-    }
+    return api.request('get', '/_api/me')
   }).then(response => {
-    var token = response.data.token
-    var user = response.data.user
-    user.avatar = 'open.account/icon/' + user.userId
-    if (token) {
-      store.commit('SET_TOKEN', token)
+    logger.info(LABEL, 'Get user information from api: ' + JSON.stringify(response.data))
+    var user = response.data
+    if (user && user.userId) {
+      if (user.localeKey) {
+        params.i18n.locale = user.localeKey
+      }
+      user.avatar = 'open.account/icon/' + user.userId // set my icon path
       store.commit('SET_USER', user)
+      return true
     } else {
-      store.commit('SET_USER', {
-        avatar: 'open.account/icon/',
-        userName: 'anonymous'
-      })
-      store.commit('SET_TOKEN', '')
-    }
-    if (window.localStorage) {
-      window.localStorage.setItem('token', token)
+      initUserInformation(store)
+      return false
     }
   }).catch(error => {
     logger.warn(LABEL, JSON.stringify(error))
-    store.commit('SET_USER', {
-      avatar: 'open.account/icon/',
-      userName: 'anonymous'
-    })
-    store.commit('SET_TOKEN', '')
+    initUserInformation(store)
+    return false
   }).finally(() => {
     store.commit('SET_PAGE_STATE', {loading: false})
   })

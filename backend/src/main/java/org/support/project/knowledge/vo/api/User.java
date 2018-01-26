@@ -1,6 +1,8 @@
 package org.support.project.knowledge.vo.api;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * APIで返すユーザ情報
@@ -11,6 +13,8 @@ public class User {
     private Integer userId;
     /** ユーザ名 */
     private String userName;
+    /** ロケール */
+    private String localeKey;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -19,6 +23,12 @@ public class User {
     private Integer updateUser;
     /** 更新日時 */
     private Timestamp updateDatetime;
+    
+    /**
+     * ユーザの設定
+     */
+    private List<Config> configs = new ArrayList<>();
+    
     /**
      * @return the userId
      */
@@ -90,6 +100,18 @@ public class User {
      */
     public void setUpdateDatetime(Timestamp updateDatetime) {
         this.updateDatetime = updateDatetime;
+    }
+    public List<Config> getConfigs() {
+        return configs;
+    }
+    public void setConfigs(List<Config> configs) {
+        this.configs = configs;
+    }
+    public String getLocaleKey() {
+        return localeKey;
+    }
+    public void setLocaleKey(String localeKey) {
+        this.localeKey = localeKey;
     }
 
 }

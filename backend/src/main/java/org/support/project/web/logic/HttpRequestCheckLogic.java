@@ -229,7 +229,7 @@ public class HttpRequestCheckLogic {
             }
             try {
                 String t = SerializeUtils.objectToBase64(tokens.getTokens());
-                LOG.warn("Set tokens table to Cokkie: " + t);
+                LOG.debug("Set tokens table to Cokkie: " + t);
                 HttpUtil.setCookie(request, response, CSRF_TOKENS, t);
             } catch (SerializeException e) {
                 LOG.debug("Error on set CSRF token to request. " + e.getClass().getSimpleName());
