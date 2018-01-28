@@ -30,15 +30,15 @@ var abbreviate = function (value, length, omission) {
   }
 }
 
-const deepClone = obj => {
+const deepClone = function (obj) {
   const channel = new MessageChannel()
   const inPort = channel.port1
   const outPort = channel.port2
-  return new Promise(resolve => {
-      inPort.onmessage = data => {
-          resolve(data.data)
-      }
-      outPort.postMessage(obj)
+  return new Promise(function (resolve) {
+    inPort.onmessage = function (data) {
+      resolve(data.data)
+    }
+    outPort.postMessage(obj)
   })
 }
 
