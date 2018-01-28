@@ -7,6 +7,8 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.DraftKnowledgesDao;
+import org.support.project.knowledge.entity.DraftKnowledgesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.logic.KnowledgeDataSelectLogic;
@@ -36,13 +38,28 @@ public class GetArticleTemplateItemsApiControl extends ApiControl {
         if (!StringUtils.isLong(id)) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST);
         }
+        boolean includeDraft = false; // 下書きがあれば下書きの情報を取得
+        String d = getParam("include_draft");
+        if (d != null && d.toLowerCase().equals("true")) {
+            includeDraft = true;
+        }
+
         long knowledgeId = Long.parseLong(id);
         KnowledgesEntity knowledge = KnowledgeLogic.get().select(knowledgeId, getLoginedUser());
         if (knowledge == null) {
             // 存在しない or アクセス権無し
             return sendError(HttpStatus.SC_404_NOT_FOUND);
         }
-        TemplateMastersEntity template = KnowledgeTemplateItemSelectLogic.get().getItems(knowledge);
+        int typeId = knowledge.getTypeId();
+        long draftId = -1;
+        if (includeDraft) {
+            DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKnowledgeAndUser(knowledgeId, getLoginUserId());
+            if (draft != null) {
+                typeId = draft.getTypeId();
+                draftId = draft.getDraftId();
+            }
+        }
+        TemplateMastersEntity template = KnowledgeTemplateItemSelectLogic.get().getItems(knowledgeId, typeId, includeDraft, draftId);
         Type type = KnowledgeDataSelectLogic.get().convType(template);
         return send(HttpStatus.SC_200_OK, type);
     }

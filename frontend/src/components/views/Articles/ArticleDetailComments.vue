@@ -154,5 +154,3 @@ export default {
   margin-top: 20px;
 }
 </style>
-
-<style src="../../css/comments.css" />

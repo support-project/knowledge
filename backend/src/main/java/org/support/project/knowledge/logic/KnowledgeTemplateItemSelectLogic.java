@@ -8,10 +8,11 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.DraftItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
+import org.support.project.knowledge.entity.DraftItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
-import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 
@@ -26,12 +27,14 @@ public class KnowledgeTemplateItemSelectLogic {
     
     /**
      * テンプレートの拡張項目の情報を取得
-     * @param knowledge
+     * @param knowledgeId
+     * @param typeId
+     * @param includeDraft 
+     * @param draftId 
      * @return
      */
-    public TemplateMastersEntity getItems(KnowledgesEntity knowledge) {
+    public TemplateMastersEntity getItems(long knowledgeId, int typeId, boolean includeDraft, long draftId) {
         LOG.trace("getItems");
-        Integer typeId = knowledge.getTypeId();
         TemplateMastersEntity template = TemplateMastersDao.get().selectWithItems(typeId);
         if (template == null) {
             // そのテンプレートは既に削除済みの場合、通常のナレッジのテンプレートで表示する（ナレッジのテンプレートは削除できないようにする）
@@ -40,14 +43,25 @@ public class KnowledgeTemplateItemSelectLogic {
         }
         
         // 保存している値の取得
-        Long knowledgeId = knowledge.getKnowledgeId();
-        List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(knowledgeId);
         List<TemplateItemsEntity> items = template.getItems();
-        for (KnowledgeItemValuesEntity val : values) {
-            for (TemplateItemsEntity item : items) {
-                if (val.getItemNo().equals(item.getItemNo())) {
-                    item.setItemValue(val.getItemValue());
-                    break;
+        if (includeDraft) {
+            List<DraftItemValuesEntity> values = DraftItemValuesDao.get().selectOnDraftId(draftId); 
+            for (DraftItemValuesEntity val : values) {
+                for (TemplateItemsEntity item : items) {
+                    if (val.getItemNo().equals(item.getItemNo())) {
+                        item.setItemValue(val.getItemValue());
+                        break;
+                    }
+                }
+            }
+        } else {
+            List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(knowledgeId);
+            for (KnowledgeItemValuesEntity val : values) {
+                for (TemplateItemsEntity item : items) {
+                    if (val.getItemNo().equals(item.getItemNo())) {
+                        item.setItemValue(val.getItemValue());
+                        break;
+                    }
                 }
             }
         }

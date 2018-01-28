@@ -1,7 +1,10 @@
 package org.support.project.knowledge.control.api.internal.auth;
 
+import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.logic.KnowledgeAuthenticationLogic;
+import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.Msg;
 import org.support.project.web.boundary.JsonBoundary;
 import org.support.project.web.common.HttpStatus;
@@ -10,6 +13,7 @@ import org.support.project.web.control.service.Delete;
 import org.support.project.web.dao.TokensDao;
 import org.support.project.web.entity.TokensEntity;
 import org.support.project.web.exception.InvalidParamException;
+import org.support.project.web.logic.AuthenticationLogic;
 
 @DI(instance = Instance.Prototype)
 public class DeleteTokenApiControl extends ApiControl {
@@ -29,6 +33,11 @@ public class DeleteTokenApiControl extends ApiControl {
             }
             TokensDao.get().physicalDelete(token);
         }
+        // ログアウト
+        AuthenticationLogic<AccessUser> authenticationLogic = Container.getComp(KnowledgeAuthenticationLogic.class);
+        authenticationLogic.clearSession(getRequest());
+        getRequest().changeSessionId();
+        authenticationLogic.removeCookie(getRequest(), getResponse());
         return send(HttpStatus.SC_200_OK, "Removed");
     }
 }

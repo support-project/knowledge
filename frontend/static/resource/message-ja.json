@@ -50,7 +50,8 @@
     "BtnLike": "いいね",
     "BtnStock": "この記事をストックする",
     "BtnEdit": "この記事を編集する",
-    "BtnToc": "目次を表示を切り替え"
+    "BtnToc": "目次を表示を切り替え",
+    "ExistDraft": "[下書き編集中]"
   },
   "ArticleDetailSidebar": {
     "TocTitle": "目次"
@@ -67,7 +68,8 @@
     "BtnDraft": "下書き保存",
     "BtnAttributes": "属性表示の切り替え",
     "BtnCancel": "編集をやめて参照ページに戻る",
-    "BtnRemove": "この記事を削除する"
+    "BtnRemove": "この記事を削除する",
+    "ExistDraft": "[下書き編集中]"
   },
   "DraftList": {
     "description": "下書き一覧",

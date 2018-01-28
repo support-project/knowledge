@@ -16,6 +16,7 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.DraftKnowledgesDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.StocksDao;
@@ -23,6 +24,7 @@ import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
+import org.support.project.knowledge.entity.DraftKnowledgesEntity;
 import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
 import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
@@ -40,6 +42,7 @@ import org.support.project.knowledge.vo.api.Comment;
 import org.support.project.knowledge.vo.api.Item;
 import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
+import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
 import org.support.project.knowledge.vo.api.Target;
 import org.support.project.knowledge.vo.api.Type;
 import org.support.project.knowledge.vo.api.internal.KnowledgeList;
@@ -65,6 +68,7 @@ public class KnowledgeDataSelectLogic {
     /**
      * KnowledgesEntity を WebAPIで送る情報に変換する
      * @param entity
+     * @param checkDraft 
      * @return
      * @throws ParseException 
      */
@@ -116,8 +120,6 @@ public class KnowledgeDataSelectLogic {
             // 共同編集者
             Target editors = getEditors(entity);
             detail.setEditors(editors);
-            
-            
             return detail;
         }
         return result;
@@ -249,10 +251,11 @@ public class KnowledgeDataSelectLogic {
      * @param parseMarkdown 
      * @param sanitize 
      * @param includeDraft 
+     * @param checkDraft 
      * @return
      * @throws ParseException 
      */
-    public Knowledge select(long knowledgeId, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize, boolean includeDraft) throws ParseException {
+    public Knowledge select(long knowledgeId, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize, boolean includeDraft, boolean checkDraft) throws ParseException {
         KnowledgesEntity entity = KnowledgeLogic.get().selectWithTags(knowledgeId, loginedUser);
         if (entity == null) {
             return null;
@@ -263,7 +266,17 @@ public class KnowledgeDataSelectLogic {
                 return draft;
             }
         }
-        return conv(entity, loginedUser, parseMarkdown, sanitize);
+        Knowledge knowledge = conv(entity, loginedUser, parseMarkdown, sanitize);
+        if (checkDraft) {
+            KnowledgeDetailDraft draft = new KnowledgeDetailDraft();
+            PropertyUtil.copyPropertyValue(knowledge, draft, true);
+            DraftKnowledgesEntity d = DraftKnowledgesDao.get().selectOnKnowledgeAndUser(knowledgeId, loginedUser.getUserId());
+            if (d != null) {
+                draft.setDraftId(d.getDraftId());
+                return draft;
+            }
+        }
+        return knowledge;
     }
     
     /**
@@ -272,6 +285,7 @@ public class KnowledgeDataSelectLogic {
      * @param loginedUser
      * @param parseMarkdown 
      * @param sanitize 
+     * @param checkDraft 
      * @return
      * @throws ParseException 
      */

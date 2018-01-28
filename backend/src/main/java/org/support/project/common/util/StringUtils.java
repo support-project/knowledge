@@ -643,5 +643,29 @@ public abstract class StringUtils extends org.apache.commons.lang.StringUtils {
         }
         return false;
     }
-
+    
+    /**
+     * 文字列が "true" であるかをチェック
+     * @param s string
+     * @return is "true"
+     */
+    public static final boolean isTrue(String s) {
+        if (s != null && s.toLowerCase().equals("true")) {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 文字列が "false" であるかをチェック
+     * @param s string
+     * @return is "false"
+     */
+    public static final boolean isFalse(String s) {
+        if (s != null && s.toLowerCase().equals("false")) {
+            return true;
+        }
+        return false;
+    }
+    
+    
 }

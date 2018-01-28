@@ -50,7 +50,8 @@
     "BtnLike": "Like",
     "BtnStock": "Stock this article",
     "BtnEdit": "Edit this article",
-    "BtnToc": "Toggle table of contents"
+    "BtnToc": "Toggle table of contents",
+    "ExistDraft": "[Exists Draft]"
   },
   "ArticleDetailSidebar": {
     "TocTitle": "Table of contents"
@@ -67,7 +68,8 @@
     "BtnDraft": "Save this article as draft",
     "BtnAttributes": "Toggle display attribute",
     "BtnCancel": "Cancel edit",
-    "BtnRemove": "Remove this article"
+    "BtnRemove": "Remove this article",
+    "ExistDraft": "[Exists Draft]"
   },
   "DraftList": {
     "description": "list of draft",

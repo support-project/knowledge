@@ -25,7 +25,6 @@ import org.support.project.web.control.service.Get;
 import org.support.project.web.control.service.Post;
 import org.support.project.web.control.service.Put;
 import org.support.project.web.exception.InvalidParamException;
-import org.support.project.web.filter.ControlManagerFilter;
 
 import net.arnx.jsonic.JSONException;
 
@@ -66,7 +65,7 @@ public class KnowledgesApiControl extends GetApiControl {
         }
         long knowledgeId = Long.parseLong(id);
         try {
-            Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), false, false, false);
+            Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), false, false, false, false);
             if (result == null) {
                 return sendError(HttpStatus.SC_404_NOT_FOUND);
             }

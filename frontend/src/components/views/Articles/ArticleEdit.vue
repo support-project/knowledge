@@ -25,6 +25,7 @@
         <a :title="$t('ArticleEdit.BtnRemove')" class="label-danger">
           <i class="fa fa-remove fa-lg" aria-hidden="true"></i>
         </a>
+        <span v-if="resources.article.draftId" class="exist-draft">{{ $t("ArticleDetail.ExistDraft") }}</span>
       </nav>
     </div>
 

@@ -16,7 +16,7 @@ export default (store, id) => {
     store.commit('INIT_ARTICLE')
     store.commit('SET_RESOURCES', {comments: []})
     store.commit('CREAR_ALERTS')
-    return api.request('get', '/_api/articles/' + id + '', null)
+    return api.request('get', '/_api/articles/' + id + '?check_draft=true', null)
     .then(response => {
       var article = response.data
       actionCommon.setIcon(store, article)

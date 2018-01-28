@@ -35,24 +35,20 @@ public class GetArticleOneApiControl extends ApiControl {
         if (!StringUtils.isLong(id)) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST);
         }
-        boolean parseMarkdown = false;
-        String parse = getParam("parse");
-        if (parse != null && parse.toLowerCase().equals("true")) {
-            parseMarkdown = true;
-        }
-        boolean sanitize = true;
         String s = getParam("sanitize");
-        if (s != null && s.toLowerCase().equals("false")) {
-            sanitize = false;
-        }
-        boolean includeDraft = false; // 下書きがあれば下書きの情報を取得
+        boolean sanitize = !StringUtils.isFalse(s);
+        
+        String parse = getParam("parse");
+        boolean parseMarkdown = StringUtils.isTrue(parse);
+        
         String d = getParam("include_draft");
-        if (d != null && d.toLowerCase().equals("true")) {
-            includeDraft = true;
-        }
+        boolean includeDraft = StringUtils.isTrue(d);
+        
+        String c = getParam("check_draft");
+        boolean checkDraft = StringUtils.isTrue(c);
         
         long knowledgeId = Long.parseLong(id);
-        Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), parseMarkdown, sanitize, includeDraft);
+        Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), parseMarkdown, sanitize, includeDraft, checkDraft);
         if (result == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND);
         }

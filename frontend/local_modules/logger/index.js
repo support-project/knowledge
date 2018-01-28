@@ -1,5 +1,6 @@
 // var callsite = require('callsite')
 // var path = require('path')
+var he = require('he')
 
 var logger = function logger() {
 }
@@ -153,7 +154,10 @@ logger.buildResponseErrorMsg = function (response, params) {
       msg += '[Status] ' + response.status + '. '
     }
     if (response.data && response.data.message) {
-      msg += response.data.message + ' '
+      msg += he.decode(response.data.message, {
+        'isAttributeValue': true
+      })
+      msg += ' '
     }
   } else {
     msg += 'response is undefined.'

@@ -167,7 +167,7 @@ public class DraftDataSelectLogic extends KnowledgeDataSelectLogic {
         return null;
     }
     
-    private List<LabelValue> getDraftTemplateItems(int typeId, long draftId, TemplateMastersEntity template) {
+    public List<LabelValue> getDraftTemplateItems(int typeId, long draftId, TemplateMastersEntity template) {
         List<TemplateItemsEntity> items = TemplateItemsDao.get().selectOnTypeId(typeId);
         List<DraftItemValuesEntity> values = DraftItemValuesDao.get().selectOnDraftId(draftId);
         List<LabelValue> templateItems = new ArrayList<>();
