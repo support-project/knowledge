@@ -48,7 +48,7 @@ export default {
     checkCreds () {
       const {username, password} = this
       this.$store.dispatch('login', {id: username, password: password}).then((result) => {
-        logger.info(LABEL, 'login result: ' + JSON.stringify(result))
+        logger.debug(LABEL, 'login result: ' + JSON.stringify(result))
         if (result) {
           return this.$store.dispatch('loadUserInformation', {
             i18n: this.$i18n
@@ -56,13 +56,13 @@ export default {
         }
         return result
       }).then((result) => {
-        logger.info(LABEL, 'load user information result: ' + JSON.stringify(result))
+        logger.debug(LABEL, 'load user information result: ' + JSON.stringify(result))
         if (result) {
           var redirect = this.$route.query.redirect
           if (!redirect) {
             redirect = '/'
           }
-          logger.info(LABEL, 'redirect: ' + JSON.stringify(redirect))
+          logger.debug(LABEL, 'redirect: ' + JSON.stringify(redirect))
           this.$router.push(redirect)
         }
       }).catch((e) => {

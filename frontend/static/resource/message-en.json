@@ -69,7 +69,8 @@
     "BtnAttributes": "Toggle display attribute",
     "BtnCancel": "Cancel edit",
     "BtnRemove": "Remove this article",
-    "ExistDraft": "[Exists Draft]"
+    "ExistDraft": "[Exists Draft]",
+    "DeleteDraft": "Delete the draft"
   },
   "DraftList": {
     "description": "list of draft",

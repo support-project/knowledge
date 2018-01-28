@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.support.project.common.config.Resources;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -25,20 +26,23 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.api.AttachedFile;
-import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
 import org.support.project.knowledge.vo.api.Target;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
+import org.support.project.web.bean.MessageResult;
 import org.support.project.web.bean.NameId;
+import org.support.project.web.common.HttpStatus;
+import org.support.project.web.config.MessageStatus;
+import org.support.project.web.exception.InvalidParamException;
 
 @DI(instance = Instance.Singleton)
-public class DraftDataSelectLogic extends KnowledgeDataSelectLogic {
+public class DraftDataLogic extends KnowledgeDataSelectLogic {
     /** LOG */
     private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /** Get instance */
-    public static DraftDataSelectLogic get() {
-        return Container.getComp(DraftDataSelectLogic.class);
+    public static DraftDataLogic get() {
+        return Container.getComp(DraftDataLogic.class);
     }
     
     /**
@@ -50,7 +54,7 @@ public class DraftDataSelectLogic extends KnowledgeDataSelectLogic {
      * @return
      * @throws ParseException 
      */
-    public Knowledge selectOnKnowledgeId(long knowledgeId, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
+    public KnowledgeDetailDraft selectOnKnowledgeId(long knowledgeId, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
         DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKnowledgeAndUser(knowledgeId, loginedUser.getUserId());
         return convDraft(draft, parseMarkdown, sanitize);
     }
@@ -183,6 +187,22 @@ public class DraftDataSelectLogic extends KnowledgeDataSelectLogic {
             }
         }
         return templateItems;
+    }
+
+    public void deleteDraft(long draftId, AccessUser user) throws InvalidParamException {
+        Resources resources = Resources.getInstance(user.getLocale());
+        DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKey(draftId);
+        // アクセス可能かチェック
+        if (draft == null) {
+            throw new InvalidParamException(new MessageResult(
+                    MessageStatus.Warning, HttpStatus.SC_404_NOT_FOUND, "NOT_FOUND", ""));
+        }
+        if (draft.getInsertUser().intValue() != user.getUserId().intValue()) {
+            throw new InvalidParamException(new MessageResult(
+                    MessageStatus.Warning, HttpStatus.SC_403_FORBIDDEN, resources.getResource("knowledge.edit.noaccess"), ""));
+        }
+        DraftKnowledgesDao.get().physicalDelete(draft);
+        DraftItemValuesDao.get().deleteOnDraftId(draftId);
     }
     
 }

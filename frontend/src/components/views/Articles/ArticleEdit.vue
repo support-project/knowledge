@@ -25,12 +25,18 @@
         <a :title="$t('ArticleEdit.BtnRemove')" class="label-danger">
           <i class="fa fa-remove fa-lg" aria-hidden="true"></i>
         </a>
-        <span v-if="resources.article.draftId" class="exist-draft">{{ $t("ArticleDetail.ExistDraft") }}</span>
       </nav>
     </div>
 
     <!-- Main content -->
     <div class="content main-content">
+      <div class="article-meta" v-if="resources.article.draftId" >
+        <span class="exist-draft">{{ $t("ArticleEdit.ExistDraft") }}</span>
+        <button class="btn btn-default btn-xs" v-on:click="deleteDraft()">
+          <i class="fa fa-eraser"></i>&nbsp;{{ $t("ArticleEdit.DeleteDraft") }}
+        </button>
+      </div>
+
       <alerts></alerts>
       <form role="form" id="knowledgeForm">
         <div class="form-group">
@@ -107,15 +113,15 @@ export default {
       // データの取得
       if (this.$route.params.draftId) {
         // 下書きから（まだ記事を投稿前)
-        logger.info(LABEL, 'edit draft. ' + this.$route.params.draftId)
+        logger.debug(LABEL, 'edit draft. ' + this.$route.params.draftId)
         this.$store.dispatch('getDraftForEdit', this.$route.params.draftId)
       } else if (this.$route.params.id) {
-        logger.info(LABEL, 'edit article. ' + this.$route.params.id)
+        logger.debug(LABEL, 'edit article. ' + this.$route.params.id)
         this.$store.dispatch('getArticleForEdit', this.$route.params.id).then(() => {
           return this.$store.dispatch('getTypes')
         })
       } else {
-        logger.info(LABEL, 'create new article.')
+        logger.debug(LABEL, 'create new article.')
         this.$store.commit('INIT_ARTICLE')
       }
     },
@@ -124,14 +130,23 @@ export default {
     },
     releaseArticle () {
       logger.debug(LABEL, JSON.stringify(this.resources.article, null, '  '))
-      this.$store.dispatch('saveArticle').then((id) => {
-        this.$router.push('/articles/' + id)
+      this.$store.dispatch('saveArticle').then(() => {
+        if (this.resources.article.draftId) {
+          return this.$store.dispatch('deleteDraft')
+        }
+      }).then(() => {
+        this.$router.push('/articles/' + this.resources.article.knowledgeId)
       })
     },
     saveDraftArticle () {
       this.$store.dispatch('saveDraft').then((id) => {
-        logger.info(LABEL, 'article was save draft. draft id: ' + id)
-        this.resources.article.draftId = id
+        logger.debug(LABEL, 'article was save draft. draft id: ' + id)
+      })
+    },
+    deleteDraft () {
+      this.$store.dispatch('deleteDraft').then(() => {
+        logger.debug(LABEL, 'draft is deleted.')
+        this.resources.article.draftId = null
       })
     }
   },

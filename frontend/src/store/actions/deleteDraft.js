@@ -1,36 +1,26 @@
 import Promise from 'bluebird'
 import api from '../../api'
 import logger from 'logger'
-import lang from 'lang'
 
-const LABEL = 'saveDraft.js'
+const LABEL = 'deleteDraft.js'
 
 export default (store) => {
+  if (!store.state.resources.article.draftId) {
+    return
+  }
+  const draftId = store.state.resources.article.draftId
   store.commit('SET_PAGE_STATE', {loading: true})
   store.commit('CREAR_ALERTS')
   return Promise.try(() => {
-    return lang.deepClone(store.state.resources.article)
-  }).then((article) => {
-    article.type.items.forEach(element => {
-      if (element.itemType === 11) {
-        if (!lang.isString(element.itemValue)) {
-          var vals = element.itemValue.join(',')
-          element.itemValue = vals
-        }
-      }
-    })
-    logger.debug(LABEL, 'draft save articles to api. put data:\n' + JSON.stringify(article, null, '  '))
-    return api.request('post', '/_api/drafts', article)
+    return api.request('delete', '/_api/drafts/' + draftId)
   }).then(response => {
     logger.debug(LABEL, JSON.stringify(response.data))
     store.commit('ADD_ALERT', {
       display: false,
       type: 'success',
       title: 'Well done!',
-      content: 'You successfully save draft.'
+      content: 'You successfully delete draft.'
     })
-    store.state.resources.article.draftId = response.data.id
-    store.commit('SET_RESOURCES', {article: store.state.resources.article})
     return response.data.id
   }).catch(error => {
     logger.error(LABEL, JSON.stringify(error))

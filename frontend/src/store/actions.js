@@ -15,6 +15,7 @@ import getDraftForEdit from './actions/getDraftForEdit'
 import saveArticle from './actions/saveArticle'
 import saveDraft from './actions/saveDraft'
 import addComment from './actions/addComment'
+import deleteDraft from './actions/deleteDraft'
 
 import likeArticle from './actions/likeArticle'
 import likeComment from './actions/likeComment'
@@ -38,6 +39,7 @@ export default {
   saveArticle: saveArticle,
   saveDraft: saveDraft,
   addComment: addComment,
+  deleteDraft: deleteDraft,
   likeArticle: likeArticle,
   likeComment: likeComment,
   previewArticle: previewArticle,

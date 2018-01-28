@@ -11,7 +11,7 @@ export default (store, params) => {
     return api.request('post', '/_api/auth', params)
     .then(response => {
       var data = response.data
-      logger.info(LABEL, 'logined: ' + JSON.stringify(data))
+      logger.debug(LABEL, 'logined: ' + JSON.stringify(data))
       if (data.token) {
         var token = data.token
         store.commit('SET_TOKEN', token)

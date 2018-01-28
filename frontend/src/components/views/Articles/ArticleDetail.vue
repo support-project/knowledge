@@ -21,7 +21,6 @@
           :title="$t('ArticleDetail.BtnEdit')">
           <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
         </router-link>
-        <span v-if="resources.article.draftId" class="exist-draft">{{ $t("ArticleDetail.ExistDraft") }}</span>
       </nav>
     </div>
     
@@ -31,7 +30,9 @@
       <div class="article-information">
         <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ resources.article.title}}
         </div>
-        
+        <div class="article-meta">
+          <span v-if="resources.article.draftId" class="exist-draft">{{ $t("ArticleDetail.ExistDraft") }}</span>
+        </div>
         <div class="article-meta">
           <article-parts-editor :article="resources.article" />
         </div>

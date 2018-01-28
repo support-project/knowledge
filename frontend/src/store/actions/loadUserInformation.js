@@ -22,7 +22,7 @@ export default (store, params) => {
   return Promise.try(() => {
     return api.request('get', '/_api/me')
   }).then(response => {
-    logger.info(LABEL, 'Get user information from api: ' + JSON.stringify(response.data))
+    logger.debug(LABEL, 'Get user information from api: ' + JSON.stringify(response.data))
     var user = response.data
     if (user && user.userId) {
       if (user.localeKey) {

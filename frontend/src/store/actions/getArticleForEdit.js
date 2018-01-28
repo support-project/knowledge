@@ -32,7 +32,7 @@ export default (store, id) => {
         if (element.itemValue) {
           vals = element.itemValue.split(',')
         }
-        logger.info(LABEL, vals)
+        logger.debug(LABEL, vals)
         element.itemValue = vals
       }
     })

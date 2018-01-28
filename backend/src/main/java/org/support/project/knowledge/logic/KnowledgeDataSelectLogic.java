@@ -261,8 +261,13 @@ public class KnowledgeDataSelectLogic {
             return null;
         }
         if (includeDraft) {
-            Knowledge draft = DraftDataSelectLogic.get().selectOnKnowledgeId(knowledgeId, loginedUser, parseMarkdown, sanitize);
+            KnowledgeDetailDraft draft = DraftDataLogic.get().selectOnKnowledgeId(knowledgeId, loginedUser, parseMarkdown, sanitize);
             if (draft != null) {
+                return draft;
+            } else {
+                Knowledge knowledge = conv(entity, loginedUser, parseMarkdown, sanitize);
+                draft = new KnowledgeDetailDraft();
+                PropertyUtil.copyPropertyValue(knowledge, draft, true);
                 return draft;
             }
         }

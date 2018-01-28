@@ -31,6 +31,7 @@ export default (store) => {
       return api.request('post', '/_api/articles', article)
       .then(response => {
         logger.debug(LABEL, JSON.stringify(response.data))
+        store.state.resources.article.knowledgeId = response.data.id
         return response.data.id
       })
     }

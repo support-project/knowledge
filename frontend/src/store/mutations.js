@@ -42,8 +42,10 @@ export default {
   },
   INIT_ARTICLE (state) {
     state.resources.article = {
+      knowledgeId: '',
       title: '',
       content: '',
+      draftId: '',
       type: {
         id: -100,
         items: []

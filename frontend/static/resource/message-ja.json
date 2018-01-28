@@ -69,7 +69,8 @@
     "BtnAttributes": "属性表示の切り替え",
     "BtnCancel": "編集をやめて参照ページに戻る",
     "BtnRemove": "この記事を削除する",
-    "ExistDraft": "[下書き編集中]"
+    "ExistDraft": "[下書き編集中]",
+    "DeleteDraft": "下書き削除"
   },
   "DraftList": {
     "description": "下書き一覧",

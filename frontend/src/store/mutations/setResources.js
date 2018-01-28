@@ -3,7 +3,7 @@ const LABEL = 'setResources.js'
 
 export default (state, resources) => {
   if ('article' in resources) {
-    logger.debug(LABEL, 'Change state.resources.article: \n' + JSON.stringify(resources.article, null, '  '))
+    logger.info(LABEL, 'Change state.resources.article: \n' + JSON.stringify(resources.article))
     state.resources.article = resources.article
   }
   if ('articles' in resources) {
