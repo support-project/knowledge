@@ -10,8 +10,8 @@ export default (store, id) => {
     return api.request('post', '/_api/articles/' + id + '/likes', null)
   }).then(response => {
     logger.debug(LABEL, JSON.stringify(response.data))
-    logger.debug(LABEL, JSON.stringify(store.state.resources.article))
-    store.state.resources.article.likeCount = response.data.count
+    logger.debug(LABEL, JSON.stringify(store.state.article))
+    store.state.article.likeCount = response.data.count
     store.commit('ADD_ALERT', {
       display: false,
       type: 'succcess',

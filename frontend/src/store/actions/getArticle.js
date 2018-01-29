@@ -13,7 +13,7 @@ const LABEL = 'getArticle.js'
 export default (store, id) => {
   store.commit('SET_PAGE_STATE', {loading: true})
   return Promise.try(() => {
-    store.commit('INIT_ARTICLE')
+    store.commit('initArticle')
     store.commit('SET_RESOURCES', {comments: []})
     store.commit('CREAR_ALERTS')
     return api.request('get', '/_api/articles/' + id + '?check_draft=true', null)
@@ -22,7 +22,7 @@ export default (store, id) => {
       actionCommon.setIcon(store, article)
       logger.debug(LABEL, response)
       return Promise.try(() => {
-        return processDecorateAll(response.data.content)
+        return processDecorateAll(article.content)
       }).then(function (result) {
         logger.debug(LABEL, result)
         article.displaySafeHtml = result
@@ -36,7 +36,7 @@ export default (store, id) => {
       }).then(function (itemsHtml) {
         logger.debug(itemsHtml)
         article.itemsHtml = itemsHtml
-        store.commit('SET_RESOURCES', {article: article})
+        store.commit('setArticle', article)
         // return article.comments
         return api.request('get', '/_api/articles/' + id + '/comments', null)
       }).then(function (response) {

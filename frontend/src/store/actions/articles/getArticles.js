@@ -1,8 +1,7 @@
 import Promise from 'bluebird'
-import api from '../../api'
 import logger from 'logger'
-
-import actionCommon from './actionCommon'
+import api from '../../../api'
+import actionCommon from '../actionCommon'
 
 const LABEL = 'getArticles.js'
 
@@ -17,9 +16,7 @@ export default (store) => {
       articles.forEach(article => {
         actionCommon.setIcon(store, article)
       })
-      store.commit('SET_RESOURCES', {
-        articles: articles
-      })
+      store.commit('setArticles', articles)
     })
     .catch(error => {
       logger.error(LABEL, error)

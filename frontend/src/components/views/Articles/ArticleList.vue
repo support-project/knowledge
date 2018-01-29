@@ -23,7 +23,7 @@
       <div class="row" id="knowledgeList">
         <!-- main list -->
         <div class="col-sm-12 col-md-8 knowledge_list">
-          <article-list-item :articles="resources.articles"/>
+          <article-list-item :articles="articles"/>
         </div>
         <!-- right area -->
         <div class="col-sm-12 col-md-4">
@@ -47,7 +47,7 @@ export default {
   computed: {
     ...mapState([
       'pagestate',
-      'resources'
+      'articles'
     ])
   },
   methods: {

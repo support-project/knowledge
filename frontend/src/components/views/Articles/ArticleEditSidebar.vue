@@ -11,13 +11,21 @@
         </a>
       </div>
 
-      Types:
-      <div v-for="t in resources.types" :key="t.id">
-        <label v-if="resources.article.type">
-          <input type="radio" name="type" :value="t.id" v-model="resources.article.type.id" v-on:change="changeType(t.id)">
-          <i :class="'fa ' + t.icon" aria-hidden="true"></i>
-          {{ t.name | abbreviate(25)}}
-        </label>
+      <div class="sidebar-group">
+        <span class="sidebar-title">Types:</span>
+        <div v-for="t in types" :key="t.id">
+          <label v-if="article.type">
+            <input type="radio" name="type" :value="t.id"
+              v-model="article.type.id" v-on:change="changeType(t.id)">
+            <i :class="'fa ' + t.icon" aria-hidden="true"></i>
+            {{ t.name | abbreviate(25)}}
+          </label>
+        </div>
+      </div>
+
+      <div class="sidebar-group">
+        <span class="sidebar-title">Viewer:</span>
+        <article-parts-target />
       </div>
 
     </div>
@@ -30,6 +38,8 @@
 import { mapState } from 'vuex'
 import logger from 'logger'
 
+import ArticlePartsTarget from './ArticlePartsTarget'
+
 const LABEL = 'ArticleEditSidebar.vue'
 
 export default {
@@ -37,9 +47,12 @@ export default {
   computed: {
     ...mapState([
       'pagestate',
-      'resources'
+      'resources',
+      'article'
     ])
   },
+  props: ['article'],
+  components: {ArticlePartsTarget},
   methods: {
     toggleRightSideBar () {
       this.$store.dispatch('toggleRightSideBar')
@@ -55,6 +68,15 @@ export default {
   }
 }
 </script>
+
+<style>
+.sidebar-group {
+  margin-bottom: 10px;
+}
+.sidebar-group .sidebar-title {
+  margin-bottom: 10px;
+}
+</style>
 
 <style src="../../css/toc.css" />
 <style src="../../css/control-sidebar.css" />

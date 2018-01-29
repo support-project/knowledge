@@ -9,7 +9,7 @@ export default (store) => {
   store.commit('SET_PAGE_STATE', {loading: true})
   return Promise.try(() => {
     store.commit('CREAR_ALERTS')
-    return lang.deepClone(store.state.resources.article)
+    return lang.deepClone(store.state.article)
   }).then((article) => {
     article.type.items.forEach(element => {
       if (element.itemType === 11) {
@@ -31,7 +31,7 @@ export default (store) => {
       return api.request('post', '/_api/articles', article)
       .then(response => {
         logger.debug(LABEL, JSON.stringify(response.data))
-        store.state.resources.article.knowledgeId = response.data.id
+        store.state.article.knowledgeId = response.data.id
         return response.data.id
       })
     }

@@ -5,10 +5,10 @@ import logger from 'logger'
 const LABEL = 'deleteDraft.js'
 
 export default (store) => {
-  if (!store.state.resources.article.draftId) {
+  if (!store.state.article.draftId) {
     return
   }
-  const draftId = store.state.resources.article.draftId
+  const draftId = store.state.article.draftId
   store.commit('SET_PAGE_STATE', {loading: true})
   store.commit('CREAR_ALERTS')
   return Promise.try(() => {

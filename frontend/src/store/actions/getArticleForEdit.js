@@ -9,7 +9,7 @@ const LABEL = 'getArticleForEdit.js'
 
 export default (store, id) => {
   store.commit('SET_PAGE_STATE', {loading: true})
-  store.commit('INIT_ARTICLE')
+  store.commit('initArticle')
   if (!id) {
     store.commit('SET_PAGE_STATE', {loading: false})
     return
@@ -40,7 +40,7 @@ export default (store, id) => {
     article.content = he.decode(article.content, {
       'isAttributeValue': true
     })
-    store.commit('SET_RESOURCES', {article: article})
+    store.commit('setArticle', article)
     store.commit('SET_PAGE_STATE', {loading: false})
   }).catch(error => {
     store.commit('SET_PAGE_STATE', {loading: false})

@@ -2,7 +2,7 @@
   <span>
     <span v-if="article.publicFlag !== undefined">
       <i class="fa fa-globe" v-if="article.publicFlag === 0"></i>
-      <i class="fa fa fa-lock" v-if="article.publicFlag === 1"></i>
+      <i class="fa fa-lock" v-if="article.publicFlag === 1"></i>
       <i class="fa fa-address-book-o" v-if="article.publicFlag === 2"></i>
       {{ $t('Article.PublicFlag.' + article.publicFlag) }}
     </span>

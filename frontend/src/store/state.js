@@ -1,34 +1,28 @@
+import user from './state/user'
+import userInfo from './state/userInfo'
+import searchConditions from './state/searchConditions'
+import pagestate from './state/pagestate'
+
+import article from './state/article'
+import articles from './state/articles'
+
 export default {
   serverURI: '',
-  user: null,
   token: null,
   requestToken: null,
-  userInfo: {
-    messages: [{1: 'test', 2: 'test'}],
-    notifications: []
-  },
-  searchConditions: {
-    keyword: '',
-    tags: '',
-    groups: '',
-    creators: '',
-    templates: ''
-  },
+  user: user,
+  userInfo: userInfo,
+  searchConditions: searchConditions,
+  pagestate: pagestate,
+  // resources
+  article: article,
+  articles: articles,
   resources: {
-    article: {
-      type: {id: -100}
-    },
     comments: [],
-    articles: [],
     drafts: [],
     groups: [],
     tags: [],
     types: [],
     toc: ''
-  },
-  pagestate: {
-    showRightSideBar: true,
-    loading: false,
-    alerts: []
   }
 }

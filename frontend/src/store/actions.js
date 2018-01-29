@@ -5,7 +5,7 @@ import logout from './actions/logout'
 import checkTokenOnLocalStrage from './actions/checkTokenOnLocalStrage'
 import loadUserInformation from './actions/loadUserInformation'
 
-import getArticles from './actions/getArticles'
+import getArticles from './actions/articles/getArticles'
 import getArticle from './actions/getArticle'
 import getArticleForEdit from './actions/getArticleForEdit'
 import getTypes from './actions/getTypes'

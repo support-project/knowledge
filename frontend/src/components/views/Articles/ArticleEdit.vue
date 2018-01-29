@@ -30,7 +30,7 @@
 
     <!-- Main content -->
     <div class="content main-content">
-      <div class="article-meta" v-if="resources.article.draftId" >
+      <div class="article-meta" v-if="article.draftId" >
         <span class="exist-draft">{{ $t("ArticleEdit.ExistDraft") }}</span>
         <button class="btn btn-default btn-xs" v-on:click="deleteDraft()">
           <i class="fa fa-eraser"></i>&nbsp;{{ $t("ArticleEdit.DeleteDraft") }}
@@ -48,16 +48,16 @@
                 <span class="fa fa-bookmark"></span>
               </span>
               <input type="text" class="form-control" name="title" placeholder="Title"
-                v-model="resources.article.title" />
+                v-model="article.title" />
             </div>
         </div>
 
         <article-edit-items />
 
-        <markdown-editor :article="resources.article" :rows="20" />
+        <markdown-editor :article="article" :rows="20" />
 
       </form>
-      <article-edit-sidebar />
+      <article-edit-sidebar :article="article" />
 
     </div>
   </div>
@@ -102,7 +102,8 @@ export default {
   computed: {
     ...mapState([
       'pagestate',
-      'resources'
+      'resources',
+      'article'
     ])
   },
   methods: {
@@ -122,20 +123,22 @@ export default {
         })
       } else {
         logger.debug(LABEL, 'create new article.')
-        this.$store.commit('INIT_ARTICLE')
+        this.$store.dispatch('getTypes').then(() => {
+          this.$store.commit('initArticle')
+        })
       }
     },
     toggleRightSideBar () {
       this.$store.dispatch('toggleRightSideBar')
     },
     releaseArticle () {
-      logger.debug(LABEL, JSON.stringify(this.resources.article, null, '  '))
+      logger.debug(LABEL, JSON.stringify(this.article, null, '  '))
       this.$store.dispatch('saveArticle').then(() => {
-        if (this.resources.article.draftId) {
+        if (this.article.draftId) {
           return this.$store.dispatch('deleteDraft')
         }
       }).then(() => {
-        this.$router.push('/articles/' + this.resources.article.knowledgeId)
+        this.$router.push('/articles/' + this.article.knowledgeId)
       })
     },
     saveDraftArticle () {
@@ -146,7 +149,7 @@ export default {
     deleteDraft () {
       this.$store.dispatch('deleteDraft').then(() => {
         logger.debug(LABEL, 'draft is deleted.')
-        this.resources.article.draftId = null
+        this.article.draftId = null
       })
     }
   },

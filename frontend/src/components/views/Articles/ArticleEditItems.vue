@@ -1,6 +1,6 @@
 <template>
-  <div v-if="resources.article.type">
-    <div class="form-group" v-for="item in resources.article.type.items" :key="item.id">
+  <div v-if="article.type">
+    <div class="form-group" v-for="item in article.type.items" :key="item.id">
       <label>{{item.itemName}}</label>
 
       <span v-if="item.itemType === 0">
@@ -120,7 +120,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'resources'
+      'resources',
+      'article'
     ])
   },
   mounted () {

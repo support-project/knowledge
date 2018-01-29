@@ -3,6 +3,10 @@ import setPageState from './mutations/setPageState'
 import changeArticleType from './mutations/changeArticleType'
 import addAlert from './mutations/addAlert'
 
+import setArticles from './mutations/articles/setArticles'
+import initArticle from './mutations/article/initArticle'
+import setArticle from './mutations/article/setArticle'
+
 import logger from 'logger'
 const LABEL = 'mutations.js'
 
@@ -40,22 +44,13 @@ export default {
   CHANGE_ARTICLE_TYPE (state, type) {
     changeArticleType(state, type)
   },
-  INIT_ARTICLE (state) {
-    state.resources.article = {
-      knowledgeId: '',
-      title: '',
-      content: '',
-      draftId: '',
-      type: {
-        id: -100,
-        items: []
-      }
-    }
-  },
   ADD_ALERT (state, params) {
     addAlert(state, params)
   },
   CREAR_ALERTS (state, params) {
     state.pagestate.alerts = []
-  }
+  },
+  setArticles: setArticles,
+  initArticle: initArticle,
+  setArticle: setArticle
 }

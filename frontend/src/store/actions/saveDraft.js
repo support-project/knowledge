@@ -9,7 +9,7 @@ export default (store) => {
   store.commit('SET_PAGE_STATE', {loading: true})
   store.commit('CREAR_ALERTS')
   return Promise.try(() => {
-    return lang.deepClone(store.state.resources.article)
+    return lang.deepClone(store.state.article)
   }).then((article) => {
     article.type.items.forEach(element => {
       if (element.itemType === 11) {
@@ -29,8 +29,8 @@ export default (store) => {
       title: 'Well done!',
       content: 'You successfully save draft.'
     })
-    store.state.resources.article.draftId = response.data.id
-    store.commit('SET_RESOURCES', {article: store.state.resources.article})
+    store.state.article.draftId = response.data.id
+    store.commit('setArticle', store.state.article)
     return response.data.id
   }).catch(error => {
     logger.error(LABEL, JSON.stringify(error))

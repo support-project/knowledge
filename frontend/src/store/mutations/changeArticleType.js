@@ -4,7 +4,7 @@ const LABEL = 'changeArticleType.js'
 
 export default (state, type) => {
   logger.debug(LABEL, 'Change article type: ' + type)
-  var article = state.resources.article
+  var article = state.article
   var types = state.resources.types
   logger.debug(LABEL, JSON.stringify(article))
   logger.debug(LABEL, JSON.stringify(types))

@@ -1,13 +1,9 @@
-import logger from 'logger'
-const LABEL = 'setResources.js'
-
 export default (state, resources) => {
   if ('article' in resources) {
-    logger.info(LABEL, 'Change state.resources.article: \n' + JSON.stringify(resources.article))
-    state.resources.article = resources.article
+    throw new Error('deplicated article')
   }
   if ('articles' in resources) {
-    state.resources.articles = resources.articles
+    throw new Error('deplicated articles')
   }
   if ('drafts' in resources) {
     state.resources.drafts = resources.drafts

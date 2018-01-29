@@ -28,37 +28,37 @@
     <div class="content main-content">
       <alerts></alerts>
       <div class="article-information">
-        <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ resources.article.title}}
+        <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ article.title}}
         </div>
         <div class="article-meta">
-          <span v-if="resources.article.draftId" class="exist-draft">{{ $t("ArticleDetail.ExistDraft") }}</span>
+          <span v-if="article.draftId" class="exist-draft">{{ $t("ArticleDetail.ExistDraft") }}</span>
         </div>
         <div class="article-meta">
-          <article-parts-editor :article="resources.article" />
+          <article-parts-editor :article="article" />
         </div>
         <div class="article-meta">
-          <article-parts-point :article="resources.article" />
+          <article-parts-point :article="article" />
         </div>
         <div class="article-meta">
-          <article-parts-type-label :article="resources.article" />
+          <article-parts-type-label :article="article" />
           <span>
-            <article-parts-public-flag :article="resources.article" />
+            <article-parts-public-flag :article="article" />
           </span>
         </div>
         <div class="article-meta">
-          <article-parts-tags :article="resources.article" />
-          <article-parts-stocks :article="resources.article" />
+          <article-parts-tags :article="article" />
+          <article-parts-stocks :article="article" />
         </div>
       </div>
 <!--      <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i> -->
-      <div class="markdown-body template-items" v-if="this.resources.article.itemsHtml">
-        <span v-html="this.resources.article.itemsHtml"></span>
+      <div class="markdown-body template-items" v-if="this.article.itemsHtml">
+        <span v-html="article.itemsHtml"></span>
       </div>
       <div class="markdown-body contents">
-        <span v-html="this.resources.article.displaySafeHtml"></span>
+        <span v-html="article.displaySafeHtml"></span>
       </div>
       <div id="comments">
-        <article-detail-comments :comments="resources.comments" :article="resources.article" />
+        <article-detail-comments :comments="resources.comments" :article="article" />
       </div>
 
       <article-detail-sidebar />
@@ -110,7 +110,8 @@ export default {
   computed: {
     ...mapState([
       'pagestate',
-      'resources'
+      'resources',
+      'article'
     ])
   },
   methods: {

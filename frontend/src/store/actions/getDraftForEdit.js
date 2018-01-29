@@ -9,7 +9,7 @@ const LABEL = 'getDraftForEdit.js'
 
 export default (store, id) => {
   store.commit('SET_PAGE_STATE', {loading: true})
-  store.commit('INIT_ARTICLE')
+  store.commit('initArticle')
   if (!id) {
     store.commit('SET_PAGE_STATE', {loading: false})
     return
