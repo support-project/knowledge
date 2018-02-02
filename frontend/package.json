@@ -35,7 +35,7 @@
     "vue-date-picker": "^1.0.2",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.2.0",
-    "vuex": "^2.0.0",
+    "vuex": "^2.5.0",
     "vuex-router-sync": "^4.1.2",
     "vue-i18n": "^7.3.2",
     "vue-lazyload": "^1.1.4",

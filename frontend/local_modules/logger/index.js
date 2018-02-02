@@ -1,6 +1,8 @@
+/* global @sourceURL */
 // var callsite = require('callsite')
 // var path = require('path')
 var he = require('he')
+var judgeBrowser = require('./judgeBrowser')
 
 var logger = function logger() {
 }
@@ -57,10 +59,27 @@ var getCallsiteStr = function (loglevel) {
   var line = call.getLineNumber()
   return '[' + file + ':' + line + '] - '
   */
-  if (logger.callsite && loglevel <= logger.LEVEL.WARN) {
-    console.trace(loglevel)
-  }
   var c = ''
+  if (logger.callsite) {
+    var browser = judgeBrowser()
+    if (browser === 'Chrome') {
+      require('source-map-support/register')
+    }
+    var stack = new Error().stack
+    if (stack) {
+      var lines = stack.toString().match(/[^\r\n]+/g)
+      var line = lines[4]
+      var call = line.substring(line.lastIndexOf('(') + 1, line.lastIndexOf(')'))
+      if (call.lastIndexOf('webpack:/') != -1) {
+        // may be Chrome only
+        if (browser === 'Chrome') {
+          call = call.substring(call.lastIndexOf('webpack:/') + 'webpack:/'.length, call.lastIndexOf(':'))
+          call = 'webpack:///./' + call
+        }
+      }
+      c += ' (' + call + ')'
+    }
+  }
   c += ' - '
   return c
 }
