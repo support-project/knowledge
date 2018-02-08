@@ -1,0 +1,28 @@
+INSERT INTO USER_ALIAS
+( 
+AUTH_KEY
+ , USER_ID
+ , ALIAS_KEY
+ , ALIAS_NAME
+ , ALIAS_MAIL
+ , USER_INFO_UPDATE
+ , ROW_ID
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

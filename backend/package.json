@@ -1,0 +1,36 @@
+{
+  "name": "knowledge",
+  "version": "1.0.0",
+  "description": "Free Knowledge Management System",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/support-project/knowledge"
+  },
+  "dependencies": {
+    "bower": "1.8.2",
+    "gulp": "3.9.1",
+    "gulp-usemin": "0.3.28",
+    "gulp-uglify": "0.3.2",
+    "gulp-minify-html": "0.1.8",
+    "gulp-minify-css": "0.3.13",
+    "gulp-rev": "7.1.2",
+    "gulp-replace": "0.5.4",
+    "gulp-eslint": "4.0.0",
+    "gulp-rename": "1.2.2",
+    "rimraf": "2.6.2",
+    "run-sequence": "2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node node_modules/bower/bin/bower install --allow-root"
+  },
+  "keywords": [
+    "knowledge"
+  ],
+  "bugs": {
+    "url": "https://github.com/support-project/knowledge/issues"
+  },
+  "author": "support-project",
+  "license": "Apache-2.0"
+}

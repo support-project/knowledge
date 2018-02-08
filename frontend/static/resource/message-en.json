@@ -1,0 +1,85 @@
+{
+  "Route": {
+    "ArticleCreate": "Create",
+    "ArticleList": "Articles",
+    "ArticleDetail": "Article",
+    "ArticleEdit": "Edit Article",
+    "DraftList": "Drafts",
+    "DraftEdit": "Edit Article",
+    "MoveOldUI": "Change to OLD UI",
+    "TestViewTitle": "Page of Test",
+    "TestViewDescription": "This page is test of frontend development"
+  },
+  "Label": {
+    "Create": "Create",
+    "Update": "Update",
+    "Delete": "Delete",
+    "Edit": "Edit",
+    "Save": "Save",
+    "Release": "Release",
+    "Show": "Show",
+    "Hide": "Hide",
+    "Empty": "Empty",
+    "Close": "Close"
+  },
+  "Article": {
+    "PublicFlag": {
+      "0": "Public",
+      "1": "Private",
+      "2": "Protect"
+    }
+  },
+  "EmojiPicker": {
+    "Emoji": "Emoji"
+  },
+  "Login": {
+    "BtnSubmit": "Submit",
+    "BtnCancel": "Cancel"
+  },
+  "DashView": {
+    "about": "About",
+    "manual": "Manual",
+    "licence": "Licence"
+  },
+  "ArticleList": {
+    "description": "list of articles",
+    "Message": "message"
+  },
+  "ArticleDetail": {
+    "description": "detail of a article",
+    "BtnLike": "Like",
+    "BtnStock": "Stock this article",
+    "BtnEdit": "Edit this article",
+    "BtnToc": "Toggle table of contents",
+    "ExistDraft": "[Exists Draft]"
+  },
+  "ArticleDetailSidebar": {
+    "TocTitle": "Table of contents"
+  },
+  "ArticleDetailComments": {
+    "DisplayHidden": "Hided this comment"
+  },
+  "ArticleCreate": {
+    "description": "create a new article"
+  },
+  "ArticleEdit": {
+    "description": "edit this article",
+    "BtnRelease": "Release this article",
+    "BtnDraft": "Save this article as draft",
+    "BtnAttributes": "Toggle display attribute",
+    "BtnCancel": "Cancel edit",
+    "BtnRemove": "Remove this article",
+    "ExistDraft": "[Exists Draft]",
+    "DeleteDraft": "Delete the draft"
+  },
+  "DraftList": {
+    "description": "list of draft",
+    "EmptyTitle": "Title is empty"
+  },
+  "DraftEdit": {
+    "description": "edit this article"
+  },
+  "TestView": {
+    "Message": "This is test."
+  }
+}

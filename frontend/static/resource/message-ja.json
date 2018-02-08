@@ -1,0 +1,85 @@
+{
+  "Route": {
+    "ArticleCreate": "作成",
+    "ArticleList": "記事一覧",
+    "ArticleDetail": "記事表示",
+    "ArticleEdit": "記事編集",
+    "DraftList": "下書き",
+    "DraftEdit": "記事編集",
+    "MoveOldUI": "旧い画面に戻す",
+    "TestViewTitle": "テストページ",
+    "TestViewDescription": "フロントエンド開発テストページ"
+  },
+  "Label": {
+    "Create": "登録",
+    "Update": "更新",
+    "Delete": "削除",
+    "Edit": "編集",
+    "Save": "保存",
+    "Release": "投稿",
+    "Show": "表示",
+    "Hide": "非表示",
+    "Empty": "登録無し",
+    "Close": "閉じる"
+  },
+  "Article": {
+    "PublicFlag": {
+      "0": "公開",
+      "1": "非公開",
+      "2": "保護"
+    }
+  },
+  "EmojiPicker": {
+    "Emoji": "絵文字"
+  },
+  "Login": {
+    "BtnSubmit": "ログイン",
+    "BtnCancel": "キャンセル"
+  },
+  "DashView": {
+    "about": "このアプリについて",
+    "manual": "オンラインマニュアル",
+    "licence": "ライセンス"
+  },
+  "ArticleList": {
+    "description": "一覧ページ",
+    "Message": "ほげほげふがふが"
+  },
+  "ArticleDetail": {
+    "description": "記事を表示",
+    "BtnLike": "いいね",
+    "BtnStock": "この記事をストックする",
+    "BtnEdit": "この記事を編集する",
+    "BtnToc": "目次を表示を切り替え",
+    "ExistDraft": "[下書き編集中]"
+  },
+  "ArticleDetailSidebar": {
+    "TocTitle": "目次"
+  },
+  "ArticleDetailComments": {
+    "DisplayHidden": "非表示になっています"
+  },
+  "ArticleCreate": {
+    "description": "新しい記事を作成します"
+  },
+  "ArticleEdit": {
+    "description": "記事を編集します",
+    "BtnRelease": "この記事を投稿する",
+    "BtnDraft": "下書き保存",
+    "BtnAttributes": "属性表示の切り替え",
+    "BtnCancel": "編集をやめて参照ページに戻る",
+    "BtnRemove": "この記事を削除する",
+    "ExistDraft": "[下書き編集中]",
+    "DeleteDraft": "下書き削除"
+  },
+  "DraftList": {
+    "description": "下書き一覧",
+    "EmptyTitle": "タイトル未指定"
+  },
+  "DraftEdit": {
+    "description": "記事を編集します"
+  },
+  "TestView": {
+    "Message": "これはテストです"
+  }
+}

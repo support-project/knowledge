@@ -1,0 +1,4 @@
+SELECT * FROM USERS
+ WHERE 
+USER_ID = ?
+;

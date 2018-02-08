@@ -1,0 +1,13 @@
+.content {
+  box-sizing: border-box;
+  padding-left: 30px;
+}
+@media (max-width: 767px) {
+  .content {
+    padding: 10px;
+  }
+}
+.exist-draft {
+  font-size: 11px;
+  color: salmon;
+}

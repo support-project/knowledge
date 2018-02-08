@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!-- ConsoleAppender -->
+    <appender name="APP_STDOUT" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out" />
+        <layout class="com.jcabi.log.MulticolorLayout">
+            <param name="ConversionPattern" value="%color{%5p} %d %c{1}(%L) %m%n" />
+            <param name="Levels" value="INFO:2;36,DEBUG:2;37,TRACE:2;34" />
+        </layout>
+    </appender>
+
+    <!-- FileAppender -->
+    <appender name="APP_FILEOUT" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="${user.home}/app.log" />
+        <param name="Append" value="true" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p %d %c{1}(%L) %m%n" />
+        </layout>
+    </appender>
+
+    <!-- 特定のログのレベルの指定 -->
+    <category name="org.apache">
+        <level value="WARN" />
+    </category>
+    
+    <!-- 
+    <category name="org.support.project.common">
+        <level value="INFO" />
+    </category>
+    <category name="org.support.project.aop">
+        <level value="INFO" />
+    </category>
+    <category name="org.support.project.di">
+        <level value="INFO" />
+    </category>
+    <category name="org.support.project.ormapping">
+        <level value="INFO" />
+    </category>
+    <category name="org.support.project.web">
+        <level value="INFO" />
+    </category>
+    <category name="org.support.project.ormapping.transaction.Transaction">
+        <level value="INFO" />
+    </category>
+    <category name="org.support.project.ormapping.dao.AbstractDao">
+        <level value="INFO" />
+    </category>
+    -->
+    
+    <category name="org.support.project.web.common.InvokeSearch">
+        <level value="DEBUG" />
+    </category>
+    
+    <category name="org.support.project.ormapping.tool">
+        <level value="INFO" />
+    </category>
+    <category name="org.support.project.web.filter.LoggingFilter">
+        <level value="INFO" />
+    </category>
+    <category name="org.support.project.web.filter.PublicApiFilter">
+        <level value="INFO" />
+    </category>
+    <category name="org.support.project.web.filter.InternalApiFilter">
+        <level value="INFO" />
+    </category>
+    <category name="org.support.project.knowledge.bat">
+        <level value="INFO" />
+    </category>
+
+    <!-- Root Logger: Other -->
+    <root>
+        <priority value="WARN" />
+        <appender-ref ref="APP_STDOUT" />
+        <appender-ref ref="APP_FILEOUT" />
+    </root>
+
+</log4j:configuration>
+

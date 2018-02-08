@@ -1,0 +1,4 @@
+SELECT * FROM ROLES
+ WHERE 
+ROLE_ID = ?
+;

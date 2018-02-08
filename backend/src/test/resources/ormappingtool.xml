@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<oRmappingToolConfig>
+    <connectionConfig>
+        <name>connection</name>
+        <driverClass>org.h2.Driver</driverClass>
+        <URL>jdbc:h2:tcp://localhost/./knowledgeTestDB</URL>
+        <user>sa</user>
+        <password></password>
+        <schema>public</schema>
+        <maxConn>1</maxConn>
+        <autocommit>false</autocommit>
+    </connectionConfig>
+
+    <entityGenConfig>
+        <entityOutDir>/data/project/red/src/knowledge/backend/src/main/</entityOutDir>
+        <entityPackage>org.support.project.knowledge.entity</entityPackage>
+        <entitySuffix>Entity</entitySuffix>
+    </entityGenConfig>
+
+
+    <daoGenConfig>
+        <daoOutDir>/data/project/red/src/knowledge/backend/src/main/</daoOutDir>
+        <daoPackage>org.support.project.knowledge.dao</daoPackage>
+        <daoSuffix>Dao</daoSuffix>
+
+        <!-- <rowIdColumn>ROW_ID</rowIdColumn> -->
+        <insertUserColumn>INSERT_USER</insertUserColumn>
+        <insertDatetimeColumn>INSERT_DATETIME</insertDatetimeColumn>
+        <updateUserColumn>UPDATE_USER</updateUserColumn>
+        <updateDatetimeColumn>UPDATE_DATETIME</updateDatetimeColumn>
+        <deleteFlagColumn>DELETE_FLAG</deleteFlagColumn>
+        <userColumnType>Integer</userColumnType>
+
+    </daoGenConfig>
+
+    <initializeConfig>
+        <sqlPaths>/org/support/project/knowledge/database/ddl.sql</sqlPaths>
+    </initializeConfig>
+
+</oRmappingToolConfig>

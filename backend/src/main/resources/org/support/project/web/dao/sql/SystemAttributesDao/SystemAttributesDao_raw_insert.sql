@@ -1,0 +1,22 @@
+INSERT INTO SYSTEM_ATTRIBUTES
+( 
+CONFIG_NAME
+ , SYSTEM_NAME
+ , CONFIG_VALUE
+ , ROW_ID
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

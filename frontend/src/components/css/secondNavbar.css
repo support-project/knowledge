@@ -1,0 +1,62 @@
+#secondNavbar {
+	width: 100%;
+}
+.secondMenu {
+  height: 50px;
+  display: flex;
+  /*justify-content: center;*/
+  align-items: center;
+}
+.secondMenu a,
+.secondMenu a:hover,
+.secondMenu a:active,
+.secondMenu a:visited,
+.secondMenu button {
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  cursor: pointer;
+}
+.secondNavbarfixed {
+  position: fixed;
+  top: 0;
+  z-index: 1011;
+}
+
+/* ------------------- Skins */
+.skin-blue-light .navbar-color {
+  color: #f6f6f6;
+  background-color: #3c8dbc;
+}
+.skin-blue-light .secondMenu a,
+.skin-blue-light .secondMenu a:hover,
+.skin-blue-light .secondMenu a:active,
+.skin-blue-light .secondMenu a:visited,
+.skin-blue-light .secondMenu button {
+  color: navy;
+  border: 2px solid navy;
+  background-color: buttonface;
+}
+.skin-blue-light .navbar-color .secondMenu a,
+.skin-blue-light .navbar-color .secondMenu a:hover,
+.skin-blue-light .navbar-color .secondMenu a:active,
+.skin-blue-light .navbar-color .secondMenu button {
+  color: navy;
+  border: 2px solid navy;
+  background-color: buttonface;
+}
+.skin-blue-light .secondMenu a.toggle-on,
+.skin-blue-light .secondMenu button.toggle-on,
+.skin-blue-light .navbar-color .secondMenu a.toggle-on,
+.skin-blue-light .navbar-color .secondMenu button.toggle-on {
+  color: buttonface;
+  border: buttonface;
+  background-color: navy;
+}
