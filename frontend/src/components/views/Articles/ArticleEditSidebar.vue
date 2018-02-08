@@ -14,7 +14,7 @@
       <div class="sidebar-group">
         <span class="sidebar-title">Types:</span>
         <div v-for="t in types" :key="t.id">
-          <label v-if="article.type">
+          <label v-if="article.type.id">
             <input type="radio" name="type" :value="t.id"
               v-model="article.type.id" v-on:change="changeType(t.id)">
             <i :class="'fa ' + t.icon" aria-hidden="true"></i>
@@ -45,21 +45,23 @@ const LABEL = 'ArticleEditSidebar.vue'
 export default {
   name: 'ArticleEditSidebar',
   computed: {
-    ...mapState([
-      'pagestate',
-      'resources',
-      'article'
-    ])
+    ...mapState({
+      pagestate: state => state.pagestate,
+      article: state => state.article.article,
+      types: state => state.types.types
+    })
   },
-  props: ['article'],
   components: {ArticlePartsTarget},
   methods: {
     toggleRightSideBar () {
-      this.$store.dispatch('toggleRightSideBar')
+      this.$store.dispatch('pagestate/toggleRightSideBar')
     },
     changeType (type) {
       logger.debug(LABEL, type)
-      this.$store.commit('CHANGE_ARTICLE_TYPE', type)
+      this.$store.commit('article/changeArticleType', {
+        type: type,
+        types: this.types
+      })
     }
   },
   mounted () {

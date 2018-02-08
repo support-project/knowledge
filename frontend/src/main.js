@@ -64,8 +64,9 @@ var router = new VueRouter({
 // Some middleware to help us ensure the user is authenticated.
 router.beforeEach((to, from, next) => {
   rightSidebar(false) // ルーティングの際には一度必ず閉じる→書くページで必要に応じ復元する
-  store.commit('CREAR_ALERTS') // Alerts初期化
-  if (to.matched.some(record => record.meta.requiresAuth) && (!router.app.$store.state.token || router.app.$store.state.token === 'null')) {
+  store.commit('pagestate/clearAlerts') // Alerts初期化
+  if (to.matched.some(record => record.meta.requiresAuth) &&
+    (!router.app.$store.getters['auth/getToken'] || router.app.$store.getters['auth/getToken'] === 'null')) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
     logger.debug(LABEL, 'Not authenticated')
@@ -78,7 +79,7 @@ router.beforeEach((to, from, next) => {
   }
 })
 router.onReady(() => {
-  store.commit('SET_PAGE_STATE', {loading: false}) // 画面を切り替えた場合、必ず読み込み中の表示をOFFにする
+  store.commit('pagestate/setPageState', {loading: false}) // 画面を切り替えた場合、必ず読み込み中の表示をOFFにする
 })
 
 sync(store, router)
@@ -105,11 +106,11 @@ const i18n = new VueI18n({
   messages: message
 })
 
-store.dispatch('setServerURI', serverURI)
+store.dispatch('system/setServerURI', serverURI)
 .then(() => {
-  return store.dispatch('checkTokenOnLocalStrage')
+  return store.dispatch('auth/checkTokenOnLocalStrage')
 }).then(() => {
-  return store.dispatch('loadUserInformation', {i18n})
+  return store.dispatch('user/loadUserInformation', {i18n})
 }).then(() => {
   // Start out app!
   // eslint-disable-next-line no-new

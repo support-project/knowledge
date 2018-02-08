@@ -58,7 +58,7 @@
         <span v-html="article.displaySafeHtml"></span>
       </div>
       <div id="comments">
-        <article-detail-comments :comments="resources.comments" :article="article" />
+        <article-detail-comments :comments="comments" :article="article" />
       </div>
 
       <article-detail-sidebar />
@@ -108,16 +108,16 @@ export default {
   },
   components: { PageTitle, ArticleDetailSidebar, ArticlePartsPoint, ArticlePartsEditor, ArticlePartsTypeLabel, ArticlePartsPublicFlag, ArticlePartsTags, ArticlePartsStocks, ArticleDetailComments, Alerts },
   computed: {
-    ...mapState([
-      'pagestate',
-      'resources',
-      'article'
-    ])
+    ...mapState({
+      pagestate: state => state.pagestate,
+      article: state => state.article.article,
+      comments: state => state.comments.comments
+    })
   },
   methods: {
     getArticle () {
       logger.debug(LABEL, 'getArticle')
-      this.$store.dispatch('getArticle', this.$route.params.id)
+      this.$store.dispatch('article/getArticle', this.$route.params.id)
       .then(() => {
         logger.debug(LABEL, 'finish getArticle')
         setTimeout(() => {
@@ -129,10 +129,10 @@ export default {
       })
     },
     toggleRightSideBar () {
-      this.$store.dispatch('toggleRightSideBar')
+      this.$store.dispatch('pagestate/toggleRightSideBar')
     },
     likeArticle () {
-      this.$store.dispatch('likeArticle', this.$route.params.id).then((cnt) => {
+      this.$store.dispatch('article/likeArticle', this.$route.params.id).then((cnt) => {
         logger.debug(LABEL, JSON.stringify(cnt))
       })
     }

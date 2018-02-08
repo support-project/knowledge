@@ -100,11 +100,11 @@ export default {
   },
   components: { PageTitle, ArticleEditSidebar, MarkdownEditor, ArticleEditItems, Alerts },
   computed: {
-    ...mapState([
-      'pagestate',
-      'resources',
-      'article'
-    ])
+    ...mapState({
+      pagestate: state => state.pagestate,
+      article: state => state.article.article,
+      types: state => state.types.types
+    })
   },
   methods: {
     getArticle () {
@@ -114,40 +114,40 @@ export default {
       // データの取得
       if (this.$route.params.draftId) {
         // 下書きから（まだ記事を投稿前)
-        logger.debug(LABEL, 'edit draft. ' + this.$route.params.draftId)
-        this.$store.dispatch('getDraftForEdit', this.$route.params.draftId)
+        logger.info(LABEL, 'edit draft. ' + this.$route.params.draftId)
+        this.$store.dispatch('article/getDraftForEdit', this.$route.params.draftId)
       } else if (this.$route.params.id) {
-        logger.debug(LABEL, 'edit article. ' + this.$route.params.id)
-        this.$store.dispatch('getArticleForEdit', this.$route.params.id).then(() => {
-          return this.$store.dispatch('getTypes')
+        logger.info(LABEL, 'edit article. ' + this.$route.params.id)
+        this.$store.dispatch('article/getArticleForEdit', this.$route.params.id).then(() => {
+          return this.$store.dispatch('types/loadTypes')
         })
       } else {
-        logger.debug(LABEL, 'create new article.')
-        this.$store.dispatch('getTypes').then(() => {
-          this.$store.commit('initArticle')
+        logger.info(LABEL, 'create new article.')
+        this.$store.dispatch('types/loadTypes').then(() => {
+          this.$store.commit('article/initArticle')
         })
       }
     },
     toggleRightSideBar () {
-      this.$store.dispatch('toggleRightSideBar')
+      this.$store.dispatch('pagestate/toggleRightSideBar')
     },
     releaseArticle () {
       logger.debug(LABEL, JSON.stringify(this.article, null, '  '))
-      this.$store.dispatch('saveArticle').then(() => {
+      this.$store.dispatch('article/saveArticle').then(() => {
         if (this.article.draftId) {
-          return this.$store.dispatch('deleteDraft')
+          return this.$store.dispatch('article/deleteDraft')
         }
       }).then(() => {
         this.$router.push('/articles/' + this.article.knowledgeId)
       })
     },
     saveDraftArticle () {
-      this.$store.dispatch('saveDraft').then((id) => {
+      this.$store.dispatch('article/saveDraft').then((id) => {
         logger.debug(LABEL, 'article was save draft. draft id: ' + id)
       })
     },
     deleteDraft () {
-      this.$store.dispatch('deleteDraft').then(() => {
+      this.$store.dispatch('article/deleteDraft').then(() => {
         logger.debug(LABEL, 'draft is deleted.')
         this.article.draftId = null
       })

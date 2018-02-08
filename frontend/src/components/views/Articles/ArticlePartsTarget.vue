@@ -2,10 +2,10 @@
   <div>
     <div v-for="flag in publicFlags" :key="flag.id">
       <label>
-        <input type="radio" name="type" :value="flag.id" v-model="article.PublicFlag">
+        <input type="radio" name="type" :value="flag.id" v-model="article.publicFlag">
         <i :class="'fa ' + flag.icon" aria-hidden="true"></i>
         {{ $t(flag.name) }}
-        {{article.PublicFlag}}
+        {{article.publicFlag}}
       </label>
     </div>
   </div>
@@ -19,19 +19,25 @@ const LABEL = 'ArticlePartsTarget.vue'
 export default {
   name: 'ArticlePartsTarget',
   computed: {
-    ...mapState([
-      'resources',
-      'article'
-    ])
+    ...mapState({
+      article: state => state.article.article
+    })
   },
   data () {
-    logger.info(LABEL, JSON.stringify(this.article))
     return {
       publicFlags: [
         {id: 0, name: 'Article.PublicFlag.0', icon: 'fa-globe'},
         {id: 1, name: 'Article.PublicFlag.1', icon: 'fa-lock'},
         {id: 2, name: 'Article.PublicFlag.2', icon: 'fa-address-book-o'}
       ]
+    }
+  },
+  watch: {
+    'article': 'changeArticle'
+  },
+  methods: {
+    changeArticle: function () {
+      logger.info(LABEL, 'article is changed.')
     }
   },
   mounted () {

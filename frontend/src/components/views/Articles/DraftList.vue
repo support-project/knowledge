@@ -8,7 +8,7 @@
     <div class="content main-content">
       <i class="fa fa-refresh fa-spin fa-3x fa-fw" id="loadingList"></i>
 
-      <div class="knowledge_item" v-for="draft in resources.drafts" :key="draft.draftId">
+      <div class="knowledge_item" v-for="draft in drafts" :key="draft.draftId">
         <router-link tag="a" :to="draft.editPage">
           <div class="item-info">
             <a>
@@ -42,14 +42,14 @@ export default {
   name: 'DraftList',
   components: { PageTitle },
   computed: {
-    ...mapState([
-      'pagestate',
-      'resources'
-    ])
+    ...mapState({
+      pagestate: state => state.pagestate,
+      drafts: state => state.articles.drafts
+    })
   },
   methods: {
     getDrafts () {
-      this.$store.dispatch('getDrafts')
+      this.$store.dispatch('articles/getDrafts')
       .then(() => {
         $('#loadingList').addClass('hide')
       })

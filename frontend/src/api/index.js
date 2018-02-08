@@ -20,12 +20,12 @@ export default {
       return
     }
     var headers = {}
-    var token = store.getters.GET_TOKEN
+    var token = store.getters['auth/getToken']
     if (token) {
       headers['PRIVATE-TOKEN'] = token
     }
     if (method.toLowerCase() !== 'get') {
-      var reqToken = store.getters.GET_REQUEST_TOKEN
+      var reqToken = store.getters['auth/getRequestToken']
       if (reqToken) {
         headers['request-token'] = reqToken
       }
@@ -37,19 +37,17 @@ export default {
       headers: headers,
       data: data
     })
-    // store.commit('SET_PAGE_STATE', {loading: true})
     logger.debug(LABEL, 'start request')
     return Promise.try(() => {
       return axios({ method, url, data, headers }).then(response => {
         // レスポンスヘッダーに「REQ_TOKEN」があれば、それを保持
         logger.debug(LABEL, JSON.stringify(response, null, '  '))
         if (response.headers['request-token']) {
-          store.commit('SET_REQUEST_TOKEN', response.headers['request-token'])
+          store.commit('auth/setRequestToken', response.headers['request-token'])
         }
         return response
       })
     }).finally(() => {
-      // store.commit('SET_PAGE_STATE', {loading: false})
       logger.debug(LABEL, 'finish request')
     })
   }

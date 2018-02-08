@@ -30,7 +30,7 @@ public class DeleteDraftApiControl extends ApiControl {
             return sendError(HttpStatus.SC_400_BAD_REQUEST);
         }
         long draftId = new Long(id);
-        DraftDataLogic.get().deleteDraft(draftId, geAccessUser());
+        DraftDataLogic.get().deleteDraft(draftId, getAccessUser());
         return send(HttpStatus.SC_200_OK, "Removed");
     }
 }

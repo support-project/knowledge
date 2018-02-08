@@ -28,7 +28,7 @@ public class DeleteTokenApiControl extends ApiControl {
         String t = super.getAttributeByString("token");
         TokensEntity token = TokensDao.get().selectOnKey(t);
         if (token != null) {
-            if (!token.getUserId().equals(geAccessUser().getUserId())) {
+            if (!token.getUserId().equals(getAccessUser().getUserId())) {
                 return send(HttpStatus.SC_403_FORBIDDEN, new Msg("FORBIDDEN"));
             }
             TokensDao.get().physicalDelete(token);

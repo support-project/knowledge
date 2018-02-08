@@ -19,7 +19,6 @@ export default {
   watch: {
     // use the watch to react on the value change.
     currentAlerts (alerts) {
-      console.log('alerts was change. ' + JSON.stringify(alerts))
       alerts.forEach(element => {
         if (element.notify) {
           Notification.notify({

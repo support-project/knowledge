@@ -45,14 +45,14 @@ export default {
   name: 'ArticleList',
   components: { PageTitle, ArticleListItem, ArticleListCalendar },
   computed: {
-    ...mapState([
-      'pagestate',
-      'articles'
-    ])
+    ...mapState({
+      pagestate: state => state.pagestate,
+      articles: state => state.articles.articles
+    })
   },
   methods: {
     getArticleList () {
-      this.$store.dispatch('getArticles')
+      this.$store.dispatch('articles/getArticles')
     }
   },
   mounted () {

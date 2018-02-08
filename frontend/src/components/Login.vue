@@ -47,10 +47,10 @@ export default {
   methods: {
     checkCreds () {
       const {username, password} = this
-      this.$store.dispatch('login', {id: username, password: password}).then((result) => {
-        logger.debug(LABEL, 'login result: ' + JSON.stringify(result))
+      this.$store.dispatch('auth/login', {id: username, password: password}).then((result) => {
+        logger.info(LABEL, 'login result: ' + JSON.stringify(result))
         if (result) {
-          return this.$store.dispatch('loadUserInformation', {
+          return this.$store.dispatch('user/loadUserInformation', {
             i18n: this.$i18n
           })
         }

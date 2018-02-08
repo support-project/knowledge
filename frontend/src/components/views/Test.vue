@@ -77,7 +77,7 @@
       },
       testAddMsgCount () {
         console.log(this.$store.state)
-        this.$store.commit('SET_USER_INFO', {
+        this.$store.commit('user/setUserInfo', {
           messages: [],
           notifications: [{1: 'test', 2: 'test'}],
           tasks: []
@@ -98,8 +98,8 @@
         })
       },
       apisample2 () {
-        console.log(this.$store.getters.GET_TOKEN)
-        api.request('get', '/api/sample', null, this.$store.getters.GET_TOKEN)
+        console.log(this.$store.getters.['auth/getToken'])
+        api.request('get', '/api/sample', null, this.$store.getters['auth/getToken'])
         .then(response => {
           console.log(response.data)
           this.msg = response.data.msg
@@ -121,7 +121,7 @@
         })
       },
       apisample4 () {
-        api.request('get', '/_api/sample', null, this.$store.getters.GET_TOKEN)
+        api.request('get', '/_api/sample', null, this.$store.getters['auth/getToken'])
         .then(response => {
           console.log(response.data)
           this.msg = response.data.msg
@@ -132,7 +132,7 @@
         })
       },
       apisamplePost1 () {
-        api.request('post', '/api/samplepost', null, this.$store.getters.GET_TOKEN)
+        api.request('post', '/api/samplepost', null, this.$store.getters['auth/getToken'])
         .then(response => {
           console.log(response.data)
           this.msg = response.data.msg
@@ -143,7 +143,7 @@
         })
       },
       apisamplePost2 () {
-        api.request('post', '/_api/samplepost', null, this.$store.getters.GET_TOKEN)
+        api.request('post', '/_api/samplepost', null, this.$store.getters['auth/getToken'])
         .then(response => {
           console.log(response.data)
           this.msg = response.data.msg

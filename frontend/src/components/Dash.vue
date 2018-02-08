@@ -150,19 +150,11 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'user',
-      'userInfo'
-    ])
-    /*
-    demo () {
-      return {
-        displayName: 'displayName',
-        avatar: '',
-        email: 'example@example.com'
-      }
-    }
-    */
+    ...mapState({
+      pagestate: state => state.pagestate,
+      user: state => state.user.user,
+      userInfo: state => state.user.userInfo
+    })
   },
   methods: {
     changeloading () {

@@ -61,7 +61,7 @@ export default {
       }, 500)
     },
     preview: function () {
-      this.$store.dispatch('previewArticle', this.article)
+      this.$store.dispatch('article/previewArticle', this.article)
       .then((result) => {
         this.article.displaySafeHtml = result
         this.displaySafeHtml = result

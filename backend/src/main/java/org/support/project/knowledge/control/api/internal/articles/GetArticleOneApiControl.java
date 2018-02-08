@@ -48,7 +48,7 @@ public class GetArticleOneApiControl extends ApiControl {
         boolean checkDraft = StringUtils.isTrue(c);
         
         long knowledgeId = Long.parseLong(id);
-        Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getLoginedUser(), parseMarkdown, sanitize, includeDraft, checkDraft);
+        Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getAccessUser(), parseMarkdown, sanitize, includeDraft, checkDraft);
         if (result == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND);
         }

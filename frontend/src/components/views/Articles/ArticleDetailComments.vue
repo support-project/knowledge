@@ -121,13 +121,13 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'user'
-    ])
+    ...mapState({
+      user: state => state.user.user
+    })
   },
   methods: {
     addComment: function (id, comment) {
-      this.$store.dispatch('addComment', {
+      this.$store.dispatch('comments/addComment', {
         id: id,
         comment: comment
       }).then(() => {

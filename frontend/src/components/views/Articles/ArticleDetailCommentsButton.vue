@@ -42,13 +42,13 @@ export default {
   methods: {
     collapse: function (comment, flag) {
       comment.commentStatus = flag
-      this.$store.dispatch('toggleDisplayComment', {
+      this.$store.dispatch('comments/toggleDisplayComment', {
         id: this.comment.knowledgeId,
         comment: this.comment
       })
     },
     likeComment (id, commentNo) {
-      this.$store.dispatch('likeComment', { id, commentNo }).then((cnt) => {
+      this.$store.dispatch('comments/likeComment', { id, commentNo }).then((cnt) => {
         logger.debug(LABEL, JSON.stringify(cnt))
       })
     }

@@ -183,8 +183,8 @@ export default {
   props: ['user'],
   methods: {
     logout () {
-      this.$store.dispatch('logout').then(() => {
-        return this.$store.dispatch('loadUserInformation', {
+      this.$store.dispatch('auth/logout').then(() => {
+        return this.$store.dispatch('user/loadUserInformation', {
           i18n: this.$i18n
         })
       }).then(() => {

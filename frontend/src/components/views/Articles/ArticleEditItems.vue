@@ -119,10 +119,9 @@ export default {
     flatPickr, ClockPicker, Typeahead
   },
   computed: {
-    ...mapState([
-      'resources',
-      'article'
-    ])
+    ...mapState({
+      article: state => state.article.article
+    })
   },
   mounted () {
     this.$nextTick(() => {

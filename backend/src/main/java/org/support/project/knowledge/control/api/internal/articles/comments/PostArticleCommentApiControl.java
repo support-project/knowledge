@@ -35,7 +35,7 @@ public class PostArticleCommentApiControl extends ApiControl {
         Comment comment = super.parseJson(Comment.class);
         comment.setKnowledgeId(knowledgeId);
         try {
-            comment = CommentDataEditLogic.get().insert(comment, geAccessUser());
+            comment = CommentDataEditLogic.get().insert(comment, getAccessUser());
         } catch (InvalidParamException e) {
             return sendError(e);
         } catch (SendErrorException e) {

@@ -35,7 +35,6 @@ import org.support.project.web.boundary.RedirectBoundary;
 import org.support.project.web.boundary.SendMessageBoundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
-import org.support.project.web.common.InvokeSearch;
 import org.support.project.web.common.InvokeTarget;
 import org.support.project.web.config.CommonWebParameter;
 import org.support.project.web.config.HttpMethod;
@@ -455,7 +454,7 @@ public abstract class Control {
      * ログインしていない場合、アノニマスユーザのオブジェクトを取得する(Nullにはならない）
      * @return AccessUser
      */
-    public AccessUser geAccessUser() {
+    public AccessUser getAccessUser() {
         AccessUser user = getLoginedUser();
         if (user == null) {
             user = new AccessUser();

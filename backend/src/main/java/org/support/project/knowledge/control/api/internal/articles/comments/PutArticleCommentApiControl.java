@@ -41,7 +41,7 @@ public class PutArticleCommentApiControl extends ApiControl {
         comment.setKnowledgeId(knowledgeId);
         comment.setCommentNo(commentNo);
         try {
-            comment = CommentDataEditLogic.get().update(comment, geAccessUser());
+            comment = CommentDataEditLogic.get().update(comment, getAccessUser());
         } catch (InvalidParamException e) {
             return sendError(e);
         } catch (SendErrorException e) {

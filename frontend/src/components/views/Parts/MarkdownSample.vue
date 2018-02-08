@@ -291,7 +291,7 @@ export default {
   },
   methods: {
     parse: function () {
-      this.$store.dispatch('previewArticle', this.article)
+      this.$store.dispatch('article/previewArticle', this.article)
       .then((result) => {
         this.article.displaySafeHtml = result
         setTimeout(() => {

@@ -13,7 +13,7 @@
       <div class="toc-title">
         &lt;{{ $t('ArticleDetailSidebar.TocTitle') }}&gt;
       </div>
-      <span v-html="this.resources.toc"></span>
+      <span v-html="this.toc"></span>
     </div>
   </div>
 </aside>
@@ -26,14 +26,14 @@ import { mapState } from 'vuex'
 export default {
   name: 'ArticleDetailSidebar',
   computed: {
-    ...mapState([
-      'pagestate',
-      'resources'
-    ])
+    ...mapState({
+      pagestate: state => state.pagestate,
+      toc: state => state.article.toc
+    })
   },
   methods: {
     toggleRightSideBar () {
-      this.$store.dispatch('toggleRightSideBar')
+      this.$store.dispatch('pagestate/toggleRightSideBar')
     }
   },
   mounted () {

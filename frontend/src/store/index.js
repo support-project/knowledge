@@ -1,15 +1,28 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import state from './state'
-import actions from './actions'
-import mutations from './mutations'
-import getters from './getters'
+
+import system from './system'
+import pagestate from './pagestate'
+import auth from './auth'
+import user from './user'
+import search from './search'
+import articles from './articles'
+import article from './article'
+import comments from './comments'
+import types from './types'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state,
-  actions,
-  mutations,
-  getters
+  modules: {
+    system: system,
+    pagestate: pagestate,
+    auth: auth,
+    user: user,
+    search: search,
+    articles: articles,
+    article: article,
+    comments: comments,
+    types: types
+  }
 })
