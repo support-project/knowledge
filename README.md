@@ -32,14 +32,21 @@
 <img alt="VAddy logo" src="https://raw.github.com/wiki/support-project/knowledge/assets/images/VAddy_logo_b.png" height="40" /></a>
 
 
-## Development
+-------
 
-- Clone this repository your local machine
-- 以下の手順で、フロントエンド、バックエンド、リバースプロキシの順に起動します
-- docker & docker-compose を使います
-- http://localhost にアクセスし確認できます
 
-### Frontend
+## How to development
+
+- Clone this repository your local machine.
+- From version 2, frontend module and backend module are divided.
+   - The backend module is the same as version 1.
+   - Therefore, starting only the backend module will have the same as version 1.
+- In version 2 development,
+- Start up in frontend, backend, and reverse proxy by Nginx.
+   - Start with docker & docker-compose.
+- After starting all the modules, you can access to http://localhost for development.
+
+### How to start Frontend
 
 #### install dependencies
 
@@ -48,7 +55,7 @@ $ docker-compose run --rm frontend npm install
 $ docker-compose run --rm frontend npm run afterinstall
 ```
 
-#### serve with hot reload at localhost:8081
+#### start frontend with hot reload at localhost:8081
 
 ```
 $  docker-compose run --rm -p 8081:8081 frontend npm run dev
@@ -61,30 +68,30 @@ $  docker-compose run --rm -p 8081:8081 frontend npm run dev
 $ docker-compose run --rm frontend npm rebuild node-sass --force
 ```
 
-### Backend
+### How to start Backend
 
-#### serve backend service 
+#### start backend 
 
 ```
 $ docker-compose run --rm maven mvn clean package
 $ docker-compose run --rm -p 8080:8080 tomcat
 ```
 
-- Eclipse や IntelliJ IDEA などのIDEでBackendサービスを起動する場合、以下のクラスを実行してください
+- Otherwise, Run the following classes in IDE such as Eclipse or IntelliJ IDEA
 
 - org.support.project.knowledge.Launch
 
-
-### Reverse proxy for develop
+### How to start Reverse proxy
 
 ```
 $ docker-compose run --rm -p 80:80 nginx 
 ```
 
 
+-------
 
 
-## Build release package
+## How to build release package
 
 ### Frontend
 
@@ -94,8 +101,9 @@ $ docker-compose run --rm -p 80:80 nginx
 $  docker-compose run --rm frontend npm run build
 ```
 
-- frontend/dist のディレクトリの中に、フロントエンドのリリース用ファイルを格納します
-- これを backend/src/main/webapp ディレクトリの下にコピーしてください
+- Fronted module will generated to "frontend/dist" directory.
+- Next, please copy this module's file to backend/src/main/webapp
+- Then, Then you will run the build of Backend.
 
 ### Backend
 
