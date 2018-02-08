@@ -130,8 +130,11 @@ gulp.task('copy:pdfthema', function() {
 });
 
 gulp.task('gen', function(callback) {
-    runSequence('gen:index', 'gen:rm', callback);
+    runSequence('gen:rmstart', 'gen:index', 'gen:rm', callback);
 });
+gulp.task('gen:rmstart', function(callback) {
+    rimraf('./src/main/webapp/index.jsp', callback);
+})
 gulp.task('gen:index', function() {
     return gulp.src([
         'src/main/webapp/index.html'
