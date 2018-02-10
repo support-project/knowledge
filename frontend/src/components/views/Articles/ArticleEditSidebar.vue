@@ -1,37 +1,39 @@
 <template>
+  <div>
+    <aside class="control-sidebar control-sidebar-dark"
+      v-bind:class="{'control-sidebar-open': pagestate.showRightSideBar}">
+      <div class="tab-content" id="tab-content">
+        <!-- Home tab content -->
+        <div class="tab-pane active" id="control-sidebar-theme-demo-options-tab">
+          <div class="close-btn-on-sidebar">
+            <a class="btn btn-link" v-on:click="toggleRightSideBar()">
+              <i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i>
+            </a>
+          </div>
 
-<aside class="control-sidebar control-sidebar-dark"
-  v-bind:class="{'control-sidebar-open': pagestate.showRightSideBar}">
-  <div class="tab-content" id="tab-content">
-    <!-- Home tab content -->
-    <div class="tab-pane active" id="control-sidebar-theme-demo-options-tab">
-      <div class="close-btn-on-sidebar">
-        <a class="btn btn-link" v-on:click="toggleRightSideBar()">
-          <i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i>
-        </a>
-      </div>
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Types</h3>
+            </div>
+            <div class="box-body text-black" v-for="t in types" :key="t.id">
+              <label v-if="article.type.id" >
+                <input type="radio" name="type" :value="t.id"
+                  v-model="article.type.id" v-on:change="changeType(t.id)">
+                <i :class="'fa ' + t.icon" aria-hidden="true"></i>
+                {{ t.name | abbreviate(20)}}
+              </label>
+            </div>
+          </div>
 
-      <div class="sidebar-group">
-        <span class="sidebar-title">Types:</span>
-        <div v-for="t in types" :key="t.id">
-          <label v-if="article.type.id">
-            <input type="radio" name="type" :value="t.id"
-              v-model="article.type.id" v-on:change="changeType(t.id)">
-            <i :class="'fa ' + t.icon" aria-hidden="true"></i>
-            {{ t.name | abbreviate(25)}}
-          </label>
+          <article-parts-target />
+
         </div>
       </div>
+    </aside>
 
-      <div class="sidebar-group">
-        <span class="sidebar-title">Viewer:</span>
-        <article-parts-target />
-      </div>
+    <div class="control-sidebar-bg"></div>
 
-    </div>
   </div>
-</aside>
-  
 </template>
 
 <script>

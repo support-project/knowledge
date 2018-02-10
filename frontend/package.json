@@ -53,7 +53,8 @@
     "vue-flatpickr-component": "^6.0.0",
     "clockpicker": "^0.0.7",
     "uiv": "^0.16.0",
-    "he": "^1.1.1"
+    "he": "^1.1.1",
+    "animate.css": "^3.6.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
