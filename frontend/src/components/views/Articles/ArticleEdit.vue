@@ -1,65 +1,71 @@
 <template>
   <div>
-    <page-title
-      :title = "'Route.' + $route.name"
-      :description = "$route.name + '.description'"
-      :breadcrumb = "breadcrumb" />
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      
+      <page-title
+        :title = "'Route.' + $route.name"
+        :description = "$route.name + '.description'"
+        :breadcrumb = "breadcrumb" />
 
-    <div id="secondNavbar" class="left-margin-content">
-      <nav class="secondMenu" >
-        <a :title="$t('ArticleEdit.BtnAttributes')"
-          v-bind:class="{'toggle-on': pagestate.showRightSideBar}"
-          v-on:click="toggleRightSideBar()">
-          <i class="fa fa-list fa-lg" aria-hidden="true"></i>
-        </a>
-        <button :title="$t('ArticleEdit.BtnRelease')" class="label-primary" v-on:click="releaseArticle()">
-          <i class="fa fa-rocket fa-lg" aria-hidden="true"></i>
-        </button>
-        <a :title="$t('ArticleEdit.BtnDraft')" v-on:click="saveDraftArticle()">
-          <i class="fa fa-save fa-lg" aria-hidden="true"></i>
-        </a>
-        <router-link tag="a" :to="backhref"
-          :title="$t('ArticleEdit.BtnCancel')">
-          <i class="fa fa-undo fa-lg" aria-hidden="true"></i>
-        </router-link>
-        <a :title="$t('ArticleEdit.BtnRemove')" class="label-danger">
-          <i class="fa fa-remove fa-lg" aria-hidden="true"></i>
-        </a>
-      </nav>
-    </div>
-
-    <!-- Main content -->
-    <div class="content main-content">
-      <div class="article-meta" v-if="article.draftId" >
-        <span class="exist-draft">{{ $t("ArticleEdit.ExistDraft") }}</span>
-        <button class="btn btn-default btn-xs" v-on:click="deleteDraft()">
-          <i class="fa fa-eraser"></i>&nbsp;{{ $t("ArticleEdit.DeleteDraft") }}
-        </button>
+      <div id="secondNavbar" class="left-margin-content">
+        <nav class="secondMenu" >
+          <a :title="$t('ArticleEdit.BtnAttributes')"
+            v-bind:class="{'toggle-on': pagestate.showRightSideBar}"
+            v-on:click="toggleRightSideBar()">
+            <i class="fa fa-list fa-lg" aria-hidden="true"></i>
+          </a>
+          <button :title="$t('ArticleEdit.BtnRelease')" class="label-primary" v-on:click="releaseArticle()">
+            <i class="fa fa-rocket fa-lg" aria-hidden="true"></i>
+          </button>
+          <a :title="$t('ArticleEdit.BtnDraft')" v-on:click="saveDraftArticle()">
+            <i class="fa fa-save fa-lg" aria-hidden="true"></i>
+          </a>
+          <router-link tag="a" :to="backhref"
+            :title="$t('ArticleEdit.BtnCancel')">
+            <i class="fa fa-undo fa-lg" aria-hidden="true"></i>
+          </router-link>
+          <a :title="$t('ArticleEdit.BtnRemove')" class="label-danger">
+            <i class="fa fa-remove fa-lg" aria-hidden="true"></i>
+          </a>
+        </nav>
       </div>
 
-      <alerts></alerts>
-      <form role="form" id="knowledgeForm">
-        <div class="form-group">
-            <label for="input_title">
-              Title
-            </label>
-            <div class="input-group">
-              <span class="input-group-addon">
-                <span class="fa fa-bookmark"></span>
-              </span>
-              <input type="text" class="form-control" name="title" placeholder="Title"
-                v-model="article.title" />
-            </div>
+      <!-- Main content -->
+      <div class="content main-content">
+        <div class="article-meta" v-if="article.draftId" >
+          <span class="exist-draft">{{ $t("ArticleEdit.ExistDraft") }}</span>
+          <button class="btn btn-default btn-xs" v-on:click="deleteDraft()">
+            <i class="fa fa-eraser"></i>&nbsp;{{ $t("ArticleEdit.DeleteDraft") }}
+          </button>
         </div>
 
-        <article-edit-items />
+        <alerts></alerts>
+        <form role="form" id="knowledgeForm">
+          <div class="form-group">
+              <label for="input_title">
+                Title
+              </label>
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <span class="fa fa-bookmark"></span>
+                </span>
+                <input type="text" class="form-control" name="title" placeholder="Title"
+                  v-model="article.title" />
+              </div>
+          </div>
 
-        <markdown-editor :article="article" :rows="20" />
+          <article-edit-items />
 
-      </form>
-      <article-edit-sidebar :article="article" />
+          <markdown-editor :article="article" :rows="20" />
 
+        </form>
+      </div>
     </div>
+    <!-- /.content-wrapper -->
+
+    <article-edit-sidebar :article="article" />
+
   </div>
 </template>
 

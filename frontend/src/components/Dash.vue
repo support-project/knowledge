@@ -1,5 +1,5 @@
 <template>
-  <div :class="['wrapper', classes]">
+  <div :class="['wrapper', classes]" style="height: auto; min-height: 100%;">
     <header class="main-header">
 
       <a href="/" class="logo">
@@ -94,12 +94,9 @@
     </header>
     <!-- Left side column. contains the logo and sidebar -->
     <sidebar :display-name="user.userName" :picture-url="user.avatar" :user="user" />
-  
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-      <router-view></router-view>
-    </div>
-    <!-- /.content-wrapper -->
+
+    <!-- contents -->
+    <router-view></router-view>
   
     <!-- Main Footer -->
     <footer class="main-footer">

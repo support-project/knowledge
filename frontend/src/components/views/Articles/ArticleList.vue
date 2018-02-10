@@ -1,36 +1,43 @@
 <template>
   <div>
-    <page-title
-      :title = "'Route.' + $route.name"
-      :description = "$route.name + '.description'" />
 
-    <!-- Main content -->
-    <div class="content main-content">
-      <div v-if="pagestate.loading" class="text-center">
-        <i class="fa fa-refresh fa-spin fa-1x fa-fw" v-if="pagestate.loading"></i>
-      </div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
 
-      <!-- Tab -->
-      <div class="row padding-side">
-          <ul class="nav nav-tabs">
-              <li role="presentation" class="active"><a href="open.knowledge/list">一覧</a></li>
-              <li role="presentation"><a href="open.knowledge/show_popularity">人気</a></li>
-              <li role="presentation"><a href="open.knowledge/stocks">ストック</a></li>
-              <li role="presentation"><a href="open.knowledge/show_history">履歴</a></li>
-          </ul>
-      </div>
+      <page-title
+        :title = "'Route.' + $route.name"
+        :description = "$route.name + '.description'" />
 
-      <div class="row" id="knowledgeList">
-        <!-- main list -->
-        <div class="col-sm-12 col-md-8 knowledge_list">
-          <article-list-item :articles="articles"/>
+      <!-- Main content -->
+      <div class="content main-content">
+        <div v-if="pagestate.loading" class="text-center">
+          <i class="fa fa-refresh fa-spin fa-1x fa-fw" v-if="pagestate.loading"></i>
         </div>
-        <!-- right area -->
-        <div class="col-sm-12 col-md-4">
-          <article-list-calendar />
+
+        <!-- Tab -->
+        <div class="row padding-side">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="open.knowledge/list">一覧</a></li>
+                <li role="presentation"><a href="open.knowledge/show_popularity">人気</a></li>
+                <li role="presentation"><a href="open.knowledge/stocks">ストック</a></li>
+                <li role="presentation"><a href="open.knowledge/show_history">履歴</a></li>
+            </ul>
+        </div>
+
+        <div class="row" id="knowledgeList">
+          <!-- main list -->
+          <div class="col-sm-12 col-md-8 knowledge_list">
+            <article-list-item :articles="articles"/>
+          </div>
+          <!-- right area -->
+          <div class="col-sm-12 col-md-4">
+            <article-list-calendar />
+          </div>
         </div>
       </div>
     </div>
+    <!-- /.content-wrapper -->
+
   </div>
 
 </template>

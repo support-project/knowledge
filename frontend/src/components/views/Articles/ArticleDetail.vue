@@ -1,69 +1,73 @@
 <template>
   <div>
-    <page-title
-      :title = "'Route.' + $route.name"
-      :description = "$route.name + '.description'"
-      :breadcrumb = "breadcrumb" />
-    
-    <div id="secondNavbar" class="left-margin-content">
-      <nav class="secondMenu" >
-        <a :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'toggle-on': pagestate.showRightSideBar}"
-          v-on:click="toggleRightSideBar()">
-          <i class="fa fa-list fa-lg" aria-hidden="true"></i>
-        </a>
-        <button :title="$t('ArticleDetail.BtnLike')" v-on:click="likeArticle()">
-          <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
-        </button>
-        <a :title="$t('ArticleDetail.BtnStock')">
-          <i class="fa fa-star-o fa-lg" aria-hidden="true"></i>
-        </a>
-        <router-link tag="a" :to="'/articles/' + $route.params.id + '/edit'"
-          :title="$t('ArticleDetail.BtnEdit')">
-          <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
-        </router-link>
-      </nav>
-    </div>
-    
-    <!-- Main content -->
-    <div class="content main-content">
-      <alerts></alerts>
-      <div class="article-information">
-        <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ article.title}}
-        </div>
-        <div class="article-meta">
-          <span v-if="article.draftId" class="exist-draft">{{ $t("ArticleDetail.ExistDraft") }}</span>
-        </div>
-        <div class="article-meta">
-          <article-parts-editor :article="article" />
-        </div>
-        <div class="article-meta">
-          <article-parts-point :article="article" />
-        </div>
-        <div class="article-meta">
-          <article-parts-type-label :article="article" />
-          <span>
-            <article-parts-public-flag :article="article" />
-          </span>
-        </div>
-        <div class="article-meta">
-          <article-parts-tags :article="article" />
-          <article-parts-stocks :article="article" />
-        </div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <page-title
+        :title = "'Route.' + $route.name"
+        :description = "$route.name + '.description'"
+        :breadcrumb = "breadcrumb" />
+      
+      <div id="secondNavbar" class="left-margin-content">
+        <nav class="secondMenu" >
+          <a :title="$t('ArticleDetail.BtnToc')" v-bind:class="{'toggle-on': pagestate.showRightSideBar}"
+            v-on:click="toggleRightSideBar()">
+            <i class="fa fa-list fa-lg" aria-hidden="true"></i>
+          </a>
+          <button :title="$t('ArticleDetail.BtnLike')" v-on:click="likeArticle()">
+            <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
+          </button>
+          <a :title="$t('ArticleDetail.BtnStock')">
+            <i class="fa fa-star-o fa-lg" aria-hidden="true"></i>
+          </a>
+          <router-link tag="a" :to="'/articles/' + $route.params.id + '/edit'"
+            :title="$t('ArticleDetail.BtnEdit')">
+            <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
+          </router-link>
+        </nav>
       </div>
+    
+      <!-- Main content -->
+      <div class="content main-content">
+        <alerts></alerts>
+        <div class="article-information">
+          <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ article.title}}
+          </div>
+          <div class="article-meta">
+            <span v-if="article.draftId" class="exist-draft">{{ $t("ArticleDetail.ExistDraft") }}</span>
+          </div>
+          <div class="article-meta">
+            <article-parts-editor :article="article" />
+          </div>
+          <div class="article-meta">
+            <article-parts-point :article="article" />
+          </div>
+          <div class="article-meta">
+            <article-parts-type-label :article="article" />
+            <span>
+              <article-parts-public-flag :article="article" />
+            </span>
+          </div>
+          <div class="article-meta">
+            <article-parts-tags :article="article" />
+            <article-parts-stocks :article="article" />
+          </div>
+        </div>
 <!--      <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i> -->
-      <div class="markdown-body template-items" v-if="this.article.itemsHtml">
-        <span v-html="article.itemsHtml"></span>
+        <div class="markdown-body template-items" v-if="this.article.itemsHtml">
+          <span v-html="article.itemsHtml"></span>
+        </div>
+        <div class="markdown-body contents">
+          <span v-html="article.displaySafeHtml"></span>
+        </div>
+        <div id="comments">
+          <article-detail-comments :comments="comments" :article="article" />
+        </div>
       </div>
-      <div class="markdown-body contents">
-        <span v-html="article.displaySafeHtml"></span>
-      </div>
-      <div id="comments">
-        <article-detail-comments :comments="comments" :article="article" />
-      </div>
-
-      <article-detail-sidebar />
-
     </div>
+    <!-- /.content-wrapper -->
+
+    <article-detail-sidebar />
+
   </div>
 </template>
 

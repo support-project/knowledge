@@ -46,3 +46,17 @@
 .btn-round.btn-sm{border-radius:22.5px;}
 .btn-round       {border-radius:17px;}
 .btn-round.btn-lg{border-radius:23px;}
+
+
+/* change-admin-lte */
+.box-header>.fa, .box-header>.glyphicon, .box-header>.ion, .box-header .box-title {
+  font-size: 14px;
+}
+.box-body {
+  padding: 3px 10px;
+}
+
+/* change bootstrap */
+label {
+  font-weight: normal;
+}

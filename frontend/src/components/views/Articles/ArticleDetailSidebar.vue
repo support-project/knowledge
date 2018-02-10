@@ -1,23 +1,37 @@
 <template>
+  <div>
+    <aside class="control-sidebar control-sidebar-dark control-sidebar-fixed"
+      v-bind:class="{'control-sidebar-open': pagestate.showRightSideBar}">
+      <div class="tab-content" id="tab-content">
+        <!-- Home tab content -->
+        <div class="tab-pane active" id="control-sidebar-theme-demo-options-tab">
+          <div class="close-btn-on-sidebar">
+            <a class="btn btn-link" v-on:click="toggleRightSideBar()">
+              <i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i>
+            </a>
+          </div>
+          <!--
+          <div class="toc-title">
+            &lt;{{ $t('ArticleDetailSidebar.TocTitle') }}&gt;
+          </div>
+          <span v-html="this.toc"></span>
+          -->
 
-<aside class="control-sidebar control-sidebar-dark "
-  v-bind:class="{'control-sidebar-open': pagestate.showRightSideBar}">
-  <div class="tab-content" id="tab-content">
-    <!-- Home tab content -->
-    <div class="tab-pane active" id="control-sidebar-theme-demo-options-tab">
-      <div class="close-btn-on-sidebar">
-        <a class="btn btn-link" v-on:click="toggleRightSideBar()">
-          <i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i>
-        </a>
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{ $t('ArticleDetailSidebar.TocTitle') }}</h3>
+            </div>
+            <div class="box-body text-black">
+              <span v-html="this.toc"></span>
+            </div>
+          </div>
+
+        </div>
       </div>
-      <div class="toc-title">
-        &lt;{{ $t('ArticleDetailSidebar.TocTitle') }}&gt;
-      </div>
-      <span v-html="this.toc"></span>
-    </div>
+    </aside>
+
+    <div class="control-sidebar-bg"></div>
   </div>
-</aside>
-  
 </template>
 
 <script>
@@ -42,6 +56,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.control-sidebar-fixed {
+  position: fixed;
+}
+</style>
 
 <style src="../../css/toc.css" />
 <style src="../../css/control-sidebar.css" />
