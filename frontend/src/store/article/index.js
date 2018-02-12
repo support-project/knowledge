@@ -7,6 +7,8 @@ import saveDraft from './actions/saveDraft'
 import deleteDraft from './actions/deleteDraft'
 import likeArticle from './actions/likeArticle'
 import removeViewer from './actions/removeViewer'
+import addTag from './actions/addTag'
+import removeTag from './actions/removeTag'
 
 import initArticle from './mutations/initArticle'
 import setArticle from './mutations/setArticle'
@@ -44,7 +46,9 @@ export default {
     deleteDraft: deleteDraft,
     previewArticle: previewArticle,
     likeArticle: likeArticle,
-    removeViewer: removeViewer
+    removeViewer: removeViewer,
+    addTag: addTag,
+    removeTag: removeTag
   },
   mutations: {
     initArticle: initArticle,
