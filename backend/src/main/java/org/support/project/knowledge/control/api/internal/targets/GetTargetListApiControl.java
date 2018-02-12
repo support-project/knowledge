@@ -8,6 +8,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.logic.TargetLogic;
+import org.support.project.knowledge.vo.api.Target;
 import org.support.project.web.bean.ApiParams;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.boundary.Boundary;
@@ -32,7 +33,9 @@ public class GetTargetListApiControl extends ApiControl {
         int limit = apiParams.getLimit();
         int offset = apiParams.getOffset();
         TargetLogic groupLogic = TargetLogic.get();
-        List<LabelValue> aHeads = groupLogic.selectOnKeyword(keyword, super.getLoginedUser(), offset * limit, limit);
-        return send(aHeads);
+        List<LabelValue> aHeads = groupLogic.selectOnKeyword(keyword, super.getLoginedUser(), offset, limit);
+        // LabelValueはやめる（既存の処理に影響を与えないように、ここで変換)
+        List<Target> targets = TargetLogic.get().convLabelValuesToTargets(aHeads);
+        return send(targets);
     }
 }

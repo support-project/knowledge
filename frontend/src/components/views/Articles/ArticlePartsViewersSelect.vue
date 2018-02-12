@@ -23,21 +23,27 @@
         <div class="box-header with-border">
           <h3 class="box-title">Targets</h3>
           <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool"><i class="fa fa-plus-circle"></i></button>
+            <button type="button" class="btn btn-box-tool" v-on:click="selectTargets()">
+              <i class="fa fa-plus-circle"></i>
+            </button>
           </div>
         </div>
 
-        <div v-for="vgroup in article.viewers.groups" :key="vgroup.id" class="box-body text-black">
-          <i class="fa fa-users text-light-blue" aria-hidden="true"></i>&nbsp;{{vgroup.name}}
-          <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool"><i class="fa fa-minus-circle"></i></button>
+        <div if="article.viewers">
+          <div v-for="vgroup in article.viewers.groups" :key="vgroup.id" class="box-body text-black">
+            <i class="fa fa-users text-light-blue" aria-hidden="true"></i>&nbsp;{{vgroup.name}}
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool"><i class="fa fa-minus-circle"></i></button>
+            </div>
           </div>
         </div>
 
-        <div v-for="vuser in article.viewers.users" :key="vuser.id" class="box-body text-black">
-          <i class="fa fa-user text-olive" aria-hidden="true"></i>&nbsp;{{vuser.name}}
-          <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool"><i class="fa fa-minus-circle"></i></button>
+        <div if="article.viewers">
+          <div v-for="vuser in article.viewers.users" :key="vuser.id" class="box-body text-black">
+            <i class="fa fa-user text-olive" aria-hidden="true"></i>&nbsp;{{vuser.name}}
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool"><i class="fa fa-minus-circle"></i></button>
+            </div>
           </div>
         </div>
       </div>
@@ -50,10 +56,10 @@ import 'animate.css/animate.min.css'
 
 import { mapState } from 'vuex'
 import logger from 'logger'
-const LABEL = 'ArticlePartsTarget.vue'
+const LABEL = 'ArticlePartsViewersSelect.vue'
 
 export default {
-  name: 'ArticlePartsTarget',
+  name: 'ArticlePartsViewersSelect',
   computed: {
     ...mapState({
       article: state => state.article.article
@@ -74,6 +80,11 @@ export default {
   methods: {
     changeArticle: function () {
       logger.info(LABEL, 'article is changed.')
+    },
+    selectTargets: function () {
+      this.$store.dispatch('targets/showDialog', {
+        selected: this.article.viewers
+      })
     }
   },
   mounted () {

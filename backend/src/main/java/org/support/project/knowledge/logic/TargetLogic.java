@@ -15,8 +15,9 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.ExGroupsDao;
 import org.support.project.knowledge.dao.TargetsDao;
-import org.support.project.web.bean.LabelValue;
+import org.support.project.knowledge.vo.api.Target;
 import org.support.project.web.bean.AccessUser;
+import org.support.project.web.bean.LabelValue;
 import org.support.project.web.dao.UserGroupsDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.GroupsEntity;
@@ -369,6 +370,32 @@ public class TargetLogic {
             return true;
         }
         return false;
+    }
+
+    public List<Target> convLabelValuesToTargets(List<LabelValue> aHeads) {
+        List<Target> targets = new ArrayList<>();
+        for (LabelValue labelValue : aHeads) {
+            Target t = new Target();
+            if (labelValue.getValue().startsWith(TargetLogic.ID_PREFIX_GROUP)) {
+                t.setId(labelValue.getValue().substring(TargetLogic.ID_PREFIX_GROUP.length()));
+                if (labelValue.getLabel().startsWith(TargetLogic.NAME_PREFIX_GROUP)) {
+                    t.setName(labelValue.getLabel().substring(TargetLogic.NAME_PREFIX_GROUP.length()));
+                } else {
+                    t.setName(labelValue.getLabel());
+                }
+                t.setType("group");
+            } else if (labelValue.getValue().startsWith(TargetLogic.ID_PREFIX_USER)) {
+                t.setId(labelValue.getValue().substring(TargetLogic.ID_PREFIX_USER.length()));
+                if (labelValue.getLabel().startsWith(TargetLogic.NAME_PREFIX_USER)) {
+                    t.setName(labelValue.getLabel().substring(TargetLogic.NAME_PREFIX_USER.length()));
+                } else {
+                    t.setName(labelValue.getLabel());
+                }
+                t.setType("user");
+            }
+            targets.add(t);
+        }
+        return targets;
     }
 
 

@@ -14,7 +14,7 @@ public class KnowledgeDetail extends Knowledge {
     private List<AttachedFile> attachments = new ArrayList<>();
     
     /** 編集可能な対象（共同編集者） */
-    private Target editors;
+    private Targets editors;
     
     /**
      * @return the comments
@@ -31,13 +31,13 @@ public class KnowledgeDetail extends Knowledge {
     /**
      * @return the editors
      */
-    public Target getEditors() {
+    public Targets getEditors() {
         return editors;
     }
     /**
      * @param editors the editors to set
      */
-    public void setEditors(Target editors) {
+    public void setEditors(Targets editors) {
         this.editors = editors;
     }
     /**

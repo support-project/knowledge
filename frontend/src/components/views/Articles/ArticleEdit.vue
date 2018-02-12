@@ -66,6 +66,8 @@
 
     <article-edit-sidebar :article="article" />
 
+    <target-select-dialog />
+
   </div>
 </template>
 
@@ -76,10 +78,11 @@ import logger from 'logger'
 
 import PageTitle from '../Parts/PageTitle'
 import ArticleEditSidebar from './ArticleEditSidebar'
-import MarkdownEditor from '../Parts/MarkdownEditor'
 import ArticleEditItems from './ArticleEditItems'
 
 import Alerts from '../Parts/Alerts'
+import MarkdownEditor from '../Parts/MarkdownEditor'
+import TargetSelectDialog from '../Parts/TargetSelectDialog'
 import secondNavbar from '../../../lib/displayParts/secondNavbar'
 import rightSidebar from './../../../lib/displayParts/rightSidebar'
 
@@ -104,7 +107,7 @@ export default {
       backhref: backhref
     }
   },
-  components: { PageTitle, ArticleEditSidebar, MarkdownEditor, ArticleEditItems, Alerts },
+  components: { PageTitle, ArticleEditSidebar, MarkdownEditor, ArticleEditItems, Alerts, TargetSelectDialog },
   computed: {
     ...mapState({
       pagestate: state => state.pagestate,

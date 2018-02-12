@@ -12,6 +12,10 @@ export default (state) => {
     type: {
       id: -100,
       items: []
+    },
+    viewers: {
+      groups: [],
+      users: []
     }
   }
 }
