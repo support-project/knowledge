@@ -27,11 +27,11 @@ import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.api.AttachedFile;
 import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
+import org.support.project.knowledge.vo.api.Target;
 import org.support.project.knowledge.vo.api.Targets;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.MessageResult;
-import org.support.project.web.bean.NameId;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.config.MessageStatus;
 import org.support.project.web.exception.InvalidParamException;
@@ -155,16 +155,18 @@ public class DraftDataLogic extends KnowledgeDataSelectLogic {
         Targets target = new Targets();
         String[] targets = accesses.split(",");
         List<LabelValue> viewers = TargetLogic.get().selectTargets(targets);
-        List<NameId> groupViewers = new ArrayList<>();
-        List<NameId> userViewers = new ArrayList<>();
+        List<Target> groupViewers = new ArrayList<>();
+        List<Target> userViewers = new ArrayList<>();
         target.setGroups(groupViewers);
         target.setUsers(userViewers);
         for (LabelValue labelValue : viewers) {
             if (TargetLogic.get().isGroupLabel(labelValue.getLabel())) {
-                NameId group = new NameId(labelValue.getLabel(), labelValue.getValue());
+                Target group = new Target(labelValue.getLabel(), labelValue.getValue());
+                group.setType("group");
                 groupViewers.add(group);
             } else if (TargetLogic.get().isGroupLabel(labelValue.getLabel())) {
-                NameId user = new NameId(labelValue.getLabel(), labelValue.getValue());
+                Target user = new Target(labelValue.getLabel(), labelValue.getValue());
+                user.setType("user");
                 userViewers.add(user);
             }
         }

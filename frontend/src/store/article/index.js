@@ -6,6 +6,7 @@ import saveArticle from './actions/saveArticle'
 import saveDraft from './actions/saveDraft'
 import deleteDraft from './actions/deleteDraft'
 import likeArticle from './actions/likeArticle'
+import removeViewer from './actions/removeViewer'
 
 import initArticle from './mutations/initArticle'
 import setArticle from './mutations/setArticle'
@@ -24,6 +25,10 @@ export default {
       type: {
         id: -100,
         items: []
+      },
+      viewers: {
+        groups: [],
+        users: []
       }
     },
     toc: ''
@@ -38,7 +43,8 @@ export default {
     saveDraft: saveDraft,
     deleteDraft: deleteDraft,
     previewArticle: previewArticle,
-    likeArticle: likeArticle
+    likeArticle: likeArticle,
+    removeViewer: removeViewer
   },
   mutations: {
     initArticle: initArticle,

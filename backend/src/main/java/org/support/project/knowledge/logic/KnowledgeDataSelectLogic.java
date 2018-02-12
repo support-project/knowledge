@@ -43,12 +43,12 @@ import org.support.project.knowledge.vo.api.Item;
 import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
+import org.support.project.knowledge.vo.api.Target;
 import org.support.project.knowledge.vo.api.Targets;
 import org.support.project.knowledge.vo.api.Type;
 import org.support.project.knowledge.vo.api.internal.KnowledgeList;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
-import org.support.project.web.bean.NameId;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.UsersEntity;
 
@@ -200,19 +200,21 @@ public class KnowledgeDataSelectLogic {
      */
     private Targets getEditors(KnowledgeDataInterface entity) {
         Targets editors = new Targets();
-        List<NameId> listGroups = new ArrayList<>();
-        List<NameId> listUsers = new ArrayList<>();
+        List<Target> listGroups = new ArrayList<>();
+        List<Target> listUsers = new ArrayList<>();
         editors.setGroups(listGroups);
         editors.setUsers(listUsers);
         TargetsDao targetsDao = TargetsDao.get();
         List<GroupsEntity> groups = targetsDao.selectEditorGroupsOnKnowledgeId(entity.getKnowledgeId());
         for (GroupsEntity groupsEntity : groups) {
-            NameId group = new NameId(groupsEntity.getGroupName(), String.valueOf(groupsEntity.getGroupId()));
+            Target group = new Target(groupsEntity.getGroupName(), String.valueOf(groupsEntity.getGroupId()));
+            group.setType("user");
             listGroups.add(group);
         }
         List<UsersEntity> users = targetsDao.selectEditorUsersOnKnowledgeId(entity.getKnowledgeId());
         for (UsersEntity usersEntity : users) {
-            NameId user = new NameId(usersEntity.getUserName(), String.valueOf(usersEntity.getUserId()));
+            Target user = new Target(usersEntity.getUserName(), String.valueOf(usersEntity.getUserId()));
+            user.setType("user");
             listUsers.add(user);
         }
         return editors;
@@ -225,19 +227,21 @@ public class KnowledgeDataSelectLogic {
     private Targets getViewers(KnowledgeDataInterface entity) {
         Targets viewers = new Targets();
         if (entity.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
-            List<NameId> groupViewers = new ArrayList<>();
-            List<NameId> userViewers = new ArrayList<>();
+            List<Target> groupViewers = new ArrayList<>();
+            List<Target> userViewers = new ArrayList<>();
             viewers.setGroups(groupViewers);
             viewers.setUsers(userViewers);
             TargetsDao targetsDao = TargetsDao.get();
             List<GroupsEntity> groups = targetsDao.selectGroupsOnKnowledgeId(entity.getKnowledgeId());
             for (GroupsEntity groupsEntity : groups) {
-                NameId group = new NameId(groupsEntity.getGroupName(), String.valueOf(groupsEntity.getGroupId()));
+                Target group = new Target(groupsEntity.getGroupName(), String.valueOf(groupsEntity.getGroupId()));
+                group.setType("group");
                 groupViewers.add(group);
             }
             List<UsersEntity> users = targetsDao.selectUsersOnKnowledgeId(entity.getKnowledgeId());
             for (UsersEntity usersEntity : users) {
-                NameId user = new NameId(usersEntity.getUserName(), String.valueOf(usersEntity.getUserId()));
+                Target user = new Target(usersEntity.getUserName(), String.valueOf(usersEntity.getUserId()));
+                user.setType("user");
                 userViewers.add(user);
             }
         }
