@@ -16,6 +16,7 @@ export default (state) => {
     viewers: {
       groups: [],
       users: []
-    }
+    },
+    tags: []
   }
 }

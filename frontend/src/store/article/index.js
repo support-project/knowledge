@@ -31,7 +31,8 @@ export default {
       viewers: {
         groups: [],
         users: []
-      }
+      },
+      tags: []
     },
     toc: ''
   },
