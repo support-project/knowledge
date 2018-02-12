@@ -71,7 +71,7 @@
           <span class="input-group-addon">
             <span class="fa fa-globe"></span>
           </span>
-          <input :id="'item_' + item.itemNo" class="form-control" type="text" :value="item.itemValue">
+          <input :id="'item_' + item.itemNo" class="form-control" type="text" :value="item.itemValue" autocomplete="off">
         </div>
         <typeahead v-model="item.itemValue" :data="timezonedata" :target="'#item_' + item.itemNo"/>
       </span>

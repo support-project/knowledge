@@ -40,7 +40,8 @@
               <div class="box-tools">
                 <tooltip text="already exist" trigger="manual" v-model="tagInputTooltip">
                   <div class="input-group input-group-sm" style="width: 200px;">
-                    <input type="text" name="table_search" class="form-control pull-right" placeholder="Tag" v-model="tag">
+                    <input type="text" name="inputTag" id="inputTag" class="form-control pull-right"
+                      placeholder="Tag" autocomplete="off">
                     <div class="input-group-btn">
                       <button type="submit" class="btn btn-default" v-on:click="addTag">
                         <i class="fa fa-plus-circle"></i>
@@ -49,6 +50,7 @@
                   </div>
                 </tooltip>
               </div>
+              <typeahead v-model="tag" target="#inputTag" :async-function="queryFunction" item-key="tagName" />
             </div>
             <div class="box-body text-black" v-for="tag in article.tags" :key="tag">
                 <i class="fa fa-tag" aria-hidden="true"></i>
@@ -71,10 +73,12 @@
 </template>
 
 <script>
-import { Tooltip } from 'uiv'
+import { Tooltip, Typeahead } from 'uiv'
 
 import { mapState } from 'vuex'
 import logger from 'logger'
+
+import api from '../../../api'
 
 import ArticlePartsViewersSelect from './ArticlePartsViewersSelect'
 
@@ -85,7 +89,8 @@ export default {
   data () {
     return {
       tag: '',
-      tagInputTooltip: false
+      tagInputTooltip: false,
+      suggestTags: ['aaa', 'bbb']
     }
   },
   watch: {
@@ -98,7 +103,7 @@ export default {
       types: state => state.types.types
     })
   },
-  components: {ArticlePartsViewersSelect, Tooltip},
+  components: {ArticlePartsViewersSelect, Tooltip, Typeahead},
   methods: {
     toggleRightSideBar () {
       this.$store.dispatch('pagestate/toggleRightSideBar')
@@ -114,6 +119,7 @@ export default {
       this.tagInputTooltip = false
     },
     addTag () {
+      logger.info(LABEL, 'addTag: ' + this.tag)
       this.tagInputTooltip = false
       this.$store.dispatch('article/addTag', this.tag).then(result => {
         if (result) {
@@ -125,6 +131,11 @@ export default {
     },
     removeTag (tag) {
       this.$store.dispatch('article/removeTag', tag)
+    },
+    queryFunction (query, done) {
+      api.request('get', '/_api/tags?keyword=' + this.tag, null).then(res => {
+        return done(res.data)
+      })
     }
   },
   mounted () {

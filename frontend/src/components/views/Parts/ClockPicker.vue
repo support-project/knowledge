@@ -1,7 +1,7 @@
 <template>
   <span>
     <input type="text" class="form-control" :value="value" @input="updateDate()"
-      ref="clockPicker" :id="id"/>
+      ref="clockPicker" :id="id" readonly v-on:keyup.8="clearDate"/>
   </span>
 </template>
 
@@ -15,6 +15,9 @@ export default {
   methods: {
     updateDate () {
       this.$emit('input', +this.$refs.clockPicker.value)
+    },
+    clearDate () {
+      this.value = ''
     }
   },
   mounted () {
