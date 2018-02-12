@@ -27,6 +27,40 @@
 
           <article-parts-viewers-select />
 
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Tags</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool">
+                  <i class="fa fa-plus-circle"></i>
+                </button>
+              </div>
+            </div>
+            <div class="box-body text-black">
+              <div class="box-tools">
+                <tooltip text="already exist" trigger="manual" v-model="tagInputTooltip">
+                  <div class="input-group input-group-sm" style="width: 200px;">
+                    <input type="text" name="table_search" class="form-control pull-right" placeholder="Tag" v-model="tag">
+                    <div class="input-group-btn">
+                      <button type="submit" class="btn btn-default" v-on:click="addTag">
+                        <i class="fa fa-plus-circle"></i>
+                      </button>
+                    </div>
+                  </div>
+                </tooltip>
+              </div>
+            </div>
+            <div class="box-body text-black" v-for="tag in article.tags" :key="tag">
+                <i class="fa fa-tag" aria-hidden="true"></i>
+                {{ tag }}
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" v-on:click="removeTag(tag)">
+                    <i class="fa fa-minus-circle"></i>
+                  </button>
+                </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </aside>
@@ -37,6 +71,8 @@
 </template>
 
 <script>
+import { Tooltip } from 'uiv'
+
 import { mapState } from 'vuex'
 import logger from 'logger'
 
@@ -46,6 +82,15 @@ const LABEL = 'ArticleEditSidebar.vue'
 
 export default {
   name: 'ArticleEditSidebar',
+  data () {
+    return {
+      tag: '',
+      tagInputTooltip: false
+    }
+  },
+  watch: {
+    'tag': 'clearTagInputTooltip'
+  },
   computed: {
     ...mapState({
       pagestate: state => state.pagestate,
@@ -53,7 +98,7 @@ export default {
       types: state => state.types.types
     })
   },
-  components: {ArticlePartsViewersSelect},
+  components: {ArticlePartsViewersSelect, Tooltip},
   methods: {
     toggleRightSideBar () {
       this.$store.dispatch('pagestate/toggleRightSideBar')
@@ -64,6 +109,22 @@ export default {
         type: type,
         types: this.types
       })
+    },
+    clearTagInputTooltip () {
+      this.tagInputTooltip = false
+    },
+    addTag () {
+      this.tagInputTooltip = false
+      this.$store.dispatch('article/addTag', this.tag).then(result => {
+        if (result) {
+          this.tag = ''
+        } else {
+          this.tagInputTooltip = true
+        }
+      })
+    },
+    removeTag (tag) {
+      this.$store.dispatch('article/removeTag', tag)
     }
   },
   mounted () {

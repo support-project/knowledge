@@ -1,0 +1,14 @@
+import Promise from 'bluebird'
+import logger from 'logger'
+const LABEL = 'addTag.js'
+
+export default (store, tag) => {
+  return Promise.try(() => {
+    logger.info(LABEL, 'addTag')
+    if (!store.state.article.tags.includes(tag)) {
+      store.state.article.tags.push(tag)
+      return true
+    }
+    return false
+  })
+}
