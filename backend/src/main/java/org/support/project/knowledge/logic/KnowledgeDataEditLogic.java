@@ -23,6 +23,7 @@ import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.api.Item;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
+import org.support.project.knowledge.vo.api.Target;
 import org.support.project.knowledge.vo.api.Targets;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
@@ -125,13 +126,13 @@ public class KnowledgeDataEditLogic {
             return "";
         }
         StringJoinBuilder<String> builder = new StringJoinBuilder<>();
-        List<NameId> groups = viewers.getGroups();
+        List<Target> groups = viewers.getGroups();
         if (groups != null) {
             for (NameId nameId : groups) {
                 builder.append(TargetLogic.ID_PREFIX_GROUP.concat(nameId.getId()));
             }
         }
-        List<NameId> users = viewers.getUsers();
+        List<Target> users = viewers.getUsers();
         if (users != null) {
             for (NameId nameId : users) {
                 builder.append(TargetLogic.ID_PREFIX_USER.concat(nameId.getId()));

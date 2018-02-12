@@ -8,7 +8,6 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenStocksDao;
-import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.vo.Stock;
 import org.support.project.ormapping.common.SQLManager;
