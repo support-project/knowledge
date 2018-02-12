@@ -76,6 +76,9 @@
     "description": "list of draft",
     "EmptyTitle": "Title is empty"
   },
+  "TargetSelectDialog": {
+    "Title": "Select group/user"
+  },
   "DraftEdit": {
     "description": "edit this article"
   },

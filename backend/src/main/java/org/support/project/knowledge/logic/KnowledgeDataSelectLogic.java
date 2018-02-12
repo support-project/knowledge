@@ -43,7 +43,7 @@ import org.support.project.knowledge.vo.api.Item;
 import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
-import org.support.project.knowledge.vo.api.Target;
+import org.support.project.knowledge.vo.api.Targets;
 import org.support.project.knowledge.vo.api.Type;
 import org.support.project.knowledge.vo.api.internal.KnowledgeList;
 import org.support.project.web.bean.AccessUser;
@@ -97,7 +97,7 @@ public class KnowledgeDataSelectLogic {
         }
         
         // 公開範囲
-        Target viewers = getViewers(entity);
+        Targets viewers = getViewers(entity);
         result.setViewers(viewers);
         
         // 1件取得の場合は詳細な情報を取得する
@@ -118,7 +118,7 @@ public class KnowledgeDataSelectLogic {
             detail.setAttachments(attachedFiles);
             
             // 共同編集者
-            Target editors = getEditors(entity);
+            Targets editors = getEditors(entity);
             detail.setEditors(editors);
             return detail;
         }
@@ -198,8 +198,8 @@ public class KnowledgeDataSelectLogic {
      * @param entity
      * @return
      */
-    private Target getEditors(KnowledgeDataInterface entity) {
-        Target editors = new Target();
+    private Targets getEditors(KnowledgeDataInterface entity) {
+        Targets editors = new Targets();
         List<NameId> listGroups = new ArrayList<>();
         List<NameId> listUsers = new ArrayList<>();
         editors.setGroups(listGroups);
@@ -222,8 +222,8 @@ public class KnowledgeDataSelectLogic {
      * @param entity
      * @return
      */
-    private Target getViewers(KnowledgeDataInterface entity) {
-        Target viewers = new Target();
+    private Targets getViewers(KnowledgeDataInterface entity) {
+        Targets viewers = new Targets();
         if (entity.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
             List<NameId> groupViewers = new ArrayList<>();
             List<NameId> userViewers = new ArrayList<>();

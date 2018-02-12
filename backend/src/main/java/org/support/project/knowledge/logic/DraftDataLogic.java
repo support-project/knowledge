@@ -27,7 +27,7 @@ import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.api.AttachedFile;
 import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
-import org.support.project.knowledge.vo.api.Target;
+import org.support.project.knowledge.vo.api.Targets;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.MessageResult;
@@ -105,11 +105,11 @@ public class DraftDataLogic extends KnowledgeDataSelectLogic {
         }
         
         // 参照権限
-        Target viewers = getTarget(entity.getAccesses());
+        Targets viewers = getTarget(entity.getAccesses());
         result.setViewers(viewers);
         
         // 編集権限
-        Target editors = getTarget(entity.getEditors());
+        Targets editors = getTarget(entity.getEditors());
         result.setEditors(editors);
         
         // テンプレートで拡張した項目の値を取得
@@ -151,8 +151,8 @@ public class DraftDataLogic extends KnowledgeDataSelectLogic {
      * @param accesses
      * @return
      */
-    private Target getTarget(String accesses) {
-        Target target = new Target();
+    private Targets getTarget(String accesses) {
+        Targets target = new Targets();
         String[] targets = accesses.split(",");
         List<LabelValue> viewers = TargetLogic.get().selectTargets(targets);
         List<NameId> groupViewers = new ArrayList<>();

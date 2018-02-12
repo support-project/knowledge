@@ -25,7 +25,7 @@
             </div>
           </div>
 
-          <article-parts-target />
+          <article-parts-viewers-select />
 
         </div>
       </div>
@@ -40,7 +40,7 @@
 import { mapState } from 'vuex'
 import logger from 'logger'
 
-import ArticlePartsTarget from './ArticlePartsTarget'
+import ArticlePartsViewersSelect from './ArticlePartsViewersSelect'
 
 const LABEL = 'ArticleEditSidebar.vue'
 
@@ -53,7 +53,7 @@ export default {
       types: state => state.types.types
     })
   },
-  components: {ArticlePartsTarget},
+  components: {ArticlePartsViewersSelect},
   methods: {
     toggleRightSideBar () {
       this.$store.dispatch('pagestate/toggleRightSideBar')

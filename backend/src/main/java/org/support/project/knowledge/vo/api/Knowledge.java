@@ -49,7 +49,7 @@ public class Knowledge implements KnowledgeKeyInterface {
     private Type type;
     
     /** 閲覧可能な対象（publicflag=2(保護)の場合に指定） */
-    private Target viewers;
+    private Targets viewers;
     
     /** この記事をストックしている場合のストック情報 */
     private List<StocksEntity> stocks = new ArrayList<>();
@@ -214,14 +214,14 @@ public class Knowledge implements KnowledgeKeyInterface {
     /**
      * @return the viewers
      */
-    public Target getViewers() {
+    public Targets getViewers() {
         return viewers;
     }
 
     /**
      * @param viewers the viewers to set
      */
-    public void setViewers(Target viewers) {
+    public void setViewers(Targets viewers) {
         this.viewers = viewers;
     }
 

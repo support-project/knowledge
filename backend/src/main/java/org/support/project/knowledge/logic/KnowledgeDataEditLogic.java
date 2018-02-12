@@ -23,7 +23,7 @@ import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.api.Item;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
-import org.support.project.knowledge.vo.api.Target;
+import org.support.project.knowledge.vo.api.Targets;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.MessageResult;
@@ -120,7 +120,7 @@ public class KnowledgeDataEditLogic {
         return knowledge;
     }
     
-    private String convTargets(Target viewers) {
+    private String convTargets(Targets viewers) {
         if (viewers == null) {
             return "";
         }

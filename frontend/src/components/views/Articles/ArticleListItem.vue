@@ -67,7 +67,4 @@ export default {
 .update_info {
   margin-left: 10px;
 }
-.tag {
-  margin-right: 5px;
-}
 </style>

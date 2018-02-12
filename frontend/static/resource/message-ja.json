@@ -76,6 +76,9 @@
     "description": "下書き一覧",
     "EmptyTitle": "タイトル未指定"
   },
+  "TargetSelectDialog": {
+    "Title": "グループ/ユーザ選択"
+  },
   "DraftEdit": {
     "description": "記事を編集します"
   },
