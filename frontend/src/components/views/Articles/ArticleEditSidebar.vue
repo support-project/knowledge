@@ -63,6 +63,36 @@
             </div>
           </div>
 
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Editor</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" v-on:click="selectEditors()">
+                  <i class="fa fa-plus-circle"></i>
+                </button>
+              </div>
+            </div>
+
+            <div if="article.viewers">
+              <div v-for="vgroup in article.editors.groups" :key="vgroup.id" class="box-body text-black">
+                <i class="fa fa-users text-light-blue" aria-hidden="true"></i>&nbsp;{{vgroup.name | abbreviate(20)}}
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" v-on:click="removeEditor(vgroup)"><i class="fa fa-minus-circle"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <div if="article.viewers">
+              <div v-for="vuser in article.editors.users" :key="vuser.id" class="box-body text-black">
+                <i class="fa fa-user text-olive" aria-hidden="true"></i>&nbsp;{{vuser.name | abbreviate(20)}}
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" v-on:click="removeEditor(vuser)"><i class="fa fa-minus-circle"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
         </div>
       </div>
     </aside>
@@ -136,6 +166,14 @@ export default {
       api.request('get', '/_api/tags?keyword=' + this.tag, null).then(res => {
         return done(res.data)
       })
+    },
+    selectEditors: function () {
+      this.$store.dispatch('targets/showDialog', {
+        selected: this.article.editors
+      })
+    },
+    removeEditor: function (target) {
+      this.$store.dispatch('article/removeEditor', target)
     }
   },
   mounted () {

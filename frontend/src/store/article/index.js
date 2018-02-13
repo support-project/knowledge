@@ -7,6 +7,7 @@ import saveDraft from './actions/saveDraft'
 import deleteDraft from './actions/deleteDraft'
 import likeArticle from './actions/likeArticle'
 import removeViewer from './actions/removeViewer'
+import removeEditor from './actions/removeEditor'
 import addTag from './actions/addTag'
 import removeTag from './actions/removeTag'
 
@@ -32,6 +33,10 @@ export default {
         groups: [],
         users: []
       },
+      editors: {
+        groups: [],
+        users: []
+      },
       tags: []
     },
     toc: ''
@@ -48,6 +53,7 @@ export default {
     previewArticle: previewArticle,
     likeArticle: likeArticle,
     removeViewer: removeViewer,
+    removeEditor: removeEditor,
     addTag: addTag,
     removeTag: removeTag
   },
