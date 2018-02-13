@@ -26,5 +26,6 @@ export default (store, target) => {
         element.selected = false
       }
     })
+    store.dispatch('pagestate/triggerResize', null, {root: true})
   })
 }

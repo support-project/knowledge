@@ -1,4 +1,5 @@
 import toggleRightSideBar from './actions/toggleRightSideBar'
+import triggerResize from './actions/triggerResize'
 
 import addAlert from './mutations/addAlert'
 import clearAlerts from './mutations/clearAlerts'
@@ -14,7 +15,8 @@ export default {
   getters: {
   },
   actions: {
-    toggleRightSideBar: toggleRightSideBar
+    toggleRightSideBar: toggleRightSideBar,
+    triggerResize: triggerResize
   },
   mutations: {
     addAlert: addAlert,

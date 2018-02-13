@@ -28,5 +28,8 @@ export default (store, target) => {
         target.selected = true
       }
     }
+    if (!exist) {
+      store.dispatch('pagestate/triggerResize', null, {root: true})
+    }
   })
 }

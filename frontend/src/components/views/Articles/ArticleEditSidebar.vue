@@ -63,11 +63,42 @@
             </div>
           </div>
 
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Editor</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" v-on:click="selectEditors()">
+                  <i class="fa fa-plus-circle"></i>
+                </button>
+              </div>
+            </div>
+
+            <div if="article.viewers">
+              <div v-for="vgroup in article.editors.groups" :key="vgroup.id" class="box-body text-black">
+                <i class="fa fa-users text-light-blue" aria-hidden="true"></i>&nbsp;{{vgroup.name | abbreviate(20)}}
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" v-on:click="removeEditor(vgroup)"><i class="fa fa-minus-circle"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <div if="article.viewers">
+              <div v-for="vuser in article.editors.users" :key="vuser.id" class="box-body text-black">
+                <i class="fa fa-user text-olive" aria-hidden="true"></i>&nbsp;{{vuser.name | abbreviate(20)}}
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" v-on:click="removeEditor(vuser)"><i class="fa fa-minus-circle"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </aside>
 
-    <div class="control-sidebar-bg"></div>
+    <div class="control-sidebar-bg">
+        <br/>
+    </div>
 
   </div>
 </template>
@@ -89,12 +120,8 @@ export default {
   data () {
     return {
       tag: '',
-      tagInputTooltip: false,
-      suggestTags: ['aaa', 'bbb']
+      tagInputTooltip: false
     }
-  },
-  watch: {
-    'tag': 'clearTagInputTooltip'
   },
   computed: {
     ...mapState({
@@ -103,8 +130,14 @@ export default {
       types: state => state.types.types
     })
   },
+  watch: {
+    'tag': 'clearTagInputTooltip'
+  },
   components: {ArticlePartsViewersSelect, Tooltip, Typeahead},
   methods: {
+    triggerResize: function () {
+      return this.$store.dispatch('pagestate/triggerResize', 1000)
+    },
     toggleRightSideBar () {
       this.$store.dispatch('pagestate/toggleRightSideBar')
     },
@@ -130,16 +163,29 @@ export default {
       })
     },
     removeTag (tag) {
-      this.$store.dispatch('article/removeTag', tag)
+      this.$store.dispatch('article/removeTag', tag).then(() => {
+        this.$store.dispatch('pagestate/triggerResize')
+      })
     },
     queryFunction (query, done) {
       api.request('get', '/_api/tags?keyword=' + this.tag, null).then(res => {
         return done(res.data)
       })
+    },
+    selectEditors: function () {
+      this.$store.dispatch('targets/showDialog', {
+        selected: this.article.editors
+      })
+    },
+    removeEditor: function (target) {
+      this.$store.dispatch('article/removeEditor', target).then(() => {
+        this.$store.dispatch('pagestate/triggerResize')
+      })
     }
   },
   mounted () {
     this.$nextTick(() => {
+      this.triggerResize()
     })
   }
 }

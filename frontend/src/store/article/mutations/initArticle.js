@@ -17,6 +17,10 @@ export default (state) => {
       groups: [],
       users: []
     },
+    editors: {
+      groups: [],
+      users: []
+    },
     tags: []
   }
 }

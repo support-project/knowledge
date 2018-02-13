@@ -208,7 +208,7 @@ public class KnowledgeDataSelectLogic {
         List<GroupsEntity> groups = targetsDao.selectEditorGroupsOnKnowledgeId(entity.getKnowledgeId());
         for (GroupsEntity groupsEntity : groups) {
             Target group = new Target(groupsEntity.getGroupName(), String.valueOf(groupsEntity.getGroupId()));
-            group.setType("user");
+            group.setType("group");
             listGroups.add(group);
         }
         List<UsersEntity> users = targetsDao.selectEditorUsersOnKnowledgeId(entity.getKnowledgeId());
