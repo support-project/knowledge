@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <i class="fa fa-refresh fa-spin fa-1x fa-fw text-yellow loading-icon" v-if="pagestate.loading"></i>
+    <i class="fa fa-refresh fa-spin fa-1x fa-fw text-yellow loading-icon" v-show="pagestate.loading"></i>
     <router-view></router-view>
   </div>
 </template>

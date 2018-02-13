@@ -18,8 +18,10 @@
       name="custom-classes-transition"
       enter-active-class="animated fadeIn"
       leave-active-class="animated fadeOut"
+      v-on:after-enter="triggerResizeWindow"
+      v-on:after-leave="triggerResizeWindow"
     >
-      <div class="box box-success" v-if="article.publicFlag === 2">
+      <div class="box box-success" v-show="article.publicFlag === 2">
         <div class="box-header with-border">
           <h3 class="box-title">Targets</h3>
           <div class="box-tools pull-right">
@@ -78,6 +80,9 @@ export default {
     'article': 'changeArticle'
   },
   methods: {
+    triggerResizeWindow: function () {
+      return this.$store.dispatch('pagestate/triggerResize')
+    },
     changeArticle: function () {
       logger.info(LABEL, 'article is changed.')
     },

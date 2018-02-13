@@ -92,12 +92,13 @@
             </div>
           </div>
 
-
         </div>
       </div>
     </aside>
 
-    <div class="control-sidebar-bg"></div>
+    <div class="control-sidebar-bg">
+        <br/>
+    </div>
 
   </div>
 </template>
@@ -119,12 +120,8 @@ export default {
   data () {
     return {
       tag: '',
-      tagInputTooltip: false,
-      suggestTags: ['aaa', 'bbb']
+      tagInputTooltip: false
     }
-  },
-  watch: {
-    'tag': 'clearTagInputTooltip'
   },
   computed: {
     ...mapState({
@@ -133,8 +130,14 @@ export default {
       types: state => state.types.types
     })
   },
+  watch: {
+    'tag': 'clearTagInputTooltip'
+  },
   components: {ArticlePartsViewersSelect, Tooltip, Typeahead},
   methods: {
+    triggerResize: function () {
+      return this.$store.dispatch('pagestate/triggerResize', 1000)
+    },
     toggleRightSideBar () {
       this.$store.dispatch('pagestate/toggleRightSideBar')
     },
@@ -160,7 +163,9 @@ export default {
       })
     },
     removeTag (tag) {
-      this.$store.dispatch('article/removeTag', tag)
+      this.$store.dispatch('article/removeTag', tag).then(() => {
+        this.$store.dispatch('pagestate/triggerResize')
+      })
     },
     queryFunction (query, done) {
       api.request('get', '/_api/tags?keyword=' + this.tag, null).then(res => {
@@ -173,11 +178,14 @@ export default {
       })
     },
     removeEditor: function (target) {
-      this.$store.dispatch('article/removeEditor', target)
+      this.$store.dispatch('article/removeEditor', target).then(() => {
+        this.$store.dispatch('pagestate/triggerResize')
+      })
     }
   },
   mounted () {
     this.$nextTick(() => {
+      this.triggerResize()
     })
   }
 }

@@ -74,7 +74,7 @@ export default {
 
 <style>
 html, body, .container-table {
-  height: 100%;
+/*  height: 100%; */
 /*  background-color: #282B30 !important; */
 }
 .container-table {
