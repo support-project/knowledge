@@ -22,6 +22,9 @@
     "Empty": "Empty",
     "Close": "Close"
   },
+  "Message": {
+    "NotFound": "Not found"
+  },
   "Article": {
     "PublicFlag": {
       "0": "Public",
@@ -57,7 +60,8 @@
     "TocTitle": "Table of contents"
   },
   "ArticleDetailComments": {
-    "DisplayHidden": "Hided this comment"
+    "DisplayHidden": "Hided this comment",
+    "NotYetBeenRegistered": "Not yet been registered"
   },
   "ArticleCreate": {
     "description": "create a new article"
@@ -81,8 +85,5 @@
   },
   "DraftEdit": {
     "description": "edit this article"
-  },
-  "TestView": {
-    "Message": "This is test."
   }
 }

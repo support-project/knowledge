@@ -23,7 +23,7 @@ public class GetArticleOneApiControl extends ApiControl {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
-     * 記事の一覧を取得
+     * 記事を取得
      * @throws Exception 
      */
     @Get(path="_api/articles/:id")

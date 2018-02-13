@@ -15,6 +15,8 @@ public class KnowledgeDetail extends Knowledge {
     
     /** 編集可能な対象（共同編集者） */
     private Targets editors;
+    /** 編集可能かどうか */
+    private boolean editable = false;
     
     /**
      * @return the comments
@@ -57,5 +59,11 @@ public class KnowledgeDetail extends Knowledge {
     }
     public void setItems(List<LabelValue> items) {
         this.items = items;
+    }
+    public boolean isEditable() {
+        return editable;
+    }
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 }

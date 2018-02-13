@@ -15,8 +15,8 @@
         <div class="timeline-item">
           <span class="time"><i class="fa fa-clock-o"></i></span>
           <!-- <h3 class="timeline-header"></h3> -->
-          <div class="timeline-body text-gray">
-            Not yet been registered
+          <div class="timeline-body link-muted">
+            {{$t('ArticleDetailComments.NotYetBeenRegistered')}}
           </div>
           <!-- <div class="timeline-footer"></div> -->
         </div>

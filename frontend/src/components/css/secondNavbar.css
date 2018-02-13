@@ -60,3 +60,6 @@
   border: buttonface;
   background-color: navy;
 }
+.skin-blue-light .secondMenu button.disabled {
+  background-color: gray;
+}

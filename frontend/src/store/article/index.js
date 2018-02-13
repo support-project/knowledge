@@ -10,6 +10,7 @@ import removeViewer from './actions/removeViewer'
 import removeEditor from './actions/removeEditor'
 import addTag from './actions/addTag'
 import removeTag from './actions/removeTag'
+import countUpComent from './actions/countUpComent'
 
 import initArticle from './mutations/initArticle'
 import setArticle from './mutations/setArticle'
@@ -55,7 +56,8 @@ export default {
     removeViewer: removeViewer,
     removeEditor: removeEditor,
     addTag: addTag,
-    removeTag: removeTag
+    removeTag: removeTag,
+    countUpComent: countUpComent
   },
   mutations: {
     initArticle: initArticle,
