@@ -7,5 +7,7 @@ public interface KnowledgeDataInterface extends KnowledgeKeyInterface {
     public String getTagNames();
     /** 公開区分 */
     public Integer getPublicFlag();
+    /** 登録ユーザ */
+    public Integer getInsertUser();
     
 }

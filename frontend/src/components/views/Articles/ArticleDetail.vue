@@ -13,54 +13,59 @@
             v-on:click="toggleRightSideBar()">
             <i class="fa fa-list fa-lg" aria-hidden="true"></i>
           </a>
-          <button :title="$t('ArticleDetail.BtnLike')" v-on:click="likeArticle()">
+          <button :title="$t('ArticleDetail.BtnLike')" v-on:click="likeArticle()"
+            :class="{'disabled': errored}" :disabled="errored">
             <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
           </button>
-          <a :title="$t('ArticleDetail.BtnStock')">
+          <button :title="$t('ArticleDetail.BtnStock')"
+            :class="{'disabled': errored}" :disabled="errored">
             <i class="fa fa-star-o fa-lg" aria-hidden="true"></i>
-          </a>
-          <router-link tag="a" :to="'/articles/' + $route.params.id + '/edit'"
-            :title="$t('ArticleDetail.BtnEdit')">
+          </button>
+          <router-link tag="button" :to="'/articles/' + $route.params.id + '/edit'"
+            :title="$t('ArticleDetail.BtnEdit')" :class="{'disabled': !editable}" :disabled="!editable">
             <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
           </router-link>
+          <i class="fa fa-refresh fa-spin fa-1x fa-fw" v-if="pagestate.loading"></i>
         </nav>
       </div>
     
       <!-- Main content -->
       <div class="content main-content">
         <alerts></alerts>
-        <div class="article-information">
-          <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ article.title}}
+
+        <div v-if="!errored">
+          <div class="article-information">
+            <div class="article-title"><span class="article-id">#{{ $route.params.id }}</span> {{ article.title}}
+            </div>
+            <div class="article-meta">
+              <span v-if="article.draftId" class="exist-draft">{{ $t("ArticleDetail.ExistDraft") }}</span>
+            </div>
+            <div class="article-meta">
+              <article-parts-editor :article="article" />
+            </div>
+            <div class="article-meta">
+              <article-parts-point :article="article" />
+            </div>
+            <div class="article-meta">
+              <article-parts-type-label :article="article" />
+              <span>
+                <article-parts-public-flag :article="article" />
+              </span>
+            </div>
+            <div class="article-meta">
+              <article-parts-tags :article="article" />
+              <article-parts-stocks :article="article" />
+            </div>
           </div>
-          <div class="article-meta">
-            <span v-if="article.draftId" class="exist-draft">{{ $t("ArticleDetail.ExistDraft") }}</span>
+          <div class="markdown-body template-items" v-if="this.article.itemsHtml">
+            <span v-html="article.itemsHtml"></span>
           </div>
-          <div class="article-meta">
-            <article-parts-editor :article="article" />
+          <div class="markdown-body contents" >
+            <span v-html="article.displaySafeHtml"></span>
           </div>
-          <div class="article-meta">
-            <article-parts-point :article="article" />
+          <div id="comments">
+            <article-detail-comments :comments="comments" :article="article" />
           </div>
-          <div class="article-meta">
-            <article-parts-type-label :article="article" />
-            <span>
-              <article-parts-public-flag :article="article" />
-            </span>
-          </div>
-          <div class="article-meta">
-            <article-parts-tags :article="article" />
-            <article-parts-stocks :article="article" />
-          </div>
-        </div>
-<!--      <i class="fa fa-refresh fa-spin fa-3x fa-fw" v-if="pagestate.loading"></i> -->
-        <div class="markdown-body template-items" v-if="this.article.itemsHtml">
-          <span v-html="article.itemsHtml"></span>
-        </div>
-        <div class="markdown-body contents">
-          <span v-html="article.displaySafeHtml"></span>
-        </div>
-        <div id="comments">
-          <article-detail-comments :comments="comments" :article="article" />
         </div>
       </div>
     </div>
@@ -102,7 +107,9 @@ export default {
       breadcrumb: [
 //        {to: '/articles', name: 'Route.ArticleList'},
         {to: '/articles/' + this.$route.params.id, name: 'Route.ArticleDetail'}
-      ]
+      ],
+      errored: false,
+      editable: true
     }
   },
   watch: {
@@ -128,8 +135,13 @@ export default {
           processFootnotesPotision($('.markdown-body'))
           moveTocTarget()
         }, 500)
-      }).catch(error => {
-        logger.error(LABEL, JSON.stringify(error))
+        this.editable = this.article.editable
+      }).catch(() => {
+        this.errored = true
+        this.editable = false
+        if (this.$store.state.pagestate.showRightSideBar) {
+          this.toggleRightSideBar()
+        }
       })
     },
     toggleRightSideBar () {

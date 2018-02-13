@@ -67,6 +67,7 @@ import org.support.project.knowledge.logic.hook.HookFactory;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.knowledge.vo.KnowledgeData;
+import org.support.project.knowledge.vo.KnowledgeDataInterface;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
@@ -1380,7 +1381,7 @@ public class KnowledgeLogic {
      * @param editors
      * @return
      */
-    public boolean isEditor(AccessUser loginedUser, KnowledgesEntity entity, List<LabelValue> editors) {
+    public boolean isEditor(AccessUser loginedUser, KnowledgeDataInterface entity, List<LabelValue> editors) {
         if (loginedUser == null) {
             // ログインしていないユーザに編集権限は無し
             return false;

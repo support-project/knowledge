@@ -1,5 +1,7 @@
 import Promise from 'bluebird'
 import api from '../../../api'
+import i18n from '../../../lib/i18n'
+
 import logger from 'logger'
 
 import setIcons from '../../../lib/utils/setIcons'
@@ -39,13 +41,22 @@ export default (store, id) => {
     store.commit('setArticle', article)
     return store.dispatch('comments/getComments', id, {root: true})
   }).catch(error => {
-    logger.error(LABEL, JSON.stringify(error))
-    const msg = logger.buildResponseErrorMsg(error.response, {suffix: 'Please try again.'})
-    store.commit('pagestate/addAlert', {
-      type: 'warning',
-      title: 'Error',
-      content: msg
-    }, {root: true})
+    if (error.response.status === 404) {
+      logger.debug(LABEL, JSON.stringify(error))
+      store.commit('pagestate/addAlert', {
+        type: 'warning',
+        title: 'Error',
+        content: i18n.t('Message.NotFound')
+      }, {root: true})
+    } else {
+      logger.error(LABEL, JSON.stringify(error))
+      const msg = logger.buildResponseErrorMsg(error.response, {suffix: 'Please try again.'})
+      store.commit('pagestate/addAlert', {
+        type: 'warning',
+        title: 'Error',
+        content: msg
+      }, {root: true})
+    }
     throw error
   }).finally(() => {
     store.commit('pagestate/setPageState', {loading: false}, {root: true})

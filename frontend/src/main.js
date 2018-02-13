@@ -11,12 +11,13 @@ import 'es6-promise/auto'
 // Import System requirements
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import VueI18n from 'vue-i18n'
 import VueLazyload from 'vue-lazyload'
 
 import { sync } from 'vuex-router-sync'
 import routes from './routes'
 import store from './store'
+
+import i18n from './lib/i18n'
 
 // Import Helpers for filters
 import { domain, count, prettyDate, pluralize } from './filters'
@@ -89,21 +90,6 @@ Vue.use(VueLazyload, {
   error: './static/img/loader.gif',
   loading: './static/img/loader.gif',
   attempt: 1
-})
-
-const messageEn = require('../static/resource/message-en.json')
-const messageJa = require('../static/resource/message-ja.json')
-const message = {
-  en: messageEn,
-  ja: messageJa
-}
-
-// 言語の設定
-Vue.use(VueI18n)
-const i18n = new VueI18n({
-  locale: 'en',
-  fallbackLocale: 'en',
-  messages: message
 })
 
 store.dispatch('system/setServerURI', serverURI)

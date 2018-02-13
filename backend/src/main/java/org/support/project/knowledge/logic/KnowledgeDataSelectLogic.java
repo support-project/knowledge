@@ -68,11 +68,12 @@ public class KnowledgeDataSelectLogic {
     /**
      * KnowledgesEntity を WebAPIで送る情報に変換する
      * @param entity
+     * @param loginedUser 
      * @param checkDraft 
      * @return
      * @throws ParseException 
      */
-    private Knowledge conv(KnowledgeDataInterface entity, int type, Map<Integer, TemplateMastersEntity> typeMap) throws ParseException {
+    private Knowledge conv(KnowledgeDataInterface entity, int type, Map<Integer, TemplateMastersEntity> typeMap, AccessUser loginedUser) throws ParseException {
         if (entity == null) {
             return null;
         }
@@ -120,6 +121,11 @@ public class KnowledgeDataSelectLogic {
             // 共同編集者
             Targets editors = getEditors(entity);
             detail.setEditors(editors);
+            
+            List<LabelValue> editorsCheck = TargetLogic.get().selectEditorsViewOnKnowledgeId(entity.getKnowledgeId(), loginedUser);
+            boolean editable = KnowledgeLogic.get().isEditor(loginedUser, entity, editorsCheck);
+            detail.setEditable(editable);
+            
             return detail;
         }
         return result;
@@ -264,18 +270,19 @@ public class KnowledgeDataSelectLogic {
         if (entity == null) {
             return null;
         }
+        
+        Knowledge knowledge = conv(entity, loginedUser, parseMarkdown, sanitize);
         if (includeDraft) {
             KnowledgeDetailDraft draft = DraftDataLogic.get().selectOnKnowledgeId(knowledgeId, loginedUser, parseMarkdown, sanitize);
             if (draft != null) {
+                draft.setEditable(true);
                 return draft;
             } else {
-                Knowledge knowledge = conv(entity, loginedUser, parseMarkdown, sanitize);
                 draft = new KnowledgeDetailDraft();
                 PropertyUtil.copyPropertyValue(knowledge, draft, true);
                 return draft;
             }
         }
-        Knowledge knowledge = conv(entity, loginedUser, parseMarkdown, sanitize);
         if (checkDraft) {
             KnowledgeDetailDraft draft = new KnowledgeDetailDraft();
             PropertyUtil.copyPropertyValue(knowledge, draft, true);
@@ -304,7 +311,7 @@ public class KnowledgeDataSelectLogic {
         }
         // 記事のマスタを読み込み
         Map<Integer, TemplateMastersEntity> typeMap = getTypeMap();
-        Knowledge result = conv(entity, SINGLE, typeMap);
+        Knowledge result = conv(entity, SINGLE, typeMap, loginedUser);
         
         if (parseMarkdown) {
             LOG.warn("Parse Markdown on server side is deprecated.");
@@ -345,7 +352,7 @@ public class KnowledgeDataSelectLogic {
                 param.getLimit());
         List<String> ids = new ArrayList<>();
         for (KnowledgesEntity entity : entities) {
-            Knowledge result = conv(entity, LIST, typeMap);
+            Knowledge result = conv(entity, LIST, typeMap, param.getLoginedUser());
             results.add(result);
             ids.add(String.valueOf(result.getKnowledgeId()));
         }

@@ -37,6 +37,8 @@ export default (store, params) => {
       title: 'Well done!',
       content: 'You successfully added comment.'
     }, {root: true})
+    return store.dispatch('article/countUpComent', null, {root: true})
+  }).then(function () {
     return comment
   }).catch(error => {
     logger.error(LABEL, JSON.stringify(error))

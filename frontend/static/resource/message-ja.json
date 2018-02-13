@@ -22,6 +22,9 @@
     "Empty": "登録無し",
     "Close": "閉じる"
   },
+  "Message": {
+    "NotFound": "見つかりません"
+  },
   "Article": {
     "PublicFlag": {
       "0": "公開",
@@ -57,7 +60,8 @@
     "TocTitle": "目次"
   },
   "ArticleDetailComments": {
-    "DisplayHidden": "非表示になっています"
+    "DisplayHidden": "非表示になっています",
+    "NotYetBeenRegistered": "未だ登録がありません"
   },
   "ArticleCreate": {
     "description": "新しい記事を作成します"
@@ -81,8 +85,5 @@
   },
   "DraftEdit": {
     "description": "記事を編集します"
-  },
-  "TestView": {
-    "Message": "これはテストです"
   }
 }

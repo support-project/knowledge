@@ -15,19 +15,22 @@
             v-on:click="toggleRightSideBar()">
             <i class="fa fa-list fa-lg" aria-hidden="true"></i>
           </a>
-          <button :title="$t('ArticleEdit.BtnRelease')" class="label-primary" v-on:click="releaseArticle()">
+          <button :title="$t('ArticleEdit.BtnRelease')" v-on:click="releaseArticle()"
+            :class="{'disabled': errored, 'label-primary': !errored}" :disabled="errored">
             <i class="fa fa-rocket fa-lg" aria-hidden="true"></i>
           </button>
-          <a :title="$t('ArticleEdit.BtnDraft')" v-on:click="saveDraftArticle()">
+          <button :title="$t('ArticleEdit.BtnDraft')" v-on:click="saveDraftArticle()"
+            :class="{'disabled': errored}" :disabled="errored">
             <i class="fa fa-save fa-lg" aria-hidden="true"></i>
-          </a>
+          </button>
           <router-link tag="a" :to="backhref"
             :title="$t('ArticleEdit.BtnCancel')">
             <i class="fa fa-undo fa-lg" aria-hidden="true"></i>
           </router-link>
-          <a :title="$t('ArticleEdit.BtnRemove')" class="label-danger">
+          <button :title="$t('ArticleEdit.BtnRemove')"
+            :class="{'disabled': errored, 'label-danger': !errored}" :disabled="errored">
             <i class="fa fa-remove fa-lg" aria-hidden="true"></i>
-          </a>
+          </button>
         </nav>
       </div>
 
@@ -41,25 +44,24 @@
         </div>
 
         <alerts></alerts>
-        <form role="form" id="knowledgeForm">
-          <div class="form-group">
-              <label for="input_title">
-                Title
-              </label>
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <span class="fa fa-bookmark"></span>
-                </span>
-                <input type="text" class="form-control" name="title" placeholder="Title"
-                  v-model="article.title" />
-              </div>
-          </div>
-
-          <article-edit-items />
-
-          <markdown-editor :article="article" :rows="20" />
-
-        </form>
+        <div v-if="!errored">
+          <form role="form" id="knowledgeForm">
+            <div class="form-group">
+                <label for="input_title">
+                  Title
+                </label>
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <span class="fa fa-bookmark"></span>
+                  </span>
+                  <input type="text" class="form-control" name="title" placeholder="Title"
+                    v-model="article.title" />
+                </div>
+            </div>
+            <article-edit-items />
+            <markdown-editor :article="article" :rows="20" />
+          </form>
+        </div>
       </div>
     </div>
     <!-- /.content-wrapper -->
@@ -104,7 +106,8 @@ export default {
     }
     return {
       breadcrumb: breadcrumb,
-      backhref: backhref
+      backhref: backhref,
+      errored: false
     }
   },
   components: { PageTitle, ArticleEditSidebar, MarkdownEditor, ArticleEditItems, Alerts, TargetSelectDialog },
@@ -129,6 +132,11 @@ export default {
         logger.info(LABEL, 'edit article. ' + this.$route.params.id)
         this.$store.dispatch('article/getArticleForEdit', this.$route.params.id).then(() => {
           return this.$store.dispatch('types/loadTypes')
+        }).catch(() => {
+          this.errored = true
+          if (this.$store.state.pagestate.showRightSideBar) {
+            this.toggleRightSideBar()
+          }
         })
       } else {
         logger.info(LABEL, 'create new article.')
