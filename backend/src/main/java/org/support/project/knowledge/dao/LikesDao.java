@@ -30,7 +30,7 @@ public class LikesDao extends GenLikesDao {
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public Long countOnKnowledgeId(Long knowledgeId) {
-        String sql = "SELECT COUNT(*) FROM LIKES WHERE KNOWLEDGE_ID = ?";
+        String sql = "SELECT COUNT(*) FROM LIKES WHERE KNOWLEDGE_ID = ? AND LIKES.DELETE_FLAG = 0";
         return super.executeQuerySingle(sql, Long.class, knowledgeId);
     }
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
@@ -39,8 +39,6 @@ public class LikesDao extends GenLikesDao {
                 + "SELECT KNOWLEDGE_ID, INSERT_USER FROM LIKES WHERE KNOWLEDGE_ID = ? GROUP BY KNOWLEDGE_ID, INSERT_USER) AS SUBQ";
         return super.executeQuerySingle(sql, Long.class, knowledgeId);
     }
-
-    
 
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<LikesEntity> selectOnKnowledge(Long knowledgeId, int offset, int limit) {

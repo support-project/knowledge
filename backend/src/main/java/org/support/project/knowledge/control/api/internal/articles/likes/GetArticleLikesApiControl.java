@@ -45,7 +45,11 @@ public class GetArticleLikesApiControl extends ApiControl {
         int limit = apiParams.getLimit();
         int offset = apiParams.getOffset();
         
+        long total = LikesDao.get().countOnKnowledgeId(knowledgeId);
+        setPaginationHeaders(total, offset, limit);
+        
         List<LikesEntity> likes = LikesDao.get().selectOnKnowledge(knowledgeId, offset, limit);
+        
         return send(HttpStatus.SC_200_OK, likes);
     }
 

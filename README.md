@@ -51,7 +51,7 @@
 #### install dependencies
 
 ```
-$ docker-compose run --rm frontend npm install
+$ docker-compose run --rm frontend npm install --no-optional
 $ docker-compose run --rm frontend npm run afterinstall
 ```
 

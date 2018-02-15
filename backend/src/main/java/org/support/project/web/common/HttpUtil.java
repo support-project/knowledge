@@ -6,6 +6,8 @@ import java.lang.invoke.MethodHandles;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -712,6 +714,31 @@ public class HttpUtil {
         StringBuilder builder = new StringBuilder();
         builder.append(getContextUrl(request));
         builder.append(request.getServletPath());
+        return builder.toString();
+    }
+    
+    public static String buildQueryParams(LinkedHashMap<String, String> params, boolean appendIfEmptyValue) {
+        if (params == null) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        Iterator<String> iterator = params.keySet().iterator();
+        boolean append = false;
+        while (iterator.hasNext()) {
+            String key = (String) iterator.next();
+            String value = params.get(key);
+            if (StringUtils.isEmpty(value)) {
+                if (!appendIfEmptyValue) {
+                    continue;
+                }
+            }
+            if (!append) {
+                builder.append("?");
+            } else {
+                builder.append("&");
+            }
+            builder.append(key).append("=").append(value);
+        }
         return builder.toString();
     }
 
