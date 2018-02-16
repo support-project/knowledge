@@ -83,6 +83,11 @@
   "TargetSelectDialog": {
     "Title": "Select group/user"
   },
+  "LikesModal": {
+    "Title": "Liked by",
+    "Name": "User",
+    "InsertedAt": "Pushed at"
+  },
   "DraftEdit": {
     "description": "edit this article"
   }

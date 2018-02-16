@@ -9,6 +9,9 @@ export default (store, tag) => {
   }
   return Promise.try(() => {
     logger.info(LABEL, 'addTag')
+    if (!tag) {
+      return true
+    }
     if (!store.state.article.tags.includes(tag)) {
       store.state.article.tags.push(tag)
       return true

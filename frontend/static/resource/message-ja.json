@@ -83,6 +83,11 @@
   "TargetSelectDialog": {
     "Title": "グループ/ユーザ選択"
   },
+  "LikesModal": {
+    "Title": "「いいね！」したユーザ",
+    "Name": "ユーザ名",
+    "InsertedAt": "日時"
+  },
   "DraftEdit": {
     "description": "記事を編集します"
   }

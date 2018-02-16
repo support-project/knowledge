@@ -1,6 +1,7 @@
 package org.support.project.web.control;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -77,6 +78,24 @@ public abstract class ApiControl extends Control {
      * X-Total The total number of items
      * X-Offset The offset of the current
      * X-Limit  The number of items per 1 request
+     * 
+     * X-First-Offset The offset of the first
+     * X-Last-Offset The offset of the last
+     * X-Next-Offset The offset of the next(nullable)
+     * X-Previous-Offset The offset of the previous(nullable)
+     * 
+     * X-Page1-Label The display label of the page1
+     * X-Page2-Label The display label of the page2 (nullable)
+     * X-Page3-Label The display label of the page3 (nullable)
+     * X-Page4-Label The display label of the page4 (nullable)
+     * X-Page5-Label The display label of the page5 (nullable)
+     * 
+     * X-Page1-Offset The offset of the page1
+     * X-Page2-Offset The offset of the page2 (nullable)
+     * X-Page3-Offset The offset of the page3 (nullable)
+     * X-Page4-Offset The offset of the page4 (nullable)
+     * X-Page5-Offset The offset of the page5 (nullable)
+     * 
      * X-Current-URL The URL of the current(This URL may be different from the actual one, because parameters such as offset can be omitted)
      * X-First-URL The URL of the first
      * X-Last-URL The URL of the last
@@ -84,12 +103,12 @@ public abstract class ApiControl extends Control {
      * X-Previous-URL The URL of the previous(nullable)
      * 
      * @param total
-     * @param nowOffset
+     * @param currentOffset
      * @param limit
      */
-    protected void setPaginationHeaders(long total, long nowOffset, int limit) {
+    protected void setPaginationHeaders(long total, long currentOffset, int limit) {
         getResponse().addHeader("X-Total", String.valueOf(total));
-        getResponse().addHeader("X-Offset", String.valueOf(nowOffset));
+        getResponse().addHeader("X-Offset", String.valueOf(currentOffset));
         getResponse().addHeader("X-Limit", String.valueOf(limit));
         
         // システムURL
@@ -129,7 +148,7 @@ public abstract class ApiControl extends Control {
         params.put("limit", String.valueOf(limit));
         
         LinkedHashMap<String, String> current = new LinkedHashMap<>(params);
-        current.put("offset", String.valueOf(nowOffset));
+        current.put("offset", String.valueOf(currentOffset));
         StringBuilder currentURL = new StringBuilder(url.toString());
         currentURL.append(HttpUtil.buildQueryParams(current, false));
         getResponse().addHeader("X-Current-URL", currentURL.toString());
@@ -138,6 +157,7 @@ public abstract class ApiControl extends Control {
         firtt.put("offset", String.valueOf(0));
         StringBuilder firttURL = new StringBuilder(url.toString());
         firttURL.append(HttpUtil.buildQueryParams(firtt, false));
+        getResponse().addHeader("X-First-Offset", String.valueOf(0));
         getResponse().addHeader("X-First-URL", firttURL.toString());
         
         long lastOffset = total / limit;
@@ -146,19 +166,21 @@ public abstract class ApiControl extends Control {
         last.put("offset", String.valueOf(lastOffset));
         StringBuilder lastURL = new StringBuilder(url.toString());
         lastURL.append(HttpUtil.buildQueryParams(last, false));
+        getResponse().addHeader("X-Last-Offset", String.valueOf(lastOffset));
         getResponse().addHeader("X-Last-URL", lastURL.toString());
         
-        long nextOffset = nowOffset + limit;
+        long nextOffset = currentOffset + limit;
         if (total > nextOffset) {
             LinkedHashMap<String, String> next = new LinkedHashMap<>(params);
             next.put("offset", String.valueOf(nextOffset));
             StringBuilder nextURL = new StringBuilder(url.toString());
             nextURL.append(HttpUtil.buildQueryParams(next, false));
+            getResponse().addHeader("X-Next-Offset", String.valueOf(nextOffset));
             getResponse().addHeader("X-Next-URL", nextURL.toString());
         }
         
-        if (nowOffset > 0) {
-            long prevOffset = nowOffset - limit;
+        if (currentOffset > 0) {
+            long prevOffset = currentOffset - limit;
             if (prevOffset < 0) {
                 prevOffset = 0;
             }
@@ -166,7 +188,47 @@ public abstract class ApiControl extends Control {
             prev.put("offset", String.valueOf(prevOffset));
             StringBuilder prevURL = new StringBuilder(url.toString());
             prevURL.append(HttpUtil.buildQueryParams(prev, false));
+            getResponse().addHeader("X-Previous-Offset", String.valueOf(prevOffset));
             getResponse().addHeader("X-Previous-URL", prevURL.toString());
+        }
+        
+        // ページコントロール
+        int prevCount = 0;
+        for (int i = 1; i <= 2; i++) {
+            if (currentOffset - (limit * i) >= 0) {
+                prevCount ++;
+            }
+        }
+        int nextCount = 0;
+        for (int i = 1; i <= (4 - prevCount); i++) {
+            if (currentOffset + (limit * i) < total) {
+                nextCount ++;
+            }
+        }
+        if (nextCount < 2) {
+            for (int i = 3; i <= 4 - nextCount; i++) {
+                if (currentOffset - (limit * i) >= 0) {
+                    prevCount ++;
+                }
+            }
+        }
+        List<Long> offsets = new ArrayList<>();
+        for (int i = prevCount; i > 0; i--) {
+            offsets.add(currentOffset - (limit * i));
+        }
+        offsets.add(currentOffset);
+        for (int i = 1; i <= nextCount; i++) {
+            offsets.add(currentOffset + (limit * i));
+        }
+        int pageIndex = 1;
+        for (Long long1 : offsets) {
+            getResponse().addHeader("X-Page" + pageIndex + "-Offset", String.valueOf(long1));
+            
+            long pageLabel = long1 / limit;
+            pageLabel = pageLabel + 1; // ページは0スタートでない
+            getResponse().addHeader("X-Page" + pageIndex + "-label", String.valueOf(pageLabel));
+            
+            pageIndex++;
         }
     }
     

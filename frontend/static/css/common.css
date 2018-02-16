@@ -65,6 +65,15 @@
 .box-body {
   padding: 3px 10px;
 }
+.pagination > li > a.active {
+  background: #3c8dbc;
+  color: #666;
+}
+.pagination > li > a.disabled {
+  background-color: gray;
+  color:black;
+}
+
 
 /* change bootstrap */
 label {

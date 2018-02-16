@@ -11,6 +11,7 @@ import article from './article'
 import comments from './comments'
 import types from './types'
 import targets from './targets'
+import likes from './likes'
 
 Vue.use(Vuex)
 
@@ -25,6 +26,7 @@ export default new Vuex.Store({
     article: article,
     comments: comments,
     types: types,
-    targets: targets
+    targets: targets,
+    likes: likes
   }
 })

@@ -10,9 +10,9 @@
     </span>
 
     <span class="article-point-value">
-      <a href="open.knowledge/likes/" class="text-primary btn-link">
+      <button  class="text-primary btn btn-link" v-on:click="showLikes(article.knowledgeId)">
         <i class="fa fa-thumbs-o-up"></i>&nbsp;Like × <span id="like_count">{{article.likeCount}}</span>
-      </a>
+      </button>
     </span>
 
     <span class="article-point-value">
@@ -34,15 +34,23 @@
       </a>
     </span>
 
+    <likes-modal />
   </span>
 
 </template>
 
 <script>
 /* global $ */
+import LikesModal from './LikesModal'
 export default {
   name: 'ArticlePartsPoint',
   props: ['article'],
+  components: { LikesModal },
+  methods: {
+    showLikes: function (id) {
+      this.$store.dispatch('likes/showLikesModal', id)
+    }
+  },
   mounted () {
     this.$nextTick(() => {
       $('.inner-page-link').click(function () {
