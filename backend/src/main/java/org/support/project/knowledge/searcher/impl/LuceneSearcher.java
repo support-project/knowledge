@@ -3,7 +3,6 @@ package org.support.project.knowledge.searcher.impl;
 import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -43,6 +42,7 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.indexer.impl.LuceneIndexer;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.searcher.SearchResult;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.Searcher;
 import org.support.project.knowledge.searcher.SearchingValue;
@@ -103,16 +103,17 @@ public class LuceneSearcher implements Searcher {
      * 検索
      * @throws InvalidParamException 
      */
-    public List<SearchResultValue> search(final SearchingValue value, int keywordSortType) throws IOException, InvalidTokenOffsetsException, InvalidParamException {
-        List<SearchResultValue> resultValues = new ArrayList<>();
+    public SearchResult search(final SearchingValue value, int keywordSortType) throws IOException, InvalidTokenOffsetsException, InvalidParamException {
+        SearchResult searchResult = new SearchResult();
+        List<SearchResultValue> resultValues = searchResult.getItems();
 
         File indexDir = new File(getIndexPath());
         if (!indexDir.exists()) {
-            return resultValues;
+            return searchResult;
         }
         File[] children = indexDir.listFiles();
         if (children == null || children.length == 0) {
-            return resultValues;
+            return searchResult;
         }
 
         IndexReader reader = DirectoryReader.open(FSDirectory.open(indexDir));
@@ -155,6 +156,7 @@ public class LuceneSearcher implements Searcher {
         }
 
         searcher.search(query, collector);
+        searchResult.setTotal(collector.getTotalHits());
         ScoreDoc[] hits = collector.topDocs(value.getOffset(), value.getOffset() + value.getLimit()).scoreDocs;
 
         log.debug("Found " + hits.length + " hits.");
@@ -193,7 +195,7 @@ public class LuceneSearcher implements Searcher {
             resultValues.add(resultValue);
         }
 
-        return resultValues;
+        return searchResult;
 
     }
 

@@ -106,7 +106,7 @@ public class KnowledgeLogicTest extends TestCommon {
         ignores.add("score"); // スコアは、Luceneが算出する値なのでテストしない（Luceneの実装が変化すると値が変わるので）
 
         KnowledgeLogic logic = KnowledgeLogic.get();
-        List<KnowledgesEntity> entities = logic.searchKnowledge(null, loginedUser, 0, 100);
+        List<KnowledgesEntity> entities = logic.searchKnowledge(null, loginedUser, 0, 100).getItems();
         LOG.info(JSON.encode(entities, true));
         eqdb(checks, entities, ignores);
 
@@ -115,14 +115,14 @@ public class KnowledgeLogicTest extends TestCommon {
         checks.add(list.get(1)); // スコア上
         checks.add(list.get(0));
 
-        entities = logic.searchKnowledge(null, loginedUser2, 0, 100);
+        entities = logic.searchKnowledge(null, loginedUser2, 0, 100).getItems();
         LOG.info(JSON.encode(entities, true));
         eqdb(checks, entities, ignores);
 
         checks = new ArrayList<KnowledgesEntity>();
         checks.add(list.get(0));
 
-        entities = logic.searchKnowledge("テスト", loginedUser2, 0, 100);
+        entities = logic.searchKnowledge("テスト", loginedUser2, 0, 100).getItems();
         list.get(0).setContent("<span class=\"mark\">テスト</span>だよ");
 
         LOG.info(JSON.encode(entities, true));

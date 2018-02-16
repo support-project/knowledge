@@ -409,7 +409,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             if (StringUtils.isInteger(tag)) {
                 // タグを選択している
                 LOG.trace("show on Tag");
-                knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                knowledges.addAll(knowledgeLogic.showKnowledgeOnTag(tag, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT).getItems());
                 TagsEntity tagsEntity = tagsDao.selectOnKey(new Integer(tag));
                 List<Integer> tagIds = new ArrayList<Integer>();
                 String name = "";
@@ -423,7 +423,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             } else if (StringUtils.isInteger(group)) {
                 // グループを選択している
                 LOG.trace("show on Group");
-                knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                knowledges.addAll(knowledgeLogic.showKnowledgeOnGroup(group, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT).getItems());
                 GroupsEntity groupsEntity = groupsDao.selectOnKey(new Integer(group));
                 List<Integer> groupIds = new ArrayList<Integer>();
                 String name = "";
@@ -438,7 +438,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 // ユーザを選択している
                 LOG.trace("show on User");
                 int userId = Integer.parseInt(user);
-                knowledges.addAll(knowledgeLogic.showKnowledgeOnUser(userId, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                knowledges.addAll(knowledgeLogic.showKnowledgeOnUser(userId, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT).getItems());
                 UsersEntity usersEntity = UsersDao.get().selectOnKey(userId);
                 usersEntity.setPassword("");
                 setAttribute("selectedUser", usersEntity);
@@ -490,7 +490,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 setAttribute("selectedGroupIds", groupIds);
                 setAttribute("searchKeyword", searchKeyword + keyword);
     
-                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, null, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, null, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT).getItems());
             } else {
                 // その他(キーワード検索)
                 LOG.trace("search");
@@ -543,7 +543,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 }
                 setAttribute("creators", creatorUserEntities);
                 
-                knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, creatorUserEntities, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+                knowledges.addAll(knowledgeLogic.searchKnowledge(
+                        keyword, tags, groups, creatorUserEntities, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT).getItems());
             }
     
             List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);

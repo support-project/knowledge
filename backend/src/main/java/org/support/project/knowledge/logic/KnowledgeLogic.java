@@ -64,10 +64,12 @@ import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.logic.hook.AfterSaveHook;
 import org.support.project.knowledge.logic.hook.BeforeSaveHook;
 import org.support.project.knowledge.logic.hook.HookFactory;
+import org.support.project.knowledge.searcher.SearchResult;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.KnowledgeDataInterface;
+import org.support.project.knowledge.vo.ArticleList;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
@@ -513,17 +515,20 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    private List<KnowledgesEntity> searchKnowledge(SearchingValue searchingValue) throws Exception {
+    private ArticleList searchKnowledge(SearchingValue searchingValue) throws Exception {
         if (LOG.isDebugEnabled()) {
             LOG.debug("search params：" + PropertyUtil.reflectionToString(searchingValue));
         }
         LOG.trace("検索開始");
-        List<SearchResultValue> list = IndexLogic.get().search(searchingValue, this.keywordSortType);
+        SearchResult result = IndexLogic.get().search(searchingValue, this.keywordSortType);
         LOG.trace("検索終了");
         LOG.trace("付加情報をセット開始");
-        List<KnowledgesEntity> result = getKnowledgeDatas(list);
+        ArticleList listResult = new ArticleList();
+        listResult.setTotal(result.getTotal());
+        List<KnowledgesEntity> items = getKnowledgeDatas(result.getItems());
+        listResult.setItems(items);
         LOG.trace("付加情報をセット終了");
-        return result;
+        return listResult;
     }
 
     /**
@@ -539,7 +544,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
+    public ArticleList searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
             List<UsersEntity> creators, String[] templates, AccessUser loginedUser,
             Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
@@ -623,7 +628,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> searchKnowledge(String keyword, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public ArticleList searchKnowledge(String keyword, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
         return searchKnowledge(keyword, null, null, null, null, loginedUser, offset, limit);
     }
 
@@ -637,7 +642,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> showKnowledgeOnTag(String tag, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public ArticleList showKnowledgeOnTag(String tag, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setOffset(offset);
         searchingValue.setLimit(limit);
@@ -677,8 +682,8 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> showKnowledgeOnGroup(String group, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
-        List<KnowledgesEntity> knowledges = new ArrayList<KnowledgesEntity>();
+    public ArticleList showKnowledgeOnGroup(String group, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
+        ArticleList knowledges = new ArticleList();
         if (loginedUser == null) {
             return knowledges;
         }
@@ -714,7 +719,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> showKnowledgeOnUser(int targetUser, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public ArticleList showKnowledgeOnUser(int targetUser, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setOffset(offset);
         searchingValue.setLimit(limit);

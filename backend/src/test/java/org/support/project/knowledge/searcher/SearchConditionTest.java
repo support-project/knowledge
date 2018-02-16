@@ -93,7 +93,7 @@ public class SearchConditionTest {
 
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.addTemplate(TemplateLogic.TYPE_ID_KNOWLEDGE);
-        List<SearchResultValue> results = searcher.search(searchingValue, 1);
+        List<SearchResultValue> results = searcher.search(searchingValue, 1).getItems();
         for (SearchResultValue searchResultValue : results) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));
         }
@@ -102,7 +102,7 @@ public class SearchConditionTest {
         assertEquals(id1, result.getId());
 
         searchingValue.addTemplate(TemplateLogic.TYPE_ID_EVENT);
-        results = searcher.search(searchingValue, 1);
+        results = searcher.search(searchingValue, 1).getItems();
         for (SearchResultValue searchResultValue : results) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));
         }
@@ -122,7 +122,7 @@ public class SearchConditionTest {
 
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.addCreator(100);
-        List<SearchResultValue> results = searcher.search(searchingValue, 1);
+        List<SearchResultValue> results = searcher.search(searchingValue, 1).getItems();
         for (SearchResultValue searchResultValue : results) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));
         }

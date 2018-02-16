@@ -83,7 +83,7 @@ public class CreateExportDataBat extends AbstractBat {
         CommentsDao commentsDao = CommentsDao.get();
         KnowledgeFilesDao knowledgeFilesDao = KnowledgeFilesDao.get();
 
-        List<KnowledgesEntity> knowledges = knowledgeLogic.searchKnowledge("", loginedUser, 0, 100);
+        List<KnowledgesEntity> knowledges = knowledgeLogic.searchKnowledge("", loginedUser, 0, 100).getItems();
         for (KnowledgesEntity knowledgesEntity : knowledges) {
             File f = new File(dir, "knowledge-" + StringUtils.zeroPadding(knowledgesEntity.getKnowledgeId(), 6) + ".xml");
             String xml = SerializeUtils.objectToXml(knowledgesEntity);

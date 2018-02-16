@@ -98,7 +98,7 @@ public class AccountControl extends Control {
         if (StringUtils.isInteger(getParam("offset"))) {
             offset = getParam("offset", Integer.class);
         }
-        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
+        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT).getItems();
         List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, getLoginedUser());
         KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         setAttribute("knowledges", stocks);
@@ -148,7 +148,7 @@ public class AccountControl extends Control {
         if (StringUtils.isInteger(getParam("offset"))) {
             offset = getParam("offset", Integer.class);
         }
-        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
+        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT).getItems();
         List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, getLoginedUser());
         KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         return send(stocks);

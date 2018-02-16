@@ -66,7 +66,7 @@ public class SearchTest {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setKeyword("Lucene");
         Searcher searcher = Container.getComp(Searcher.class);
-        List<SearchResultValue> results = searcher.search(searchingValue, 1);
+        List<SearchResultValue> results = searcher.search(searchingValue, 1).getItems();
 
         for (SearchResultValue searchResultValue : results) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));
@@ -89,7 +89,7 @@ public class SearchTest {
 
         indexer.writeIndex(indexingValue);
 
-        results = searcher.search(searchingValue, 1);
+        results = searcher.search(searchingValue, 1).getItems();
         for (SearchResultValue searchResultValue : results) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));
         }
@@ -120,7 +120,7 @@ public class SearchTest {
         searchingValue.addUser(0);
 
         Searcher searcher = Container.getComp(Searcher.class);
-        List<SearchResultValue> results = searcher.search(searchingValue, 1);
+        List<SearchResultValue> results = searcher.search(searchingValue, 1).getItems();
 
         for (SearchResultValue searchResultValue : results) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));
@@ -135,14 +135,14 @@ public class SearchTest {
         searchingValue = new SearchingValue();
         searchingValue.setKeyword("Lucene");
         searchingValue.addTag(0);
-        results = searcher.search(searchingValue, 1);
+        results = searcher.search(searchingValue, 1).getItems();
         assertEquals(0, results.size());
 
         LOG.info("再度検索（絞り込みなし）");
         searchingValue = new SearchingValue();
         searchingValue.setKeyword("Lucene");
 
-        results = searcher.search(searchingValue, 1);
+        results = searcher.search(searchingValue, 1).getItems();
 
         for (SearchResultValue searchResultValue : results) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));
@@ -155,7 +155,7 @@ public class SearchTest {
         searchingValue.setOffset(2);
         searchingValue.setLimit(1);
 
-        results = searcher.search(searchingValue, 1);
+        results = searcher.search(searchingValue, 1).getItems();
 
         for (SearchResultValue searchResultValue : results) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));
@@ -186,30 +186,30 @@ public class SearchTest {
         Searcher searcher = Container.getComp(Searcher.class);
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.addUser(1);
-        List<SearchResultValue> results = searcher.search(searchingValue, 1);
+        List<SearchResultValue> results = searcher.search(searchingValue, 1).getItems();
         assertEquals(0, results.size());
 
         searchingValue = new SearchingValue();
         searchingValue.addUser(100);
-        results = searcher.search(searchingValue, 1);
+        results = searcher.search(searchingValue, 1).getItems();
         assertEquals(1, results.size());
 
         searchingValue = new SearchingValue();
         searchingValue.addUser(1);
         searchingValue.addGroup(1);
-        results = searcher.search(searchingValue, 1);
+        results = searcher.search(searchingValue, 1).getItems();
         assertEquals(0, results.size());
 
         searchingValue = new SearchingValue();
         searchingValue.addUser(1);
         searchingValue.addGroup(100);
-        results = searcher.search(searchingValue, 1);
+        results = searcher.search(searchingValue, 1).getItems();
         assertEquals(1, results.size());
 
         searchingValue = new SearchingValue();
         searchingValue.addUser(100);
         searchingValue.addGroup(1);
-        results = searcher.search(searchingValue, 1);
+        results = searcher.search(searchingValue, 1).getItems();
         assertEquals(1, results.size());
     }
 
@@ -247,17 +247,17 @@ public class SearchTest {
         Searcher searcher = Container.getComp(Searcher.class);
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.addUser(1);
-        List<SearchResultValue> results = searcher.search(searchingValue, 1);
+        List<SearchResultValue> results = searcher.search(searchingValue, 1).getItems();
         assertEquals(0, results.size());
 
         searchingValue = new SearchingValue();
         searchingValue.addUser(100);
-        results = searcher.search(searchingValue, 1);
+        results = searcher.search(searchingValue, 1).getItems();
         assertEquals(2, results.size());
 
         searchingValue = new SearchingValue();
         searchingValue.addTemplate(1);
-        results = searcher.search(searchingValue, 1);
+        results = searcher.search(searchingValue, 1).getItems();
         assertEquals(1, results.size());
     }
     

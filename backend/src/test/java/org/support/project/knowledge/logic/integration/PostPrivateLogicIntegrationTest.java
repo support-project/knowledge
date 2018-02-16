@@ -171,7 +171,7 @@ public class PostPrivateLogicIntegrationTest extends TestCommon {
     public void testKnowledgeView() throws Exception {
         LOG.info("記事を参照");
         AccessUser user = getLoginUser("integration-test-user-01");
-        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100);
+        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100).getItems();
         Assert.assertEquals(1, knowledges.size());
         
         KnowledgesEntity knowledge = KnowledgeLogic.get().select(knowledges.get(0).getKnowledgeId(), user);
@@ -179,7 +179,7 @@ public class PostPrivateLogicIntegrationTest extends TestCommon {
         Assert.assertEquals(knowledgeId, knowledge.getKnowledgeId().intValue());
         
         user = getLoginUser("integration-test-user-02");
-        knowledges = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100);
+        knowledges = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100).getItems();
         Assert.assertEquals(0, knowledges.size()); // 登録者以外は参照できない
     }
     

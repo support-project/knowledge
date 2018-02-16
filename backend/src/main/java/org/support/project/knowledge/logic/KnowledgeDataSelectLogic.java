@@ -34,6 +34,7 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.vo.KnowledgeDataInterface;
 import org.support.project.knowledge.vo.KnowledgeKeyInterface;
+import org.support.project.knowledge.vo.ArticleList;
 import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
 import org.support.project.knowledge.vo.api.AttachedFile;
@@ -341,7 +342,7 @@ public class KnowledgeDataSelectLogic {
         
         // 記事検索
         List<Knowledge> results = new ArrayList<>();
-        List<KnowledgesEntity> entities = KnowledgeLogic.get().searchKnowledge(
+        ArticleList searchResults = KnowledgeLogic.get().searchKnowledge(
                 param.getKeyword(),
                 param.getTags(),
                 param.getGroups(),
@@ -351,7 +352,7 @@ public class KnowledgeDataSelectLogic {
                 param.getOffset(),
                 param.getLimit());
         List<String> ids = new ArrayList<>();
-        for (KnowledgesEntity entity : entities) {
+        for (KnowledgesEntity entity : searchResults.getItems()) {
             Knowledge result = conv(entity, LIST, typeMap, param.getLoginedUser());
             results.add(result);
             ids.add(String.valueOf(result.getKnowledgeId()));
