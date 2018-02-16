@@ -114,7 +114,9 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      // ルートの変更の検知...
+      if (to.hash.match(/^#/)) {
+        this.scrollToTarget(to.hash)
+      }
     }
   },
   components: { PageTitle, ArticleDetailSidebar, ArticlePartsPoint, ArticlePartsEditor, ArticlePartsTypeLabel, ArticlePartsPublicFlag, ArticlePartsTags, ArticlePartsStocks, ArticleDetailComments, Alerts },
@@ -151,6 +153,15 @@ export default {
       this.$store.dispatch('article/likeArticle', this.$route.params.id).then((cnt) => {
         logger.debug(LABEL, JSON.stringify(cnt))
       })
+    },
+    scrollToTarget (targetId) {
+      var speed = 500
+      var target = $(targetId)
+      if (target && target.offset && target.offset()) {
+        var position = target.offset().top
+        position = position - 100
+        $('html, body').animate({scrollTop: position}, speed, 'swing')
+      }
     }
   },
   mounted () {
@@ -172,6 +183,9 @@ export default {
       // 右側のサイドバーの状態を復元
       rightSidebar(this.$store.state.pagestate.showRightSideBar)
     })
+    if (this.$route.hash.match(/^#/)) {
+      this.scrollToTarget(this.$route.hash)
+    }
   }
 }
 </script>

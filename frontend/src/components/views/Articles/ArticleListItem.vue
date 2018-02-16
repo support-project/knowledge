@@ -31,9 +31,9 @@
               <i class="fa fa-thumbs-o-up"></i>&nbsp;× <span id="like_count">{{article.likeCount}}</span>
           </button>
           
-          <a :href="'open.knowledge/view/' + article.knowledgeId + '#comments'" class="text-primary btn-link">
-              <i class="fa fa-comments-o"></i>&nbsp;× {{article.commentCount}}
-          </a>
+          <router-link tag="a" :to="'/articles/' + article.knowledgeId + '#comments'" class="text-primary btn-link">
+            <i class="fa fa-comments-o"></i>&nbsp;× {{article.commentCount}}
+          </router-link>
           
           <article-parts-public-flag :article="article" />
 
