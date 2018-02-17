@@ -583,7 +583,8 @@ public abstract class IntegrationCommon extends TestCommon {
                 lastestKnowledgeId = results.get(0).getKnowledgeId();
             }
         } else {
-            Assert.fail("result is not List object.");
+            LOG.error("result error." + PropertyUtil.reflectionToString(result));
+            Assert.fail("result is not List object. this is " + result.getClass().getName());
         }
         if (count > 0) {
             request.setServletPath("api/knowledges/" + lastestKnowledgeId);

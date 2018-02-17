@@ -54,6 +54,7 @@ public class KnowledgesApiControl extends GetApiControl {
             setPaginationHeaders(results.getTotal(), param.getOffset(), param.getLimit());
             return send(HttpStatus.SC_200_OK, results.getItems());
         } catch (Exception e) {
+            LOG.error("error", e);
             return sendError(HttpStatus.SC_500_INTERNAL_SERVER_ERROR);
         }
     }

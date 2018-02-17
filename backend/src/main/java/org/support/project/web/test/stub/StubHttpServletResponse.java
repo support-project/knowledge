@@ -51,7 +51,10 @@ public class StubHttpServletResponse implements HttpServletResponse {
     public void setHeader(String paramString1, String paramString2) {
         headers.put(paramString1, paramString2);
     }
-    
+    @Override
+    public void addHeader(String paramString1, String paramString2) {
+        headers.put(paramString1, paramString2);
+    }
     
     @Override
     public String getCharacterEncoding() {
@@ -179,10 +182,6 @@ public class StubHttpServletResponse implements HttpServletResponse {
         throw new NotImplementedException("NotImplemented");
     }
 
-    @Override
-    public void addHeader(String paramString1, String paramString2) {
-        throw new NotImplementedException("NotImplemented");
-    }
 
     @Override
     public void setIntHeader(String paramString, int paramInt) {
