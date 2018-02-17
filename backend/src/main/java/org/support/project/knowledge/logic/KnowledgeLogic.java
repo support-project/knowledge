@@ -68,8 +68,8 @@ import org.support.project.knowledge.searcher.SearchResult;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.knowledge.vo.KnowledgeData;
-import org.support.project.knowledge.vo.KnowledgeDataInterface;
-import org.support.project.knowledge.vo.ArticleList;
+import org.support.project.knowledge.vo.ArticleDataInterface;
+import org.support.project.knowledge.vo.SearchResultKnowledge;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
@@ -515,7 +515,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    private ArticleList searchKnowledge(SearchingValue searchingValue) throws Exception {
+    private SearchResultKnowledge searchKnowledge(SearchingValue searchingValue) throws Exception {
         if (LOG.isDebugEnabled()) {
             LOG.debug("search params：" + PropertyUtil.reflectionToString(searchingValue));
         }
@@ -523,7 +523,7 @@ public class KnowledgeLogic {
         SearchResult result = IndexLogic.get().search(searchingValue, this.keywordSortType);
         LOG.trace("検索終了");
         LOG.trace("付加情報をセット開始");
-        ArticleList listResult = new ArticleList();
+        SearchResultKnowledge listResult = new SearchResultKnowledge();
         listResult.setTotal(result.getTotal());
         List<KnowledgesEntity> items = getKnowledgeDatas(result.getItems());
         listResult.setItems(items);
@@ -544,7 +544,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public ArticleList searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
+    public SearchResultKnowledge searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
             List<UsersEntity> creators, String[] templates, AccessUser loginedUser,
             Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
@@ -628,7 +628,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public ArticleList searchKnowledge(String keyword, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public SearchResultKnowledge searchKnowledge(String keyword, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
         return searchKnowledge(keyword, null, null, null, null, loginedUser, offset, limit);
     }
 
@@ -642,7 +642,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public ArticleList showKnowledgeOnTag(String tag, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public SearchResultKnowledge showKnowledgeOnTag(String tag, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setOffset(offset);
         searchingValue.setLimit(limit);
@@ -682,8 +682,8 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public ArticleList showKnowledgeOnGroup(String group, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
-        ArticleList knowledges = new ArticleList();
+    public SearchResultKnowledge showKnowledgeOnGroup(String group, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
+        SearchResultKnowledge knowledges = new SearchResultKnowledge();
         if (loginedUser == null) {
             return knowledges;
         }
@@ -719,7 +719,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public ArticleList showKnowledgeOnUser(int targetUser, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public SearchResultKnowledge showKnowledgeOnUser(int targetUser, AccessUser loginedUser, Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setOffset(offset);
         searchingValue.setLimit(limit);
@@ -1386,7 +1386,7 @@ public class KnowledgeLogic {
      * @param editors
      * @return
      */
-    public boolean isEditor(AccessUser loginedUser, KnowledgeDataInterface entity, List<LabelValue> editors) {
+    public boolean isEditor(AccessUser loginedUser, ArticleDataInterface entity, List<LabelValue> editors) {
         if (loginedUser == null) {
             // ログインしていないユーザに編集権限は無し
             return false;

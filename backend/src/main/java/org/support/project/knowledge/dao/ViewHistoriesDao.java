@@ -9,7 +9,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.gen.GenViewHistoriesDao;
 import org.support.project.knowledge.entity.ViewHistoriesEntity;
-import org.support.project.knowledge.vo.KnowledgeKeyInterface;
+import org.support.project.knowledge.vo.ArticleKeyInterface;
 
 /**
  * ナレッジの参照履歴
@@ -36,7 +36,7 @@ public class ViewHistoriesDao extends GenViewHistoriesDao {
      * @return
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public List<Long> selectViewdKnowledgeIds(List<? extends KnowledgeKeyInterface> stocks, Integer userId) {
+    public List<Long> selectViewdKnowledgeIds(List<? extends ArticleKeyInterface> stocks, Integer userId) {
         if (stocks == null || stocks.isEmpty()) {
             return new ArrayList<>();
         }
@@ -44,7 +44,7 @@ public class ViewHistoriesDao extends GenViewHistoriesDao {
         sql.append("SELECT DISTINCT KNOWLEDGE_ID FROM VIEW_HISTORIES WHERE KNOWLEDGE_ID IN (");
         int cnt = 0;
         List<Object> params = new ArrayList<>();
-        for (KnowledgeKeyInterface knowledge : stocks) {
+        for (ArticleKeyInterface knowledge : stocks) {
             if (cnt > 0) {
                 sql.append(", ");
             }

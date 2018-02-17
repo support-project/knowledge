@@ -32,11 +32,12 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
-import org.support.project.knowledge.vo.KnowledgeDataInterface;
-import org.support.project.knowledge.vo.KnowledgeKeyInterface;
-import org.support.project.knowledge.vo.ArticleList;
+import org.support.project.knowledge.vo.ArticleDataInterface;
+import org.support.project.knowledge.vo.ArticleKeyInterface;
 import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
+import org.support.project.knowledge.vo.SearchResultArticle;
+import org.support.project.knowledge.vo.SearchResultKnowledge;
 import org.support.project.knowledge.vo.api.AttachedFile;
 import org.support.project.knowledge.vo.api.Choice;
 import org.support.project.knowledge.vo.api.Comment;
@@ -74,7 +75,7 @@ public class KnowledgeDataSelectLogic {
      * @return
      * @throws ParseException 
      */
-    private Knowledge conv(KnowledgeDataInterface entity, int type, Map<Integer, TemplateMastersEntity> typeMap, AccessUser loginedUser) throws ParseException {
+    private Knowledge conv(ArticleDataInterface entity, int type, Map<Integer, TemplateMastersEntity> typeMap, AccessUser loginedUser) throws ParseException {
         if (entity == null) {
             return null;
         }
@@ -166,7 +167,7 @@ public class KnowledgeDataSelectLogic {
      * @param entity
      * @return
      */
-    private List<AttachedFile> getAttachedFiles(KnowledgeDataInterface entity) {
+    private List<AttachedFile> getAttachedFiles(ArticleDataInterface entity) {
         List<AttachedFile> attachedFiles = new ArrayList<>();
         List<KnowledgeFilesEntity> filesEntities = KnowledgeFilesDao.get().selectOnKnowledgeId(entity.getKnowledgeId());
         for (KnowledgeFilesEntity knowledgeFilesEntity : filesEntities) {
@@ -183,7 +184,7 @@ public class KnowledgeDataSelectLogic {
      * @param template
      * @return
      */
-    private List<LabelValue> getTemplateItems(KnowledgeDataInterface entity, TemplateMastersEntity template) {
+    private List<LabelValue> getTemplateItems(ArticleDataInterface entity, TemplateMastersEntity template) {
         List<TemplateItemsEntity> items = TemplateItemsDao.get().selectOnTypeId(template.getTypeId());
         List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(entity.getKnowledgeId());
         List<LabelValue> templateItems = new ArrayList<>();
@@ -205,7 +206,7 @@ public class KnowledgeDataSelectLogic {
      * @param entity
      * @return
      */
-    private Targets getEditors(KnowledgeDataInterface entity) {
+    private Targets getEditors(ArticleDataInterface entity) {
         Targets editors = new Targets();
         List<Target> listGroups = new ArrayList<>();
         List<Target> listUsers = new ArrayList<>();
@@ -231,7 +232,7 @@ public class KnowledgeDataSelectLogic {
      * @param entity
      * @return
      */
-    private Targets getViewers(KnowledgeDataInterface entity) {
+    private Targets getViewers(ArticleDataInterface entity) {
         Targets viewers = new Targets();
         if (entity.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PROTECT) {
             List<Target> groupViewers = new ArrayList<>();
@@ -306,7 +307,7 @@ public class KnowledgeDataSelectLogic {
      * @return
      * @throws ParseException 
      */
-    public Knowledge conv(KnowledgeDataInterface entity, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
+    public Knowledge conv(ArticleDataInterface entity, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
         if (entity == null) {
             return null;
         }
@@ -333,7 +334,7 @@ public class KnowledgeDataSelectLogic {
      * @return
      * @throws Exception
      */
-    public List<Knowledge> selectList(SearchKnowledgeParam param) throws Exception {
+    public SearchResultArticle selectList(SearchKnowledgeParam param) throws Exception {
         if (LOG.isDebugEnabled()) {
             LOG.debug("get knowledge list. [params] " + PropertyUtil.reflectionToString(param));
         }
@@ -342,7 +343,7 @@ public class KnowledgeDataSelectLogic {
         
         // 記事検索
         List<Knowledge> results = new ArrayList<>();
-        ArticleList searchResults = KnowledgeLogic.get().searchKnowledge(
+        SearchResultKnowledge searchResults = KnowledgeLogic.get().searchKnowledge(
                 param.getKeyword(),
                 param.getTags(),
                 param.getGroups(),
@@ -371,7 +372,10 @@ public class KnowledgeDataSelectLogic {
             }
         }
         
-        return results;
+        SearchResultArticle result = new SearchResultArticle();
+        result.setItems(results);
+        result.setTotal(searchResults.getTotal());
+        return result;
     }
     protected Map<Integer, TemplateMastersEntity> getTypeMap() {
         // 記事の種類の情報取得
@@ -383,14 +387,14 @@ public class KnowledgeDataSelectLogic {
         return typeMap;
     }
     
-    public List<KnowledgeList> convInternalList(List<Knowledge> results, AccessUser loginedUser) {
+    public List<KnowledgeList> convInternalList(List<? extends ArticleKeyInterface> results, AccessUser loginedUser) {
         List<KnowledgeList> list = new ArrayList<>();
         List<Long> knowledgeIds = null;
         if (loginedUser != null) {
             knowledgeIds = ViewHistoriesDao.get().selectViewdKnowledgeIds(results, loginedUser.getUserId());
         }
         //N+1問題になるので、もっと良い方法は無いか検討
-        for (KnowledgeKeyInterface knowledge : results) {
+        for (ArticleKeyInterface knowledge : results) {
             KnowledgeList v = new KnowledgeList();
             PropertyUtil.copyPropertyValue(knowledge, v);
             list.add(v);

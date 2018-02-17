@@ -3,16 +3,13 @@ package org.support.project.knowledge.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.support.project.knowledge.entity.KnowledgesEntity;
-
-public class ArticleList {
-    
-    private List<KnowledgesEntity> items = new ArrayList<>();
+public class SearchResultArticle {
+    private List<? extends ArticleKeyInterface> items = new ArrayList<>();
     private long total = 0;
-    public List<KnowledgesEntity> getItems() {
+    public List<? extends ArticleKeyInterface> getItems() {
         return items;
     }
-    public void setItems(List<KnowledgesEntity> items) {
+    public void setItems(List<? extends ArticleKeyInterface> items) {
         if (items != null) {
             this.items = items;
         }

@@ -4,14 +4,14 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.gen.GenDraftKnowledgesEntity;
-import org.support.project.knowledge.vo.KnowledgeDataInterface;
+import org.support.project.knowledge.vo.ArticleDataInterface;
 
 
 /**
  * ナレッジの下書き
  */
 @DI(instance = Instance.Prototype)
-public class DraftKnowledgesEntity extends GenDraftKnowledgesEntity implements KnowledgeDataInterface {
+public class DraftKnowledgesEntity extends GenDraftKnowledgesEntity implements ArticleDataInterface {
 
     /** SerialVersion */
     private static final long serialVersionUID = 1L;

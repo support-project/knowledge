@@ -1,6 +1,6 @@
 package org.support.project.knowledge.vo;
 
-public interface KnowledgeDataInterface extends KnowledgeKeyInterface {
+public interface ArticleDataInterface extends ArticleKeyInterface {
     /** テンプレートの種類ID */
     public Integer getTypeId();
     /** タグ名称一覧 */

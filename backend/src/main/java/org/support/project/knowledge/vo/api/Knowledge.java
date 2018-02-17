@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.support.project.knowledge.entity.StocksEntity;
-import org.support.project.knowledge.vo.KnowledgeKeyInterface;
+import org.support.project.knowledge.vo.ArticleKeyInterface;
 
-public class Knowledge implements KnowledgeKeyInterface {
+public class Knowledge implements ArticleKeyInterface {
     /** ナレッジID */
     private Long knowledgeId;
     /** タイトル */

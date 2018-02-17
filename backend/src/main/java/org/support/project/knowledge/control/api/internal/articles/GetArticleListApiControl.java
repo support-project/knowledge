@@ -9,7 +9,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.logic.KnowledgeDataSelectLogic;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
-import org.support.project.knowledge.vo.api.Knowledge;
+import org.support.project.knowledge.vo.SearchResultArticle;
 import org.support.project.knowledge.vo.api.internal.KnowledgeList;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
@@ -30,15 +30,16 @@ public class GetArticleListApiControl extends ApiControl {
     public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         SearchKnowledgeParam param = new SearchKnowledgeParam();
-        param.setLimit(getParamInt("limit", 50, 50));
+        param.setLimit(getParamInt("limit", 20, 50));
         param.setOffset(getParamInt("offset", 0, -1));
         param.setKeyword(getParam("keyword"));
         param.setTags(getParam("tags"));
         param.setGroupsAndLoginUser(getParam("groups"), getLoginedUser());
         param.setCreators(getParam("creators"));
         param.setTemplates(getParam("templates"));
-        List<Knowledge> results = KnowledgeDataSelectLogic.get().selectList(param);
-        List<KnowledgeList> list =  KnowledgeDataSelectLogic.get().convInternalList(results, getLoginedUser());
+        SearchResultArticle results = KnowledgeDataSelectLogic.get().selectList(param);
+        List<KnowledgeList> list =  KnowledgeDataSelectLogic.get().convInternalList(results.getItems(), getLoginedUser());
+        setPaginationHeaders(results.getTotal(), param.getOffset(), param.getLimit());
         return send(HttpStatus.SC_200_OK, list);
     }
 }

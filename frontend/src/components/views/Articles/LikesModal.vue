@@ -17,15 +17,21 @@
                 <h3 class="box-title"><!--Liked users--></h3>
                 <div class="box-tools">
                   <ul class="pagination pagination-sm no-margin pull-right">
-                    <li class="clickable" v-on:click="selectPage(likes.pagination.prev)">
-                      <a :class="{'disabled': likes.pagination.prev === -1}">«</a>
+                    <li class="clickable" v-on:click="selectPage(pagination.first)">
+                      <a :class="{'disabled': pagination.prev === -1}"><i class="fa fa-step-backward" aria-hidden="true"></i></a>
                     </li>
-                    <li class="clickable" v-for="page in likes.pagination.pages" :key="page.label"
+                    <li class="clickable" v-on:click="selectPage(pagination.prev)">
+                      <a :class="{'disabled': pagination.prev === -1}"><i class="fa fa-backward" aria-hidden="true"></i></a>
+                    </li>
+                    <li class="clickable" v-for="page in pagination.pages" :key="page.label"
                       v-on:click="selectPage(page.offset)">
                       <a :class="{'active': page.current}">{{page.label}}</a>
                     </li>
-                    <li class="clickable" v-on:click="selectPage(likes.pagination.next)">
-                      <a :class="{'disabled': likes.pagination.next === -1}">»</a>
+                    <li class="clickable" v-on:click="selectPage(pagination.next)">
+                      <a :class="{'disabled': pagination.next === -1}"><i class="fa fa-forward" aria-hidden="true"></i></a>
+                    </li>
+                    <li class="clickable" v-on:click="selectPage(pagination.last)">
+                      <a :class="{'disabled': pagination.next === -1}"><i class="fa fa-step-forward" aria-hidden="true"></i></a>
                     </li>
                   </ul>
                 </div>
@@ -65,7 +71,8 @@ export default {
   name: 'TargetSelectDialog',
   computed: {
     ...mapState({
-      likes: state => state.likes
+      likes: state => state.likes,
+      pagination: state => state.likes.pagination
     })
   },
   data () {

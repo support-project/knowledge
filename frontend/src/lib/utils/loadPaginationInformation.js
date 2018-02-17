@@ -16,17 +16,19 @@ let loadHeaders = (response) => {
     }
     logger.info(LABEL, JSON.stringify(response.headers, null, '  '))
     let headers = response.headers
-    if (headers['x-offset']) pagination.offset = headers['x-offset']
-    if (headers['x-total']) pagination.total = headers['x-total']
-    if (headers['x-next-offset']) pagination.next = headers['x-next-offset']
-    if (headers['x-previous-offset']) pagination.prev = headers['x-previous-offset']
+    if (headers['x-offset']) pagination.offset = parseInt(headers['x-offset'])
+    if (headers['x-total']) pagination.total = parseInt(headers['x-total'])
+    if (headers['x-first-offset']) pagination.first = parseInt(headers['x-first-offset'])
+    if (headers['x-last-offset']) pagination.last = parseInt(headers['x-last-offset'])
+    if (headers['x-next-offset']) pagination.next = parseInt(headers['x-next-offset'])
+    if (headers['x-previous-offset']) pagination.prev = parseInt(headers['x-previous-offset'])
 
     for (let i = 1; i <= 5; i++) {
       let pagekey = 'x-page' + i
       if (headers[pagekey + '-offset']) {
         let page = {
           label: headers[pagekey + '-label'],
-          offset: headers[pagekey + '-offset']
+          offset: parseInt(headers[pagekey + '-offset'])
         }
         if (page.offset === pagination.offset) {
           page.current = true

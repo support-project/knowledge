@@ -1,7 +1,6 @@
 package org.support.project.knowledge.control.api;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
@@ -12,6 +11,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.logic.KnowledgeDataEditLogic;
 import org.support.project.knowledge.logic.KnowledgeDataSelectLogic;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
+import org.support.project.knowledge.vo.SearchResultArticle;
 import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.web.bean.ApiParams;
@@ -50,8 +50,9 @@ public class KnowledgesApiControl extends GetApiControl {
         param.setGroupsAndLoginUser(getParam("groups"), getLoginedUser());
         param.setTemplates(getParam("template"));
         try {
-            List<Knowledge> results = KnowledgeDataSelectLogic.get().selectList(param);
-            return send(HttpStatus.SC_200_OK, results);
+            SearchResultArticle results = KnowledgeDataSelectLogic.get().selectList(param);
+            setPaginationHeaders(results.getTotal(), param.getOffset(), param.getLimit());
+            return send(HttpStatus.SC_200_OK, results.getItems());
         } catch (Exception e) {
             return sendError(HttpStatus.SC_500_INTERNAL_SERVER_ERROR);
         }

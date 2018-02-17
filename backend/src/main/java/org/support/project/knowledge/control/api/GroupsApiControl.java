@@ -1,5 +1,8 @@
 package org.support.project.knowledge.control.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.support.project.common.util.PropertyUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
@@ -9,9 +12,9 @@ import org.support.project.knowledge.logic.GroupLogic;
 import org.support.project.knowledge.logic.KnowledgeDataSelectLogic;
 import org.support.project.knowledge.vo.GroupUser;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
+import org.support.project.knowledge.vo.SearchResultArticle;
 import org.support.project.knowledge.vo.api.Group;
 import org.support.project.knowledge.vo.api.GroupDetail;
-import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.knowledge.vo.api.User;
 import org.support.project.web.bean.ApiParams;
 import org.support.project.web.boundary.Boundary;
@@ -19,9 +22,6 @@ import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.GetApiControl;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.entity.GroupsEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @DI(instance = Instance.Prototype)
 public class GroupsApiControl extends GetApiControl {
@@ -105,8 +105,9 @@ public class GroupsApiControl extends GetApiControl {
         param.setTemplates("");
         param.setLoginedUser(getLoginedUser());
         try {
-            List<Knowledge> results = KnowledgeDataSelectLogic.get().selectList(param);
-            return send(HttpStatus.SC_200_OK, results);
+            SearchResultArticle results = KnowledgeDataSelectLogic.get().selectList(param);
+            setPaginationHeaders(results.getTotal(), param.getOffset(), param.getLimit());
+            return send(HttpStatus.SC_200_OK, results.getItems());
         } catch (Exception e) {
             return sendError(HttpStatus.SC_500_INTERNAL_SERVER_ERROR);
         }
