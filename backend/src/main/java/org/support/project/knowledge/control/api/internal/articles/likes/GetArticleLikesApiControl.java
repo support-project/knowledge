@@ -49,6 +49,11 @@ public class GetArticleLikesApiControl extends ApiControl {
         setPaginationHeaders(total, offset, limit);
         
         List<LikesEntity> likes = LikesDao.get().selectOnKnowledge(knowledgeId, offset, limit);
+        for (LikesEntity likesEntity : likes) {
+            if (likesEntity.getInsertUser() == null || likesEntity.getInsertUser().intValue() <= 0) {
+                likesEntity.setUserName("Anonymous");
+            }
+        }
         
         return send(HttpStatus.SC_200_OK, likes);
     }

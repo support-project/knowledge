@@ -11,7 +11,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,7 +20,6 @@ import org.support.project.common.util.RandomUtil;
 import org.support.project.common.util.StringUtils;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.common.HttpUtil;
-import org.support.project.web.config.CommonWebParameter;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.UsersEntity;
 import org.support.project.web.exception.AuthenticateException;
@@ -60,6 +58,9 @@ public class AuthenticationFilter implements Filter {
     /** ログインしていなくてもアクセス可能なパスの正規表現 */
     private String ignoreRegularExpression = "^open|css$|js$|jpg$|jpeg$|gif$|png$|init$";
     private Pattern pattern = null;
+    
+    private String targetRegex = ".*";
+    protected Pattern targetPattern = null;
 
     /** 認証／認可ロジックのインスタンス */
     private AuthenticationLogic<?> authenticationLogic = null;
@@ -130,6 +131,12 @@ public class AuthenticationFilter implements Filter {
             cookieSecure = false;
         }
         authenticationLogic.initCookie(cookieMaxAge, cookieEncryptKey, cookieSecure);
+        
+        String targetRegex = filterconfig.getInitParameter("target-regex");
+        if (StringUtils.isNotEmpty(targetRegex)) {
+            this.targetRegex = targetRegex;
+        }
+        this.targetPattern = Pattern.compile(this.targetRegex);
     }
 
     @Override
@@ -162,7 +169,16 @@ public class AuthenticationFilter implements Filter {
             if (!isLogin(req)) {
                 authenticationLogic.cookieLogin(req, res);
             }
-
+            
+            if (targetPattern != null) {
+                Matcher matcher = targetPattern.matcher(path);
+                if (!matcher.find()) {
+                    // 対象外なのでスルー
+                    isLogin(req);
+                    filterchain.doFilter(req, res);
+                    return;
+                }
+            }
             if (pattern != null) {
                 Matcher matcher = pattern.matcher(path);
                 if (matcher.find()) {

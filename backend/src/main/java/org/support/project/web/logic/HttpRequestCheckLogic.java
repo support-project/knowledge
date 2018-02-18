@@ -20,7 +20,6 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.web.bean.CSRFToken;
 import org.support.project.web.bean.CSRFTokens;
 import org.support.project.web.common.HttpUtil;
 import org.support.project.web.common.InvokeTarget;
@@ -236,14 +235,12 @@ public class HttpRequestCheckLogic {
             }
             
             // Reauest token
-            if (userId != Integer.MIN_VALUE) { // ログインしていない場合、Integer.MIN_VALUEが入ってくる
-                String reqid = CsrfTokensDao.get().addToken(tokenkey, userId);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Add token to CSRF_REQIDS. key:" + tokenkey + "  token:" + reqid);
-                }
-                request.setAttribute(REQ_ID_KEY, reqid);
-                response.setHeader(REQUEST_TOKEN, reqid);
+            String reqid = CsrfTokensDao.get().addToken(tokenkey, userId);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Add token to CSRF_REQIDS. key:" + tokenkey + "  token:" + reqid);
             }
+            request.setAttribute(REQ_ID_KEY, reqid);
+            response.setHeader(REQUEST_TOKEN, reqid);
         }
     }
     

@@ -21,11 +21,11 @@ public class PostArticleLikeApiControl extends ApiControl {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
-     * 記事の一覧を取得
+     * いいね
      * @throws Exception 
      */
-    @Post(path="_api/articles/:id/likes", checkCookieToken=false, checkHeaderToken=true)
     @Open
+    @Post(path="_api/articles/:id/likes", checkCookieToken=false, checkHeaderToken=true)
     public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         String id = super.getParam("id");

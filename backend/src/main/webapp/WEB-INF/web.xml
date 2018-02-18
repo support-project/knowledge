@@ -83,9 +83,9 @@
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>org.support.project.knowledge.filter.CloseAbleAuthenticationFilter</filter-class>
         <init-param>
-            <!-- 認証無しでアクセスできるパス -->
-            <param-name>ignore-regular-expression</param-name>
-            <param-value>^/index|^/api|^/template|^/static|^/bower|^/images|^/css|^/js|^/favicon.ico|^/lang|^/assets|css$|js$|jpg$|jpeg$|gif$|png$|ico$|html$|^/open</param-value>
+            <!-- 認証が必要なパス -->
+            <param-name>target-regex</param-name>
+            <param-value>(^/protected)(.)*</param-value>
         </init-param>
         <init-param>
             <!-- 全ての機能に認証が必須を設定している場合でも、認証無しでアクセスできるパス -->
