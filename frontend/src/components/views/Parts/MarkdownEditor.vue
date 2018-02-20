@@ -11,7 +11,7 @@
     </ul>
     <div class="tab-content">
       <div class="tab-pane contents active" id="contentsTab">
-        <textarea class="form-control" name="content" :rows="rows" placeholder="Markdown" id="content"
+        <textarea class="form-control edit-text" name="content" :rows="rows" placeholder="Markdown" id="content"
         v-model="article.content"></textarea>
         <emoji-picker @emoji-select="selectEmojiToCotents" />
         <span class="helpMarkdownLabel pull-right">

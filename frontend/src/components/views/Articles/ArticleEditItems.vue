@@ -16,7 +16,7 @@
           <span class="input-group-addon">
             <span class="fa fa-pencil"></span>
           </span>
-          <textarea class="form-control"  v-model="item.itemValue" :name="'item_' + item.itemNo" rows="3"></textarea>
+          <textarea class="form-control edit-text" v-model="item.itemValue" :name="'item_' + item.itemNo" rows="3"></textarea>
         </div>
       </span>
       <span v-if="item.itemType === 2">

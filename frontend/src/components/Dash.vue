@@ -18,6 +18,24 @@
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
+            <li>
+            <form v-on:submit.prevent class="sidebar-form form-inline search-form">
+              <div class="input-group">
+                <input type="text"
+                  name="search"
+                  id="search"
+                  class="search form-control"
+                  laceholder="Search Menus"
+                >
+                <span class="input-group-btn">
+                  <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </span>
+              </div>
+            </form>
+            </li>
+
             <!-- Messages-->
             <li class="dropdown messages-menu">
               <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
@@ -212,4 +230,22 @@ hr.visible-xs-block {
   height: 1px;
   border-color: transparent;
 }
+
+.navbar .search-form {
+  width: 200px;
+  height: 30px;
+}
+@media (max-width: 767px) {
+  .navbar .search-form {
+    width: 130px;
+  }
+}
+.navbar .search-form input[type="text"] {
+  height: 28px;
+}
+.navbar .search-form .btn {
+  height: 30px;
+  padding: 0 12px;
+}
+
 </style>

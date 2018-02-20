@@ -1,3 +1,5 @@
+@charset "utf-8";
+
 body {
     padding-top: 70px;
 }
@@ -230,3 +232,8 @@ body {
 .cursor-pointer {
     cursor: pointer;
 }
+
+.edit-text {
+  font-family: 'monospace','Osaka−等幅','ＭＳ ゴシック','MS UI Gothic','Consolas','Courier','Terminal','Monaco','Microsoft Sans Serif',sans-serif;
+}
+

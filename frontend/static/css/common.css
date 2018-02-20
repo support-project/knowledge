@@ -57,6 +57,12 @@
   margin-right: 5px;
   display: inline-block;
 }
+.break-line-block {
+  display: inline-block;  
+}
+.edit-text {
+  font-family: 'monospace','Osaka−等幅','ＭＳ ゴシック','MS UI Gothic','Consolas','Courier','Terminal','Monaco','Microsoft Sans Serif',sans-serif;
+}
 
 /* change-admin-lte */
 .box-header>.fa, .box-header>.glyphicon, .box-header>.ion, .box-header .box-title {

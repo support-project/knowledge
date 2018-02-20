@@ -1,6 +1,6 @@
 <template>
   <span>
-    <i :class="'fa ' + article.type.icon"></i>&nbsp;{{article.type.name}}
+    <!-- <i :class="'fa ' + article.type.icon"></i>&nbsp;{{article.type.name}} -->
     
     <span v-if="article.publicFlag !== undefined">
       <i class="fa fa-globe" v-if="article.publicFlag === 0"></i>

@@ -32,7 +32,7 @@
                 <span class="helpMarkdownLabel pull-right">
                     <a data-toggle="modal" data-target="#helpMarkdownModal"><i class="fa fa-info-circle" aria-hidden="true"></i>Markdown information</a>
                 </span>
-                <textarea class="form-control" name="content" rows="20" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
+                <textarea class="form-control edit-text" name="content" rows="20" placeholder="<%= jspUtil.label("knowledge.add.label.content") %>" id="content"><%= jspUtil.out("content") %></textarea>
             </div>
 
             <div class="tab-pane preview markdown" id="previewTab">
