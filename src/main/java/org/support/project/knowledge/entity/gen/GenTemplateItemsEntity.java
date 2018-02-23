@@ -356,7 +356,7 @@ public class GenTemplateItemsEntity implements Serializable {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(this.itemName, convLabelName("Item Name"), 32);
+        error = validator.validate(this.itemName, convLabelName("Item Name"), 1024);
         if (error != null) {
             errors.add(error);
         }
@@ -367,11 +367,6 @@ public class GenTemplateItemsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(this.itemType, convLabelName("Item Type"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(this.description, convLabelName("Description"), 1024);
         if (error != null) {
             errors.add(error);
         }
@@ -427,7 +422,7 @@ public class GenTemplateItemsEntity implements Serializable {
             errors.add(error);
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(values.get("itemName"), convLabelName("Item Name"), 32);
+        error = validator.validate(values.get("itemName"), convLabelName("Item Name"), 1024);
         if (error != null) {
             errors.add(error);
         }
@@ -438,11 +433,6 @@ public class GenTemplateItemsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(values.get("itemType"), convLabelName("Item Type"));
-        if (error != null) {
-            errors.add(error);
-        }
-        validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
-        error = validator.validate(values.get("description"), convLabelName("Description"), 1024);
         if (error != null) {
             errors.add(error);
         }

@@ -264,9 +264,9 @@ drop table if exists SURVEY_ITEMS cascade;
 create table SURVEY_ITEMS (
   KNOWLEDGE_ID bigint not null
   , ITEM_NO integer not null
-  , ITEM_NAME character varying(32) not null
+  , ITEM_NAME character varying(1024) not null
   , ITEM_TYPE integer not null
-  , DESCRIPTION character varying(1024)
+  , DESCRIPTION text
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -577,9 +577,9 @@ drop table if exists TEMPLATE_ITEMS cascade;
 create table TEMPLATE_ITEMS (
   TYPE_ID integer not null
   , ITEM_NO integer not null
-  , ITEM_NAME character varying(32) not null
+  , ITEM_NAME character varying(1024) not null
   , ITEM_TYPE integer not null
-  , DESCRIPTION character varying(1024)
+  , DESCRIPTION text
   , INITIAL_VALUE text
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
