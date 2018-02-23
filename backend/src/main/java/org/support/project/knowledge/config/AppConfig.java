@@ -22,6 +22,8 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
     
     private boolean convSlidePath = false;
     
+    private boolean enableV2 = false;
+    
 
     /**
      * @return the indexPath
@@ -69,6 +71,14 @@ public class AppConfig extends org.support.project.web.config.AppConfig {
      */
     public void setSlidePath(String slidePath) {
         this.slidePath = slidePath;
+    }
+
+    public boolean isEnableV2() {
+        return enableV2;
+    }
+
+    public void setEnableV2(boolean enableV2) {
+        this.enableV2 = enableV2;
     }
 
 }

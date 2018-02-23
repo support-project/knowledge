@@ -150,7 +150,9 @@ $(document).ready(function() {
                 var item = template.items[i];
 //                console.log(item);
                 var tag = '<div class="form-group"><label for="item_' + item.itemNo + '">' + item.itemName + '</label>';
-                
+                if (item.description) {
+                    tag += '<div class="item_description">' + item.description + '</div>';
+                }
                 // テンプレートの項目の種類毎に生成する入力項目を変化
                 if (item.itemType === 1) {
                     // textarea
