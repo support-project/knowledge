@@ -19,7 +19,6 @@ import org.support.project.web.bean.MessageResult;
 import org.support.project.web.config.AppConfig;
 
 import net.arnx.jsonic.JSON;
-import net.arnx.jsonic.JSONException;
 
 public class JobOnWebsocket {
     /** ログ */
@@ -56,7 +55,7 @@ public class JobOnWebsocket {
                 session.getBasicRemote().sendText(JSON.encode(result));
             } catch (IllegalStateException e) {
                 LOG.warn("websocket message send error. " + e.getClass().getSimpleName() + ". but this batch is continue...");
-            } catch (JSONException | IOException e) {
+            } catch (IOException e) {
                 LOG.warn("websocket message send error", e);
             }
         }

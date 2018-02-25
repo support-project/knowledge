@@ -1,11 +1,9 @@
 package org.support.project.knowledge.dao.gen;
 
 import org.support.project.ormapping.dao.AbstractDao;
-
-import java.lang.invoke.MethodHandles;
-
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
+import java.lang.invoke.MethodHandles;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 

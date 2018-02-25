@@ -29,6 +29,7 @@ public class DatabaseControlDaoCreator {
             pw.println("import org.support.project.ormapping.dao.AbstractDao;");
             pw.println("import org.support.project.common.log.Log;");
             pw.println("import org.support.project.common.log.LogFactory;");
+            pw.println("import java.lang.invoke.MethodHandles;");
             pw.println("import org.support.project.di.DI;");
             pw.println("import org.support.project.di.Instance;");
             pw.println();
@@ -45,7 +46,7 @@ public class DatabaseControlDaoCreator {
             pw.println("    private static final long serialVersionUID = 1L;");
             
             pw.println("    /** LOG */");
-            pw.println("    private static final Log LOG = LogFactory.getLog(DatabaseControlDao.class);");
+            pw.println("    private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());");
             
             pw.println();
 

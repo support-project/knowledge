@@ -728,13 +728,13 @@ Left=1200
 Top=2400
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="項目NO","ITEM_NO","@INT","NOT NULL",1,"","",$FFFFFFFF,""
-Field="項目名","ITEM_NAME","@VARCHAR(32)","NOT NULL",,"","",$FFFFFFFF,""
+Field="項目名","ITEM_NAME","@VARCHAR(1024)","NOT NULL",,"","",$FFFFFFFF,""
 Field="項目の種類","ITEM_TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
-Field="説明","DESCRIPTION","@VARCHAR(1024)",,,"","",$FFFFFFFF,""
+Field="説明","DESCRIPTION","text",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170220203458
+ModifiedDateTime=20180223094914
 Position="MAIN",1200,2400
 
 [Relation]
@@ -1382,14 +1382,14 @@ Left=1350
 Top=450
 Field="テンプレートの種類ID","TYPE_ID","@INT","NOT NULL",0,"","",$FFFFFFFF,""
 Field="項目NO","ITEM_NO","@INT","NOT NULL",1,"","",$FFFFFFFF,""
-Field="項目名","ITEM_NAME","@VARCHAR(32)","NOT NULL",,"","",$FFFFFFFF,""
+Field="項目名","ITEM_NAME","@VARCHAR(1024)","NOT NULL",,"","",$FFFFFFFF,""
 Field="項目の種類","ITEM_TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
-Field="説明","DESCRIPTION","@VARCHAR(1024)",,,"","",$FFFFFFFF,""
+Field="説明","DESCRIPTION","text",,,"","",$FFFFFFFF,""
 Field="初期値","INITIAL_VALUE","text",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170915171315
+ModifiedDateTime=20180223121026
 Position="MAIN",1350,450
 
 [Relation]

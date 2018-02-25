@@ -110,11 +110,14 @@
                         </a>
                         -->
                         <ul class="dropdown-menu" role="menu">
+                            <% if (AppConfig.get().isEnableV2()) { %>
                             <li >
                                 <a href="<%= request.getContextPath() %>/" >
                                     <i class="fa fa-star-o" aria-hidden="true"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.move.new") %>
                                 </a>
                             </li>
+                            <% } %>
+                            
                             <li class="divider"></li>
                             <li >
                                 <a href="<%= request.getContextPath() %>/open.knowledge/list" >
@@ -152,11 +155,14 @@
                         </a>
                         -->
                         <ul class="dropdown-menu" role="menu">
+                            <% if (AppConfig.get().isEnableV2()) { %>
                             <li >
                                 <a href="<%= request.getContextPath() %>/" >
                                     <i class="fa fa-star-o" aria-hidden="true"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.move.new") %>
                                 </a>
                             </li>
+                            <% } %>
+                            
                             <li class="divider"></li>
                             <li >
                                 <a href="<%= request.getContextPath() %>/open.knowledge/list" >

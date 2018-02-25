@@ -19,7 +19,7 @@
         
         <%= jspUtil.out(CommonWebParameter.ERROR_ATTRIBUTE) %>
         <p>
-        <a href="<%= request.getContextPath() %>/index" class="btn btn-info">Back to Top</a>
+        <a href="<%= request.getContextPath() %>/" class="btn btn-info">Back to Top</a>
         </p>
         
         </div>
