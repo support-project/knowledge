@@ -1,0 +1,33 @@
+.pagetop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99999;
+}
+.pagetop a {
+  border-radius: 30px;
+  width: 60px;
+  height: 60px;
+  display: block;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #666699;
+  color: white;
+  font-size: 20px;
+  text-decoration: none;
+  padding:15px 10px;
+}
+
+.pagetop a:hover {
+  border-radius: 30px;
+  width: 60px;
+  height: 60px;
+  display: block;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #333366;
+  color: #fff;
+  font-size: 20px;
+  text-decoration: none;
+  padding:15px 10px;
+}

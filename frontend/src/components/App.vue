@@ -2,12 +2,26 @@
   <div id="app">
     <i class="fa fa-refresh fa-spin fa-1x fa-fw text-yellow loading-icon" v-show="pagestate.loading"></i>
     <router-view></router-view>
+    <transition
+      name="custom-classes-transition"
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+    >
+      <p class="pagetop" v-if="showReturnToTop">
+        <a v-on:click="returnToTop()"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+      </p>
+    </transition>
   </div>
 </template>
 
 <script>
+/* global $ */
 import { mapState } from 'vuex'
 import { Notification } from 'uiv'
+
+import 'animate.css/animate.min.css'
+import './css/returnToTop.css'
+
 export default {
   name: 'App',
   computed: {
@@ -33,10 +47,30 @@ export default {
   },
   data () {
     return {
-      section: 'Head'
+      section: 'Head',
+      showReturnToTop: false
     }
   },
   methods: {
+    returnToTop () {
+      $('body, html').animate({
+        scrollTop: 0
+      }, 500)
+      return false
+    }
+  },
+  mounted () {
+    // 画面表示時に読み込み
+    this.$nextTick(() => {
+      // トップへ戻る
+      $(window).scroll(() => {
+        if ($(window).scrollTop() > 130) {
+          this.showReturnToTop = true
+        } else {
+          this.showReturnToTop = false
+        }
+      })
+    })
   }
 }
 </script>
