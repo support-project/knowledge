@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections4.map.HashedMap;
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
@@ -16,14 +15,19 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.bat.FileParseBat;
+import org.support.project.knowledge.config.IndexType;
+import org.support.project.knowledge.dao.CommentsDao;
 import org.support.project.knowledge.dao.DraftKnowledgesDao;
 import org.support.project.knowledge.dao.KnowledgeFilesDao;
 import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
+import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.dao.TargetsDao;
 import org.support.project.knowledge.dao.TemplateItemsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
 import org.support.project.knowledge.dao.ViewHistoriesDao;
+import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.DraftKnowledgesEntity;
 import org.support.project.knowledge.entity.ItemChoicesEntity;
 import org.support.project.knowledge.entity.KnowledgeFilesEntity;
@@ -32,23 +36,21 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
-import org.support.project.knowledge.vo.ArticleDataInterface;
-import org.support.project.knowledge.vo.ArticleKeyInterface;
+import org.support.project.knowledge.searcher.SearchResult;
+import org.support.project.knowledge.searcher.SearchResultValue;
+import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
 import org.support.project.knowledge.vo.SearchResultArticle;
-import org.support.project.knowledge.vo.SearchResultKnowledge;
+import org.support.project.knowledge.vo.api.ArticleDataInterface;
 import org.support.project.knowledge.vo.api.AttachedFile;
 import org.support.project.knowledge.vo.api.Choice;
 import org.support.project.knowledge.vo.api.Comment;
 import org.support.project.knowledge.vo.api.Item;
 import org.support.project.knowledge.vo.api.Knowledge;
-import org.support.project.knowledge.vo.api.KnowledgeDetail;
-import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
 import org.support.project.knowledge.vo.api.Target;
 import org.support.project.knowledge.vo.api.Targets;
 import org.support.project.knowledge.vo.api.Type;
-import org.support.project.knowledge.vo.api.internal.KnowledgeList;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.entity.GroupsEntity;
@@ -105,8 +107,7 @@ public class KnowledgeDataSelectLogic {
         
         // 1件取得の場合は詳細な情報を取得する
         if (SINGLE == type) {
-            KnowledgeDetail detail = new KnowledgeDetail();
-            PropertyUtil.copyPropertyValue(result, detail);
+            Knowledge detail = result; // 詳細と通常取得で、型を分けた方が良いかと検討したが、冗長になるだけなのでやめた
             
             // テンプレートで拡張した項目の値を取得
             List<LabelValue> templateItems = getTemplateItems(entity, template);
@@ -275,18 +276,18 @@ public class KnowledgeDataSelectLogic {
         
         Knowledge knowledge = conv(entity, loginedUser, parseMarkdown, sanitize);
         if (includeDraft) {
-            KnowledgeDetailDraft draft = DraftDataLogic.get().selectOnKnowledgeId(knowledgeId, loginedUser, parseMarkdown, sanitize);
+            Knowledge draft = DraftDataLogic.get().selectOnKnowledgeId(knowledgeId, loginedUser, parseMarkdown, sanitize);
             if (draft != null) {
                 draft.setEditable(true);
                 return draft;
             } else {
-                draft = new KnowledgeDetailDraft();
+                draft = new Knowledge();
                 PropertyUtil.copyPropertyValue(knowledge, draft, true);
                 return draft;
             }
         }
         if (checkDraft) {
-            KnowledgeDetailDraft draft = new KnowledgeDetailDraft();
+            Knowledge draft = new Knowledge();
             PropertyUtil.copyPropertyValue(knowledge, draft, true);
             DraftKnowledgesEntity d = DraftKnowledgesDao.get().selectOnKnowledgeAndUser(knowledgeId, loginedUser.getUserId());
             if (d != null) {
@@ -326,7 +327,158 @@ public class KnowledgeDataSelectLogic {
             result.setContent(SanitizeMarkdownTextLogic.get().sanitize(result.getContent()));
         }
         return result;
-    }    
+    }
+    
+    
+    /**
+     * 全文検索エンジンからナレッジを取得し、そこにさらに付加情報をつけて返す
+     * 
+     * @param searchingValue
+     * @return
+     * @throws Exception
+     */
+    private SearchResult searchKnowledge(SearchingValue searchingValue) throws Exception {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("search params：" + PropertyUtil.reflectionToString(searchingValue));
+        }
+        LOG.trace("検索開始");
+        int keywordSortType = KnowledgeLogic.KEYWORD_SORT_TYPE_TIME;
+        if (StringUtils.isNotEmpty(searchingValue.getKeyword())) {
+            keywordSortType = KnowledgeLogic.KEYWORD_SORT_TYPE_SCORE;
+        }
+        SearchResult result = IndexLogic.get().search(searchingValue, keywordSortType);
+        LOG.trace("検索終了");
+        return result;
+    }
+    
+    private SearchResultArticle convSearchResultToResponseResultArticles(SearchResult searchResult) {
+        // DBに何回もアクセスするのはもったいないので一度に取得するようにする
+        List<Long> knowledgeIds = new ArrayList<Long>();
+        for (SearchResultValue search : searchResult.getItems()) {
+            if (search.getType() == KnowledgeLogic.TYPE_KNOWLEDGE) {
+                knowledgeIds.add(new Long(search.getId()));
+            }
+        }
+        List<KnowledgesEntity> dbs = KnowledgesDao.get().selectKnowledges(knowledgeIds);
+        Map<Long, KnowledgesEntity> map = new HashMap<Long, KnowledgesEntity>();
+        for (KnowledgesEntity knowledgesEntity : dbs) {
+            map.put(knowledgesEntity.getKnowledgeId(), knowledgesEntity);
+        }
+        
+        List<Knowledge> items = new ArrayList<>(searchResult.getItems().size());
+        for (SearchResultValue search : searchResult.getItems()) {
+            Knowledge k = null;
+            if (search.getType() == KnowledgeLogic.TYPE_KNOWLEDGE) {
+                k = convArticle(search, map);
+            } else if (search.getType() == KnowledgeLogic.TYPE_FILE) {
+                k = convArticleFromFile(search);
+            } else if (search.getType() == KnowledgeLogic.TYPE_COMMENT) {
+                k = convArticleFromComment(search);
+            } else if (search.getType() == IndexType.bookmarkContent.getValue()) {
+                k = convArticleFromBookmartTarget(search);
+            }
+            if (k != null) {
+                items.add(k);
+            }
+        }
+        SearchResultArticle res = new SearchResultArticle();
+        res.setTotal(searchResult.getTotal());
+        res.setItems(items);
+        return res;
+    }
+    private Knowledge convArticleFromBookmartTarget(SearchResultValue searchResultValue) {
+        String id = searchResultValue.getId().substring(FileParseBat.WEB_ID_PREFIX.length());
+        Long knowledgeId = new Long(id);
+        KnowledgesEntity entity = KnowledgesDao.get().selectOnKeyWithUserName(knowledgeId);
+        if (entity != null && entity.getKnowledgeId() != null) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("[Bookmark Target] ");
+            if (StringUtils.isNotEmpty(searchResultValue.getHighlightedTitle())) {
+                builder.append(searchResultValue.getHighlightedTitle());
+            }
+            builder.append("<br/>");
+            if (StringUtils.isNotEmpty(searchResultValue.getHighlightedContents())) {
+                builder.append(searchResultValue.getHighlightedContents());
+            }
+            
+            Knowledge knowledge = new Knowledge();
+            PropertyUtil.copyPropertyValue(entity, knowledge);
+            knowledge.setHighlightedContents(builder.toString());
+            knowledge.setScore(searchResultValue.getScore());
+            return knowledge;
+        }
+        return null;
+    }
+    private Knowledge convArticleFromComment(SearchResultValue searchResultValue) {
+        String id = searchResultValue.getId().substring(KnowledgeLogic.COMMENT_ID_PREFIX.length());
+        Long commentNo = new Long(id);
+        CommentsEntity commentsEntity = CommentsDao.get().selectOnKey(commentNo);
+        if (commentsEntity != null && commentsEntity.getKnowledgeId() != null) {
+            KnowledgesEntity entity = KnowledgesDao.get().selectOnKeyWithUserName(commentsEntity.getKnowledgeId());
+            if (entity == null) {
+                // コメントの情報が検索エンジン内にあり、検索にHitしたが、それに紐づくナレッジデータは削除されていた
+                return null;
+            }
+            Knowledge k = new Knowledge();
+            PropertyUtil.copyPropertyValue(entity, k);
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("[Comment] ");
+            if (StringUtils.isNotEmpty(searchResultValue.getHighlightedContents())) {
+                builder.append(searchResultValue.getHighlightedContents());
+            }
+            k.setHighlightedContents(builder.toString());
+            k.setScore(searchResultValue.getScore());
+            return k;
+        }
+        return null;
+    }
+    private Knowledge convArticleFromFile(SearchResultValue searchResultValue) {
+        String id = searchResultValue.getId().substring(FileParseBat.ID_PREFIX.length());
+        Long fileNo = new Long(id);
+        KnowledgeFilesEntity filesEntity = KnowledgeFilesDao.get().selectOnKeyWithoutBinary(fileNo);
+        if (filesEntity != null && filesEntity.getKnowledgeId() != null) {
+            KnowledgesEntity entity = KnowledgesDao.get().selectOnKeyWithUserName(filesEntity.getKnowledgeId());
+            if (entity == null) {
+                // 添付ファイルの情報が検索エンジン内にあり、検索にHitしたが、それに紐づくナレッジデータは削除されていた
+                return null;
+            }
+            Knowledge k = new Knowledge();
+            PropertyUtil.copyPropertyValue(entity, k);
+            StringBuilder builder = new StringBuilder();
+            builder.append("[AttachFile] ");
+            if (StringUtils.isNotEmpty(searchResultValue.getHighlightedTitle())) {
+                builder.append(searchResultValue.getHighlightedTitle());
+            } else {
+                builder.append(filesEntity.getFileName());
+            }
+            builder.append("<br/>");
+            if (StringUtils.isNotEmpty(searchResultValue.getHighlightedContents())) {
+                builder.append(searchResultValue.getHighlightedContents());
+            }
+            k.setHighlightedContents(builder.toString());
+            k.setScore(searchResultValue.getScore());
+            return k;
+        }
+        return null;
+    }
+    private Knowledge convArticle(SearchResultValue search, Map<Long, KnowledgesEntity> map) {
+        Long key = new Long(search.getId());
+        if (map.containsKey(key)) { // 必ずあるはずだが念のため
+            KnowledgesEntity entity = map.get(key);
+            Knowledge knowledge = new Knowledge();
+            PropertyUtil.copyPropertyValue(entity, knowledge);
+            if (StringUtils.isNotEmpty(search.getHighlightedTitle())) {
+                knowledge.setHighlightedTitle("[Title] " + search.getHighlightedTitle());
+            }
+            if (StringUtils.isNotEmpty(search.getHighlightedContents())) {
+                knowledge.setHighlightedContents("[Contents] " + search.getHighlightedContents());
+            }
+            knowledge.setScore(search.getScore());
+            return knowledge;
+        }
+        return null;
+    }
     
     /**
      * Knowledgeのデータを取得（WebAPIで返す形で）
@@ -338,12 +490,8 @@ public class KnowledgeDataSelectLogic {
         if (LOG.isDebugEnabled()) {
             LOG.debug("get knowledge list. [params] " + PropertyUtil.reflectionToString(param));
         }
-        // 記事のマスタを読み込み
-        Map<Integer, TemplateMastersEntity> typeMap = getTypeMap();
-        
         // 記事検索
-        List<Knowledge> results = new ArrayList<>();
-        SearchResultKnowledge searchResults = KnowledgeLogic.get().searchKnowledge(
+        SearchingValue searchingValue = KnowledgeLogic.get().buildSearchParam(
                 param.getKeyword(),
                 param.getTags(),
                 param.getGroups(),
@@ -352,30 +500,9 @@ public class KnowledgeDataSelectLogic {
                 param.getLoginedUser(),
                 param.getOffset(),
                 param.getLimit());
-        List<String> ids = new ArrayList<>();
-        for (KnowledgesEntity entity : searchResults.getItems()) {
-            Knowledge result = conv(entity, LIST, typeMap, param.getLoginedUser());
-            results.add(result);
-            ids.add(String.valueOf(result.getKnowledgeId()));
-        }
-        List<KnowledgesEntity> dbs = KnowledgeLogic.get().getKnowledges(ids, param.getLoginedUser());
-        Map<Long, KnowledgesEntity> idMap = new HashedMap<>();
-        for (KnowledgesEntity knowledgesEntity : dbs) {
-            idMap.put(knowledgesEntity.getKnowledgeId(), knowledgesEntity);
-        }
-        
-        // TODO 以下は、パブリックAPIのみで実施するように後で変更すること(このメソッドは共通処理）
-        for (Knowledge knowledge : results) {
-            if (idMap.containsKey(knowledge.getKnowledgeId())) {
-                // Titleのハイライトを消す
-                knowledge.setTitle(idMap.get(knowledge.getKnowledgeId()).getTitle());
-            }
-        }
-        
-        SearchResultArticle result = new SearchResultArticle();
-        result.setItems(results);
-        result.setTotal(searchResults.getTotal());
-        return result;
+
+        SearchResult result = searchKnowledge(searchingValue);
+        return convSearchResultToResponseResultArticles(result);
     }
     protected Map<Integer, TemplateMastersEntity> getTypeMap() {
         // 記事の種類の情報取得
@@ -387,25 +514,23 @@ public class KnowledgeDataSelectLogic {
         return typeMap;
     }
     
-    public List<KnowledgeList> convInternalList(List<? extends ArticleKeyInterface> results, AccessUser loginedUser) {
-        List<KnowledgeList> list = new ArrayList<>();
+    public List<Knowledge> convInternalList(List<Knowledge> results, AccessUser loginedUser) {
+        List<Knowledge> list = new ArrayList<>();
         List<Long> knowledgeIds = null;
         if (loginedUser != null) {
             knowledgeIds = ViewHistoriesDao.get().selectViewdKnowledgeIds(results, loginedUser.getUserId());
         }
         //N+1問題になるので、もっと良い方法は無いか検討
-        for (ArticleKeyInterface knowledge : results) {
-            KnowledgeList v = new KnowledgeList();
-            PropertyUtil.copyPropertyValue(knowledge, v);
+        for (Knowledge v : results) {
             list.add(v);
             //ストック情報を取得
-            List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(knowledge.getKnowledgeId(), loginedUser);
+            List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(v.getKnowledgeId(), loginedUser);
             v.setStocks(stocks);
             // 参照の状態
             if (loginedUser == null) {
                 // 未ログインユーザは、未読かんりしないので、全て既読にする
                 v.setViewed(true);
-            } else if (knowledgeIds.contains(knowledge.getKnowledgeId())) {
+            } else if (knowledgeIds.contains(v.getKnowledgeId())) {
                 v.setViewed(true);
             }
         }

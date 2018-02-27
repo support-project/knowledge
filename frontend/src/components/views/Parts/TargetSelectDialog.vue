@@ -116,7 +116,7 @@ export default {
       this.$store.dispatch('targets/selectTarget', target)
     },
     searchTargets: function () {
-      logger.info(LABEL, 'search targets')
+      logger.debug(LABEL, 'search targets')
       this.$store.dispatch('targets/searchTargets', this.params)
     },
     removeTarget: function (target) {

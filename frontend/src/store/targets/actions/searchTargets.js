@@ -5,7 +5,7 @@ import logger from 'logger'
 const LABEL = 'searchTargets.js'
 
 export default (store, params) => {
-  logger.info(LABEL, 'searchTargets')
+  logger.debug(LABEL, 'searchTargets')
   store.state.loading = true
   var url = '/_api/targets'
   url += '?keyword=' + params.keyword
@@ -15,7 +15,7 @@ export default (store, params) => {
   return Promise.try(() => {
     return api.request('get', url)
   }).then(response => {
-    logger.info(LABEL, JSON.stringify(response.data))
+    logger.debug(LABEL, JSON.stringify(response.data))
     store.state.targets = response.data
     // 既に選択済みのものにフラグをたてる
     store.state.targets.forEach(target => {

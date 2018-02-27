@@ -4,7 +4,7 @@ const LABEL = 'removeTag.js'
 
 export default (store, tag) => {
   return Promise.try(() => {
-    logger.info(LABEL, 'removeTag')
+    logger.debug(LABEL, 'removeTag')
     let array = store.state.article.tags
     let arrayNew = array.filter(function (v, i) {
       return (v !== tag)

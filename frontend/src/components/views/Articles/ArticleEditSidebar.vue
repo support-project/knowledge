@@ -152,7 +152,7 @@ export default {
       this.tagInputTooltip = false
     },
     addTag () {
-      logger.info(LABEL, 'addTag: ' + this.tag)
+      logger.debug(LABEL, 'addTag: ' + this.tag)
       this.tagInputTooltip = false
       this.$store.dispatch('article/addTag', this.tag).then(result => {
         if (result) {

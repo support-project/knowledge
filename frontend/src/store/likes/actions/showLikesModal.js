@@ -5,7 +5,7 @@ import logger from 'logger'
 const LABEL = 'showLikes.js'
 
 export default (store, id) => {
-  logger.info(LABEL, 'showLikes')
+  logger.debug(LABEL, 'showLikes')
   store.state.articleId = id
   return Promise.try(() => {
     return store.dispatch('getLikes')

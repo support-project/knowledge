@@ -10,7 +10,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.gen.GenKnowledgesEntity;
-import org.support.project.knowledge.vo.ArticleDataInterface;
+import org.support.project.knowledge.vo.api.ArticleDataInterface;
 
 /**
  * ナレッジ

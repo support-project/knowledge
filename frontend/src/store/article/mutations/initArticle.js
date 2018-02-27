@@ -2,7 +2,7 @@ import logger from 'logger'
 const LABEL = 'initArticle.js'
 
 export default (state) => {
-  logger.info(LABEL, 'initialize article.')
+  logger.debug(LABEL, 'initialize article.')
   state.article = {
     knowledgeId: '',
     title: '',

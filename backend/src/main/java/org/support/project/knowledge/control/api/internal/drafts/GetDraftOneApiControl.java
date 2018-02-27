@@ -10,7 +10,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.DraftKnowledgesDao;
 import org.support.project.knowledge.entity.DraftKnowledgesEntity;
 import org.support.project.knowledge.logic.DraftDataLogic;
-import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
+import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.ApiControl;
@@ -47,7 +47,7 @@ public class GetDraftOneApiControl extends ApiControl {
         if (draft == null) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST);
         }
-        KnowledgeDetailDraft result = DraftDataLogic.get().convDraft(draft, parseMarkdown, sanitize);
+        Knowledge result = DraftDataLogic.get().convDraft(draft, parseMarkdown, sanitize);
         if (result == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND);
         }

@@ -21,8 +21,7 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.vo.KnowledgeData;
 import org.support.project.knowledge.vo.api.Item;
-import org.support.project.knowledge.vo.api.KnowledgeDetail;
-import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
+import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.knowledge.vo.api.Target;
 import org.support.project.knowledge.vo.api.Targets;
 import org.support.project.web.bean.AccessUser;
@@ -48,7 +47,7 @@ public class KnowledgeDataEditLogic {
      * @return
      * @throws InvalidParamException 
      */
-    private KnowledgeData conv(KnowledgeDetail data) throws InvalidParamException {
+    private KnowledgeData conv(Knowledge data) throws InvalidParamException {
         KnowledgeData knowledge = new KnowledgeData();
         
         // KnowledgesEntity knowledge
@@ -148,7 +147,7 @@ public class KnowledgeDataEditLogic {
      * @return
      * @throws Exception 
      */
-    public long insert(KnowledgeDetail data, AccessUser loginedUser) throws Exception {
+    public long insert(Knowledge data, AccessUser loginedUser) throws Exception {
         LOG.trace("insert");
         // 画面での登録と形をあわせる
         KnowledgeData knowledge = conv(data);
@@ -163,7 +162,7 @@ public class KnowledgeDataEditLogic {
      * @return
      * @throws Exception 
      */
-    public void update(KnowledgeDetail data, AccessUser loginedUser) throws Exception {
+    public void update(Knowledge data, AccessUser loginedUser) throws Exception {
         LOG.trace("update");
         KnowledgesEntity check = KnowledgesDao.get().selectOnKey(data.getKnowledgeId());
         if (check == null) {
@@ -218,7 +217,7 @@ public class KnowledgeDataEditLogic {
      * @return
      * @throws InvalidParamException
      */
-    public long saveDraft(KnowledgeDetailDraft data, AccessUser loginedUser) throws InvalidParamException {
+    public long saveDraft(Knowledge data, AccessUser loginedUser) throws InvalidParamException {
         LOG.trace("insert");
         // 画面での登録と形をあわせる
         KnowledgeData knowledge = conv(data);

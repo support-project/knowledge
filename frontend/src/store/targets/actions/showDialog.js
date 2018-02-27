@@ -5,7 +5,7 @@ import logger from 'logger'
 const LABEL = 'showDialog.js'
 
 export default (store, params) => {
-  logger.info(LABEL, 'showdialog')
+  logger.debug(LABEL, 'showdialog')
   return Promise.try(() => {
     store.state.selected = params.selected
     store.state.selected.groups.forEach(element => {

@@ -4,7 +4,7 @@ import logger from 'logger'
 const LABEL = 'selectTarget.js'
 
 export default (store, target) => {
-  logger.info(LABEL, 'selectTarget')
+  logger.debug(LABEL, 'selectTarget')
   return Promise.try(() => {
     let exist = false
     if (target.type === 'group') {

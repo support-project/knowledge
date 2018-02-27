@@ -9,7 +9,7 @@ import processDecorateAll from '../../../lib/decorateMarkdown/processDecorateAll
 const LABEL = 'getComments.js'
 
 export default (store, id) => {
-  logger.info(LABEL, 'start getComments')
+  logger.debug(LABEL, 'start getComments')
   store.commit('setComments', [])
   return Promise.try(() => {
     return api.request('get', '/_api/articles/' + id + '/comments', null)

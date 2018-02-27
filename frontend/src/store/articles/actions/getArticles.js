@@ -6,13 +6,34 @@ import loadPaginationInformation from '../../../lib/utils/loadPaginationInformat
 
 const LABEL = 'getArticles.js'
 
+const restoreHighlight = (str) => {
+  if (str) {
+    logger.trace(LABEL, str)
+    str = str.split('&lt;span class=&quot;mark&quot;&gt;').join('<span class="mark">')
+    str = str.split('&lt;/span&gt;').join('</span>')
+    logger.trace(LABEL, str)
+  }
+  return str
+}
+
 export default (store) => {
   store.commit('pagestate/setPageState', {loading: true}, {root: true}, {root: true})
   return Promise.try(() => {
     logger.debug(LABEL, 'get articles from api')
     var uri = '/_api/articles'
+    var add = false
     if (store.state.pagination.offset) {
       uri += '?offset=' + store.state.pagination.offset
+      add = true
+    }
+    if (store.state.search.keyword) {
+      if (add) {
+        uri += '&'
+      } else {
+        uri += '?'
+      }
+      uri += 'keyword=' + store.state.search.keyword
+      add = true
     }
     return api.request('get', uri, null)
   }).then(response => {
@@ -20,6 +41,8 @@ export default (store) => {
     var articles = response.data
     articles.forEach(article => {
       setIcons(store, article)
+      article.highlightedTitle = restoreHighlight(article.highlightedTitle)
+      article.highlightedContents = restoreHighlight(article.highlightedContents)
     })
     store.commit('setArticles', articles)
     return loadPaginationInformation(response)

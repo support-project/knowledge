@@ -6,7 +6,7 @@ import logger from 'logger'
 const LABEL = 'getLikes.js'
 
 export default (store) => {
-  logger.info(LABEL, 'showLikes')
+  logger.debug(LABEL, 'showLikes')
   return Promise.try(() => {
     var uri = '/_api/articles/' + store.state.articleId + '/likes'
     if (store.state.pagination.offset) {

@@ -3,7 +3,7 @@ import logger from 'logger'
 const LABEL = 'selectPage.js'
 
 export default (store, offset) => {
-  logger.info(LABEL, 'selectPage:' + offset)
+  logger.debug(LABEL, 'selectPage:' + offset)
   if (offset === -1) {
     return
   }

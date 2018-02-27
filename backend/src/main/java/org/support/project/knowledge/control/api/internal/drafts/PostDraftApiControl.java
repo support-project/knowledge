@@ -7,7 +7,7 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.logic.KnowledgeDataEditLogic;
-import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
+import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.web.bean.NameId;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
@@ -29,7 +29,7 @@ public class PostDraftApiControl extends ApiControl {
     public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
         try {
-            KnowledgeDetailDraft data = getJsonObject(KnowledgeDetailDraft.class);
+            Knowledge data = getJsonObject(Knowledge.class);
             long id = KnowledgeDataEditLogic.get().saveDraft(data, getLoginedUser());
             return send(HttpStatus.SC_200_OK, new NameId(data.getTitle(), String.valueOf(id)));
         } catch (JSONException e) {

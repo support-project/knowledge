@@ -68,9 +68,9 @@ import org.support.project.knowledge.searcher.SearchResult;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.knowledge.vo.KnowledgeData;
-import org.support.project.knowledge.vo.ArticleDataInterface;
 import org.support.project.knowledge.vo.SearchResultKnowledge;
 import org.support.project.knowledge.vo.StockKnowledge;
+import org.support.project.knowledge.vo.api.ArticleDataInterface;
 import org.support.project.web.bean.AccessUser;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.entity.GroupsEntity;
@@ -531,22 +531,10 @@ public class KnowledgeLogic {
         return listResult;
     }
 
-    /**
-     * ナレッジ検索
-     * 
-     * @param keyword
-     * @param tags
-     * @param groups
-     * @param creators 
-     * @param loginedUser
-     * @param offset
-     * @param limit
-     * @return
-     * @throws Exception
-     */
-    public SearchResultKnowledge searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
+    
+    public SearchingValue buildSearchParam(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
             List<UsersEntity> creators, String[] templates, AccessUser loginedUser,
-            Integer offset, Integer limit) throws Exception {
+            Integer offset, Integer limit) {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setKeyword(keyword);
         searchingValue.setOffset(offset);
@@ -576,7 +564,7 @@ public class KnowledgeLogic {
         // ログインしてない場合はグループ検索ができないので公開記事のみを対象にして検索する
         if (loginedUser == null) {
             searchingValue.addUser(ALL_USER);
-            return searchKnowledge(searchingValue);
+            return searchingValue;
         }
 
         // グループが指定されてる場合はグループのみ対象にして検索する
@@ -599,7 +587,7 @@ public class KnowledgeLogic {
                 LOG.warn("Bad request group param");
                 searchingValue.addTag(-123); //ありえないタグで検索するので、絶対に何もヒットしない
             }
-            return searchKnowledge(searchingValue);
+            return searchingValue;
         }
 
         // 管理者じゃなければ自身が参加してる公開記事、自身の記事、グループの記事を条件に追加する
@@ -614,7 +602,26 @@ public class KnowledgeLogic {
                 }
             }
         }
-
+        return searchingValue;
+    }
+    
+    /**
+     * ナレッジ検索
+     * 
+     * @param keyword
+     * @param tags
+     * @param groups
+     * @param creators 
+     * @param loginedUser
+     * @param offset
+     * @param limit
+     * @return
+     * @throws Exception
+     */
+    public SearchResultKnowledge searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
+            List<UsersEntity> creators, String[] templates, AccessUser loginedUser,
+            Integer offset, Integer limit) throws Exception {
+        SearchingValue searchingValue = buildSearchParam(keyword, tags, groups, creators, templates, loginedUser, offset, limit);
         return searchKnowledge(searchingValue);
     }
 
@@ -747,12 +754,15 @@ public class KnowledgeLogic {
     }
 
     /**
-     * 全文検索エンジンの結果を元に、DBからデータを取得し、 さらにアクセス権のチェックなどを行う
-     * 
+     * 全文検索エンジンの結果を元に、DBからデータを取得
+     * 検索した結果のハイライトと通常のコンテントを変換してしまうので、
+     * org.support.project.knowledge.logic.KnowledgeDataSelectLogic#convSearchResultToResponseResultArticles
+     * にて再実装（昔作ったもので、経緯がわからなくなってる）
      * @param list
      * @return
      */
-    private List<KnowledgesEntity> getKnowledgeDatas(List<SearchResultValue> list) {
+    @Deprecated
+    public List<KnowledgesEntity> getKnowledgeDatas(List<SearchResultValue> list) {
         KnowledgeFilesDao filesDao = KnowledgeFilesDao.get();
         List<Long> knowledgeIds = new ArrayList<Long>();
         // List<Long> fileIds = new ArrayList<>();

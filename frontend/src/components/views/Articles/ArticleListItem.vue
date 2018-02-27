@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="knowledge_item" v-for="article in articles" :key="article.knowledgeId">
+    <div class="knowledge_item" v-for="article in articles">
       <!-- article and editor information -->
       <div >
         <router-link tag="a" :to="'/articles/' + article.knowledgeId">
@@ -37,12 +37,15 @@
 
         </div>
       </div>
-
       <div >
         <div class="item-info">
           <article-parts-tags :article="article" />
           <article-parts-stocks :article="article" />
         </div>
+      </div>
+      <div class="item-info" v-if="article.highlightedTitle || article.highlightedContents">
+        <span v-html="article.highlightedTitle" v-if="article.highlightedTitle"></span>
+        <span v-html="article.highlightedContents" v-if="article.highlightedContents"></span>
       </div>
     </div>
 

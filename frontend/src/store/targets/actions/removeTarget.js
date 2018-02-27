@@ -4,7 +4,7 @@ import logger from 'logger'
 const LABEL = 'removeTarget.js'
 
 export default (store, target) => {
-  logger.info(LABEL, 'removeTarget: ' + JSON.stringify(target))
+  logger.debug(LABEL, 'removeTarget: ' + JSON.stringify(target))
   return Promise.try(() => {
     let array
     if (target.type === 'group') {
