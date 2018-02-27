@@ -84,7 +84,7 @@ export default {
       return this.$store.dispatch('pagestate/triggerResize')
     },
     changeArticle: function () {
-      logger.info(LABEL, 'article is changed.')
+      logger.debug(LABEL, 'article is changed.')
     },
     selectTargets: function () {
       this.$store.dispatch('targets/showDialog', {

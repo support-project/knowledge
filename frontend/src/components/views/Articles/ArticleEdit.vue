@@ -126,10 +126,10 @@ export default {
       // データの取得
       if (this.$route.params.draftId) {
         // 下書きから（まだ記事を投稿前)
-        logger.info(LABEL, 'edit draft. ' + this.$route.params.draftId)
+        logger.debug(LABEL, 'edit draft. ' + this.$route.params.draftId)
         this.$store.dispatch('article/getDraftForEdit', this.$route.params.draftId)
       } else if (this.$route.params.id) {
-        logger.info(LABEL, 'edit article. ' + this.$route.params.id)
+        logger.debug(LABEL, 'edit article. ' + this.$route.params.id)
         this.$store.dispatch('article/getArticleForEdit', this.$route.params.id).then(() => {
           return this.$store.dispatch('types/loadTypes')
         }).catch(() => {
@@ -139,7 +139,7 @@ export default {
           }
         })
       } else {
-        logger.info(LABEL, 'create new article.')
+        logger.debug(LABEL, 'create new article.')
         this.$store.dispatch('types/loadTypes').then(() => {
           this.$store.commit('article/initArticle')
         })

@@ -13,7 +13,6 @@ import org.support.project.knowledge.logic.KnowledgeDataSelectLogic;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
 import org.support.project.knowledge.vo.SearchResultArticle;
 import org.support.project.knowledge.vo.api.Knowledge;
-import org.support.project.knowledge.vo.api.KnowledgeDetail;
 import org.support.project.web.bean.ApiParams;
 import org.support.project.web.bean.Msg;
 import org.support.project.web.bean.NameId;
@@ -83,7 +82,7 @@ public class KnowledgesApiControl extends GetApiControl {
     @Post(path="api/knowledges", checkReferer=false, subscribeToken="")
     public Boundary post() {
         try {
-            KnowledgeDetail data = getJsonObject(KnowledgeDetail.class);
+            Knowledge data = getJsonObject(Knowledge.class);
             long id = KnowledgeDataEditLogic.get().insert(data, getLoginedUser());
             return send(HttpStatus.SC_201_CREATED, new NameId(data.getTitle(), String.valueOf(id)));
         } catch (JSONException e) {
@@ -104,7 +103,7 @@ public class KnowledgesApiControl extends GetApiControl {
     public Boundary put() {
         try {
             Long id = getPathLong();
-            KnowledgeDetail data = getJsonObject(KnowledgeDetail.class);
+            Knowledge data = getJsonObject(Knowledge.class);
             data.setKnowledgeId(id);
             KnowledgeDataEditLogic.get().update(data, getLoginedUser());
             return send(HttpStatus.SC_200_OK, new Msg("updated"));

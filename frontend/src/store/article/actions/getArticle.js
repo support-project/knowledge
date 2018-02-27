@@ -14,7 +14,7 @@ const LABEL = 'getArticle.js'
 
 export default (store, id) => {
   let article = {}
-  logger.info(LABEL, 'start getArticle')
+  logger.debug(LABEL, 'start getArticle')
   store.commit('pagestate/setPageState', {loading: true}, {root: true})
   return Promise.try(() => {
     store.commit('initArticle')

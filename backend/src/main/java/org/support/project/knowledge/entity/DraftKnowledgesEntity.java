@@ -4,7 +4,7 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.entity.gen.GenDraftKnowledgesEntity;
-import org.support.project.knowledge.vo.ArticleDataInterface;
+import org.support.project.knowledge.vo.api.ArticleDataInterface;
 
 
 /**
@@ -54,6 +54,4 @@ public class DraftKnowledgesEntity extends GenDraftKnowledgesEntity implements A
         }
         return super.getAccesses();
     }
-
-
 }

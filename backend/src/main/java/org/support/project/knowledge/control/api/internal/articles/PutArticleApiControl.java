@@ -8,7 +8,7 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.logic.KnowledgeDataEditLogic;
-import org.support.project.knowledge.vo.api.KnowledgeDetail;
+import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.web.bean.NameId;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
@@ -34,7 +34,7 @@ public class PutArticleApiControl extends ApiControl {
             if (!StringUtils.isLong(id)) {
                 return sendError(HttpStatus.SC_400_BAD_REQUEST);
             }
-            KnowledgeDetail data = getJsonObject(KnowledgeDetail.class);
+            Knowledge data = getJsonObject(Knowledge.class);
             data.setKnowledgeId(new Long(id));
             KnowledgeDataEditLogic.get().update(data, getLoginedUser());
             return send(HttpStatus.SC_200_OK, new NameId(data.getTitle(), String.valueOf(data.getKnowledgeId())));

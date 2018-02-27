@@ -10,7 +10,7 @@ import org.support.project.di.Instance;
 import org.support.project.knowledge.logic.KnowledgeDataSelectLogic;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
 import org.support.project.knowledge.vo.SearchResultArticle;
-import org.support.project.knowledge.vo.api.internal.KnowledgeList;
+import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.ApiControl;
@@ -38,7 +38,7 @@ public class GetArticleListApiControl extends ApiControl {
         param.setCreators(getParam("creators"));
         param.setTemplates(getParam("templates"));
         SearchResultArticle results = KnowledgeDataSelectLogic.get().selectList(param);
-        List<KnowledgeList> list =  KnowledgeDataSelectLogic.get().convInternalList(results.getItems(), getLoginedUser());
+        List<Knowledge> list =  KnowledgeDataSelectLogic.get().convInternalList(results.getItems(), getLoginedUser());
         setPaginationHeaders(results.getTotal(), param.getOffset(), param.getLimit());
         return send(HttpStatus.SC_200_OK, list);
     }

@@ -5,7 +5,7 @@ const LABEL = 'loadPaginationInformation.js'
 
 let loadHeaders = (response) => {
   return Promise.try(() => {
-    logger.info(LABEL, 'loadHeaders')
+    logger.debug(LABEL, 'loadHeaders')
     let pagination = {
       limit: 10,
       offset: 0,
@@ -14,7 +14,7 @@ let loadHeaders = (response) => {
       prev: -1,
       pages: []
     }
-    logger.info(LABEL, JSON.stringify(response.headers, null, '  '))
+    logger.debug(LABEL, JSON.stringify(response.headers, null, '  '))
     let headers = response.headers
     if (headers['x-offset']) pagination.offset = parseInt(headers['x-offset'])
     if (headers['x-total']) pagination.total = parseInt(headers['x-total'])
@@ -36,7 +36,7 @@ let loadHeaders = (response) => {
         pagination.pages.push(page)
       }
     }
-    logger.info(JSON.stringify(pagination, null, '  '))
+    logger.debug(JSON.stringify(pagination, null, '  '))
     return pagination
   })
 }

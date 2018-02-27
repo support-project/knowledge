@@ -26,7 +26,7 @@ import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
 import org.support.project.knowledge.vo.MarkDown;
 import org.support.project.knowledge.vo.api.AttachedFile;
-import org.support.project.knowledge.vo.api.KnowledgeDetailDraft;
+import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.knowledge.vo.api.Target;
 import org.support.project.knowledge.vo.api.Targets;
 import org.support.project.web.bean.AccessUser;
@@ -54,17 +54,17 @@ public class DraftDataLogic extends KnowledgeDataSelectLogic {
      * @return
      * @throws ParseException 
      */
-    public KnowledgeDetailDraft selectOnKnowledgeId(long knowledgeId, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
+    public Knowledge selectOnKnowledgeId(long knowledgeId, AccessUser loginedUser, boolean parseMarkdown, boolean sanitize) throws ParseException {
         DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKnowledgeAndUser(knowledgeId, loginedUser.getUserId());
         return convDraft(draft, parseMarkdown, sanitize);
     }
 
-    public KnowledgeDetailDraft convDraft(DraftKnowledgesEntity draft, boolean parseMarkdown, boolean sanitize) throws ParseException {
+    public Knowledge convDraft(DraftKnowledgesEntity draft, boolean parseMarkdown, boolean sanitize) throws ParseException {
         if (draft == null) {
             return null;
         }
         Map<Integer, TemplateMastersEntity> typeMap = getTypeMap();
-        KnowledgeDetailDraft result = convDraft(draft, SINGLE, typeMap);
+        Knowledge result = convDraft(draft, SINGLE, typeMap);
         
         if (parseMarkdown) {
             LOG.warn("Parse Markdown on server side is deprecated.");
@@ -79,8 +79,8 @@ public class DraftDataLogic extends KnowledgeDataSelectLogic {
         return result;
     }
 
-    private KnowledgeDetailDraft convDraft(DraftKnowledgesEntity entity, int single, Map<Integer, TemplateMastersEntity> typeMap) {
-        KnowledgeDetailDraft result = new KnowledgeDetailDraft();
+    private Knowledge convDraft(DraftKnowledgesEntity entity, int single, Map<Integer, TemplateMastersEntity> typeMap) {
+        Knowledge result = new Knowledge();
         PropertyUtil.copyPropertyValue(entity, result, true);
         
         // テンプレートの情報を追加

@@ -65,6 +65,16 @@
 }
 
 /* change-admin-lte */
+.content-wrapper{
+  background-color: #ecf0f5;
+}
+@media (min-width: 768px) {
+  .sidebar-mini.sidebar-collapse .sidebar-form {
+    display: block !important;
+    -webkit-transform: translateZ(0);
+  }
+}
+
 .box-header>.fa, .box-header>.glyphicon, .box-header>.ion, .box-header .box-title {
   font-size: 14px;
 }
@@ -79,6 +89,8 @@
   background-color: gray;
   color:black;
 }
+
+
 /* change bootstrap */
 label {
   font-weight: normal;

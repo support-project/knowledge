@@ -3,7 +3,7 @@ import logger from 'logger'
 const LABEL = 'countUpComent.js'
 
 export default (store) => {
-  logger.info(LABEL, 'countUpComent')
+  logger.debug(LABEL, 'countUpComent')
   return Promise.try(() => {
     store.state.article.commentCount++
   })

@@ -11,7 +11,7 @@ export default (store, params) => {
   return Promise.try(() => {
     return api.request('put', '/_api/articles/' + params.id + '/comments/' + params.comment.commentNo + '/collapse', params.comment)
   }).then(response => {
-    logger.info(LABEL, response.data)
+    logger.debug(LABEL, response.data)
   }).catch(error => {
     logger.error(LABEL, JSON.stringify(error))
     var msg = logger.buildResponseErrorMsg(error.response, {suffix: 'Please try again.'})

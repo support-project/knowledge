@@ -4,7 +4,7 @@ const LABEL = 'changeArticleType.js'
 
 export default (state, params) => {
   let type = params.type
-  logger.info(LABEL, 'Change article type: ' + type)
+  logger.debug(LABEL, 'Change article type: ' + type)
   var article = state.article
   var types = params.types
   logger.debug(LABEL, JSON.stringify(article))

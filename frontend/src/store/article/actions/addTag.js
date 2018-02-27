@@ -8,7 +8,7 @@ export default (store, tag) => {
     tag = tag.tagName
   }
   return Promise.try(() => {
-    logger.info(LABEL, 'addTag')
+    logger.debug(LABEL, 'addTag')
     if (!tag) {
       return true
     }

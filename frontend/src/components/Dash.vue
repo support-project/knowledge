@@ -18,17 +18,20 @@
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
+
+            <!-- search -->
             <li>
-            <form v-on:submit.prevent class="sidebar-form form-inline search-form">
+            <form v-on:submit.prevent="searchArticles()" class="sidebar-form form-inline search-form">
               <div class="input-group">
                 <input type="text"
                   name="search"
                   id="search"
                   class="search form-control"
-                  laceholder="Search Menus"
+                  placeholder="Search Keyword"
+                  v-model="search.keyword"
                 >
                 <span class="input-group-btn">
-                  <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                  <button type="submit" name="search" id="search-btn" class="btn btn-flat" >
                     <i class="fa fa-search"></i>
                   </button>
                 </span>
@@ -148,6 +151,9 @@ import config from '../config'
 import Sidebar from './Sidebar'
 import 'hideseek'
 
+import logger from 'logger'
+const LABEL = 'Dash.vue'
+
 export default {
   name: 'Dash',
   components: {
@@ -168,12 +174,21 @@ export default {
     ...mapState({
       pagestate: state => state.pagestate,
       user: state => state.user.user,
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.user.userInfo,
+      search: state => state.articles.search
     })
   },
   methods: {
     changeloading () {
       this.$store.commit('TOGGLE_SEARCHING')
+    },
+    searchArticles () {
+      logger.debug(LABEL, 'searchArticles:' + this.$route.path)
+      if (this.$route.path !== '/') {
+        this.$router.push('/')
+      } else {
+        this.$store.dispatch('articles/getArticles')
+      }
     }
   }
 }

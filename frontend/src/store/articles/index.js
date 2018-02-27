@@ -19,6 +19,10 @@ export default {
       first: -1,
       last: -1,
       pages: []
+    },
+    search: {
+      search: false,
+      keyword: ''
     }
   },
   getters: {
