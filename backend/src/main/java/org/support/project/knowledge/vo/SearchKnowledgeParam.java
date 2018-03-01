@@ -161,5 +161,8 @@ public class SearchKnowledgeParam {
     public List<UsersEntity> getCreators() {
         return creators;
     }
+    public void setCreators(List<UsersEntity> creators) {
+        this.creators = creators;
+    }
     
 }

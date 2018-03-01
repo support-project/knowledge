@@ -6,6 +6,7 @@
     "ArticleEdit": "記事編集",
     "DraftList": "下書き",
     "DraftEdit": "記事編集",
+    "MyArticleList": "自分の記事",
     "MoveOldUI": "旧い画面に戻す",
     "TestViewTitle": "テストページ",
     "TestViewDescription": "フロントエンド開発テストページ"
@@ -47,6 +48,9 @@
   "ArticleList": {
     "description": "一覧ページ",
     "Message": "ほげほげふがふが"
+  },
+  "MyArticleList": {
+    "description": "自分が投稿した記事の一覧"
   },
   "ArticleDetail": {
     "description": "記事を表示",

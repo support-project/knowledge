@@ -35,6 +35,16 @@ export default (store) => {
       uri += 'keyword=' + store.state.search.keyword
       add = true
     }
+    if (store.state.search.creators && store.state.search.creators.length > 0) {
+      if (add) {
+        uri += '&'
+      } else {
+        uri += '?'
+      }
+      uri += 'creatorIds=' + store.state.search.creators.join(',')
+      add = true
+    }
+    store.commit('setArticles', [])
     return api.request('get', uri, null)
   }).then(response => {
     logger.debug(LABEL, response.data)

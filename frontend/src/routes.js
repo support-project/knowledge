@@ -58,6 +58,11 @@ const routes = [
         component: ArticleEdit,
         name: 'DraftEdit',
         meta: {requiresAuth: true}
+      }, {
+        path: 'myarticles',
+        component: ArticleList,
+        name: 'MyArticleList',
+        meta: {requiresAuth: true}
 /*
       }, {
         path: 'test',
