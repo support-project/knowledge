@@ -4,6 +4,8 @@ import selectPage from './actions/selectPage'
 
 import setArticles from './mutations/setArticles'
 import setDrafts from './mutations/setDrafts'
+import clearSearchCondition from './mutations/clearSearchCondition'
+import setCreatorToSearchCondition from './mutations/setCreatorToSearchCondition'
 
 export default {
   namespaced: true,
@@ -22,7 +24,8 @@ export default {
     },
     search: {
       search: false,
-      keyword: ''
+      keyword: '',
+      creators: []
     }
   },
   getters: {
@@ -34,6 +37,8 @@ export default {
   },
   mutations: {
     setArticles: setArticles,
-    setDrafts: setDrafts
+    setDrafts: setDrafts,
+    clearSearchCondition: clearSearchCondition,
+    setCreatorToSearchCondition: setCreatorToSearchCondition
   }
 }

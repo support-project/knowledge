@@ -76,6 +76,9 @@ import PageTitle from '../Parts/PageTitle'
 import ArticleListItem from './ArticleListItem'
 import ArticleListCalendar from './ArticleListCalendar'
 
+import logger from 'logger'
+const LABEL = 'ArticleList.vue'
+
 export default {
   name: 'ArticleList',
   components: { PageTitle, ArticleListItem, ArticleListCalendar },
@@ -92,11 +95,37 @@ export default {
     },
     selectPage (offset) {
       this.$store.dispatch('articles/selectPage', offset)
+    },
+    clearSearchCondition () {
+      this.$store.commit('articles/clearSearchCondition')
+    },
+    setMyIdToSearchCondition () {
+      logger.trace(LABEL, JSON.stringify(this.$store.getters['user/getUser']))
+      var id = this.$store.getters['user/getUser'].userId
+      this.$store.commit('articles/setCreatorToSearchCondition', id)
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      logger.debug(LABEL, 'from:' + from.path + '   ' + 'to:' + to.path)
+      if (from.path !== '/myarticles' && to.path === '/myarticles') {
+        this.clearSearchCondition()
+        this.setMyIdToSearchCondition()
+      } else if (from.path !== '/' && to.path === '/') {
+        this.clearSearchCondition()
+      }
+      this.getArticleList()
     }
   },
   mounted () {
     // 画面表示時に読み込み
     this.$nextTick(() => {
+      if (this.$route.path === '/') {
+        this.clearSearchCondition()
+      } else if (this.$route.path === '/myarticles') {
+        this.clearSearchCondition()
+        this.setMyIdToSearchCondition()
+      }
       this.getArticleList()
     })
   }

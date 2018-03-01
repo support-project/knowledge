@@ -6,6 +6,7 @@
     "ArticleEdit": "Edit Article",
     "DraftList": "Drafts",
     "DraftEdit": "Edit Article",
+    "MyArticleList": "My Articles",
     "MoveOldUI": "Change to OLD UI",
     "TestViewTitle": "Page of Test",
     "TestViewDescription": "This page is test of frontend development"
@@ -47,6 +48,9 @@
   "ArticleList": {
     "description": "list of articles",
     "Message": "message"
+  },
+  "MyArticleList": {
+    "description": "My Articles"
   },
   "ArticleDetail": {
     "description": "detail of a article",

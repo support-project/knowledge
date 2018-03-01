@@ -184,7 +184,7 @@ export default {
     },
     searchArticles () {
       logger.debug(LABEL, 'searchArticles:' + this.$route.path)
-      if (this.$route.path !== '/') {
+      if (this.$route.path !== '/' && this.$route.path !== '/myarticles') {
         this.$router.push('/')
       } else {
         this.$store.dispatch('articles/getArticles')

@@ -23,15 +23,22 @@
 
     <router-link tag="li" class="pageLink" to="/">
       <a>
-        <i class="fa fa-list text-green"></i>
+        <i class="fa fa-list text-olive"></i>
         <span class="page">{{ $t('Route.ArticleList') }}</span>
       </a>
     </router-link>
 
     <router-link tag="li" class="pageLink" to="/drafts">
       <a>
-        <i class="fa fa-list text-olive"></i>
+        <i class="fa fa-pencil-square-o text-olive"></i>
         <span class="page">{{ $t('Route.DraftList') }}</span>
+      </a>
+    </router-link>
+
+    <router-link tag="li" class="pageLink" to="/myarticles">
+      <a>
+        <i class="fa fa-user-circle text-olive"></i>
+        <span class="page">{{ $t('Route.MyArticleList') }}</span>
       </a>
     </router-link>
     
