@@ -56,6 +56,7 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
+      this.setWindowWidth()
     })
   },
   created: function () {
