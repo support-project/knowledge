@@ -8,6 +8,7 @@
     "DraftEdit": "Edit Article",
     "MyArticleList": "My Articles",
     "StockList": "Stocks",
+    "StockArticles": "Stock",
     "MoveOldUI": "Change to OLD UI",
     "TestViewTitle": "Page of Test",
     "TestViewDescription": "This page is test of frontend development"
@@ -101,5 +102,11 @@
     "Name": "Stock name",
     "Note": "Note",
     "Count": "Article count"
+  },
+  "StockArticles": {
+    "description": "Stock information and articles in this stock",
+    "ArticleTitle": "Title of Article",
+    "Comment": "Comment",
+    "DateTime": "Saved at"
   }
 }

@@ -26,7 +26,6 @@ public class GetStockListApiControl extends ApiControl {
      * @throws Exception 
      */
     @Get(path="_api/stocks")
-    @Open
     public Boundary execute() throws Exception {
         LOG.trace("_api/stocks");
         

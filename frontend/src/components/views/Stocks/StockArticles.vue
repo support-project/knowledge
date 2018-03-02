@@ -38,16 +38,16 @@
                 <table class="table table-striped">
                   <tbody><tr>
                     <th style="width:20px">#</th>
-                    <th>{{$t('StockList.Name')}}</th>
-                    <th>{{$t('StockList.Note')}}</th>
-                    <th>{{$t('StockList.Count')}}</th>
+                    <th style="width:40%">{{$t('StockArticles.ArticleTitle')}}</th>
+                    <th style="width:40%">{{$t('StockArticles.Comment')}}</th>
+                    <th style="width:100px">{{$t('StockArticles.DateTime')}}</th>
                   </tr>
-                  <tr v-for="(item, index) in items" :key="item.stockId" class="clickable"
-                    v-on:click="selectStock(item.stockId)">
-                    <td>{{index + parseInt(pagination.offset) + 1}}</td>
-                    <td>{{item.stockName}}</td>
-                    <td>{{item.description}}</td>
-                    <td>{{item.knowledgeCount}}</td>
+                  <tr v-for="(item) in items" :key="item.knowledgeId" class="clickable"
+                    v-on:click="selectArticle(item.knowledgeId)">
+                    <td>{{item.knowledgeId}}</td>
+                    <td>{{item.title}}</td>
+                    <td>{{item.comment}}</td>
+                    <td>{{item.insertDatetime | dispDate}}</td>
                   </tr>
                 </tbody></table>
               </div>
@@ -71,33 +71,24 @@ export default {
   components: { PageTitle },
   computed: {
     ...mapState({
-      items: state => state.stocks.items,
-      pagination: state => state.stocks.pagination
+      items: state => state.stocks.articles,
+      pagination: state => state.stocks.articlePagination
     })
   },
   methods: {
     selectPage (offset) {
-      this.$store.dispatch('stocks/getStocks', offset)
+      this.$store.dispatch('stocks/getArticles', this.$route.params.id, offset)
     },
-    getStocks () {
-      this.$store.dispatch('stocks/getStocks')
+    getArticles () {
+      this.$store.dispatch('stocks/getArticles', this.$route.params.id)
     },
-    selectStock (id) {
-      this.$store.state.stocks.articles = []
-      this.$store.state.stocks.articlePagination = {
-        limit: 10,
-        offst: 0,
-        total: 0,
-        next: -1,
-        prev: -1,
-        pages: []
-      }
-      this.$router.push('/stocks/' + id + '/articles')
+    selectArticle (id) {
+      this.$router.push('/articles/' + id)
     }
   },
   mounted () {
     this.$nextTick(() => {
-      this.getStocks()
+      this.getArticles()
     })
   }
 }

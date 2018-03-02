@@ -8,6 +8,7 @@
     "DraftEdit": "記事編集",
     "MyArticleList": "自分の記事",
     "StockList": "ストック一覧",
+    "StockArticles": "ストック",
     "MoveOldUI": "旧い画面に戻す",
     "TestViewTitle": "テストページ",
     "TestViewDescription": "フロントエンド開発テストページ"
@@ -101,5 +102,11 @@
     "Name": "ストック名",
     "Note": "ストックの説明",
     "Count": "登録記事件数"
+  },
+  "StockArticles": {
+    "description": "ストックの情報と、ストックに保存した記事の一覧",
+    "ArticleTitle": "記事のタイトル",
+    "Comment": "ストック時のコメント",
+    "DateTime": "ストックした日時"
   }
 }
