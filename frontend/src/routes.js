@@ -7,6 +7,7 @@ import ArticleList from './components/views/Articles/ArticleList.vue'
 import ArticleDetail from './components/views/Articles/ArticleDetail.vue'
 import ArticleEdit from './components/views/Articles/ArticleEdit.vue'
 import DraftList from './components/views/Articles/DraftList.vue'
+import StockList from './components/views/Stocks/StockList.vue'
 
 /*
 import TestView from './components/views/Test.vue'
@@ -62,6 +63,11 @@ const routes = [
         path: 'myarticles',
         component: ArticleList,
         name: 'MyArticleList',
+        meta: {requiresAuth: true}
+      }, {
+        path: 'stocks',
+        component: StockList,
+        name: 'StockList',
         meta: {requiresAuth: true}
 /*
       }, {

@@ -7,6 +7,7 @@
     "DraftList": "下書き",
     "DraftEdit": "記事編集",
     "MyArticleList": "自分の記事",
+    "StockList": "ストック一覧",
     "MoveOldUI": "旧い画面に戻す",
     "TestViewTitle": "テストページ",
     "TestViewDescription": "フロントエンド開発テストページ"
@@ -94,5 +95,11 @@
   },
   "DraftEdit": {
     "description": "記事を編集します"
+  },
+  "StockList": {
+    "description": "ストックの一覧",
+    "Name": "ストック名",
+    "Note": "ストックの説明",
+    "Count": "登録記事件数"
   }
 }

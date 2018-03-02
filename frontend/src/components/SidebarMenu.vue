@@ -42,6 +42,12 @@
       </a>
     </router-link>
     
+    <router-link tag="li" class="pageLink" to="/stocks">
+      <a>
+        <i class="fa fa-bookmark-o text-olive"></i>
+        <span class="page">{{ $t('Route.StockList') }}</span>
+      </a>
+    </router-link>
 
     <li class="header">Other</li>
     <li class="pageLink router-link-active">
