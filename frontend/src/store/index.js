@@ -12,6 +12,7 @@ import comments from './comments'
 import types from './types'
 import targets from './targets'
 import likes from './likes'
+import stocks from './stocks'
 
 Vue.use(Vuex)
 
@@ -27,6 +28,7 @@ export default new Vuex.Store({
     comments: comments,
     types: types,
     targets: targets,
-    likes: likes
+    likes: likes,
+    stocks: stocks
   }
 })

@@ -89,4 +89,17 @@ public class StocksDao extends GenStocksDao {
         return executeQueryList(sql, StocksEntity.class, loginedUser.getUserId(), limit, offset);
     }
 
+    /**
+     * 指定ユーザのストックのカウントを取得
+     * @param loginedUser
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public Integer selectMyStocksCount(AccessUser loginedUser) {
+        String sql = "SELECT COUNT(*) FROM STOCKS WHERE STOCKS.INSERT_USER = ? AND STOCKS.DELETE_FLAG = 0";
+        return executeQuerySingle(sql, Integer.class, loginedUser.getUserId());
+    }
+
 }
