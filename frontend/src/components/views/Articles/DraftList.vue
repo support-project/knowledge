@@ -6,7 +6,8 @@
       
       <page-title
         :title = "'Route.' + $route.name"
-        :description = "$route.name + '.description'" />
+        :description = "$route.name + '.description'"
+        :breadcrumb = "breadcrumb" />
 
       <!-- Main content -->
       <div class="content main-content">
@@ -47,6 +48,13 @@ import PageTitle from '../Parts/PageTitle'
 export default {
   name: 'DraftList',
   components: { PageTitle },
+  data () {
+    return {
+      breadcrumb: [
+        {to: '/drafts/', name: 'Route.DraftList'}
+      ]
+    }
+  },
   computed: {
     ...mapState({
       pagestate: state => state.pagestate,

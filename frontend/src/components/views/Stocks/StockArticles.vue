@@ -4,7 +4,9 @@
     <div class="content-wrapper">
       <page-title
         :title = "'Route.' + $route.name"
-        :description = "$route.name + '.description'" />
+        :description = "$route.name + '.description'"
+        :breadcrumb = "breadcrumb" />
+
       <!-- Main content -->
       <div class="content main-content">
 
@@ -67,8 +69,16 @@ import { mapState } from 'vuex'
 import PageTitle from '../Parts/PageTitle'
 
 export default {
-  name: 'StockList',
+  name: 'StockArticles',
   components: { PageTitle },
+  data () {
+    return {
+      breadcrumb: [
+        {to: '/stocks/', name: 'Route.StockList'},
+        {to: '/stocks/' + this.$route.params.id, name: 'Route.StockArticles'}
+      ]
+    }
+  },
   computed: {
     ...mapState({
       items: state => state.stocks.articles,

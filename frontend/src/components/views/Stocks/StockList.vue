@@ -4,10 +4,11 @@
     <div class="content-wrapper">
       <page-title
         :title = "'Route.' + $route.name"
-        :description = "$route.name + '.description'" />
+        :description = "$route.name + '.description'"
+        :breadcrumb = "breadcrumb" />
+
       <!-- Main content -->
       <div class="content main-content">
-
 
             <div class="box box-default">
               <div class="box-header">
@@ -69,6 +70,13 @@ import PageTitle from '../Parts/PageTitle'
 export default {
   name: 'StockList',
   components: { PageTitle },
+  data () {
+    return {
+      breadcrumb: [
+        {to: '/stocks/', name: 'Route.StockList'}
+      ]
+    }
+  },
   computed: {
     ...mapState({
       items: state => state.stocks.items,
