@@ -46,6 +46,21 @@ public class StockKnowledgesDao extends GenStockKnowledgesDao {
         return executeQueryList(sql, StockKnowledgesEntity.class, stockId, limit, offset);
     }
     /**
+     * ストックに登録された記事の件数を取得
+     * 
+     * @param stockId
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public Integer selectKnowledgeCountByStock(Long stockId) {
+        String sql = SQLManager.getInstance()
+                .getSql("/org/support/project/knowledge/dao/sql/StockKnowledgesDao/StockKnowledgesDao_selectKnowledgeCountByStock.sql");
+        return executeQuerySingle(sql, Integer.class, stockId);
+    }
+    
+    /**
      * ストック内のナレッジを取得（有効なもののみ）
      * @param stockId
      * @return

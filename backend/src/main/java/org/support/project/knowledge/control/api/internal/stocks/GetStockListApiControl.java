@@ -15,7 +15,6 @@ import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.ApiControl;
 import org.support.project.web.control.service.Get;
-import org.support.project.web.logic.invoke.Open;
 
 @DI(instance = Instance.Prototype)
 public class GetStockListApiControl extends ApiControl {
@@ -26,7 +25,6 @@ public class GetStockListApiControl extends ApiControl {
      * @throws Exception 
      */
     @Get(path="_api/stocks")
-    @Open
     public Boundary execute() throws Exception {
         LOG.trace("_api/stocks");
         

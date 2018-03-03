@@ -4,14 +4,17 @@
     <div class="content-wrapper">
       <page-title
         :title = "'Route.' + $route.name"
-        :description = "$route.name + '.description'" />
+        :description = "$route.name + '.description'"
+        :breadcrumb = "breadcrumb" />
+
       <!-- Main content -->
       <div class="content main-content">
 
-
             <div class="box box-default">
               <div class="box-header">
-                <h3 class="box-title"><!--Liked users--></h3>
+                <h3 class="box-title">
+                  <router-link to="/stocks/add" class="btn btn-primary" tag="a">{{$t('Label.Add')}}</router-link>
+                </h3>
                 <div class="box-tools">
                   <ul class="pagination pagination-sm no-margin pull-right">
                     <li class="clickable" v-on:click="selectPage(pagination.first)">
@@ -42,7 +45,8 @@
                     <th>{{$t('StockList.Note')}}</th>
                     <th>{{$t('StockList.Count')}}</th>
                   </tr>
-                  <tr v-for="(item, index) in items" :key="item.stockId" class="clickable">
+                  <tr v-for="(item, index) in items" :key="item.stockId" class="clickable"
+                    v-on:click="selectStock(item.stockId)">
                     <td>{{index + parseInt(pagination.offset) + 1}}</td>
                     <td>{{item.stockName}}</td>
                     <td>{{item.description}}</td>
@@ -68,6 +72,13 @@ import PageTitle from '../Parts/PageTitle'
 export default {
   name: 'StockList',
   components: { PageTitle },
+  data () {
+    return {
+      breadcrumb: [
+        {to: '/stocks/', name: 'Route.StockList'}
+      ]
+    }
+  },
   computed: {
     ...mapState({
       items: state => state.stocks.items,
@@ -80,6 +91,18 @@ export default {
     },
     getStocks () {
       this.$store.dispatch('stocks/getStocks')
+    },
+    selectStock (id) {
+      this.$store.state.stocks.articles = []
+      this.$store.state.stocks.articlePagination = {
+        limit: 10,
+        offst: 0,
+        total: 0,
+        next: -1,
+        prev: -1,
+        pages: []
+      }
+      this.$router.push('/stocks/' + id + '/articles')
     }
   },
   mounted () {

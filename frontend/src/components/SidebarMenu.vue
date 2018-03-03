@@ -50,7 +50,8 @@
     </router-link>
 
     <li class="header">Other</li>
-    <li class="pageLink router-link-active">
+
+    <li class="pageLink">
       <a href="open.knowledge/list">
         <i class="fa fa-recycle" aria-hidden="true"></i>
         <span class="page">{{ $t('Route.MoveOldUI') }}</span>

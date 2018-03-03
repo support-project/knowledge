@@ -8,6 +8,8 @@
     "DraftEdit": "Edit Article",
     "MyArticleList": "My Articles",
     "StockList": "Stocks",
+    "StockArticles": "Stock",
+    "StockAdd": "Add Stock",
     "MoveOldUI": "Change to OLD UI",
     "TestViewTitle": "Page of Test",
     "TestViewDescription": "This page is test of frontend development"
@@ -22,7 +24,9 @@
     "Show": "Show",
     "Hide": "Hide",
     "Empty": "Empty",
-    "Close": "Close"
+    "Close": "Close",
+    "Add": "Add",
+    "Back": "Back"
   },
   "Message": {
     "NotFound": "Not found"
@@ -96,10 +100,27 @@
   "DraftEdit": {
     "description": "edit this article"
   },
+  "Stock": {
+    "Name": "Name",
+    "Description": "Description",
+    "Placeholder": {
+      "Name": "",
+      "Description": ""
+    }
+  },
   "StockList": {
     "description": "Stocks",
     "Name": "Stock name",
     "Note": "Note",
     "Count": "Article count"
+  },
+  "StockArticles": {
+    "description": "Stock information and articles in this stock",
+    "ArticleTitle": "Title of Article",
+    "Comment": "Comment",
+    "DateTime": "Saved at"
+  },
+  "StockAdd": {
+    "description": "Add your stock"
   }
 }

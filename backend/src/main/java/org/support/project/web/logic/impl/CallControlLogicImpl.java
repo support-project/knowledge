@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -157,9 +159,11 @@ public class CallControlLogicImpl implements CallControlLogic {
             // コントローラーで処理を呼び出す場合、パラメータは全てリクエストのアトリビュートにコピーする
             this.copyAttribute(request);
             // パスで取得できる値があればセット
+            Map<String, String> routeParam = new HashMap<>();
             for (Entry<String, String> entry : invokeTarget.getPathValue().entrySet()) {
-                request.setAttribute(entry.getKey(), entry.getValue());
+                routeParam.put(entry.getKey(), entry.getValue());
             }
+            request.setAttribute(Control._ROUTE_PARAM, routeParam);
 
             if (auth(invokeTarget, request, response, path, pathInfo)) {
                 return this.setInvokeParams(invokeTarget, request, response, path, pathInfo);

@@ -57,6 +57,8 @@ import net.arnx.jsonic.JSONException;
 public abstract class Control {
     /** ログ */
     private static Log log = LogFactory.getLog(MethodHandles.lookup());
+    /** ルーティングパスにセットされている値を格納したMapをアトリビュートにセットする際のキー */
+    public static final String _ROUTE_PARAM = "_ROUTE_PARAM";
 
     /** HttpServletRequest */
     private HttpServletRequest request;
@@ -908,4 +910,18 @@ public abstract class Control {
         return resources.getResource(key, params);
     }
 
+    /**
+     * パスに設定されているパラメータを取得
+     * @param key
+     * @return
+     */
+    public String getRouteParam(String key) {
+        @SuppressWarnings("unchecked")
+        Map<String, String> routeParam = (Map<String, String>) getRequest().getAttribute(_ROUTE_PARAM);
+        if (routeParam != null) {
+            return routeParam.get(key);
+        }
+        return "";
+    }
+    
 }
