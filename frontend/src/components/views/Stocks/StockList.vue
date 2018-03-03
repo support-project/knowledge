@@ -12,7 +12,9 @@
 
             <div class="box box-default">
               <div class="box-header">
-                <h3 class="box-title"><!--Liked users--></h3>
+                <h3 class="box-title">
+                  <router-link to="/stocks/add" class="btn btn-primary" tag="a">{{$t('Label.Add')}}</router-link>
+                </h3>
                 <div class="box-tools">
                   <ul class="pagination pagination-sm no-margin pull-right">
                     <li class="clickable" v-on:click="selectPage(pagination.first)">

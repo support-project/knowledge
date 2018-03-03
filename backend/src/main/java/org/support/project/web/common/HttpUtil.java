@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,7 @@ import org.support.project.web.bean.MessageResult;
 import org.support.project.web.config.AppConfig;
 import org.support.project.web.config.CommonWebParameter;
 import org.support.project.web.config.MessageStatus;
+import org.support.project.web.control.Control;
 import org.support.project.web.dao.LocalesDao;
 import org.support.project.web.dao.UsersDao;
 import org.support.project.web.entity.LocalesEntity;
@@ -256,10 +258,18 @@ public class HttpUtil {
         // Attributeを取得
         Object value = req.getAttribute(param);
         if (value == null) {
-            // Attribute がなければ、最後にSessionを取得
+            // Attribute がなければ、Sessionを取得
             HttpSession session = req.getSession();
             value = session.getAttribute(param);
         }
+        
+        if (value == null) {
+            Map<String, String> routeParam = (Map<String, String>) req.getAttribute(Control._ROUTE_PARAM);
+            if (routeParam != null) {
+                value = routeParam.get(param);
+            }
+        }
+        
         if (value == null) {
             return null;
         }

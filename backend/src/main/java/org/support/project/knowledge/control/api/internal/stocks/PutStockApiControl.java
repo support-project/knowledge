@@ -29,7 +29,7 @@ public class PutStockApiControl extends ApiControl {
     @Put(path="_api/stocks/:id", checkCookieToken=false, checkHeaderToken=true)
     public Boundary execute() throws Exception {
         try {
-            String id = super.getParam("id");
+            String id = super.getRouteParam("id");
             LOG.debug(id);
             if (!StringUtils.isLong(id)) {
                 return sendError(HttpStatus.SC_400_BAD_REQUEST);
@@ -39,7 +39,7 @@ public class PutStockApiControl extends ApiControl {
             if (stocksEntity == null) {
                 return sendError(HttpStatus.SC_404_NOT_FOUND);
             }
-            if (stocksEntity.getInsertUser().equals(getLoginUserId())) {
+            if (stocksEntity.getInsertUser().intValue() != getLoginUserId()) {
                 return sendError(HttpStatus.SC_403_FORBIDDEN);
             }
             StocksEntity stock = getJsonObject(StocksEntity.class);

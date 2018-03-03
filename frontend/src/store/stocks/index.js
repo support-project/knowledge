@@ -1,5 +1,7 @@
 import getStocks from './actions/getStocks'
+import getStock from './actions/getStock'
 import getArticles from './actions/getArticles'
+import saveArticle from './actions/saveArticle'
 
 export default {
   namespaced: true,
@@ -29,7 +31,9 @@ export default {
   },
   actions: {
     getStocks: getStocks,
-    getArticles: getArticles
+    getStock: getStock,
+    getArticles: getArticles,
+    saveArticle: saveArticle
   },
   mutations: {
   }

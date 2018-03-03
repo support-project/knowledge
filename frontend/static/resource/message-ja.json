@@ -9,6 +9,7 @@
     "MyArticleList": "自分の記事",
     "StockList": "ストック一覧",
     "StockArticles": "ストック",
+    "StockAdd": "ストック追加",
     "MoveOldUI": "旧い画面に戻す",
     "TestViewTitle": "テストページ",
     "TestViewDescription": "フロントエンド開発テストページ"
@@ -23,7 +24,9 @@
     "Show": "表示",
     "Hide": "非表示",
     "Empty": "登録無し",
-    "Close": "閉じる"
+    "Close": "閉じる",
+    "Add": "追加",
+    "Back": "戻る"
   },
   "Message": {
     "NotFound": "見つかりません"
@@ -97,6 +100,14 @@
   "DraftEdit": {
     "description": "記事を編集します"
   },
+  "Stock": {
+    "Name": "ストック名",
+    "Description": "備考",
+    "Placeholder": {
+      "Name": "",
+      "Description": "どのような種類の記事をストックするのかなどの備考を入力できます（任意）"
+    }
+  },
   "StockList": {
     "description": "ストックの一覧",
     "Name": "ストック名",
@@ -108,5 +119,8 @@
     "ArticleTitle": "記事のタイトル",
     "Comment": "ストック時のコメント",
     "DateTime": "ストックした日時"
+  },
+  "StockAdd": {
+    "description": "ストック(お気に入りを保存する箱)を作成します"
   }
 }

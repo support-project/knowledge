@@ -42,7 +42,6 @@ public class GetStockArticlesApiControl extends ApiControl {
         if (stocksEntity.getInsertUser().intValue() != getLoginUserId()) {
             return sendError(HttpStatus.SC_403_FORBIDDEN);
         }
-        
         ApiParams apiParams = super.getCommonApiParams();
         List<StockKnowledgesEntity> knowledges = StockKnowledgesDao.get().selectOnStockIdWithKnowledgeInfo(
                 stockId, apiParams.getOffset(), apiParams.getLimit());

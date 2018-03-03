@@ -25,7 +25,7 @@ public class GetStockOneApiControl extends ApiControl {
     @Get(path="_api/stocks/:id")
     public Boundary execute() throws Exception {
         LOG.trace("_api/stocks/:id");
-        String id = super.getParam("id");
+        String id = super.getRouteParam("id");
         LOG.debug(id);
         if (!StringUtils.isLong(id)) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST);
@@ -35,7 +35,7 @@ public class GetStockOneApiControl extends ApiControl {
         if (stocksEntity == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND);
         }
-        if (stocksEntity.getInsertUser().equals(getLoginUserId())) {
+        if (stocksEntity.getInsertUser().intValue() != getLoginUserId()) {
             return sendError(HttpStatus.SC_403_FORBIDDEN);
         }
         return send(HttpStatus.SC_200_OK, stocksEntity);
