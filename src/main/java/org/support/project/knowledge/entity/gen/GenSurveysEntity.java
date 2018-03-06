@@ -55,6 +55,8 @@ public class GenSurveysEntity implements Serializable {
     private String title;
     /** 説明 */
     private String description;
+    /**  */
+    private Integer loginNecessary;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -111,6 +113,22 @@ public class GenSurveysEntity implements Serializable {
      * @return this object     */
     public GenSurveysEntity setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    /**
+     * Get .
+     * @return 
+     */
+    public Integer getLoginNecessary() {
+        return this.loginNecessary;
+    }
+    /**
+     * Set .
+     * @param loginNecessary 
+     * @return this object     */
+    public GenSurveysEntity setLoginNecessary(Integer loginNecessary) {
+        this.loginNecessary = loginNecessary;
         return this;
     }
 
@@ -245,6 +263,7 @@ public class GenSurveysEntity implements Serializable {
         builder.append("knowledgeId = ").append(knowledgeId).append("\n");
         builder.append("title = ").append(title).append("\n");
         builder.append("description = ").append(description).append("\n");
+        builder.append("loginNecessary = ").append(loginNecessary).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -280,6 +299,11 @@ public class GenSurveysEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
         error = validator.validate(this.title, convLabelName("Title"), 256);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(this.loginNecessary, convLabelName("Login Necessary"));
         if (error != null) {
             errors.add(error);
         }
@@ -321,6 +345,11 @@ public class GenSurveysEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.MAX_LENGTH);
         error = validator.validate(values.get("title"), convLabelName("Title"), 256);
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(values.get("loginNecessary"), convLabelName("Login Necessary"));
         if (error != null) {
             errors.add(error);
         }

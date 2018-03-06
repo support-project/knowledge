@@ -141,14 +141,15 @@ public class SurveyLogic extends TemplateLogic {
             }
         }
         
-        List<SurveyItemAnswersEntity> annswers = SurveyItemAnswersDao.get().selectOnKnowledgeIdAndAnswerId(knowledgeId, userId);
-        for (SurveyItemAnswersEntity answer : annswers) {
-            if (itemMap.containsKey(answer.getItemNo())) {
-                SurveyItemsEntity templateItemsEntity = itemMap.get(answer.getItemNo());
-                templateItemsEntity.setItemValue(answer.getItemValue());
+        if (userId > 0) {
+            List<SurveyItemAnswersEntity> annswers = SurveyItemAnswersDao.get().selectOnKnowledgeIdAndAnswerId(knowledgeId, userId);
+            for (SurveyItemAnswersEntity answer : annswers) {
+                if (itemMap.containsKey(answer.getItemNo())) {
+                    SurveyItemsEntity templateItemsEntity = itemMap.get(answer.getItemNo());
+                    templateItemsEntity.setItemValue(answer.getItemValue());
+                }
             }
         }
-        
         entity.setEditable(true);
         return entity;
     }

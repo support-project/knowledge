@@ -282,6 +282,7 @@ create table SURVEYS (
   KNOWLEDGE_ID bigint not null
   , TITLE character varying(256) not null
   , DESCRIPTION text
+  , LOGIN_NECESSARY integer DEFAULT 0
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
