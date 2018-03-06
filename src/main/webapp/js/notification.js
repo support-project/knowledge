@@ -26,7 +26,18 @@ var checkPermission = function() {
                 return Promise.resolve(true);
             } else if (Notification.permission === 'denied') {
                 console.log('Notification.permission is denied');
-                return Promise.resolve(false);
+                Notification.requestPermission(function(result) {
+                    if (result === 'denied') {
+                        console.log('requestPermission is denied');
+                        return Promise.resolve(false);
+                    } else if (result === 'default') {
+                        console.log('requestPermission is default');
+                        return Promise.resolve(false);
+                    } else if (result === 'granted') {
+                        console.log('requestPermission is granted');
+                        return Promise.resolve(true);
+                    }
+                });
             } else if (Notification.permission === 'default') {
                 console.log('Notification.permission is default');
                 Notification.requestPermission(function(result) {

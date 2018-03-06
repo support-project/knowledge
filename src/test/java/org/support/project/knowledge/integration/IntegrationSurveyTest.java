@@ -115,7 +115,7 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         StubHttpServletRequest request = new StubHttpServletRequest();
         StubHttpServletResponse response = new StubHttpServletResponse(request);
         
-        request.setServletPath("protect.survey/load/" + knowledgeId);
+        request.setServletPath("open.survey/load/" + knowledgeId);
         request.setMethod("get");
         DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
         auth.setSession(POST_USER, request, response);
@@ -170,13 +170,13 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         StubHttpServletRequest request = new StubHttpServletRequest();
         StubHttpServletResponse response = new StubHttpServletResponse(request);
         
-        request.setServletPath("protect.survey/load/" + knowledgeId);
+        request.setServletPath("open.survey/load/" + knowledgeId);
         request.setMethod("get");
         JsonBoundary survey = invoke(request, response, JsonBoundary.class);
         LOG.info(survey);
         Assert.assertNotNull(survey);
         
-        request.setServletPath("protect.survey/answer");
+        request.setServletPath("open.survey/answer");
         request.setMethod("post");
         DefaultAuthenticationLogicImpl auth = org.support.project.di.Container.getComp(DefaultAuthenticationLogicImpl.class);
         auth.setSession(ANSWER_USER, request, response);
@@ -275,7 +275,7 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         // アンケート保存
         request = new StubHttpServletRequest();
         response = new StubHttpServletResponse(request);
-        request.setServletPath("protect.survey/load/" + knowledgeId);
+        request.setServletPath("open.survey/load/" + knowledgeId);
         request.setMethod("get");
         auth.setSession(POST_USER, request, response);
         JsonBoundary msg = invoke(request, response, JsonBoundary.class);
@@ -286,7 +286,7 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         
         request = new StubHttpServletRequest();
         response = new StubHttpServletResponse(request);
-        request.setServletPath("protect.survey/load/" + knowledgeId);
+        request.setServletPath("open.survey/load/" + knowledgeId);
         request.setMethod("get");
         auth.setSession(OTHER_USER, request, response);
         msg = invoke(request, response, JsonBoundary.class);
@@ -312,7 +312,7 @@ public class IntegrationSurveyTest extends IntegrationCommon {
         
         request = new StubHttpServletRequest();
         response = new StubHttpServletResponse(request);
-        request.setServletPath("protect.survey/load/" + knowledgeId);
+        request.setServletPath("open.survey/load/" + knowledgeId);
         request.setMethod("get");
         auth.setSession(OTHER_USER, request, response);
         msg = invoke(request, response, JsonBoundary.class);
