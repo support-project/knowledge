@@ -8,10 +8,18 @@ $(document).ready(function() {
         if (data.msg || !data.exist) {
             return;
         }
-        $('#btnAnswerSurvey').removeClass('hide');
         $('#modalAnswerSurveyLabel').text(data.title);
         $('#surveyDescription').text(data.description);
         document.__add_Template_Edit_Item(data);
+        if (_LOGIN_USER_ID) {
+            $('#btnAnswerSurvey').removeClass('hide');
+        } else {
+            if (data.loginNecessary) {
+                $('#btnLoginToAnswerSurvey').removeClass('hide');
+            } else {
+                $('#btnAnswerSurvey').removeClass('hide');
+            }
+        }
     }).fail(function(err) {
         console.log(err);
     });

@@ -94,6 +94,11 @@
             <i class="fa fa-check-square-o"></i>&nbsp;
             <%=jspUtil.label("knowledge.view.label.answer")%>
         </a>
+        <a id="btnLoginToAnswerSurvey" class="btn btn-info btn_col2 hide"
+            href="<%= request.getContextPath() %>/protect.knowledge/view/<%=jspUtil.out("knowledgeId")%>">
+            <i class="fa fa-check-square-o"></i>&nbsp;
+            <%=jspUtil.label("knowledge.view.label.answer")%>
+        </a>
     </div>
 
     <%
