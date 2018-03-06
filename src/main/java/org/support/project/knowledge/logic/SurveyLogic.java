@@ -170,6 +170,7 @@ public class SurveyLogic extends TemplateLogic {
         SurveyAnswersDao.get().save(answer);
         List<SurveyItemAnswersEntity> items = answer.getItems();
         for (SurveyItemAnswersEntity item : items) {
+            item.setAnswerId(answer.getAnswerId());
             SurveyItemAnswersDao.get().save(item);
         }
     }
