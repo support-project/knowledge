@@ -1,4 +1,4 @@
-package org.support.project.knowledge.control.api.internal.articles.likes;
+package org.support.project.knowledge.control.api.internal.articles.stocks;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -8,24 +8,21 @@ import org.support.project.common.log.LogFactory;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.control.api.internal.articles.AbstractArticleApi;
-import org.support.project.knowledge.dao.LikesDao;
-import org.support.project.knowledge.entity.LikesEntity;
+import org.support.project.knowledge.dao.StocksDao;
+import org.support.project.knowledge.vo.Stock;
 import org.support.project.web.bean.ApiParams;
 import org.support.project.web.boundary.Boundary;
-import org.support.project.web.common.HttpStatus;
 import org.support.project.web.control.service.Get;
-import org.support.project.web.logic.invoke.Open;
 
 @DI(instance = Instance.Prototype)
-public class GetArticleLikesApiControl extends AbstractArticleApi {
+public class GetArticleStocksApiControl extends AbstractArticleApi {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
-     * 記事のイイネの一覧を取得
+     * ストックの一覧を取得
      * @throws Exception 
      */
-    @Get(path="_api/articles/:id/likes")
-    @Open
+    @Get(path="_api/articles/:id/stocks")
     public Boundary execute() throws Exception {
         LOG.trace("GET _api/articles/:id/likes");
         long knowledgeId = super.getRouteArticleId();
@@ -33,17 +30,12 @@ public class GetArticleLikesApiControl extends AbstractArticleApi {
         ApiParams apiParams = super.getCommonApiParams();
         int limit = apiParams.getLimit();
         int offset = apiParams.getOffset();
-        long total = LikesDao.get().countOnKnowledgeId(knowledgeId);
+        
+        int total = StocksDao.get().selectMyStocksCount(super.getAccessUser());
         super.setPaginationHeaders(total, offset, limit);
         
-        List<LikesEntity> likes = LikesDao.get().selectOnKnowledge(knowledgeId, offset, limit);
-        for (LikesEntity likesEntity : likes) {
-            if (likesEntity.getInsertUser() == null || likesEntity.getInsertUser().intValue() <= 0) {
-                likesEntity.setUserName("Anonymous");
-            }
-        }
-        
-        return send(HttpStatus.SC_200_OK, likes);
+        List<Stock> stocks = StocksDao.get().selectMyStocksWithStocked(
+                super.getAccessUser(), knowledgeId, offset, limit);
+        return send(stocks);
     }
-
 }

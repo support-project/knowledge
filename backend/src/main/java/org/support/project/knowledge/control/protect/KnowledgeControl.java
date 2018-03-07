@@ -705,8 +705,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
                     if (LOG.isTraceEnabled()) {
                         LOG.trace(key + " = " + value + "  (" + value.getClass().getName() + ")");
                     }
-                    Object val = PropertyUtil.convValue(value.toString(), PropertyUtil.getPropertyType(stock, key));
-                    PropertyUtil.setPropertyValue(stock, key, val);
+                    if (value != null) {
+                        Object val = PropertyUtil.convValue(value.toString(), PropertyUtil.getPropertyType(stock, key));
+                        PropertyUtil.setPropertyValue(stock, key, val);
+                    }
                 }
                 stocks.add(stock);
                 if (LOG.isTraceEnabled()) {

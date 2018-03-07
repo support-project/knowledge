@@ -122,5 +122,11 @@
   },
   "StockAdd": {
     "description": "Add your stock"
+  },
+  "StockSelectModal": {
+    "Title": "Select stock",
+    "Stocked": "ON/OFF",
+    "StockName": "Stock name",
+    "Comment": "Comment"
   }
 }

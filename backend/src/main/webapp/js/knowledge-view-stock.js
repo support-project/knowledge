@@ -73,6 +73,7 @@ var saveStocks = function(knowledgeId) {
             if (stocksInfo[i].stockId == this.value) {
                 stocksInfo[i].stocked = this.checked;
                 stocksInfo[i].description = comment;
+                stocksInfo[i].comment = comment;
                 break;
             }
         }

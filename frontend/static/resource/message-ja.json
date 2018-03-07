@@ -122,5 +122,11 @@
   },
   "StockAdd": {
     "description": "ストック(お気に入りを保存する箱)を作成します"
+  },
+  "StockSelectModal": {
+    "Title": "ストック選択",
+    "Stocked": "ON/OFF",
+    "StockName": "ストック名",
+    "Comment": "コメント"
   }
 }

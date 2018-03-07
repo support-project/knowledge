@@ -85,7 +85,7 @@ public class StocksDao extends GenStocksDao {
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public List<StocksEntity> selectMyStocks(AccessUser loginedUser, int offset, int limit) {
-        String sql = "SELECT * FROM STOCKS WHERE STOCKS.INSERT_USER = ? AND STOCKS.DELETE_FLAG = 0 ORDER BY STOCKS.INSERT_DATETIME LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM STOCKS WHERE STOCKS.INSERT_USER = ? AND STOCKS.DELETE_FLAG = 0 ORDER BY STOCKS.STOCK_ID DESC LIMIT ? OFFSET ?";
         return executeQueryList(sql, StocksEntity.class, loginedUser.getUserId(), limit, offset);
     }
 

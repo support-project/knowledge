@@ -172,7 +172,7 @@ public abstract class Control extends org.support.project.web.control.Control {
                             || flagCheck(notifyConfigsEntity.getStokeItemComment()) || flagCheck(notifyConfigsEntity.getToItemComment())
                             || flagCheck(notifyConfigsEntity.getToItemSave())) {
                         if (LOG.isTraceEnabled()) {
-                            LOG.info("Notify On to [" + getLoginUserId() + "]");
+                            LOG.trace("Notify On to [" + getLoginUserId() + "]");
                         }
                         setAttribute("desktopNotify", true);
                     }

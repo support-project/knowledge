@@ -17,7 +17,7 @@
             :class="{'disabled': errored}" :disabled="errored">
             <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
           </button>
-          <button :title="$t('ArticleDetail.BtnStock')"
+          <button :title="$t('ArticleDetail.BtnStock')" v-on:click="showSelectStock()"
             :class="{'disabled': errored}" :disabled="errored">
             <i class="fa fa-star-o fa-lg" aria-hidden="true"></i>
           </button>
@@ -72,6 +72,7 @@
     <!-- /.content-wrapper -->
 
     <article-detail-sidebar />
+    <stock-select-modal />
 
   </div>
 </template>
@@ -91,6 +92,7 @@ import ArticlePartsPublicFlag from './ArticlePartsPublicFlag'
 import ArticlePartsTags from './ArticlePartsTags'
 import ArticlePartsStocks from './ArticlePartsStocks'
 import ArticleDetailComments from './ArticleDetailComments'
+import StockSelectModal from './StockSelectModal'
 
 import Alerts from '../Parts/Alerts'
 import processFootnotesPotision from '../../../lib/displayParts/processFootnotesPotision'
@@ -119,7 +121,7 @@ export default {
       }
     }
   },
-  components: { PageTitle, ArticleDetailSidebar, ArticlePartsPoint, ArticlePartsEditor, ArticlePartsTypeLabel, ArticlePartsPublicFlag, ArticlePartsTags, ArticlePartsStocks, ArticleDetailComments, Alerts },
+  components: { PageTitle, ArticleDetailSidebar, ArticlePartsPoint, ArticlePartsEditor, ArticlePartsTypeLabel, ArticlePartsPublicFlag, ArticlePartsTags, ArticlePartsStocks, ArticleDetailComments, StockSelectModal, Alerts },
   computed: {
     ...mapState({
       pagestate: state => state.pagestate,
@@ -162,6 +164,13 @@ export default {
         position = position - 100
         $('html, body').animate({scrollTop: position}, speed, 'swing')
       }
+    },
+    showSelectStock () {
+      if (!this.$store.getters['auth/isLogined']) {
+        this.$router.push('/login')
+        return
+      }
+      $('#StockSelectModal').modal('show')
     }
   },
   mounted () {

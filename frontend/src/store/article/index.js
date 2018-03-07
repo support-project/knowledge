@@ -11,6 +11,8 @@ import removeEditor from './actions/removeEditor'
 import addTag from './actions/addTag'
 import removeTag from './actions/removeTag'
 import countUpComent from './actions/countUpComent'
+import getStocksForSelect from './actions/getStocksForSelect'
+import saveStocks from './actions/saveStocks'
 
 import initArticle from './mutations/initArticle'
 import setArticle from './mutations/setArticle'
@@ -40,7 +42,18 @@ export default {
       },
       tags: []
     },
-    toc: ''
+    toc: '',
+    stockSelect: {
+      items: [],
+      pagination: {
+        limit: 5,
+        offst: 0,
+        total: 0,
+        next: -1,
+        prev: -1,
+        pages: []
+      }
+    }
   },
   getters: {
   },
@@ -57,7 +70,9 @@ export default {
     removeEditor: removeEditor,
     addTag: addTag,
     removeTag: removeTag,
-    countUpComent: countUpComent
+    countUpComent: countUpComent,
+    getStocksForSelect: getStocksForSelect,
+    saveStocks: saveStocks
   },
   mutations: {
     initArticle: initArticle,

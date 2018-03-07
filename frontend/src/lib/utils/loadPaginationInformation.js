@@ -22,6 +22,7 @@ let loadHeaders = (response) => {
     if (headers['x-last-offset']) pagination.last = parseInt(headers['x-last-offset'])
     if (headers['x-next-offset']) pagination.next = parseInt(headers['x-next-offset'])
     if (headers['x-previous-offset']) pagination.prev = parseInt(headers['x-previous-offset'])
+    if (headers['x-limit']) pagination.limit = parseInt(headers['x-limit'])
 
     for (let i = 1; i <= 5; i++) {
       let pagekey = 'x-page' + i

@@ -19,6 +19,10 @@ public class Stock {
      * ストックされているかの情報を画面とやりとりするためのフラグ
      */
     private Boolean stocked = false;
+    /**
+     * コメントを付加した際のコメント
+     */
+    private String comment = "";
 
     /**
      * @return the stockId
@@ -88,6 +92,14 @@ public class Stock {
      */
     public void setStocked(Boolean stocked) {
         this.stocked = stocked;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
 }
