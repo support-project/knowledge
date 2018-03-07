@@ -5,7 +5,7 @@ $(document).ready(function() {
         $('#survey_edit').removeClass('hide');
         document._TEMPLATE.editable = true;
         $('#items').html('');
-        document.__load_survey(_CONTEXT + '/protect.survey/load/' + knowledgeId);
+        document.__load_survey(_CONTEXT + '/open.survey/load/' + knowledgeId);
     }
     
     $('#deletebutton').click(function(){
@@ -121,7 +121,7 @@ $(document).ready(function() {
         $('#typeName').val('');
         $('#description').val('');
         $('.deleteItemButton').click();
-        return document.__load_survey(_CONTEXT + '/protect.survey/load/' + id);
+        return document.__load_survey(_CONTEXT + '/open.survey/load/' + id);
     };
     
     $('#modalCopySurvey').on('show.bs.modal', function (event) {

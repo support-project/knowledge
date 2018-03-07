@@ -10,7 +10,7 @@
 <div class="modal fade" id="modalAnswerSurvey" tabindex="-1" role="dialog" aria-labelledby="modalAnswerSurveyLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form action="<%=request.getContextPath()%>/protect.survey/answer" method="post" role="form" id="answerForm">
+            <form action="<%=request.getContextPath()%>/open.survey/answer" method="post" role="form" id="answerForm">
             <input type="hidden" name="<%= HttpRequestCheckLogic.REQ_ID_KEY %>"
                 value="<%= jspUtil.out(HttpRequestCheckLogic.REQ_ID_KEY) %>" />
             <input type="hidden" name="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" />
@@ -33,6 +33,7 @@
                 <button type="button" class="btn btn-primary" id="saveSurveyButton">
                     <i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save") %></button>
             </div>
+            <input type="hidden" name="answerId" id="answerId" value="" />
             </form>
         </div>
     </div>
