@@ -665,15 +665,15 @@ LName=アンケートの回答
 Comment=
 TableOption=
 Page=MAIN
-Left=1550
-Top=2100
+Left=1700
+Top=2200
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="回答ID","ANSWER_ID","@INT","NOT NULL",1,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170222215330
-Position="MAIN",1550,2100
+Position="MAIN",1700,2200
 
 [Relation]
 Entity1=SURVEY_ITEMS
@@ -724,7 +724,7 @@ Fields1=KNOWLEDGE_ID
 Fields2=KNOWLEDGE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,6505,5433,1090,R,R
+Position="MAIN",0,6505,5433,3775,R,R
 Dependence=1
 Caption=
 PName=
@@ -732,7 +732,7 @@ ModifiedDateTime=20170220203540
 LineMode=0
 Bar1=650
 Bar2=543
-Bar3=109
+Bar3=378
 TermPos1=R
 TermPos2=R
 
@@ -746,13 +746,13 @@ Left=1200
 Top=2400
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="項目NO","ITEM_NO","@INT","NOT NULL",1,"","",$FFFFFFFF,""
-Field="項目名","ITEM_NAME","@VARCHAR(32)","NOT NULL",,"","",$FFFFFFFF,""
+Field="項目名","ITEM_NAME","@VARCHAR(1024)","NOT NULL",,"","",$FFFFFFFF,""
 Field="項目の種類","ITEM_TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
-Field="説明","DESCRIPTION","@VARCHAR(1024)",,,"","",$FFFFFFFF,""
+Field="説明","DESCRIPTION","text",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170220203458
+ModifiedDateTime=20180307211942
 Position="MAIN",1200,2400
 
 [Relation]
@@ -764,14 +764,14 @@ Fields1=KNOWLEDGE_ID
 Fields2=KNOWLEDGE_ID
 Cardinarity1=
 Cardinarity2=
-Position="MAIN",0,6893,2055,3184,R,R
+Position="MAIN",0,6893,2055,2232,R,R
 Dependence=1
 Caption=
 PName=
 LineMode=0
 Bar1=689
 Bar2=206
-Bar3=318
+Bar3=223
 TermPos1=R
 TermPos2=R
 
@@ -786,10 +786,11 @@ Top=2100
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",0,"","",$FFFFFFFF,""
 Field="タイトル","TITLE","@VARCHAR(256)","NOT NULL",,"","",$FFFFFFFF,""
 Field="説明","DESCRIPTION","text",,,"","",$FFFFFFFF,""
+Field="アンケート回答にログインが必須","LOGIN_NECESSARY","@INT",,,"0","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170220203309
+ModifiedDateTime=20180307212134
 Position="MAIN",950,2100
 
 [Relation]
@@ -1400,14 +1401,14 @@ Left=1350
 Top=450
 Field="テンプレートの種類ID","TYPE_ID","@INT","NOT NULL",0,"","",$FFFFFFFF,""
 Field="項目NO","ITEM_NO","@INT","NOT NULL",1,"","",$FFFFFFFF,""
-Field="項目名","ITEM_NAME","@VARCHAR(32)","NOT NULL",,"","",$FFFFFFFF,""
+Field="項目名","ITEM_NAME","@VARCHAR(1024)","NOT NULL",,"","",$FFFFFFFF,""
 Field="項目の種類","ITEM_TYPE","@INT","NOT NULL",,"","",$FFFFFFFF,""
-Field="説明","DESCRIPTION","@VARCHAR(1024)",,,"","",$FFFFFFFF,""
+Field="説明","DESCRIPTION","text",,,"","",$FFFFFFFF,""
 Field="初期値","INITIAL_VALUE","text",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170915171315
+ModifiedDateTime=20180307211844
 Position="MAIN",1350,450
 
 [Relation]
