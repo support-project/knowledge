@@ -1,22 +1,28 @@
 $(document).ready(function() {
     var knowledgeId = $('#knowledgeId').val();
-    if (_LOGIN_USER_ID) {
-        $.ajax({
-            type : 'GET',
-            url : _CONTEXT + '/protect.survey/load/' + knowledgeId
-        }).done(function(data) {
-            console.log(data);
-            if (data.msg || !data.exist) {
-                return;
-            }
+    $.ajax({
+        type : 'GET',
+        url : _CONTEXT + '/open.survey/load/' + knowledgeId
+    }).done(function(data) {
+        console.log(data);
+        if (data.msg || !data.exist) {
+            return;
+        }
+        $('#modalAnswerSurveyLabel').text(data.title);
+        $('#surveyDescription').text(data.description);
+        document.__add_Template_Edit_Item(data);
+        if (_LOGIN_USER_ID) {
             $('#btnAnswerSurvey').removeClass('hide');
-            $('#modalAnswerSurveyLabel').text(data.title);
-            $('#surveyDescription').text(data.description);
-            document.__add_Template_Edit_Item(data);
-        }).fail(function(err) {
-            console.log(err);
-        });
-    }
+        } else {
+            if (data.loginNecessary) {
+                $('#btnLoginToAnswerSurvey').removeClass('hide');
+            } else {
+                $('#btnAnswerSurvey').removeClass('hide');
+            }
+        }
+    }).fail(function(err) {
+        console.log(err);
+    });
     
     $('#saveSurveyButton').click(function(){
         $('#answerForm').submit();
@@ -46,6 +52,7 @@ $(document).ready(function() {
             // 入力値を初期化
             console.log(result);
             $.notify(result.message, 'info');
+            $('#answerId').val(result.result);
             $('#modalAnswerSurvey').modal('hide');
         }).fail(function(xhr, textStatus, error) {
             handleErrorResponse(xhr, textStatus, error);

@@ -30,6 +30,7 @@ import org.support.project.knowledge.deploy.v1_11_0.Migrate_1_11_3;
 import org.support.project.knowledge.deploy.v1_11_0.Migrate_1_11_4;
 import org.support.project.knowledge.deploy.v1_12.Migrate_1_12_0;
 import org.support.project.knowledge.deploy.v1_12.Migrate_1_12_1;
+import org.support.project.knowledge.deploy.v1_12.Migrate_1_12_2;
 import org.support.project.knowledge.deploy.v1_1_0pre1.Migrate_1_1_0pre1;
 import org.support.project.knowledge.deploy.v1_4_0.Migrate_1_4_0;
 import org.support.project.knowledge.deploy.v1_5_0.Migrate_1_5_0;
@@ -95,6 +96,7 @@ public class InitDB {
         MAP.put("1.11.4", Migrate_1_11_4.get());
         MAP.put("1.12.0", Migrate_1_12_0.get());
         MAP.put("1.12.1", Migrate_1_12_1.get());
+        MAP.put("1.12.2", Migrate_1_12_2.get());
         MAP.put("2.0.0", Migrate_2_0_0.get());
         MAP.put("2.0.1", Migrate_2_0_1.get());
         MAP.put("2.0.2", Migrate_2_0_2.get());

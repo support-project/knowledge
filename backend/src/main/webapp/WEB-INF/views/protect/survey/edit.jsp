@@ -4,6 +4,7 @@
 <%@page import="org.support.project.web.logic.HttpRequestCheckLogic"%>
 <%@page import="org.support.project.web.util.JspUtil"%>
 <%@page import="org.support.project.knowledge.logic.KnowledgeLogic"%>
+<%@page import="org.support.project.web.config.SystemConfigValue"%>
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -70,6 +71,21 @@ var _MSG_CONFIRM_COPY = '<%= jspUtil.label("knowledge.survey.msg.copy.confirm") 
             <label for="description"><%= jspUtil.label("knowledge.template.label.description") %></label>
             <textarea class="form-control" name="description" id="description" placeholder="Description" ><%= jspUtil.out("description") %></textarea>
         </div>
+        <% if (!SystemConfigValue.get().isClose()) { %>
+        <div class="form-group">
+            <label><%= jspUtil.label("knowledge.template.label.login.necessary") %></label>
+            <br/>
+            <label>
+                <input type="radio" name="loginNecessary" value="0" <%= jspUtil.checked("0", "loginNecessary", false) %>> Yes
+            </label>
+            &nbsp;
+            <label>
+                <input type="radio" name="loginNecessary" value="1" <%= jspUtil.checked("1", "loginNecessary", true) %>> No
+            </label>
+        </div>
+        <% } else { %>
+                <input type="hidden" name="loginNecessary" value="1"><!-- デフォルトはログイン必要 -->
+        <% } %>
         
         <h5><b><%= jspUtil.label("knowledge.template.label.item") %></b></h5>
         <div class="form-group">

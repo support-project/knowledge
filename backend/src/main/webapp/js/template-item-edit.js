@@ -233,6 +233,10 @@ $(document).ready(function() {
                 $('#description').val(result.description);
                 $('#initialValue').val(result.initialValue);
                 $('#deletebutton').removeClass('hide');
+                if (result.loginNecessary === 0) {
+                    $('input[name=loginNecessary]:eq(0)').prop('checked', true);
+                }
+                
                 document._TEMPLATE.editable = result.editable;
                 if (!result.editable) {
                     $('#editableMsg').removeClass('hide');

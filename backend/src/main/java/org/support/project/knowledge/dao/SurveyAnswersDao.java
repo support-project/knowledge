@@ -32,6 +32,10 @@ public class SurveyAnswersDao extends GenSurveyAnswersDao {
         String sql = "SELECT COUNT(*) FROM SURVEY_ANSWERS WHERE KNOWLEDGE_ID = ?";
         return executeQuerySingle(sql, Integer.class, knowledgeId);
     }
+    public Integer selectAnonymousId(Long knowledgeId) {
+        String sql = "SELECT MAX(ANSWER_ID) FROM SURVEY_ANSWERS WHERE KNOWLEDGE_ID = ? AND ANSWER_ID < 0";
+        return executeQuerySingle(sql, Integer.class, knowledgeId);
+    }
 
 
 
