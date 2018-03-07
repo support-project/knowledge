@@ -1,18 +1,21 @@
 import Promise from 'bluebird'
 import api from '../../../api'
-
 import logger from 'logger'
-const LABEL = 'getStock.js'
 
-export default (store, id) => {
-  logger.debug(LABEL, 'getStock')
+const LABEL = 'saveStocks.js'
+
+export default (store, {id}) => {
+  logger.trace(LABEL, 'saveStocks')
   return Promise.try(() => {
-    var uri = '/_api/stocks/' + id
-    return api.request('get', uri, store.state.item)
-  }).then(response => {
-    store.state.item = response.data
-    logger.trace(LABEL, JSON.stringify(store.state.item))
-    return response.data
+    let uri = '/_api/articles/' + id + '/stocks'
+    return api.request('post', uri, store.state.stockSelect.items)
+  }).then(() => {
+    store.commit('pagestate/addAlert', {
+      display: false,
+      type: 'succcess',
+      title: 'Well done!',
+      content: 'You successfully save stocks.'
+    }, {root: true})
   }).catch(error => {
     logger.error(LABEL, JSON.stringify(error))
     var msg = logger.buildResponseErrorMsg(error.response, {suffix: 'Please try again.'})
@@ -22,6 +25,5 @@ export default (store, id) => {
       content: msg
     }, {root: true})
     throw error
-  }).finally(() => {
   })
 }

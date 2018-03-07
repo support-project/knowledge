@@ -39,6 +39,17 @@ public class MessageResult implements Serializable {
     public MessageResult() {
     }
     /**
+     * 
+     * @param httpStatusCode
+     * @param message
+     */
+    public MessageResult(Integer httpStatusCode, String message) {
+        super();
+        this.code = httpStatusCode;
+        this.message = message;
+    }
+    
+    /**
      * Constructor
      * @param status ステータス(org.support.project.web.config.MessageStatus)
      * @param code コード(HttpStatus)

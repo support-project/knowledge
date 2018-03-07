@@ -16,7 +16,7 @@ export default (store, id) => {
     }
   }).then(response => {
     store.state.item = response.data
-    logger.info(LABEL, JSON.stringify(store.state.item))
+    logger.trace(LABEL, JSON.stringify(store.state.item))
     return response.data
   }).catch(error => {
     logger.error(LABEL, JSON.stringify(error))
