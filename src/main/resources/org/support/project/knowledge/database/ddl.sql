@@ -282,7 +282,7 @@ create table SURVEYS (
   KNOWLEDGE_ID bigint not null
   , TITLE character varying(256) not null
   , DESCRIPTION text
-  , LOGIN_NECESSARY integer DEFAULT 0
+  , LOGIN_NECESSARY integer default 0
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -1079,6 +1079,7 @@ comment on table SURVEYS is 'アンケート';
 comment on column SURVEYS.KNOWLEDGE_ID is 'ナレッジID';
 comment on column SURVEYS.TITLE is 'タイトル';
 comment on column SURVEYS.DESCRIPTION is '説明';
+comment on column SURVEYS.LOGIN_NECESSARY is 'アンケート回答にログインが必須';
 comment on column SURVEYS.INSERT_USER is '登録ユーザ';
 comment on column SURVEYS.INSERT_DATETIME is '登録日時';
 comment on column SURVEYS.UPDATE_USER is '更新ユーザ';
