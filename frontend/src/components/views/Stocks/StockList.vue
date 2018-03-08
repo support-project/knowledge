@@ -13,7 +13,7 @@
             <div class="box box-default">
               <div class="box-header">
                 <h3 class="box-title">
-                  <router-link to="/stocks/add" class="btn btn-primary" tag="a">{{$t('Label.Add')}}</router-link>
+                  <button class="btn btn-primary" v-on:click="addStock">{{$t('Label.Add')}}</button>
                 </h3>
                 <div class="box-tools">
                   <ul class="pagination pagination-sm no-margin pull-right">
@@ -81,6 +81,7 @@ export default {
   },
   computed: {
     ...mapState({
+      item: state => state.stocks.item,
       items: state => state.stocks.items,
       pagination: state => state.stocks.pagination
     })
@@ -103,6 +104,11 @@ export default {
         pages: []
       }
       this.$router.push('/stocks/' + id + '/articles')
+    },
+    addStock () {
+      this.item.stockName = ''
+      this.item.description = ''
+      this.$router.push('/stocks/add')
     }
   },
   mounted () {
