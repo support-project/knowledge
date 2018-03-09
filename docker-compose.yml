@@ -44,7 +44,7 @@ services:
       - $PWD/backend/target/knowledge.war:/usr/local/tomcat/webapps/ROOT.war
 
   frontend:
-    image: node:8.9.4-slim
+    image: node:8.10.0
     env_file: .env
     environment:
       - https_proxy:${https_proxy}

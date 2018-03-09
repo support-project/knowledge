@@ -55,6 +55,13 @@ $ docker-compose run --rm frontend npm install --no-optional
 $ docker-compose run --rm frontend npm run afterinstall
 ```
 
+- If the following error occurs, execute the this command
+   - `PhantomJS not found on PATH`
+
+```
+$ docker-compose run --rm frontend npm install phantomjs-prebuilt@2.1.16 --ignore-scripts
+```
+
 #### start frontend with hot reload at localhost:8081
 
 ```
