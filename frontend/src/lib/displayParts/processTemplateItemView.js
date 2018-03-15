@@ -2,16 +2,20 @@ import Promise from 'bluebird'
 import logger from 'logger'
 import lang from 'lang'
 
-const LABEL = 'processToc.js'
+const LABEL = 'processTemplateItemView.js'
 
 var createTextItem = function (item) {
   var tag = ''
-  tag += item.itemValue
+  if (item.itemValue) {
+    tag += item.itemValue
+  }
   return tag
 }
 var createTextArea = function (item) {
   var tag = '<pre>'
-  tag += item.itemValue
+  if (item.itemValue) {
+    tag += item.itemValue
+  }
   tag += '</pre>'
   return tag
 }
@@ -100,7 +104,7 @@ var addTemplateItem = function (template) {
 }
 
 /**
- * 目次のHTMLを生成
+ * 拡張項目の表示
  */
 export default function (template) {
   logger.trace(LABEL, template)
