@@ -4,7 +4,6 @@ import java.lang.invoke.MethodHandles;
 
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
-import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.DraftKnowledgesDao;
@@ -17,12 +16,11 @@ import org.support.project.knowledge.logic.KnowledgeTemplateItemSelectLogic;
 import org.support.project.knowledge.vo.api.Type;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
-import org.support.project.web.control.ApiControl;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.logic.invoke.Open;
 
 @DI(instance = Instance.Prototype)
-public class GetArticleTemplateItemsApiControl extends ApiControl {
+public class GetArticleTemplateItemsApiControl extends AbstractArticleApi {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
@@ -33,18 +31,12 @@ public class GetArticleTemplateItemsApiControl extends ApiControl {
     @Open
     public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
-        String id = super.getParam("id");
-        LOG.debug(id);
-        if (!StringUtils.isLong(id)) {
-            return sendError(HttpStatus.SC_400_BAD_REQUEST);
-        }
+        long knowledgeId = getRouteArticleId();
         boolean includeDraft = false; // 下書きがあれば下書きの情報を取得
         String d = getParam("include_draft");
         if (d != null && d.toLowerCase().equals("true")) {
             includeDraft = true;
         }
-
-        long knowledgeId = Long.parseLong(id);
         KnowledgesEntity knowledge = KnowledgeLogic.get().select(knowledgeId, getLoginedUser());
         if (knowledge == null) {
             // 存在しない or アクセス権無し

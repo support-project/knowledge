@@ -14,12 +14,11 @@ import org.support.project.knowledge.logic.KnowledgeDataSelectLogic;
 import org.support.project.knowledge.vo.api.Knowledge;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
-import org.support.project.web.control.ApiControl;
 import org.support.project.web.control.service.Get;
 import org.support.project.web.logic.invoke.Open;
 
 @DI(instance = Instance.Prototype)
-public class GetArticleOneApiControl extends ApiControl {
+public class GetArticleOneApiControl extends AbstractArticleApi {
     /** ログ */
     private static final Log LOG = LogFactory.getLog(MethodHandles.lookup());
     /**
@@ -30,11 +29,8 @@ public class GetArticleOneApiControl extends ApiControl {
     @Open
     public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
-        String id = super.getParam("id");
-        LOG.debug(id);
-        if (!StringUtils.isLong(id)) {
-            return sendError(HttpStatus.SC_400_BAD_REQUEST);
-        }
+        long knowledgeId = getRouteArticleId();
+        
         String s = getParam("sanitize");
         boolean sanitize = !StringUtils.isFalse(s);
         
@@ -47,7 +43,6 @@ public class GetArticleOneApiControl extends ApiControl {
         String c = getParam("check_draft");
         boolean checkDraft = StringUtils.isTrue(c);
         
-        long knowledgeId = Long.parseLong(id);
         Knowledge result = KnowledgeDataSelectLogic.get().select(knowledgeId, getAccessUser(), parseMarkdown, sanitize, includeDraft, checkDraft);
         if (result == null) {
             return sendError(HttpStatus.SC_404_NOT_FOUND);
