@@ -114,7 +114,7 @@
       </nav>
     </header>
     <!-- Left side column. contains the logo and sidebar -->
-    <sidebar :display-name="user.userName" :picture-url="user.avatar" :user="user" />
+    <sidebar />
 
     <!-- contents -->
     <router-view></router-view>

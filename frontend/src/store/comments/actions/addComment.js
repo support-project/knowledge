@@ -19,6 +19,8 @@ export default (store, params) => {
   return Promise.try(() => {
     store.commit('pagestate/clearAlerts', null, {root: true})
     return api.request('post', '/_api/articles/' + params.id + '/comments', params.comment)
+  }).tap(() => {
+    return store.dispatch('user/loadUserInformation', null, {root: true})
   }).then(response => {
     logger.debug(LABEL, JSON.stringify(response.data))
     comment = response.data

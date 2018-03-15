@@ -1,13 +1,16 @@
 import Promise from 'bluebird'
 import api from '../../../api'
-import logger from 'logger'
 
+import logger from 'logger'
 const LABEL = 'loadUserInformation.js'
 
 var initUserInformation = (store) => {
   store.commit('setUser', {
     avatar: 'open.account/icon/',
-    userName: 'anonymous'
+    userName: 'anonymous',
+    localeKey: 'en',
+    POINT: 0,
+    configs: []
   })
 }
 
@@ -26,9 +29,19 @@ export default (store, params) => {
     var user = response.data
     if (user && user.userId) {
       if (user.localeKey) {
-        params.i18n.locale = user.localeKey
+        if (params && params.i18n) {
+          params.i18n.locale = user.localeKey
+        }
       }
       user.avatar = 'open.account/icon/' + user.userId // set my icon path
+      user.configs.forEach(element => {
+        if (element.configName === 'POINT') {
+          user[element.configName] = parseInt(element.configValue)
+        } else {
+          user[element.configName] = element.configValue
+        }
+      })
+
       store.commit('setUser', user)
       return true
     } else {

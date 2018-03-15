@@ -7,14 +7,14 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img :src="pictureUrl" />
+          <img :src="user.avatar" />
         </div>
         <div class="pull-left info">
           <div>
-            <p class="white">{{ displayName }}</p>
+            <p class="white">{{ user.userName }}</p>
           </div>
           <a href="javascript:;">
-            <i class="fa fa fa-heart-o text-success"></i> &#x00D7; 390
+            <i class="fa fa fa-heart-o text-success"></i> &#x00D7; {{animated_number}}
           </a>
         </div>
       </div>
@@ -49,13 +49,48 @@
 </template>
 <script>
 import SidebarMenu from './SidebarMenu'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Sidebar',
-  props: ['displayName', 'pictureUrl', 'user'],
+  computed: {
+    ...mapState({
+      user: state => state.user.user,
+      point: state => state.user.user.POINT
+    })
+  },
+  data: function () {
+    return {
+      animated_number: 0
+    }
+  },
+  watch: {
+    point: function (newValue, oldValue) {
+      console.log(newValue + ' <- ' + oldValue)
+      let timeCnt = 0
+      let timer
+      const animate = () => {
+        timeCnt++
+        if (timeCnt <= 60) {
+          this.animated_number = Math.floor((newValue - oldValue) * timeCnt / 60) + oldValue
+          timer = setTimeout(() => {
+            animate()
+          }, 10)
+        } else {
+          clearTimeout(timer)
+          timer = null
+          this.animated_number = newValue
+        }
+      }
+      animate()
+    }
+  },
   components: { SidebarMenu },
   mounted: function () {
     window.jQuery('[data-toggle="hideseek"]').off().hideseek()
+    this.$nextTick(() => {
+      this.animated_number = this.point
+    })
   }
 }
 </script>
