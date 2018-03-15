@@ -43,9 +43,14 @@ public class KnowledgeTemplateItemSelectLogic {
         }
         
         // 保存している値の取得
+        boolean loaded = false;
         List<TemplateItemsEntity> items = template.getItems();
         if (includeDraft) {
             List<DraftItemValuesEntity> values = DraftItemValuesDao.get().selectOnDraftId(draftId); 
+            if (values != null && values.size() > 0) {
+                loaded = true;
+            }
+            
             for (DraftItemValuesEntity val : values) {
                 for (TemplateItemsEntity item : items) {
                     if (val.getItemNo().equals(item.getItemNo())) {
@@ -54,7 +59,8 @@ public class KnowledgeTemplateItemSelectLogic {
                     }
                 }
             }
-        } else {
+        }
+        if (!loaded) {
             List<KnowledgeItemValuesEntity> values = KnowledgeItemValuesDao.get().selectOnKnowledgeId(knowledgeId);
             for (KnowledgeItemValuesEntity val : values) {
                 for (TemplateItemsEntity item : items) {

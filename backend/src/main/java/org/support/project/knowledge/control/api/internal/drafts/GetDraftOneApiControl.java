@@ -27,7 +27,7 @@ public class GetDraftOneApiControl extends ApiControl {
     @Get(path="_api/drafts/:id")
     public Boundary execute() throws Exception {
         LOG.trace("access user: " + getLoginUserId());
-        String id = super.getParam("id");
+        String id = super.getRouteParam("id");
         LOG.debug(id);
         if (!StringUtils.isLong(id)) {
             return sendError(HttpStatus.SC_400_BAD_REQUEST);
