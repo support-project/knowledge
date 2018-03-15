@@ -34,6 +34,8 @@ export default (store) => {
         return response.data.id
       })
     }
+  }).tap(() => {
+    return store.dispatch('user/loadUserInformation', null, {root: true})
   }).catch(error => {
     logger.error(LABEL, JSON.stringify(error))
     var msg = logger.buildResponseErrorMsg(error.response, {suffix: 'Please try again.'})

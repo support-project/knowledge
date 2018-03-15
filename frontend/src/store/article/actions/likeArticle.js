@@ -8,6 +8,8 @@ export default (store, id) => {
   logger.debug(LABEL, 'like article')
   return Promise.try(() => {
     return api.request('post', '/_api/articles/' + id + '/likes', null)
+  }).tap(() => {
+    return store.dispatch('user/loadUserInformation', null, {root: true})
   }).then(response => {
     logger.debug(LABEL, JSON.stringify(response.data))
     logger.debug(LABEL, JSON.stringify(store.state.article))

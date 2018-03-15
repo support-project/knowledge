@@ -1,4 +1,7 @@
 export default {
   avatar: 'open.account/icon/',
-  userName: 'anonymous'
+  userName: 'anonymous',
+  localeKey: 'en',
+  POINT: 0,
+  configs: []
 }
