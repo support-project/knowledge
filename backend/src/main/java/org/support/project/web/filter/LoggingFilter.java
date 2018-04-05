@@ -167,12 +167,12 @@ public class LoggingFilter implements Filter {
             path.append(req.getQueryString());
         }
 
-        path.append("\t").append(res.getStatus());
+        path.append(" ").append(res.getStatus());
         String ip = HttpUtil.getRemoteAddr(req);
-        path.append("\t").append(ip);
+        path.append(" ").append(ip);
 
         long time = end.getTime() - start.getTime();
-        path.append("\t").append(time).append("[ms]");
+        path.append(" ").append(time).append("[ms]");
         return path.toString();
     }
 

@@ -13,6 +13,8 @@
         <span class="page"> Logout</span>
       </a>
     </li>
+
+    <li class="header">Main</li>
     
     <router-link tag="li" class="pageLink" to="/articles/new">
       <a>
@@ -34,14 +36,12 @@
         <span class="page">{{ $t('Route.DraftList') }}</span>
       </a>
     </router-link>
-
     <router-link tag="li" class="pageLink" to="/myarticles">
       <a>
         <i class="fa fa-user-circle text-olive"></i>
         <span class="page">{{ $t('Route.MyArticleList') }}</span>
       </a>
     </router-link>
-    
     <router-link tag="li" class="pageLink" to="/stocks">
       <a>
         <i class="fa fa-bookmark-o text-olive"></i>
@@ -49,22 +49,43 @@
       </a>
     </router-link>
 
-    <li class="header">Other</li>
+    <li class="header">Custom</li>
 
-    <li class="pageLink">
-      <a href="open.knowledge/list">
-        <i class="fa fa-recycle" aria-hidden="true"></i>
-        <span class="page">{{ $t('Route.MoveOldUI') }}</span>
+    <li class="treeview">
+      <a href="#">
+        <i class="fa fa-cogs"></i>
+        <span>Config</span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left fa-fw pull-right"></i>
+        </span>
       </a>
+      <ul class="treeview-menu">
+        <li class="pageLink">
+          <a href="open.knowledge/list">
+            <i class="fa fa-recycle" aria-hidden="true"></i>
+            <span class="page">{{ $t('Route.MoveOldUI') }}</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="treeview-menu">
+        <router-link tag="li" class="pageLink" to="/config">
+          <a>
+            <i class="fa fa-cog"></i>
+            <span class="page">{{ $t('Route.Config') }}</span>
+          </a>
+        </router-link>
+      </ul>
+      <ul class="treeview-menu">
+        <router-link tag="li" class="pageLink" to="/localize">
+          <a>
+            <i class="fa fa-language"></i>
+            <span class="page">{{ $t('Route.ConfigLocalize') }}</span>
+          </a>
+        </router-link>
+      </ul>
     </li>
-    
+
     <!--
-    <router-link tag="li" class="pageLink" to="/stocks">
-      <a>
-        <i class="fa fa-list"></i>
-        <span class="page">ストック</span>
-      </a>
-    </router-link>
     <router-link tag="li" class="pageLink" to="/events">
       <a>
         <i class="fa fa-list"></i>
@@ -85,15 +106,6 @@
         <span class="page">タグ</span>
       </a>
     </router-link>
-
-
-    <li class="header">ME</li>
-    <li class="pageLink router-link-active">
-      <a href="open.knowledge/list">
-        <i class="fa fa-recycle" aria-hidden="true"></i>
-        <span class="page">{{ $t('Route.MoveOldUI') }}</span>
-      </a>
-    </li>
 
     <li class="header">Test</li>
     <router-link tag="li" class="pageLink" to="/test">

@@ -10,6 +10,8 @@
     "StockList": "Stocks",
     "StockArticles": "Stock",
     "StockAdd": "Add Stock",
+    "Config": "Config",
+    "ConfigLocalize": "Localize",
     "MoveOldUI": "Change to OLD UI",
     "TestViewTitle": "Page of Test",
     "TestViewDescription": "This page is test of frontend development"
@@ -128,5 +130,15 @@
     "Stocked": "ON/OFF",
     "StockName": "Stock name",
     "Comment": "Comment"
+  },
+  "Config": {
+    "description": "Config"
+  },
+  "ConfigLocalize": {
+    "description": "Localize",
+    "Language": "Display Language",
+    "English": "English",
+    "Japanese": "Japanese",
+    "Edit": "Edit"
   }
 }
