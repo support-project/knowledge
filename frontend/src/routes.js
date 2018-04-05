@@ -10,6 +10,8 @@ import DraftList from './components/views/Articles/DraftList.vue'
 import StockList from './components/views/Stocks/StockList.vue'
 import StockArticles from './components/views/Stocks/StockArticles.vue'
 import StockAdd from './components/views/Stocks/StockAdd.vue'
+import Config from './components/views/Configs/Config.vue'
+import ConfigLocalize from './components/views/Configs/ConfigLocalize.vue'
 
 /*
 import TestView from './components/views/Test.vue'
@@ -81,6 +83,16 @@ const routes = [
         component: StockArticles,
         name: 'StockArticles',
         meta: {requiresAuth: true}
+      }, {
+        path: 'config',
+        component: Config,
+        name: 'Config',
+        meta: {requiresAuth: true}
+      }, {
+        path: 'localize',
+        component: ConfigLocalize,
+        name: 'ConfigLocalize',
+        meta: {requiresAuth: false}
 /*
       }, {
         path: 'test',

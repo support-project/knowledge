@@ -30,6 +30,8 @@ public abstract class ApiControl extends Control {
     /** ログ */
     private static Log LOG = LogFactory.getLog(MethodHandles.lookup());
 
+    protected static final Msg _OK = new Msg("OK");
+    
     private boolean isSetPaginationHeaders = false;
     
     protected <T> T parseJson(Class<T> type) throws InvalidParamException {

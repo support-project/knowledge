@@ -2,6 +2,7 @@ import user from './state/user'
 import userInfo from './state/userInfo'
 
 import loadUserInformation from './actions/loadUserInformation'
+import setLanguage from './actions/setLanguage'
 
 import setUser from './mutations/setUser'
 import setUserInfo from './mutations/setUserInfo'
@@ -20,7 +21,8 @@ export default {
     getUserInfo: getUserInfo
   },
   actions: {
-    loadUserInformation: loadUserInformation
+    loadUserInformation: loadUserInformation,
+    setLanguage: setLanguage
   },
   mutations: {
     setUser: setUser,

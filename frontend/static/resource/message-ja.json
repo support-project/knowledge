@@ -10,6 +10,8 @@
     "StockList": "ストック一覧",
     "StockArticles": "ストック",
     "StockAdd": "ストック追加",
+    "Config": "設定",
+    "ConfigLocalize": "地域",
     "MoveOldUI": "旧い画面に戻す",
     "TestViewTitle": "テストページ",
     "TestViewDescription": "フロントエンド開発テストページ"
@@ -128,5 +130,15 @@
     "Stocked": "ON/OFF",
     "StockName": "ストック名",
     "Comment": "コメント"
+  },
+  "Config": {
+    "description": "設定"
+  },
+  "ConfigLocalize": {
+    "description": "地域設定",
+    "Language": "表示言語",
+    "English": "English",
+    "Japanese": "日本語",
+    "Edit": "変更"
   }
 }
