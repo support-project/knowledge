@@ -34,8 +34,7 @@ export default {
   },
   computed: {
     ...mapState({
-      item: state => state.stocks.item,
-      pagination: state => state.stocks.articlePagination
+      pagestate: state => state.pagestate
     })
   },
   methods: {

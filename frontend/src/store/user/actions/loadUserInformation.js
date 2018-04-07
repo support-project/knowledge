@@ -1,14 +1,17 @@
 import Promise from 'bluebird'
+import jstz from 'jstz'
 import api from '../../../api'
 
 import logger from 'logger'
 const LABEL = 'loadUserInformation.js'
+var timezone = jstz.determine().name()
 
 var initUserInformation = (store) => {
   store.commit('setUser', {
     avatar: 'open.account/icon/',
     userName: 'anonymous',
     localeKey: 'en',
+    timezone: timezone,
     POINT: 0,
     configs: []
   })
@@ -41,6 +44,9 @@ export default (store, params) => {
           user[element.configName] = element.configValue
         }
       })
+      if (!user.timezone) {
+        user.timezone = timezone
+      }
 
       store.commit('setUser', user)
       return true

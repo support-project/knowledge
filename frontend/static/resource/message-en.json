@@ -139,6 +139,7 @@
     "Language": "Display Language",
     "English": "English",
     "Japanese": "Japanese",
+    "Timezone": "Timezone",
     "Edit": "Edit"
   }
 }
