@@ -43,7 +43,6 @@ Vue.filter('abbreviate', function (value, len) {
   return lang.abbreviate(value, len)
 })
 Vue.filter('dispDate', function (date, format) {
-  console.log(store.state.user.user.timezone)
   var f = 'YYYY/MM/DD HH:mm Z' // TODO datetime format
   if (format) {
     f = format

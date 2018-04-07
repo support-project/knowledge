@@ -116,12 +116,10 @@ export default {
         $i18n: this.$i18n,
         lang: lang
       }).then(() => {
-        console.log('this.editLanguage = false')
         this.editLanguage = false
       })
     },
     doEditLanguage () {
-      console.log('this.editLanguage = true')
       this.editLanguage = true
     },
     doEditTimezone () {
