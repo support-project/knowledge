@@ -28,7 +28,7 @@ import AppView from './components/App.vue'
 import rightSidebar from './lib/displayParts/rightSidebar'
 
 import lang from 'lang'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 var LABEL = 'main.js'
 
@@ -43,11 +43,16 @@ Vue.filter('abbreviate', function (value, len) {
   return lang.abbreviate(value, len)
 })
 Vue.filter('dispDate', function (date, format) {
-  var f = 'YYYY/MM/DD HH:mm'
+  var f = 'YYYY/MM/DD HH:mm Z' // TODO datetime format
   if (format) {
     f = format
   }
-  return moment(date).format(f)
+  var timezone = store.state.user.user.timezone
+  if (!timezone) {
+    return moment(date).format(f)
+  } else {
+    return moment.utc(date).tz(timezone).format(f)
+  }
 })
 
 Vue.use(VueRouter)
