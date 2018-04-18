@@ -120,7 +120,7 @@ public class AddSampleKnowledge {
         data.setKnowledge(entity);
         data.setTags(tagList);
         
-        KnowledgeLogic.get().insert(data, loginedUser);
+        KnowledgeLogic.get().insert(data, loginedUser, false);
 
         LOG.info("サンプル登録 :" + org.apache.commons.lang.StringUtils.abbreviate(line, 50));
         count++;

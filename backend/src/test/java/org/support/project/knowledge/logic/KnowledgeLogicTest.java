@@ -42,7 +42,7 @@ public class KnowledgeLogicTest extends TestCommon {
         KnowledgeData data = new KnowledgeData();
         data.setKnowledge(entity);
         
-        entity = logic.insert(data, loginedUser);
+        entity = logic.insert(data, loginedUser, false);
 
         // publicFlagは指定しないでDBに保存すると、公開になる
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
@@ -72,7 +72,7 @@ public class KnowledgeLogicTest extends TestCommon {
         KnowledgeData data = new KnowledgeData();
         data.setKnowledge(entity);
         
-        entity = logic.insert(data, loginedUser2);
+        entity = logic.insert(data, loginedUser2, false);
         // publicFlagは指定しないでDBに保存すると、公開になる
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
         KnowledgesEntity saved = KnowledgesDao.get().selectOnKey(entity.getKnowledgeId());
@@ -81,7 +81,7 @@ public class KnowledgeLogicTest extends TestCommon {
         entity.setTitle(RandomUtil.randamGen(64));
         entity.setContent(RandomUtil.randamGen(1024));
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
-        logic.update(data, loginedUser2);
+        logic.update(data, loginedUser2, false);
 
         saved = KnowledgesDao.get().selectOnKeyWithUserName(entity.getKnowledgeId());
         entity.setInsertUserName(loginedUser2.getUserInfomation().getUserName());

@@ -60,7 +60,9 @@ public class Knowledge extends KnowledgesEntity {
     /** 取得したユーザが、この記事を表示したことがあるかどうか */
     private boolean viewed = false;
     
-    
+    /** 通知を送らない */
+    private Boolean ignoreNotification = false;
+
     
     public boolean isEditable() {
         return editable;
@@ -166,6 +168,12 @@ public class Knowledge extends KnowledgesEntity {
     }
     public void setViewed(boolean viewed) {
         this.viewed = viewed;
+    }
+    public Boolean getIgnoreNotification() {
+        return ignoreNotification;
+    }
+    public void setIgnoreNotification(Boolean ignoreNotification) {
+        this.ignoreNotification = ignoreNotification;
     }
     
 
