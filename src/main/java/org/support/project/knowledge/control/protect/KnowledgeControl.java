@@ -213,7 +213,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         
         LOG.trace("save");
 
-        KnowledgesEntity insertedEntity = knowledgeLogic.insert(data, super.getLoginedUser());
+        KnowledgesEntity insertedEntity = knowledgeLogic.insert(data, super.getLoginedUser(), false);
         
         return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,
                 String.valueOf(insertedEntity.getKnowledgeId()), "message.success.insert");
@@ -308,7 +308,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
         }
         // 更新実行
-        KnowledgesEntity updatedEntity = knowledgeLogic.update(data, super.getLoginedUser());
+        KnowledgesEntity updatedEntity = knowledgeLogic.update(data, super.getLoginedUser(), false);
         
         if (data.isUpdateContent()) {
             return sendMsg(MessageStatus.Success, HttpStatus.SC_200_OK,

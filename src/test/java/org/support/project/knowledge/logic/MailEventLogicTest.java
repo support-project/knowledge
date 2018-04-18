@@ -144,7 +144,7 @@ public class MailEventLogicTest extends TestCommon{
             }
             
             KnowledgeData data = KnowledgeData.create(knowledge, "", "", "", null, null, template);
-            knowledge = KnowledgeLogic.get().insert(data, loginedUser);
+            knowledge = KnowledgeLogic.get().insert(data, loginedUser, false);
             
             // 参加登録
             ParticipantsEntity participant = new ParticipantsEntity(knowledge.getKnowledgeId(), loginedUser.getUserId());
@@ -203,7 +203,7 @@ public class MailEventLogicTest extends TestCommon{
         }
         
         KnowledgeData data = KnowledgeData.create(knowledge, "", "", "", null, null, template);
-        knowledge = KnowledgeLogic.get().insert(data, loginedUser);
+        knowledge = KnowledgeLogic.get().insert(data, loginedUser, false);
         
         // 参加登録
         ParticipantsEntity participant = new ParticipantsEntity(knowledge.getKnowledgeId(), loginedUser.getUserId());
@@ -268,7 +268,7 @@ public class MailEventLogicTest extends TestCommon{
         }
         
         KnowledgeData data = KnowledgeData.create(knowledge, "", "", "", null, null, template);
-        knowledge = KnowledgeLogic.get().insert(data, loginedUser);
+        knowledge = KnowledgeLogic.get().insert(data, loginedUser, false);
         
         // ストック
         StockKnowledgesEntity stock = new StockKnowledgesEntity();

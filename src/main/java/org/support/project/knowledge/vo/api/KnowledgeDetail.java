@@ -15,6 +15,9 @@ public class KnowledgeDetail extends Knowledge {
     /** 編集可能な対象（共同編集者） */
     private Target editors;
     
+    /** 通知を送らない */
+    private Boolean ignoreNotification = false;
+    
     /**
      * @return the templateItems
      */
@@ -63,4 +66,12 @@ public class KnowledgeDetail extends Knowledge {
     public void setAttachments(List<AttachedFile> attachments) {
         this.attachments = attachments;
     }
+    
+    public Boolean getIgnoreNotification() {
+        return ignoreNotification;
+    }
+    public void setIgnoreNotification(Boolean ignoreNotification) {
+        this.ignoreNotification = ignoreNotification;
+    }
+
 }

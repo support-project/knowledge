@@ -305,7 +305,7 @@ public abstract class TestCommon {
         if (StringUtils.isNotEmpty(viewersStr)) {
             data.setViewers(viewersStr);
         }
-        entity = KnowledgeLogic.get().insert(data, loginedUser);
+        entity = KnowledgeLogic.get().insert(data, loginedUser, false);
         return entity;
     }
     
