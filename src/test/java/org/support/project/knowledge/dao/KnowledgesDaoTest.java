@@ -39,7 +39,7 @@ public class KnowledgesDaoTest extends TestCommon {
             KnowledgeData data = new KnowledgeData();
             data.setKnowledge(entity);
 
-            entity = logic.insert(data, loginedUser);
+            entity = logic.insert(data, loginedUser, false);
             knowledgeIds.add(entity.getKnowledgeId());
         }
         KnowledgesDao dao = KnowledgesDao.get();
@@ -65,7 +65,7 @@ public class KnowledgesDaoTest extends TestCommon {
             KnowledgeData data = new KnowledgeData();
             data.setKnowledge(entity);
 
-            entity = logic.insert(data, loginedUser);
+            entity = logic.insert(data, loginedUser, false);
             knowledge.add(entity);
 
             if (i == 29) {
@@ -107,7 +107,7 @@ public class KnowledgesDaoTest extends TestCommon {
             KnowledgeData data = new KnowledgeData();
             data.setKnowledge(entity);
             
-            entity = logic.insert(data, loginedUser);
+            entity = logic.insert(data, loginedUser, false);
             knowledge.add(entity);
             if (i == 29) {
                 LikeLogic.get().addLike(entity.getKnowledgeId(), loginedUser2, Locale.JAPAN);

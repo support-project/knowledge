@@ -399,7 +399,7 @@ public class MailhookLogic {
         data.setViewers(viewers);
         data.setEditors(editors);
         
-        KnowledgesEntity entity = KnowledgeLogic.get().update(data, loginedUser);
+        KnowledgesEntity entity = KnowledgeLogic.get().update(data, loginedUser, false);
         LOG.info("Knowledge[" + entity.getKnowledgeId() + "] " + entity.getTitle() + " was updated.");
     }
 
@@ -468,7 +468,7 @@ public class MailhookLogic {
         data.setEditors(editors);
         data.setFileNos(fileNos);
         
-        entity = KnowledgeLogic.get().insert(data, loginedUser);
+        entity = KnowledgeLogic.get().insert(data, loginedUser, false);
         
         MailPostsEntity post = new MailPostsEntity();
         post.setMessageId(msgId);

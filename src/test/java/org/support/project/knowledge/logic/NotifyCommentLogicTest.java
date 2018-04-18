@@ -56,7 +56,7 @@ public class NotifyCommentLogicTest extends TestCommon {
         knowledge.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC); // 公開
         KnowledgeData data = new KnowledgeData();
         data.setKnowledge(knowledge);
-        knowledge1 = KnowledgeLogic.get().insert(data, loginedUser);
+        knowledge1 = KnowledgeLogic.get().insert(data, loginedUser, false);
         
         LOG.info("テストユーザ1でKnowledge登録");
         knowledge = new KnowledgesEntity();
@@ -65,7 +65,7 @@ public class NotifyCommentLogicTest extends TestCommon {
         knowledge.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE); // 非公開
         data = new KnowledgeData();
         data.setKnowledge(knowledge);
-        knowledge2 = KnowledgeLogic.get().insert(data, loginedUser);
+        knowledge2 = KnowledgeLogic.get().insert(data, loginedUser, false);
         
         LOG.info("テストユーザ1でKnowledge登録");
         knowledge = new KnowledgesEntity();
@@ -80,7 +80,7 @@ public class NotifyCommentLogicTest extends TestCommon {
         data = new KnowledgeData();
         data.setKnowledge(knowledge);
         data.setViewers(targets);
-        knowledge3 = KnowledgeLogic.get().insert(data, loginedUser);
+        knowledge3 = KnowledgeLogic.get().insert(data, loginedUser, false);
         
         LOG.info("テストユーザ1でKnowledge登録");
         knowledge = new KnowledgesEntity();
@@ -95,7 +95,7 @@ public class NotifyCommentLogicTest extends TestCommon {
         data = new KnowledgeData();
         data.setKnowledge(knowledge);
         data.setViewers(targets);
-        knowledge4 = KnowledgeLogic.get().insert(data, loginedUser);
+        knowledge4 = KnowledgeLogic.get().insert(data, loginedUser, false);
     }
     
     @Test

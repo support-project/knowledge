@@ -32,7 +32,7 @@ public class SurveysDaoTest extends TestCommon {
         KnowledgeData data = new KnowledgeData();
         data.setKnowledge(entity);
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
-        entity = logic.insert(data, admin);
+        entity = logic.insert(data, admin, false);
 
         // Survey登録
         SurveysEntity survey = new SurveysEntity(entity.getKnowledgeId());
@@ -68,7 +68,7 @@ public class SurveysDaoTest extends TestCommon {
         KnowledgeData data = new KnowledgeData();
         data.setKnowledge(entity);
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
-        entity = logic.insert(data, admin);
+        entity = logic.insert(data, admin, false);
 
         // Survey登録
         SurveysEntity survey = new SurveysEntity(entity.getKnowledgeId());
