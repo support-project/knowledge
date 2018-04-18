@@ -152,7 +152,7 @@ public class KnowledgeDataEditLogic {
         // 画面での登録と形をあわせる
         KnowledgeData knowledge = conv(data);
         knowledge.getKnowledge().setKnowledgeId(null);
-        KnowledgesEntity insertedEntity = KnowledgeLogic.get().insert(knowledge, loginedUser);
+        KnowledgesEntity insertedEntity = KnowledgeLogic.get().insert(knowledge, loginedUser, data.getIgnoreNotification());
         return insertedEntity.getKnowledgeId();
     }
     /**
@@ -182,7 +182,7 @@ public class KnowledgeDataEditLogic {
         // TODO この辺の判定処理は、後で共有化すること（KnowledgeControlで、ロジックを実装しすぎている）
         knowledge.setUpdateContent(true);
         knowledge.setNotifyUpdate(true);
-        KnowledgeLogic.get().update(knowledge, loginedUser);
+        KnowledgeLogic.get().update(knowledge, loginedUser, data.getIgnoreNotification());
     }
 
     /**

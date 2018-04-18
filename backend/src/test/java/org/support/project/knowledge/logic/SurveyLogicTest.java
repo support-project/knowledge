@@ -83,7 +83,7 @@ public class SurveyLogicTest extends TestCommon {
         KnowledgeData data = new KnowledgeData();
         data.setKnowledge(entity);
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PRIVATE);
-        entity = logic.insert(data, user);
+        entity = logic.insert(data, user, false);
 
         // Survey登録
         Long knowledgeId = entity.getKnowledgeId();
@@ -110,7 +110,7 @@ public class SurveyLogicTest extends TestCommon {
         data = new KnowledgeData();
         data.setKnowledge(entity);
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
-        entity = logic.insert(data, admin);
+        entity = logic.insert(data, admin, false);
         
         // Survey登録
         knowledgeId = entity.getKnowledgeId();

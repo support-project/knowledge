@@ -80,7 +80,7 @@ public class KnowledgeUpdateWebHookNotificationTest extends TestCommon {
         data.setTagsStr("KnowledgeManagement,Java,SQL");
         data.setViewers("G-0,G-1,U-3");
         data.setKnowledge(knowledge);
-        knowledge = KnowledgeLogic.get().insert(data, loginedUser);
+        knowledge = KnowledgeLogic.get().insert(data, loginedUser, false);
         
         NotifyMailBat.main(null);
 

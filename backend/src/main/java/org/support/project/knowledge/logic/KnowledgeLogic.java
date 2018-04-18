@@ -189,7 +189,7 @@ public class KnowledgeLogic {
      * @throws Exception Exception
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity insert(KnowledgeData data, AccessUser loginedUser) throws Exception {
+    public KnowledgesEntity insert(KnowledgeData data, AccessUser loginedUser, boolean ignoreNotification) throws Exception {
         List<BeforeSaveHook> beforeSaveHooks = HookFactory.getBeforeSaveHookInstance(data, null);
         for (BeforeSaveHook beforeSaveHook : beforeSaveHooks) {
             beforeSaveHook.beforeSave(data, null, loginedUser);
@@ -215,7 +215,9 @@ public class KnowledgeLogic {
         // 履歴登録
         insertHistory(insertedEntity);
         // 通知
-        NotifyLogic.get().notifyOnKnowledgeInsert(insertedEntity);
+        if (!ignoreNotification) {
+            NotifyLogic.get().notifyOnKnowledgeInsert(insertedEntity);
+        }
         
         // 下書きがあったら消す
         removeDraft(data.getDraftId(), loginedUser);
@@ -240,7 +242,7 @@ public class KnowledgeLogic {
      * @throws Exception Exception
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public KnowledgesEntity update(KnowledgeData data, AccessUser loginedUser) throws Exception {
+    public KnowledgesEntity update(KnowledgeData data, AccessUser loginedUser, boolean ignoreNotification) throws Exception {
         // 更新前の情報を保持
         KnowledgesEntity db = knowledgesDao.selectOnKey(data.getKnowledge().getKnowledgeId());
         List<BeforeSaveHook> beforeSaveHooks = HookFactory.getBeforeSaveHookInstance(data, db);
@@ -290,7 +292,7 @@ public class KnowledgeLogic {
             updatedEntity.setUpdateDatetime(db.getUpdateDatetime());
             knowledgesDao.physicalUpdate(updatedEntity);
         }
-        if (data.isNotifyUpdate()) {
+        if (data.isNotifyUpdate() && !ignoreNotification) {
             // 通知
             NotifyLogic.get().notifyOnKnowledgeUpdate(updatedEntity);
         }
