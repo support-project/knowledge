@@ -28,7 +28,7 @@
                   id="search"
                   class="search form-control"
                   placeholder="Search Keyword"
-                  v-model="search.keyword"
+                  v-model="keyword"
                 >
                 <span class="input-group-btn">
                   <button type="submit" name="search" id="search-btn" class="btn btn-flat" >
@@ -167,7 +167,8 @@ export default {
         fixed_layout: config.fixedLayout,
         hide_logo: config.hideLogoOnMobile
       },
-      error: ''
+      error: '',
+      keyword: ''
     }
   },
   computed: {
@@ -183,12 +184,16 @@ export default {
       this.$store.commit('TOGGLE_SEARCHING')
     },
     searchArticles () {
+      logger.debug(LABEL, 'searchArticles:' + this.keyword)
+      this.$router.push('/articles?keyword=' + this.keyword)
+      /*
       logger.debug(LABEL, 'searchArticles:' + this.$route.path)
       if (this.$route.path !== '/' && this.$route.path !== '/myarticles') {
         this.$router.push('/')
       } else {
         this.$store.dispatch('articles/getArticles')
       }
+      */
     }
   }
 }

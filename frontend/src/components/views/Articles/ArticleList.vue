@@ -6,7 +6,8 @@
 
       <page-title
         :title = "'Route.' + $route.name"
-        :description = "$route.name + '.description'" />
+        :description = "$route.name + '.description'"
+        :breadcrumb = "breadcrumb" />
 
       <!-- Main content -->
       <div class="content main-content">
@@ -81,12 +82,22 @@ const LABEL = 'ArticleList.vue'
 
 export default {
   name: 'ArticleList',
+  data () {
+    let breadcrumb = []
+    if (this.$route.path === '/myarticles') {
+      breadcrumb.push({to: '/myarticles/' + this.$route.params.id, name: 'Route.MyArticleList'})
+    }
+    return {
+      breadcrumb: breadcrumb
+    }
+  },
   components: { PageTitle, ArticleListItem, ArticleListCalendar },
   computed: {
     ...mapState({
       pagestate: state => state.pagestate,
       articles: state => state.articles.articles,
-      pagination: state => state.articles.pagination
+      pagination: state => state.articles.pagination,
+      search: state => state.articles.search
     })
   },
   methods: {
@@ -103,16 +114,23 @@ export default {
       logger.trace(LABEL, JSON.stringify(this.$store.getters['user/getUser']))
       var id = this.$store.getters['user/getUser'].userId
       this.$store.commit('articles/setCreatorToSearchCondition', id)
+    },
+    loadQueryParams () {
+      this.$store.state.articles.search.keyword = this.$route.query.keyword ? this.$route.query.keyword : ''
     }
   },
   watch: {
     '$route' (to, from) {
       logger.debug(LABEL, 'from:' + from.path + '   ' + 'to:' + to.path)
+      this.breadcrumb = []
       if (from.path !== '/myarticles' && to.path === '/myarticles') {
         this.clearSearchCondition()
         this.setMyIdToSearchCondition()
+        this.breadcrumb.push({to: '/myarticles/' + this.$route.params.id, name: 'Route.MyArticleList'})
       } else if (from.path !== '/' && to.path === '/') {
         this.clearSearchCondition()
+      } else {
+        this.loadQueryParams()
       }
       this.getArticleList()
     }
@@ -120,11 +138,15 @@ export default {
   mounted () {
     // 画面表示時に読み込み
     this.$nextTick(() => {
+      console.log('aaa')
+      logger.info(LABEL, JSON.stringify(this.$route.query))
       if (this.$route.path === '/') {
         this.clearSearchCondition()
       } else if (this.$route.path === '/myarticles') {
         this.clearSearchCondition()
         this.setMyIdToSearchCondition()
+      } else {
+        this.loadQueryParams()
       }
       this.getArticleList()
     })
