@@ -11,6 +11,14 @@
 
       <!-- Main content -->
       <div class="content main-content">
+        <div class="search-condition">
+          <button class="btn btn-link search-condition-param" v-if="search.keyword">
+            <i class="fa fa-search"></i>{{search.keyword}}
+          </button><button class="btn btn-link search-condition-param" v-for="t in searchTypes" :key="t.id">
+            <i :class="'fa ' + t.icon" aria-hidden="true"></i>{{t.name}}
+          </button>
+        </div>
+
         <div v-if="pagestate.loading" class="text-center">
           <i class="fa fa-refresh fa-spin fa-1x fa-fw" v-if="pagestate.loading"></i>
         </div>
@@ -88,7 +96,8 @@ export default {
       breadcrumb.push({to: '/myarticles/' + this.$route.params.id, name: 'Route.MyArticleList'})
     }
     return {
-      breadcrumb: breadcrumb
+      breadcrumb: breadcrumb,
+      searchTypes: []
     }
   },
   components: { PageTitle, ArticleListItem, ArticleListCalendar },
@@ -115,8 +124,24 @@ export default {
       var id = this.$store.getters['user/getUser'].userId
       this.$store.commit('articles/setCreatorToSearchCondition', id)
     },
+    loadQueryListParam (param) {
+      let arr = []
+      if (param) {
+        let list = param.split(',')
+        list.forEach(element => {
+          arr.push(element)
+        })
+      }
+      return arr
+    },
     loadQueryParams () {
       this.$store.state.articles.search.keyword = this.$route.query.keyword ? this.$route.query.keyword : ''
+      this.$store.state.articles.search.types = this.loadQueryListParam(this.$route.query.types)
+      this.$store.state.articles.search.typeIds = this.loadQueryListParam(this.$route.query.typeIds)
+      this.$store.dispatch('articles/getTypesInformation').then(searchTypes => {
+        logger.info(LABEL, JSON.stringify(searchTypes))
+        this.searchTypes = searchTypes
+      })
     }
   },
   watch: {
@@ -138,7 +163,6 @@ export default {
   mounted () {
     // 画面表示時に読み込み
     this.$nextTick(() => {
-      console.log('aaa')
       logger.info(LABEL, JSON.stringify(this.$route.query))
       if (this.$route.path === '/') {
         this.clearSearchCondition()
@@ -167,6 +191,15 @@ export default {
   font-size: 80%;
   position: relative;
   bottom: 10px;
+}
+.search-condition {
+  margin-top: -10px;
+  border: 0px solid black;
+}
+.search-condition-param {
+  border: 0px solid black;
+  padding: 0px;
+  margin-right: 2px;
 }
 </style>
 <style src="../../css/knowledge-list.css" />

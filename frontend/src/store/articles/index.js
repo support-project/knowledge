@@ -1,6 +1,7 @@
 import getArticles from './actions/getArticles'
 import getDrafts from './actions/getDrafts'
 import selectPage from './actions/selectPage'
+import getTypesInformation from './actions/getTypesInformation'
 
 import setArticles from './mutations/setArticles'
 import setDrafts from './mutations/setDrafts'
@@ -25,6 +26,8 @@ export default {
     search: {
       search: false,
       keyword: '',
+      types: [],
+      typeIds: [],
       creators: []
     }
   },
@@ -33,7 +36,8 @@ export default {
   actions: {
     getArticles: getArticles,
     getDrafts: getDrafts,
-    selectPage: selectPage
+    selectPage: selectPage,
+    getTypesInformation: getTypesInformation
   },
   mutations: {
     setArticles: setArticles,
