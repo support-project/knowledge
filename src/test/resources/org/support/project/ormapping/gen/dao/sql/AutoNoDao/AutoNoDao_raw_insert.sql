@@ -1,0 +1,16 @@
+INSERT INTO AUTO_NO
+( 
+NO
+ , STR
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

@@ -1,0 +1,20 @@
+INSERT INTO EMPLOYEE
+( 
+EMPLOYEE_ID
+ , EMPLOYEE_NAME
+ , PASSWORD
+ , MAIL_ADRESS
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);
