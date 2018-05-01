@@ -4,7 +4,7 @@
 
     <groupId>org.support-project</groupId>
     <artifactId>knowledge</artifactId>
-    <version>1.12.1</version>
+    <version>1.13.0-SHAPSHOT</version>
     <packaging>war</packaging>
 
     <name>knowledge</name>

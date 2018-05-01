@@ -55,7 +55,7 @@ public class GenSurveysEntity implements Serializable {
     private String title;
     /** 説明 */
     private String description;
-    /**  */
+    /** アンケート回答にログインが必須 */
     private Integer loginNecessary;
     /** 登録ユーザ */
     private Integer insertUser;
@@ -117,15 +117,15 @@ public class GenSurveysEntity implements Serializable {
     }
 
     /**
-     * Get .
-     * @return 
+     * Get アンケート回答にログインが必須.
+     * @return アンケート回答にログインが必須
      */
     public Integer getLoginNecessary() {
         return this.loginNecessary;
     }
     /**
-     * Set .
-     * @param loginNecessary 
+     * Set アンケート回答にログインが必須.
+     * @param loginNecessary アンケート回答にログインが必須
      * @return this object     */
     public GenSurveysEntity setLoginNecessary(Integer loginNecessary) {
         this.loginNecessary = loginNecessary;

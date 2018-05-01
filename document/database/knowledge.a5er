@@ -10,7 +10,7 @@ Author=
 MaxEntityRowShow=1000
 ReadOnlyRecommend=0
 Page=Main
-PageInfo="Main",7,"A3Landscape",$FFFFFF
+PageInfo="Main",7,"A3Landscape",$FFDDDD
 LogicalView=1
 DecodeDomain=0
 ViewModePageIndividually=1
@@ -416,7 +416,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1500
-Top=1450
+Top=1500
 Field="NO","NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="コメント番号","COMMENT_NO","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="種類","LIKE_CLASS","@INT",,,"1","",$FFFFFFFF,""
@@ -425,7 +425,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170809123907
-Position="MAIN",1500,1450
+Position="MAIN",1500,1500
 
 [Entity]
 PName=TOKENS
@@ -1640,7 +1640,7 @@ Comment=
 TableOption=
 Page=MAIN
 Left=1500
-Top=1600
+Top=1650
 Field="NO","NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF,""
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="種類","LIKE_CLASS","@INT",,,"1","",$FFFFFFFF,""
@@ -1649,7 +1649,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20170809123852
-Position="MAIN",1500,1600
+Position="MAIN",1500,1650
 
 [Relation]
 Entity1=KNOWLEDGES
@@ -1684,11 +1684,12 @@ Field="コメント番号","COMMENT_NO","BIGSERIAL","NOT NULL",0,"","",$FFFFFFFF
 Field="ナレッジID","KNOWLEDGE_ID","bigint","NOT NULL",,"","",$FFFFFFFF,""
 Field="コメント","COMMENT","text",,,"","",$FFFFFFFF,""
 Field="ステータス","COMMENT_STATUS","@INT",,,"","",$FFFFFFFF,""
+Field="匿名化","ANONYMOUS","@INT",,,"","",$FFFFFFFF,""
 Index=IDX_COMMENTS_KNOWLEDGE_ID=0,KNOWLEDGE_ID
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20150910035117
+ModifiedDateTime=20180501120731
 Position="MAIN",1500,1250
 
 [Relation]
@@ -2019,14 +2020,15 @@ Field="参照件数","VIEW_COUNT","bigint",,,"","",$FFFFFFFF,""
 Field="テンプレートの種類ID","TYPE_ID","@INT",,,"","",$FFFFFFFF,""
 Field="通知ステータス","NOTIFY_STATUS","@INT",,,"","",$FFFFFFFF,""
 Field="ポイント","POINT","@INT","NOT NULL",,"0","",$FFFFFFFF,""
+Field="匿名化","ANONYMOUS","@INT",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20170829164715
+ModifiedDateTime=20180501120632
 Position="MAIN",700,1100
 
 [Comment]
-Comment=knowledge
+Comment=knowledge-Oshiete
 FontName=Tahoma
 FontBold=0
 FontItalic=0
@@ -2034,9 +2036,9 @@ FontUnderline=0
 FontSize=7
 FontColor=$FFFFFF
 LineColor=$000000
-BkColor=$000000
+BkColor=$000080
 Page=Main
-Left=20
-Top=20
+Left=0
+Top=0
 Width=402
 Height=53
