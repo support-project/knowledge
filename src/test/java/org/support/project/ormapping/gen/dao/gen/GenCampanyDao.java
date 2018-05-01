@@ -2,22 +2,15 @@ package org.support.project.ormapping.gen.dao.gen;
 
 import java.util.List;
 
-import java.sql.Timestamp;
-
-import org.support.project.ormapping.gen.entity.CampanyEntity;
-import org.support.project.ormapping.dao.AbstractDao;
-import org.support.project.ormapping.exception.ORMappingException;
-import org.support.project.ormapping.common.SQLManager;
-import org.support.project.ormapping.common.DBUserPool;
-import org.support.project.ormapping.common.IDGen;
-import org.support.project.ormapping.config.ORMappingParameter;
-import org.support.project.ormapping.connection.ConnectionManager;
-import org.support.project.common.util.PropertyUtil;
-
+import org.support.project.aop.Aspect;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.aop.Aspect;
+import org.support.project.ormapping.common.DBUserPool;
+import org.support.project.ormapping.common.SQLManager;
+import org.support.project.ormapping.dao.AbstractDao;
+import org.support.project.ormapping.exception.ORMappingException;
+import org.support.project.ormapping.gen.entity.CampanyEntity;
 
 /**
  * 会社
@@ -182,7 +175,7 @@ public class GenCampanyDao extends AbstractDao {
      * 削除(削除ユーザを指定／論理削除があれば論理削除)
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(String user, String campanyCode) {
+    public void delete(Integer user, String campanyCode) {
         physicalDelete(campanyCode);
     }
 
@@ -192,7 +185,7 @@ public class GenCampanyDao extends AbstractDao {
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
     public void delete(String campanyCode) {
         DBUserPool pool = Container.getComp(DBUserPool.class);
-        String user = (String) pool.getUser();
+        Integer user = (Integer) pool.getUser();
         delete(user, campanyCode);
     }
 
@@ -200,7 +193,7 @@ public class GenCampanyDao extends AbstractDao {
      * 削除(削除ユーザを指定／論理削除があれば論理削除)
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
-    public void delete(String user, CampanyEntity entity) {
+    public void delete(Integer user, CampanyEntity entity) {
         delete(user, entity.getCampanyCode());
 
     }

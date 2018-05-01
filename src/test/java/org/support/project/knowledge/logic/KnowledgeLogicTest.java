@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.test.Order;
@@ -45,6 +46,7 @@ public class KnowledgeLogicTest extends TestCommon {
 
         // publicFlagは指定しないでDBに保存すると、公開になる
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
+        entity.setAnonymous(INT_FLAG.OFF.getValue());
 
         KnowledgesEntity saved = KnowledgesDao.get().selectOnKey(entity.getKnowledgeId());
         eqdb(entity, saved);
@@ -74,6 +76,8 @@ public class KnowledgeLogicTest extends TestCommon {
         entity = logic.insert(data, loginedUser2, false);
         // publicFlagは指定しないでDBに保存すると、公開になる
         entity.setPublicFlag(KnowledgeLogic.PUBLIC_FLAG_PUBLIC);
+        entity.setAnonymous(INT_FLAG.OFF.getValue());
+        
         KnowledgesEntity saved = KnowledgesDao.get().selectOnKey(entity.getKnowledgeId());
         eqdb(entity, saved);
 
