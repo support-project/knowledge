@@ -1,0 +1,3 @@
+DELETE FROM MAILS 
+WHERE INSERT_DATETIME < now() - interval '1 month' 
+AND (STATUS >= 100 OR DELETE_FLAG = 1);

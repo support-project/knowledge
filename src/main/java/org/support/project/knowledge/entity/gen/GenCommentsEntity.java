@@ -57,6 +57,8 @@ public class GenCommentsEntity implements Serializable {
     private String comment;
     /** ステータス */
     private Integer commentStatus;
+    /** 匿名化 */
+    private Integer anonymous;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -129,6 +131,22 @@ public class GenCommentsEntity implements Serializable {
      * @return this object     */
     public GenCommentsEntity setCommentStatus(Integer commentStatus) {
         this.commentStatus = commentStatus;
+        return this;
+    }
+
+    /**
+     * Get 匿名化.
+     * @return 匿名化
+     */
+    public Integer getAnonymous() {
+        return this.anonymous;
+    }
+    /**
+     * Set 匿名化.
+     * @param anonymous 匿名化
+     * @return this object     */
+    public GenCommentsEntity setAnonymous(Integer anonymous) {
+        this.anonymous = anonymous;
         return this;
     }
 
@@ -264,6 +282,7 @@ public class GenCommentsEntity implements Serializable {
         builder.append("knowledgeId = ").append(knowledgeId).append("\n");
         builder.append("comment = ").append(comment).append("\n");
         builder.append("commentStatus = ").append(commentStatus).append("\n");
+        builder.append("anonymous = ").append(anonymous).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -294,6 +313,11 @@ public class GenCommentsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(this.commentStatus, convLabelName("Comment Status"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(this.anonymous, convLabelName("Anonymous"));
         if (error != null) {
             errors.add(error);
         }
@@ -330,6 +354,11 @@ public class GenCommentsEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(values.get("commentStatus"), convLabelName("Comment Status"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(values.get("anonymous"), convLabelName("Anonymous"));
         if (error != null) {
             errors.add(error);
         }

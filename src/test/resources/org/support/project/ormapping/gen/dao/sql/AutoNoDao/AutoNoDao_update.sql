@@ -1,0 +1,10 @@
+UPDATE AUTO_NO
+SET 
+   STR = ?
+ , INSERT_USER = ?
+ , INSERT_DATETIME = ?
+ , UPDATE_USER = ?
+ , UPDATE_DATETIME = ?
+WHERE 
+NO = ?
+;

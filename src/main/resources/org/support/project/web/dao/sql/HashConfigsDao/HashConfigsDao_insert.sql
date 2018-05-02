@@ -1,0 +1,22 @@
+INSERT INTO HASH_CONFIGS
+( 
+SYSTEM_NAME
+ , HASH_ITERATIONS
+ , HASH_SIZE_BITS
+ , ROW_ID
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

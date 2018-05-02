@@ -1,0 +1,28 @@
+INSERT INTO GROUPS
+( 
+GROUP_ID
+ , GROUP_KEY
+ , GROUP_NAME
+ , DESCRIPTION
+ , PARENT_GROUP_KEY
+ , GROUP_CLASS
+ , ROW_ID
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+ , DELETE_FLAG
+) VALUES (
+DEFAULT
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

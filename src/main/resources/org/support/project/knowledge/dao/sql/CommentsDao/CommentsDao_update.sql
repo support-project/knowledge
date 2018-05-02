@@ -3,6 +3,7 @@ SET
    KNOWLEDGE_ID = ?
  , COMMENT = ?
  , COMMENT_STATUS = ?
+ , ANONYMOUS = ?
  , INSERT_USER = ?
  , INSERT_DATETIME = ?
  , UPDATE_USER = ?

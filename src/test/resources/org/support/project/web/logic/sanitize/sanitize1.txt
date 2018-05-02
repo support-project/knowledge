@@ -1,0 +1,1 @@
+<p><a href="https://support-project.org/knowledge/index" target="_blank" src="hoge" type="checkbox" onclick="alert('hoge')" >https://support-project.org/knowledge/index</a></p>

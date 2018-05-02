@@ -1,0 +1,4 @@
+SELECT * FROM GROUPS
+ WHERE 
+GROUP_ID = ?
+;

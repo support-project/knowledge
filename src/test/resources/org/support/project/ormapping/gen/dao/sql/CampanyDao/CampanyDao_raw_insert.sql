@@ -1,0 +1,18 @@
+INSERT INTO CAMPANY
+( 
+CAMPANY_CODE
+ , CAMPANY_NAME
+ , ADRESS
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+) VALUES (
+?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

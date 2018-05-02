@@ -73,6 +73,8 @@ public class GenKnowledgesEntity implements Serializable {
     private Integer notifyStatus;
     /** ポイント */
     private Integer point;
+    /** 匿名化 */
+    private Integer anonymous;
     /** 登録ユーザ */
     private Integer insertUser;
     /** 登録日時 */
@@ -277,6 +279,22 @@ public class GenKnowledgesEntity implements Serializable {
     }
 
     /**
+     * Get 匿名化.
+     * @return 匿名化
+     */
+    public Integer getAnonymous() {
+        return this.anonymous;
+    }
+    /**
+     * Set 匿名化.
+     * @param anonymous 匿名化
+     * @return this object     */
+    public GenKnowledgesEntity setAnonymous(Integer anonymous) {
+        this.anonymous = anonymous;
+        return this;
+    }
+
+    /**
      * Get 登録ユーザ.
      * @return 登録ユーザ
      */
@@ -416,6 +434,7 @@ public class GenKnowledgesEntity implements Serializable {
         builder.append("typeId = ").append(typeId).append("\n");
         builder.append("notifyStatus = ").append(notifyStatus).append("\n");
         builder.append("point = ").append(point).append("\n");
+        builder.append("anonymous = ").append(anonymous).append("\n");
         builder.append("insertUser = ").append(insertUser).append("\n");
         builder.append("insertDatetime = ").append(insertDatetime).append("\n");
         builder.append("updateUser = ").append(updateUser).append("\n");
@@ -481,6 +500,11 @@ public class GenKnowledgesEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(this.point, convLabelName("Point"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(this.anonymous, convLabelName("Anonymous"));
         if (error != null) {
             errors.add(error);
         }
@@ -552,6 +576,11 @@ public class GenKnowledgesEntity implements Serializable {
         }
         validator = ValidatorFactory.getInstance(Validator.INTEGER);
         error = validator.validate(values.get("point"), convLabelName("Point"));
+        if (error != null) {
+            errors.add(error);
+        }
+        validator = ValidatorFactory.getInstance(Validator.INTEGER);
+        error = validator.validate(values.get("anonymous"), convLabelName("Anonymous"));
         if (error != null) {
             errors.add(error);
         }
