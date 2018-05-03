@@ -1,0 +1,4 @@
+SELECT * FROM READ_MARKS
+ WHERE 
+NO = ?
+;

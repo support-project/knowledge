@@ -725,6 +725,7 @@ create table COMMENTS (
   , KNOWLEDGE_ID bigint not null
   , COMMENT text
   , COMMENT_STATUS integer
+  , ANONYMOUS integer
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -888,6 +889,7 @@ create table KNOWLEDGES (
   , TYPE_ID integer
   , NOTIFY_STATUS integer
   , POINT integer default 0 not null
+  , ANONYMOUS integer
   , INSERT_USER integer
   , INSERT_DATETIME timestamp
   , UPDATE_USER integer
@@ -1385,6 +1387,7 @@ comment on column COMMENTS.COMMENT_NO is 'コメント番号';
 comment on column COMMENTS.KNOWLEDGE_ID is 'ナレッジID';
 comment on column COMMENTS.COMMENT is 'コメント';
 comment on column COMMENTS.COMMENT_STATUS is 'ステータス';
+comment on column COMMENTS.ANONYMOUS is '匿名化';
 comment on column COMMENTS.INSERT_USER is '登録ユーザ';
 comment on column COMMENTS.INSERT_DATETIME is '登録日時';
 comment on column COMMENTS.UPDATE_USER is '更新ユーザ';
@@ -1485,6 +1488,7 @@ comment on column KNOWLEDGES.VIEW_COUNT is '参照件数';
 comment on column KNOWLEDGES.TYPE_ID is 'テンプレートの種類ID';
 comment on column KNOWLEDGES.NOTIFY_STATUS is '通知ステータス';
 comment on column KNOWLEDGES.POINT is 'ポイント';
+comment on column KNOWLEDGES.ANONYMOUS is '匿名化';
 comment on column KNOWLEDGES.INSERT_USER is '登録ユーザ';
 comment on column KNOWLEDGES.INSERT_DATETIME is '登録日時';
 comment on column KNOWLEDGES.UPDATE_USER is '更新ユーザ';

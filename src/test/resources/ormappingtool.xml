@@ -12,14 +12,14 @@
     </connectionConfig>
 
     <entityGenConfig>
-        <entityOutDir>/data/project/red/release/knowledge/src/main/</entityOutDir>
+        <entityOutDir>/data/project/masuka/knowledge/src/main/</entityOutDir>
         <entityPackage>org.support.project.knowledge.entity</entityPackage>
         <entitySuffix>Entity</entitySuffix>
     </entityGenConfig>
 
 
     <daoGenConfig>
-        <daoOutDir>/data/project/red/release/knowledge/src/main/</daoOutDir>
+        <daoOutDir>/data/project/masuka/knowledge/src/main/</daoOutDir>
         <daoPackage>org.support.project.knowledge.dao</daoPackage>
         <daoSuffix>Dao</daoSuffix>
 

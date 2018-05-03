@@ -59,7 +59,7 @@
 
     <!-- Root Logger: Other -->
     <root>
-        <priority value="WARN" />
+        <priority value="INFO" />
         <appender-ref ref="APP_STDOUT" />
         <appender-ref ref="APP_FILEOUT" />
     </root>

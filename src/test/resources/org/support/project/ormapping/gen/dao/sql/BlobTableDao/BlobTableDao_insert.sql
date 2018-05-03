@@ -1,0 +1,16 @@
+INSERT INTO BLOB_TABLE
+( 
+NO
+ , BLOB
+ , INSERT_USER
+ , INSERT_DATETIME
+ , UPDATE_USER
+ , UPDATE_DATETIME
+) VALUES (
+DEFAULT
+ , ?
+ , ?
+ , ?
+ , ?
+ , ?
+);

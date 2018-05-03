@@ -11,6 +11,7 @@ SET
  , TYPE_ID = ?
  , NOTIFY_STATUS = ?
  , POINT = ?
+ , ANONYMOUS = ?
  , INSERT_USER = ?
  , INSERT_DATETIME = ?
  , UPDATE_USER = ?
