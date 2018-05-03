@@ -10,6 +10,7 @@ export default (store) => {
     logger.debug(LABEL, response.data)
     var types = response.data
     store.commit('setTypes', types)
+    return types
   })
   .catch(error => {
     logger.error(LABEL, error)

@@ -6,10 +6,23 @@
 
       <page-title
         :title = "'Route.' + $route.name"
-        :description = "$route.name + '.description'" />
+        :description = "$route.name + '.description'"
+        :breadcrumb = "breadcrumb" />
 
       <!-- Main content -->
       <div class="content main-content">
+        <div class="search-condition" v-if="search.available">
+          <i class="fa fa-filter" aria-hidden="true"></i>:
+          <button class="btn btn-link search-condition-param" v-if="search.keyword">
+            <i class="fa fa-search"></i>{{search.keyword}}&nbsp;
+          </button><button class="btn btn-link search-condition-param" v-for="t in searchTypes" :key="t.id">
+            <i :class="'fa ' + t.icon" aria-hidden="true"></i>{{t.name}}&nbsp;
+          </button>
+          <button class="btn btn-default btn-sm" v-on:click="clearFilter">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>RemoveFilter
+          </button>
+        </div>
+
         <div v-if="pagestate.loading" class="text-center">
           <i class="fa fa-refresh fa-spin fa-1x fa-fw" v-if="pagestate.loading"></i>
         </div>
@@ -81,12 +94,23 @@ const LABEL = 'ArticleList.vue'
 
 export default {
   name: 'ArticleList',
+  data () {
+    let breadcrumb = []
+    if (this.$route.path === '/myarticles') {
+      breadcrumb.push({to: '/myarticles/' + this.$route.params.id, name: 'Route.MyArticleList'})
+    }
+    return {
+      breadcrumb: breadcrumb,
+      searchTypes: []
+    }
+  },
   components: { PageTitle, ArticleListItem, ArticleListCalendar },
   computed: {
     ...mapState({
       pagestate: state => state.pagestate,
       articles: state => state.articles.articles,
-      pagination: state => state.articles.pagination
+      pagination: state => state.articles.pagination,
+      search: state => state.articles.search
     })
   },
   methods: {
@@ -103,16 +127,45 @@ export default {
       logger.trace(LABEL, JSON.stringify(this.$store.getters['user/getUser']))
       var id = this.$store.getters['user/getUser'].userId
       this.$store.commit('articles/setCreatorToSearchCondition', id)
+    },
+    loadQueryListParam (param) {
+      let arr = []
+      if (param) {
+        let list = param.split(',')
+        list.forEach(element => {
+          arr.push(element)
+        })
+      }
+      return arr
+    },
+    loadQueryParams () {
+      this.$store.state.articles.search.keyword = this.$route.query.keyword ? this.$route.query.keyword : ''
+      this.$store.state.articles.search.types = this.loadQueryListParam(this.$route.query.types)
+      this.$store.state.articles.search.typeIds = this.loadQueryListParam(this.$route.query.typeIds)
+      this.$store.dispatch('articles/getTypesInformation').then(searchTypes => {
+        logger.info(LABEL, JSON.stringify(searchTypes))
+        this.searchTypes = searchTypes
+      })
+    },
+    clearFilter () {
+      this.$store.state.articles.search.keyword = ''
+      this.$store.state.articles.search.types = []
+      this.$store.state.articles.search.typeIds = []
+      this.getArticleList()
     }
   },
   watch: {
     '$route' (to, from) {
       logger.debug(LABEL, 'from:' + from.path + '   ' + 'to:' + to.path)
+      this.breadcrumb = []
       if (from.path !== '/myarticles' && to.path === '/myarticles') {
         this.clearSearchCondition()
         this.setMyIdToSearchCondition()
+        this.breadcrumb.push({to: '/myarticles/' + this.$route.params.id, name: 'Route.MyArticleList'})
       } else if (from.path !== '/' && to.path === '/') {
         this.clearSearchCondition()
+      } else {
+        this.loadQueryParams()
       }
       this.getArticleList()
     }
@@ -120,11 +173,14 @@ export default {
   mounted () {
     // 画面表示時に読み込み
     this.$nextTick(() => {
+      logger.info(LABEL, JSON.stringify(this.$route.query))
       if (this.$route.path === '/') {
         this.clearSearchCondition()
       } else if (this.$route.path === '/myarticles') {
         this.clearSearchCondition()
         this.setMyIdToSearchCondition()
+      } else {
+        this.loadQueryParams()
       }
       this.getArticleList()
     })
@@ -145,6 +201,16 @@ export default {
   font-size: 80%;
   position: relative;
   bottom: 10px;
+}
+.search-condition {
+  margin-top: -10px;
+  margin-bottom: 10px;
+  border: 0px solid black;
+}
+.search-condition-param {
+  border: 0px solid black;
+  padding: 0px;
+  margin-right: 2px;
 }
 </style>
 <style src="../../css/knowledge-list.css" />

@@ -4,6 +4,7 @@
     "ArticleList": "記事一覧",
     "ArticleDetail": "記事表示",
     "ArticleEdit": "記事編集",
+    "ArticleSearch": "フィルタ(検索)",
     "DraftList": "下書き",
     "DraftEdit": "記事編集",
     "MyArticleList": "自分の記事",
@@ -86,6 +87,13 @@
     "BtnRemove": "この記事を削除する",
     "ExistDraft": "[下書き編集中]",
     "DeleteDraft": "下書き削除"
+  },
+  "ArticleSearch": {
+    "description": "検索",
+    "SearchCondition": "検索条件",
+    "Keyword": "Keyword",
+    "Types": "種類",
+    "Tags": "タグ"
   },
   "DraftList": {
     "description": "下書き一覧",

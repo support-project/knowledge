@@ -1,5 +1,6 @@
 import Promise from 'bluebird'
 import logger from 'logger'
+import lang from 'lang'
 import api from '../../../api'
 import setIcons from '../../../lib/utils/setIcons'
 import loadPaginationInformation from '../../../lib/utils/loadPaginationInformation'
@@ -16,34 +17,46 @@ const restoreHighlight = (str) => {
   return str
 }
 
+const buildQuery = (store) => {
+  let params = {}
+  if (store.state.pagination.offset) {
+    params.offset = store.state.pagination.offset
+  }
+  store.state.search.available = false
+  if (store.state.search.keyword) {
+    store.state.search.available = true
+    params.keyword = store.state.search.keyword
+  }
+  if (store.state.search.typeIds && store.state.search.typeIds.length > 0) {
+    store.state.search.available = true
+    params.typeIds = store.state.search.typeIds
+  } else if (store.state.search.types && store.state.search.types.length > 0) {
+    // id指定があれば、それを優先
+    store.state.search.available = true
+    params.types = store.state.search.types
+  }
+  if (store.state.search.creatorIds && store.state.search.creatorIds.length > 0) {
+    store.state.search.available = true
+    if (!params.creatorIds) params.creatorIds = []
+    store.state.search.creators.forEach(c => {
+      params.creatorIds.push(c)
+    })
+  }
+  return lang.parseParamsToQuery(params)
+}
+
 export default (store) => {
   store.commit('pagestate/setPageState', {loading: true}, {root: true}, {root: true})
   return Promise.try(() => {
     logger.debug(LABEL, 'get articles from api')
-    var uri = '/_api/articles'
-    var add = false
-    if (store.state.pagination.offset) {
-      uri += '?offset=' + store.state.pagination.offset
-      add = true
+
+    let query = buildQuery(store)
+
+    let uri = '/_api/articles'
+    if (query) {
+      uri += '?' + query
     }
-    if (store.state.search.keyword) {
-      if (add) {
-        uri += '&'
-      } else {
-        uri += '?'
-      }
-      uri += 'keyword=' + store.state.search.keyword
-      add = true
-    }
-    if (store.state.search.creators && store.state.search.creators.length > 0) {
-      if (add) {
-        uri += '&'
-      } else {
-        uri += '?'
-      }
-      uri += 'creatorIds=' + store.state.search.creators.join(',')
-      add = true
-    }
+    logger.info(LABEL, uri)
     store.commit('setArticles', [])
     return api.request('get', uri, null)
   }).then(response => {

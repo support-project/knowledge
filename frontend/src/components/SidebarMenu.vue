@@ -22,6 +22,12 @@
         <span class="page">{{ $t('Route.ArticleCreate') }}</span>
       </a>
     </router-link>
+    <router-link tag="li" class="pageLink" to="/drafts">
+      <a>
+        <i class="fa fa-pencil-square-o text-olive"></i>
+        <span class="page">{{ $t('Route.DraftList') }}</span>
+      </a>
+    </router-link>
 
     <router-link tag="li" class="pageLink" to="/">
       <a>
@@ -30,12 +36,13 @@
       </a>
     </router-link>
 
-    <router-link tag="li" class="pageLink" to="/drafts">
+    <router-link tag="li" class="pageLink" to="/articles/search">
       <a>
-        <i class="fa fa-pencil-square-o text-olive"></i>
-        <span class="page">{{ $t('Route.DraftList') }}</span>
+        <i class="fa fa-search text-olive"></i>
+        <span class="page">{{ $t('Route.ArticleSearch') }}</span>
       </a>
     </router-link>
+
     <router-link tag="li" class="pageLink" to="/myarticles">
       <a>
         <i class="fa fa-user-circle text-olive"></i>
@@ -50,40 +57,25 @@
     </router-link>
 
     <li class="header">Custom</li>
-
-    <li class="treeview">
-      <a href="#">
-        <i class="fa fa-cogs"></i>
-        <span>Config</span>
-        <span class="pull-right-container">
-          <i class="fa fa-angle-left fa-fw pull-right"></i>
-        </span>
+    <li class="pageLink">
+      <a href="open.knowledge/list">
+        <i class="fa fa-recycle" aria-hidden="true"></i>
+        <span class="page">{{ $t('Route.MoveOldUI') }}</span>
       </a>
-      <ul class="treeview-menu">
-        <li class="pageLink">
-          <a href="open.knowledge/list">
-            <i class="fa fa-recycle" aria-hidden="true"></i>
-            <span class="page">{{ $t('Route.MoveOldUI') }}</span>
-          </a>
-        </li>
-      </ul>
-      <ul class="treeview-menu">
-        <router-link tag="li" class="pageLink" to="/config">
-          <a>
-            <i class="fa fa-cog"></i>
-            <span class="page">{{ $t('Route.Config') }}</span>
-          </a>
-        </router-link>
-      </ul>
-      <ul class="treeview-menu">
-        <router-link tag="li" class="pageLink" to="/localize">
-          <a>
-            <i class="fa fa-language"></i>
-            <span class="page">{{ $t('Route.ConfigLocalize') }}</span>
-          </a>
-        </router-link>
-      </ul>
     </li>
+    <router-link tag="li" class="pageLink" to="/config">
+      <a>
+        <i class="fa fa-cog"></i>
+        <span class="page">{{ $t('Route.Config') }}</span>
+      </a>
+    </router-link>
+    <router-link tag="li" class="pageLink" to="/localize">
+      <a>
+        <i class="fa fa-language"></i>
+        <span class="page">{{ $t('Route.ConfigLocalize') }}</span>
+      </a>
+    </router-link>
+
 
     <!--
     <router-link tag="li" class="pageLink" to="/events">

@@ -3,13 +3,13 @@ var isString = function (obj) {
 }
 
 var escapeLink = function (url) {
-  if (url.toLowerCase().indexOf('javascript:') != -1) {
-      var conv = ''
-      conv += url.substring(0, url.toLowerCase().indexOf('javascript:'))
-      conv += encodeURIComponent(url.substring(url.toLowerCase().indexOf('javascript:')))
-      return conv
+  if (url.toLowerCase().indexOf('javascript:') !== -1) {
+    var conv = ''
+    conv += url.substring(0, url.toLowerCase().indexOf('javascript:'))
+    conv += encodeURIComponent(url.substring(url.toLowerCase().indexOf('javascript:')))
+    return conv
   } else {
-      return url
+    return url
   }
 }
 
@@ -42,9 +42,24 @@ const deepClone = function (obj) {
   })
 }
 
+const parseParamsToQuery = (params) => {
+  let query = ''
+  Object.entries(params).forEach(e => {
+    if (query) query += '&'
+    query += e[0] + '='
+    if (Array.isArray(e[1])) {
+      query += e[1].join(',')
+    } else {
+      query += e[1]
+    }
+  })
+  return query
+}
+
 module.exports = {
   isString: isString,
   escapeLink: escapeLink,
   abbreviate: abbreviate,
-  deepClone: deepClone
+  deepClone: deepClone,
+  parseParamsToQuery: parseParamsToQuery
 }
