@@ -187,7 +187,9 @@
                     List<Integer> selectedKeys = new ArrayList<>();
                     if (selectedFilter != null) {
                         for (TemplateMastersEntity item : selectedFilter) {
-                            selectedKeys.add(item.getTypeId());
+                            if (item != null) {
+                                selectedKeys.add(item.getTypeId());
+                            }
                         }
                     }
                     Map<Integer, TemplateMastersEntity> templates = (Map) request.getAttribute("templates");
