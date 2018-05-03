@@ -11,11 +11,15 @@
 
       <!-- Main content -->
       <div class="content main-content">
-        <div class="search-condition">
+        <div class="search-condition" v-if="search.available">
+          <i class="fa fa-filter" aria-hidden="true"></i>:
           <button class="btn btn-link search-condition-param" v-if="search.keyword">
-            <i class="fa fa-search"></i>{{search.keyword}}
+            <i class="fa fa-search"></i>{{search.keyword}}&nbsp;
           </button><button class="btn btn-link search-condition-param" v-for="t in searchTypes" :key="t.id">
-            <i :class="'fa ' + t.icon" aria-hidden="true"></i>{{t.name}}
+            <i :class="'fa ' + t.icon" aria-hidden="true"></i>{{t.name}}&nbsp;
+          </button>
+          <button class="btn btn-default btn-sm" v-on:click="clearFilter">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>RemoveFilter
           </button>
         </div>
 
@@ -142,6 +146,12 @@ export default {
         logger.info(LABEL, JSON.stringify(searchTypes))
         this.searchTypes = searchTypes
       })
+    },
+    clearFilter () {
+      this.$store.state.articles.search.keyword = ''
+      this.$store.state.articles.search.types = []
+      this.$store.state.articles.search.typeIds = []
+      this.getArticleList()
     }
   },
   watch: {
@@ -194,6 +204,7 @@ export default {
 }
 .search-condition {
   margin-top: -10px;
+  margin-bottom: 10px;
   border: 0px solid black;
 }
 .search-condition-param {

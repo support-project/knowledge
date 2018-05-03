@@ -24,7 +24,7 @@ export default {
       pages: []
     },
     search: {
-      search: false,
+      available: false,
       keyword: '',
       types: [],
       typeIds: [],

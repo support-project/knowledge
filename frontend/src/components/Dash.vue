@@ -27,7 +27,7 @@
                   name="search"
                   id="search"
                   class="search form-control"
-                  placeholder="Search Keyword"
+                  placeholder="Keyword"
                   v-model="keyword"
                 >
                 <span class="input-group-btn">
