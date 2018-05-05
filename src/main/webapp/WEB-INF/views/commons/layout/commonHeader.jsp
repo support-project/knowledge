@@ -40,7 +40,7 @@
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/thema/<%= jspUtil.out("thema") %>.css" />
 <% } else { %>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/bower/bootswatch/<%= jspUtil.cookie(SystemConfig.COOKIE_KEY_THEMA, "flatly") %>/bootstrap.min.css" />
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/thema/<%= jspUtil.cookie(SystemConfig.COOKIE_KEY_THEMA, "cosmo") %>.css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/thema/<%= jspUtil.cookie(SystemConfig.COOKIE_KEY_THEMA, "flatly") %>.css" />
 <% } %>
 
 <% if (StringUtils.isNotEmpty(jspUtil.out("highlight"))) { %>
