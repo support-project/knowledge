@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import org.support.project.knowledge.dao.KnowledgeItemValuesDao;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.LikeCommentsDao;
 import org.support.project.knowledge.dao.LikesDao;
+import org.support.project.knowledge.dao.PinsDao;
 import org.support.project.knowledge.dao.StocksDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.TemplateMastersDao;
@@ -39,6 +41,7 @@ import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.LikeCommentsEntity;
 import org.support.project.knowledge.entity.LikesEntity;
+import org.support.project.knowledge.entity.PinsEntity;
 import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
@@ -543,6 +546,25 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 setAttribute("creators", creatorUserEntities);
                 
                 knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, creatorUserEntities, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
+            }
+            
+            // pin留めの記事取得
+            if (0 == offset.intValue()) {
+                List<PinsEntity> pins = PinsDao.get().selectAll();
+                for (PinsEntity pin : pins) {
+                    KnowledgesEntity k = KnowledgeLogic.get().select(pin.getKnowledgeId(), loginedUser);
+                    if (k != null) {
+                        Iterator<KnowledgesEntity> iterator = knowledges.iterator();
+                        while (iterator.hasNext()) {
+                            KnowledgesEntity knowledgesEntity = (KnowledgesEntity) iterator.next();
+                            if (knowledgesEntity.getKnowledgeId().intValue() == pin.getKnowledgeId().intValue()) {
+                                iterator.remove();
+                            }
+                        }
+                        k.setPin(true);
+                        knowledges.add(0, k); // 先頭に追加
+                    }
+                }
             }
     
             List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);

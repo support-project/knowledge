@@ -90,6 +90,9 @@ public class CompressLogic {
             ZipArchiveEntry entry;
             while ((entry = archive.getNextZipEntry()) != null) {
                 File file = new File(tmp, entry.getName());
+                if (!file.getAbsolutePath().startsWith(tmp.getAbsolutePath())) {
+                    throw new IOException("IO_ExtractingResultsInOutside");
+                }
                 if (entry.isDirectory()) {
                     file.mkdirs();
                 } else {

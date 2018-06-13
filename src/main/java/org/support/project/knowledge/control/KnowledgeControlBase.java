@@ -3,6 +3,7 @@ package org.support.project.knowledge.control;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.support.project.common.util.HtmlUtils;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
@@ -58,7 +59,7 @@ public class KnowledgeControlBase extends Control {
                 params.append(labelValue.getLabel()).append("=").append(labelValue.getValue());
             }
         }
-        setAttribute("params", params.toString());
+        setAttribute("params", HtmlUtils.escapeHTML(params.toString()));
         return params.toString();
     }
     

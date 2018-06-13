@@ -662,7 +662,7 @@ public class JspUtil {
      * @return value
      */
     public String cookie(String key, String defaultValue) {
-        return HttpUtil.getCookie(request, key, defaultValue);
+        return HtmlUtils.escapeHTML(HttpUtil.getCookie(request, key, defaultValue));
     }
     
     /**

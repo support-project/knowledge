@@ -46,6 +46,10 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
     /** 開催日     UTC(Eventの場合のみ） */
     private Timestamp startDateTime;
     
+    /** ピン留めされた項目 */
+    private boolean pin = false;
+    
+
     /**
      * コンストラクタ
      */
@@ -194,6 +198,13 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
      */
     public void setPointOnTerm(Integer pointOnTerm) {
         this.pointOnTerm = pointOnTerm;
+    }
+    public boolean isPin() {
+        return pin;
+    }
+
+    public void setPin(boolean pin) {
+        this.pin = pin;
     }
 
 }
