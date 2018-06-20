@@ -46,14 +46,20 @@
         <div class="knowledge_item <%= unread %>">
             <div class="insert_info">
                 <a href="<%=request.getContextPath()%>/open.knowledge/view/<%=jspUtil.out("knowledge.knowledgeId")%><%=jspUtil.out("params")%>"
-                    class="text-primary btn-link">
+                    class="text-primary btn-link" >
                     <div class="list-title">
                     <span class="dispKnowledgeId">
                         #<%= jspUtil.out("knowledge.knowledgeId") %>
                     </span>
                     <%=jspUtil.out("knowledge.title", JspUtil.ESCAPE_CLEAR)%>
+                    <c:if test="${knowledge.pin}">
+                        <span class="badge" style="font-size: 10pt;">
+                        <i class="fa fa-bullhorn" aria-hidden="true"></i>
+                        </span>
+                    </c:if>
                     </div>
                 </a>
+                
                 <div>
                     <%= unreadLabel %>
                     <img src="<%=request.getContextPath()%>/images/loader.gif"

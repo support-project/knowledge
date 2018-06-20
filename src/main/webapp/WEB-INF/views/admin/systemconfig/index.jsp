@@ -42,6 +42,9 @@
             <li><a href="<%=request.getContextPath()%>/admin.notice/list" style="cursor: pointer;">
                 <i class="fa fa-rocket"></i>&nbsp;<%=jspUtil.label("knowledge.admin.notice.title")%>
             </a></li>
+            <li><a href="<%=request.getContextPath()%>/admin.pin/index" style="cursor: pointer;">
+                <i class="fa fa-bullhorn"></i>&nbsp;<%=jspUtil.label("knowledge.admin.pin.menu")%>
+            </a></li>
             <li><a href="<%=request.getContextPath()%>/admin.users/list" style="cursor: pointer;">
                 <i class="fa fa-users"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.config.admin.users")%>
             </a></li>
