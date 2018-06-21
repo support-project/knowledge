@@ -366,7 +366,16 @@
                             <arguments>start</arguments>
                         </configuration>
                     </execution>
-                    <!-- 
+                    <execution>
+                        <id>copy emoji</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run emoji</arguments>
+                        </configuration>
+                    </execution>
+                    <!--
                     <execution>
                         <id>gulp</id>
                         <phase>prepare-package</phase>
