@@ -15,12 +15,16 @@
     "gulp-minify-css": "0.3.13",
     "gulp-rev": "7.1.2",
     "gulp-replace": "0.5.4",
-    "gulp-eslint": "4.0.0"
+    "gulp-eslint": "4.0.0",
+    "emoji-parser": "0.1.1",
+    "emoji-images": "0.1.1",
+    "fs-extra": "*"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node node_modules/bower/bin/bower install --allow-root"
+    "start": "node node_modules/bower/bin/bower install --allow-root",
+    "emoji": "node copy-emoji.js"
   },
   "keywords": [
     "knowledge"
