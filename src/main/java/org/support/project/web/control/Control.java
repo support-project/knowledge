@@ -621,7 +621,7 @@ public abstract class Control {
      */
     protected String getPathString() throws InvalidParamException {
         String[] pathInfos = getPathInfos();
-        if (pathInfos == null || StringUtils.isEmpty(pathInfos[0])) {
+        if (pathInfos == null || pathInfos.length == 0 || StringUtils.isEmpty(pathInfos[0])) {
             MessageResult result = new MessageResult();
             result.setStatus(MessageStatus.Warning.getValue());
             result.setMessage(resources.getResource("errors.required", "id"));

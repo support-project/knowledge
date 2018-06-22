@@ -1,14 +1,7 @@
 package org.support.project.knowledge.control.admin;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.support.project.common.bean.ValidateError;
 import org.support.project.common.config.INT_FLAG;
 import org.support.project.common.log.Log;
@@ -19,6 +12,7 @@ import org.support.project.knowledge.control.Control;
 import org.support.project.knowledge.dao.WebhookConfigsDao;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
 import org.support.project.knowledge.logic.WebhookLogic;
+import org.support.project.knowledge.logic.notification.webhook.AbstractWebHookNotification;
 import org.support.project.web.annotation.Auth;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.common.HttpStatus;
@@ -27,8 +21,11 @@ import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.ProxyConfigsDao;
 import org.support.project.web.entity.ProxyConfigsEntity;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WebhookControl extends Control {
     /** ログ */
@@ -110,18 +107,13 @@ public class WebhookControl extends Control {
         }
 
         try {
-            InputStream is = getClass().getResourceAsStream(webhookConfig.resourcePath());
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String str;
-            String json = "";
-            while ((str = br.readLine()) != null) {
-                json += str;
-            }
+            AbstractWebHookNotification webhook = WebhookLogic.get().getWebHookNotification(webhookConfig);
+            String json = webhook.createSendTestJson(webhookConfig);
 
             WebhookLogic.get().notify(proxyConfig, webhookConfig, json);
             addMsgInfo("knowledge.webhook.test.success");
         } catch (Exception e) {
-            LOG.error(e.getMessage());
+            LOG.error("WebHook test was error.", e);
             addMsgError("knowledge.webhook.test.error");
         }
 

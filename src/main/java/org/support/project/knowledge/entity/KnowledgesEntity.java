@@ -48,7 +48,20 @@ public class KnowledgesEntity extends GenKnowledgesEntity {
     
     /** ピン留めされた項目 */
     private boolean pin = false;
-    
+    /** 
+     * グループの名称
+     * 複数選択が可能なため、複数あった場合はカンマ区切りにする
+     */
+    private String groupName = "";
+
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 
     /**
      * コンストラクタ

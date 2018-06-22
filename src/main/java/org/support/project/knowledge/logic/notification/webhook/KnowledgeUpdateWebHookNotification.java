@@ -13,7 +13,6 @@ import org.support.project.common.util.StringUtils;
 import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
-import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
 import org.support.project.knowledge.entity.WebhooksEntity;
@@ -67,12 +66,36 @@ public class KnowledgeUpdateWebHookNotification extends AbstractWebHookNotificat
         json.became_public = became_public;
         return JSON.encode(json);
     }
+    
+    @Override
+    public String createSendTestJson(WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
+        WebhookKnowledgeJson json = new WebhookKnowledgeJson();
+        json.type = 0;
+        json.became_public = true;
+        KnowledgesEntity knowledge = new KnowledgesEntity();
+        knowledge.setTitle("Test knowledge");
+        knowledge.setContent("This is sample data for test.");
+        knowledge.setGroupName("TestGroup");
+        knowledge.setKnowledgeId(new Long(1));
+        return createSendJson(configEntity, json, knowledge);
+    }
+    
+    
     @Override
     public String createSendJson(WebhooksEntity entity, WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
         LOG.trace("createSendJson");
-        String template = loadTemplate(configEntity);
         WebhookKnowledgeJson json = JSON.decode(entity.getContent(), WebhookKnowledgeJson.class);
-        KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKeyWithUserName(json.knowledgeId);
+        long knowledgeId = json.knowledgeId;
+        KnowledgesEntity knowledge = loadKnowledgeData(knowledgeId);
+        if (knowledge == null) {
+            return ""; // 生成エラー
+        }
+        return createSendJson(configEntity, json, knowledge);
+    }
+
+    private String createSendJson(WebhookConfigsEntity configEntity, WebhookKnowledgeJson json, KnowledgesEntity knowledge)
+            throws UnsupportedEncodingException, IOException {
+        String template = loadTemplate(configEntity);
         JsonElement send = new JsonParser().parse(new StringReader(template));
         
         Map<String, Object> map = new HashMap<>();

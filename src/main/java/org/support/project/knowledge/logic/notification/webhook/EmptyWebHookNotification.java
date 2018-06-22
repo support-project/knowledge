@@ -25,4 +25,9 @@ public class EmptyWebHookNotification extends AbstractWebHookNotification {
         return entity.getContent();
     }
 
+    @Override
+    public String createSendTestJson(WebhookConfigsEntity configEntity) throws Exception {
+        return "{\\\"text\\\": \\\"Hello, this is some text\\\\nThis is more text. :tada:\\\"}";
+    }
+
 }

@@ -11,9 +11,11 @@ import org.support.project.common.exception.SystemException;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.common.util.StringJoinBuilder;
 import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.dao.TagsDao;
 import org.support.project.knowledge.dao.WebhookConfigsDao;
 import org.support.project.knowledge.dao.WebhooksDao;
@@ -21,6 +23,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
 import org.support.project.knowledge.entity.WebhooksEntity;
+import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.NotifyLogic;
 import org.support.project.knowledge.logic.TargetLogic;
@@ -67,6 +70,14 @@ public abstract class AbstractWebHookNotification {
      * @throws Exception
      */
     public abstract String createSendJson(WebhooksEntity entity, WebhookConfigsEntity configEntity) throws Exception;
+    
+    /**
+     * Webhookのテストで送信するJSONを生成する
+     * @param configEntity
+     * @return
+     * @throws Exception
+     */
+    public abstract String createSendTestJson(WebhookConfigsEntity configEntity) throws Exception;
     
     /**
      * Webhookの登録を行う
@@ -320,4 +331,22 @@ public abstract class AbstractWebHookNotification {
         }
         return null;
     }
+
+    protected KnowledgesEntity loadKnowledgeData(long knowledgeId) {
+        KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKeyWithUserName(knowledgeId);
+        if (knowledge.getPublicFlag().intValue() == KnowledgeLogic.PUBLIC_FLAG_PUBLIC) {
+            knowledge.setGroupName("");
+        } else {
+            StringJoinBuilder<String> builder = new StringJoinBuilder<>();
+            List<LabelValue> targets = TargetLogic.get().selectTargetsOnKnowledgeId(knowledge.getKnowledgeId());
+            for (LabelValue labelValue : targets) {
+                if (!TargetLogic.get().isUserLabel(labelValue.getLabel())) {
+                    builder.append(labelValue.getLabel());
+                }
+            }
+            knowledge.setGroupName(builder.join(","));
+        }
+        return knowledge;
+    }
+
 }
