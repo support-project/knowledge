@@ -61,9 +61,23 @@ public class CommentLikedWebhookNotification extends AbstractWebHookNotification
     }
     
     @Override
+    public String createSendTestJson(WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
+        KnowledgesEntity knowledge = new KnowledgesEntity();
+        knowledge.setTitle("Test knowledge");
+        knowledge.setContent("This is sample data for test.");
+        knowledge.setKnowledgeId(new Long(1));
+        CommentsEntity comment = new CommentsEntity();
+        comment.setCommentNo(new Long(1));
+        comment.setComment("This is sample comment");
+        LikeCommentsEntity liked = new LikeCommentsEntity();
+        liked.setInsertUser(0);
+        return createSendJson(configEntity, liked, comment, knowledge);
+    }
+    
+    
+    @Override
     public String createSendJson(WebhooksEntity entity, WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
         LOG.trace("createSendJson");
-        String template = loadTemplate(configEntity);
         WebhookLongIdJson json = JSON.decode(entity.getContent(), WebhookLongIdJson.class);
         LikeCommentsEntity liked = LikeCommentsDao.get().selectOnKey(json.id);
         if (liked == null) {
@@ -89,6 +103,11 @@ public class CommentLikedWebhookNotification extends AbstractWebHookNotification
         if (knowledge == null) {
             return ""; // 生成エラー
         }
+        return createSendJson(configEntity, liked, comment, knowledge);
+    }
+    private String createSendJson(WebhookConfigsEntity configEntity, LikeCommentsEntity liked, CommentsEntity comment, KnowledgesEntity knowledge)
+            throws UnsupportedEncodingException, IOException {
+        String template = loadTemplate(configEntity);
         JsonElement send = new JsonParser().parse(new StringReader(template));
         
         Map<String, Object> map = new HashMap<>();

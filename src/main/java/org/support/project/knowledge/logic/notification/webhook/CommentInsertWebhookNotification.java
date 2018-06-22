@@ -14,7 +14,6 @@ import org.support.project.di.Container;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.dao.CommentsDao;
-import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.CommentsEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.WebhookConfigsEntity;
@@ -61,9 +60,21 @@ public class CommentInsertWebhookNotification extends AbstractWebHookNotificatio
     }
     
     @Override
+    public String createSendTestJson(WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
+        KnowledgesEntity knowledge = new KnowledgesEntity();
+        knowledge.setTitle("Test knowledge");
+        knowledge.setContent("This is sample data for test.");
+        knowledge.setKnowledgeId(new Long(1));
+        knowledge.setGroupName("TestGroup");
+        CommentsEntity comment = new CommentsEntity();
+        comment.setCommentNo(new Long(1));
+        comment.setComment("This is sample comment");
+        return createSendJson(configEntity, comment, knowledge);
+    }
+    
+    @Override
     public String createSendJson(WebhooksEntity entity, WebhookConfigsEntity configEntity) throws UnsupportedEncodingException, IOException {
         LOG.trace("createSendJson");
-        String template = loadTemplate(configEntity);
         WebhookLongIdJson json = JSON.decode(entity.getContent(), WebhookLongIdJson.class);
         CommentsEntity comment = CommentsDao.get().selectOnKey(json.id);
         if (comment == null) {
@@ -77,10 +88,15 @@ public class CommentInsertWebhookNotification extends AbstractWebHookNotificatio
         if (updateUser != null) {
             comment.setUpdateUserName(updateUser.getUserName());
         }
-        KnowledgesEntity knowledge = KnowledgesDao.get().selectOnKeyWithUserName(comment.getKnowledgeId());
+        KnowledgesEntity knowledge = loadKnowledgeData(comment.getKnowledgeId());
         if (knowledge == null) {
             return ""; // 生成エラー
         }
+        return createSendJson(configEntity, comment, knowledge);
+    }
+    private String createSendJson(WebhookConfigsEntity configEntity, CommentsEntity comment, KnowledgesEntity knowledge)
+            throws UnsupportedEncodingException, IOException {
+        String template = loadTemplate(configEntity);
         JsonElement send = new JsonParser().parse(new StringReader(template));
         
         Map<String, Object> map = new HashMap<>();
