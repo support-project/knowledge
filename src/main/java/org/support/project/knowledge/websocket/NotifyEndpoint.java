@@ -72,7 +72,7 @@ public class NotifyEndpoint {
 
     @OnMessage
     public void onMessage(String text) throws JSONException, IOException {
-        // LOG.info("onMessage: " + text);
+        LOG.trace("onMessage: " + text);
         // MessageResult message = new MessageResult();
         // message.setMessage(text);
         // notify.notifyObservers(message);
