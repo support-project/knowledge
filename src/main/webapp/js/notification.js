@@ -82,4 +82,9 @@ window.onload = function() {
     }
     webSocket.onerror = function(message) {
     }
+
+    setInterval(function() {
+        console.log('interval connection check');
+        webSocket.send('a');
+    }, 1000 * 60 * 4); // 3分に1回通信する(ALBのタイムアウトを300秒に設定していると、コネクションを切ってしまう）
 };
