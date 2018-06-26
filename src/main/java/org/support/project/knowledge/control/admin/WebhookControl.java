@@ -21,7 +21,9 @@ import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.ProxyConfigsDao;
 import org.support.project.web.entity.ProxyConfigsEntity;
 
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -112,9 +114,16 @@ public class WebhookControl extends Control {
 
             WebhookLogic.get().notify(proxyConfig, webhookConfig, json);
             addMsgInfo("knowledge.webhook.test.success");
+            setAttribute("TEST_JSON", json);
         } catch (Exception e) {
             LOG.error("WebHook test was error.", e);
             addMsgError("knowledge.webhook.test.error");
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            pw.flush();
+            String str = sw.toString();
+            setAttribute("TEST_ERROR_RESULT", str);
         }
 
         return config();
