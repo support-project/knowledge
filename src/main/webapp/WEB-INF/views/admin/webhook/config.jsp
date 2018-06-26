@@ -17,6 +17,9 @@
 .pull-right {
     margin-left: 5px;
 }
+.bootbox-form > .bootbox-input-textarea {
+    height: 300px;
+}
 </style>
 </c:param>
 
@@ -92,6 +95,36 @@ function putConfig() {
     }).always(function() {
     });
 }
+
+<% if (request.getAttribute("TEST_JSON") != null) { %>
+var text = $('#TEST_JSON').val();
+try {
+    text = JSON.stringify(JSON.parse(text), null, '    ');
+} catch(e) {
+}
+bootbox.prompt({
+    title: "<%= jspUtil.label("knowledge.webhook.test.result") %>",
+    inputType: 'textarea',
+    value: text,
+    size: 'large',
+    callback: function (result) {
+        console.log(result);
+    }
+});
+<% } %>
+
+<% if (request.getAttribute("TEST_ERROR_RESULT") != null) { %>
+var text = $('#TEST_ERROR_RESULT').val();
+bootbox.prompt({
+    title: "<%= jspUtil.label("knowledge.webhook.test.error") %>",
+    inputType: 'textarea',
+    value: text,
+    size: 'large',
+    callback: function (result) {
+        console.log(result);
+    }
+});
+<% } %>
 
 </script>
 </c:param>
@@ -208,7 +241,17 @@ function putConfig() {
 </div>
 
 
-
+<div style="visibility:hidden">
+<% if (request.getAttribute("TEST_JSON") != null) { %>
+<textarea id="TEST_JSON">
+<%= jspUtil.out("TEST_JSON") %>
+</textarea>
+<% } %>
+<% if (request.getAttribute("TEST_ERROR_RESULT") != null) { %>
+<textarea id="TEST_ERROR_RESULT">
+<%= jspUtil.out("TEST_ERROR_RESULT") %>
+</textarea>
+<% } %>
 
 
 </c:param>
