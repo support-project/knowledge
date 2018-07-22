@@ -229,12 +229,12 @@
         <nav>
             <ul class="pager">
                 <li class="previous"><a
-                    href="<%=request.getContextPath()%>/open.knowledge/list/<%=jspUtil.out("previous")%><%=jspUtil.out("params")%>"> <span
-                        aria-hidden="true">&larr;</span><%=jspUtil.label("label.previous")%>
+                    href="<%=request.getContextPath()%>/open.knowledge/list/<%=jspUtil.out("previous")%><%=jspUtil.out("params")%>">
+                     <span aria-hidden="true">&larr;</span><%=jspUtil.label("label.previous")%>
                 </a></li>
                 <li class="next"><a
-                    href="<%=request.getContextPath()%>/open.knowledge/list/<%=jspUtil.out("next")%><%=jspUtil.out("params")%>"> <%=jspUtil.label("label.next")%>
-                        <span aria-hidden="true">&rarr;</span>
+                    href="<%=request.getContextPath()%>/open.knowledge/list/<%=jspUtil.out("next")%><%=jspUtil.out("params")%>">
+                        <%=jspUtil.label("label.next")%> <span aria-hidden="true">&rarr;</span>
                 </a></li>
             </ul>
         </nav>
