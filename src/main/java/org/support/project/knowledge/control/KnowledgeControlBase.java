@@ -31,21 +31,21 @@ public class KnowledgeControlBase extends Control {
     private static final String MARKDOWN_SAMPLE = "/org/support/project/knowledge/markdown/sample_markdown.md";
     
     protected String setViewParam() {
-            List<LabelValue> paramsArray = new ArrayList<>();
-            paramsArray.add(new LabelValue("offset", getParamWithDefault("offset", "")));
-            paramsArray.add(new LabelValue("keyword", getParamWithDefault("keyword", "")));
-            paramsArray.add(new LabelValue("tag", getParamWithDefault("tag", "")));
-            paramsArray.add(new LabelValue("tagNames", getParamWithDefault("tagNames", "")));
-            paramsArray.add(new LabelValue("group", getParamWithDefault("group", "")));
-            paramsArray.add(new LabelValue("groupNames", getParamWithDefault("groupNames", "")));
-            paramsArray.add(new LabelValue("user", getParamWithDefault("user", "")));
-            paramsArray.add(new LabelValue("creators", getParamWithDefault("creators", "")));
-            String[] templates = getParam("template", String[].class);
-            if (templates != null) {
-                for (String template : templates) {
-                    paramsArray.add(new LabelValue("template", template));
+        List<LabelValue> paramsArray = new ArrayList<>();
+        paramsArray.add(new LabelValue("offset", getParamWithDefault("offset", "")));
+        paramsArray.add(new LabelValue("keyword", getParamWithDefault("keyword", "")));
+        paramsArray.add(new LabelValue("tag", getParamWithDefault("tag", "")));
+        paramsArray.add(new LabelValue("tagNames", getParamWithDefault("tagNames", "")));
+        paramsArray.add(new LabelValue("group", getParamWithDefault("group", "")));
+        paramsArray.add(new LabelValue("groupNames", getParamWithDefault("groupNames", "")));
+        paramsArray.add(new LabelValue("user", getParamWithDefault("user", "")));
+        paramsArray.add(new LabelValue("creators", getParamWithDefault("creators", "")));
+        String[] templates = getParam("template", String[].class);
+        if (templates != null) {
+            for (String template : templates) {
+                paramsArray.add(new LabelValue("template", template));
             }
-            }
+        }
         StringBuilder params = new StringBuilder();
         boolean append = false;
         for (LabelValue labelValue : paramsArray) {
@@ -56,10 +56,12 @@ public class KnowledgeControlBase extends Control {
                 } else {
                     params.append('&');
                 }
-                params.append(labelValue.getLabel()).append("=").append(labelValue.getValue());
+                params.append(HtmlUtils.escapeHTML(labelValue.getLabel()))
+                        .append("=")
+                        .append(HtmlUtils.escapeHTML(labelValue.getValue()));
             }
         }
-        setAttribute("params", HtmlUtils.escapeHTML(params.toString()));
+        setAttribute("params", params.toString());
         return params.toString();
     }
     
