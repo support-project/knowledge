@@ -69,6 +69,6 @@ public class PinsDao extends GenPinsDao {
         entity.setInsertUser(ADMIN_ID);
         entity.setInsertDatetime(new Timestamp(DateUtils.now().getTime()));
         entity.setDeleteFlag(0);
-        rawPhysicalInsert(entity);
+        physicalInsert(entity);
     }
 }
