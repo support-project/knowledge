@@ -3,3 +3,4 @@ jdk: oraclejdk8
 
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dskip.npm=true -Dskip.bower=true -Dskip.gulp=true -B -V
 script: mvn clean test -Dskip.npm=true -Dskip.bower=true -Dskip.gulp=true
+
