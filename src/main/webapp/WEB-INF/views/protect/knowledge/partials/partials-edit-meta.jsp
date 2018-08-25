@@ -19,20 +19,20 @@
     </div>
     <div class="panel-body">
         <div class="article_meta">
-        
+
             <!-- template -->
             <div class="form-group" style="margin-top: 3px;">
                 <label for="input_title"><%= jspUtil.label("knowledge.add.label.type") %></label><br/>
                 <c:forEach var="template" items="${templates}" >
                     <label class="radio-inline">
-                        <% 
+                        <%
                         int type = jspUtil.getValue("typeId", Integer.class);
                         if (pageContext.getAttribute("typeId") != null) {
                             type = (Integer) pageContext.getAttribute("typeId");
                         }
                         TemplateMastersEntity template = (TemplateMastersEntity) pageContext.getAttribute("template");
                         String id = "typeId_" + template.getTypeId();
-                        
+
                         StringBuilder builder = new StringBuilder();
                         builder.append("<input type=\"radio\" value=\"").append(template.getTypeId()).append("\" name=\"typeId\" ");
                         builder.append("id=\"").append(id).append("\"");
@@ -51,7 +51,7 @@
                     </label>
                     <br/>
                 </c:forEach>
-                
+
                 <div class="tips_info hide" id="template_info">
                     <span id="template_msg"></span>
                 </div>
@@ -64,36 +64,26 @@
                 <label for="input_content">
                     <%= jspUtil.label("knowledge.add.label.public.class") %><br/>
                 </label><br/>
-                
+
                 <div class="tips_info"><%= jspUtil.label("knowledge.add.label.public.class.info") %></div>
-                
+
                 <label class="radio-inline">
-                    <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PRIVATE %>" name="publicFlag" 
+                    <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PRIVATE %>" name="publicFlag"
                         id="publicFlag_private" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", true) %>/>
                     <i class="fa fa-lock"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.private") %>
                 </label><br/>
                 <label class="radio-inline">
-                    <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PUBLIC %>" name="publicFlag" 
-                        id="publicFlag_piblic" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag") %>/>
+                    <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PUBLIC %>" name="publicFlag"
+                        id="publicFlag_piblic" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag") %> <%= !jspUtil.isAdmin() ? "disabled" : "" %> />
                     <i class="fa fa-globe"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.public") %>
                 </label><br/>
                 <label class="radio-inline">
-                    <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PROTECT %>" name="publicFlag" 
-                        id="publicFlag_protect" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag") %>/>
+                    <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PROTECT %>" name="publicFlag"
+                        id="publicFlag_protect" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag") %>  <%= !jspUtil.isAdmin() ? "disabled" : "" %> />
                     <i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.protect") %>
                 </label><br/>
                 <div style="height:5px"></div>
-                <div class="" id="grops_area" <%= jspUtil.isnot(KnowledgeLogic.PUBLIC_FLAG_PROTECT, "publicFlag", "style=\"display: none;\"") %>>
-                    <label for="input_groups"><%= jspUtil.label("knowledge.add.label.destination") %></label><br/>
-                    <a id="groupselect" class="btn btn-primary btn-xs" data-toggle="modal" href="#groupSelectModal">
-                        <i class="fa fa-th-list"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.destination.select") %>
-                    </a>
-                    <p>
-                        <input type="hidden" name="groups" id="groups" value="">
-                        <span id="groupsLabel"></span>
-                    </p>
-                </div>
-                
+
             </div>
 
 
@@ -112,6 +102,8 @@
 
 
             <!-- editors -->
+            <%-- 共同編集者は利用しないので削除
+
             <div class="form-group" id="editor_area">
                 <label for="input_groups"><%= jspUtil.label("knowledge.add.label.editors") %></label><br/>
                 <a id="groupselect" class="btn btn-info btn-xs" data-toggle="modal" href="#editorSelectModal">
@@ -122,15 +114,16 @@
                     <span id="editorsLabel"></span>
                 </p>
             </div>
-        
+            --%>
+
             <!-- upload files -->
             <div class="form-group">
                 <jsp:include page="partials-edit-attach.jsp"></jsp:include>
             </div>
-            
-        </div>
-        
 
-    
+        </div>
+
+
+
     </div>
 </div>

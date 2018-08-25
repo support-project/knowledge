@@ -67,7 +67,7 @@
             <jsp:include page="partials/partials-view-main-contents.jsp"></jsp:include>
         </div>
     </div>
-     
+
     <%-- 添付ファイル --%>
     <div class="row">
         <div class="col-sm-12" >
@@ -75,18 +75,20 @@
             <jsp:include page="partials/partials-view-attach-files.jsp"></jsp:include>
         </div>
     </div>
-     
-     
+
+
     <%-- コメント表示 --%>
     <jsp:include page="partials/partials-view-comment-list.jsp"></jsp:include>
 
     <%-- コメント登録 --%>
+    <% if (jspUtil.isAdmin()) { %>
     <hr />
     <jsp:include page="partials/partials-view-comment-edit.jsp"></jsp:include>
+    <% } %>
 
     <%-- Stock Modal --%>
     <jsp:include page="partials/partials-view-modal-stock.jsp"></jsp:include>
-    
+
     <%-- Survey --%>
     <jsp:include page="partials/partials-view-modal-answer-survey.jsp"></jsp:include>
 
