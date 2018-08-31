@@ -25,6 +25,7 @@ import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.logic.CompressLogic;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.vo.ExportUser;
+import org.support.project.knowledge.vo.KnowledgeListInfo;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UsersDao;
@@ -82,7 +83,8 @@ public class CreateExportDataBat extends AbstractBat {
         CommentsDao commentsDao = CommentsDao.get();
         KnowledgeFilesDao knowledgeFilesDao = KnowledgeFilesDao.get();
 
-        List<KnowledgesEntity> knowledges = knowledgeLogic.searchKnowledge("", loginedUser, 0, 100);
+        KnowledgeListInfo knowledgesListInfo = knowledgeLogic.searchKnowledge("", loginedUser, 0, 100);
+        List<KnowledgesEntity> knowledges = knowledgesListInfo.getKnowledgesEntityList();
         for (KnowledgesEntity knowledgesEntity : knowledges) {
             File f = new File(dir, "knowledge-" + StringUtils.zeroPadding(knowledgesEntity.getKnowledgeId(), 6) + ".xml");
             String xml = SerializeUtils.objectToXml(knowledgesEntity);

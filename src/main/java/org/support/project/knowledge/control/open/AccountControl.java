@@ -28,6 +28,7 @@ import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.vo.AccountInfo;
 import org.support.project.knowledge.vo.ActivityHistory;
 import org.support.project.knowledge.vo.ContributionPointHistory;
+import org.support.project.knowledge.vo.KnowledgeListInfo;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.boundary.Boundary;
 import org.support.project.web.control.service.Get;
@@ -97,7 +98,8 @@ public class AccountControl extends Control {
         if (StringUtils.isInteger(getParam("offset"))) {
             offset = getParam("offset", Integer.class);
         }
-        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
+        KnowledgeListInfo knowledgesListInfo = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
+        List<KnowledgesEntity> knowledges = knowledgesListInfo.getKnowledgesEntityList();
         List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, getLoginedUser());
         KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         setAttribute("knowledges", stocks);
@@ -147,7 +149,8 @@ public class AccountControl extends Control {
         if (StringUtils.isInteger(getParam("offset"))) {
             offset = getParam("offset", Integer.class);
         }
-        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
+        KnowledgeListInfo knowledgesListInfo = KnowledgeLogic.get().showKnowledgeOnUser(userId, getLoginedUser(), offset * PAGE_LIMIT, PAGE_LIMIT);
+        List<KnowledgesEntity> knowledges = knowledgesListInfo.getKnowledgesEntityList();
         List<StockKnowledge> stocks = KnowledgeLogic.get().setStockInfo(knowledges, getLoginedUser());
         KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         return send(stocks);

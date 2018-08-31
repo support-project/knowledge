@@ -228,15 +228,36 @@
         <!-- Pager -->
         <nav>
             <ul class="pager">
+                <%
+                    if (!jspUtil.attr("offset").equals("0")) {
+                %>
                 <li class="previous"><a
                     href="<%=request.getContextPath()%>/open.knowledge/list/<%=jspUtil.out("previous")%><%=jspUtil.out("params")%>">
                      <span aria-hidden="true">&larr;</span><%=jspUtil.label("label.previous")%>
                 </a></li>
+                <%
+                    }
+                %>
+                <%
+                    if (jspUtil.attr("hasNextPage").equals("true")) {
+                %>
                 <li class="next"><a
                     href="<%=request.getContextPath()%>/open.knowledge/list/<%=jspUtil.out("next")%><%=jspUtil.out("params")%>">
                         <%=jspUtil.label("label.next")%> <span aria-hidden="true">&rarr;</span>
                 </a></li>
+                <%
+                    }
+                %>
             </ul>
+            <%
+                if (!jspUtil.attr("totalCount").equals("0")) {
+            %>
+            <p>
+                全 <%= jspUtil.attr("totalCount") %> 件中、<%= jspUtil.attr("currentPageStart") %> 件目 〜 <%= jspUtil.attr("currentPageEnd") %> 件目を表示中
+            </p>
+            <%
+                }
+            %>
         </nav>
 
         <c:import url="/WEB-INF/views/commons/notice/notice.jsp" />

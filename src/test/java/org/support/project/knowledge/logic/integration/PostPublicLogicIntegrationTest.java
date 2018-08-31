@@ -22,6 +22,7 @@ import org.support.project.knowledge.entity.NotifyQueuesEntity;
 import org.support.project.knowledge.logic.KnowledgeLogic;
 import org.support.project.knowledge.logic.MailLogic;
 import org.support.project.knowledge.logic.notification.QueueNotification;
+import org.support.project.knowledge.vo.KnowledgeListInfo;
 import org.support.project.ormapping.common.DBUserPool;
 import org.support.project.web.bean.LoginedUser;
 import org.support.project.web.dao.MailConfigsDao;
@@ -183,7 +184,8 @@ public class PostPublicLogicIntegrationTest extends TestCommon {
     public void testKnowledgeView() throws Exception {
         LOG.info("記事を参照");
         LoginedUser user = getLoginUser("integration-test-user-01");
-        List<KnowledgesEntity> knowledges = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100);
+        KnowledgeListInfo knowledgesListInfo = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100);
+        List<KnowledgesEntity> knowledges = knowledgesListInfo.getKnowledgesEntityList();
         Assert.assertEquals(1, knowledges.size());
         
         KnowledgesEntity knowledge = KnowledgeLogic.get().select(knowledges.get(0).getKnowledgeId(), user);
@@ -191,7 +193,8 @@ public class PostPublicLogicIntegrationTest extends TestCommon {
         Assert.assertEquals(knowledgeId, knowledge.getKnowledgeId().intValue());
         
         user = getLoginUser("integration-test-user-02");
-        knowledges = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100);
+        knowledgesListInfo = KnowledgeLogic.get().searchKnowledge(null, user, 0, 100);
+        knowledges = knowledgesListInfo.getKnowledgesEntityList();
         Assert.assertEquals(1, knowledges.size());
         
         knowledge = KnowledgeLogic.get().select(knowledges.get(0).getKnowledgeId(), user);

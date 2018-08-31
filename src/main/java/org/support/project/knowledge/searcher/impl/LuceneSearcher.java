@@ -42,6 +42,7 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.config.IndexType;
 import org.support.project.knowledge.indexer.impl.LuceneIndexer;
 import org.support.project.knowledge.logic.KnowledgeLogic;
+import org.support.project.knowledge.searcher.SearchResultAggregate;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.Searcher;
 import org.support.project.knowledge.searcher.SearchingValue;
@@ -102,16 +103,16 @@ public class LuceneSearcher implements Searcher {
      * 検索
      * @throws InvalidParamException 
      */
-    public List<SearchResultValue> search(final SearchingValue value, int keywordSortType) throws IOException, InvalidTokenOffsetsException, InvalidParamException {
+    public SearchResultAggregate search(final SearchingValue value, int keywordSortType) throws IOException, InvalidTokenOffsetsException, InvalidParamException {
         List<SearchResultValue> resultValues = new ArrayList<>();
 
         File indexDir = new File(getIndexPath());
         if (!indexDir.exists()) {
-            return resultValues;
+            return new SearchResultAggregate(0, resultValues);
         }
         File[] children = indexDir.listFiles();
         if (children == null || children.length == 0) {
-            return resultValues;
+            return new SearchResultAggregate(0, resultValues);
         }
 
         IndexReader reader = DirectoryReader.open(FSDirectory.open(indexDir));
@@ -192,7 +193,7 @@ public class LuceneSearcher implements Searcher {
             resultValues.add(resultValue);
         }
 
-        return resultValues;
+        return new SearchResultAggregate(countCollector.getTotalHits(), resultValues);
 
     }
 

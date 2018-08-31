@@ -1,7 +1,5 @@
 package org.support.project.knowledge.searcher;
 
-import java.util.List;
-
 import org.support.project.di.DI;
 import org.support.project.knowledge.searcher.impl.LuceneSearcher;
 
@@ -16,6 +14,6 @@ public interface Searcher {
      * @return
      * @throws Exception
      */
-    List<SearchResultValue> search(SearchingValue value, int keywordSortType) throws Exception;
+    SearchResultAggregate search(SearchingValue value, int keywordSortType) throws Exception;
 
 }

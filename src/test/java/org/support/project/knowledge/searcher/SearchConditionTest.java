@@ -1,5 +1,10 @@
 package org.support.project.knowledge.searcher;
 
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.support.project.common.config.ConfigLoader;
@@ -14,12 +19,6 @@ import org.support.project.knowledge.config.AppConfig;
 import org.support.project.knowledge.indexer.Indexer;
 import org.support.project.knowledge.indexer.IndexingValue;
 import org.support.project.knowledge.logic.TemplateLogic;
-
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 public class SearchConditionTest {
     /** ログ */
@@ -92,20 +91,20 @@ public class SearchConditionTest {
 
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.addTemplate(TemplateLogic.TYPE_ID_KNOWLEDGE);
-        List<SearchResultValue> results = searcher.search(searchingValue, 1);
-        for (SearchResultValue searchResultValue : results) {
+        SearchResultAggregate results = searcher.search(searchingValue, 1);
+        for (SearchResultValue searchResultValue : results.getResultList()) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));
         }
-        assertEquals(1, results.size());
-        SearchResultValue result = results.get(0);
+        assertEquals(1, results.getResultList().size());
+        SearchResultValue result = results.getResultList().get(0);
         assertEquals(id1, result.getId());
 
         searchingValue.addTemplate(TemplateLogic.TYPE_ID_EVENT);
         results = searcher.search(searchingValue, 1);
-        for (SearchResultValue searchResultValue : results) {
+        for (SearchResultValue searchResultValue : results.getResultList()) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));
         }
-        assertEquals(2, results.size());
+        assertEquals(2, results.getResultList().size());
     }
 
     @Test
@@ -121,12 +120,12 @@ public class SearchConditionTest {
 
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.addCreator(100);
-        List<SearchResultValue> results = searcher.search(searchingValue, 1);
-        for (SearchResultValue searchResultValue : results) {
+        SearchResultAggregate results = searcher.search(searchingValue, 1);
+        for (SearchResultValue searchResultValue : results.getResultList()) {
             LOG.info(PropertyUtil.reflectionToString(searchResultValue));
         }
-        assertEquals(1, results.size());
-        SearchResultValue result = results.get(0);
+        assertEquals(1, results.getResultList().size());
+        SearchResultValue result = results.getResultList().get(0);
         assertEquals(id1, result.getId());
 
     }
