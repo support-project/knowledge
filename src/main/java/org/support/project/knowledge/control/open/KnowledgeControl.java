@@ -561,6 +561,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
             
             // pin留めの記事取得
+            int pinnedCount = 0;
             if (0 == offset.intValue()) {
                 List<PinsEntity> pins = PinsDao.get().selectAll();
                 for (PinsEntity pin : pins) {
@@ -574,6 +575,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                             }
                         }
                         k.setPin(true);
+                        pinnedCount++;
                         knowledges.add(0, k); // 先頭に追加
                     }
                 }
@@ -582,8 +584,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
             // ページングに関する情報設定
             setAttribute("hasNextPage", totalCount > (offset + 1) * PAGE_LIMIT);
             setAttribute("totalCount", totalCount);
+            setAttribute("pinnedCount", pinnedCount);
             setAttribute("currentPageStart", offset * PAGE_LIMIT + 1);
-            if (totalCount < (offset + 1) * PAGE_LIMIT) {
+                       if (totalCount < (offset + 1) * PAGE_LIMIT) {
                 setAttribute("currentPageEnd", totalCount);
             } else {
                 setAttribute("currentPageEnd", (offset + 1) * PAGE_LIMIT);

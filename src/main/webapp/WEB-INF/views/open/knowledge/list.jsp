@@ -254,6 +254,13 @@
             %>
             <p>
                 全 <%= jspUtil.attr("totalCount") %> 件中、<%= jspUtil.attr("currentPageStart") %> 件目 〜 <%= jspUtil.attr("currentPageEnd") %> 件目を表示中
+                <%
+                    if (!jspUtil.attr("pinnedCount").equals("0")) {
+                %>
+                （ピン留め記事を <%= jspUtil.attr("pinnedCount") %> 件表示中）
+                <%
+                    }
+                %>
             </p>
             <%
                 }
