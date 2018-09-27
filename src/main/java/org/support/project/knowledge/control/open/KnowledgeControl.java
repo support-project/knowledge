@@ -586,7 +586,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             setAttribute("totalCount", totalCount);
             setAttribute("pinnedCount", pinnedCount);
             setAttribute("currentPageStart", offset * PAGE_LIMIT + 1);
-                       if (totalCount < (offset + 1) * PAGE_LIMIT) {
+            if (totalCount < (offset + 1) * PAGE_LIMIT) {
                 setAttribute("currentPageEnd", totalCount);
             } else {
                 setAttribute("currentPageEnd", (offset + 1) * PAGE_LIMIT);
