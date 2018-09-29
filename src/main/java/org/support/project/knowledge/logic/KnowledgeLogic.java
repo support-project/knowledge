@@ -63,9 +63,11 @@ import org.support.project.knowledge.logic.activity.ActivityLogic;
 import org.support.project.knowledge.logic.hook.AfterSaveHook;
 import org.support.project.knowledge.logic.hook.BeforeSaveHook;
 import org.support.project.knowledge.logic.hook.HookFactory;
+import org.support.project.knowledge.searcher.SearchResultAggregate;
 import org.support.project.knowledge.searcher.SearchResultValue;
 import org.support.project.knowledge.searcher.SearchingValue;
 import org.support.project.knowledge.vo.KnowledgeData;
+import org.support.project.knowledge.vo.KnowledgeListInfo;
 import org.support.project.knowledge.vo.StockKnowledge;
 import org.support.project.web.bean.LabelValue;
 import org.support.project.web.bean.LoginedUser;
@@ -514,17 +516,17 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    private List<KnowledgesEntity> searchKnowledge(SearchingValue searchingValue) throws Exception {
+    private KnowledgeListInfo searchKnowledge(SearchingValue searchingValue) throws Exception {
         if (LOG.isDebugEnabled()) {
             LOG.debug("search params：" + PropertyUtil.reflectionToString(searchingValue));
         }
         LOG.trace("検索開始");
-        List<SearchResultValue> list = IndexLogic.get().search(searchingValue, this.keywordSortType);
+        SearchResultAggregate results = IndexLogic.get().search(searchingValue, this.keywordSortType);
         LOG.trace("検索終了");
         LOG.trace("付加情報をセット開始");
-        List<KnowledgesEntity> result = getKnowledgeDatas(list);
+        List<KnowledgesEntity> result = getKnowledgeDatas(results.getResultList());
         LOG.trace("付加情報をセット終了");
-        return result;
+        return new KnowledgeListInfo(results.getTotalResultCount(), result);
     }
 
     /**
@@ -540,7 +542,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
+    public KnowledgeListInfo searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
             List<UsersEntity> creators, String[] templates, LoginedUser loginedUser,
             Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
@@ -624,7 +626,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> searchKnowledge(String keyword, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public KnowledgeListInfo searchKnowledge(String keyword, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
         return searchKnowledge(keyword, null, null, null, null, loginedUser, offset, limit);
     }
 
@@ -638,7 +640,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> showKnowledgeOnTag(String tag, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public KnowledgeListInfo showKnowledgeOnTag(String tag, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setOffset(offset);
         searchingValue.setLimit(limit);
@@ -678,10 +680,10 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> showKnowledgeOnGroup(String group, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public KnowledgeListInfo showKnowledgeOnGroup(String group, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
         List<KnowledgesEntity> knowledges = new ArrayList<KnowledgesEntity>();
         if (loginedUser == null) {
-            return knowledges;
+            return new KnowledgeListInfo(0, knowledges);
         }
 
         SearchingValue searchingValue = new SearchingValue();
@@ -703,7 +705,7 @@ public class KnowledgeLogic {
             }
         }
 
-        return knowledges;
+        return new KnowledgeListInfo(0, knowledges);
     }
 
     /**
@@ -715,7 +717,7 @@ public class KnowledgeLogic {
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> showKnowledgeOnUser(int targetUser, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
+    public KnowledgeListInfo showKnowledgeOnUser(int targetUser, LoginedUser loginedUser, Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
         searchingValue.setOffset(offset);
         searchingValue.setLimit(limit);

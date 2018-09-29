@@ -1,7 +1,5 @@
 package org.support.project.knowledge.logic;
 
-import java.util.List;
-
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.di.Container;
@@ -9,7 +7,7 @@ import org.support.project.di.DI;
 import org.support.project.di.Instance;
 import org.support.project.knowledge.indexer.Indexer;
 import org.support.project.knowledge.indexer.IndexingValue;
-import org.support.project.knowledge.searcher.SearchResultValue;
+import org.support.project.knowledge.searcher.SearchResultAggregate;
 import org.support.project.knowledge.searcher.Searcher;
 import org.support.project.knowledge.searcher.SearchingValue;
 
@@ -48,13 +46,13 @@ public class IndexLogic {
      * @return
      * @throws Exception
      */
-    public List<SearchResultValue> search(SearchingValue search, int keywordSortType) throws Exception {
+    public SearchResultAggregate search(SearchingValue search, int keywordSortType) throws Exception {
         Searcher searcher = Container.getComp(Searcher.class);
-        List<SearchResultValue> list = searcher.search(search, keywordSortType);
+        SearchResultAggregate result = searcher.search(search, keywordSortType);
         if (LOG.isDebugEnabled()) {
-            LOG.debug(JSON.encode(list, true));
+            LOG.debug(JSON.encode(result, true));
         }
-        return list;
+        return result;
     }
 
     /**

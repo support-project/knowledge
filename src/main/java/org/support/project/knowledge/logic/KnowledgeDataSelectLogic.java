@@ -23,6 +23,7 @@ import org.support.project.knowledge.entity.KnowledgeItemValuesEntity;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
+import org.support.project.knowledge.vo.KnowledgeListInfo;
 import org.support.project.knowledge.vo.SearchKnowledgeParam;
 import org.support.project.knowledge.vo.api.AttachedFile;
 import org.support.project.knowledge.vo.api.Comment;
@@ -244,7 +245,7 @@ public class KnowledgeDataSelectLogic {
         String [] templates = {param.getTemplate()}; // TODO テンプレートの複数指定に対応させる
 
         List<Knowledge> results = new ArrayList<>();
-        List<KnowledgesEntity> entities = KnowledgeLogic.get().searchKnowledge(
+        KnowledgeListInfo knowledgesListInfo = KnowledgeLogic.get().searchKnowledge(
                 param.getKeyword(),
                 param.getTags(),
                 param.getGroups(),
@@ -253,6 +254,7 @@ public class KnowledgeDataSelectLogic {
                 param.getLoginedUser(),
                 param.getOffset(),
                 param.getLimit());
+        List<KnowledgesEntity> entities = knowledgesListInfo.getKnowledgesEntityList();
         List<String> ids = new ArrayList<>();
         for (KnowledgesEntity entity : entities) {
             Knowledge result = conv(entity, LIST);

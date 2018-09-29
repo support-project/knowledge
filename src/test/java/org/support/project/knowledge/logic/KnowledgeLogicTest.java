@@ -1,6 +1,6 @@
 package org.support.project.knowledge.logic;
 
-import static org.support.project.common.test.AssertEx.eqdb;
+import static org.support.project.common.test.AssertEx.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,7 @@ import org.support.project.knowledge.TestCommon;
 import org.support.project.knowledge.dao.KnowledgesDao;
 import org.support.project.knowledge.entity.KnowledgesEntity;
 import org.support.project.knowledge.vo.KnowledgeData;
+import org.support.project.knowledge.vo.KnowledgeListInfo;
 import org.support.project.ormapping.common.DBUserPool;
 
 import net.arnx.jsonic.JSON;
@@ -109,7 +110,8 @@ public class KnowledgeLogicTest extends TestCommon {
         ignores.add("score"); // スコアは、Luceneが算出する値なのでテストしない（Luceneの実装が変化すると値が変わるので）
 
         KnowledgeLogic logic = KnowledgeLogic.get();
-        List<KnowledgesEntity> entities = logic.searchKnowledge(null, loginedUser, 0, 100);
+        KnowledgeListInfo knowledgesListInfo = logic.searchKnowledge(null, loginedUser, 0, 100); 
+        List<KnowledgesEntity> entities = knowledgesListInfo.getKnowledgesEntityList();
         LOG.info(JSON.encode(entities, true));
         eqdb(checks, entities, ignores);
 
@@ -118,14 +120,16 @@ public class KnowledgeLogicTest extends TestCommon {
         checks.add(list.get(1)); // スコア上
         checks.add(list.get(0));
 
-        entities = logic.searchKnowledge(null, loginedUser2, 0, 100);
+        knowledgesListInfo = logic.searchKnowledge(null, loginedUser2, 0, 100);
+        entities = knowledgesListInfo.getKnowledgesEntityList();
         LOG.info(JSON.encode(entities, true));
         eqdb(checks, entities, ignores);
 
         checks = new ArrayList<KnowledgesEntity>();
         checks.add(list.get(0));
 
-        entities = logic.searchKnowledge("テスト", loginedUser2, 0, 100);
+        knowledgesListInfo = logic.searchKnowledge("テスト", loginedUser2, 0, 100);
+        entities = knowledgesListInfo.getKnowledgesEntityList();
         list.get(0).setContent("<span class=\"mark\">テスト</span>だよ");
 
         LOG.info(JSON.encode(entities, true));
