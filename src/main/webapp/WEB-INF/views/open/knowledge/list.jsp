@@ -253,11 +253,11 @@
                 if (!jspUtil.attr("totalCount").equals("0")) {
             %>
             <p>
-                全 <%= jspUtil.attr("totalCount") %> 件中、<%= jspUtil.attr("currentPageStart") %> 件目 〜 <%= jspUtil.attr("currentPageEnd") %> 件目を表示中
+                <%= jspUtil.label("knowledge.list.pagination.current", jspUtil.attr("totalCount"), jspUtil.attr("currentPageStart"), jspUtil.attr("currentPageEnd")) %>
                 <%
                     if (!jspUtil.attr("pinnedCount").equals("0")) {
                 %>
-                （ピン留め記事を <%= jspUtil.attr("pinnedCount") %> 件表示中）
+                <%= jspUtil.label("knowledge.list.pagination.pinned", jspUtil.attr("pinnedCount")) %>
                 <%
                     }
                 %>
