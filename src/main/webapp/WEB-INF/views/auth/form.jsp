@@ -74,9 +74,6 @@
 <% } %>
 
             <br/><br/>
-            <a href="<%=request.getContextPath()%>/open.PasswordInitialization/view" class="text-primary">
-                <i class="fa fa-key"></i>&nbsp;<%= jspUtil.label("knowledge.auth.forgot.password") %>
-            </a>
 
 
                 </div>
