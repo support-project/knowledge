@@ -1,21 +1,6 @@
 var timer;
 var titleValue = '';
 var contentValue = '';
-var initTimer = function() {
-    if (timer) {
-        clearInterval(timer);
-    }
-    titleValue = $("#input_title").val();
-    contentValue = $("#content").val();
-    timer = setInterval(function() {
-        if (titleValue !== $("#input_title").val() || contentValue !== $("#content").val()) {
-            titleValue = $("#input_title").val();
-            contentValue = $("#content").val();
-            $.notify('auto saving...', 'info');
-            saveDraft();
-        }
-    }, 1000 * 60 * 1); // 1分に1回確認する
-};
 var saveDraft = function() {
     // 操作対象のフォーム要素を取得
     var $form = $('#knowledgeForm');
@@ -32,8 +17,6 @@ var deleteKnowledge = function() {
 };
 var saveKnowledge = function($form, url, notifyNone) {
     return new Promise(function(resolve, reject) {
-        // 下書き保存のタイマーは初期化する
-        initTimer();
         // 送信ボタンを取得
         var $button = $form.find('button');
         // ボタンを無効化し、二重送信を防止
@@ -114,8 +97,6 @@ $(document).ready(function() {
         event.preventDefault();
         return saveDraft();
     });
-    // 自動保存のタイマーをセット
-    initTimer();
     // タイトル時にenterを押して保存されないようenterを無効化する
     $("#input_title").keypress(function(e) {
         return ! ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13));
