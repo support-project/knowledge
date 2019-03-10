@@ -28,13 +28,13 @@
             <li><a href="<%=request.getContextPath()%>/protect.account" style="cursor: pointer;">
                 <i class="fa fa-smile-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.myaccount")%>
             </a></li>
-            
+
             <% if (jspUtil.is(Boolean.TRUE, "ldapExists")) { %>
             <li><a href="<%=request.getContextPath()%>/protect.connect" style="cursor: pointer;">
                 <i class="fa fa-link"></i>&nbsp;<%=jspUtil.label("knowledge.connect.title")%>
             </a></li>
             <% } %>
-            
+
             <li><a href="<%=request.getContextPath()%>/protect.notify" style="cursor: pointer;">
                 <i class="fa fa-bell-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.notify")%>
             </a></li>
@@ -57,9 +57,6 @@
         <ul class="menu_list" role="menu">
             <li><a href="<%=request.getContextPath()%>/open.knowledge/list?user=<%=jspUtil.id()%>">
                 <i class="fa fa-male"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.myknowledge")%>
-            </a></li>
-            <li><a href="<%=request.getContextPath()%>/protect.draft/list">
-                <i class="fa fa-database"></i>&nbsp;<%=jspUtil.label("knowledge.draft.list.title")%>
             </a></li>
             <li><a href="<%=request.getContextPath()%>/protect.stock/mylist">
                 <i class="fa fa-star-o"></i>&nbsp;<%=jspUtil.label("knowledge.navbar.account.mystock")%>

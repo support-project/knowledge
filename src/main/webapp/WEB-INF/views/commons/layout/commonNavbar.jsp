@@ -28,7 +28,7 @@
                     class="icon-bar"></span> <span class="icon-bar"></span> <span
                     class="icon-bar"></span>
             </button>
-            <% 
+            <%
             String icon = "fa-book";
             ServiceConfigsEntity serviceConfig = SystemConfig.getServiceConfigsEntity();
             if (serviceConfig != null && StringUtils.isNotEmpty(serviceConfig.getServiceIcon())) {
@@ -38,7 +38,7 @@
             <a class="navbar-brand"
                 href="<%= request.getContextPath() %><%= top %>"
                 style="cursor: pointer;"> <i class="fa <%= icon %>"></i>&nbsp;
-                <% 
+                <%
                 if (serviceConfig != null && StringUtils.isNotEmpty(serviceConfig.getServiceLabel())) { %>
                     <%= SanitizingLogic.get().sanitize(serviceConfig.getServiceLabel()) %>
                 <% } else { %>
@@ -80,11 +80,6 @@
                                     <i class="fa fa-plus-circle"></i>&nbsp;<%= jspUtil.label("knowledge.navbar.add.knowledge") %>
                                 </a>
                             </li>
-                            <li>
-                                <a class="dropdown-item" href="<%=request.getContextPath()%>/protect.draft/list">
-                                    <i class="fa fa-database"></i>&nbsp;<%=jspUtil.label("knowledge.draft.list.title")%>
-                                </a>
-                            </li>
                         </ul>
                     </div>
                 </li>
@@ -96,7 +91,7 @@
                         </a>
                     </div>
                 </li>
-                
+
                 <% if (!jspUtil.logined()) { %>
                 <li class="navButton navMenuButton">
                     <div class="btn-group">
@@ -104,7 +99,7 @@
                             <img src="<%= request.getContextPath()%>/open.account/icon/<%= jspUtil.id() %>" alt="icon" width="15" height="15"/>
                             <span class="caret"></span>
                         </a>
-                        <!-- 
+                        <!--
                         <a href="#" class="btn btn-default dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                         </a>
@@ -190,8 +185,8 @@
                 </li>
                 <% } %>
             </ul>
-            
-            
+
+
         </div>
         <!-- /.navbar-collapse -->
     </div>

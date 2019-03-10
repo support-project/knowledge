@@ -55,7 +55,6 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
     <input type="hidden" name="<%= HttpRequestCheckLogic.REQ_ID_KEY %>"
         value="<%= jspUtil.out(HttpRequestCheckLogic.REQ_ID_KEY) %>" />
     <input type="hidden" name="knowledgeId" value="<%= jspUtil.out("knowledgeId") %>" id="knowledgeId" />
-    <input type="hidden" name="draftId" value="<%= jspUtil.out("draftId") %>" id="draftId" />
     <input type="hidden" name="updateContent" value="" id="updateContent" />
     <%-- ヘッダ部（ボタンなど） --%>
     <div class="row" id="content_head">
@@ -69,7 +68,7 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
             <jsp:include page="partials/partials-edit-buttons.jsp"></jsp:include>
         </div>
     </div>
-    
+
     <%-- ナレッジ編集（メインのコンテンツ部分） --%>
     <div class="row" id="content_main">
         <div class="col-sm-8">
@@ -81,7 +80,7 @@ selectedEditors.push({label: '<%= jspUtil.out("editor.label") %>', value: '<%= j
             <jsp:include page="partials/partials-edit-meta.jsp"></jsp:include>
         </div>
     </div>
-    
+
 </form>
 
 <%-- Editors select modal --%>

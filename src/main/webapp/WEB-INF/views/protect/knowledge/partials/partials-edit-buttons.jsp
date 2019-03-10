@@ -8,16 +8,12 @@
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
-<% 
+<%
     String deleteHide = "hide";
-    String draftDeleteHide = "hide";
     String cancelUrl = request.getContextPath() + "/open.knowledge/list" + jspUtil.out("params");
     if (jspUtil.getValue("knowledgeId", Long.class) != null) {
         deleteHide = "";
         cancelUrl = request.getContextPath() + "/open.knowledge/view/" + jspUtil.out("knowledgeId") + jspUtil.out("params");
-    }
-    if (jspUtil.getValue("draftId", Long.class) != null) {
-        draftDeleteHide = "";
     }
 %>
 <div class="article_buttons">
@@ -33,14 +29,6 @@
         </button>
     </div>
     <div>
-        <button type="submit" class="btn btn-info btn_2" id="draftbutton">
-            <i class="fa fa-save"></i>&nbsp;<%= jspUtil.label("label.save.draft") %>
-        </button>
-        <button type="button" class="btn btn-info btn_2 text-warning <%= draftDeleteHide %>" onclick="" id="draftDeleteButton">
-            <i class="fa fa-eraser"></i>&nbsp; <%= jspUtil.label("label.delete.draft") %>
-        </button>
-    </div>
-    <div>
         <a href="<%= cancelUrl %>"
             class="btn btn-info btn_2" role="button" id="cancelButton">
             <i class="fa fa-undo"></i>&nbsp;<%= jspUtil.label("label.cancel") %>
@@ -49,6 +37,6 @@
             <i class="fa fa-remove"></i>&nbsp;<%= jspUtil.label("label.delete") %>
         </button>
     </div>
-    
+
 </div>
 

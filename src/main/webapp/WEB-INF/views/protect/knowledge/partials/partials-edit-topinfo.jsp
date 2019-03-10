@@ -16,7 +16,7 @@
     <%-- <div class="form-group title" id="title_msg"><%= jspUtil.label("knowledge.edit.title") %></div> --%>
     <!-- info -->
     #<%= jspUtil.out("knowledgeId") %>
-     / 
+     /
     <i class="fa fa-calendar"></i>&nbsp;<%= jspUtil.date("updateDatetime")%>
 <% } else { %>
     <%-- <div class="form-group title" id="title_msg"><%= jspUtil.label("knowledge.add.title") %></div> --%>
@@ -29,17 +29,3 @@
     <label for="input_title"><%= jspUtil.label("knowledge.add.label.title") %></label>
     <input type="text" class="form-control" name="title" id="input_title" placeholder="<%= jspUtil.label("knowledge.add.label.title") %>" value="<%= jspUtil.out("title") %>" />
 </div>
-
-<%
-    String draft = "";
-    if (jspUtil.getValue("draftId", Long.class) == null) {
-        draft = "hide";
-    }
-
-%>
-
-<div class="form-group <%= draft %>" id="draft_flag">
-    <%= jspUtil.label("knowledge.add.draft.flag") %>
-    <span class="tips_info"><%= jspUtil.label("knowledge.add.draft.info") %></span>
-</div>
-
