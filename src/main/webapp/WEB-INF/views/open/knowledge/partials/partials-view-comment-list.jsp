@@ -50,10 +50,16 @@
                 <%
                     if (jspUtil.isAdmin() || jspUtil.is(jspUtil.id(), "comment.insertUser") || (Boolean) request.getAttribute("edit")) {
                 %>
+                <%
+                        if (jspUtil.isAdmin()) {
+                %>
                 &nbsp; <a class="btn btn-primary btn-xs"
                     href="<%=request.getContextPath()%>/protect.knowledge/edit_comment/<%=comment.getCommentNo()%>"> <i class="fa fa-edit"></i>
                     <%=jspUtil.label("label.edit")%>
                 </a> &nbsp;
+                <%
+                        }
+                %>
                 <button class="btn btn-info btn-xs <%if (comment.getCommentStatus() == 1) {%>hide<%}%>"
                     onclick="collapse('<%=comment.getCommentNo()%>', 1);" id="collapse_on_<%=comment.getCommentNo()%>">
                     <i class="fa fa-minus-square-o"></i>
@@ -79,9 +85,9 @@
             </div>
             <div class="arrow_question markdown">
                 <%=jspUtil.out("comment.comment", JspUtil.ESCAPE_NONE)%>
-                
+
                 <hr class="hrstyle01"/>
-                
+
                 <!-- コメントに付けた添付ファイルの表示 -->
                 <c:forEach var="file" items="${files}">
                     <c:if test="${file.commentNo == comment.commentNo}">
@@ -91,10 +97,10 @@
                         </div>
                     </c:if>
                 </c:forEach>
-                
+
                 <a href="<%=request.getContextPath()%>/open.knowledge/likecomments/<%=jspUtil.out("comment.getCommentNo()")%><%=jspUtil.out("params")%>"
                     class="text-primary btn-link">
-                    <i class="fa fa-thumbs-o-up"></i>&nbsp;<%=jspUtil.label("knowledge.view.like")%> × 
+                    <i class="fa fa-thumbs-o-up"></i>&nbsp;<%=jspUtil.label("knowledge.view.like")%> ×
                     <span id="like_comment_count_<%=comment.getCommentNo()%>">
                     <%=comment.getLikeCount()%>
                     </span>
@@ -103,7 +109,7 @@
                 <button class="btn btn-info btn-circle" onclick="addlikeComment(<%=comment.getCommentNo()%>);">
                     <i class="fa fa-thumbs-o-up"></i>&nbsp;
                 </button>
-                
+
             </div>
             <!-- /.arrow_question -->
         </div>
@@ -123,10 +129,16 @@
                 <%
                     if (jspUtil.isAdmin() || jspUtil.is(jspUtil.id(), "comment.insertUser") || (Boolean) request.getAttribute("edit")) {
                 %>
+                <%
+                        if (jspUtil.isAdmin()) {
+                %>
                 &nbsp; <a class="btn btn-primary btn-xs"
                     href="<%=request.getContextPath()%>/protect.knowledge/edit_comment/<%=comment.getCommentNo()%>"> <i class="fa fa-edit"></i>
                     <%=jspUtil.label("label.edit")%>
                 </a> &nbsp;
+                <%
+                        }
+                %>
                 <button class="btn btn-info btn-xs <%if (comment.getCommentStatus() == 1) {%>hide<%}%>"
                     onclick="collapse('<%=comment.getCommentNo()%>', 1);" id="collapse_on_<%=comment.getCommentNo()%>">
                     <i class="fa fa-minus-square-o"></i>
@@ -165,9 +177,9 @@
             </div>
             <div class="arrow_answer markdown">
                 <%=jspUtil.out("comment.comment", JspUtil.ESCAPE_NONE)%>
-                
+
                 <hr class="hrstyle01"/>
-                
+
                 <!-- コメントに付けた添付ファイルの表示 -->
                 <c:forEach var="file" items="${files}">
                     <c:if test="${file.commentNo == comment.commentNo}">
@@ -177,10 +189,10 @@
                         </div>
                     </c:if>
                 </c:forEach>
-                
+
                 <a href="<%=request.getContextPath()%>/open.knowledge/likecomments/<%=jspUtil.out("comment.getCommentNo()")%><%=jspUtil.out("params")%>"
                     class="text-primary btn-link">
-                    <i class="fa fa-thumbs-o-up"></i>&nbsp;<%=jspUtil.label("knowledge.view.like")%> × 
+                    <i class="fa fa-thumbs-o-up"></i>&nbsp;<%=jspUtil.label("knowledge.view.like")%> ×
                     <span id="like_comment_count_<%=comment.getCommentNo()%>">
                     <%=comment.getLikeCount()%>
                     </span>
@@ -189,7 +201,7 @@
                 <button class="btn btn-info btn-circle" onclick="addlikeComment(<%=comment.getCommentNo()%>);">
                     <i class="fa fa-thumbs-o-up"></i>&nbsp;
                 </button>
-                
+
             </div>
             <!-- /.arrow_answer -->
         </div>
@@ -203,7 +215,7 @@
         <%
             }
         %>
-        
+
     </c:forEach>
     <br />
     <br />
@@ -212,4 +224,3 @@
     %>
 
 
-    

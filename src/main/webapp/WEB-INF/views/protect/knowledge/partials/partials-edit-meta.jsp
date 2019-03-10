@@ -34,10 +34,12 @@
                         String id = "typeId_" + template.getTypeId();
 
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<input disabled type=\"radio\" value=\"").append(template.getTypeId()).append("\" name=\"typeId\" ");
+                        builder.append("<input type=\"radio\" value=\"").append(template.getTypeId()).append("\" name=\"typeId\" ");
                         builder.append("id=\"").append(id).append("\"");
                         if (template.getTypeId() == type) {
                             builder.append(" checked");
+                        } else {
+                            builder.append(" disabled");
                         }
                         builder.append(" />");
                         if (!StringUtils.isEmpty(template.getTypeIcon())) {
@@ -69,17 +71,25 @@
 
                 <label class="radio-inline">
                     <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PRIVATE %>" name="publicFlag"
-                        id="publicFlag_private" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", true) %>/>
+                        id="publicFlag_private"
+                        <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PRIVATE), "publicFlag", true) %>
+                        />
                     <i class="fa fa-lock"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.private") %>
                 </label><br/>
                 <label class="radio-inline">
                     <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PUBLIC %>" name="publicFlag"
-                        id="publicFlag_piblic" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag") %> <%= !jspUtil.isAdmin() ? "disabled" : "" %> />
+                        id="publicFlag_piblic"
+                        <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag") %>
+                        <%= !jspUtil.isAdmin() && jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag").isEmpty() ? "disabled" : "" %>
+                        />
                     <i class="fa fa-globe"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.public") %>
                 </label><br/>
                 <label class="radio-inline">
                     <input type="radio" value="<%= KnowledgeLogic.PUBLIC_FLAG_PROTECT %>" name="publicFlag"
-                        id="publicFlag_protect" <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag") %>  <%= !jspUtil.isAdmin() ? "disabled" : "" %> />
+                        id="publicFlag_protect"
+                        <%= jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag") %>
+                        <%= !jspUtil.isAdmin() && jspUtil.checked(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PROTECT), "publicFlag").isEmpty() ? "disabled" : "" %>
+                        />
                     <i class="fa fa-gavel"></i>&nbsp;<%= jspUtil.label("knowledge.add.label.public.class.protect") %>
                 </label><br/>
                 <div style="height:5px"></div>

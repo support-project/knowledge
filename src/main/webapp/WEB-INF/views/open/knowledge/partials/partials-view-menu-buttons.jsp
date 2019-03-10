@@ -8,24 +8,25 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
+<% boolean isEditable = jspUtil.isAdmin() || !jspUtil.is(String.valueOf(KnowledgeLogic.PUBLIC_FLAG_PUBLIC), "publicFlag"); %>
 
 <div class="article_buttons">
     <div>
         <%
             if (request.getRemoteUser() != null) {
-                if ((Boolean) request.getAttribute("edit")) {
+                if ((Boolean) request.getAttribute("edit") && isEditable) {
         %>
         <a href="<%=request.getContextPath()%>/protect.knowledge/view_edit/<%=jspUtil.out("knowledgeId")%>"
             class="btn btn-primary btn_edit" role="button"><i class="fa fa-edit"></i>&nbsp; <%=jspUtil.label("knowledge.view.edit")%>
         </a>
         <%
-            } else {
+                } else {
         %>
         <button class="btn btn-primary btn_edit disabled" disabled="disabled">
             <i class="fa fa-info-circle"></i>&nbsp;<%=jspUtil.label("knowledge.view.edit.disable")%>
         </button>
         <%
-            }
+                }
         %>
         <%
             } else {
@@ -60,7 +61,7 @@
             <%=jspUtil.label("knowledge.view.like")%>
         </button>
     </div>
-    
+
     <div>
         <button class="btn btn-info btn_agenda" onclick="showAgenda();" id="buttonToc">
             <i class="fa fa-list"></i>&nbsp;
@@ -71,7 +72,7 @@
             <%=jspUtil.label("knowledge.view.label.copy.url")%>
         </button>
     </div>
-    
+
     <div>
     <% if (jspUtil.is(TemplateLogic.TYPE_ID_EVENT, "typeId")) { %>
         <% if (jspUtil.logined()) { %>
@@ -110,7 +111,7 @@
             <i class="fa fa-th-list"></i>&nbsp;
             <%=jspUtil.label("knowledge.survey.label.edit")%>
         </a>
-        
+
         <a id="answersSurveyBtn" class="btn btn-info btn_col2" href="<%= request.getContextPath()%>/protect.survey/answers/<%=jspUtil.out("knowledgeId")%>">
             <i class="fa fa-bar-chart"></i>&nbsp;
             <%=jspUtil.label("knowledge.survey.label.report")%>
