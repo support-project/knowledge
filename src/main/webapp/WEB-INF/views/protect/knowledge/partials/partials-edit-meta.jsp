@@ -34,7 +34,7 @@
                         String id = "typeId_" + template.getTypeId();
 
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<input type=\"radio\" value=\"").append(template.getTypeId()).append("\" name=\"typeId\" ");
+                        builder.append("<input disabled type=\"radio\" value=\"").append(template.getTypeId()).append("\" name=\"typeId\" ");
                         builder.append("id=\"").append(id).append("\"");
                         if (template.getTypeId() == type) {
                             builder.append(" checked");
