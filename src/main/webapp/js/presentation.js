@@ -112,7 +112,7 @@ var createPresentation = function(contentJqObj) {// eslint-disable-line no-unuse
         slidehtml += '<div style="text-align:center">';
         slidehtml += '<div class="numbertext"><span class="current">1</span> / ' + slideLength;
         
-        slidehtml += '&nbsp;&nbsp;&nbsp;<a onclick="requestFullscreen(\'' + slideId + '\');">';
+        slidehtml += '&nbsp;&nbsp;&nbsp;<a onclick="window.requestFullscreen(\'' + slideId + '\');">';
         slidehtml += '<i class="full fa fa-television fa-2x" aria-hidden="true"></i></a>';
         
         /* いったんPDFダウンロードボタンはコメントアウト
