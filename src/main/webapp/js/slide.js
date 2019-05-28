@@ -1,36 +1,27 @@
 var indexMap = {};
-var full = false;
 var slideCount = 0;
 
 var requestFullscreen = function(id) {// eslint-disable-line no-unused-vars
-    if (full) {
+    if (document.fullscreenElement) {
         if (document.webkitCancelFullScreen) {
             document.webkitCancelFullScreen();
-            full = false;
         } else if (document.mozCancelFullScreen) {
             document.mozCancelFullScreen();
-            full = false;
         } else if (document.msExitFullscreen) {
             document.msExitFullscreen();
-            full = false;
         } else if (document.exitFullscreen) {
             document.exitFullscreen();
-            full = false;
         }
     } else {
         var target = document.getElementById(id);
         if (target.requestFullscreen) {
             target.requestFullscreen(); // HTML5 Fullscreen API仕様
-            full = true;
         } else if (target.webkitRequestFullscreen) {
             target.webkitRequestFullscreen(); //Chrome15+, Safari5.1+, Opera15+
-            full = true;
         } else if (target.mozRequestFullScreen) {
             target.mozRequestFullScreen(); //FF10+
-            full = true;
         } else if (target.msRequestFullscreen) {
             target.msRequestFullscreen(); //IE11+
-            full = true;
         } else {
             $.notify('Fullscreen view is not supported.', 'warn');
             return;
@@ -84,7 +75,7 @@ var showSlide = function(parent) {// eslint-disable-line no-unused-vars
                         slidehtml += '<a class="next" onclick="plusSlides(1, \'' + slideId + '\')">next &#10095;</a>';
                         slidehtml += '<div style="text-align:center">';
                         slidehtml += '<div class="numbertext"><span class="current">1</span> / ' + data.files.length;
-                        slidehtml += '&nbsp;&nbsp;&nbsp;<a onclick="requestFullscreen(\'' + slideId + '\');">';
+                        slidehtml += '&nbsp;&nbsp;&nbsp;<a onclick="window.requestFullscreen(\'' + slideId + '\');">';
                         slidehtml += '<i class="full fa fa-television fa-2x" aria-hidden="true"></i></a></div>';
                         if (data.files.length < 60) {
                             slidehtml += '<div class="dotArea">';
