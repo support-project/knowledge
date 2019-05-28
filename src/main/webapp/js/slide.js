@@ -1,36 +1,27 @@
 var indexMap = {};
-var full = false;
 var slideCount = 0;
 
 var requestFullscreen = function(id) {// eslint-disable-line no-unused-vars
-    if (full) {
+    if (document.fullscreenElement) {
         if (document.webkitCancelFullScreen) {
             document.webkitCancelFullScreen();
-            full = false;
         } else if (document.mozCancelFullScreen) {
             document.mozCancelFullScreen();
-            full = false;
         } else if (document.msExitFullscreen) {
             document.msExitFullscreen();
-            full = false;
         } else if (document.exitFullscreen) {
             document.exitFullscreen();
-            full = false;
         }
     } else {
         var target = document.getElementById(id);
         if (target.requestFullscreen) {
             target.requestFullscreen(); // HTML5 Fullscreen API仕様
-            full = true;
         } else if (target.webkitRequestFullscreen) {
             target.webkitRequestFullscreen(); //Chrome15+, Safari5.1+, Opera15+
-            full = true;
         } else if (target.mozRequestFullScreen) {
             target.mozRequestFullScreen(); //FF10+
-            full = true;
         } else if (target.msRequestFullscreen) {
             target.msRequestFullscreen(); //IE11+
-            full = true;
         } else {
             $.notify('Fullscreen view is not supported.', 'warn');
             return;
