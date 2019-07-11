@@ -1,5 +1,5 @@
 # Markdown sample 
-- ここに書かれているMarkdownのテキストが、下のDispley sampleに表示されるので、
+- ここに書かれているMarkdownのテキストが、下のDisplay sampleに表示されるので、
   Markdownがどのように表示されるかのイメージが湧くと思います
 
 ## 見出し -> 「#」
