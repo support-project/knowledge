@@ -21,7 +21,29 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
-      - run: mvn clean integration-test -P release
+      - run: mvn clean package -DskipTests=true -P release
+      - run:
+          name: Copy war file
+          command: |
+            mkdir -p ~/artifacts/war
+            cp ./target/*.war ~/artifacts/war
+      - store_artifacts:
+          path: ~/artifacts/war
+          destination: war
+  test:
+    <<: *container_config
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            - v1-dependencies-
+      - run: mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+      - run: mvn clean site
       - run:
           name: Save test results
           command: |
@@ -31,13 +53,13 @@ jobs:
       - store_test_results:
           path: ~/test-results
       - run:
-          name: Save war file
+          name: Copy reports
           command: |
-            mkdir -p ~/artifacts/war
-            cp ./target/*.war ~/artifacts/war
+            mkdir -p ~/artifacts/site
+            cp ./target/site ~/artifacts/site
       - store_artifacts:
-          path: ~/artifacts/war
-          destination: war
+          path: ~/artifacts/site
+          destination: site
   release:
     <<: *container_config
     steps:
@@ -62,10 +84,13 @@ jobs:
           destination: war
 workflows:
   version: 2
-  main_workflow:
+  main_flow:
     jobs:
       - build
-  release_workflow:
+      - test:
+          requires:
+            - build
+  release_flow:
     jobs:
       - release:
           filters:
