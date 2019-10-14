@@ -62,10 +62,13 @@ jobs:
           name: Save war file
           command: |
             mkdir -p ~/artifacts/war
-            cp ./target/*.war ~/artifacts/war
+            cp ./target/knowledge.war ~/artifacts/war
       - store_artifacts:
           path: ~/artifacts/war
           destination: war
+      - run:
+          name: Upload release asserts
+          command: .circleci/scripts/upload-github-release-asset.sh owner=cmknet repo=knowledge tag=${CIRCLE_TAG} filename=./target/knowledge.war github_api_token=${GITHUB_API_TOKEN}
 workflows:
   version: 2
   main_flow:
