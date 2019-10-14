@@ -1,0 +1,75 @@
+version: 2
+references:
+  container_config: &container_config
+    docker:
+      - image: circleci/openjdk:8-jdk
+    working_directory: ~/repo
+    environment:
+      MAVEN_OPTS: -Xmx3200m
+
+jobs:
+  build:
+    <<: *container_config
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            - v1-dependencies-
+      - run: mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+      - run: mvn clean integration-test -P release
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - run:
+          name: Save war file
+          command: |
+            mkdir -p ~/artifacts/war
+            cp ./target/*.war ~/artifacts/war
+      - store_artifacts:
+          path: ~/artifacts/war
+          destination: war
+  release:
+    <<: *container_config
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            - v1-dependencies-
+      - run: mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+      - run: mvn clean package -DskipTests=true -P release
+      - run:
+          name: Save war file
+          command: |
+            mkdir -p ~/artifacts/war
+            cp ./target/*.war ~/artifacts/war
+      - store_artifacts:
+          path: ~/artifacts/war
+          destination: war
+workflows:
+  version: 2
+  main_workflow:
+    jobs:
+      - build
+  release_workflow:
+    jobs:
+      - release:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
