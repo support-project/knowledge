@@ -34,7 +34,7 @@ jobs:
           root: .
           paths:
             - ~/.m2
-   test:
+  test:
     <<: *container_config
     steps:
       - checkout
