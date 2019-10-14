@@ -31,15 +31,15 @@ jobs:
           path: ~/artifacts/war
           destination: war
       - persist_to_workspace:
-          root: .
+          root: ~/.m2
           paths:
-            - ~/.m2
+            - ./
   test:
     <<: *container_config
     steps:
       - checkout
       - attach_workspace:
-          at: .
+          at: ~/.m2
       - run: mvn clean test
       - run:
           name: Save test results
