@@ -18,13 +18,16 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
-            - v1-dependencies-
+            - v2-dependencies-{{ checksum "pom.xml" }}
+            - v2-dependencies-
       - run: mvn dependency:go-offline
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
+            - ~/repo/node
+            - ~/repo/node_modules
+            - ~/repo/src/main/webapp/bower
+          key: v2-dependencies-{{ checksum "pom.xml" }}
       - run: mvn clean package -DskipTests=true -P release
       - run:
           name: Copy war file
@@ -44,7 +47,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/.m2
-      - run: mvn clean test
+      - run: mvn clean test -Dskip.npm=true -Dskip.bower=true -Dskip.gulp=true
       - run:
           name: Save test results
           command: |
