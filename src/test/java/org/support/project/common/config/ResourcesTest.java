@@ -16,7 +16,7 @@ public class ResourcesTest {
 
 	/** ログ */
 	private static Log logger = LogFactory.getLog(ResourcesTest.class);
-	
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -39,16 +39,16 @@ public class ResourcesTest {
 		String str = Resources.getInstance(locale).getResource("errors.invalid", "1");
 		logger.info(str);
 		assertEquals("1が不正です。", str);
-		
+
 		str = Resources.getInstance(CommonBaseParameter.COMMON_RESOURCE, locale).getResource("errors.common.notimpl");
 		logger.info(str);
 		assertEquals("未実装です。", str);
-		
+
 		logger.info(Resources.getInstance().getResource("errors.invalid"));
 		logger.info(Resources.getInstance().getResource("errors.common.notimpl"));
-		
+
 	}
-	
+
 	@Test
 	public void testGetStringUS() {
 		Locale locale = Locale.ENGLISH;
@@ -56,22 +56,22 @@ public class ResourcesTest {
 		logger.info(str);
 		assertEquals("aaa is invalid.", str);
 		assertNotEquals("aaaが不正です。", str);
-		
+
 		//str = Resources.getInstance().getResource("errors.common.notimpl");
 		//logger.info(str);
 		//assertEquals("errors.common.notimpl", str); // 指定のキーにない場合、そのキーをそのまま取得
-		
+
 		str = Resources.getInstance(locale).getResource("errors.common.notimpl");
 		logger.info(str);
 		assertEquals("errors.common.notimpl", str); // 指定のキーにない場合、そのキーをそのまま取得
-		
+
 		str = Resources.getInstance(CommonBaseParameter.COMMON_RESOURCE, locale).getResource("errors.common.notimpl");
 		logger.info(str);
 		assertEquals("Not implement.", str);
-		
-		str = Resources.getInstance().getResource("errors.common.notimpl");
+
+		str = Resources.getInstance().getResource("key.not.found.error");
 		logger.info(str);
-		assertEquals("errors.common.notimpl", str); // 指定のキーにない場合、そのキーをそのまま取得
+		assertEquals("key.not.found.error", str); // 指定のキーにない場合、そのキーをそのまま取得
 	}
-	
+
 }

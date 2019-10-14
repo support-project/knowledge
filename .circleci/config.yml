@@ -5,7 +5,11 @@ references:
       - image: circleci/openjdk:8-jdk
     working_directory: ~/repo
     environment:
-      MAVEN_OPTS: -Xmx3200m
+      - TZ: "/usr/share/zoneinfo/Asia/Tokyo"
+      - LANG: ja_JP.UTF-8
+      - LC_ALL: C.UTF-8
+      - LANGUAGE: ja_JP.UTF-8
+      - MAVEN_OPTS: -Xmx3200m
 
 jobs:
   build:
