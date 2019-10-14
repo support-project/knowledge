@@ -30,20 +30,17 @@ jobs:
       - store_artifacts:
           path: ~/artifacts/war
           destination: war
-  test:
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ~/.m2
+   test:
     <<: *container_config
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
-            - v1-dependencies-
-      - run: mvn dependency:go-offline
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
-      - run: mvn clean site
+      - attach_workspace:
+          at: .
+      - run: mvn clean test
       - run:
           name: Save test results
           command: |
@@ -52,27 +49,10 @@ jobs:
           when: always
       - store_test_results:
           path: ~/test-results
-      - run:
-          name: Copy reports
-          command: |
-            mkdir -p ~/artifacts/site
-            cp ./target/site ~/artifacts/site
-      - store_artifacts:
-          path: ~/artifacts/site
-          destination: site
   release:
     <<: *container_config
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
-            - v1-dependencies-
-      - run: mvn dependency:go-offline
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
       - run: mvn clean package -DskipTests=true -P release
       - run:
           name: Save war file
