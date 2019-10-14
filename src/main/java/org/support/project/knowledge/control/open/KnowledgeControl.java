@@ -3,11 +3,13 @@ package org.support.project.knowledge.control.open;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
@@ -46,6 +48,7 @@ import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
+import org.support.project.knowledge.entity.gen.GenKnowledgesEntity;
 import org.support.project.knowledge.logic.DiffLogic;
 import org.support.project.knowledge.logic.EventsLogic;
 import org.support.project.knowledge.logic.GroupLogic;
@@ -84,7 +87,7 @@ import org.support.project.web.exception.InvalidParamException;
 
 /**
  * ナレッジ操作のコントロール
- * 
+ *
  * @author Koda
  */
 @DI(instance = Instance.Prototype)
@@ -102,7 +105,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
     /**
      * ナレッジを表示
-     * 
+     *
      * @return
      * @throws InvalidParamException
      * @throws ParseException
@@ -111,9 +114,9 @@ public class KnowledgeControl extends KnowledgeControlBase {
     public Boundary view() throws InvalidParamException, ParseException {
         // 共通処理呼の表示条件の保持の呼び出し
         setViewParam();
-        
+
         Long knowledgeId = super.getPathLong(Long.valueOf(-1));
-        
+
         SystemConfigsDao dao = SystemConfigsDao.get();
         SystemConfigsEntity config = dao.selectOnKey(SystemConfig.SYSTEM_URL, AppConfig.get().getSystemName());
         StringBuilder url = new StringBuilder();
@@ -200,7 +203,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         for (CommentsEntity commentsEntity : comments) {
             MarkDown markDown2 = MarkdownLogic.get().markdownToHtml(commentsEntity.getComment());
             commentsEntity.setComment(markDown2.getHtml());
-            
+
             Long likeCount = LikeCommentsDao.get().selectOnCommentNo(commentsEntity.getCommentNo());
             commentsEntity.setLikeCount(likeCount);
         }
@@ -220,24 +223,24 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
         ArrayList<Long> knowledgeIds = new ArrayList<Long>();
         knowledgeIds.add(entity.getKnowledgeId());
-        
+
         // ナレッジの公開先の情報を取得（共通処理）
         setKnowledgeTargets(loginedUser, knowledgeIds);
 
         //ストック情報を取得
         List<StocksEntity> stocks = StocksDao.get().selectStockOnKnowledge(entity, loginedUser);
         setAttribute("stocks", stocks);
-        
+
         UserConfigsEntity stealth = UserConfigsDao.get().selectOnKey(UserConfig.STEALTH_ACCESS, AppConfig.get().getSystemName(), getLoginUserId());
         if (stealth == null || !"1".equals(stealth.getConfigValue())) {
             ActivityLogic.get().processActivity(Activity.KNOWLEDGE_SHOW, getLoginedUser(), DateUtils.now(), entity);
         }
         long point = KnowledgesDao.get().selectPoint(entity.getKnowledgeId());
         setAttribute("point", point);
-        
+
         return forward("view.jsp");
     }
-    
+
     /**
      * ナレッジの公開先の情報を取得
      * @param loginedUser
@@ -261,7 +264,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setAttribute("targets", targets);
         setAttribute("targetLogic", targetLogic);
     }
-    
+
     /**
      * タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
      * @param loginedUser
@@ -290,7 +293,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             }
         }
         LOG.trace("タグ、グループ取得完了");
-        
+
         List<TemplateMastersEntity> templateList = TemplateLogic.get().selectAll();
         Map<Integer, TemplateMastersEntity> templates = new LinkedHashMap<>();
         for (TemplateMastersEntity templateMastersEntity : templateList) {
@@ -298,7 +301,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
         }
         setAttribute("templates", templates);
     }
-    
+
     /**
      * 一覧に表示するオフセット（ページ番号）を取得する
      * @return
@@ -315,12 +318,12 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setAttribute("next", offset + 1);
         return offset;
     }
-    
-    
-    
+
+
+
     /**
      * リストを表示
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -328,7 +331,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     public Boundary list() throws Exception {
         LOG.trace("Call list");
         Integer offset = getOffsetParameter();
-        
+
         String keyword = getParam("keyword");
         setAttribute("searchKeyword", keyword);
 
@@ -465,7 +468,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 if (0 < tags.size()) {
                     searchKeyword += keywordLogic.toTagsQuery(tagNames.replaceAll("[\\xc2\\xa0]", ""));
                 }
-    
+
                 List<GroupsEntity> groups = new ArrayList<GroupsEntity>();
                 List<Integer> groupIds = new ArrayList<Integer>();
                 if (loginedUser != null) {
@@ -485,13 +488,13 @@ public class KnowledgeControl extends KnowledgeControlBase {
                         searchKeyword += keywordLogic.toGroupsQuery(groupNames.replaceAll("[\\xc2\\xa0]", ""));
                     }
                 }
-    
+
                 setAttribute("selectedTags", tags);
                 setAttribute("selectedGroups", groups);
                 setAttribute("selectedTagIds", tagIds);
                 setAttribute("selectedGroupIds", groupIds);
                 setAttribute("searchKeyword", searchKeyword + keyword);
-    
+
                 knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, null, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
             } else {
                 // その他(キーワード検索)
@@ -500,7 +503,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 List<TagsEntity> tags = null;
                 List<Integer> groupIds = new ArrayList<Integer>();
                 List<Integer> tagIds = new ArrayList<Integer>();
-    
+
                 if (loginedUser != null) {
                     String groupKeyword = keywordLogic.parseQuery("groups", keyword);
                     if (groupKeyword != null) {
@@ -516,7 +519,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                         setAttribute("selectedGroupIds", groupIds);
                     }
                 }
-    
+
                 String tagKeyword = keywordLogic.parseQuery("tags", keyword);
                 if (tagKeyword != null) {
                     tags = new ArrayList<TagsEntity>();
@@ -530,11 +533,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
                     setAttribute("selectedTags", tags);
                     setAttribute("selectedTagIds", tagIds);
                 }
-    
+
                 keyword = keywordLogic.parseKeyword(keyword);
-    
+
                 setAttribute("keyword", keyword);
-                
+
                 List <UsersEntity> creatorUserEntities = new ArrayList<>();
                 if (StringUtils.isNotEmpty(creators)) {
                     String[] creatorsArray = creators.split(",");
@@ -544,10 +547,14 @@ public class KnowledgeControl extends KnowledgeControlBase {
                     }
                 }
                 setAttribute("creators", creatorUserEntities);
-                
+
                 knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, creatorUserEntities, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
             }
-            
+
+            // データの降順にソート
+            knowledges = knowledges.stream().sorted(Comparator.comparingLong(GenKnowledgesEntity::getKnowledgeId).reversed()).collect(Collectors.toList());
+
+
             // pin留めの記事取得
             if (0 == offset.intValue()) {
                 List<PinsEntity> pins = PinsDao.get().selectAll();
@@ -566,7 +573,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
                     }
                 }
             }
-    
+
             List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(knowledges, loginedUser);
             KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
             setAttribute("knowledges", stocks);
@@ -592,7 +599,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
             setKnowledgeTargetsWithConv(loginedUser, knowledges);
             // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
             setSublistInformations(loginedUser);
-            
+
             return forward("list.jsp");
         } catch (InvalidParamException e) {
             return forward("list.jsp");
@@ -601,7 +608,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
     /**
      * イベント一覧
-     * 
+     *
      * @return
      * @throws InvalidParamException
      */
@@ -639,11 +646,11 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
         return forward("events.jsp");
     }
-    
-    
+
+
     /**
      * 閲覧履歴の表示
-     * 
+     *
      * @return
      * @throws InvalidParamException
      */
@@ -687,7 +694,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
     /**
      * 人気のKnowledgeを表示
-     * 
+     *
      * @return
      * @throws InvalidParamException
      */
@@ -711,7 +718,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
     /**
      * ストックしたナレッジを表示
-     * 
+     *
      * @return
      * @throws InvalidParamException
      */
@@ -733,25 +740,25 @@ public class KnowledgeControl extends KnowledgeControlBase {
                 setAttribute("stock", stocksEntity);
             }
         }
-        
+
         KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
         List<KnowledgesEntity> list = knowledgeLogic.getStocks(loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT, stockid);
         List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(list, loginedUser);
         KnowledgeLogic.get().setViewed(stocks, getLoginedUser());
         setAttribute("popularities", stocks);
         LOG.trace("取得完了");
-        
+
         // ナレッジの公開先の情報を取得
         setKnowledgeTargetsWithConv(loginedUser, list);
         // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
         setSublistInformations(loginedUser);
 
         return forward("stocks.jsp");
-    }    
-    
+    }
+
     /**
      * いいねを押下
-     * 
+     *
      * @return
      * @throws InvalidParamException
      */
@@ -767,7 +774,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
     /**
      * コメントにイイネを押下
      * @return
-     * @throws InvalidParamException 
+     * @throws InvalidParamException
      */
     @Post(subscribeToken="knowledge")
     public Boundary likecomment() throws InvalidParamException {
@@ -780,7 +787,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
     /**
      * タイトルとコンテンツの危険なタグをエスケープした結果を返す
-     * 
+     *
      * @param entity
      * @return
      * @throws ParseException
@@ -795,7 +802,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
     /**
      * タイトルの危険なタグをサニタイズし、コンテンツのmarkdownをHTMLへ変換する
-     * 
+     *
      * @param entity
      * @return
      * @throws ParseException
@@ -811,7 +818,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
     /**
      * 検索画面を表示
-     * 
+     *
      * @return
      */
     @Get
@@ -846,7 +853,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
     /**
      * いいねを押したユーザを一覧表示
-     * 
+     *
      * @return
      * @throws InvalidParamException
      */
@@ -885,10 +892,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
         return forward("likes.jsp");
     }
 
-    
+
     /**
      * いいねを押したユーザを一覧表示（コメントに対し）
-     * 
+     *
      * @return
      * @throws InvalidParamException
      */
@@ -921,13 +928,13 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setAttribute("page", page);
         setAttribute("previous", previous);
         setAttribute("next", page + 1);
-        
+
         return forward("likes.jsp");
     }
-    
+
     /**
      * 編集履歴の表示
-     * 
+     *
      * @return
      * @throws InvalidParamException
      */
@@ -968,7 +975,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
     /**
      * 編集履歴の更新内容表示
-     * 
+     *
      * @return
      * @throws InvalidParamException
      */
@@ -1012,7 +1019,7 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
     /**
      * ナレッジのテンプレート情報を取得
-     * 
+     *
      * @return
      * @throws InvalidParamException
      */
@@ -1061,10 +1068,10 @@ public class KnowledgeControl extends KnowledgeControlBase {
         return send(template);
     }
 
-    
+
     /**
      * オートコンプリートの候補を取得（JSON）
-     * 
+     *
      * @return
      * @throws ParseException
      */
@@ -1076,6 +1083,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
         listdata.setItems(list);
         return super.send(listdata);
     }
-    
-    
+
+
 }
