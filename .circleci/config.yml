@@ -20,7 +20,7 @@ jobs:
           keys:
             - v2-dependencies-{{ checksum "pom.xml" }}
             - v2-dependencies-
-      - run: mvn dependency:go-offline
+      - run: mvn clean package -DskipTests=true -P release
       - save_cache:
           paths:
             - ~/.m2
@@ -28,7 +28,6 @@ jobs:
             - ~/repo/node_modules
             - ~/repo/src/main/webapp/bower
           key: v2-dependencies-{{ checksum "pom.xml" }}
-      - run: mvn clean package -DskipTests=true -P release
       - run:
           name: Copy war file
           command: |
