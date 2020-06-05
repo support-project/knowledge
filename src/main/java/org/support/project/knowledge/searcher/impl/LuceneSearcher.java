@@ -2,6 +2,7 @@ package org.support.project.knowledge.searcher.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,9 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser.Operator;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.FieldComparator;
+import org.apache.lucene.search.FieldComparator.TermValComparator;
+import org.apache.lucene.search.FieldComparatorSource;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.Query;
@@ -32,6 +36,7 @@ import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.search.highlight.SimpleSpanFragmenter;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.Version;
 import org.support.project.common.config.ConfigLoader;
 import org.support.project.common.log.Log;
@@ -52,11 +57,70 @@ import org.support.project.web.exception.InvalidParamException;
 
 /**
  * Luceneを使った検索
- * 
+ *
  * @author Koda
  *
  */
 public class LuceneSearcher implements Searcher {
+
+    /**
+     * IDフィールドでソートするための{@link FieldComparatorr}実装です。
+     *
+     * @author makot
+     *
+     */
+    private static class IdFieldComparatorr extends TermValComparator {
+
+        private int missingSortCmp;
+
+        public IdFieldComparatorr(int numHits, String field, boolean sortMissingLast) {
+            super(numHits, field, sortMissingLast);
+            missingSortCmp = sortMissingLast ? 1 : -1;
+        }
+
+        @Override
+        public int compareValues(BytesRef val1, BytesRef val2) {
+            // missing always sorts first:
+            if (val1 == null) {
+                if (val2 == null) {
+                    return 0;
+                }
+                return missingSortCmp;
+            } else if (val2 == null) {
+                return -missingSortCmp;
+            }
+
+            try {
+                // IDフィールドは数値なので、数値に変換して比較
+                final String val1Str = new String(val1.bytes, val1.offset, val1.length, StandardCharsets.UTF_8);
+                final String val2Str = new String(val2.bytes, val2.offset, val2.length, StandardCharsets.UTF_8);
+                final int val1Num = Integer.parseInt(val1Str);
+                final int val2Num = Integer.parseInt(val2Str);
+
+                return Integer.compare(val1Num, val2Num);
+            } catch (Exception e) {
+                // とりあえず、スタックトレースを出力して、元々の方法で比較
+                e.printStackTrace();
+                return super.compareValues(val1, val2);
+            }
+        }
+    }
+
+    /**
+     * IDフィールドでソートするための{@link FieldComparatorSource}実装クラスです。
+     *
+     * @author makot
+     */
+    private static class IdFieldComparatorSource extends FieldComparatorSource {
+
+        @Override
+        public FieldComparator<?> newComparator(String fieldname, int numHits, int sortPos, boolean reversed)
+                throws IOException {
+            return new IdFieldComparatorr(numHits, fieldname, reversed);
+        }
+
+    }
+
     /** ログ */
     private static Log log = LogFactory.getLog(LuceneSearcher.class);
     /** 検索のリミット */
@@ -89,7 +153,7 @@ public class LuceneSearcher implements Searcher {
 
     /**
      * Indexが格納されているディレクトリのパスを取得
-     * 
+     *
      * @return
      */
     private String getIndexPath() {
@@ -100,9 +164,10 @@ public class LuceneSearcher implements Searcher {
 
     /**
      * 検索
-     * @throws InvalidParamException 
+     * @throws InvalidParamException
      */
-    public List<SearchResultValue> search(final SearchingValue value, int keywordSortType) throws IOException, InvalidTokenOffsetsException, InvalidParamException {
+    public List<SearchResultValue> search(final SearchingValue value, int keywordSortType)
+            throws IOException, InvalidTokenOffsetsException, InvalidParamException {
         List<SearchResultValue> resultValues = new ArrayList<>();
 
         File indexDir = new File(getIndexPath());
@@ -116,7 +181,7 @@ public class LuceneSearcher implements Searcher {
 
         IndexReader reader = DirectoryReader.open(FSDirectory.open(indexDir));
         IndexSearcher searcher = new IndexSearcher(reader);
-        
+
         Query query = null;
         try {
             query = structQuery(value);
@@ -135,22 +200,24 @@ public class LuceneSearcher implements Searcher {
         log.debug("Found " + countCollector.getTotalHits() + " hits.");
 
         TopDocsCollector<? extends ScoreDoc> collector;
-        if (StringUtils.isNotEmpty(value.getKeyword())) {
-            switch (keywordSortType) {
-            case KnowledgeLogic.KEYWORD_SORT_TYPE_TIME:
-                Sort sort = new Sort(new SortField(FIELD_LABEL_TIME, SortField.Type.LONG, true));
-                collector = TopFieldCollector.create(sort, value.getOffset() + value.getLimit(), true, false, false, false);
-                break;
-            case KnowledgeLogic.KEYWORD_SORT_TYPE_SCORE:
-            default:
-                collector = TopScoreDocCollector.create(value.getOffset() + value.getLimit(), true);
-                break;
-            }
-        } else {
-            // Sort sort = new Sort(new SortField(FIELD_LABEL_ID, SortField.Type.INT, true));
-            // Sort sort = Sort.INDEXORDER;
-            Sort sort = new Sort(new SortField(FIELD_LABEL_TIME, SortField.Type.LONG, true));
-            collector = TopFieldCollector.create(sort, value.getOffset() + value.getLimit(), true, false, false, false);
+
+        // ソート順を設定
+        // キーワードに限らず、ソート順を変更可能とする
+        switch (keywordSortType) {
+        case KnowledgeLogic.KEYWORD_SORT_TYPE_TIME:
+            Sort timeSort = new Sort(new SortField(FIELD_LABEL_TIME, SortField.Type.LONG, true));
+            collector = TopFieldCollector.create(timeSort, value.getOffset() + value.getLimit(), true, false, false,
+                    false);
+            break;
+        case KnowledgeLogic.KEYWORD_SORT_TYPE_SCORE:
+            collector = TopScoreDocCollector.create(value.getOffset() + value.getLimit(), true);
+            break;
+        case KnowledgeLogic.KEYWORD_SORT_TYPE_ID:
+        default:
+            Sort idSort = new Sort(new SortField(FIELD_LABEL_ID, new IdFieldComparatorSource(), true));
+            collector = TopFieldCollector.create(idSort, value.getOffset() + value.getLimit(), true, false, false,
+                    false);
+            break;
         }
 
         searcher.search(query, collector);
@@ -161,8 +228,10 @@ public class LuceneSearcher implements Searcher {
             int docId = hits[i].doc;
             Document d = searcher.doc(docId);
             if (log.isDebugEnabled()) {
-                log.debug((i + 1) + ". \n" + "\t[id]\t" + d.get(FIELD_LABEL_ID) + "\n" + "\t[tag]\t" + d.get(FIELD_LABEL_TAGS) + "\n" + "\t[user]\t"
-                        + d.get(FIELD_LABEL_USERS) + "\n" + "\t[group]\t" + d.get(FIELD_LABEL_GROUPS) + "\n" + "\t[score]\t" + hits[i].score + "\n");
+                log.debug((i + 1) + ". \n" + "\t[id]\t" + d.get(FIELD_LABEL_ID) + "\n" + "\t[tag]\t"
+                        + d.get(FIELD_LABEL_TAGS) + "\n" + "\t[user]\t"
+                        + d.get(FIELD_LABEL_USERS) + "\n" + "\t[group]\t" + d.get(FIELD_LABEL_GROUPS) + "\n"
+                        + "\t[score]\t" + hits[i].score + "\n");
             }
 
             SearchResultValue resultValue = new SearchResultValue();
@@ -198,7 +267,7 @@ public class LuceneSearcher implements Searcher {
 
     /**
      * クエリの組み立て
-     * 
+     *
      * @param value
      * @return
      * @throws ParseException
@@ -240,7 +309,8 @@ public class LuceneSearcher implements Searcher {
 
             container.add(miniContainer, BooleanClause.Occur.MUST);
         } else {
-            Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TYPE, 1, IndexType.knowledge.getValue(), IndexType.knowledge.getValue(), true,
+            Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TYPE, 1, IndexType.knowledge.getValue(),
+                    IndexType.knowledge.getValue(), true,
                     true);
             container.add(query, BooleanClause.Occur.MUST);
         }
@@ -279,22 +349,23 @@ public class LuceneSearcher implements Searcher {
             Query query = queryParser.parse(value.getCreators());
             container.add(query, BooleanClause.Occur.MUST);
         }
-        
+
         if (value.getTemplates() != null && !value.getTemplates().isEmpty()) {
             BooleanQuery miniContainer = new BooleanQuery();
-            for (Integer templatesId: value.getTemplates()) {
-                Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TEMPLATE, 1, templatesId, templatesId, true, true);
+            for (Integer templatesId : value.getTemplates()) {
+                Query query = NumericRangeQuery.newIntRange(FIELD_LABEL_TEMPLATE, 1, templatesId, templatesId, true,
+                        true);
                 miniContainer.add(query, BooleanClause.Occur.SHOULD);
             }
             container.add(miniContainer, BooleanClause.Occur.MUST);
         }
-        
+
         return container;
     }
 
     /**
      * 検索キーワードのハイライト
-     * 
+     *
      * @param query
      * @param analyzer
      * @param fieldName

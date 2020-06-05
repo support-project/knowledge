@@ -100,7 +100,7 @@ public class KnowledgeLogic {
 
     /** Prefix for Comment */
     public static final String COMMENT_ID_PREFIX = "COMMENT-";
-    
+
     /** Get instance */
     public static KnowledgeLogic get() {
         return Container.getComp(KnowledgeLogic.class);
@@ -123,8 +123,11 @@ public class KnowledgeLogic {
     /** キーワード検索時のソート順 : 日付順 */
     public static final int KEYWORD_SORT_TYPE_TIME = 2;
 
+    /** キーワード検索時のソート順 : ID順 */
+    public static final int KEYWORD_SORT_TYPE_ID = 3;
+
     /** キーワード検索時のソート順 */
-    private int keywordSortType = KEYWORD_SORT_TYPE_SCORE;
+    private int keywordSortType = KEYWORD_SORT_TYPE_ID;
 
     /**
      * キーワード検索時のソート順をセットする
@@ -137,7 +140,7 @@ public class KnowledgeLogic {
 
     /**
      * タグの文字列（カンマ区切り）から、登録済のタグであれば、それを取得し、 存在しないものであれば、新たにタグを生成してタグの情報を取得
-     * 
+     *
      * @param tags
      * @return
      */
@@ -178,10 +181,10 @@ public class KnowledgeLogic {
 
     /**
      * ナレッジを登録
-     * 
+     *
      * @param data KnowledgeData
      * @param loginedUser LoginedUser
-     * @param ignoreNotification 
+     * @param ignoreNotification
      * @return KnowledgesEntity
      * @throws Exception Exception
      */
@@ -215,7 +218,7 @@ public class KnowledgeLogic {
         if (!ignoreNotification) {
             NotifyLogic.get().notifyOnKnowledgeInsert(insertedEntity);
         }
-        
+
         // 下書きがあったら消す
         removeDraft(data.getDraftId(), loginedUser);
 
@@ -223,19 +226,19 @@ public class KnowledgeLogic {
         for (AfterSaveHook afterSaveHook : afterSaveHooks) {
             afterSaveHook.afterSave(data, loginedUser);
         }
-        
+
         // CPの処理
         ActivityLogic.get().processKnowledgeSaveActivity(loginedUser, DateUtils.now(), insertedEntity);
-        
+
         return insertedEntity;
     }
 
     /**
      * ナレッジを更新
-     * 
+     *
      * @param data KnowledgeData
      * @param loginedUser LoginedUser
-     * @param ignoreNotification 
+     * @param ignoreNotification
      * @return KnowledgesEntity
      * @throws Exception Exception
      */
@@ -298,28 +301,28 @@ public class KnowledgeLogic {
             // タイムラインの上に表示しないと明示的に指定があれば、全文検索エンジン上の更新日は更新しない（検索エンジンのインデックスでタイムラインを作っているため）
             updatedEntity.setUpdateDatetime(db.getUpdateDatetime());
         }
-        
+
         // 全文検索エンジンへ登録
         saveIndex(updatedEntity, data.getTags(), data.getViewers(), data.getTemplate(), updatedEntity.getInsertUser());
 
         // 下書きがあったら消す
         removeDraft(data.getDraftId(), loginedUser);
-        
+
         List<AfterSaveHook> afterSaveHooks = HookFactory.getAfterSaveHookInstance(data);
         for (AfterSaveHook afterSaveHook : afterSaveHooks) {
             afterSaveHook.afterSave(data, loginedUser);
         }
-        
+
         // CP
         ActivityLogic.get().processKnowledgeSaveActivity(loginedUser, DateUtils.now(), updatedEntity);
-        
+
         return updatedEntity;
     }
 
 
     /**
      * テンプレートにある拡張項目値を保存
-     * 
+     *
      * @param knowledgeId
      * @param template
      * @param loginedUser
@@ -345,7 +348,7 @@ public class KnowledgeLogic {
 
     /**
      * ナレッジの更新履歴を登録
-     * 
+     *
      * @param entity
      */
     public void insertHistory(KnowledgesEntity entity) {
@@ -362,7 +365,7 @@ public class KnowledgeLogic {
 
     /**
      * タグを登録
-     * 
+     *
      * @param entity
      * @param tags
      */
@@ -377,7 +380,7 @@ public class KnowledgeLogic {
 
     /**
      * 編集権限を登録
-     * 
+     *
      * @param entity
      * @param loginedUser
      * @param editors
@@ -412,7 +415,7 @@ public class KnowledgeLogic {
 
     /**
      * アクセス権を登録
-     * 
+     *
      * @param entity
      * @param loginedUser
      * @param targets
@@ -453,7 +456,7 @@ public class KnowledgeLogic {
 
     /**
      * 全文検索エンジンへ保存
-     * 
+     *
      * @param entity
      * @param tags
      * @param template
@@ -509,7 +512,7 @@ public class KnowledgeLogic {
 
     /**
      * 全文検索エンジンからナレッジを取得し、そこにさらに付加情報をつけて返す
-     * 
+     *
      * @param searchingValue
      * @return
      * @throws Exception
@@ -529,18 +532,18 @@ public class KnowledgeLogic {
 
     /**
      * ナレッジ検索
-     * 
+     *
      * @param keyword
      * @param tags
      * @param groups
-     * @param creators 
+     * @param creators
      * @param loginedUser
      * @param offset
      * @param limit
      * @return
      * @throws Exception
      */
-    public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups, 
+    public List<KnowledgesEntity> searchKnowledge(String keyword, List<TagsEntity> tags, List<GroupsEntity> groups,
             List<UsersEntity> creators, String[] templates, LoginedUser loginedUser,
             Integer offset, Integer limit) throws Exception {
         SearchingValue searchingValue = new SearchingValue();
@@ -562,13 +565,13 @@ public class KnowledgeLogic {
                 }
             }
         }
-        
+
         if (creators != null) {
             for (UsersEntity creator : creators) {
                 searchingValue.addCreator(creator.getUserId());
             }
         }
-        
+
         // ログインしてない場合はグループ検索ができないので公開記事のみを対象にして検索する
         if (loginedUser == null) {
             searchingValue.addUser(ALL_USER);
@@ -616,7 +619,7 @@ public class KnowledgeLogic {
 
     /**
      * ナレッジの検索
-     * 
+     *
      * @param keyword
      * @param loginedUser
      * @param offset
@@ -630,7 +633,7 @@ public class KnowledgeLogic {
 
     /**
      * ナレッジをタグ指定で表示
-     * 
+     *
      * @param tag
      * @param loginedUser
      * @param offset
@@ -744,7 +747,7 @@ public class KnowledgeLogic {
 
     /**
      * 全文検索エンジンの結果を元に、DBからデータを取得し、 さらにアクセス権のチェックなどを行う
-     * 
+     *
      * @param list
      * @return
      */
@@ -917,7 +920,7 @@ public class KnowledgeLogic {
 
     /**
      * ナレッジを取得（アクセス権のあるもののみ）
-     * 
+     *
      * @param knowledgeId
      * @param loginedUser
      * @return
@@ -972,7 +975,7 @@ public class KnowledgeLogic {
 
     /**
      * ナレッジのタグをセット
-     * 
+     *
      * @param entity
      */
     private void setTags(KnowledgesEntity entity) {
@@ -992,7 +995,7 @@ public class KnowledgeLogic {
 
     /**
      * ナレッジを取得
-     * 
+     *
      * @param ids
      * @param loginedUser
      * @return
@@ -1036,7 +1039,7 @@ public class KnowledgeLogic {
 
     /**
      * ナレッジを削除
-     * 
+     *
      * @param knowledgeId
      * @param loginedUser
      * @throws Exception
@@ -1072,14 +1075,14 @@ public class KnowledgeLogic {
         IndexLogic indexLogic = IndexLogic.get();
         indexLogic.delete(knowledgeId);
         indexLogic.delete("WEB-" + knowledgeId);
-        
+
         // ストック一覧から削除
         StockKnowledgesDao.get().deleteOnKnowledgeId(knowledgeId);
     }
 
     /**
      * ナレッジに紐づくコメントを削除
-     * 
+     *
      * @param knowledgeId
      * @throws Exception
      */
@@ -1095,7 +1098,7 @@ public class KnowledgeLogic {
 
     /**
      * ユーザのナレッジを削除 TODO ものすごく多くのナレッジを登録したユーザの場合、それを全て削除するのは時間がかかるかも？ ただ、非同期で実施して、「そのうち消えます」と表示するのも気持ち悪いと感じられるので、 いったん同期処理で1件づつ消す（効率的な消し方を検討する）
-     * 
+     *
      * @param loginUserId
      * @throws Exception
      */
@@ -1109,7 +1112,7 @@ public class KnowledgeLogic {
 
     /**
      * 閲覧履歴を保持
-     * 
+     *
      * @param knowledgeId
      * @param loginedUser
      */
@@ -1125,7 +1128,7 @@ public class KnowledgeLogic {
             historiesEntity.setInsertUser(SystemConfig.SYSTEM_USER_ID);
         }
         historiesDao.insert(historiesEntity);
-        
+
         KnowledgesEntity entity = KnowledgesDao.get().selectOnKey(knowledgeId);
         if (entity != null) {
             Long count = entity.getViewCount();
@@ -1139,7 +1142,7 @@ public class KnowledgeLogic {
 
     /**
      * ナレッジテーブルの タグやイイネ件数、コメント件数などの付加情報を 更新する（一覧表示用）
-     * 
+     *
      * @param knowledgeId
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
@@ -1152,7 +1155,7 @@ public class KnowledgeLogic {
 
     /**
      * ナレッジテーブルの タグやイイネ件数、コメント件数などの付加情報を 更新する（一覧表示用）
-     * 
+     *
      * @param entity
      */
     @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
@@ -1184,7 +1187,7 @@ public class KnowledgeLogic {
 
     /**
      * コメント保存
-     * 
+     *
      * @param knowledgeId
      * @param comment
      * @param fileNos
@@ -1207,16 +1210,16 @@ public class KnowledgeLogic {
 
         // 通知
         NotifyLogic.get().notifyOnKnowledgeComment(knowledgeId, commentsEntity);
-        
+
         //ポイント
         ActivityLogic.get().processActivity(Activity.COMMENT_INSERT, loginedUser, DateUtils.now(), commentsEntity);
-        
+
         return commentsEntity;
     }
 
     /**
      * コメント更新
-     * 
+     *
      * @param commentsEntity
      * @param fileNos
      * @param loginedUser
@@ -1237,7 +1240,7 @@ public class KnowledgeLogic {
 
     /**
      * コメント削除
-     * 
+     *
      * @param commentsEntity
      * @param loginedUser
      * @throws Exception
@@ -1252,7 +1255,7 @@ public class KnowledgeLogic {
 
     /**
      * コメント削除
-     * 
+     *
      * @param commentsEntity
      * @param loginedUser
      * @throws Exception
@@ -1267,7 +1270,7 @@ public class KnowledgeLogic {
 
     /**
      * コメントを全文検索エンジンへ登録
-     * 
+     *
      * @param commentsEntity
      * @throws Exception
      */
@@ -1313,7 +1316,7 @@ public class KnowledgeLogic {
 
         IndexLogic.get().save(indexingValue); // 全文検索のエンジンにも保存（DBに保存する意味ないかも）
     }
-    
+
     /**
      * Re indexing
      * @param knowledgesEntity
@@ -1354,7 +1357,7 @@ public class KnowledgeLogic {
             filesDao.changeStatus(knowledgeFilesEntity.getFileNo(), FileParseBat.PARSE_STATUS_WAIT, FileParseBat.UPDATE_USER_ID);
         }
     }
-    
+
     /**
      * ナレッジに対し編集権限があるかチェック
      * @param loginedUser
@@ -1372,11 +1375,11 @@ public class KnowledgeLogic {
         List<LabelValue> editors = TargetLogic.get().selectEditorsOnKnowledgeId(knowledgeId);
         return isEditor(loginedUser, check, editors);
     }
-    
-    
+
+
     /**
      * ナレッジに対し編集権限があるかチェック
-     * 
+     *
      * @param loginedUser
      * @param entity
      * @param editors
@@ -1423,8 +1426,8 @@ public class KnowledgeLogic {
 
     /**
      * 一定期間で人気の高い記事を並べる
-     * 
-     * 
+     *
+     *
      * @param loginedUser
      * @return
      */
@@ -1488,7 +1491,7 @@ public class KnowledgeLogic {
      * 下書き保存
      * @param draft
      * @param template
-     * @param files 
+     * @param files
      * @param loginedUser
      * @return
      */
@@ -1549,8 +1552,8 @@ public class KnowledgeLogic {
         }
         return draft;
     }
-    
-    
+
+
     /**
      * 下書きを削除
      * @param draftId
@@ -1572,7 +1575,7 @@ public class KnowledgeLogic {
         DraftItemValuesDao.get().deleteOnDraftId(draftId);
     }
 
-    
+
     /**
      * アクセス可能な記事を、IDの前方一致で取得
      * @param q
@@ -1587,7 +1590,7 @@ public class KnowledgeLogic {
         }
         return KnowledgesDao.get().selectAccessAbleKnowledgeOnIdPrefix(q, loginedUser, limit, offset);
     }
-    
+
     /**
      * 参照済かどうかをセットする
      * @param stocks

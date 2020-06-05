@@ -3,13 +3,11 @@ package org.support.project.knowledge.control.open;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.support.project.common.exception.ParseException;
 import org.support.project.common.log.Log;
@@ -48,7 +46,6 @@ import org.support.project.knowledge.entity.StocksEntity;
 import org.support.project.knowledge.entity.TagsEntity;
 import org.support.project.knowledge.entity.TemplateItemsEntity;
 import org.support.project.knowledge.entity.TemplateMastersEntity;
-import org.support.project.knowledge.entity.gen.GenKnowledgesEntity;
 import org.support.project.knowledge.logic.DiffLogic;
 import org.support.project.knowledge.logic.EventsLogic;
 import org.support.project.knowledge.logic.GroupLogic;
@@ -401,8 +398,8 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
         String keywordSortTypeString = getCookie(SystemConfig.COOKIE_KEY_KEYWORD_SORT_TYPE);
         int keywordSortType;
-        if ("" == keywordSortTypeString) {
-            keywordSortType = KnowledgeLogic.KEYWORD_SORT_TYPE_SCORE;
+        if (keywordSortTypeString == null || keywordSortTypeString.isEmpty()) {
+            keywordSortType = KnowledgeLogic.KEYWORD_SORT_TYPE_ID;
         } else {
             keywordSortType = Integer.valueOf(keywordSortTypeString);
         }
@@ -550,10 +547,6 @@ public class KnowledgeControl extends KnowledgeControlBase {
 
                 knowledges.addAll(knowledgeLogic.searchKnowledge(keyword, tags, groups, creatorUserEntities, templates, loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT));
             }
-
-            // データの降順にソート
-            knowledges = knowledges.stream().sorted(Comparator.comparingLong(GenKnowledgesEntity::getKnowledgeId).reversed()).collect(Collectors.toList());
-
 
             // pin留めの記事取得
             if (0 == offset.intValue()) {
