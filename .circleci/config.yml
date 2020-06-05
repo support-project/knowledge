@@ -2,7 +2,7 @@ version: 2
 references:
   container_config: &container_config
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:8u212-jdk-stretch-node
     working_directory: ~/repo
     environment:
       - TZ: "/usr/share/zoneinfo/Asia/Tokyo"
