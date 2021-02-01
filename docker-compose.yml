@@ -8,12 +8,14 @@ services:
       args:
         - https_proxy
         - http_proxy
+        - no_proxy
     command: mvn -v
     environment:
       KNOWLEDGE_TEST_MAIL: 'false'
       MAVEN_CONFIG: /var/maven/.m2
       https_proxy: ${https_proxy}
       http_proxy: ${http_proxy}
+      no_proxy: ${no_proxy}
     working_dir: /usr/src/mymaven/
     entrypoint: ''
     volumes:
@@ -35,6 +37,7 @@ services:
     environment:
       https_proxy: ${https_proxy}
       http_proxy: ${http_proxy}
+      no_proxy: ${no_proxy}
     volumes:
       - ${KNOWLEDGE_HOME}.knowledge:/root/.knowledge
       - $PWD/target/webapps:/usr/local/tomcat/webapps
