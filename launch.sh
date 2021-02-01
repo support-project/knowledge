@@ -21,8 +21,9 @@ docker-compose run --rm maven mvn install -DskipTests=true -Dmaven.javadoc.skip=
 # docker-compose run --rm maven mvn clean test site -e $(propagate_proxy_vars)
 docker-compose run --rm maven mvn clean package -e $(propagate_proxy_vars)
 
-mkdir target/webapps
-mv target/knowledge.war target/webapps/ROOT.war
+# Run everything through docker-compose to work around permission issues.
+docker-compose run --rm maven mkdir target/webapps
+docker-compose run --rm maven mv target/knowledge.war target/webapps/ROOT.war
 
 docker-compose up --build -d tomcat
 docker-compose logs -f tomcat
