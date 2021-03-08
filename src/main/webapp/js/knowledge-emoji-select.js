@@ -21,6 +21,8 @@ $(document).ready(function() {
             '#markdownSamplePreview'
         ).then(function() {
             return processMathJax('#sampleMarkdownText');
+        }).then(function() {
+            return processMermaid();
         });
     });
 });

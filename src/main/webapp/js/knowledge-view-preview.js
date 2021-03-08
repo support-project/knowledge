@@ -30,6 +30,8 @@ var preview = function() {
         jqObj.html(html);
         processDecoration(target).then(function() {
             return processMathJax(target);
+        }).then(function() {
+            return processMermaid();
         });
     });
 };
@@ -59,6 +61,8 @@ var previewans = function() {
         jqObj.html(html);
         processDecoration(target).then(function() {
             return processMathJax(target);
+        }).then(function() {
+            return processMermaid();
         });
     });
 };

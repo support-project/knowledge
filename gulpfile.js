@@ -38,7 +38,7 @@ gulp.task('min', function() {
 
 gulp.task('copy', ['copy:bootswatch', 'copy:bootswatch2', 'copy:highlightjs', 'copy:font-awesome', 'copy:flag-icon-css', 
     'copy:html5shiv', 'copy:respond', 'copy:MathJax', 'copy:emoji-parser', 'copy:free-file-icons',
-    'copy:diff2html', 'copy:jsdiff', 'copy:jspdf', 'copy:pdfthema']);
+                   'copy:diff2html', 'copy:jsdiff', 'copy:jspdf', 'copy:pdfthema', 'copy:mermaid']);
 
 gulp.task('copy:bootswatch', function() {
     return gulp.src([
@@ -124,6 +124,12 @@ gulp.task('copy:pdfthema', function() {
         'src/main/webapp/css/presentation-thema/**/*'
     ])
     .pipe(gulp.dest('target/knowledge/css/presentation-thema'));
+});
+gulp.task('copy:mermaid', function() {
+    return gulp.src([
+        'src/main/webapp/bower/mermaid/**/*'
+    ])
+    .pipe(gulp.dest('target/knowledge/bower/mermaid'));
 });
 
 gulp.task('check', function () {
