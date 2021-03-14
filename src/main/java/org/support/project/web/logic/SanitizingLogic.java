@@ -82,7 +82,7 @@ public class SanitizingLogic {
             .allowElements("a", "label", "noscript", "h1", "h2", "h3", "h4", "h5", "h6", "p", "i", "b", "u", "strong", "em", "small", "big", "pre",
                     "code", "cite", "samp", "sub", "sup", "strike", "center", "blockquote", "hr", "br", "col", "font", "map", "span", "div", "img",
                     "ul", "ol", "li", "dd", "dt", "dl", "tbody", "thead", "tfoot", "table", "td", "th", "tr", "colgroup", "fieldset", "legend", "del",
-                    "var")
+ 		    "var", "details", "summary")
             .allowAttributes("id").matching(HTML_ID).globally()
             .allowAttributes("slide").matching(NUMBER).globally()
             .allowAttributes("transition").matching(HTML_CLASS).globally()
