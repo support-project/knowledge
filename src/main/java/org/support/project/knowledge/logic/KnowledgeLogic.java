@@ -771,11 +771,15 @@ public class KnowledgeLogic {
         LOG.trace("ナレッジ情報取得完了");
 
         List<KnowledgesEntity> knowledges = new ArrayList<>();
+        Map<Long, Long> knowledgeIdToList = new HashMap<Long, Long>();
+
         for (SearchResultValue searchResultValue : list) {
+            KnowledgesEntity entity = null;
+
             if (searchResultValue.getType() == TYPE_KNOWLEDGE) {
                 Long key = new Long(searchResultValue.getId());
                 if (map.containsKey(key)) {
-                    KnowledgesEntity entity = map.get(key);
+                    entity = map.get(key);
                     if (StringUtils.isNotEmpty(searchResultValue.getHighlightedTitle())) {
                         entity.setTitle(searchResultValue.getHighlightedTitle());
                     }
@@ -787,9 +791,7 @@ public class KnowledgeLogic {
                         // entity.setContent(org.apache.commons.lang.StringUtils.abbreviate(entity.getContent(),
                         // LuceneSearcher.CONTENTS_LIMIT_LENGTH));
                     }
-
                     entity.setScore(searchResultValue.getScore());
-                    knowledges.add(entity);
                 }
             } else if (searchResultValue.getType() == TYPE_FILE) {
                 // TODO 1件づつ処理しているので、パフォーマンスが悪いので後で処理を検討
@@ -797,7 +799,7 @@ public class KnowledgeLogic {
                 Long fileNo = new Long(id);
                 KnowledgeFilesEntity filesEntity = filesDao.selectOnKeyWithoutBinary(fileNo);
                 if (filesEntity != null && filesEntity.getKnowledgeId() != null) {
-                    KnowledgesEntity entity = knowledgesDao.selectOnKeyWithUserName(filesEntity.getKnowledgeId());
+                    entity = knowledgesDao.selectOnKeyWithUserName(filesEntity.getKnowledgeId());
                     if (entity == null) {
                         // 添付ファイルの情報が検索エンジン内にあり、検索にHitしたが、それに紐づくナレッジデータは削除されていた
                         break;
@@ -818,7 +820,6 @@ public class KnowledgeLogic {
                     }
                     entity.setContent(builder.toString());
                     entity.setScore(searchResultValue.getScore());
-                    knowledges.add(entity);
                 }
             } else if (searchResultValue.getType() == TYPE_COMMENT) {
                 // TODO 1件づつ処理しているので、パフォーマンスが悪いので後で処理を検討
@@ -826,7 +827,7 @@ public class KnowledgeLogic {
                 Long commentNo = new Long(id);
                 CommentsEntity commentsEntity = CommentsDao.get().selectOnKey(commentNo);
                 if (commentsEntity != null && commentsEntity.getKnowledgeId() != null) {
-                    KnowledgesEntity entity = knowledgesDao.selectOnKeyWithUserName(commentsEntity.getKnowledgeId());
+                    entity = knowledgesDao.selectOnKeyWithUserName(commentsEntity.getKnowledgeId());
                     if (entity == null) {
                         // コメントの情報が検索エンジン内にあり、検索にHitしたが、それに紐づくナレッジデータは削除されていた
                         break;
@@ -840,13 +841,12 @@ public class KnowledgeLogic {
                     }
                     entity.setContent(builder.toString());
                     entity.setScore(searchResultValue.getScore());
-                    knowledges.add(entity);
                 }
             } else if (searchResultValue.getType() == IndexType.bookmarkContent.getValue()) {
                 // TODO 1件づつ処理しているので、パフォーマンスが悪いので後で処理を検討
                 String id = searchResultValue.getId().substring(FileParseBat.WEB_ID_PREFIX.length());
                 Long knowledgeId = new Long(id);
-                KnowledgesEntity entity = knowledgesDao.selectOnKeyWithUserName(knowledgeId);
+                entity = knowledgesDao.selectOnKeyWithUserName(knowledgeId);
                 if (entity != null && entity.getKnowledgeId() != null) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("[Bookmark Content] ");
@@ -859,8 +859,19 @@ public class KnowledgeLogic {
                     }
                     entity.setContent(builder.toString());
                     entity.setScore(searchResultValue.getScore());
-                    knowledges.add(entity);
                 }
+            }
+
+            if(entity == null) continue;
+
+            if(knowledgeIdToList.containsKey(entity.getKnowledgeId())) {
+                int listId = knowledgeIdToList.get(entity.getKnowledgeId()).intValue();
+                KnowledgesEntity updateEntity = knowledges.get(listId);
+                String content = updateEntity.getContent();
+                updateEntity.setContent(content + entity.getContent());
+            } else {
+                knowledges.add(entity);
+                knowledgeIdToList.put(entity.getKnowledgeId(), new Long(knowledges.size() - 1));
             }
         }
 
