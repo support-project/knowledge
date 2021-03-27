@@ -4,8 +4,16 @@
 
 
 ## About
-- Free Knowledge Management System
+- **UNOFFICIAL** Free Knowledge Management System
 - [landing page and Online manual](https://information-knowledge.support-project.org/)
+- As original repository does not look to be maintained, I update it unofficially.
+
+### Differences
+
+- [Dialog support](https://github.com/support-project/knowledge/pull/1104)
+- [`<details>` tag support](https://github.com/support-project/knowledge/pull/1107)
+- [Simplify search result ](https://github.com/support-project/knowledge/pull/1110)
+
 
 ## Support
 - **日本語での質問は、以下のサイトに登録してください(海外からのアクセスが多くなったため)**
