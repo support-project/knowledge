@@ -55,13 +55,18 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>localrepo</id>
+            <name>localrepo</name>
+            <url>file://${basedir}/third_party/markedj/target/</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>org.support-project</groupId>
             <artifactId>markedj</artifactId>
-            <version>1.7.0</version>
+            <version>1.6.0</version>
         </dependency>
 
         <dependency>
