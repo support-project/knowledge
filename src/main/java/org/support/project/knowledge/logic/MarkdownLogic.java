@@ -121,7 +121,7 @@ public class MarkdownLogic {
             new Renderer(options) {
                 @Override
                 public String code(String code, String lang, boolean escaped){
-                    if(lang.equals("mermaid")) {
+                    if(lang != null && lang.equals("mermaid")) {
                         StringBuilder sb = new StringBuilder();
                         sb.append("<div class=\"mermaid\">");
                         sb.append(code);
