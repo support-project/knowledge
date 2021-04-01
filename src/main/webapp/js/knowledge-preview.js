@@ -10,6 +10,11 @@ var preview = function() {
     ).then(function() {
         return processMathJax('#preview');
     }).then(function() {
+      return new Promise(function(resolve, reject) {
+        mermaid.init();
+        return resolve();
+      });
+    }).then(function() {
         if ($('input[name=typeId]:checked').val() === '-102') {
             // プレゼンテーションのタイプであった場合に、プレゼンテーションを生成する
             return createPresentation($($('#preview').children()[0]));

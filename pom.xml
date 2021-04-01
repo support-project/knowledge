@@ -375,7 +375,6 @@
                             <arguments>run emoji</arguments>
                         </configuration>
                     </execution>
-                    <!--
                     <execution>
                         <id>gulp</id>
                         <phase>prepare-package</phase>
@@ -386,7 +385,6 @@
                             <arguments>default</arguments>
                         </configuration>
                     </execution>
-                    -->
                 </executions>
             </plugin>
 

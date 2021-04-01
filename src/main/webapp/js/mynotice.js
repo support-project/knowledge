@@ -8,6 +8,8 @@ $(document).ready(function() {
     var showNotice = function(notice) {
         parseMarkdown(notice.title, notice.message, '#notice_content_area', '#notice_title_area').then(function() {
             return processMathJax('#notice_content_area');
+        }).then(function() {
+            return processMermaid();
         });
         if (notice.showNextTime) {
             $('#showagain').prop('checked', true);

@@ -769,12 +769,18 @@ Renderer.prototype.code = function(code, lang, escaped) {
       + '\n</code></pre>';
   }
 
+  if (lang === "mermaid") {
+    return '<div class="mermaid>"'
+      + code
+      + '\n</div>';
+  }
+
   return '<pre><code class="'
     + this.options.langPrefix
     + escape(lang, true)
     + '">'
     + (escaped ? code : escape(code, true))
-    + '\n</code></pre>\n';
+    + '\n</code></pre>\n' + escape(lang, true);
 };
 
 Renderer.prototype.blockquote = function(quote) {

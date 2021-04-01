@@ -21,6 +21,8 @@ $(document).ready(function() {
             '#markdownSamplePreview'
         ).then(function() {
             return processMathJax('#sampleMarkdownText');
+        }).then(function() {
+            return processMermaid();
         });
     });
     
@@ -66,6 +68,8 @@ var preview = function() {
         jqObj.html(html);
         processDecoration(target).then(function() {
             return processMathJax(target);
+        }).then(function() {
+            return processMermaid();
         });
     });
 };

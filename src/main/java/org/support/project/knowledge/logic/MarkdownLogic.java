@@ -1,6 +1,7 @@
 package org.support.project.knowledge.logic;
 
 import io.github.gitbucket.markedj.Marked;
+import io.github.gitbucket.markedj.Renderer;
 import io.github.gitbucket.markedj.Options;
 
 import java.io.IOException;
@@ -116,7 +117,23 @@ public class MarkdownLogic {
         options.setHeaderPrefix("markdown-agenda-");
         options.setHeaderIdSequential(true);
 
-        String html = Marked.marked(markdown, options);
+        Renderer renderer =
+            new Renderer(options) {
+                @Override
+                public String code(String code, String lang, boolean escaped){
+                    if(lang != null && lang.equals("mermaid")) {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("<div class=\"mermaid\">");
+                        sb.append(code);
+                        sb.append("</div>");
+                        return sb.toString();
+                    } else {
+                        return super.code(code, lang, escaped);
+                    }
+                };
+            };
+
+        String html = Marked.marked(markdown, options, renderer);
         result.setHtml(html);
         result.setParsed(true);
         result.setMarkdown(markdown);

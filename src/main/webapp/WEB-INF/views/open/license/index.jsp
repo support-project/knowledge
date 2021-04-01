@@ -35,7 +35,16 @@ $(document).ready(function(){
         type: 'GET',
         timeout: 10000,
     }).done(function(result, textStatus, xhr) {
-        $('#content').html(marked(result));
+      var renderer = new marked.Renderer();
+      renderer.code = function (code, language) {
+        if(language.match(/^mermaid/)){
+           return '<div class="mermaid">'+code+'</div>';
+        }else{
+           return '<pre><code>' + hljs.highlightAuto(code).value + '</code></pre>';
+        }
+      };
+
+      $('#content').html(marked(result, { renderer: renderer }));
     }).fail(function(xhr, textStatus, error) {
         handleErrorResponse(xhr, textStatus, error);
     });

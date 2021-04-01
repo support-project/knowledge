@@ -57,6 +57,12 @@ var processMathJax = function(target) {
     });
 };
 
+var processMermaid = function(target) {
+    return new Promise(function(resolve, reject) {
+      mermaid.init();
+      return resolve();
+    });
+};
 
 /**
  * 内部の別の記事へのリンクを生成
