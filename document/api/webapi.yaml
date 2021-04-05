@@ -1,0 +1,433 @@
+openapi: "3.0.0"
+info:
+  title: "Knowledge API"
+  description: "[Knowledge](https://github.com/support-project/knowledge) web API."
+  version: "1.13.1"
+servers:
+  - url: http://localhost:8080/knowledge
+    description: change me
+paths:
+  "/api/sample":
+    get:
+      description: "Sample API."
+      tags:
+        - sample
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                title: "Sample response"
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+  "/api/groups":
+    get:
+      description: "Get groups"
+      tags:
+        - groups
+      responses:
+        "200":
+          description: "Successful responses"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: '#/components/schemas/Group'
+  "/api/groups/{groupId}":
+    get:
+      description: "Get a group"
+      tags:
+        - groups
+      parameters:
+        - name: "groupId"
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+  "/api/groups/{groupId}/knowledges":
+    get:
+      description: "Get knowledges for the group"
+      tags:
+        - groups
+      parameters:
+        - name: "groupId"
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: '#/components/schemas/Knowledge'
+  "/api/groups/{groupId}/users":
+    get:
+      description: "Get users in the group"
+      tags:
+        - users
+      parameters:
+        - name: groupId
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  "/api/knowledges":
+    get:
+      description: "list knowledges"
+      tags:
+        - knowledges
+      parameters:
+        - name: keyword
+          in: query
+          schema:
+            type: string
+            description: comma-separated search keywords
+        - name: tags
+          in: query
+          schema:
+            type: string
+            description: comma-separated tag names
+        - name: groups
+          in: query
+          schema:
+            type: string
+            description: comma-separeted group names
+        - name: template
+          in: query
+          schema:
+            type: integer
+            description: >
+              template id.
+              -99: bookmark
+              -100: knowledge
+              -101: event
+              -102: presentation
+      responses:
+        200:
+          description: "Successful responses"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Knowledge'
+    post:
+      description: "Create knowledge"
+      tags:
+        - knowledge
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewKnowledge'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: registered knowledge ID
+                  name:
+                    type: string
+                    description: title
+  "/api/knowledge/{knowledge_id}":
+    get:
+      description: "Get knowledge"
+      tags:
+        - knowledge
+      parameters:
+        - name: "knowledge_id"
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge'
+    put:
+      description: Update knowledge
+      tags:
+        - knowledge
+      parameters:
+        - name: "knowledge_id"
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewKnowledge'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+    delete:
+      description: Delete knowledge
+      tags:
+        - knowledge
+      parameters:
+        - name: "knowledge_id"
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: fixed string, "deleted"
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+components:
+  schemas:
+    Group:
+      type: "object"
+      properties:
+        "description":
+          type: "string"
+        "groupClass":
+          type: "integer"
+        "groupId":
+          type: "integer"
+        "groupKnowledgeCount":
+          type: "integer"
+        "groupName":
+          type: "string"
+        "insertDatetime":
+          type: "string"
+          format: "datetime"
+        "insertUser":
+          type: "integer"
+        "updateDatetime":
+          type: "string"
+          format: "datetime"
+          nullable: true
+        "updateUser":
+          type: "integer"
+    Attachment:
+      type: object
+      properties:
+        commentNo:
+          type: integer
+        fileName:
+          type: string
+        fileNo:
+          type: integer
+        fileSize:
+          type: integer
+        insertDatetime:
+          type: integer
+          format: datetime
+        insertUser:
+          type: integer
+        knowledgeId:
+          type: integer
+        updateDatetime:
+          type: string
+          format: datetime
+        updateUser:
+          type: integer
+          description: "-100"
+    User:
+      type: "object"
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Members:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: groupId in string such as "1"
+              name:
+                type: string
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: userId in string such as "1"
+              name:
+                type: string
+    Knowledge:
+      type: object
+      properties:
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+          description: only in GET api/knowledge/id
+        commentCount:
+          type: integer
+        comments:
+          description: only in GET api/knowledge/id
+          type: array
+          items:
+            type: object
+            properties:
+              comment:
+                type: string
+              commentNo:
+                type: integer
+              insertDatetime:
+                type: string
+                format: datetime
+              insertUser:
+                type: integer
+              knowledgeId:
+                type: integer
+              updateDatetime:
+                type: string
+                format: datetime
+              updateUser:
+                type: integer
+        content:
+          description: knowledge body
+          type: string
+        editors:
+          description: only in api/knowledge/id
+          type: array
+          items:
+            $ref: '#/components/schemas/Members'
+        ignoreNotification:
+          type: boolean
+          description: only in GET api/knowledge/id
+        insertDatetime:
+          type: string
+          format: "datetime"
+        insertUser:
+          type: integer
+        knowledgeId:
+          type: integer
+        likeCount:
+          type: integer
+        publicFlag:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+        template:
+          type: string
+          description: template name such as "bookmark"
+        templateItems:
+          type: array
+          description: only in GET api/knowledge/id
+          items:
+            type: object
+            description: >-
+              items specified at template
+            properties:
+              label:
+                type: string
+              value:
+                type: string
+        title:
+          type: string
+        updateDatetime:
+          type: string
+          format: datetime
+          nullable: true
+        updateUser:
+          type: integer
+        viewers:
+          $ref: '#/components/schemas/Members'
+    NewKnowledge:
+      type: "object"
+      properties:
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        content:
+          type: string
+          description: >-
+            knowledge contents.
+            Use \r\n for a new line.
+            Web API test\r\nThis is a test\r\n.
+        editors:
+          $ref: '#/components/schemas/Members'
+        ignoreNotification:
+          type: boolean
+        publicFlag: 
+          type: integer
+          description: >-
+            aa
+        tags:
+          type: array
+          items:
+            type: string
+        template:
+          type: string
+          description: name of template such as knowledge
+        title: 
+          type: string
+        viewers:
+          $ref: '#/components/schemas/Members'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: private_token
+security:
+  - ApiKeyAuth: []
+      
