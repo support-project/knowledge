@@ -4,7 +4,7 @@ info:
   description: "[Knowledge](https://github.com/support-project/knowledge) web API."
   version: "1.13.1"
 servers:
-  - url: http://localhost:8080/knowledge
+  - url: http://localhost/knowledge
     description: change me
 paths:
   "/api/sample":
@@ -159,7 +159,7 @@ paths:
                   name:
                     type: string
                     description: title
-  "/api/knowledge/{knowledge_id}":
+  "/api/knowledges/{knowledge_id}":
     get:
       description: "Get knowledge"
       tags:
@@ -281,9 +281,19 @@ components:
     User:
       type: "object"
       properties:
-        id:
+        insertDatetime:
+          type: string
+          format: datetime
+        insertUser:
           type: integer
-        name:
+        updateDatetime:
+          type: string
+          format: datetime
+        updateUser:
+          type: integer
+        userId:
+          type: integer
+        userName:
           type: string
     Members:
       type: object
@@ -423,6 +433,10 @@ components:
           type: string
         viewers:
           $ref: '#/components/schemas/Members'
+      required:
+        - content
+        - template
+        - title
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
@@ -430,4 +444,3 @@ components:
       name: private_token
 security:
   - ApiKeyAuth: []
-      
