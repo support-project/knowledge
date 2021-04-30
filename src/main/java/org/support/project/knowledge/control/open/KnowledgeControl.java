@@ -76,10 +76,12 @@ import org.support.project.web.control.service.Post;
 import org.support.project.web.dao.SystemConfigsDao;
 import org.support.project.web.dao.UserConfigsDao;
 import org.support.project.web.dao.UsersDao;
+import org.support.project.web.dao.ReadMarksDao;
 import org.support.project.web.entity.GroupsEntity;
 import org.support.project.web.entity.SystemConfigsEntity;
 import org.support.project.web.entity.UserConfigsEntity;
 import org.support.project.web.entity.UsersEntity;
+import org.support.project.web.entity.ReadMarksEntity;
 import org.support.project.web.exception.InvalidParamException;
 
 /**
@@ -683,6 +685,37 @@ public class KnowledgeControl extends KnowledgeControlBase {
         setSublistInformations(loginedUser);
 
         return forward("show_history.jsp");
+    }
+
+    @Get
+    public Boundary show_unread() throws InvalidParamException {
+        LoginedUser loginedUser = super.getLoginedUser();
+        KnowledgeLogic knowledgeLogic = KnowledgeLogic.get();
+
+        Integer offset = getOffsetParameter();
+        List<Long> unreadIds = knowledgeLogic.getUnreadKnowledgeIds(loginedUser, offset * PAGE_LIMIT, PAGE_LIMIT);
+
+        List<String> getIds = new ArrayList<>();
+        for(Long i : unreadIds) {
+            getIds.add(String.valueOf(i));
+        }
+
+        List<KnowledgesEntity> unreadKnowledges = knowledgeLogic.getKnowledges(getIds, loginedUser);
+        ArrayList<Long> knowledgeIds = new ArrayList<>();
+        for(KnowledgesEntity e : unreadKnowledges) {
+            knowledgeIds.add(e.getKnowledgeId());
+        }
+
+        List<StockKnowledge> stocks = knowledgeLogic.setStockInfo(unreadKnowledges, loginedUser);
+        setAttribute("unreads", stocks);
+        LOG.trace("未読取得完了");
+
+        // ナレッジの公開先の情報を取得
+        setKnowledgeTargets(loginedUser, knowledgeIds);
+        // タグとグループの情報を取得（一覧画面の右側のサブリスト部分に表示する情報をセット）
+        setSublistInformations(loginedUser);
+
+        return forward("show_unread.jsp");
     }
 
     /**
