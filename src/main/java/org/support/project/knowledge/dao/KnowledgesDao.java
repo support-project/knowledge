@@ -340,4 +340,22 @@ public class KnowledgesDao extends GenKnowledgesDao {
         executeUpdate(sql, point, knowledgeId);
     }
 
+    @Aspect(advice = org.support.project.ormapping.transaction.Transaction.class)
+    public List<Long> getUnreadKnowledgeIds(Integer userId,
+                                            int exclude_public_flag,
+                                            int offset, int limit) {
+        // TODO check protected knowledges
+        String sql = "SELECT knowledge_id FROM KNOWLEDGES "
+            + "WHERE knowledge_id NOT IN (SELECT DISTINCT knowledge_id FROM VIEW_HISTORIES WHERE INSERT_USER = ?) "
+            + "AND public_flag <> ?"
+            + "ORDER BY UPDATE_DATETIME DESC "
+            + "Limit ? offset ? "
+            ;
+        return executeQueryList(sql,
+                                Long.class,
+                                userId,
+                                exclude_public_flag,
+                                limit, offset);
+    }
+
 }

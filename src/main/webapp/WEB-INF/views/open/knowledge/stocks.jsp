@@ -30,6 +30,7 @@
                 <li role="presentation"><a href="<%=request.getContextPath()%>/open.knowledge/show_popularity"><%=jspUtil.label("knowledge.list.kind.popular")%></a></li>
                 <% if (jspUtil.logined()) { %>
                 <li role="presentation" class="active"><a href="<%=request.getContextPath()%>/open.knowledge/stocks"><%= jspUtil.label("knowledge.list.kind.stock") %></a></li>
+                <li role="presentation" class="active"><a href="<%=request.getContextPath()%>/open.knowledge/show_unread"><%=jspUtil.label("knowledge.list.kind.unread")%></a></li>
                 <% } %>
                 <li role="presentation"><a href="<%=request.getContextPath()%>/open.knowledge/show_history"><%=jspUtil.label("knowledge.list.kind.history")%></a></li>
             </ul>

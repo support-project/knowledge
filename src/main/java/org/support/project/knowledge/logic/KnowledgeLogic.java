@@ -1002,6 +1002,25 @@ public class KnowledgeLogic {
     }
 
     /**
+     * get unread knowledges
+     *
+     * @param user
+     * @param offset
+     * @param limit
+     */
+    public List<Long> getUnreadKnowledgeIds(LoginedUser user,
+                                            int offset,
+                                            int limit) {
+        Integer userId = user.getUserId();
+
+        return KnowledgesDao.get().getUnreadKnowledgeIds(userId,
+                                                         PUBLIC_FLAG_PRIVATE,
+                                                         offset,
+                                                         limit);
+
+    }
+
+    /**
      * ナレッジを取得
      * 
      * @param ids
