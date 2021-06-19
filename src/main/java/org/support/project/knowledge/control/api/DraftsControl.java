@@ -8,8 +8,10 @@ import java.util.List;
 import org.support.project.common.log.Log;
 import org.support.project.common.log.LogFactory;
 import org.support.project.common.util.PropertyUtil;
+import org.support.project.common.util.StringUtils;
 import org.support.project.di.DI;
 import org.support.project.di.Instance;
+import org.support.project.knowledge.dao.DraftItemValuesDao;
 import org.support.project.knowledge.dao.DraftKnowledgesDao;
 import org.support.project.knowledge.entity.DraftKnowledgesEntity;
 import org.support.project.knowledge.vo.api.Draft;
@@ -51,5 +53,29 @@ public class DraftsControl extends GetApiControl {
     public Boundary getSingle(String id) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Delete(path="api/drafts", checkReferer=false, subscribeToken="")
+    public Boundary delete() {
+        // TODO: almost same as DraftControl.delete().
+        // TODO: Can we unify these?
+
+        String draftIdStr = super.getPathString("");
+        if(StringUtils.isEmpty(draftIdStr)) {
+            send(HttpStatus.SC_204_NO_CONTENT);
+        }
+        Long draftId = Long.valueOf(draftIdStr);
+        DraftKnowledgesEntity draft = DraftKnowledgesDao.get().selectOnKey(draftId);
+        // アクセス可能かチェック
+        if (draft == null) {
+            return send(HttpStatus.SC_404_NOT_FOUND, "NOT FOUND");
+        }
+        if (draft.getInsertUser().intValue() != getLoginUserId().intValue()) {
+            return send(HttpStatus.SC_403_FORBIDDEN, "FORBIDDEN");
+        }
+        DraftKnowledgesDao.get().physicalDelete(draft);
+        DraftItemValuesDao.get().deleteOnDraftId(draftId);
+
+        return send(HttpStatus.SC_200_OK);
     }
 }
