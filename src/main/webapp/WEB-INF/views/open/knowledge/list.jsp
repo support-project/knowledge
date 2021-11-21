@@ -29,7 +29,7 @@
 
     <c:param name="PARAM_SCRIPTS">
         <jsp:include page="partials/partials-list-scripts.jsp"></jsp:include>
-        
+
         <%
             if (jspUtil.logined()) {
         %>
@@ -77,7 +77,7 @@
                         </a>
                         </c:forEach>
                     </c:if>
-                    
+
                     <c:if test="${!empty selectedTag}">
                         <a class="text-link" href="<%=request.getContextPath()%>/open.knowledge/list?tag=<%=jspUtil.out("selectedTag.tagId")%>">
                             <i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("selectedTag.tagName")%>
@@ -104,7 +104,7 @@
                             </a>
                         </c:forEach>
                     </c:if>
-                    
+
                     <c:if test="${!empty creators}">
                         <c:forEach var="creator" items="${creators}" varStatus="status">
                             <a class="text-link" href="<%=request.getContextPath()%>/open.knowledge/list?creators=<%=jspUtil.out("creator.userName")%>">
@@ -112,7 +112,7 @@
                             </a>
                         </c:forEach>
                     </c:if>
-                    
+
 
                     <c:if test="${!empty selectedGroups}">
                         <c:forEach var="group" items="${selectedGroups}" varStatus="status">
@@ -162,7 +162,7 @@
                     </c:if>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-sm-12 text-right">
                     <small class="text-info"><%= jspUtil.label("knowledge.list.msg.advanced.serch") %></small>
@@ -173,7 +173,7 @@
                 </div>
             </div>
         </c:if>
-        
+
         <c:if test="${empty types}">
         <div class="row">
             <div class="col-sm-12">
@@ -245,4 +245,3 @@
     </c:param>
 
 </c:import>
-
