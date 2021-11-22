@@ -405,6 +405,13 @@ public class KnowledgeControl extends KnowledgeControlBase {
         } else {
             keywordSortType = Integer.valueOf(keywordSortTypeString);
         }
+        // sorting by score is invalid at non-search list
+        if("" == keyword && keywordSortType == KnowledgeLogic.KEYWORD_SORT_TYPE_SCORE) {
+            keywordSortType = KnowledgeLogic.KEYWORD_SORT_TYPE_TIME;
+        }
+        // save keywordSortType on cookie to synchronize sort type
+        setCookie(SystemConfig.COOKIE_KEY_KEYWORD_SORT_TYPE, String.valueOf(keywordSortType));
+
         knowledgeLogic.setKeywordSortType(keywordSortType);
         setAttribute("keywordSortType", keywordSortType);
 

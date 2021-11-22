@@ -18,6 +18,17 @@
 <% String top = "/open.knowledge/list"; %>
 <% JspUtil jspUtil = new JspUtil(request, pageContext); %>
 
+<script type="text/javascript">
+ function clearSortOrder() {
+     console.log("hhh");
+     var now = new Date();
+     var time = now.getTime();
+     var expireTime = time + 1000*36000;
+     now.setTime(expireTime);
+     document.cookie = "knowledge_KEYWORD_SORT_TYPE=1; expires=" + now.toUTCString() + "; path=/knowledge/";
+ }
+</script>
+
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -51,6 +62,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
             <form class="nav navbar-nav navbar-form " role="search"
+                onsubmit="return clearSortOrder()"
                 action="<%= request.getContextPath() %><%= top %>">
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="<%= jspUtil.label("knowledge.navbar.search.placeholder") %>"
