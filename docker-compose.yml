@@ -3,6 +3,7 @@ version: '2.1'
 services:
   maven:
     image: knowledge-dev
+    user: "${DUID}:${DGID}"
     build:
       context: .
       args:
@@ -14,6 +15,7 @@ services:
       MAVEN_CONFIG: /var/maven/.m2
       https_proxy: ${https_proxy}
       http_proxy: ${http_proxy}
+      HOME: /usr/src/mymaven/
     working_dir: /usr/src/mymaven/
     entrypoint: ''
     volumes:
