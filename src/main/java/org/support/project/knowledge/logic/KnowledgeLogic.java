@@ -123,6 +123,9 @@ public class KnowledgeLogic {
     /** キーワード検索時のソート順 : 日付順 */
     public static final int KEYWORD_SORT_TYPE_TIME = 2;
 
+    /** キーワード検索時のソート順 : ID 順 */
+    public static final int KEYWORD_SORT_TYPE_ID = 3;
+
     /** キーワード検索時のソート順 */
     private int keywordSortType = KEYWORD_SORT_TYPE_SCORE;
 

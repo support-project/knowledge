@@ -29,7 +29,7 @@
 
     <c:param name="PARAM_SCRIPTS">
         <jsp:include page="partials/partials-list-scripts.jsp"></jsp:include>
-        
+
         <%
             if (jspUtil.logined()) {
         %>
@@ -61,6 +61,36 @@
                 <% } %>
                 <li role="presentation"><a href="<%=request.getContextPath()%>/open.knowledge/show_history"><%=jspUtil.label("knowledge.list.kind.history")%></a></li>
             </ul>
+            <c:if test="${empty keyword}">
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <%=jspUtil.label("knowledge.list.sort") %>:
+                        <span id="current-keyword-sort" data-key="<%=AppConfig.get().getSystemName() %>_<%= SystemConfig.COOKIE_KEY_KEYWORD_SORT_TYPE%>">
+                            <%
+                            if (String.valueOf(KnowledgeLogic.KEYWORD_SORT_TYPE_ID).equals(jspUtil.out("keywordSortType"))) {
+                            %>
+                                <%=jspUtil.label("knowledge.list.sort.id") %>
+                            <%
+                            } else if (String.valueOf(KnowledgeLogic.KEYWORD_SORT_TYPE_TIME).equals(jspUtil.out("keywordSortType"))) {
+                            %>
+                                <%=jspUtil.label("knowledge.list.sort.time") %>
+                            <%
+                            }
+                            %>
+                        </span>
+                        &nbsp;
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-keyword-sort" href="javascript:void(0);" data-value="<%=KnowledgeLogic.KEYWORD_SORT_TYPE_ID%>"><%=jspUtil.label("knowledge.list.sort.id") %></a>
+                        </li>
+                        <li>
+                            <a class="dropdown-keyword-sort" href="javascript:void(0);" data-value="<%=KnowledgeLogic.KEYWORD_SORT_TYPE_TIME%>"><%=jspUtil.label("knowledge.list.sort.time") %></a>
+                        </li>
+                    </ul>
+                </div>
+            </c:if>
         </div>
 
         <!-- Filter -->
@@ -77,7 +107,7 @@
                         </a>
                         </c:forEach>
                     </c:if>
-                    
+
                     <c:if test="${!empty selectedTag}">
                         <a class="text-link" href="<%=request.getContextPath()%>/open.knowledge/list?tag=<%=jspUtil.out("selectedTag.tagId")%>">
                             <i class="fa fa-tag"></i>&nbsp;<%=jspUtil.out("selectedTag.tagName")%>
@@ -104,7 +134,7 @@
                             </a>
                         </c:forEach>
                     </c:if>
-                    
+
                     <c:if test="${!empty creators}">
                         <c:forEach var="creator" items="${creators}" varStatus="status">
                             <a class="text-link" href="<%=request.getContextPath()%>/open.knowledge/list?creators=<%=jspUtil.out("creator.userName")%>">
@@ -112,7 +142,7 @@
                             </a>
                         </c:forEach>
                     </c:if>
-                    
+
 
                     <c:if test="${!empty selectedGroups}">
                         <c:forEach var="group" items="${selectedGroups}" varStatus="status">
@@ -144,6 +174,10 @@
                                     %>
                                     <%=jspUtil.label("knowledge.list.sort.time") %>
                                     <%
+                                    } else if (String.valueOf(KnowledgeLogic.KEYWORD_SORT_TYPE_ID).equals(jspUtil.out("keywordSortType"))) {
+                                    %>
+                                    <%=jspUtil.label("knowledge.list.sort.id") %>
+                                    <%
                                     }
                                     %>
                                 </span>
@@ -157,12 +191,15 @@
                                 <li>
                                     <a class="dropdown-keyword-sort" href="javascript:void(0);" data-value="<%=KnowledgeLogic.KEYWORD_SORT_TYPE_TIME%>"><%=jspUtil.label("knowledge.list.sort.time") %></a>
                                 </li>
+                                <li>
+                                    <a class="dropdown-keyword-sort" href="javascript:void(0);" data-value="<%=KnowledgeLogic.KEYWORD_SORT_TYPE_ID%>"><%=jspUtil.label("knowledge.list.sort.id") %></a>
+                                </li>
                             </ul>
                         </div>
                     </c:if>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-sm-12 text-right">
                     <small class="text-info"><%= jspUtil.label("knowledge.list.msg.advanced.serch") %></small>
@@ -173,7 +210,7 @@
                 </div>
             </div>
         </c:if>
-        
+
         <c:if test="${empty types}">
         <div class="row">
             <div class="col-sm-12">
@@ -245,4 +282,3 @@
     </c:param>
 
 </c:import>
-

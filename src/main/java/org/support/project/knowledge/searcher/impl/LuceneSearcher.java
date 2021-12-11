@@ -135,10 +135,15 @@ public class LuceneSearcher implements Searcher {
         log.debug("Found " + countCollector.getTotalHits() + " hits.");
 
         TopDocsCollector<? extends ScoreDoc> collector;
+        Sort sort;
         if (StringUtils.isNotEmpty(value.getKeyword())) {
             switch (keywordSortType) {
             case KnowledgeLogic.KEYWORD_SORT_TYPE_TIME:
-                Sort sort = new Sort(new SortField(FIELD_LABEL_TIME, SortField.Type.LONG, true));
+                sort = new Sort(new SortField(FIELD_LABEL_TIME, SortField.Type.LONG, true));
+                collector = TopFieldCollector.create(sort, value.getOffset() + value.getLimit(), true, false, false, false);
+                break;
+            case KnowledgeLogic.KEYWORD_SORT_TYPE_ID:
+                sort = new Sort(new SortField(FIELD_LABEL_ID, SortField.Type.STRING, true));
                 collector = TopFieldCollector.create(sort, value.getOffset() + value.getLimit(), true, false, false, false);
                 break;
             case KnowledgeLogic.KEYWORD_SORT_TYPE_SCORE:
@@ -147,9 +152,13 @@ public class LuceneSearcher implements Searcher {
                 break;
             }
         } else {
-            // Sort sort = new Sort(new SortField(FIELD_LABEL_ID, SortField.Type.INT, true));
-            // Sort sort = Sort.INDEXORDER;
-            Sort sort = new Sort(new SortField(FIELD_LABEL_TIME, SortField.Type.LONG, true));
+            String field = FIELD_LABEL_TIME;
+            SortField.Type sortType = SortField.Type.LONG;
+            if (keywordSortType == KnowledgeLogic.KEYWORD_SORT_TYPE_ID) {
+                field = FIELD_LABEL_ID;
+                sortType = SortField.Type.STRING;
+            }
+            sort = new Sort(new SortField(field, sortType, true));
             collector = TopFieldCollector.create(sort, value.getOffset() + value.getLimit(), true, false, false, false);
         }
 
