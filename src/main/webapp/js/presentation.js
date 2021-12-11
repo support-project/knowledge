@@ -74,13 +74,13 @@ var createPresentation = function(contentJqObj) {// eslint-disable-line no-unuse
         logging('createPresentation');
         var presentationArea = $('#presentationArea');
         var options = getOptions(contentJqObj);
-        
+
         var add = false;
         var pagecount = 0;
         var sections = [];
         var section = createSection(options);
         var content = appendContent(section, options, pagecount);
-        
+
         //console.log(contentJqObj);
         contentJqObj.children().each(function(i, elem) {
             if (elem.tagName.toLowerCase() == 'hr') {
@@ -97,10 +97,10 @@ var createPresentation = function(contentJqObj) {// eslint-disable-line no-unuse
         if (add) {
             sections.push(section);
         }
-        
+
         slideLength = sections.length;
         var slideId = 'presentation';
-        
+
         indexMap[slideId] = 1;
         var slidehtml = '<div class="slideshow-area" id="' + slideId + '">';
         slidehtml += '<div class="slideshow-container" id="sheets"></div>'; // この中にスライドが入る
@@ -111,18 +111,18 @@ var createPresentation = function(contentJqObj) {// eslint-disable-line no-unuse
 
         slidehtml += '<div style="text-align:center">';
         slidehtml += '<div class="numbertext"><span class="current">1</span> / ' + slideLength;
-        
-        slidehtml += '&nbsp;&nbsp;&nbsp;<a onclick="requestFullscreen(\'' + slideId + '\');">';
+
+        slidehtml += '&nbsp;&nbsp;&nbsp;<a onclick="toggleFullscreen(\'' + slideId + '\');">';
         slidehtml += '<i class="full fa fa-television fa-2x" aria-hidden="true"></i></a>';
-        
+
         /* いったんPDFダウンロードボタンはコメントアウト
         slidehtml += '&nbsp;&nbsp;&nbsp;<a id="createPdfButton" onclick="downloadPdf();">';
         slidehtml += '<i class="full fa fa-download fa-2x" aria-hidden="true"></i></a>';
         slidehtml += '&nbsp;<span id="createPdfProgress" class="hide"><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></span>';
         */
-        
+
         slidehtml += '</div>';
-        
+
         if (slideLength < 60) {
             slidehtml += '<div class="dotArea">';
             for (var i = 0; i < slideLength; i++) {
@@ -132,17 +132,17 @@ var createPresentation = function(contentJqObj) {// eslint-disable-line no-unuse
         }
         slidehtml += '</div></div></div>';
         presentationArea.html(slidehtml);
-        
+
         sections.forEach(function(s) {
             $('#sheets').append(s);
         });
-        
+
         // console.log(presentationArea.html());
         showSlides(indexMap[slideId], slideId);
         setHeight();
     });
-    
-    
+
+
 };
 
 var loadCanvus = function(doc, width, height) {
@@ -165,7 +165,7 @@ var downloadPdf = function() {// eslint-disable-line no-unused-vars
     $('#createPdfProgress').removeClass('hide');
     var doc = new jsPDF('landscape', 'mm', [width, height]);
     var slideId = 'presentation';
-    
+
     /* 全てのページをPDF化しようと思ったが、途中で止まってしまう（多分メモリの問題）
      * 1ページだけダウンロードできるようにしようかと思ったが、解像度もいまいちだし
      * 実用に耐えないため、いったん実施しないようにする（↑でPDFダウンロードボタンをコメントアウト）

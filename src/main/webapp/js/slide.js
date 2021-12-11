@@ -2,7 +2,7 @@ var indexMap = {};
 var full = false;
 var slideCount = 0;
 
-var requestFullscreen = function(id) {// eslint-disable-line no-unused-vars
+var toggleFullscreen = function(id) {// eslint-disable-line no-unused-vars
     if (full) {
         if (document.webkitCancelFullScreen) {
             document.webkitCancelFullScreen();
