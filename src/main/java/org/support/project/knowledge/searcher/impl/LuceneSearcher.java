@@ -143,7 +143,7 @@ public class LuceneSearcher implements Searcher {
                 collector = TopFieldCollector.create(sort, value.getOffset() + value.getLimit(), true, false, false, false);
                 break;
             case KnowledgeLogic.KEYWORD_SORT_TYPE_ID:
-                sort = new Sort(new SortField(FIELD_LABEL_ID, SortField.Type.STRING, true));
+                sort = new Sort(new SortField(FIELD_LABEL_ID, SortField.Type.LONG, true));
                 collector = TopFieldCollector.create(sort, value.getOffset() + value.getLimit(), true, false, false, false);
                 break;
             case KnowledgeLogic.KEYWORD_SORT_TYPE_SCORE:
@@ -156,7 +156,7 @@ public class LuceneSearcher implements Searcher {
             SortField.Type sortType = SortField.Type.LONG;
             if (keywordSortType == KnowledgeLogic.KEYWORD_SORT_TYPE_ID) {
                 field = FIELD_LABEL_ID;
-                sortType = SortField.Type.STRING;
+                sortType = SortField.Type.LONG;
             }
             sort = new Sort(new SortField(field, sortType, true));
             collector = TopFieldCollector.create(sort, value.getOffset() + value.getLimit(), true, false, false, false);
