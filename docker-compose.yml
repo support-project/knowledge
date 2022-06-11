@@ -23,7 +23,7 @@ services:
       - ${KNOWLEDGE_HOME}.m2:/root/.m2
 
   tomcat:
-    image: tomcat:8.5-jre8-alpine
+    image: tomcat:9.0.64-jre11-temurin-focal
     ports:
       - 8080:8080
       - 8009:8009
