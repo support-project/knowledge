@@ -228,24 +228,23 @@ public class LuceneSearcher implements Searcher {
             // キーワード検索(内容かパス名にキーワードがあるか)
             BooleanQuery miniContainer = new BooleanQuery();
 
-            QueryParser queryParser = new QueryParser(Version.LUCENE_4_10_2, FIELD_LABEL_TITLE, analyzer);
-            queryParser.setDefaultOperator(Operator.OR);
-            Query query;
-            try {
-                query = queryParser.parse(value.getKeyword());
-            } catch (org.apache.lucene.queryparser.classic.ParseException e) {
-                query = queryParser.parse(value.getKeyword().replaceAll("/", ""));
-            }
-            miniContainer.add(query, BooleanClause.Occur.SHOULD);
+            String[] fields = {
+                FIELD_LABEL_TITLE,
+                FIELD_LABEL_CONTENTS,
+                FIELD_LABEL_ID
+            };
 
-            queryParser = new QueryParser(Version.LUCENE_4_10_2, FIELD_LABEL_CONTENTS, analyzer);
-            queryParser.setDefaultOperator(Operator.OR);
-            try {
-                query = queryParser.parse(value.getKeyword());
-            } catch (org.apache.lucene.queryparser.classic.ParseException e) {
-                query = queryParser.parse(value.getKeyword().replaceAll("/", ""));
+            for (String field : fields) {
+                QueryParser queryParser = new QueryParser(Version.LUCENE_4_10_2, field, analyzer);
+                queryParser.setDefaultOperator(Operator.OR);
+                Query query;
+                try {
+                    query = queryParser.parse(value.getKeyword());
+                } catch (org.apache.lucene.queryparser.classic.ParseException e) {
+                    query = queryParser.parse(value.getKeyword().replaceAll("/", ""));
+                }
+                miniContainer.add(query, BooleanClause.Occur.SHOULD);
             }
-            miniContainer.add(query, BooleanClause.Occur.SHOULD);
 
             container.add(miniContainer, BooleanClause.Occur.MUST);
         } else {
