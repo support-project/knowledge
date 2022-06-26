@@ -57,9 +57,9 @@ public class ResourcesTest {
 		assertEquals("aaa is invalid.", str);
 		assertNotEquals("aaaが不正です。", str);
 		
-		//str = Resources.getInstance().getResource("errors.common.notimpl");
-		//logger.info(str);
-		//assertEquals("errors.common.notimpl", str); // 指定のキーにない場合、そのキーをそのまま取得
+		str = Resources.getInstance().getResource("errors.common.notimpl");
+		logger.info(str);
+		assertEquals("errors.common.notimpl", str); // 指定のキーにない場合、そのキーをそのまま取得
 		
 		str = Resources.getInstance(locale).getResource("errors.common.notimpl");
 		logger.info(str);
@@ -71,7 +71,7 @@ public class ResourcesTest {
 		
 		str = Resources.getInstance().getResource("errors.common.notimpl");
 		logger.info(str);
-		assertEquals("errors.common.notimpl", str); // 指定のキーにない場合、そのキーをそのまま取得
+		assertEquals("Not implement.", str); // COMMON_RESOURCE is already read
 	}
 	
 }
