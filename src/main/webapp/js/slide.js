@@ -115,7 +115,7 @@ function currentSlide(n, slideId) {// eslint-disable-line no-unused-vars
 }
 
 function showSlides(n, slideId) {
-    return Promise.try(function() {
+    return new Promise(function(resolve) {
         var slideIndex = indexMap[slideId];
         //console.log(slideIndex);
         var i;
@@ -124,24 +124,50 @@ function showSlides(n, slideId) {
         var dots = slideArea.getElementsByClassName('dot');
         if (n > slides.length) {slideIndex = 1} 
         if (n < 1) {slideIndex = slides.length}
+        indexMap[slideId] = slideIndex;
+
+        // 表示の切り替えは、次のスライド画像の読み込みが終わってから行う
+        // (読み込み中にスライドの高さが0になり、下のコンテンツが上下に動くのを防ぐ)
+        var swap = function() {
+            if (indexMap[slideId] !== slideIndex) {
+                return resolve(); // 連打された場合は最後の操作だけを反映する
+            }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = 'none'; 
+            }
+            for (i = 0; i < dots.length; i++) {
+                if (dots[i]) {
+                    dots[i].className = dots[i].className.replace(' active', '');
+                }
+            }
+            slides[slideIndex-1].style.display = 'block';
+            if (dots[slideIndex-1]) {
+                dots[slideIndex-1].className += ' active';
+            }
+            $('#' + slideId).find('.current').html(slideIndex);
+            return resolve();
+        };
+
+        var slideimg = $(slides[slideIndex-1]).find('img').first();
+        var src = slideimg.attr('lagy');
+        var shown = false; // 既に表示中のスライドがあるか(初期表示時はfalse)
         for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = 'none'; 
-        }
-        for (i = 0; i < dots.length; i++) {
-            if (dots[i]) {
-                dots[i].className = dots[i].className.replace(' active', '');
+            if (slides[i].style.display === 'block') {
+                shown = true;
             }
         }
-        slides[slideIndex-1].style.display = 'block';
-        var slideimg = $(slides[slideIndex-1].getElementsByTagName('img')[0]);
-        slideimg.attr('src', slideimg.attr('lagy'));
-        
-        if (dots[slideIndex-1]) {
-            dots[slideIndex-1].className += ' active';
+        if (!src || slideimg.attr('src') === src || !shown) {
+            if (src) {
+                slideimg.attr('src', src);
+            }
+            return swap();
         }
-        
-        $('#' + slideId).find('.current').html(slideIndex);
-        indexMap[slideId] = slideIndex;
+        var preload = new Image();
+        preload.onload = preload.onerror = function() {
+            slideimg.attr('src', src);
+            swap();
+        };
+        preload.src = src;
     });
 }
 
